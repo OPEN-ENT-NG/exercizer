@@ -1,0 +1,74 @@
+apply from: "gradle/vertx.gradle"
+apply plugin: 'scala'
+
+dependencies {
+	compile "org.entcore:common:$entCoreVersion"
+	testCompile "org.entcore:tests:$entCoreVersion"
+	testCompile 'io.gatling.highcharts:gatling-charts-highcharts:2.0.3'
+}
+
+javadoc {
+  options.encoding = 'UTF-8'
+  classpath  = configurations.provided
+  classpath += configurations.compile
+}
+
+repositories {
+    maven {
+        url "http://maven.web-education.net/nexus/content/groups/public"
+    }
+}
+
+task testJar(type: Jar) {
+  classifier = 'tests'
+  from sourceSets.test.output
+}
+
+task deploymentJar(type: Jar) {
+  classifier = 'deployment'
+  from 'deployment'
+}
+
+artifacts {
+  archives testJar
+  archives deploymentJar
+}
+
+configurations.all {
+	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+def configurePom(def pom) {
+	pom.project {
+		description 'Exercizer (ent-core)'
+		inceptionYear '2016'
+		packaging 'zip'
+		url 'http://code.web-education.net/one/exercizer'
+
+		developers {
+			developer {
+				id 'jelb'
+				name 'Julien_Elbaz'
+				email 'julien.elbaz@web-education.net'
+			}
+            developer {
+				id 'jneu'
+				name 'Julien_Neuhart'
+				email 'julien.neuhart@thecodingmachine.com'
+			}
+            developer {
+				id 'elep'
+				name 'Erwan_Lepoder'
+				email 'e.lepoder@thecodingmachine.com '
+			}
+		}
+
+		scm {
+			url 'git@github.com/OPEN-ENT-NG/exercizer.git'
+		}
+
+		properties {
+			setProperty('project.build.sourceEncoding', 'UTF8')
+		}
+	}
+}
