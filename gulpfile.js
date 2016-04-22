@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 
-var springboardModsPath = "/Users/elbywan/WSE/leo/mods/fr.openent~exercizer~0.1-SNAPSHOT"
+var springboardModsPath = "/Users/elbywan/WSE/leo/mods/fr.openent~exercizer~0.1-SNAPSHOT";
 
 gulp.task('copy-resources', function() {
 	return gulp.src('src/main/resources/**/*')
