@@ -1,7 +1,7 @@
 build
 bin
 .idea
-exercizer
+/exercizer
 .DS_Store
 .classpath
 .project
