@@ -1,4 +1,4 @@
-export class Exercice{
+class Exercice{
     pouetpouet() {
         console.log('truc')
     }
