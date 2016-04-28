@@ -1,0 +1,26 @@
+{
+  "name": "exercizer",
+  "version": "0.0.1",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^2.13.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OPEN-ENT-NG/exercizer.git"
+  },
+  "author": "TCM",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/OPEN-ENT-NG/exercizer/issues"
+  },
+  "homepage": "https://github.com/OPEN-ENT-NG/exercizer#readme"
+}

@@ -12,3 +12,4 @@ build.gradle
 gradlew
 gradlew.bat
 settings.gradle
+/src/main/resources/public/js/scripts.min.js
