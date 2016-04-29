@@ -1,4 +1,35 @@
-<div ng-controller="TeacherHomeCtrl as teacherHomeCtrl">
-    <h1>Teacher Home</h1>
-    <button ng-click="teacherHomeCtrl.clickCreateNewSubject()"><span class="no-style ng-scope" ng-click="createSubject">Nouveau sujet</span></button>
+<div data-ng-controller="TeacherHomeCtrl as teacherHomeCtrl">
+    <div class="row rigid-grid">
+        <section class="four cell">
+            <app-title class="zero-mobile">
+                <h1 class="application-title move-right">
+                    <a data-reload="">
+                        <i class="conversation"></i>
+                        <span class="no-style">Exercizer</span>
+                    </a>
+                </h1>
+            </app-title>
+        </section>
+    </div>
+    <div class="row">
+        <div class="right-magnet cell">
+            <button data-ng-click="teacherHomeCtrl.clickCreateNewSubject()">Nouveau sujet</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="row rigid-grid">
+            <div class="four cell side-col twelve-mobile">
+                <subjects-tree></subjects-tree>
+                <nav class="vertical half-stamps mobile-navigation side-nav" data-side-nav="" style="height: auto;">
+                    <a class="classic-link cell">
+                        <i18n><span class="no-style">Créer un dossier</span></i18n>
+                    </a>
+                </nav>
+            </div>
+            <section class="margin-four main-col">
+                <div class="twelve cell">
+                </div>
+            </section>
+        </div>
+    </div>
 </div>

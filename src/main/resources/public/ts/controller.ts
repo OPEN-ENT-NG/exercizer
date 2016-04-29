@@ -34,25 +34,31 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 
 (window as any).AngularExtensions = {
     init: function(module){
-
-
+        /**
+         * Directives
+         */
+        
+        // SHARED
+        module.directive("editQuestionTitle", editQuestionTitle);
+        module.directive("editQuestionMaxScore", editQuestionMaxScore);
+        module.directive('editQuestionStatement', editQuestionStatement);
+        module.directive("editQuestionAddDocument", editQuestionAddDocument);
+        module.directive("editQuestionHint", editQuestionHint);
+        module.directive("editQuestionCorrection", editQuestionCorrection);
+        module.directive("exercizerHelp", exercizerHelp);
+        module.directive("subjectOrganizer", subjectOrganizer);
+        module.directive("subjectsTree", subjectsTree);
+        
+        // COMPONENT SAMPLE
+        module.directive('editSample', editSample);
+        
+        // COMPONENTS
+        module.directive("editOpenQuestion", editOpenQuestion);
 
         /**
          * Controllers
          */
         module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
-
-
-        /**
-         * Directives
-         */
-        module.directive("editOpenQuestion", editOpenQuestion);
-        module.directive("editQuestionTitle", editQuestionTitle);
-        module.directive("editQuestionMaxScore", editQuestionMaxScore);
-        module.directive("editQuestionAddDocument", editQuestionAddDocument);
-        module.directive("editQuestionHint", editQuestionHint);
-        module.directive("editQuestionCorrection", editQuestionCorrection);
-        module.directive("exercizerHelp", exercizerHelp);
     }
 };
 
