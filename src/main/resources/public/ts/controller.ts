@@ -20,11 +20,11 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
             template.open('main', 'teacher-home');
         },
         teacherSubjectCreate: function(params){
-            template.open('main', 'teacher-create');
+            template.open('main', 'teacher-subject-create');
 
         },
         teacherSubjectEdit: function(params){
-            template.open('main', 'teacher-edit');
+            template.open('main', 'teacher-subject-edit');
 
         }
     });
@@ -40,7 +40,9 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Controllers
          */
+
         module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
+        module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
 
 
         /**
