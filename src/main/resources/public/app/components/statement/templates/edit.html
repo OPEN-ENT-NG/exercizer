@@ -1,6 +1,21 @@
 <article>
-    <div class="two cell">&nbsp;</div>
-    <div class="ten cell">
-        <html-editor ng-model="htmlContent"></html-editor>
+    <div class="row">
+        <div class="one cell">
+            <div class="row">
+                <div class="twelve cell">
+                    <div class="edit-statement-icon paragraph">
+                        <img src="/exercizer/public/assets/img/paragraph.PNG">
+                    </div>
+                </div>
+                <div class="twelve cell">
+                    <div class="edit-statement-icon arrowLeft">
+                        <img src="/exercizer/public/assets/img/arrowLeft.PNG">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="eleven cell">
+            <html-editor class="edit-statement-html-editor" ng-model="htmlContent"></html-editor>
+        </div>
     </div>
 </article>
