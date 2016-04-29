@@ -24,6 +24,8 @@ class TeacherCreateSubjectCtrl {
 
     public clickSaveSubject(){
         console.log(this.subject);
+        this.$location.path('/teacher/subject/edit')
+
     }
 
 }

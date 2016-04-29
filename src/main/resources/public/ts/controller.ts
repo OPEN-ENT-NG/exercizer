@@ -50,11 +50,15 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
          */
         module.directive("editOpenQuestion", editOpenQuestion);
         module.directive("editQuestionTitle", editQuestionTitle);
+        module.directive("editQuestionStatement", editQuestionStatement);
         module.directive("editQuestionMaxScore", editQuestionMaxScore);
         module.directive("editQuestionAddDocument", editQuestionAddDocument);
         module.directive("editQuestionHint", editQuestionHint);
         module.directive("editQuestionCorrection", editQuestionCorrection);
         module.directive("exercizerHelp", exercizerHelp);
+        module.directive("exercizerFold", exercizerFold);
+
+
     }
 };
 
