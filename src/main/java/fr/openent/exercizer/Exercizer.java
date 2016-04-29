@@ -13,8 +13,8 @@ import org.vertx.java.core.json.JsonArray;
 
 public class Exercizer extends BaseServer {
 
-	private final String TABLE = "resource";
-	private final String SHARE_TABLE = "resource_shares";
+	private final String TABLE = "subject";
+	private final String SHARE_TABLE = "subject_shares";
 
 	@Override
 	public void start() {
