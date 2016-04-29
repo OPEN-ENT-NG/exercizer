@@ -35,20 +35,22 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 (window as any).AngularExtensions = {
     init: function(module){
 
-
-
         /**
          * Controllers
          */
-
         module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
         module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
 
 
         /**
-         * Directives
+         * Directives Exercise
          */
         module.directive("editOpenQuestion", editOpenQuestion);
+        module.directive("editStatement", editStatement);
+
+        /**
+         * Directive Partials
+         */
         module.directive("editQuestionTitle", editQuestionTitle);
         module.directive("editQuestionStatement", editQuestionStatement);
         module.directive("editQuestionMaxScore", editQuestionMaxScore);
@@ -57,7 +59,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.directive("editQuestionCorrection", editQuestionCorrection);
         module.directive("exercizerHelp", exercizerHelp);
         module.directive("exercizerFold", exercizerFold);
-
 
     }
 };
