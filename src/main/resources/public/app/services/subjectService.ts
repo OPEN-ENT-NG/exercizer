@@ -3,6 +3,7 @@
  */
 interface ISubjectService {
     createSubject(subject : ISubject, callbackSuccess, callBackFail) : ISubject;
+    updateSubject(subject : ISubject, callbackSuccess, callbackFail)
     getSubjectList(params, callbackSuccess, callbackFail);
     subjectList : ISubject[];
     isSetSubjectList : boolean;
@@ -14,18 +15,16 @@ class SubjectService implements ISubjectService {
         'serverUrl'
     ];
 
-    private _subjectList :ISubject[];
+    private _subjectList :[];
     private _isSetSubjectList : boolean;
 
     constructor(
         serverUrl
     ) {
-        console.log('SubjectService');
         this._isSetSubjectList = false;
         this._subjectList = [];
 
         this.serverUrl = serverUrl;
-        console.log(this.serverUrl);
     }
 
 
@@ -38,15 +37,46 @@ class SubjectService implements ISubjectService {
         return this._isSetSubjectList;
     }
 
+    /**
+     * Set isSetSubjectList is used to force refresh subject list
+      * @param value
+     */
+    public set isSetSubjectList(value:boolean) {
+        this._isSetSubjectList = value;
+    }
+
     public createSubject(subject : ISubject, callbackSuccess, callBackFail) : ISubject{
-        console.log('createSubject');
-        subject.id = Math.floor((Math.random() * 1000) + 1);
-        this.addSubjectToSubjectList(subject);
-        callbackSuccess(subject);
+        var self = this;
+        this._createSubject(
+            subject,
+            function(data){
+                self.addSubjectToSubjectList(subject);
+                callbackSuccess(data);
+            },
+            function(err){
+                console.error(err);
+            }
+        );
+    }
+
+    public updateSubject(subject : ISubject, callbackSuccess, callbackFail){
+        this._updateSubject(
+            subject,
+            function(data){
+                this.addSubjectToSubjectList(data);
+                callbackSuccess(data);
+            },
+            function(err){
+                console.error(err);
+            }
+        )
     }
 
     private addSubjectToSubjectList(subject : ISubject){
-        this._subjectList.push(subject);
+        if(this._subjectList[subject.id]){
+            // overwrite
+        }
+        this._subjectList[subject.id] = subject;
     }
 
     public getSubjectList(params, callbackSuccess, callbackFail){
@@ -56,6 +86,7 @@ class SubjectService implements ISubjectService {
         } else{
             this._getSubjectList(params,
                 function(data){
+                    self._subjectList = data;
                     self._isSetSubjectList = true;
                     callbackSuccess(data);
                 },
@@ -69,18 +100,19 @@ class SubjectService implements ISubjectService {
         var self = this;
         req = this.$http({
             method: 'GET',
-            url: self.serverUrl+'/subjects',
+            url: self.serverUrl+'/subjects/get',
             params: {
-                "user_id": params.user_id.id,
+                "user_id": params.user.id,
             },
             paramSerializer: '$httpParamSerializerJQLike'
         });
         req
             .success(function (data, status, headers, config) {
                 if (status == 200) {
+                    // DATA  : list of subject
                     callbackSuccess(data);
                 } else{
-                    callbackSuccess(data);
+                    callbackFail(data);
                 }
             })
             .error(function (data, status, headers, config) {
@@ -90,6 +122,71 @@ class SubjectService implements ISubjectService {
                 console.error(config);
                 callbackFail(data);
             });
+    }
+
+    private _updateSubject(subject : ISubject, callbackSuccess, callbackFail){
+        var req: any;
+        var self = this;
+        req = this.$http({
+            method: 'POST',
+            url: self.serverUrl+'/subjects/update/' + subject.id,
+            params: {
+                "subject": subject,
+            },
+            paramSerializer: '$httpParamSerializerJQLike'
+        });
+        req
+            .success(function (data, status, headers, config) {
+                if (status == 200) {
+                    // DATA : subject
+                    callbackSuccess(data);
+                } else{
+                    callbackFail(data);
+                }
+            })
+            .error(function (data, status, headers, config) {
+                console.error(data);
+                console.error(status);
+                console.error(headers);
+                console.error(config);
+                callbackFail(data);
+            });
+    }
+
+    private _createSubject(subject : ISubject, callbackSuccess, callbackFail){
+        /**
+         * TEMP
+         */
+        subject.id = Math.floor((Math.random() * 1000) + 1);
+        callbackSuccess(subject);
+        /*
+        var req: any;
+        var self = this;
+        req = this.$http({
+            method: 'POST',
+            url: self.serverUrl+'/subjects/create/',
+            params: {
+                "subject": subject,
+            },
+            paramSerializer: '$httpParamSerializerJQLike'
+        });
+        req
+            .success(function (data, status, headers, config) {
+                if (status == 200) {
+                    // DATA : subject
+                    callbackSuccess(data);
+                } else{
+                    callbackFail(data);
+                }
+            })
+            .error(function (data, status, headers, config) {
+                console.error(data);
+                console.error(status);
+                console.error(headers);
+                console.error(config);
+                callbackFail(data);
+            });
+    */
     }
 
 
