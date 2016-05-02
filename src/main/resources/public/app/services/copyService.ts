@@ -5,8 +5,6 @@
  * Created by jun on 22/04/2016.
  */
 interface ICopyService {
-    createCopy(copy : ISubjectCopy, callbackSuccess, callBackFail);
-    updateCopy(copy : ISubjectCopy, callbackSuccess, callbackFail)
     getCopyList(params, callbackSuccess, callbackFail);
     copyList : ISubjectCopy[];
     isSetCopyList : boolean;
@@ -56,32 +54,6 @@ class CopyService implements ICopyService {
         this._isSetCopyList = value;
     }
 
-    public createCopy(copy : ISubjectCopy, callbackSuccess, callBackFail){
-        var self = this;
-        this._createCopy(
-            copy,
-            function(data){
-                self.addCopyToCopyList(copy);
-                callbackSuccess(data);
-            },
-            function(err){
-                console.error(err);
-            }
-        );
-    }
-
-    public updateCopy(copy : ISubjectCopy, callbackSuccess, callbackFail){
-        this._updateCopy(
-            copy,
-            function(data){
-                this.addCopyToCopyList(data);
-                callbackSuccess(data);
-            },
-            function(err){
-                console.error(err);
-            }
-        )
-    }
 
     private addCopyToCopyList(copy : ISubjectCopy){
         if(this._copyList[copy.id]){
@@ -134,72 +106,4 @@ class CopyService implements ICopyService {
                 callbackFail(data);
             });
     }
-
-    private _updateCopy(copy : ISubjectCopy, callbackSuccess, callbackFail){
-        var req: any;
-        var self = this;
-        req = this.$http({
-            method: 'POST',
-            url: self.serverUrl+'/copies/update/' + copy.id,
-            params: {
-                "copy": copy,
-            },
-            paramSerializer: '$httpParamSerializerJQLike'
-        });
-        req
-            .success(function (data, status, headers, config) {
-                if (status == 200) {
-                    // DATA : copy
-                    callbackSuccess(data);
-                } else{
-                    callbackFail(data);
-                }
-            })
-            .error(function (data, status, headers, config) {
-                console.error(data);
-                console.error(status);
-                console.error(headers);
-                console.error(config);
-                callbackFail(data);
-            });
-    }
-
-    private _createCopy(copy : ISubjectCopy, callbackSuccess, callbackFail){
-        /**
-         * TEMP
-         */
-        copy.id = Math.floor((Math.random() * 1000) + 1);
-        callbackSuccess(copy);
-        /*
-         var req: any;
-         var self = this;
-         req = this.$http({
-         method: 'POST',
-         url: self.serverUrl+'/copies/create/',
-         params: {
-         "copy": copy,
-         },
-         paramSerializer: '$httpParamSerializerJQLike'
-         });
-         req
-         .success(function (data, status, headers, config) {
-         if (status == 200) {
-         // DATA : copy
-         callbackSuccess(data);
-         } else{
-         callbackFail(data);
-         }
-         })
-         .error(function (data, status, headers, config) {
-         console.error(data);
-         console.error(status);
-         console.error(headers);
-         console.error(config);
-         callbackFail(data);
-         });
-         */
-    }
-
-
-
 }
