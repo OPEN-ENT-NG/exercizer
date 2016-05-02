@@ -8,23 +8,33 @@ class TeacherCreateSubjectCtrl {
 
     static $inject = [
         '$location',
+        'SubjectService',
     ];
-
-    public subject : any;
+    public subject : ISubject;
+    private subjectService;
 
     constructor(
-        $location
-
+        $location,
+        SubjectService
     ) {
-        this.$location = $location;
         console.log('TeacherCreateSubjectCtrl');
-        this.subject = {};
+        this.$location = $location;
+        this.subjectService = SubjectService;
+
     }
 
 
     public clickSaveSubject(){
-        console.log(this.subject);
-        this.$location.path('/teacher/subject/edit')
+        var self = this;
+        this.subjectService.createSubject(
+            this.subject,
+            function(data){
+                self.$location.path('/teacher/subject/edit')
+            },
+            function(err){
+                console.error(err);
+            }
+        );
 
     }
 

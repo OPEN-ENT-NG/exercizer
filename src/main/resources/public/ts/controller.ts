@@ -36,11 +36,23 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
     init: function(module){
 
         /**
+         * Constants
+         */
+
+        // TODO define url server
+        module.constant("serverUrl", "http://foo.com");
+
+
+        /**
          * Controllers
          */
         module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
         module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
 
+        /**
+         * Service
+         */
+        module.service('SubjectService', SubjectService);
 
         /**
          * Directives Exercise

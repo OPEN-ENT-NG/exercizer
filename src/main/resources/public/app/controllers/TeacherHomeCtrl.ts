@@ -4,7 +4,7 @@
 
 class TeacherHomeCtrl {
 
-    private $state:ng.ui.IStateService;
+    private $location;
 
 
     static $inject = [
