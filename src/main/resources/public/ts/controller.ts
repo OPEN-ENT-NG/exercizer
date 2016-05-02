@@ -77,7 +77,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.directive("editQuestionAddDocument", editQuestionAddDocument);
         module.directive("editQuestionHint", editQuestionHint);
         module.directive("editQuestionCorrection", editQuestionCorrection);
-        module.directive("addOnElement", addOnElement);
         module.directive("exercizerHelp", exercizerHelp);
         module.directive("exercizerFold", exercizerFold);
 

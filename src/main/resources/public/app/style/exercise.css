@@ -1,3 +1,8 @@
 .edit-statement-html-editor{
     height: 300px;
 }
+
+.buttonAddOneElement{
+    width: 100%;
+    background: #1D9CCB;
+}
