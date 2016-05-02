@@ -3,8 +3,9 @@
  */
 interface ISubjectService {
     createSubject(subject : ISubject, callbackSuccess, callBackFail) : ISubject;
-    subjectList : ISubject[];
     getSubjectList(params, callbackSuccess, callbackFail);
+    subjectList : ISubject[];
+    isSetSubjectList : boolean;
 }
 
 class SubjectService implements ISubjectService {
@@ -30,6 +31,11 @@ class SubjectService implements ISubjectService {
 
     public get subjectList():ISubject[] {
         return this._subjectList;
+    }
+
+
+    public get isSetSubjectList():boolean {
+        return this._isSetSubjectList;
     }
 
     public createSubject(subject : ISubject, callbackSuccess, callBackFail) : ISubject{
