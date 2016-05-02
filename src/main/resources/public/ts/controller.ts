@@ -14,6 +14,10 @@ routes.define(function($routeProvider){
         });
 });
 
+var directives = [];
+var controllers = [];
+var services = [];
+
 function ExercizerController($scope, $rootScope, model, template, route, date, $route){
     route({
         teacherHome: function(params){
@@ -38,37 +42,42 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Constants
          */
-
-        // TODO define url server
+         // TODO define url server
         module.constant("serverUrl", "http://foo.com");
 
+        /**
+         * Directives
+         */
+        directives.forEach((item) => {
+            module.directive(item.name, item.injections);
+        });
 
         /**
          * Controllers
          */
+        controllers.forEach((item) => {
+            module.controller(item.name, item.injections);
+        });
+
+        /**
+         * Services
+         */
+        services.forEach((item) => {
+            module.service(item.name, item.injections);
+        });
+
+        // TODO clean
         module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
         module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
-
-        /**
-         * Service
-         */
         module.service('SubjectService', SubjectService);
-
-        /**
-         * Directives Exercise
-         */
-        module.directive("editOpenQuestion", editOpenQuestion);
         module.directive("editStatement", editStatement);
-
-        /**
-         * Directive Partials
-         */
         module.directive("editQuestionTitle", editQuestionTitle);
         module.directive("editQuestionStatement", editQuestionStatement);
         module.directive("editQuestionMaxScore", editQuestionMaxScore);
         module.directive("editQuestionAddDocument", editQuestionAddDocument);
         module.directive("editQuestionHint", editQuestionHint);
         module.directive("editQuestionCorrection", editQuestionCorrection);
+        module.directive("addOnElement", addOnElement);
         module.directive("exercizerHelp", exercizerHelp);
         module.directive("exercizerFold", exercizerFold);
 
