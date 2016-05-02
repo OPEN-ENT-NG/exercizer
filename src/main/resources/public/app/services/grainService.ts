@@ -2,7 +2,7 @@
  * Created by jun on 22/04/2016.
  */
 interface IGrainService {
-    createGrain(grain : IGrain, callbackSuccess, callBackFail) : IGrain;
+    createGrain(grain : IGrain, callbackSuccess, callBackFail);
     updateGrain(grain : IGrain, callbackSuccess, callbackFail)
     getGrainList(params, callbackSuccess, callbackFail);
     grainList : IGrain[];
@@ -12,19 +12,25 @@ interface IGrainService {
 class GrainService implements IGrainService {
 
     static $inject = [
-        'serverUrl'
+        'serverUrl',
+        '$http'
     ];
 
-    private _grainList :[];
+    private serverUrl : string;
+    private $http : any;
+
+    private _grainList :IGrain[];
     private _isSetGrainList : boolean;
 
     constructor(
-        serverUrl
+        serverUrl,
+        $http
     ) {
+        this.serverUrl = serverUrl;
+        this.$http = $http;
+
         this._isSetGrainList = false;
         this._grainList = [];
-
-        this.serverUrl = serverUrl;
     }
 
 
@@ -45,7 +51,7 @@ class GrainService implements IGrainService {
         this._isSetGrainList = value;
     }
 
-    public createGrain(grain : IGrain, callbackSuccess, callBackFail) : IGrain{
+    public createGrain(grain : IGrain, callbackSuccess, callBackFail){
         var self = this;
         this._createGrain(
             grain,

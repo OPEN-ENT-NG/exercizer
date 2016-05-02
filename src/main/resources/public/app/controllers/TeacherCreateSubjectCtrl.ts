@@ -4,7 +4,7 @@
 
 class TeacherCreateSubjectCtrl {
 
-    private $state:ng.ui.IStateService;
+    private $location;
 
     static $inject = [
         '$location',

@@ -2,7 +2,7 @@
  * Created by jun on 22/04/2016.
  */
 interface ISubjectService {
-    createSubject(subject : ISubject, callbackSuccess, callBackFail) : ISubject;
+    createSubject(subject : ISubject, callbackSuccess, callBackFail);
     updateSubject(subject : ISubject, callbackSuccess, callbackFail)
     getSubjectList(params, callbackSuccess, callbackFail);
     subjectList : ISubject[];
@@ -12,19 +12,26 @@ interface ISubjectService {
 class SubjectService implements ISubjectService {
 
     static $inject = [
-        'serverUrl'
+        'serverUrl',
+        '$http'
     ];
 
-    private _subjectList :[];
+    private serverUrl : string;
+    private $http : any;
+
+    private _subjectList :ISubject[];
     private _isSetSubjectList : boolean;
 
     constructor(
-        serverUrl
+        serverUrl,
+        $http
     ) {
+        this.serverUrl = serverUrl;
+        this.$http = $http;
+
         this._isSetSubjectList = false;
         this._subjectList = [];
 
-        this.serverUrl = serverUrl;
     }
 
 
@@ -45,7 +52,7 @@ class SubjectService implements ISubjectService {
         this._isSetSubjectList = value;
     }
 
-    public createSubject(subject : ISubject, callbackSuccess, callBackFail) : ISubject{
+    public createSubject(subject : ISubject, callbackSuccess, callBackFail){
         var self = this;
         this._createSubject(
             subject,

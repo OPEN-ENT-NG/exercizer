@@ -5,33 +5,41 @@
  * Created by jun on 22/04/2016.
  */
 interface ICopyService {
-    createCopy(copy : ICopy, callbackSuccess, callBackFail) : ICopy;
-    updateCopy(copy : ICopy, callbackSuccess, callbackFail)
+    createCopy(copy : ISubjectCopy, callbackSuccess, callBackFail);
+    updateCopy(copy : ISubjectCopy, callbackSuccess, callbackFail)
     getCopyList(params, callbackSuccess, callbackFail);
-    copyList : ICopy[];
+    copyList : ISubjectCopy[];
     isSetCopyList : boolean;
 }
 
 class CopyService implements ICopyService {
 
     static $inject = [
-        'serverUrl'
+        'serverUrl',
+        '$http'
     ];
 
-    private _copyList :[];
+    private serverUrl : string;
+    private $http : any;
+
+    private _copyList :ISubjectCopy[];
     private _isSetCopyList : boolean;
 
+
     constructor(
-        serverUrl
+        serverUrl,
+        $http
     ) {
+        this.serverUrl = serverUrl;
+        this.$http = $http;
+
         this._isSetCopyList = false;
         this._copyList = [];
 
-        this.serverUrl = serverUrl;
     }
 
 
-    public get copyList():ICopy[] {
+    public get copyList():ISubjectCopy[] {
         return this._copyList;
     }
 
@@ -48,7 +56,7 @@ class CopyService implements ICopyService {
         this._isSetCopyList = value;
     }
 
-    public createCopy(copy : ICopy, callbackSuccess, callBackFail) : ICopy{
+    public createCopy(copy : ISubjectCopy, callbackSuccess, callBackFail){
         var self = this;
         this._createCopy(
             copy,
@@ -62,7 +70,7 @@ class CopyService implements ICopyService {
         );
     }
 
-    public updateCopy(copy : ICopy, callbackSuccess, callbackFail){
+    public updateCopy(copy : ISubjectCopy, callbackSuccess, callbackFail){
         this._updateCopy(
             copy,
             function(data){
@@ -75,7 +83,7 @@ class CopyService implements ICopyService {
         )
     }
 
-    private addCopyToCopyList(copy : ICopy){
+    private addCopyToCopyList(copy : ISubjectCopy){
         if(this._copyList[copy.id]){
             // overwrite
         }
@@ -127,7 +135,7 @@ class CopyService implements ICopyService {
             });
     }
 
-    private _updateCopy(copy : ICopy, callbackSuccess, callbackFail){
+    private _updateCopy(copy : ISubjectCopy, callbackSuccess, callbackFail){
         var req: any;
         var self = this;
         req = this.$http({
@@ -156,7 +164,7 @@ class CopyService implements ICopyService {
             });
     }
 
-    private _createCopy(copy : ICopy, callbackSuccess, callbackFail){
+    private _createCopy(copy : ISubjectCopy, callbackSuccess, callbackFail){
         /**
          * TEMP
          */
