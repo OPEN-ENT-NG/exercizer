@@ -5,8 +5,7 @@ interface IGrain {
     id: number;
     subject_id : number;
     grain_type_id : number;
-    next_grain_id : number;
-    previous_grain_id : number;
+    order : number;
     original_grain_id : number;
     created : string;
     modified : string;
