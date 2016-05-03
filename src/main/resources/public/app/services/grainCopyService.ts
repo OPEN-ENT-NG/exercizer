@@ -3,7 +3,6 @@
  */
 interface IGrainCopyService {
     getGrainCopyListBySubjectId(subject_id, callbackSuccess, callbackFail);
-    reorderGrainCopy(grainCopy, array_grainCopy);
     grainCopyListBySubjectId(subject_id) : IGrainCopy[];
     isSetGrainCopyListBySubjectId(subject_id) : boolean;
 }

@@ -34,8 +34,9 @@ class UserService implements IUserService {
     }
 
 
-    public userById(user_id):IUser {
-        return this.isSetUserById(user_id)? this.userList[user_id] : {};
+    //return IUser or empty object
+    public userById(user_id) {
+        return this.isSetUserById(user_id)? this._userList[user_id] : {};
     }
 
 
