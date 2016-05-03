@@ -14,17 +14,21 @@ routes.define(function($routeProvider){
         });
 });
 
+var directives = [];
+var controllers = [];
+var services = [];
+
 function ExercizerController($scope, $rootScope, model, template, route, date, $route){
     route({
         teacherHome: function(params){
             template.open('main', 'teacher-home');
         },
         teacherSubjectCreate: function(params){
-            template.open('main', 'teacher-create');
+            template.open('main', 'teacher-subject-create');
 
         },
         teacherSubjectEdit: function(params){
-            template.open('main', 'teacher-edit');
+            template.open('main', 'teacher-subject-edit');
 
         }
     });
@@ -34,31 +38,48 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 
 (window as any).AngularExtensions = {
     init: function(module){
+
+        /**
+         * Constants
+         */
+         // TODO define url server
+        module.constant("serverUrl", "http://foo.com");
+
         /**
          * Directives
          */
-        
-        // SHARED
-        module.directive("editQuestionTitle", editQuestionTitle);
-        module.directive("editQuestionMaxScore", editQuestionMaxScore);
-        module.directive('editQuestionStatement', editQuestionStatement);
-        module.directive("editQuestionAddDocument", editQuestionAddDocument);
-        module.directive("editQuestionHint", editQuestionHint);
-        module.directive("editQuestionCorrection", editQuestionCorrection);
-        module.directive("exercizerHelp", exercizerHelp);
-        module.directive("subjectOrganizer", subjectOrganizer);
-        module.directive("subjectsTree", subjectsTree);
-        
-        // COMPONENT SAMPLE
-        module.directive('editSample', editSample);
-        
-        // COMPONENTS
-        module.directive("editOpenQuestion", editOpenQuestion);
+        directives.forEach((item) => {
+            module.directive(item.name, item.injections);
+        });
 
         /**
          * Controllers
          */
+        controllers.forEach((item) => {
+            module.controller(item.name, item.injections);
+        });
+
+        /**
+         * Services
+         */
+        services.forEach((item) => {
+            module.service(item.name, item.injections);
+        });
+
+        // TODO clean
         module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
+        module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
+        module.service('SubjectService', SubjectService);
+        module.directive("editStatement", editStatement);
+        module.directive("editQuestionTitle", editQuestionTitle);
+        module.directive("editQuestionStatement", editQuestionStatement);
+        module.directive("editQuestionMaxScore", editQuestionMaxScore);
+        module.directive("editQuestionAddDocument", editQuestionAddDocument);
+        module.directive("editQuestionHint", editQuestionHint);
+        module.directive("editQuestionCorrection", editQuestionCorrection);
+        module.directive("exercizerHelp", exercizerHelp);
+        module.directive("exercizerFold", exercizerFold);
+
     }
 };
 
