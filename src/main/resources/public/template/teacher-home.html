@@ -1,35 +1,25 @@
 <div data-ng-controller="TeacherHomeCtrl as teacherHomeCtrl">
-    <div class="row rigid-grid">
-        <section class="four cell">
-            <app-title class="zero-mobile">
-                <h1 class="application-title move-right">
-                    <a data-reload="">
-                        <i class="conversation"></i>
-                        <span class="no-style">Exercizer</span>
-                    </a>
-                </h1>
-            </app-title>
-        </section>
+    <div class="row">
+        <h1 class="cell">
+            Exercizer
+        </h1>
     </div>
     <div class="row">
-        <div class="right-magnet cell">
-            <button data-ng-click="teacherHomeCtrl.clickCreateNewSubject()">Nouveau sujet</button>
-        </div>
+        <button class="right-magnet cell" data-ng-click="teacherHomeCtrl.clickCreateNewSubject()">
+            Nouveau sujet
+        </button>
     </div>
     <div class="row">
-        <div class="row rigid-grid">
-            <div class="four cell side-col twelve-mobile">
+        <section class="four cell vertical">
+            <nav class="vertical">
                 <subjects-tree></subjects-tree>
-                <nav class="vertical half-stamps mobile-navigation side-nav" data-side-nav="" style="height: auto;">
-                    <a class="classic-link cell">
-                        <i18n><span class="no-style">Créer un dossier</span></i18n>
-                    </a>
-                </nav>
-            </div>
-            <section class="margin-four main-col">
-                <div class="twelve cell">
-                </div>
-            </section>
-        </div>
+                <a class="classic-link cell">
+                    Créer un dossier
+                </a>
+            </nav>
+        </section>
+        <section class="eight cell">
+            <h1>TEST</h1>
+        </section>
     </div>
 </div>
