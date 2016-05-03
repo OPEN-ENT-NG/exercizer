@@ -2,9 +2,9 @@
  * Created by jun on 22/04/2016.
  */
 interface IGrainCopyService {
-    getGrainCopyListBySubjectCopyId(subject_copy_id, callbackSuccess, callbackFail);
-    grainCopyList : ISubjectGrainCopy[];
-    isSetGrainCopyList : boolean;
+    getGrainCopyListBySubjectId(subject_id, callbackSuccess, callbackFail);
+    grainCopyListBySubjectId(subject_id) : IGrainCopy[];
+    isSetGrainCopyListBySubjectId(subject_id) : boolean;
 }
 
 class GrainCopyService implements IGrainCopyService {
@@ -14,60 +14,40 @@ class GrainCopyService implements IGrainCopyService {
         '$http'
     ];
 
-    private serverUrl : string;
-    private $http : any;
+    private serverUrl:string;
+    private $http:any;
 
-    private _grainCopyList :ISubjectGrainCopy[];
-    private _isSetGrainCopyList : boolean;
+    private _grainCopyList:IGrainCopy[][];
+    private _isSetGrainCopyList:boolean[];
 
-
-    constructor(
-        serverUrl,
-        $http
-    ) {
+    constructor(serverUrl,
+                $http) {
         this.serverUrl = serverUrl;
         this.$http = $http;
 
-        this._isSetGrainCopyList = false;
         this._grainCopyList = [];
-
+        this._isSetGrainCopyList = [];
     }
 
 
-    public get grainCopyList():ISubjectGrainCopy[] {
-        return this._grainCopyList;
+    public grainCopyListBySubjectId(subject_id):IGrainCopy[] {
+        return this._isSetGrainCopyList[subject_id] ? this._grainCopyList[subject_id] : [];
     }
 
 
-    public get isSetGrainCopyList():boolean {
-        return this._isSetGrainCopyList;
+    public isSetGrainCopyListBySubjectId(subject_id):boolean {
+        return !!this._isSetGrainCopyList[subject_id];
     }
 
-    /**
-     * Set isSetGrainCopyList is used to force refresh grainCopy list
-     * @param value
-     */
-    public set isSetGrainCopyList(value:boolean) {
-        this._isSetGrainCopyList = value;
-    }
-
-
-    private addGrainCopyToGrainCopyList(grainCopy : ISubjectGrainCopy){
-        if(this._grainCopyList[grainCopy.id]){
-            // overwrite
-        }
-        this._grainCopyList[grainCopy.id] = grainCopy;
-    }
-
-    public getGrainCopyList(params, callbackSuccess, callbackFail){
+    public getGrainCopyListBySubjectId(subject_id, callbackSuccess, callbackFail) {
         var self = this;
-        if(this._isSetGrainCopyList){
-            callbackSuccess(this._grainCopyList)
-        } else{
-            this._getGrainCopyList(params,
-                function(data){
-                    self._grainCopyList = data;
-                    self._isSetGrainCopyList = true;
+        if (this._isSetGrainCopyList[subject_id]) {
+            callbackSuccess(this._grainCopyList[subject_id])
+        } else {
+            this._getGrainCopyListBySubjectId(subject_id,
+                function (data) {
+                    self._grainCopyList[subject_id] = data;
+                    self._isSetGrainCopyList[subject_id] = true;
                     callbackSuccess(data);
                 },
                 callbackFail()
@@ -75,14 +55,18 @@ class GrainCopyService implements IGrainCopyService {
         }
     }
 
-    private _getGrainCopyList(params, callbackSuccess, callbackFail){
-        var req: any;
+    /**
+     *  PRIVATE HTTP
+     */
+
+    private _getGrainCopyListBySubjectId(subject_id, callbackSuccess, callbackFail) {
+        var req:any;
         var self = this;
         req = this.$http({
             method: 'GET',
-            url: self.serverUrl+'/copies/get',
+            url: self.serverUrl + '/grainCopies/get',
             params: {
-                "user_id": params.user.id,
+                "subject_id": subject_id,
             },
             paramSerializer: '$httpParamSerializerJQLike'
         });
@@ -91,7 +75,7 @@ class GrainCopyService implements IGrainCopyService {
                 if (status == 200) {
                     // DATA  : list of grainCopy
                     callbackSuccess(data);
-                } else{
+                } else {
                     callbackFail(data);
                 }
             })
@@ -103,4 +87,5 @@ class GrainCopyService implements IGrainCopyService {
                 callbackFail(data);
             });
     }
+
 }
