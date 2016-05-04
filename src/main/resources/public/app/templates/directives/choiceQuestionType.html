@@ -1,0 +1,15 @@
+<article class="choice-question-type">
+    <div class="row">
+        <div class="one cell"><exercizer-help></exercizer-help></div>
+        <div class="eleven cell">Choisisser un question ...</div>
+    </div>
+
+    <div class="row">
+        <div class="one cell">
+            <img src="/exercizer/public/assets/img/arrowLeft.PNG">
+        </div>
+        <div class="one cell" ng-repeat="type in questionTypeList()">
+            <div data-ng-click="choiceQuestionType(type)">{{type.publicName}}</div>
+        </div>
+    </div>
+</article>

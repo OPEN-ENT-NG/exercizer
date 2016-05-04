@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var ts = require('gulp-typescript');
 
 var tsProject = ts.createProject('./tsconfig.json');
-var springboardModsPath = "/Users/jun/Sites/web-education/mods/fr.openent~exercizer~0.1-SNAPSHOT";
+var springboardModsPath = "C:/Users/Thibault_/Documents/springboard-opent-ent/mods/fr.openent~exercizer~0.1-SNAPSHOT"
 
 gulp.task('compile', function(){
     var tsResult = tsProject.src()

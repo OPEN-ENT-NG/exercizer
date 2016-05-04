@@ -14,7 +14,8 @@ directives.push(
                 }
             };
         }]
-});
+    }
+);
 
 
 

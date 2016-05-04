@@ -1,0 +1,9 @@
+.statement-or-question .text{
+    color: grey;
+    font-size: large;
+
+}
+
+.statement-or-question .image{
+    text-align: center;
+}

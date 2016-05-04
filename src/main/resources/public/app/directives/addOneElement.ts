@@ -4,11 +4,15 @@
 directives.push(
     {
         name: "addOneElement",
-        injections: [ () => {
+        injections: ['GrainCreationService', (GrainCreationService) => {
             return {
                 restrict: "E",
                 templateUrl: 'exercizer/public/app/templates/directives/addOneElement.html',
                 link:(scope : any, element, attrs) => {
+
+                    scope.createNewGrainCreation =function(){
+                        GrainCreationService.createNewGrainCreation();
+                    }
                 }
             };
         }]

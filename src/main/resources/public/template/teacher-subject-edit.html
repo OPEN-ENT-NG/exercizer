@@ -1,25 +1,44 @@
-<div class="row">
-    <h1 class="cell">
-        Exercizer - titre de mon sujet
-    </h1>
-    <button class="right-magnet cell">
-        Programmer
-    </button>
-</div>
-<div class="row">
-    <section class="four cell vertical">
-        <nav class="vertical">
-            <article>
-                <subject-organizer></subject-organizer>
-            </article>
-            <article>
-                <subjects-tree></subjects-tree>
-            </article>
-        </nav>
-    </section>
-    <section class="eight cell">
-        <edit-statement></edit-statement>
-        <edit-open-question></edit-open-question>
-        <add-one-element></add-one-element>
-    </section>
+<div data-ng-controller="TeacherEditSubjectCtrl as teacherEditSubjectCtrl">
+    <div class="row">
+        <h1 class="cell">
+            Exercizer - titre de mon sujet
+        </h1>
+        <button class="right-magnet cell">
+            Programmer
+        </button>
+    </div>
+    <div class="row">
+        <section class="four cell vertical">
+            <nav class="vertical">
+                <article>
+                    <subject-organizer></subject-organizer>
+                </article>
+                <article>
+                    <subjects-tree></subjects-tree>
+                </article>
+            </nav>
+        </section>
+        <section class="eight cell">
+            <div ng-repeat="item in teacherEditSubjectCtrl.itemGrainCreationList">
+                <div ng-switch="item.typeCreation">
+                    <div ng-switch-when="new">
+                        <statement-or-question item="item"></statement-or-question>
+                    </div>
+                    <div ng-switch-when="statement">
+                        <edit-statement></edit-statement>
+                    </div>
+                    <div ng-switch-when="newQuestion">
+                        <choice-question-type  item="item"></choice-question-type>
+                    </div>
+                    <div ng-switch-when="exercise">
+                        <exercise-list-teacher-edit item="item"></exercise-list-teacher-edit>
+                    </div>
+                    <div ng-switch-default>Default</div>
+                </div>
+            </div>
+            <!--
+            <edit-open-question></edit-open-question> -->
+            <add-one-element></add-one-element>
+        </section>
+    </div>
 </div>
