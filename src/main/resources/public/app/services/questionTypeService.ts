@@ -42,9 +42,9 @@ class QuestionTypeService implements IQuestionTypeService {
                 picture : "http://www.barmitzvah-online.com/wp-content/uploads/2013/12/question-300x300.jpg"
             },
             {
-                name : "openQuestion",
-                publicName : "Question Libre",
-                directiveName : "open-question",
+                name : "simpleAnswer",
+                publicName : "Réponse Simple",
+                directiveName : "edit-simple-answer",
                 picture : "http://www.barmitzvah-online.com/wp-content/uploads/2013/12/question-300x300.jpg"
             }
         ];

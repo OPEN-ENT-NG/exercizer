@@ -9,7 +9,7 @@ directives.push(
         injections: [ () => {
             return {
                 restrict: "E",
-                templateUrl: 'exercizer/public/app/components/openQuestion/templates/edit.html',
+                templateUrl: 'exercizer/public/app/components/open_question/templates/edit.html',
                 link:(scope : any, element, attrs) => {
                 }
             };
