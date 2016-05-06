@@ -54,6 +54,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('SimpleAnswerService', SimpleAnswerService);
         module.service('GrainCopyService', GrainCopyService);
         module.service('GrainScheduledService', GrainScheduledService);
+        module.service('StatementService', StatementService);
 
         /**
          * Controllers
@@ -71,7 +72,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 
 
         // TODO clean
-        module.directive("editStatement", editStatement);
         module.directive("editQuestionTitle", editQuestionTitle);
         module.directive("editQuestionStatement", editQuestionStatement);
         module.directive("editQuestionMaxScore", editQuestionMaxScore);
