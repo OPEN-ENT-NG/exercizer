@@ -9,6 +9,8 @@ directives.push(
         injections: [ () => {
             return {
                 restrict: "E",
+                controller: 'EditSimpleAnswerCtrl',
+                controllerAs: 'editSimpleAnswerCtrl',
                 templateUrl: 'exercizer/public/app/components/simple_answer/templates/edit.html',
                 link:(scope : any, element, attrs) => {
                 }

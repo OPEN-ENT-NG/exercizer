@@ -30,6 +30,9 @@ class GrainService implements IGrainService {
 
         this._grainList = [];
         this._isSetGrainList = [];
+
+        // TODO delete that after dev !
+        this._isSetGrainList[1] = true;
     }
 
 
@@ -42,18 +45,81 @@ class GrainService implements IGrainService {
         return !!this._isSetGrainList[subject_id];
     }
 
+    public createObjectGrain() :IGrain{
+        return {
+            id: null,
+            subject_id: null,
+            grain_type_id: null,
+            order: null,
+            original_grain_id: null,
+            created: new Date().toISOString(),
+            modified: new Date().toISOString(),
+            grain_data: {},
+            is_library_grain: null
+        }
+    }
+
     public createGrain(grain:IGrain, callbackSuccess, callBackFail) {
         var self = this;
         this._createGrain(
             grain,
             function (data) {
                 self.addGrainToGrainList(grain);
+                if(!self.hasGrainOrder(grain)){
+                    self.setOrderToThisGrain(grain);
+                } else{
+                    // this grain have order yet
+                }
                 callbackSuccess(data);
             },
             function (err) {
                 console.error(err);
             }
         );
+    }
+
+    private hasGrainOrder(grain : IGrain){
+        return !! grain.order;
+    }
+
+    /**
+     * The grain will be the last (order) of the list
+     * @param grain
+     */
+    private setOrderToThisGrain(grain : IGrain){
+        if(!this._grainList[grain.subject_id]){
+            // not possible
+           throw "List not found"
+        }
+        var max_order = null;
+        angular.forEach(this._grainList[grain.subject_id], function(item_grain) {
+            if(item_grain.order){
+                if(item_grain.order > max_order){
+                    max_order = item_grain.order;
+                }
+                if(item_grain.order > max_order){
+                    // not possible
+                    throw "Two grain have the same order"
+                }
+            } else{
+                // not possible
+                if(grain.id == item_grain.id){
+                    // the params grain have not a order yet
+                } else{
+                    console.error(grain);
+                    throw "A grain have no order"
+                }
+
+            }
+        });
+        var new_order : number;
+        if(max_order){
+            new_order = parseFloat(max_order) + 1;
+        } else {
+            new_order = 1;
+        }
+        // set
+        grain.order = new_order;
     }
 
     public updateGrain(grain:IGrain, callbackSuccess, callbackFail) {
@@ -70,6 +136,9 @@ class GrainService implements IGrainService {
     }
 
     private addGrainToGrainList(grain:IGrain) {
+        if(!this._grainList[grain.subject_id]){
+            this._grainList[grain.subject_id] = [];
+        }
         if (this._grainList[grain.subject_id][grain.id]) {
             // overwrite
         }
@@ -108,7 +177,7 @@ class GrainService implements IGrainService {
             if(oneIterationAfterMatch == true){
                 // one iteration after match current grain
                 next = item_grain;
-                oneIterationAfterMatch == false;
+                oneIterationAfterMatch = false;
             }
             currentPrevious = item_grain;
         });

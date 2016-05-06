@@ -4,25 +4,45 @@
 
 class TeacherEditSubjectCtrl {
 
-    private $location;
-
     static $inject = [
-        'GrainCreationService'
+        'GrainService',
+        'SubjectService',
+        'GrainTypeService'
+
     ];
 
-    private grainCreationService;
+    private grainService;
+    private subjectService;
+    private grainTypeService;
 
     constructor(
-        GrainCreationService
+        GrainService,
+        SubjectService,
+        GrainTypeService
 
     ) {
-        console.log('TeacherEditSubjectCtrl');
-        this.grainCreationService = GrainCreationService;
-
+        this.grainService = GrainService;
+        this.subjectService = SubjectService;
+        this.grainTypeService = GrainTypeService;
     }
 
-    public get itemGrainCreationList():IGrainCreation[] {
-        return this.grainCreationService.grainCreationList;
+    public get grainListByCurrentSubject() {
+        var subject_id = this.subjectService.currentSubjectId;
+        return this.grainService.grainListBySubjectId(subject_id);
+    }
+
+    public isNewGrain(grain : IGrain){
+        if(grain){
+            if(grain.grain_type_id){
+                return "grain";
+            } else{
+                return "new";
+            }
+        }
+    }
+
+    public getTypeNameByTypeId(id : number){
+        return this.grainTypeService.getTypeNameByTypeId(id);
     }
 }
 

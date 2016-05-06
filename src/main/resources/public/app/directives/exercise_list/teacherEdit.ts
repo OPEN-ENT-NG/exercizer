@@ -4,15 +4,18 @@
 directives.push(
     {
         name: "exerciseListTeacherEdit",
-        injections: ['GrainCreationService', (GrainCreationService) => {
+        injections: ['GrainTypeService', (GrainTypeService) => {
             return {
                 restrict: "E",
                 scope : {
-                  item : "="
+                  grain : "="
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/exercise_list/teacherEdit.html',
                 link:(scope : any, element, attrs) => {
 
+                    scope.getTypeDirectiveEditNameByCurrentGrain = function(){
+                        return GrainTypeService.getTypeDirectiveEditNameByGrainId(scope.grain.grain_type_id);
+                    }
                 }
             };
         }]

@@ -19,25 +19,17 @@
             </nav>
         </section>
         <section class="eight cell">
-            <div ng-repeat="item in teacherEditSubjectCtrl.itemGrainCreationList">
-                <div ng-switch="item.typeCreation">
+            <div ng-repeat="grain in teacherEditSubjectCtrl.grainListByCurrentSubject | orderBy:'order'">
+                <div ng-switch="teacherEditSubjectCtrl.isNewGrain(grain)">
                     <div ng-switch-when="new">
-                        <statement-or-question item="item"></statement-or-question>
+                        <new-grain grain="grain"></new-grain>
                     </div>
-                    <div ng-switch-when="statement">
-                        <edit-statement></edit-statement>
-                    </div>
-                    <div ng-switch-when="newQuestion">
-                        <choice-question-type  item="item"></choice-question-type>
-                    </div>
-                    <div ng-switch-when="exercise">
-                        <exercise-list-teacher-edit item="item"></exercise-list-teacher-edit>
+                    <div ng-switch-when="grain">
+                        <exercise-list-teacher-edit grain="grain"></exercise-list-teacher-edit>
                     </div>
                     <div ng-switch-default>[[item]]</div>
                 </div>
             </div>
-            <!--
-            <edit-open-question></edit-open-question> -->
             <add-one-element></add-one-element>
         </section>
     </div>

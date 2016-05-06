@@ -1,7 +1,6 @@
 /**
  * Created by Erwan_LP on 29/04/2016.
  */
-
 class TeacherCreateSubjectCtrl {
 
     private $location;
@@ -17,12 +16,10 @@ class TeacherCreateSubjectCtrl {
         $location,
         SubjectService
     ) {
-        console.log('TeacherCreateSubjectCtrl');
         this.$location = $location;
         this.subjectService = SubjectService;
 
     }
-
 
     public clickSaveSubject(){
         var self = this;
@@ -35,7 +32,5 @@ class TeacherCreateSubjectCtrl {
                 console.error(err);
             }
         );
-
     }
-
 }
