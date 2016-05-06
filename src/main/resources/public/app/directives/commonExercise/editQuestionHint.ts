@@ -5,6 +5,10 @@
 var editQuestionHint = [ () => {
     return {
         restrict: "E",
+        scope : {
+            hintModel : "=",
+            onBlurFunction : "&"
+        },
         templateUrl: 'exercizer/public/app/templates/directives/commonExercise/editQuestionHint.html',
         link:(scope : any, element, attrs) => {
         }

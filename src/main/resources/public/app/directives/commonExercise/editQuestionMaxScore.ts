@@ -2,6 +2,10 @@
 var editQuestionMaxScore = [ () => {
     return {
         restrict: "E",
+        scope : {
+            maxScoreModel : "=",
+            onBlurFunction : "&"
+        },
         templateUrl: 'exercizer/public/app/templates/directives/commonExercise/editQuestionMaxScore.html',
         link:(scope : any, element, attrs) => {
         }

@@ -2,6 +2,10 @@
 var editQuestionStatement = [ () => {
     return {
         restrict: "E",
+        scope : {
+            statementModel : "=",
+            onBlurFunction : "&"
+        },
         templateUrl: 'exercizer/public/app/templates/directives/commonExercise/editQuestionStatement.html',
         link:(scope : any, element, attrs) => {
         }

@@ -5,6 +5,10 @@
 var editQuestionCorrection = [ () => {
     return {
         restrict: "E",
+        scope : {
+            correctionModel : "=",
+            onBlurFunction : "&"
+        },
         templateUrl: 'exercizer/public/app/templates/directives/commonExercise/editQuestionCorrection.html',
         link:(scope : any, element, attrs) => {
         }

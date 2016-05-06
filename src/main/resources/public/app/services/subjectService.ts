@@ -50,8 +50,8 @@ class SubjectService implements ISubjectService {
     public get currentSubjectId():number {
         //TODO : delete that after dev !
         if(!this._currentSubjectId){
-            console.error('dev : _currentSubjectId not defined');
-            console.info('dev : set to 1 ONLY DEV !');
+            console.error('_currentSubjectId not defined');
+            console.error('ONLY DEV : _currentSubjectId set to 1');
             this._currentSubjectId = 1;
         }
         return this._currentSubjectId;

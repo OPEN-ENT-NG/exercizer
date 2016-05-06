@@ -11,15 +11,13 @@ directives.push(
                 link:(scope : any, element, attrs) => {
 
                     scope.clickCreateNewGrain =function(){
-                        console.log('clickCreateNewGrain');
                         var grain = GrainService.createObjectGrain();
                         var subject_id = SubjectService.currentSubjectId;
                         grain.subject_id = subject_id;
                         GrainService.createGrain(
                             grain,
                             function(data){
-                                console.info('Creation grain');
-                                console.info(data);
+                                console.info('Grain created', data);
                             },
                             function(err){
                                 console.error(err);

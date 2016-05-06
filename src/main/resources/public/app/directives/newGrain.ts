@@ -4,7 +4,7 @@
 directives.push(
     {
         name: "newGrain",
-        injections: [ 'GrainTypeService', (GrainTypeService) => {
+        injections: [ 'GrainTypeService','GrainService', (GrainTypeService, GrainService) => {
             return {
                 restrict: "E",
                 scope: {
@@ -29,6 +29,16 @@ directives.push(
 
                     scope.clickExerciseType = function(type){
                         scope.grain.grain_type_id = type.id;
+                        GrainService.updateGrain(
+                            scope.grain,
+                            function(data){
+                                //success
+                                console.info('Grain updated', data);
+                            },
+                            function(err){
+                                console.error(err);
+                            }
+                        )
                     }
                 }
             };

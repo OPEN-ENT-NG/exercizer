@@ -51,6 +51,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('SubjectService', SubjectService);
         module.service('GrainService', GrainService);
         module.service('GrainTypeService', GrainTypeService);
+        module.service('SimpleAnswerService', SimpleAnswerService);
         services.forEach((item) => {
             module.service(item.name, item.injections);
         });
@@ -77,7 +78,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
         module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
         module.controller('TeacherEditSubjectCtrl', TeacherEditSubjectCtrl);
-        module.controller('EditSimpleAnswerCtrl', EditSimpleAnswerCtrl);
 
 
         module.directive("editStatement", editStatement);

@@ -6,6 +6,7 @@ interface IGrainService {
     updateGrain(grain:IGrain, callbackSuccess, callbackFail)
     getGrainListBySubjectId(subject_id, callbackSuccess, callbackFail);
     reorderGrain(grain, array_grain);
+    createObjectGrainData() : IGrainData
     grainListBySubjectId(subject_id) : IGrain[];
     isSetGrainListBySubjectId(subject_id) : boolean;
 }
@@ -57,6 +58,20 @@ class GrainService implements IGrainService {
             grain_data: {},
             is_library_grain: null
         }
+    }
+
+    public createObjectGrainData() : IGrainData{
+        var grain_data : IGrainData = {
+            title: null,
+            max_score: null,
+            statement: null,
+            documentList: [],
+            hint: null,
+            correction : null,
+            custom_data: {}
+        };
+        return grain_data;
+
     }
 
     public createGrain(grain:IGrain, callbackSuccess, callBackFail) {
@@ -126,7 +141,8 @@ class GrainService implements IGrainService {
         this._updateGrain(
             grain,
             function (data) {
-                this.addGrainToGrainList(data);
+                // At this moment, the grain is already in the list
+                //this.addGrainToGrainList(data);
                 callbackSuccess(data);
             },
             function (err) {
@@ -233,6 +249,12 @@ class GrainService implements IGrainService {
     }
 
     private _updateGrain(grain:IGrain, callbackSuccess, callbackFail) {
+        /**
+         * TEMP
+         */
+        grain.modified = new Date().toISOString();
+        callbackSuccess(grain);
+        /*
         var req:any;
         var self = this;
         req = this.$http({
@@ -259,6 +281,7 @@ class GrainService implements IGrainService {
                 console.error(config);
                 callbackFail(data);
             });
+            */
     }
 
     private _createGrain(grain:IGrain, callbackSuccess, callbackFail) {
