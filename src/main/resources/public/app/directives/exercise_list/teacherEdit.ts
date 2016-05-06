@@ -4,7 +4,7 @@
 directives.push(
     {
         name: "exerciseListTeacherEdit",
-        injections: ['GrainTypeService', (GrainTypeService) => {
+        injections: ['GrainTypeService','GrainCopyService', (GrainTypeService, GrainCopyService) => {
             return {
                 restrict: "E",
                 scope : {
@@ -15,7 +15,8 @@ directives.push(
 
                     scope.getTypeDirectiveEditNameByCurrentGrain = function(){
                         return GrainTypeService.getTypeDirectiveEditNameByGrainId(scope.grain.grain_type_id);
-                    }
+                    };
+
                 }
             };
         }]

@@ -1,4 +1,4 @@
-/// <reference path="./../../typings/angular-1.2.d.ts"/>
+/// <reference path="./../../../typings/angular-1.2.d.ts"/>
 var editQuestionTitle = [ () => {
     return {
         restrict: "E",

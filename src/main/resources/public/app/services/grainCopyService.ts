@@ -5,6 +5,8 @@ interface IGrainCopyService {
     getGrainCopyListBySubjectId(subject_id, callbackSuccess, callbackFail);
     grainCopyListBySubjectId(subject_id) : IGrainCopy[];
     isSetGrainCopyListBySubjectId(subject_id) : boolean;
+    createObjectGrainCopy() : IGrainCopy;
+    createObjectGrainCopyFromGrain(grain:IGrain) : IGrainCopy
 }
 
 class GrainCopyService implements IGrainCopyService {
@@ -53,6 +55,47 @@ class GrainCopyService implements IGrainCopyService {
                 callbackFail()
             );
         }
+    }
+
+    public createObjectGrainCopyData():IGrainCopyData {
+        var grain_copy_data:IGrainCopyData = {
+            title: null,
+            max_score: null,
+            statement: null,
+            documentList: [],
+            hint: null,
+            custom_copy_data: null
+        };
+        return grain_copy_data;
+
+    }
+
+    public createObjectGrainCopy():IGrainCopy {
+        var grain_copy:IGrainCopy = {
+            id: null,
+            subject_copy_id: null,
+            grain_scheduled_id: null,
+            grain_type_id: null,
+            created: new Date().toISOString(),
+            modified: new Date().toISOString(),
+            grain_copy_data: this.createObjectGrainCopyData(),
+            final_score: null,
+            score: null,
+            teacher_comment: null,
+            is_deleted: null
+        };
+        return grain_copy
+    }
+
+
+    public createObjectGrainCopyFromGrain(grain:IGrain):IGrainCopy {
+        var grain_copy = this.createObjectGrainCopy();
+        grain_copy.grain_copy_data.title = grain.grain_data.title;
+        grain_copy.grain_copy_data.max_score = grain.grain_data.max_score;
+        grain_copy.grain_copy_data.statement = grain.grain_data.statement;
+        grain_copy.grain_copy_data.documentList = grain.grain_data.documentList;
+        grain_copy.grain_copy_data.hint = grain.grain_data.hint;
+        return grain_copy;
     }
 
     /**

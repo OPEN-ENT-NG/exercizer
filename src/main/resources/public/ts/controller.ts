@@ -52,16 +52,15 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('GrainService', GrainService);
         module.service('GrainTypeService', GrainTypeService);
         module.service('SimpleAnswerService', SimpleAnswerService);
-        services.forEach((item) => {
-            module.service(item.name, item.injections);
-        });
+        module.service('GrainCopyService', GrainCopyService);
+        module.service('GrainScheduledService', GrainScheduledService);
 
         /**
          * Controllers
          */
-        controllers.forEach((item) => {
-            module.controller(item.name, item.injections);
-        })
+        module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
+        module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
+        module.controller('TeacherEditSubjectCtrl', TeacherEditSubjectCtrl);
 
         /**
          * Directives
@@ -70,16 +69,8 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
             module.directive(item.name, item.injections);
         });
 
-;
-
-
 
         // TODO clean
-        module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
-        module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
-        module.controller('TeacherEditSubjectCtrl', TeacherEditSubjectCtrl);
-
-
         module.directive("editStatement", editStatement);
         module.directive("editQuestionTitle", editQuestionTitle);
         module.directive("editQuestionStatement", editQuestionStatement);
