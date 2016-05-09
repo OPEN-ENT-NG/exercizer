@@ -1,6 +1,3 @@
-/**
- * Created by Erwan_LP on 29/04/2016.
- */
 interface IGrainCopy {
     id: number;
     subject_copy_id : number;

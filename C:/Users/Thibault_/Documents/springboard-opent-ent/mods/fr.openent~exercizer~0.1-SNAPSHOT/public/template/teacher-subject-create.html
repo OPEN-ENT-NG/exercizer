@@ -1,0 +1,32 @@
+<div ng-controller="TeacherCreateSubjectCtrl as teacherCreateSubjectCtrl">
+    <h1>Exercizer - créer un sujet</h1>
+    <article class="row">
+        <form name="form">
+            <div class="rigid-grid row">
+                <div class="two cell clip height-two">
+                    <div class="absolute" loading-panel="upload-collaborativeeditor-thumbnail">
+                        <image-select ng-model="teacherCreateSubjectCtrl.subject.picture" default="/img/illustrations/collaborativeeditor-default.png" class="ng-isolate-scope ng-scope ng-pristine ng-valid"></image-select>
+                    </div>
+                </div>
+                <div class="margin-two height-three">
+                    <div class="twelve cell horizontal-spacing">
+                        <input type="text" ng-model="teacherCreateSubjectCtrl.subject.title" class="twelve cell ng-pristine ng-invalid ng-invalid-required" required="" placeholder="Titre du sujet">
+                        <div class="row">
+                            <hr class="row">
+                        </div>
+                        <textarea ng-model="teacherCreateSubjectCtrl.subject.description" class="twelve cell ng-pristine ng-valid" placeholder="Description"></textarea>
+                        <div class="row">
+                            <hr class="row">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button ng-click="teacherCreateSubjectCtrl.clickSaveSubject()" class="right-magnet" ng-disabled="form.$invalid" disabled="disabled">
+                            <i18n><span class="no-style ng-scope">Enregistrer</span></i18n>
+                        </button>
+                        <input type="button" class="button right-magnet cancel" ng-click="teacherCreateSubjectCtrl.clickCancel()" i18n-value="cancel" value="Annuler">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </article>
+</div>

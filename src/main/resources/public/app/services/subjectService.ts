@@ -1,6 +1,3 @@
-/**
- * Created by jun on 22/04/2016.
- */
 interface ISubjectService {
     createSubject(subject : ISubject, callbackSuccess, callBackFail);
     updateSubject(subject : ISubject, callbackSuccess, callbackFail)
@@ -123,6 +120,7 @@ class SubjectService implements ISubjectService {
     private _getSubjectList(params, callbackSuccess, callbackFail){
         var req: any;
         var self = this;
+
         req = this.$http({
             method: 'GET',
             url: self.serverUrl+'/subjects/get',

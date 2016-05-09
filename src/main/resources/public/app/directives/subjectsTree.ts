@@ -7,6 +7,8 @@ directives.push(
                 templateUrl: 'exercizer/public/app/templates/directives/subjectsTree.html',
                 link:(scope : any, element, attrs) => {
                     scope.showCreateFolder = attrs.showCreateFolder === 'true';
+                    
+                    
                 }
             };
         }]

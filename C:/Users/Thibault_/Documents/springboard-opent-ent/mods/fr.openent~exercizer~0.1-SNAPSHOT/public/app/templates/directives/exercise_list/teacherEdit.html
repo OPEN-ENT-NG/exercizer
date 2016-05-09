@@ -1,0 +1,16 @@
+<div ng-switch on="getTypeDirectiveEditNameByCurrentGrain()">
+    <div ng-switch-when="edit-statement">
+        <perform-statement grain="grain"></perform-statement>
+        <edit-statement grain = "grain"></edit-statement>
+    </div>
+    <div class="animate-switch" ng-switch-when="edit-open-question">
+        <edit-open-question></edit-open-question>
+    </div>
+    <div class="animate-switch" ng-switch-when="edit-simple-answer">
+        <perform-simple-answer grain="grain"></perform-simple-answer>
+        <edit-simple-answer grain="grain"></edit-simple-answer>
+    </div>
+    <div class="animate-switch" ng-switch-default>
+        [[getTypeNameByCurrentGrain()]] ---  [[grain]]
+    </div>
+</div>

@@ -49,6 +49,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
          * Services
          */
         module.service('SubjectService', SubjectService);
+        module.service('FolderService', FolderService);
         module.service('GrainService', GrainService);
         module.service('GrainTypeService', GrainTypeService);
         module.service('SimpleAnswerService', SimpleAnswerService);
@@ -69,7 +70,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         directives.forEach((item) => {
             module.directive(item.name, item.injections);
         });
-
+        
 
         // TODO clean
         module.directive("editQuestionTitle", editQuestionTitle);
