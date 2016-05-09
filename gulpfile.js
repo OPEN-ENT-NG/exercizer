@@ -7,7 +7,7 @@ var springboardModsPath = privateConfig.springboardModsPath;
 
 gulp.task('compile', function(){
     var tsResult = tsProject.src()
-		.pipe(ts(tsProjecgit));
+		.pipe(ts(tsProject));
 
     return tsResult.js.pipe(gulp.dest('src/main/resources/public/js'));
 });
