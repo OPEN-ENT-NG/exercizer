@@ -5,6 +5,6 @@ interface IGrainCopyData {
     statement: string,
     documentList: IDocument[];
     hint: string,
-    custom_data: any;
+    custom_copy_data: any;
 
 }

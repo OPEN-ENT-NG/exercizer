@@ -1,0 +1,25 @@
+<article>
+    <div class="row">
+        <div class="one cell"><exercizer-help></exercizer-help></div>
+        <div class="two cell"><perform-question-max-score max-score="grainCopy.grain_copy_data.max_score"></perform-question-max-score></div>
+        <div class="six cell"><perform-question-title title="grainCopy.grain_copy_data.title"></perform-question-title></div>
+        <div class="tree cell"><perform-question-hint title="grainCopy.grain_copy_data.hint"></perform-question-hint></div>
+    </div>
+    <div class="row">
+        <div class="twelve cell"><perform-question-statement statement="grainCopy.grain_copy_data.statement"></perform-question-statement></div>
+    </div>
+    <div class="row">
+        <div class="twelve cell">
+            <textarea ng-model="grainCopy.grain_copy_data.custom_copy_data.student_answer" ng-blur="actionOnBlur()" class="twelve cell" placeholder="Reponse"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <button class="right-magnet cell" data-ng-click="clickNextQuestion()">
+            Question precedante
+        </button>
+        <button class="right-magnet cell" data-ng-click="clickPreviousQuestion()">
+            Question suivante
+        </button>
+    </div>
+
+</article>

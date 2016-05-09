@@ -3,5 +3,9 @@
  */
 interface IGrainType {
     id : number;
-    label : string;
+    name : string;
+    publicName : string;
+    directiveEditName : string;
+    picture : string;
+
 }

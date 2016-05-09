@@ -1,0 +1,33 @@
+<article class="statement-or-question" ng-if="state =='statementOrQuestion'">
+    <div class="row">
+        <div class="one cell">&nbsp;</div>
+        <div class="ten cell text">Ajouter ...</div>
+        <div class="one cell">&nbsp;</div>
+    </div>
+    <div class="row image">
+        <div class="one cell">&nbsp;</div>
+        <div class="five cell" data-ng-click="clickStatement()">
+            <img src="/exercizer/public/assets/img/statement.PNG">
+        </div>
+        <div class="five cell" data-ng-click="clickQuestion()">
+            <img src="/exercizer/public/assets/img/question.PNG">
+        </div>
+
+        <div class="one cell">&nbsp;</div>
+    </div>
+</article>
+
+<article class="choice-question-type" ng-if="state =='choiceExerciseType'">
+    <div class="row">
+        <div class="one cell"><exercizer-help></exercizer-help></div>
+        <div class="eleven cell">Choisisser un question ...</div>
+    </div>
+    <div class="row">
+        <div class="one cell">
+            <img src="/exercizer/public/assets/img/arrowLeft.PNG">
+        </div>
+        <div class="one cell" ng-repeat="type in exerciseTypeList()">
+            <div data-ng-click="clickExerciseType(type)">{{type.publicName}}</div>
+        </div>
+    </div>
+</article>

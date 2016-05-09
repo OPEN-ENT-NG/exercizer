@@ -1,3 +1,4 @@
+<div data-ng-controller="TeacherEditSubjectCtrl as teacherEditSubjectCtrl">
 <div class="row">
     <h1 class="cell">
         Exercizer - titre de mon sujet
@@ -18,8 +19,18 @@
         </nav>
     </section>
     <section class="eight cell">
-        <edit-statement></edit-statement>
-        <edit-open-question></edit-open-question>
+        <div data-ng-repeat="grain in teacherEditSubjectCtrl.grainListByCurrentSubject | orderBy:'order'">
+            <div data-ng-switch="teacherEditSubjectCtrl.isNewGrain(grain)">
+                <div data-ng-switch-when="new">
+                    <new-grain grain="grain"></new-grain>
+                </div>
+                <div data-ng-switch-when="grain">
+                    <exercise-list-teacher-edit grain="grain"></exercise-list-teacher-edit>
+                </div>
+                <div data-ng-switch-default>[[item]]</div>
+            </div>
+        </div>
         <add-one-element></add-one-element>
     </section>
 </div>
+    </div>

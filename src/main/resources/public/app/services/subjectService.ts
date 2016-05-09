@@ -7,6 +7,7 @@ interface ISubjectService {
     getSubjectList(params, callbackSuccess, callbackFail);
     subjectList : ISubject[];
     isSetSubjectList : boolean;
+    currentSubjectId : number;
 }
 
 class SubjectService implements ISubjectService {
@@ -21,6 +22,7 @@ class SubjectService implements ISubjectService {
 
     private _subjectList :ISubject[];
     private _isSetSubjectList : boolean;
+    private _currentSubjectId : number;
 
     constructor(
         serverUrl,
@@ -31,6 +33,7 @@ class SubjectService implements ISubjectService {
 
         this._isSetSubjectList = false;
         this._subjectList = [];
+        this._currentSubjectId = null;
 
     }
 
@@ -39,9 +42,23 @@ class SubjectService implements ISubjectService {
         return this._subjectList;
     }
 
-
     public get isSetSubjectList():boolean {
         return this._isSetSubjectList;
+    }
+
+
+    public get currentSubjectId():number {
+        //TODO : delete that after dev !
+        if(!this._currentSubjectId){
+            console.error('_currentSubjectId not defined');
+            console.error('ONLY DEV : _currentSubjectId set to 1');
+            this._currentSubjectId = 1;
+        }
+        return this._currentSubjectId;
+    }
+
+    public set currentSubjectId(value:number) {
+        this._currentSubjectId = value;
     }
 
     /**
@@ -57,7 +74,8 @@ class SubjectService implements ISubjectService {
         this._createSubject(
             subject,
             function(data){
-                self.addSubjectToSubjectList(subject);
+                self.addSubjectToSubjectList(data);
+                self._currentSubjectId = data.id;
                 callbackSuccess(data);
             },
             function(err){

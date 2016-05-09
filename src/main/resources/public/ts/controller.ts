@@ -46,31 +46,32 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant("serverUrl", "http://foo.com");
 
         /**
+         * Services
+         */
+        module.service('SubjectService', SubjectService);
+        module.service('GrainService', GrainService);
+        module.service('GrainTypeService', GrainTypeService);
+        module.service('SimpleAnswerService', SimpleAnswerService);
+        module.service('GrainCopyService', GrainCopyService);
+        module.service('GrainScheduledService', GrainScheduledService);
+        module.service('StatementService', StatementService);
+
+        /**
+         * Controllers
+         */
+        module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
+        module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
+        module.controller('TeacherEditSubjectCtrl', TeacherEditSubjectCtrl);
+
+        /**
          * Directives
          */
         directives.forEach((item) => {
             module.directive(item.name, item.injections);
         });
 
-        /**
-         * Controllers
-         */
-        controllers.forEach((item) => {
-            module.controller(item.name, item.injections);
-        });
-
-        /**
-         * Services
-         */
-        services.forEach((item) => {
-            module.service(item.name, item.injections);
-        });
 
         // TODO clean
-        module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
-        module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
-        module.service('SubjectService', SubjectService);
-        module.directive("editStatement", editStatement);
         module.directive("editQuestionTitle", editQuestionTitle);
         module.directive("editQuestionStatement", editQuestionStatement);
         module.directive("editQuestionMaxScore", editQuestionMaxScore);

@@ -4,11 +4,26 @@
 directives.push(
     {
         name: "addOneElement",
-        injections: [ () => {
+        injections: ['GrainService','SubjectService', (GrainService, SubjectService) => {
             return {
                 restrict: "E",
                 templateUrl: 'exercizer/public/app/templates/directives/addOneElement.html',
                 link:(scope : any, element, attrs) => {
+
+                    scope.clickCreateNewGrain =function(){
+                        var grain = GrainService.createObjectGrain();
+                        var subject_id = SubjectService.currentSubjectId;
+                        grain.subject_id = subject_id;
+                        GrainService.createGrain(
+                            grain,
+                            function(data){
+                                console.info('Grain created', data);
+                            },
+                            function(err){
+                                console.error(err);
+                            }
+                        )
+                    }
                 }
             };
         }]
