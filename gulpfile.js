@@ -6,7 +6,7 @@ var springboardModsPath = "/Users/jun/Sites/web-education/mods/fr.openent~exerci
 
 gulp.task('compile', function(){
     var tsResult = tsProject.src()
-		.pipe(ts(tsProject));
+		.pipe(ts(tsProjecgit));
 
     return tsResult.js.pipe(gulp.dest('src/main/resources/public/js'));
 });
