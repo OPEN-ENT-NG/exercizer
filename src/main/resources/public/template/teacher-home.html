@@ -1,25 +1,36 @@
 <div data-ng-controller="TeacherHomeCtrl as teacherHomeCtrl">
     <div class="row">
-        <h1 class="cell">
+        <h1>
             Exercizer
         </h1>
     </div>
-    <div class="row">
+    <div class="row twelve cell tabs">
+        <div class="cell">
+            <header class="selected">
+                Mes sujets
+            </header>
+            <header>
+                Bibliothèque
+            </header>
+        </div>
         <button class="right-magnet cell" data-ng-click="teacherHomeCtrl.clickCreateNewSubject()">
             Nouveau sujet
         </button>
     </div>
-    <div class="row">
-        <section class="four cell vertical">
-            <nav class="vertical">
-                <subjects-tree></subjects-tree>
-                <a class="classic-link cell">
-                    Créer un dossier
-                </a>
-            </nav>
+    <div class="row rigid-grid">
+        <section class="four cell">
+            <subjects-tree data-show-create-folder="true"></subjects-tree>
         </section>
-        <section class="eight cell">
-            <h1>TEST</h1>
+        <section class="margin-four">
+            <nav class="twelve cell">
+                <div class="cell right-magnet">
+                    <i class="show-list"></i>
+                    <i class="show-icons selected"></i>
+                </div>
+            </nav>
+            <div class="twelve cell">
+                TEST
+            </div>
         </section>
     </div>
 </div>
