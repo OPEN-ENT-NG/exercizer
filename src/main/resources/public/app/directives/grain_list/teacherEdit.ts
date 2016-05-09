@@ -31,6 +31,10 @@ directives.push(
                         scope.isToggle = !scope.isToggle;
                     };
 
+                    scope.deleteGrain = function(){
+                        console.log('deleteGrain');
+                    }
+
                 }
             };
         }]

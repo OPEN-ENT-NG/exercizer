@@ -25,6 +25,24 @@ directives.push(
                     }
                     init();
 
+                    var isFocus;
+
+                    /**
+                     * Event JQuery because no ng-blur on editor
+                     */
+                    element.find('editor').on('editor-focus', function(){
+                        isFocus = true;
+                    });
+                    /**
+                     * Event JQuery because no ng-blur on editor
+                     */
+                    element.find('editor').on('editor-blur', function(){
+                        if(isFocus){
+                            scope.actionOnBlur();
+                            isFocus = false;
+                        }
+                    });
+
                     scope.actionOnBlur = function(){
                         GrainService.updateGrain(
                             scope.grain,
