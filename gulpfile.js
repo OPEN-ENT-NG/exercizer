@@ -1,8 +1,9 @@
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
+var privateConfig = require('./privateConfig');
 
 var tsProject = ts.createProject('./tsconfig.json');
-var springboardModsPath = "/Users/jun/Sites/web-education/mods/fr.openent~exercizer~0.1-SNAPSHOT";
+var springboardModsPath = privateConfig.springboardModsPath;
 
 gulp.task('compile', function(){
     var tsResult = tsProject.src()
