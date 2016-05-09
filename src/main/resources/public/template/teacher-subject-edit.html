@@ -25,7 +25,8 @@
                     <new-grain grain="grain"></new-grain>
                 </div>
                 <div data-ng-switch-when="grain">
-                    <exercise-list-teacher-edit grain="grain"></exercise-list-teacher-edit>
+                    <grain-list-teacher-edit grain="grain"></grain-list-teacher-edit>
+                    <grain-list-student-perform grain="grain"></grain-list-student-perform>
                 </div>
                 <div data-ng-switch-default>[[item]]</div>
             </div>

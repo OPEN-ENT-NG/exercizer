@@ -1,0 +1,49 @@
+<article>
+    <div class="row">
+        <div class="one cell"><grain-icon directive-name = "getTypeDirectiveEditNameByCurrentGrain()"></grain-icon></div>
+        <div class="nine cell">&nbsp;</div>
+        <div class="one cell">delete</div>
+        <div class="one cell" data-ng-click="toggle()"><grain-toggle ></grain-toggle></div>
+    </div>
+
+    <div class="row" data-ng-if="isToggle">
+        <div data-ng-if="getTypeDirectiveEditNameByCurrentGrain() == 'edit-statement'">
+            <div class="row">
+                <div class="two cell">
+                    <input type="checkbox">
+                </div>
+                <div class="ten cell" ng-bind-html="grain.grain_data.custom_data.statement"></div>
+            </div>
+        </div>
+        <div data-ng-if="getTypeDirectiveEditNameByCurrentGrain() != 'edit-statement'">
+            <div class="row">
+                <div class="two cell">
+                    <input type="checkbox"><br>
+                </div>
+                <div class="six cell">[[grain.grain_data.title]]</div>
+                <div class="two cell"><exercise-icon grain = "grain"></exercise-icon></div>
+                <div class="two cell">/ [[grain.grain_data.max_score]]</div>
+            </div>
+        </div>
+    </div>
+    <div class="row" data-ng-if="!isToggle">
+        <div ng-switch on="getTypeDirectiveEditNameByCurrentGrain()">
+            <div ng-switch-when="edit-statement">
+                <edit-statement grain = "grain"></edit-statement>
+            </div>
+            <div class="animate-switch" ng-switch-when="edit-open-question">
+                <edit-open-question></edit-open-question>
+            </div>
+            <div class="animate-switch" ng-switch-when="edit-simple-answer">
+                <edit-simple-answer grain="grain"></edit-simple-answer>
+            </div>
+            <div class="animate-switch" ng-switch-default>
+                [[getTypeNameByCurrentGrain()]] ---  [[grain]]
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
