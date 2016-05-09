@@ -1,7 +1,7 @@
 directives.push(
     {
         name: "grainListTeacherEdit",
-        injections: ['GrainTypeService','GrainCopyService', (GrainTypeService, GrainCopyService) => {
+        injections: ['GrainTypeService','GrainService', (GrainTypeService, GrainService) => {
             return {
                 restrict: "E",
                 scope : {
@@ -32,7 +32,16 @@ directives.push(
                     };
 
                     scope.deleteGrain = function(){
-                        console.log('deleteGrain');
+                        GrainService.deleteGrain(
+                            scope.grain,
+                            function(data){
+                                //success
+                            },
+                            function(err){
+                                console.error(err);
+                            }
+                        )
+
                     }
 
                 }

@@ -145,10 +145,25 @@ class GrainService implements IGrainService {
                 //this.addGrainToGrainList(data);
                 callbackSuccess(data);
             },
-            function (err) {
-                console.error(err);
-            }
+            callbackFail
         )
+    }
+
+    public deleteGrain(grain : IGrain, callbackSuccess, callBackFail){
+        this._removeGrainFromItsOwnList(grain);
+        this._deleteGrain(
+            grain,
+            function(data){
+                // success
+                console.info('Grain deleted');
+                callbackSuccess()
+            },
+            callBackFail
+        )
+    }
+
+    private _removeGrainFromItsOwnList(grain : IGrain){
+        delete this._grainList[grain.subject_id][grain.id];
     }
 
     private addGrainToGrainList(grain:IGrain) {
@@ -282,6 +297,41 @@ class GrainService implements IGrainService {
                 callbackFail(data);
             });
             */
+    }
+
+    private _deleteGrain(grain:IGrain, callbackSuccess, callbackFail) {
+        /**
+         * TEMP
+         */
+        callbackSuccess();
+        /*
+         var req:any;
+         var self = this;
+         req = this.$http({
+         method: 'POST',
+         url: self.serverUrl + '/grains/delete/' + grain.id,
+         params: {
+         "grain": grain,
+         },
+         paramSerializer: '$httpParamSerializerJQLike'
+         });
+         req
+         .success(function (data, status, headers, config) {
+         if (status == 200) {
+         // DATA : grain
+         callbackSuccess(data);
+         } else {
+         callbackFail(data);
+         }
+         })
+         .error(function (data, status, headers, config) {
+         console.error(data);
+         console.error(status);
+         console.error(headers);
+         console.error(config);
+         callbackFail(data);
+         });
+         */
     }
 
     private _createGrain(grain:IGrain, callbackSuccess, callbackFail) {
