@@ -17,13 +17,8 @@ directives.push(
                 link:(scope : any, element, attrs) => {
 
                     function init(){
-                        if(scope.grain){
-                            var grain_data : IGrainData =  GrainService.createObjectGrainData();
-                            scope.grain.grain_data = grain_data;
-                            var custom_data : ISimpleAnswerCustomData = SimpleAnswerService.createObjectCustomData();
-                            scope.grain.grain_data.custom_data = custom_data;
-                        } else{
-                            throw "Grain not found";
+                        if(scope.grain.grain_data.custom_data == null){
+                            scope.grain.grain_data.custom_data = SimpleAnswerService.createObjectCustomData();
                         }
                     }
                     init();
@@ -33,7 +28,6 @@ directives.push(
                             scope.grain,
                             function(data){
                                 //success
-                                console.info('Grain updated', data);
                             },
                             function(err){
                                 console.error(err);

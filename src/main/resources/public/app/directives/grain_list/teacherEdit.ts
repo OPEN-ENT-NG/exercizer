@@ -1,7 +1,7 @@
 directives.push(
     {
         name: "grainListTeacherEdit",
-        injections: ['GrainTypeService','GrainService', (GrainTypeService, GrainService) => {
+        injections: ['GrainTypeService','GrainService','SelectedGrainService', (GrainTypeService, GrainService, SelectedGrainService) => {
             return {
                 restrict: "E",
                 scope : {
@@ -32,6 +32,9 @@ directives.push(
                     };
 
                     scope.deleteGrain = function(){
+                        // remove the grain in the selected list before delete it
+                        // second argument false mean no mor selected
+                        SelectedGrainService.toggleGrainInSelectedGrainList(scope.grain,false );
                         GrainService.deleteGrain(
                             scope.grain,
                             function(data){
@@ -42,8 +45,11 @@ directives.push(
                             }
                         )
 
-                    }
+                    };
 
+                    scope.selectGrain = function(){
+                        SelectedGrainService.toggleGrainInSelectedGrainList(scope.grain,scope.isGrainSelected );
+                    }
                 }
             };
         }]

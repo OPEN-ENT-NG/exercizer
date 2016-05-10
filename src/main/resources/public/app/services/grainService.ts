@@ -46,6 +46,11 @@ class GrainService implements IGrainService {
         return !!this._isSetGrainList[subject_id];
     }
 
+    public grainByIdAndSubjectId(grain_id, subject_id) : IGrain{
+        return this._grainList[subject_id][grain_id];
+
+    }
+
     public createObjectGrain() :IGrain{
         return {
             id: null,
@@ -55,23 +60,21 @@ class GrainService implements IGrainService {
             original_grain_id: null,
             created: new Date().toISOString(),
             modified: new Date().toISOString(),
-            grain_data: {},
+            grain_data: this.createObjectGrainData(),
             is_library_grain: null
         }
     }
 
     public createObjectGrainData() : IGrainData{
-        var grain_data : IGrainData = {
+        return {
             title: null,
             max_score: null,
             statement: null,
-            documentList: [],
+            documentList: null,
             hint: null,
             correction : null,
-            custom_data: {}
+            custom_data: null
         };
-        return grain_data;
-
     }
 
     public createGrain(grain:IGrain, callbackSuccess, callBackFail) {
@@ -85,6 +88,7 @@ class GrainService implements IGrainService {
                 } else{
                     // this grain have order yet
                 }
+                console.info('createGrain', data);
                 callbackSuccess(data);
             },
             function (err) {
@@ -143,6 +147,7 @@ class GrainService implements IGrainService {
             function (data) {
                 // At this moment, the grain is already in the list
                 //this.addGrainToGrainList(data);
+                console.info('updateGrain', data);
                 callbackSuccess(data);
             },
             callbackFail
@@ -150,12 +155,13 @@ class GrainService implements IGrainService {
     }
 
     public deleteGrain(grain : IGrain, callbackSuccess, callBackFail){
-        this._removeGrainFromItsOwnList(grain);
+        var self = this;
         this._deleteGrain(
             grain,
             function(data){
                 // success
-                console.info('Grain deleted');
+                self._removeGrainFromItsOwnList(grain);
+                console.info('deleteGrain', data);
                 callbackSuccess()
             },
             callBackFail

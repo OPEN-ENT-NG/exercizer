@@ -1,37 +1,66 @@
 <div data-ng-controller="TeacherEditSubjectCtrl as teacherEditSubjectCtrl">
-<div class="row">
-    <h1 class="cell">
-        Exercizer - titre de mon sujet
-    </h1>
-    <button class="right-magnet cell">
-        Programmer
-    </button>
-</div>
-<div class="row">
-    <section class="four cell vertical">
-        <nav class="vertical">
-            <article>
-                <subject-organizer></subject-organizer>
-            </article>
-            <article>
-                <subjects-tree data-show-create-folder="false"></subjects-tree>
-            </article>
-        </nav>
-    </section>
-    <section class="eight cell">
-        <div data-ng-repeat="grain in teacherEditSubjectCtrl.grainListByCurrentSubject | orderBy:'order'">
-            <div data-ng-switch="teacherEditSubjectCtrl.isNewGrain(grain)">
-                <div data-ng-switch-when="new">
-                    <new-grain grain="grain"></new-grain>
+
+    <!-- LIGHT BOX -->
+
+    <lightbox show="display.grain.showConfirmRemoveList" on-close="display.grain.showConfirmRemoveList = false">
+        <h2>Supprimer</h2>
+        <p>Voulez-vous vraiment supprimer ces élements du sujet ?</p>
+        <div class="row">
+            <button data-ng-click="teacherEditSubjectCtrl.deleteSelectedGrainList(); display.grain.showConfirmRemoveList = false;" class="right-magnet">Supprimer</button>
+            <input type="button" class="cancel right-magnet" i18n-value="cancel" data-ng-click="display.grain.showConfirmRemoveList = false" />
+        </div>
+    </lightbox>
+
+    <!-- PAGE -->
+
+    <div class="row">
+        <h1 class="cell">
+            Exercizer - titre de mon sujet
+        </h1>
+        <button class="right-magnet cell">
+            Programmer
+        </button>
+    </div>
+    <div class="row">
+        <section class="four cell vertical">
+            <nav class="vertical">
+                <article>
+                    <subject-organizer></subject-organizer>
+                </article>
+                <article>
+                    <subjects-tree data-show-create-folder="false"></subjects-tree>
+                </article>
+            </nav>
+        </section>
+        <section class="eight cell">
+            <div data-ng-repeat="grain in teacherEditSubjectCtrl.grainListByCurrentSubject | orderBy:'order'">
+                <div data-ng-switch="teacherEditSubjectCtrl.isNewGrain(grain)">
+                    <div data-ng-switch-when="new">
+                        <new-grain grain="grain"></new-grain>
+                    </div>
+                    <div data-ng-switch-when="grain">
+                        <grain-list-teacher-edit grain="grain"></grain-list-teacher-edit>
+                    </div>
+                    <div data-ng-switch-default>[[item]]</div>
                 </div>
-                <div data-ng-switch-when="grain">
-                    <grain-list-teacher-edit grain="grain"></grain-list-teacher-edit>
-                    <grain-list-student-perform grain="grain"></grain-list-student-perform>
+            </div>
+            <add-one-element></add-one-element>
+        </section>
+    </div>
+
+
+    <!-- BOTTOM -->
+
+    <section class="toggle-buttons" data-ng-class="{ hide: teacherEditSubjectCtrl.selectedGrainIdList() === 0 }">
+        <div class="toggle">
+            <div class="row">
+                <div class="cell">
+                    <button ng-click="teacherEditSubjectCtrl.duplicateSelectedGrainList()">Dupliquer</button>
+                    <button ng-click="display.grain.showConfirmRemoveList = true">Supprimer</button>
                 </div>
-                <div data-ng-switch-default>[[item]]</div>
             </div>
         </div>
-        <add-one-element></add-one-element>
     </section>
+
 </div>
-    </div>
+

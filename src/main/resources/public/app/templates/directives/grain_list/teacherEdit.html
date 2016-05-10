@@ -9,7 +9,6 @@
     </div>
 </lightbox>
 
-
 <!-- PAGE -->
 
 <article>
@@ -24,7 +23,7 @@
         <div data-ng-show="getTypeDirectiveEditNameByCurrentGrain() == 'edit-statement'">
             <div class="row">
                 <div class="two cell">
-                    <input type="checkbox">
+                    <input type="checkbox" data-ng-model="isGrainSelected" data-ng-change="selectGrain()">
                 </div>
                 <div class="ten cell" ng-bind-html="grain.grain_data.custom_data.statement"></div>
             </div>
@@ -32,7 +31,7 @@
         <div data-ng-hide="getTypeDirectiveEditNameByCurrentGrain() == 'edit-statement'">
             <div class="row">
                 <div class="two cell">
-                    <input type="checkbox"><br>
+                    <input type="checkbox" data-ng-model="isGrainSelected" data-ng-change="selectGrain()"><br>
                 </div>
                 <div class="six cell">[[grain.grain_data.title]]</div>
                 <div class="two cell"><exercise-icon grain = "grain"></exercise-icon></div>
@@ -57,7 +56,6 @@
         </div>
     </div>
 </article>
-
 
 
 

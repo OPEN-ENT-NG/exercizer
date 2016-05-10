@@ -10,7 +10,6 @@ directives.push(
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/common_grain/grainIcon.html',
                 link:(scope : any, element, attrs) => {
-                    console.log(scope);
 
                 }
             };

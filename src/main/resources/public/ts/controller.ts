@@ -56,6 +56,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('GrainCopyService', GrainCopyService);
         module.service('GrainScheduledService', GrainScheduledService);
         module.service('StatementService', StatementService);
+        module.service('SelectedGrainService', SelectedGrainService);
 
         /**
          * Controllers
