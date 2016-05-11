@@ -16,6 +16,7 @@ class TeacherEditSubjectCtrl {
     private subjectService;
     private grainTypeService;
     private selectedGrainService;
+    public displayLightBoxDeleteGrain;
 
     constructor(
         GrainService,
@@ -50,9 +51,9 @@ class TeacherEditSubjectCtrl {
     }
 
 
-    /**
-     * SELECTED GRAIN PART
-     */
+    public clickOnDelete(){
+        this.selectedGrainService.displayLightBoxDeleteGrain =  true;
+    }
 
     public selectedGrainIdList(){
         var res = this.selectedGrainService.selectedGrainIdList.length;
@@ -78,24 +79,5 @@ class TeacherEditSubjectCtrl {
             )
         });
     };
-
-    public deleteSelectedGrainList(){
-        var self = this;
-        angular.forEach(this.selectedGrainService.selectedGrainIdList, function(grain_id, key) {
-            var subject_id = self.subjectService.currentSubjectId;
-            var grain = self.grainService.grainByIdAndSubjectId(grain_id, subject_id);
-            self.grainService.deleteGrain(
-                grain,
-                function(data){
-                    //success
-                },
-                function(err){
-                    console.error(err);
-                }
-            )
-        });
-        this.selectedGrainService.resetList();
-    }
-
 }
 

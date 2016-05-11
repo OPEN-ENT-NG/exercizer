@@ -2,14 +2,7 @@
 
     <!-- LIGHT BOX -->
 
-    <lightbox show="display.grain.showConfirmRemoveList" on-close="display.grain.showConfirmRemoveList = false">
-        <h2>Supprimer</h2>
-        <p>Voulez-vous vraiment supprimer ces élements du sujet ?</p>
-        <div class="row">
-            <button data-ng-click="teacherEditSubjectCtrl.deleteSelectedGrainList(); display.grain.showConfirmRemoveList = false;" class="right-magnet">Supprimer</button>
-            <input type="button" class="cancel right-magnet" i18n-value="cancel" data-ng-click="display.grain.showConfirmRemoveList = false" />
-        </div>
-    </lightbox>
+    <lightbox-delete-grains></lightbox-delete-grains>
 
     <!-- PAGE -->
 
@@ -56,7 +49,7 @@
             <div class="row">
                 <div class="cell">
                     <button ng-click="teacherEditSubjectCtrl.duplicateSelectedGrainList()">Dupliquer</button>
-                    <button ng-click="display.grain.showConfirmRemoveList = true">Supprimer</button>
+                    <button ng-click="teacherEditSubjectCtrl.clickOnDelete()">Supprimer</button>
                 </div>
             </div>
         </div>

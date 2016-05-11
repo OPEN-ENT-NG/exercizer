@@ -1,29 +1,16 @@
-<!--LIGHTBOX -->
-
-<lightbox show="display.grain.showConfirmRemove" on-close="display.grain.showConfirmRemove = false">
-    <h2>Supprimer</h2>
-    <p>Voulez-vous vraiment supprimer cet élement du sujet ?</p>
-    <div class="row">
-        <button data-ng-click="deleteGrain(); display.grain.showConfirmRemove = false;" class="right-magnet">Supprimer</button>
-        <input type="button" class="cancel right-magnet" i18n-value="cancel" data-ng-click="display.grain.showConfirmRemove = false" />
-    </div>
-</lightbox>
-
-<!-- PAGE -->
-
 <article>
     <div class="row">
         <div class="one cell"><grain-icon directive-name = "getTypeDirectiveEditNameByCurrentGrain()"></grain-icon></div>
         <div class="nine cell">&nbsp;</div>
-        <div class="one cell" data-ng-click="display.grain.showConfirmRemove = true"><i class="close-2x"></i></div>
-        <div class="one cell" data-ng-click="toggle()"><grain-toggle ></grain-toggle></div>
+        <div class="one cell" data-ng-click="eventDeleteGrain()"><i class="close-2x"></i></div>
+        <div class="one cell" data-ng-click="eventToggleGrain()"><grain-toggle ></grain-toggle></div>
     </div>
 
     <div class="row" data-ng-show="isToggle">
         <div data-ng-show="getTypeDirectiveEditNameByCurrentGrain() == 'edit-statement'">
             <div class="row">
                 <div class="two cell">
-                    <input type="checkbox" data-ng-model="isGrainSelected" data-ng-change="selectGrain()">
+                    <input type="checkbox" data-ng-model="isGrainSelected" data-ng-change="eventSelectGrain()">
                 </div>
                 <div class="ten cell" ng-bind-html="grain.grain_data.custom_data.statement"></div>
             </div>
@@ -31,7 +18,7 @@
         <div data-ng-hide="getTypeDirectiveEditNameByCurrentGrain() == 'edit-statement'">
             <div class="row">
                 <div class="two cell">
-                    <input type="checkbox" data-ng-model="isGrainSelected" data-ng-change="selectGrain()"><br>
+                    <input type="checkbox" data-ng-model="isGrainSelected" data-ng-change="eventSelectGrain()"><br>
                 </div>
                 <div class="six cell">[[grain.grain_data.title]]</div>
                 <div class="two cell"><exercise-icon grain = "grain"></exercise-icon></div>

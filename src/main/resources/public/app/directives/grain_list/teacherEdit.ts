@@ -27,27 +27,16 @@ directives.push(
                         return typeDirectiveCurrentName;
                     };
 
-                    scope.toggle = function(){
+                    scope.eventToggleGrain = function(){
                         scope.isToggle = !scope.isToggle;
                     };
 
-                    scope.deleteGrain = function(){
-                        // remove the grain in the selected list before delete it
-                        // second argument false mean no mor selected
-                        SelectedGrainService.toggleGrainInSelectedGrainList(scope.grain,false );
-                        GrainService.deleteGrain(
-                            scope.grain,
-                            function(data){
-                                //success
-                            },
-                            function(err){
-                                console.error(err);
-                            }
-                        )
-
+                    scope.eventDeleteGrain = function(){
+                        SelectedGrainService.uniqueSelectedGrain(scope.grain);
+                        SelectedGrainService.displayLightBoxDeleteGrain = true;
                     };
 
-                    scope.selectGrain = function(){
+                    scope.eventSelectGrain = function(){
                         SelectedGrainService.toggleGrainInSelectedGrainList(scope.grain,scope.isGrainSelected );
                     }
                 }
