@@ -1,0 +1,31 @@
+<!-- LIGHT BOX -->
+<lightbox-delete-grains></lightbox-delete-grains>
+
+<!-- PAGE -->
+<div data-ng-repeat="grain in grainList() | orderObjectBy:'order':false">
+    <div data-ng-switch="isNewGrain(grain)">
+        <div data-ng-switch-when="new">
+            <new-grain grain="grain"></new-grain>
+        </div>
+        <div data-ng-switch-when="grain">
+            <grain-edit grain="grain"></grain-edit>
+        </div>
+        <div data-ng-switch-default></div>
+    </div>
+</div>
+
+<add-one-element></add-one-element>
+
+
+<!-- BOTTOM -->
+
+<section class="toggle-buttons" data-ng-class="{ hide: selectedGrainIdList() === 0 }">
+    <div class="toggle">
+        <div class="row">
+            <div class="cell">
+                <button ng-click="clickOnDuplicate()">Dupliquer</button>
+                <button ng-click="clickOnDelete()">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</section>

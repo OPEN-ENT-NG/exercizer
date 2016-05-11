@@ -1,9 +1,7 @@
 <div data-ng-controller="TeacherEditSubjectCtrl as teacherEditSubjectCtrl">
 
     <!-- LIGHT BOX -->
-
-    <lightbox-delete-grains></lightbox-delete-grains>
-
+    <lightbox-preview-subject></lightbox-preview-subject>
     <!-- PAGE -->
 
     <div class="row">
@@ -26,34 +24,8 @@
             </nav>
         </section>
         <section class="eight cell">
-            <div data-ng-repeat="grain in teacherEditSubjectCtrl.grainListByCurrentSubject | orderBy:'order'">
-                <div data-ng-switch="teacherEditSubjectCtrl.isNewGrain(grain)">
-                    <div data-ng-switch-when="new">
-                        <new-grain grain="grain"></new-grain>
-                    </div>
-                    <div data-ng-switch-when="grain">
-                        <grain-list-teacher-edit grain="grain"></grain-list-teacher-edit>
-                    </div>
-                    <div data-ng-switch-default>[[item]]</div>
-                </div>
-            </div>
-            <add-one-element></add-one-element>
+            <subject-edit subject="teacherEditSubjectCtrl.getCurrentSubject()"></subject-edit>
         </section>
     </div>
-
-
-    <!-- BOTTOM -->
-
-    <section class="toggle-buttons" data-ng-class="{ hide: teacherEditSubjectCtrl.selectedGrainIdList() === 0 }">
-        <div class="toggle">
-            <div class="row">
-                <div class="cell">
-                    <button ng-click="teacherEditSubjectCtrl.duplicateSelectedGrainList()">Dupliquer</button>
-                    <button ng-click="teacherEditSubjectCtrl.clickOnDelete()">Supprimer</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
 </div>
 

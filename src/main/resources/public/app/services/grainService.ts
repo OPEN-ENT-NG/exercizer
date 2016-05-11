@@ -21,7 +21,7 @@ class GrainService implements IGrainService {
     private serverUrl:string;
     private $http:any;
 
-    private _grainList:IGrain[][];
+    private _grainList:any;
     private _isSetGrainList:boolean[];
 
     constructor(serverUrl,
@@ -29,16 +29,14 @@ class GrainService implements IGrainService {
         this.serverUrl = serverUrl;
         this.$http = $http;
 
-        this._grainList = [];
+        this._grainList = {};
         this._isSetGrainList = [];
 
-        // TODO delete that after dev !
-        this._isSetGrainList[1] = true;
     }
 
 
     public grainListBySubjectId(subject_id):IGrain[] {
-        return this._isSetGrainList[subject_id] ? this._grainList[subject_id] : [];
+        return this._isSetGrainList[subject_id] ? this._grainList[subject_id] : {};
     }
 
 
@@ -106,12 +104,12 @@ class GrainService implements IGrainService {
      * @param grain
      */
     private setOrderToThisGrain(grain : IGrain){
-        if(!this._grainList[grain.subject_id]){
+        if(!this.grainListBySubjectId(grain.subject_id)){
             // not possible
            throw "List not found"
         }
         var max_order = null;
-        angular.forEach(this._grainList[grain.subject_id], function(item_grain) {
+        angular.forEach(this.grainListBySubjectId(grain.subject_id), function(item_grain) {
             if(item_grain.order){
                 if(item_grain.order > max_order){
                     max_order = item_grain.order;
@@ -128,7 +126,6 @@ class GrainService implements IGrainService {
                     console.error(grain);
                     throw "A grain have no order"
                 }
-
             }
         });
         var new_order : number;
@@ -168,16 +165,19 @@ class GrainService implements IGrainService {
         )
     }
 
+    private _createGrainList(subject_id){
+        if(!this._grainList[subject_id]){
+            this._grainList[subject_id] = {};
+        }
+    }
+
     private _removeGrainFromItsOwnList(grain : IGrain){
         delete this._grainList[grain.subject_id][grain.id];
     }
 
     private addGrainToGrainList(grain:IGrain) {
         if(!this._grainList[grain.subject_id]){
-            this._grainList[grain.subject_id] = [];
-        }
-        if (this._grainList[grain.subject_id][grain.id]) {
-            // overwrite
+            throw "Grain List missing";
         }
         this._grainList[grain.subject_id][grain.id] = grain;
     }
@@ -185,15 +185,20 @@ class GrainService implements IGrainService {
     public getGrainListBySubjectId(subject_id, callbackSuccess, callbackFail) {
         var self = this;
         if (this._isSetGrainList[subject_id]) {
-            callbackSuccess(this._grainList[subject_id])
+            callbackSuccess(this.grainListBySubjectId(subject_id))
         } else {
             this._getGrainListBySubjectId(subject_id,
                 function (data) {
-                    self._grainList[subject_id] = data;
+                    self._createGrainList(subject_id);
+                    angular.forEach(data, function(grain, key) {
+                        self.addGrainToGrainList(grain);
+                    });
                     self._isSetGrainList[subject_id] = true;
-                    callbackSuccess(data);
+                    if(callbackSuccess){
+                        callbackSuccess(data);
+                    }
                 },
-                callbackFail()
+                callbackFail
             );
         }
     }
@@ -241,6 +246,12 @@ class GrainService implements IGrainService {
      */
 
     private _getGrainListBySubjectId(subject_id, callbackSuccess, callbackFail) {
+        /**
+         * TEMP
+         */
+        callbackSuccess();
+
+        /*
         var req:any;
         var self = this;
         req = this.$http({
@@ -266,7 +277,7 @@ class GrainService implements IGrainService {
                 console.error(headers);
                 console.error(config);
                 callbackFail(data);
-            });
+            });*/
     }
 
     private _updateGrain(grain:IGrain, callbackSuccess, callbackFail) {

@@ -1,13 +1,13 @@
 directives.push(
     {
-        name: "grainListStudentPerform",
+        name: "grainPerform",
         injections: ['GrainTypeService','GrainCopyService', (GrainTypeService, GrainCopyService) => {
             return {
                 restrict: "E",
                 scope : {
                   grain : "="
                 },
-                templateUrl: 'exercizer/public/app/templates/directives/grain_list/studentPerform.html',
+                templateUrl: 'exercizer/public/app/templates/directives/grain/GrainPerform.html',
                 link:(scope : any, element, attrs) => {
 
                     var typeDirectiveCurrentName;

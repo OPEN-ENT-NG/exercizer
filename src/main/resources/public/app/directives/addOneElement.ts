@@ -17,7 +17,7 @@ directives.push(
                         GrainService.createGrain(
                             grain,
                             function(data){
-                                console.info('Grain created', data);
+                                //success
                             },
                             function(err){
                                 console.error(err);

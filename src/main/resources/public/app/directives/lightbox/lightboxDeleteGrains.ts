@@ -5,7 +5,7 @@ directives.push(
             return {
                 restrict: 'E',
                 scope: {},
-                templateUrl: 'exercizer/public/app/templates/directives/lightboxDeleteGrains.html',
+                templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxDeleteGrains.html',
                 link:(scope : any, element, attrs) => {
 
                     var deleteMessageOneGrain = "Voulez-vous vraiment supprimer cet élement du sujet ?";

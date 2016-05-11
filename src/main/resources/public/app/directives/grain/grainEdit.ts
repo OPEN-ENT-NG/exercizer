@@ -1,13 +1,13 @@
 directives.push(
     {
-        name: "grainListTeacherEdit",
+        name: "grainEdit",
         injections: ['GrainTypeService','GrainService','SelectedGrainService', (GrainTypeService, GrainService, SelectedGrainService) => {
             return {
                 restrict: "E",
                 scope : {
                   grain : "="
                 },
-                templateUrl: 'exercizer/public/app/templates/directives/grain_list/teacherEdit.html',
+                templateUrl: 'exercizer/public/app/templates/directives/grain/grainEdit.html',
                 link:(scope : any, element, attrs) => {
 
                     var typeDirectiveCurrentName;
