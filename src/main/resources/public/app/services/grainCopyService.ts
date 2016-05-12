@@ -1,12 +1,11 @@
-/**
- * Created by jun on 22/04/2016.
- */
 interface IGrainCopyService {
-    getGrainCopyListBySubjectId(subject_id, callbackSuccess, callbackFail);
-    grainCopyListBySubjectId(subject_id) : IGrainCopy[];
-    isSetGrainCopyListBySubjectId(subject_id) : boolean;
+    getGrainCopyListBySubjectCopyId(subject_id, callbackSuccess, callbackFail);
+    grainCopyListBySubjectCopyId(subject_id) : IGrainCopy[];
+    isSetGrainCopyListBySubjectCopyId(subject_id) : boolean;
     createObjectGrainCopy() : IGrainCopy;
-    createObjectGrainCopyFromGrain(grain:IGrain) : IGrainCopy
+    createObjectGrainCopyFromGrain(grain:IGrain) : IGrainCopy;
+    addGrainCopyToGrainCopyList(grain_copy:IGrainCopy);
+    createGrainCopyList(subject_copy_id);
 }
 
 class GrainCopyService implements IGrainCopyService {
@@ -19,7 +18,7 @@ class GrainCopyService implements IGrainCopyService {
     private serverUrl:string;
     private $http:any;
 
-    private _grainCopyList:IGrainCopy[][];
+    private _grainCopyList:any;
     private _isSetGrainCopyList:boolean[];
 
     constructor(serverUrl,
@@ -27,29 +26,29 @@ class GrainCopyService implements IGrainCopyService {
         this.serverUrl = serverUrl;
         this.$http = $http;
 
-        this._grainCopyList = [];
+        this._grainCopyList = {};
         this._isSetGrainCopyList = [];
     }
 
 
-    public grainCopyListBySubjectId(subject_id):IGrainCopy[] {
-        return this._isSetGrainCopyList[subject_id] ? this._grainCopyList[subject_id] : [];
+    public grainCopyListBySubjectCopyId(subject_copy_id):IGrainCopy[] {
+        return this._isSetGrainCopyList[subject_copy_id] ? this._grainCopyList[subject_copy_id] : [];
     }
 
 
-    public isSetGrainCopyListBySubjectId(subject_id):boolean {
-        return !!this._isSetGrainCopyList[subject_id];
+    public isSetGrainCopyListBySubjectCopyId(subject_copy_id):boolean {
+        return !!this._isSetGrainCopyList[subject_copy_id];
     }
 
-    public getGrainCopyListBySubjectId(subject_id, callbackSuccess, callbackFail) {
+    public getGrainCopyListBySubjectCopyId(subject_copy_id, callbackSuccess, callbackFail) {
         var self = this;
-        if (this._isSetGrainCopyList[subject_id]) {
-            callbackSuccess(this._grainCopyList[subject_id])
+        if (this._isSetGrainCopyList[subject_copy_id]) {
+            callbackSuccess(this._grainCopyList[subject_copy_id])
         } else {
-            this._getGrainCopyListBySubjectId(subject_id,
+            this._getGrainCopyListBySubjectCopyId(subject_copy_id,
                 function (data) {
-                    self._grainCopyList[subject_id] = data;
-                    self._isSetGrainCopyList[subject_id] = true;
+                    self._grainCopyList[subject_copy_id] = data;
+                    self._isSetGrainCopyList[subject_copy_id] = true;
                     callbackSuccess(data);
                 },
                 callbackFail()
@@ -58,51 +57,68 @@ class GrainCopyService implements IGrainCopyService {
     }
 
     public createObjectGrainCopyData():IGrainCopyData {
-        var grain_copy_data:IGrainCopyData = {
+        return {
             title: null,
             max_score: null,
             statement: null,
-            documentList: [],
+            documentList: null,
             hint: null,
             custom_copy_data: null
         };
-        return grain_copy_data;
 
     }
 
     public createObjectGrainCopy():IGrainCopy {
-        var grain_copy:IGrainCopy = {
+        return {
             id: null,
             subject_copy_id: null,
             grain_scheduled_id: null,
             grain_type_id: null,
+            order : null,
             created: new Date().toISOString(),
             modified: new Date().toISOString(),
             grain_copy_data: this.createObjectGrainCopyData(),
             final_score: null,
-            score: null,
+            calculated_score: null,
             teacher_comment: null,
             is_deleted: null
         };
-        return grain_copy
     }
 
 
     public createObjectGrainCopyFromGrain(grain:IGrain):IGrainCopy {
         var grain_copy = this.createObjectGrainCopy();
+        grain_copy.id = Math.floor((Math.random() * 1000) + 1);
+        grain_copy.grain_type_id = grain.grain_type_id;
+        grain_copy.order = grain.order;
         grain_copy.grain_copy_data.title = grain.grain_data.title;
         grain_copy.grain_copy_data.max_score = grain.grain_data.max_score;
         grain_copy.grain_copy_data.statement = grain.grain_data.statement;
         grain_copy.grain_copy_data.documentList = grain.grain_data.documentList;
         grain_copy.grain_copy_data.hint = grain.grain_data.hint;
+        grain_copy.grain_copy_data.custom_copy_data = grain.grain_data.custom_data;
         return grain_copy;
+    }
+
+    public addGrainCopyToGrainCopyList(grain_copy:IGrainCopy) {
+        this._isSetGrainCopyList[grain_copy.subject_copy_id] = true;
+        if(!this._grainCopyList[grain_copy.subject_copy_id]){
+            throw "Grain List missing";
+        }
+        this._grainCopyList[grain_copy.subject_copy_id][grain_copy.id] = grain_copy;
+    }
+
+    public createGrainCopyList(subject_copy_id){
+        if(!this._grainCopyList[subject_copy_id]){
+            this._grainCopyList[subject_copy_id] = {};
+        }
     }
 
     /**
      *  PRIVATE HTTP
      */
 
-    private _getGrainCopyListBySubjectId(subject_id, callbackSuccess, callbackFail) {
+    private _getGrainCopyListBySubjectCopyId(subject_id, callbackSuccess, callbackFail) {
         var req:any;
         var self = this;
         req = this.$http({

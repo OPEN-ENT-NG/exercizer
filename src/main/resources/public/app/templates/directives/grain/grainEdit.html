@@ -1,13 +1,13 @@
 <article>
     <div class="row">
-        <div class="one cell"><grain-icon directive-name = "getTypeDirectiveEditNameByCurrentGrain()"></grain-icon></div>
+        <div class="one cell"><grain-icon type-name = "getTypeNameByCurrentGrain()"></grain-icon></div>
         <div class="nine cell">&nbsp;</div>
         <div class="one cell" data-ng-click="eventDeleteGrain()"><i class="close-2x"></i></div>
         <div class="one cell" data-ng-click="eventToggleGrain()"><grain-toggle ></grain-toggle></div>
     </div>
 
     <div class="row" data-ng-show="isToggle">
-        <div data-ng-show="getTypeDirectiveEditNameByCurrentGrain() == 'edit-statement'">
+        <div data-ng-show="getTypeNameByCurrentGrain() == 'statement'">
             <div class="row">
                 <div class="two cell">
                     <input type="checkbox" data-ng-model="isGrainSelected" data-ng-change="eventSelectGrain()">
@@ -15,26 +15,26 @@
                 <div class="ten cell" ng-bind-html="grain.grain_data.custom_data.statement"></div>
             </div>
         </div>
-        <div data-ng-hide="getTypeDirectiveEditNameByCurrentGrain() == 'edit-statement'">
+        <div data-ng-hide="getTypeNameByCurrentGrain() == 'statement'">
             <div class="row">
                 <div class="two cell">
-                    <input type="checkbox" data-ng-model="isGrainSelected" data-ng-change="eventSelectGrain()"><br>
-                </div>
-                <div class="six cell">[[grain.grain_data.title]]</div>
-                <div class="two cell"><exercise-icon grain = "grain"></exercise-icon></div>
-                <div class="two cell">/ [[grain.grain_data.max_score]]</div>
+                <input type="checkbox" data-ng-model="isGrainSelected" data-ng-change="eventSelectGrain()"><br>
+            </div>
+            <div class="six cell">[[grain.grain_data.title]]</div>
+            <div class="two cell"><exercise-icon grain = "grain"></exercise-icon></div>
+            <div class="two cell">/ [[grain.grain_data.max_score]]</div>
             </div>
         </div>
     </div>
     <div class="row" data-ng-hide="isToggle">
-        <div ng-switch on="getTypeDirectiveEditNameByCurrentGrain()">
-            <div ng-switch-when="edit-statement">
+        <div ng-switch on="getTypeNameByCurrentGrain()">
+            <div ng-switch-when="statement">
                 <edit-statement grain = "grain"></edit-statement>
             </div>
-            <div class="animate-switch" ng-switch-when="edit-open-question">
+            <div class="animate-switch" ng-switch-when="openQuestion">
                 <edit-open-question></edit-open-question>
             </div>
-            <div class="animate-switch" ng-switch-when="edit-simple-answer">
+            <div class="animate-switch" ng-switch-when="simpleAnswer">
                 <edit-simple-answer grain="grain"></edit-simple-answer>
             </div>
             <div class="animate-switch" ng-switch-default>

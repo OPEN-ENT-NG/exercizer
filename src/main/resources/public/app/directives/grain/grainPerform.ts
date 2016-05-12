@@ -5,20 +5,20 @@ directives.push(
             return {
                 restrict: "E",
                 scope : {
-                  grain : "="
+                    grainCopy : "="
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/grain/GrainPerform.html',
                 link:(scope : any, element, attrs) => {
 
-                    var typeDirectiveCurrentName;
+                    var currentTypeName;
 
                     function init(){
-                        typeDirectiveCurrentName = GrainTypeService.getTypeDirectiveEditNameByGrainId(scope.grain.grain_type_id);
+                        currentTypeName = GrainTypeService.getTypeNameByTypeId(scope.grainCopy.grain_type_id);
                     }
                     init();
 
-                    scope.getTypeDirectiveEditNameByCurrentGrain = function(){
-                        return typeDirectiveCurrentName;
+                    scope.getTypeDirectiveEditNameByCurrentGrainCopy = function(){
+                        return currentTypeName;
                     };
                 }
             };

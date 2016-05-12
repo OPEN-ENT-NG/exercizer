@@ -95,6 +95,7 @@ class SubjectService implements ISubjectService {
             created: null,
             modified: null,
             visibility: null,
+            max_score : null,
             folder_id: null,
             original_subject_id: null,
             title: null,
@@ -155,6 +156,17 @@ class SubjectService implements ISubjectService {
                 callbackFail()
             );
         }
+    }
+
+    public computeMaxScoreForCurrentSubject(){
+        var grain_list = this.grainService.grainListBySubjectId(this._currentSubjectId);
+        var max_score = 0;
+        angular.forEach(grain_list, function(grain, key) {
+            max_score += grain.grain_data.max_score
+        });
+        var currentSubject = this.subjectById(this._currentSubjectId);
+        currentSubject.max_score = max_score;
+        console.log('maxScore : ' + currentSubject.max_score);
     }
 
     /**

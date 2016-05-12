@@ -14,42 +14,29 @@ directives.push(
             return {
                 restrict: "E",
                 scope: {
-                    grain: '=',
+                    grainCopy: '=',
                 },
                 templateUrl: 'exercizer/public/app/components/simple_answer/templates/perform.html',
                 link:(scope : any, element, attrs) => {
 
                     function  init(){
-                        scope.grainCopy = GrainCopyService.createObjectGrainCopyFromGrain(scope.grain);
-                        scope.grainCopy.grain_copy_data.custom_copy_data = SimpleAnswerService.createObjectCustomCopyData();
+                        if(scope.grainCopy.grain_copy_data.custom_copy_data == null){
+                            scope.grainCopy.grain_copy_data.custom_copy_data = SimpleAnswerService.createObjectCustomCopyData();
+                        }
                     }
                     init();
-
-                    scope.clickNextQuestion = function(){
-                        // autocorrection here to test
-                        var grain_scheduled = GrainScheduledService.createObjectGrainScheduledFromGrain(scope.grain);
-                        SimpleAnswerService.automaticCorrection(scope.grainCopy, grain_scheduled);
-
-                    };
-
-
-
-                    /**
-                     * TEMP
-                     * @type {IGrainCopy}
-                     */
-                    scope.$watch('grain', function() {
-                        //keep custom_copy_data
-                        var custom_copy_data : ISimpleAnswerCustomCopyData = scope.grainCopy.grain_copy_data.custom_copy_data;
-                        scope.grainCopy = GrainCopyService.createObjectGrainCopyFromGrain(scope.grain);
-                        scope.grainCopy.grain_copy_data.custom_copy_data = custom_copy_data;
-                    }, true);
-
                 }
             };
         }]
     }
 );
+
+/*
+ // autocorrection here to test
+ var grain_scheduled = GrainScheduledService.createObjectGrainScheduledFromGrain(scope.grain);
+ SimpleAnswerService.resolver(scope.grainCopy, grain_scheduled);
+
+ */
 
 
 

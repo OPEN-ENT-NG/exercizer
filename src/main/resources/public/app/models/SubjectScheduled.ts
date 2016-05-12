@@ -1,11 +1,9 @@
-/**
- * Created by Erwan_LP on 29/04/2016.
- */
 interface ISubjectScheduled {
     id: number;
     subject_id : number;
     created : string;
     title : string;
+    max_score : number;
     description : string;
     picture : string;
     begin_date :string;

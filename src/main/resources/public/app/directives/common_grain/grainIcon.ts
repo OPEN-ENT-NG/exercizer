@@ -6,7 +6,7 @@ directives.push(
             return {
                 restrict: "E",
                 scope: {
-                    directiveName: '=',
+                    typeName: '=',
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/common_grain/grainIcon.html',
                 link:(scope : any, element, attrs) => {

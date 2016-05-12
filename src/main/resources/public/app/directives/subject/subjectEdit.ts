@@ -10,8 +10,6 @@ directives.push(
                 templateUrl: 'exercizer/public/app/templates/directives/subject/subjectEdit.html',
                 link:(scope : any, element, attrs) => {
 
-
-
                     scope.grainList = function(){
                         var res =  GrainService.grainListBySubjectId(scope.subject.id);
                         return res;
@@ -54,8 +52,6 @@ directives.push(
                             )
                         });
                     };
-
-
                 }
             };
         }]

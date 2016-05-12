@@ -8,7 +8,7 @@ directives.push(
                 link:(scope : any, element, attrs) => {
 
                     scope.clickOnShowPreview = function(){
-                        PreviewSubjectService.displayPreviewSubject = true;
+                        PreviewSubjectService.initPreviewSubject();
                     }
                 }
             };

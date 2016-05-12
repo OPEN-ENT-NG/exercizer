@@ -10,7 +10,7 @@ directives.push(
                 templateUrl: 'exercizer/public/app/templates/directives/grain/grainEdit.html',
                 link:(scope : any, element, attrs) => {
 
-                    var typeDirectiveCurrentName;
+                    var currentTypeName;
 
                     function init(){
                         /**
@@ -19,12 +19,12 @@ directives.push(
                          * @type {boolean}
                          */
                         scope.isToggle = false;
-                        typeDirectiveCurrentName = GrainTypeService.getTypeDirectiveEditNameByGrainId(scope.grain.grain_type_id);
+                        currentTypeName = GrainTypeService.getTypeNameByTypeId(scope.grain.grain_type_id);
                     }
                     init();
 
-                    scope.getTypeDirectiveEditNameByCurrentGrain = function(){
-                        return typeDirectiveCurrentName;
+                    scope.getTypeNameByCurrentGrain = function(){
+                        return currentTypeName;
                     };
 
                     scope.eventToggleGrain = function(){

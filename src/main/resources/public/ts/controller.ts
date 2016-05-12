@@ -78,6 +78,8 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('StatementService', StatementService);
         module.service('SelectedGrainService', SelectedGrainService);
         module.service('PreviewSubjectService', PreviewSubjectService);
+        module.service('SubjectScheduledService', SubjectScheduledService );
+        module.service('CopyService', CopyService );
 
         /**
          * Controllers

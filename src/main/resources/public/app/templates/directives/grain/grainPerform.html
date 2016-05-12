@@ -1,13 +1,13 @@
 <article>
-    <div ng-switch on="getTypeDirectiveEditNameByCurrentGrain()">
-        <div ng-switch-when="edit-statement">
-            <perform-statement grain="grain"></perform-statement>
+    <div ng-switch on="getTypeDirectiveEditNameByCurrentGrainCopy()">
+        <div ng-switch-when="statement">
+            <perform-statement grain-copy="grainCopy"></perform-statement>
         </div>
-        <div class="animate-switch" ng-switch-when="edit-simple-answer">
-            <perform-simple-answer grain="grain"></perform-simple-answer>
+        <div class="animate-switch" ng-switch-when="simpleAnswer">
+            <perform-simple-answer grain-copy="grainCopy"></perform-simple-answer>
         </div>
         <div class="animate-switch" ng-switch-default>
-            [[getTypeNameByCurrentGrain()]] ---  [[grain]]
+            [[grainCopy]]
         </div>
     </div>
 </article>

@@ -5,7 +5,6 @@ interface IGrainType {
     id : number;
     name : string;
     publicName : string;
-    directiveEditName : string;
     picture : string;
 
 }

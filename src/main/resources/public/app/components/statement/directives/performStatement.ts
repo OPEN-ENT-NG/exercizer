@@ -9,14 +9,12 @@ directives.push(
             return {
                 restrict: "E",
                 scope : {
-                    grain : "="
+                    grainCopy : "="
                 },
                 templateUrl: 'exercizer/public/app/components/statement/templates/perform.html',
                 link:(scope : any, element, attrs) => {
 
-                    scope.$watch('grain', function() {
-                        scope.statementHtml = $sce.trustAsHtml(scope.grain.grain_data.custom_data.statement);
-                    }, true);
+                    scope.statementHtml = $sce.trustAsHtml(scope.grainCopy.grain_copy_data.custom_copy_data.statement);
 
                 }
             };

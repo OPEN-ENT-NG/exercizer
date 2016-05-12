@@ -1,0 +1,66 @@
+<div class="row">
+    <div class="three cell">
+        <button data-ng-show="display.buttonBackToSubjectList()">
+            Retour au sujets
+        </button>
+        &nbsp;
+    </div>
+    <div class="nine cell">
+        <span>[[getSubjectTitle()]]</span>
+        <span>[[getSubjectMaxScore()]]</span>
+        <button class="right-magnet cell" data-ng-show="display.buttonReturnCopy()">
+            Rendre la copie
+        </button>
+        <button class="right-magnet cell" data-ng-show="display.buttonReturnCopy()">
+            Rendre la copie plus tard
+        </button>
+        <button class="right-magnet cell" data-ng-click="clickOnAutoCorrection" data-ng-show="display.buttonAutoCorrection()">
+            AutoCorrection
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <!-- part navigation -->
+    <div class="three cell">
+        <span>Temps restant : </span>
+        <nav-subject-perform grain-list="grainCopyList()"
+                             click-on-grain-copy-from-parent="clickOnGrainCopyInNav(grainCopy)">
+
+        </nav-subject-perform>
+    </div>
+    <!-- part grain -->
+    <div class="nine cell">
+        <div class="row">
+            <div class="twelve cell">
+                <div data-ng-show="display.pagePresentationSubject()">
+                    <article>
+                        <div class="row">
+                            <div class="twelve cell">
+                                <div>Sujet à rendre avant le : </div>
+                            </div>
+                            <div class="twelve cell">
+                                <div>Durée de réalisation : </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <div data-ng-repeat="grainCopy in grainCopyList() | orderObjectBy:'order':false"
+                     data-ng-show="display.grainCopyByOrder(grainCopy.order)">
+                    <grain-perform grain-copy="grainCopy"></grain-perform>
+                </div>
+            </div>
+            <div class="twelve cell">
+                <button class="right-magnet cell" data-ng-click="clickNextQuestion()" data-ng-show="display.buttonNextQuestion()">
+                    Question suivante
+                </button>
+                <button class="right-magnet cell" data-ng-click="clickPreviousQuestion()" data-ng-show="display.buttonPreviousQuestion()">
+                    Question précèdente
+                </button>
+                <button class="right-magnet cell" data-ng-click="startSubject()" data-ng-show="display.buttonStartSubject()">
+                    Commencer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -30,7 +30,6 @@ directives.push(
                             scope.grain,
                             function(data){
                                 //success
-                                console.info('Grain updated', data);
                             },
                             function(err){
                                 console.error(err);
