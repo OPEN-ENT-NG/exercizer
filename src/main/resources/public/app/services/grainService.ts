@@ -87,7 +87,9 @@ class GrainService implements IGrainService {
                     // this grain have order yet
                 }
                 console.info('createGrain', data);
-                callbackSuccess(data);
+                if(callbackSuccess){
+                    callbackSuccess(data);
+                }
             },
             function (err) {
                 console.error(err);
@@ -130,7 +132,7 @@ class GrainService implements IGrainService {
         });
         var new_order : number;
         if(max_order){
-            new_order = parseFloat(max_order) + 1;
+            new_order = Math.ceil(parseFloat(max_order)) + 1;
         } else {
             new_order = 1;
         }

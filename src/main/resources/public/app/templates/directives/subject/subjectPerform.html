@@ -14,7 +14,7 @@
         <button class="right-magnet cell" data-ng-show="display.buttonReturnCopy()">
             Rendre la copie plus tard
         </button>
-        <button class="right-magnet cell" data-ng-click="clickOnAutoCorrection" data-ng-show="display.buttonAutoCorrection()">
+        <button class="right-magnet cell" data-ng-click="clickOnAutoCorrection()" data-ng-show="display.buttonAutoCorrection()">
             AutoCorrection
         </button>
     </div>
@@ -47,7 +47,7 @@
                 </div>
                 <div data-ng-repeat="grainCopy in grainCopyList() | orderObjectBy:'order':false"
                      data-ng-show="display.grainCopyByOrder(grainCopy.order)">
-                    <grain-perform grain-copy="grainCopy"></grain-perform>
+                    <grain-perform grain-copy="grainCopy" state="perform"></grain-perform>
                 </div>
             </div>
             <div class="twelve cell">

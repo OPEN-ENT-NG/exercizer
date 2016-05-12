@@ -9,8 +9,12 @@
         <div class="twelve cell"><perform-question-statement statement="grainCopy.grain_copy_data.statement"></perform-question-statement></div>
     </div>
     <div class="row">
+        state : [[state]]
         <div class="twelve cell">
-            <textarea ng-model="grainCopy.grain_copy_data.custom_copy_data.student_answer" ng-blur="actionOnBlur()" class="twelve cell" placeholder="Reponse"></textarea>
+            <textarea ng-if="state == 'perform'" ng-model="grainCopy.grain_copy_data.custom_copy_data.student_answer" ng-blur="actionOnBlur()" class="twelve cell" placeholder="Reponse"></textarea>
+            <div ng-if="state == 'correction'"  class="twelve cell" >
+                [[grainCopy.grain_copy_data.custom_copy_data.student_answer]]
+            </div>
         </div>
     </div>
 </article>

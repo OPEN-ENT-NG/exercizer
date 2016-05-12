@@ -43,18 +43,56 @@ class SubjectService implements ISubjectService {
     private createDevSubject() {
         var self = this;
         var subject:ISubject = this.createObjectSubject();
-        subject.title = "DEV SUBJECT";
+        subject.title = "Subject Test";
         this.createSubject(
             subject,
             function(data){
                 console.error(data);
-                self.grainService.getGrainListBySubjectId(data.id,null, null);
+                self.grainService.getGrainListBySubjectId(
+                    data.id,
+                    function(){
+                        // create grain dev
+                        var grainDev = self.grainService.createObjectGrain();
+                        grainDev.subject_id = data.id;
+                        grainDev.grain_type_id = "3";
+                        grainDev.grain_data.title =  "Exercise Test";
+                        grainDev.grain_data.max_score =  "5";
+                        grainDev.grain_data.statement =  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean posuere rhoncus dui sit amet sagittis. Vestibulum felis quam, commodo euismod egestas pellentesque, porta nec urna. Proin rhoncus sollicitudin nibh, sed fringilla nibh porta quis. Phasellus dignissim arcu ligula, vel posuere tellus finibus at. Maecenas commodo euismod magna ut pretium. ";
+                        grainDev.grain_data.hint =  "La réponse est 3 ";
+                        grainDev.grain_data.correction =  "Correction de la réponse";
+                        grainDev.grain_data.custom_data = {
+                            correct_answer : "3"
+                        };
+
+                        self.grainService.createGrain(
+                            grainDev,
+                            function(){
+                                var grainDev2 = self.grainService.createObjectGrain();
+                                grainDev2.subject_id = data.id;
+                                grainDev2.grain_type_id = "3";
+                                grainDev2.grain_data.title =  "Exercise Test Numero 2";
+                                grainDev2.grain_data.max_score =  "5";
+                                grainDev2.grain_data.statement =  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean posuere rhoncus dui sit amet sagittis. Vestibulum felis quam, commodo euismod egestas pellentesque, porta nec urna. Proin rhoncus sollicitudin nibh, sed fringilla nibh porta quis. Phasellus dignissim arcu ligula, vel posuere tellus finibus at. Maecenas commodo euismod magna ut pretium. ";
+                                grainDev2.grain_data.hint =  "La réponse est 3 ";
+                                grainDev2.grain_data.correction =  "Correction de la réponse";
+                                grainDev2.grain_data.custom_data = {
+                                    correct_answer : "3"
+                                };
+                                self.grainService.createGrain(grainDev2, null, null);
+                            },
+                            null
+                        );
+                    },
+                    null);
+
+
             },
             function(err){
 
             }
         );
     }
+
 
 
     public get subjectList():ISubject[] {

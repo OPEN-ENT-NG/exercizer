@@ -103,7 +103,7 @@ class GrainCopyService implements IGrainCopyService {
     public addGrainCopyToGrainCopyList(grain_copy:IGrainCopy) {
         this._isSetGrainCopyList[grain_copy.subject_copy_id] = true;
         if(!this._grainCopyList[grain_copy.subject_copy_id]){
-            throw "Grain List missing";
+            console.error("Grain List missing");
         }
         this._grainCopyList[grain_copy.subject_copy_id][grain_copy.id] = grain_copy;
     }

@@ -5,10 +5,14 @@ directives.push(
             return {
                 restrict: "E",
                 scope : {
-                    grainCopy : "="
+                    grainCopy : "=",
+                    state : "@"
                 },
-                templateUrl: 'exercizer/public/app/templates/directives/grain/GrainPerform.html',
+                templateUrl: 'exercizer/public/app/templates/directives/grain/grainPerform.html',
                 link:(scope : any, element, attrs) => {
+
+                    console.log('stateGrainPerform : '+scope.state);
+
 
                     var currentTypeName;
 

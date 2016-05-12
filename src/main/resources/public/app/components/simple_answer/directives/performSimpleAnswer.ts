@@ -15,6 +15,7 @@ directives.push(
                 restrict: "E",
                 scope: {
                     grainCopy: '=',
+                    state : '@'
                 },
                 templateUrl: 'exercizer/public/app/components/simple_answer/templates/perform.html',
                 link:(scope : any, element, attrs) => {
@@ -33,9 +34,7 @@ directives.push(
 
 /*
  // autocorrection here to test
- var grain_scheduled = GrainScheduledService.createObjectGrainScheduledFromGrain(scope.grain);
  SimpleAnswerService.resolver(scope.grainCopy, grain_scheduled);
-
  */
 
 

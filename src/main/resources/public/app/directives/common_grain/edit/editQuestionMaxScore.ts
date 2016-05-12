@@ -8,7 +8,6 @@ var editQuestionMaxScore = ['SubjectService', (SubjectService) => {
         },
         templateUrl: 'exercizer/public/app/templates/directives/commonExercise/edit/editQuestionMaxScore.html',
         link:(scope : any, element, attrs) => {
-            console.log('editQuestionMaxScore');
 
 
             scope.onBlurLocalFunction = function(){

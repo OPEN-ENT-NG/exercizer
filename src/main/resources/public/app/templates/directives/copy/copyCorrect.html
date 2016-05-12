@@ -1,0 +1,5 @@
+<div data-ng-repeat="grainCopy in grainCopyList() | orderObjectBy:'order':false">
+    <grain-perform grain-copy="grainCopy" state="correction"></grain-perform>
+    <grain-correction grain-copy="grainCopy" state="correction" ></grain-correction>
+</div>
+

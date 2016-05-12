@@ -23,6 +23,7 @@ directives.push(
                     }
                     init();
 
+                    // TODO : remonter la fonction d'un cran vers le haut
                     scope.actionOnBlur = function(){
                         GrainService.updateGrain(
                             scope.grain,

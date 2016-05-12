@@ -1,11 +1,11 @@
 directives.push(
     {
-        name: 'lightboxPreviewSubject',
+        name: 'lightboxPreviewCopyCorrect',
         injections: ['PreviewSubjectService','SubjectService','GrainService', (PreviewSubjectService, SubjectService, GrainService) => {
             return {
                 restrict: 'E',
                 scope: {},
-                templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxPreviewSubject.html',
+                templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxPreviewCopyCorrect.html',
                 link:(scope : any, element, attrs) => {
 
                     scope.subjectCopy = function(){
@@ -17,11 +17,11 @@ directives.push(
                     };
 
                     scope.display = function(){
-                        return PreviewSubjectService.displayPreviewSubject;
+                        return PreviewSubjectService.displayPreviewCopyCorrect;
                     };
 
                     scope.hide = function(){
-                        PreviewSubjectService.displayPreviewSubject = false;
+                        PreviewSubjectService.displayPreviewCopyCorrect = false;
                     }
 
                 }

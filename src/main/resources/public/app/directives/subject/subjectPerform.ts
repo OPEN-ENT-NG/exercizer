@@ -1,7 +1,7 @@
 directives.push(
     {
         name: "subjectPerform",
-        injections: ['SubjectService', 'GrainCopyService', 'SelectedGrainService', (SubjectService, GrainCopyService, SelectedGrainService) => {
+        injections: ['SubjectService', 'GrainCopyService', 'PreviewSubjectService', (SubjectService, GrainCopyService, PreviewSubjectService) => {
             return {
                 restrict: "E",
                 scope: {
@@ -12,7 +12,7 @@ directives.push(
                 templateUrl: 'exercizer/public/app/templates/directives/subject/subjectPerform.html',
                 link: (scope:any, element, attrs) => {
 
-                    console.log('state : ' + scope.state);
+                    console.log('stateSubjectPerform : '+scope.state);
 
                     /**
                      * VARIABLE
@@ -63,6 +63,7 @@ directives.push(
 
                     scope.clickOnAutoCorrection = function(){
                         console.log('clickOnAutoCorrection');
+                        PreviewSubjectService.initAutoCorrection();
                     };
 
 
