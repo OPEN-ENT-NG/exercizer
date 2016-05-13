@@ -6,4 +6,4 @@
 
 * Financeur(s) : Région Nord Pas de Calais-Picardie
 
-* Description : 
+* Description : Application d'édition, de conception, de partage  et d'administration d'exercices interactifs
