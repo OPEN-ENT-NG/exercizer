@@ -1,6 +1,6 @@
 # exercizer
 
-* Licence : Non libéré pour le moment - Copyright Conseil Régional Nord Pas de Calais - Picardie, Conseil départemental de l'Essonne, Conseil régional d'Aquitaine-Limousin-Poitou-Charentes
+* Licence : Non libéré pour le moment - Copyright Conseil Régional Nord Pas de Calais - Picardie
 
 * Développeur(s) : OPEN DIGITAL EDUCATION
 
