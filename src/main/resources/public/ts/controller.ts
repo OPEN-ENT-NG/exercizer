@@ -78,6 +78,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('PreviewSubjectService', PreviewSubjectService);
         module.service('SubjectScheduledService', SubjectScheduledService );
         module.service('CopyService', CopyService );
+        module.service('CompareStringService', CompareStringService );
 
         /**
          * Controllers
