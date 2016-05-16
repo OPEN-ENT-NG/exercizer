@@ -56,6 +56,9 @@ class GrainTypeService implements IGrainTypeService {
                 } else{
                 }
             });
+            if(!self._cacheTypeIdToTypeName[id]){
+                return null;
+            }
         }
         return this._cacheTypeIdToTypeName[id];
     }

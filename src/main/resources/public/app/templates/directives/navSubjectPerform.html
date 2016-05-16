@@ -3,7 +3,7 @@
     <div class="twelve" data-ng-repeat="grainCopy in grainList | orderObjectBy:'order':false" >
         <div data-ng-click="clickOnGrainCopy(grainCopy)"
                 data-ng-class="isCurrent()">
-            [[grainCopy.grain_copy_data.title]]
+            [[getGrainLabel(grainCopy)]]
         </div>
     </div>
 </div>

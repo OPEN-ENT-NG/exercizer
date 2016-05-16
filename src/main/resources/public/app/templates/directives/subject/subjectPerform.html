@@ -47,7 +47,7 @@
                 </div>
                 <div data-ng-repeat="grainCopy in grainCopyList() | orderObjectBy:'order':false"
                      data-ng-show="display.grainCopyByOrder(grainCopy.order)">
-                    <grain-perform grain-copy="grainCopy" state="perform"></grain-perform>
+                    <grain-perform grain-copy="grainCopy" grain-state="perform"></grain-perform>
                 </div>
             </div>
             <div class="twelve cell">

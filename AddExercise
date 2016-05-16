@@ -1,3 +1,5 @@
 Add edit directive:
-In the switch  - > ng-switch on="getTypeNameByCurrentGrain()
 /exercizer/src/main/resources/public/app/templates/directives/grain/grainEdit.html
+
+Add perform directive
+/exercizer/src/main/resources/public/app/templates/directives/grain/grainPerform.html

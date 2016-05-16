@@ -94,7 +94,6 @@ class PreviewSubjectService implements IPreviewSubjectService {
     }
 
     public initAutoCorrection(){
-        console.log('initAutoCorrection');
         var self = this;
         this._displayPreviewSubjectPerform = false;
         this._displayPreviewCopyCorrect = true;

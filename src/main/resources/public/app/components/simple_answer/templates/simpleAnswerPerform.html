@@ -1,20 +1,10 @@
-<article>
-    <div class="row">
-        <div class="one cell"><exercizer-help></exercizer-help></div>
-        <div class="two cell"><perform-question-max-score max-score="grainCopy.grain_copy_data.max_score"></perform-question-max-score></div>
-        <div class="six cell"><perform-question-title title="grainCopy.grain_copy_data.title"></perform-question-title></div>
-        <div class="tree cell"><perform-question-hint title="grainCopy.grain_copy_data.hint"></perform-question-hint></div>
-    </div>
-    <div class="row">
-        <div class="twelve cell"><perform-question-statement statement="grainCopy.grain_copy_data.statement"></perform-question-statement></div>
-    </div>
-    <div class="row">
-        state : [[state]]
-        <div class="twelve cell">
-            <textarea ng-if="state == 'perform'" ng-model="grainCopy.grain_copy_data.custom_copy_data.student_answer" ng-blur="actionOnBlur()" class="twelve cell" placeholder="Reponse"></textarea>
-            <div ng-if="state == 'correction'"  class="twelve cell" >
-                [[grainCopy.grain_copy_data.custom_copy_data.student_answer]]
-            </div>
+<div class="row">
+    <div class="twelve cell">
+        <!-- perform -->
+        <textarea ng-if="grainState == 'perform'" ng-model="grainCopy.grain_copy_data.custom_copy_data.student_answer" ng-blur="actionOnBlur()" class="twelve cell" placeholder="Reponse"></textarea>
+        <!-- marking -->
+        <div ng-if="grainState == 'marking'"  class="twelve cell" >
+            [[grainCopy.grain_copy_data.custom_copy_data.student_answer]]
         </div>
     </div>
-</article>
+</div>

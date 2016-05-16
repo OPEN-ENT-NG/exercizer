@@ -7,16 +7,10 @@ directives.push(
                 restrict: "E",
                 scope: {
                     hint: '=',
-                    state: '@',
+                    grainState: '@',
                     onBlurFunction : "&"
                 },
-                templateUrl: function($elem, $attr){
-                    if($attr.state != 'edit'){
-                        console.error($attr.state + " not accepted");
-                        throw "";
-                    }
-                    return "exercizer/public/app/templates/directives/common_grain/"+$attr.state+"/hint.html";
-                },
+                templateUrl: "exercizer/public/app/templates/directives/common_grain/grainHint.html",
                 link:(scope : any, element, attrs) => {
 
                 }

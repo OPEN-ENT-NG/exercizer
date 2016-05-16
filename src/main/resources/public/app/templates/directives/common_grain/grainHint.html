@@ -1,0 +1,21 @@
+<!-- edit -->
+<div data-ng-show="grainState == 'edit'">
+    <div class="row">
+        <div class="two cell edit-question-icon" style="height: 80px;">
+            <img src="/exercizer/public/assets/img/indice.PNG">
+        </div>
+        <div class="ten cell">
+            <textarea ng-model="hintModel" ng-blur="onBlurFunction()" class="twelve cell" style="height: 80px;" placeholder="Aide à la réponse"></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- perform -->
+<div data-ng-show="grainState == 'perform' || grainState == 'marking'">
+    <span>[[hint]]</span>
+</div>
+
+
+
+
+

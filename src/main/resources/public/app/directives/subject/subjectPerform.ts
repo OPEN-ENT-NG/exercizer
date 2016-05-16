@@ -7,12 +7,10 @@ directives.push(
                 scope: {
                     subjectCopy: "=",
                     subjectScheduled: "=",
-                    state: "@"
+                    subjectState: "@"
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/subject/subjectPerform.html',
                 link: (scope:any, element, attrs) => {
-
-                    console.log('stateSubjectPerform : ' + scope.state);
 
                     /**
                      * VARIABLE
@@ -175,13 +173,13 @@ directives.push(
 
                     scope.display = {
                         buttonReturnCopy: function () {
-                            return scope.state == "studentPerform"
+                            return scope.subjectState == "studentPerform"
                         },
                         buttonAutoCorrection: function () {
-                            return scope.state == "preview"
+                            return scope.subjectState == "preview"
                         },
                         buttonBackToSubjectList: function () {
-                            return scope.state == "studentPerform"
+                            return scope.subjectState == "studentPerform"
                         },
                         pagePresentationSubject: function () {
                             return currentOrder == "subjectPresentation"

@@ -31,19 +31,58 @@
 
     <!-- not toggle part -->
     <div class="row" data-ng-hide="isToggle">
-        <div ng-switch on="getTypeNameByCurrentGrain()">
-            <div ng-switch-when="statement">
-                <statement-edit grain="grain" update-grain="updateGrain()"></statement-edit>
-            </div>
-            <div class="animate-switch" ng-switch-when="simpleAnswer">
-                <simple-answer-edit grain="grain" update-grain="updateGrain()"></simple-answer-edit>
-            </div>
-            <div class="animate-switch" ng-switch-default>
-                <span>[[getTypeNameByCurrentGrain()]] not taking into account</span>
+        <!-- statement -->
+        <div data-ng-show="getTypeNameByCurrentGrain() == 'statement'">
+            <statement-edit grain="grain" update-grain="updateGrain()"></statement-edit>
+        </div>
+        <!-- not statement -->
+        <div data-ng-hide="getTypeNameByCurrentGrain() == 'statement'">
+            <div class="row">
+                <div class="one cell">&nbsp;</div>
+                <div class="ten cell">
+                    <div class="row">
+                        <div class="eight cell">
+                            <grain-title grain-state="edit" title="grain.grain_data.title"
+                                         on-blur-function="updateGrain()"></grain-title>
+                        </div>
+                        <div class="four cell">
+                            <grain-max-score grain-state="edit" max-score="grain.grain_data.max_score"
+                                             on-blur-function="updateGrain()"></grain-max-score>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="twelve cell">
+                            <grain-statement grain-state="edit" statement="grain.grain_data.statement"
+                                             on-blur-function="updateGrain()"></grain-statement>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="twelve cell">
+                            <grain-add-document state="edit"></grain-add-document>
+                        </div>
+                    </div>
+                    <div ng-switch on="getTypeNameByCurrentGrain()">
+                        <!-- HERE IS THE SWITCH ON THE EXERCISE -->
+                        <div class="animate-switch" ng-switch-when="simpleAnswer">
+                            <simple-answer-edit grain-state="edit" grain="grain" update-grain="updateGrain()"></simple-answer-edit>
+                        </div>
+                        <div class="animate-switch" ng-switch-default></div>
+                    </div>
+                    <div class="row">
+                        <div class="twelve cell">
+                            <grain-hint grain-state="edit" hint="grain.grain_data.hint"
+                                        on-blur-function="updateGrain()"></grain-hint>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="twelve cell">
+                            <grain-correction grain-state="edit" correction="grain.grain_data.correction"
+                                              on-blur-function="updateGrain()"></grain-correction>
+                        </div>
+                    </div>
+                </div>
+                <div class="one cell">&nbsp;</div>
             </div>
         </div>
     </div>
 </article>
-
-
-

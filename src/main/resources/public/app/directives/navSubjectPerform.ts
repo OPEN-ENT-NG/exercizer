@@ -16,6 +16,15 @@ directives.push(
                     };
 
                     scope.isCurrent = function(){
+
+                    };
+
+                    scope.getGrainLabel = function(grainCopy){
+                        if(grainCopy.grain_copy_data.title){
+                            return grainCopy.grain_copy_data.title;
+                        } else {
+                            return "No Name";
+                        }
                     }
                 }
             };

@@ -5,7 +5,8 @@ directives.push(
             return {
                 restrict: "E",
                 scope : {
-                  grain : "="
+                  grain : "=",
+                    grainState : "="
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/grain/grainEdit.html',
                 link:(scope : any, element, attrs) => {

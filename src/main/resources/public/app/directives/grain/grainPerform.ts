@@ -6,13 +6,12 @@ directives.push(
                 restrict: "E",
                 scope : {
                     grainCopy : "=",
-                    state : "@"
+                    grainState : "@"
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/grain/grainPerform.html',
                 link:(scope : any, element, attrs) => {
 
-                    console.log('stateGrainPerform : '+scope.state);
-
+                    console.log('grainPerform state : '+scope.grainState);
 
                     var currentTypeName;
 
@@ -21,7 +20,7 @@ directives.push(
                     }
                     init();
 
-                    scope.getTypeDirectiveEditNameByCurrentGrainCopy = function(){
+                    scope.getTypeNameByCurrentGrain = function(){
                         return currentTypeName;
                     };
                 }

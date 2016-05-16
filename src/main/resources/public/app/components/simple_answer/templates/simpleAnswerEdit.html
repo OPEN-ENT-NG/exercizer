@@ -1,27 +1,6 @@
 <div class="row">
-    <div class="one cell">&nbsp;</div>
-    <div class="ten cell">
-        <div class="row">
-            <div class="eight cell"><grain-title state="edit" title="grain.grain_data.title" on-blur-function="updateGrain()"></grain-title></div>
-            <div class="four cell"><grain-max-score state="edit" max-score="grain.grain_data.max_score"  on-blur-function="updateGrain()"></grain-max-score></div>
-        </div>
-        <div class="row">
-            <div class="twelve cell"><grain-statement state="edit" statement="grain.grain_data.statement"  on-blur-function="updateGrain()"></grain-statement></div>
-        </div>
-        <div class="row">
-            <div class="twelve cell"><grain-add-document state="edit" ></grain-add-document></div>
-        </div>
-        <div class="row">
-            <div class="twelve cell">
-                <textarea data-ng-model="grain.grain_data.custom_data.correct_answer" data-ng-blur="updateGrain()" class="twelve cell" placeholder="Reponse"></textarea>
-            </div>
-        </div>
-        <div class="row">
-            <div class="twelve cell"><grain-hint state="edit" hint="grain.grain_data.hint"  on-blur-function="updateGrain()"></grain-hint></div>
-        </div>
-        <div class="row">
-            <div class="twelve cell"><grain-correction state="edit" correction="grain.grain_data.correction"  on-blur-function="updateGrain()"></grain-correction></div>
-        </div>
+    <div class="twelve cell">
+        <textarea data-ng-model="grain.grain_data.custom_data.correct_answer" data-ng-blur="updateGrain()" class="twelve cell" placeholder="Reponse"></textarea>
     </div>
-    <div class="one cell">&nbsp;</div>
 </div>
+
