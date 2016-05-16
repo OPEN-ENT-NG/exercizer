@@ -23,6 +23,18 @@ directives.push(
                     }
                     init();
 
+                    scope.updateGrain = function(){
+                        GrainService.updateGrain(
+                            scope.grain,
+                            function(data){
+                                //success
+                            },
+                            function(err){
+                                console.error(err);
+                            }
+                        )
+                    };
+
                     scope.getTypeNameByCurrentGrain = function(){
                         return currentTypeName;
                     };

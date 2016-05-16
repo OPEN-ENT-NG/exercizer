@@ -57,8 +57,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
             };
         });
 
-
-
         /**
          * Constants
          */
@@ -94,15 +92,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         directives.forEach((item) => {
             module.directive(item.name, item.injections);
         });
-        
-
-        // TODO clean
-        module.directive("editQuestionTitle", editQuestionTitle);
-        module.directive("editQuestionStatement", editQuestionStatement);
-        module.directive("editQuestionMaxScore", editQuestionMaxScore);
-        module.directive("editQuestionAddDocument", editQuestionAddDocument);
-        module.directive("editQuestionHint", editQuestionHint);
-        module.directive("editQuestionCorrection", editQuestionCorrection);
 
     }
 };

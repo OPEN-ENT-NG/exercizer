@@ -1,6 +1,6 @@
 directives.push(
     {
-        name: "grainCorrection",
+        name: "grainMarking",
         injections: ['GrainTypeService','GrainCopyService', (GrainTypeService, GrainCopyService) => {
             return {
                 restrict: "E",

@@ -29,16 +29,13 @@
     <div class="row" data-ng-hide="isToggle">
         <div ng-switch on="getTypeNameByCurrentGrain()">
             <div ng-switch-when="statement">
-                <edit-statement grain = "grain"></edit-statement>
-            </div>
-            <div class="animate-switch" ng-switch-when="openQuestion">
-                <edit-open-question></edit-open-question>
+                <statement-edit grain = "grain"></statement-edit>
             </div>
             <div class="animate-switch" ng-switch-when="simpleAnswer">
-                <edit-simple-answer grain="grain"></edit-simple-answer>
+                <simple-answer-edit grain="grain" update-grain="updateGrain()"></simple-answer-edit>
             </div>
             <div class="animate-switch" ng-switch-default>
-                [[getTypeNameByCurrentGrain()]] ---  [[grain]]
+                <span>[[getTypeNameByCurrentGrain()]] not taking into account</span>
             </div>
         </div>
     </div>

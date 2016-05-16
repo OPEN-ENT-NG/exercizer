@@ -200,7 +200,7 @@ class SubjectService implements ISubjectService {
         var grain_list = this.grainService.grainListBySubjectId(this._currentSubjectId);
         var max_score = 0;
         angular.forEach(grain_list, function(grain, key) {
-            max_score += grain.grain_data.max_score
+            max_score += parseInt(grain.grain_data.max_score);
         });
         var currentSubject = this.subjectById(this._currentSubjectId);
         currentSubject.max_score = max_score;

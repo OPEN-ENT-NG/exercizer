@@ -9,7 +9,7 @@
 
 directives.push(
     {
-        name: "performSimpleAnswer",
+        name: "simpleAnswerPerform",
         injections: [ 'GrainCopyService', 'SimpleAnswerService','GrainScheduledService', (GrainCopyService, SimpleAnswerService, GrainScheduledService) => {
             return {
                 restrict: "E",
@@ -17,7 +17,7 @@ directives.push(
                     grainCopy: '=',
                     state : '@'
                 },
-                templateUrl: 'exercizer/public/app/components/simple_answer/templates/perform.html',
+                templateUrl: 'exercizer/public/app/components/simple_answer/templates/simpleAnswerPerform.html',
                 link:(scope : any, element, attrs) => {
 
                     function  init(){

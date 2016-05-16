@@ -1,6 +1,6 @@
 directives.push(
     {
-        name: "copyCorrect",
+        name: "copyCorrection",
         injections: ['SubjectService', 'GrainCopyService', 'GrainScheduledService','PreviewSubjectService', (SubjectService, GrainCopyService,GrainScheduledService, PreviewSubjectService) => {
             return {
                 restrict: "E",
@@ -8,7 +8,7 @@ directives.push(
                     subjectCopy: "=",
                     subjectScheduled: "=",
                 },
-                templateUrl: 'exercizer/public/app/templates/directives/copy/copyCorrect.html',
+                templateUrl: 'exercizer/public/app/templates/directives/copy/copyCorrection.html',
                 link: (scope:any, element, attrs) => {
 
                     var _cacheGrainCopyList = null;

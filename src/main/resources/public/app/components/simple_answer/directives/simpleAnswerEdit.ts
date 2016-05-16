@@ -6,35 +6,24 @@
 
 directives.push(
     {
-        name: "editSimpleAnswer",
+        name: "simpleAnswerEdit",
         injections: [ 'GrainService', 'SimpleAnswerService',(GrainService, SimpleAnswerService) => {
             return {
                 restrict: "E",
                 scope: {
                     grain: '=',
+                    updateGrain : "&"
                 },
-                templateUrl: 'exercizer/public/app/components/simple_answer/templates/edit.html',
+                templateUrl: 'exercizer/public/app/components/simple_answer/templates/simpleAnswerEdit.html',
                 link:(scope : any, element, attrs) => {
 
                     function init(){
+                        // If the custom data doesn't exit, create it
                         if(scope.grain.grain_data.custom_data == null){
                             scope.grain.grain_data.custom_data = SimpleAnswerService.createObjectCustomData();
                         }
                     }
                     init();
-
-                    // TODO : remonter la fonction d'un cran vers le haut
-                    scope.actionOnBlur = function(){
-                        GrainService.updateGrain(
-                            scope.grain,
-                            function(data){
-                                //success
-                            },
-                            function(err){
-                                console.error(err);
-                            }
-                        )
-                    }
                 }
             };
         }]

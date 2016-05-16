@@ -12,7 +12,7 @@ directives.push(
                 templateUrl: 'exercizer/public/app/templates/directives/subject/subjectPerform.html',
                 link: (scope:any, element, attrs) => {
 
-                    console.log('stateSubjectPerform : '+scope.state);
+                    console.log('stateSubjectPerform : ' + scope.state);
 
                     /**
                      * VARIABLE
@@ -57,12 +57,10 @@ directives.push(
                     scope.startSubject = function () {
                         lowerOrder = findLowerOrder();
                         upperOrder = findUpperOrder();
-
                         currentOrder = lowerOrder;
                     };
 
-                    scope.clickOnAutoCorrection = function(){
-                        console.log('clickOnAutoCorrection');
+                    scope.clickOnAutoCorrection = function () {
                         PreviewSubjectService.initAutoCorrection();
                     };
 

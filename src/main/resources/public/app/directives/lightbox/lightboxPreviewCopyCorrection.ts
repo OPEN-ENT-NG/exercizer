@@ -1,11 +1,11 @@
 directives.push(
     {
-        name: 'lightboxPreviewCopyCorrect',
+        name: 'lightboxPreviewCopyCorrection',
         injections: ['PreviewSubjectService','SubjectService','GrainService', (PreviewSubjectService, SubjectService, GrainService) => {
             return {
                 restrict: 'E',
                 scope: {},
-                templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxPreviewCopyCorrect.html',
+                templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxPreviewCopyCorrection.html',
                 link:(scope : any, element, attrs) => {
 
                     scope.subjectCopy = function(){
