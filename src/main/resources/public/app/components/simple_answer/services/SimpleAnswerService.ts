@@ -37,9 +37,9 @@ class SimpleAnswerService implements ISimpleAnswerService {
         var student_answer = grain_copy.grain_copy_data.custom_copy_data.student_answer;
         var correct_answer = grain_scheduled.grain_data.custom_data.correct_answer;
         if(student_answer == correct_answer){
-            console.log('GOOD');
+            grain_copy.calculated_score = grain_scheduled.grain_data.max_score
         } else{
-            console.log('BAD');
+            grain_copy.calculated_score = 0;
         }
 
     }

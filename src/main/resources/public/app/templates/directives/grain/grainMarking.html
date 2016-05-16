@@ -1,7 +1,7 @@
 <article>
     <div class="row">
         <div class="six cell">
-            <textarea data-ng-if="state == 'marking'" data-ng-model="grainCopy.teacher_comment" data-ng-blur="updateGrainCopy()" placeholder="Commentaire"></textarea>
+            <textarea data-ng-if="grainState == 'marking'" data-ng-model="grainCopy.teacher_comment" data-ng-blur="updateGrainCopy()" placeholder="Commentaire"></textarea>
         </div>
         <div class="six cell">
             <span> Note automatique : </span>
@@ -12,6 +12,7 @@
             <input type="text" data-ng-model="grainCopy.final_score" data-ng-blur="updateGrainCopy()">
         </div>
     </div>
+    <grain-auto-correction grain-scheduled="grainScheduled" grain-copy="grainCopy"></grain-auto-correction>
 </article>
 
 

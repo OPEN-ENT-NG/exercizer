@@ -76,35 +76,49 @@ class PreviewSubjectService implements IPreviewSubjectService {
     public initPreviewSubject(){
         var self = this;
         this._displayPreviewSubjectPerform = true;
-        // subject
+
+        // Get subject
         var subject = this.subjectService.subjectById(this.subjectService.currentSubjectId);
-        // subject scheduled
+
+        // Create subject scheduled
         this._subjectScheduled = this.subjectScheduledService.createObjectSubjectScheduledFromSubject(subject);
-        // subject copy
+
+        // Create subject copy
         this._subjectCopy = this.copyService.createObjectSubjectCopyFromSubjectScheduled(this._subjectScheduled);
-        // grain list
+
+        // Get grain list
         var grainList = this.grainService.grainListBySubjectId(this.subjectService.currentSubjectId);
-        // grain copy
+
+        // create grain Scheduled list
+        this.grainScheduledService.createGrainScheduledList(this._subjectScheduled.id);
+
+        // create grain Copy List
         this.grainCopyService.createGrainCopyList(this._subjectCopy.id);
+
+        // loop on grain List
         angular.forEach(grainList, function(grain, key) {
+            //create grain scheduled from grain
+            var grainScheduled = self.grainScheduledService.createObjectGrainScheduledFromGrain(grain);
+            // add subject scheduled id to grain scheduled
+            grainScheduled.subject_scheduled_id = self._subjectScheduled.id;
+            // push grain scheduled in grain scheduled list
+            self.grainScheduledService.addGrainScheduledToGrainScheduledList(grainScheduled);
+
+            // create grain copy from grain
             var grainCopy = self.grainCopyService.createObjectGrainCopyFromGrain(grain);
+            // add subject copy id to grain copy
             grainCopy.subject_copy_id = self._subjectCopy.id;
+            // add grain scheduled id to grain copy
+            grainCopy.grain_scheduled_id = grainScheduled.id;
+            // push grain copy to grain copy list
             self.grainCopyService.addGrainCopyToGrainCopyList(grainCopy);
         });
     }
 
     public initAutoCorrection(){
-        var self = this;
         this._displayPreviewSubjectPerform = false;
         this._displayPreviewCopyCorrect = true;
-
-        var grainList = this.grainService.grainListBySubjectId(this.subjectService.currentSubjectId);
-        // grain scheduled
-        this.grainScheduledService.createGrainScheduledList(this._subjectScheduled.id);
-        angular.forEach(grainList, function(grain, key) {
-            var grainScheduled = self.grainScheduledService.createObjectGrainScheduledFromGrain(grain);
-            grainScheduled.subject_scheduled_id = self._subjectScheduled.id;
-            self.grainScheduledService.addGrainScheduledToGrainScheduledList(grainScheduled);
-        });
     }
 }
+
+

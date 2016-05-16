@@ -20,8 +20,6 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/simple_answer/templates/simpleAnswerPerform.html',
                 link:(scope : any, element, attrs) => {
 
-                    console.log('simpleAnswerPerform state : ', scope.grainState);
-
                     function  init(){
                         if(scope.grainCopy.grain_copy_data.custom_copy_data == null){
                             scope.grainCopy.grain_copy_data.custom_copy_data = SimpleAnswerService.createObjectCustomCopyData();
@@ -34,10 +32,6 @@ directives.push(
     }
 );
 
-/*
- // autocorrection here to test
- SimpleAnswerService.resolver(scope.grainCopy, grain_scheduled);
- */
 
 
 

@@ -8,7 +8,7 @@ directives.push(
                     subjectCopy: "=",
                     subjectScheduled: "=",
                 },
-                templateUrl: 'exercizer/public/app/templates/directives/copy/copyCorrection.html',
+                templateUrl: 'exercizer/public/app/templates/directives/subject/subjectMarking.html',
                 link: (scope:any, element, attrs) => {
 
                     var _cacheGrainCopyList = null;
@@ -26,15 +26,13 @@ directives.push(
                         return _cacheGrainCopyList;
                     };
 
+                    scope.getGrainScheduledLinkToThisGrainCopy = function(grain_copy){
+                        var grain_scheduled_list = scope.grainScheduledList();
+                        return grain_scheduled_list[grain_copy.grain_scheduled_id];
+                    };
+
                     scope.grainScheduledList = function () {
-                        if (_cacheGrainScheduledList) {
-                            // data here
-                        } else {
-                            if (scope.subjectScheduled) {
-                                _cacheGrainScheduledList = GrainScheduledService.grainScheduledListBySubjectScheduledId(scope.subjectScheduled.id);
-                            }
-                        }
-                        return _cacheGrainScheduledList;
+                        return  GrainScheduledService.grainScheduledListBySubjectScheduledId(scope.subjectScheduled.id);
                     };
                 }
             };

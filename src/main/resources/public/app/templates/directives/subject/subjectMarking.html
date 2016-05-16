@@ -1,5 +1,5 @@
 <div data-ng-repeat="grainCopy in grainCopyList() | orderObjectBy:'order':false">
     <grain-perform grain-copy="grainCopy" grain-state="marking"></grain-perform>
-    <grain-marking grain-copy="grainCopy" grain-state="marking" ></grain-marking>
+    <grain-marking grain-copy="grainCopy" grain-scheduled="getGrainScheduledLinkToThisGrainCopy(grainCopy)" grain-state="marking" ></grain-marking>
 </div>
 

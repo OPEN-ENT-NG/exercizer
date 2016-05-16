@@ -5,7 +5,7 @@ directives.push(
             return {
                 restrict: 'E',
                 scope: {},
-                templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxPreviewCopyCorrection.html',
+                templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxPreviewSubjectMarking.html',
                 link:(scope : any, element, attrs) => {
 
                     scope.subjectCopy = function(){

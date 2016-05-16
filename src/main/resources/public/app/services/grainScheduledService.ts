@@ -56,6 +56,7 @@ class GrainScheduledService implements IGrainScheduledService {
 
     public createObjectGrainScheduledFromGrain(grain:IGrain):IGrainScheduled {
         var grain_scheduled = this.createObjectGrainScheduled();
+        grain_scheduled.id = Math.floor((Math.random() * 1000) + 1);
         grain_scheduled.grain_data = grain.grain_data;
         grain_scheduled.order = grain.order;
         grain_scheduled.grain_type_id = grain.grain_type_id;

@@ -11,8 +11,6 @@ directives.push(
                 templateUrl: 'exercizer/public/app/templates/directives/grain/grainPerform.html',
                 link:(scope : any, element, attrs) => {
 
-                    console.log('grainPerform state : '+scope.grainState);
-
                     var currentTypeName;
 
                     function init(){
