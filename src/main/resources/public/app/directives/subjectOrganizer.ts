@@ -1,7 +1,7 @@
 directives.push(
     {
         name: "subjectOrganizer",
-        injections: [ 'PreviewSubjectService', (PreviewSubjectService) => {
+        injections: [ 'PreviewSubjectService','$rootScope', (PreviewSubjectService,$rootScope) => {
             return {
                 restrict: "E",
                 templateUrl: 'exercizer/public/app/templates/directives/subjectOrganizer.html',
@@ -9,6 +9,10 @@ directives.push(
 
                     scope.clickOnShowPreview = function(){
                         PreviewSubjectService.initPreviewSubject();
+                    };
+
+                    scope.clickOnAllToggle = function(){
+                        $rootScope.$broadcast('TOGGLE_ALL_GRAIN', null);
                     }
                 }
             };

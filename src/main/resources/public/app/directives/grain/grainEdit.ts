@@ -51,7 +51,15 @@ directives.push(
 
                     scope.eventSelectGrain = function(){
                         SelectedGrainService.toggleGrainInSelectedGrainList(scope.grain,scope.isGrainSelected );
-                    }
+                    };
+
+
+                    /**
+                     * EVENT
+                     */
+                    scope.$on('TOGGLE_ALL_GRAIN', function (event, result) {
+                        scope.isToggle = true;
+                    });
                 }
             };
         }]

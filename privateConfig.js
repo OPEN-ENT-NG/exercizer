@@ -1,2 +1,1 @@
-exports.springboardModsPath = "";
-//exports.springboardModsPath = "/Users/jun/Sites/web-education/mods/fr.openent~exercizer~0.1-SNAPSHOT";
+exports.springboardModsPath = "C:/Users/Thibault_/Documents/springboard-opent-ent/mods/fr.openent~exercizer~0.1-SNAPSHOT";
