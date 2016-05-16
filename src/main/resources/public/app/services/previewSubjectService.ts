@@ -79,22 +79,18 @@ class PreviewSubjectService implements IPreviewSubjectService {
 
         // Get subject
         var subject = this.subjectService.subjectById(this.subjectService.currentSubjectId);
-
         // Create subject scheduled
         this._subjectScheduled = this.subjectScheduledService.createObjectSubjectScheduledFromSubject(subject);
-
         // Create subject copy
         this._subjectCopy = this.copyService.createObjectSubjectCopyFromSubjectScheduled(this._subjectScheduled);
-
+        // reset subject copy
+        this.copyService.createObjectSubjectCopyFromSubjectScheduled(this._subjectScheduled);
         // Get grain list
         var grainList = this.grainService.grainListBySubjectId(this.subjectService.currentSubjectId);
-
         // create grain Scheduled list
         this.grainScheduledService.createGrainScheduledList(this._subjectScheduled.id);
-
         // create grain Copy List
         this.grainCopyService.createGrainCopyList(this._subjectCopy.id);
-
         // loop on grain List
         angular.forEach(grainList, function(grain, key) {
             //create grain scheduled from grain
@@ -103,7 +99,6 @@ class PreviewSubjectService implements IPreviewSubjectService {
             grainScheduled.subject_scheduled_id = self._subjectScheduled.id;
             // push grain scheduled in grain scheduled list
             self.grainScheduledService.addGrainScheduledToGrainScheduledList(grainScheduled);
-
             // create grain copy from grain
             var grainCopy = self.grainCopyService.createObjectGrainCopyFromGrain(grain);
             // add subject copy id to grain copy

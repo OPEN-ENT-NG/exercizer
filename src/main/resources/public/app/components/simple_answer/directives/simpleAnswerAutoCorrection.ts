@@ -9,6 +9,8 @@ directives.push(
                     grainCopy : "=",
                     grainScheduled : "="
                 },
+                templateUrl: 'exercizer/public/app/templates/directives/common_grain/grainCalculatedScore.html',
+
                 link:(scope : any, element, attrs) => {
                     scope.$watch('grainCopy', function() {
                         SimpleAnswerService.automaticCorrection(scope.grainCopy, scope.grainScheduled);
