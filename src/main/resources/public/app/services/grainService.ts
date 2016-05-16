@@ -9,6 +9,7 @@ interface IGrainService {
     createObjectGrainData() : IGrainData
     grainListBySubjectId(subject_id) : IGrain[];
     isSetGrainListBySubjectId(subject_id) : boolean;
+    getGrainLabel(grain : IGrain);
 }
 
 class GrainService implements IGrainService {
@@ -241,6 +242,14 @@ class GrainService implements IGrainService {
         // reorder
         grain.order = average;
 
+    }
+
+    public getGrainLabel(grain : IGrain){
+        if(grain.grain_data.title){
+            return grain.grain_data.title
+        } else{
+            return 'Enoncé';
+        }
     }
 
     /**

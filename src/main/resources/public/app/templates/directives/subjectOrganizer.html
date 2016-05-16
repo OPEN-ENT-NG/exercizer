@@ -1,3 +1,9 @@
 <h2>Organiser</h2>
 <h4 data-ng-click="clickOnShowPreview()">aperçu</h4>
 <h4 data-ng-click="clickOnAllToggle()">Tout replier</h4>
+<h4 data-ng-click="initSortable()">init sortable</h4>
+
+
+<ul id="sortable" data-ng-init="initSortable()">
+    <li class="ui-state-default" ng-repeat="grain in grainList">[[getGrainLabel(grain)]]</li>
+</ul>
