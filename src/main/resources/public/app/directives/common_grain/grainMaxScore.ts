@@ -12,7 +12,8 @@ directives.push(
                 },
                 templateUrl: function($elem, $attr){
                     if($attr.state != 'edit'){
-                        throw "state not valid"
+                        console.error($attr.state + " not accepted");
+                        throw "";
                     }
                     return "exercizer/public/app/templates/directives/common_grain/"+$attr.state+"/maxScore.html";
                 },
