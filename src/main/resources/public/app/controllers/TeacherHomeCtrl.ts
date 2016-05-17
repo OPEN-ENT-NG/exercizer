@@ -11,17 +11,27 @@ class TeacherHomeCtrl {
         '$location',
     ];
 
+    private _displayLightboxCreateSubject : boolean;
+
     constructor(
         $location
 
     ) {
         this.$location = $location;
-        console.log('TeacherHomeCtrl');
+        this._displayLightboxCreateSubject = false;
+    }
+
+
+    get displayLightboxCreateSubject():boolean {
+        return this._displayLightboxCreateSubject;
+    }
+
+    set displayLightboxCreateSubject(value:boolean) {
+        this._displayLightboxCreateSubject = value;
     }
 
     public clickCreateNewSubject() {
-        console.log('clickCreateNewSubject');
-        this.$location.path('/teacher/subject/create')
+        this._displayLightboxCreateSubject =  true;
     };
 
 

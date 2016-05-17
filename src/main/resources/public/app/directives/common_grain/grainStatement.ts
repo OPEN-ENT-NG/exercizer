@@ -2,7 +2,7 @@
 directives.push(
     {
         name: "grainStatement",
-        injections: [ () => {
+        injections: [ '$sce',($sce) => {
             return {
                 restrict: "E",
                 scope: {
@@ -12,6 +12,27 @@ directives.push(
                 },
                 templateUrl: "exercizer/public/app/templates/directives/common_grain/grainStatement.html",
                 link:(scope : any, element, attrs) => {
+
+                    var isFocus;
+
+                    scope.statementHtml = $sce.trustAsHtml(scope.statement);
+
+
+                    /**
+                     * Event JQuery because no ng-blur on editor
+                     */
+                    element.find('editor').on('editor-focus', function(){
+                        isFocus = true;
+                    });
+                    /**
+                     * Event JQuery because no ng-blur on editor
+                     */
+                    element.find('editor').on('editor-blur', function(){
+                        if(isFocus){
+                            scope.onBlurFunction();
+                            isFocus = false;
+                        }
+                    });
 
                 }
             };

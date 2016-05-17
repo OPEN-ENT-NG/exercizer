@@ -57,7 +57,7 @@ class SubjectService implements ISubjectService {
                         grainDev.grain_type_id = "3";
                         grainDev.grain_data.title =  "Exercise Test";
                         grainDev.grain_data.max_score =  "5";
-                        grainDev.grain_data.statement =  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean posuere rhoncus dui sit amet sagittis. Vestibulum felis quam, commodo euismod egestas pellentesque, porta nec urna. Proin rhoncus sollicitudin nibh, sed fringilla nibh porta quis. Phasellus dignissim arcu ligula, vel posuere tellus finibus at. Maecenas commodo euismod magna ut pretium. ";
+                        grainDev.grain_data.statement =  "<div class=\"ng-scope\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean posuere rhoncus dui sit amet sagittis. Vestibulum felis quam, commodo euismod egestas pellentesque, porta nec urna.&nbsp;</div>";
                         grainDev.grain_data.hint =  "La réponse est 3 ";
                         grainDev.grain_data.correction =  "Correction de la réponse";
                         grainDev.grain_data.custom_data = {
@@ -72,7 +72,7 @@ class SubjectService implements ISubjectService {
                                 grainDev2.grain_type_id = "3";
                                 grainDev2.grain_data.title =  "Exercise Test Numero 2";
                                 grainDev2.grain_data.max_score =  "5";
-                                grainDev2.grain_data.statement =  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean posuere rhoncus dui sit amet sagittis. Vestibulum felis quam, commodo euismod egestas pellentesque, porta nec urna. Proin rhoncus sollicitudin nibh, sed fringilla nibh porta quis. Phasellus dignissim arcu ligula, vel posuere tellus finibus at. Maecenas commodo euismod magna ut pretium. ";
+                                grainDev2.grain_data.statement =  "<div class=\"ng-scope\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean posuere rhoncus dui sit amet sagittis. Vestibulum felis quam, commodo euismod egestas pellentesque, porta nec urna.&nbsp;</div>";
                                 grainDev2.grain_data.hint =  "La réponse est 3 ";
                                 grainDev2.grain_data.correction =  "Correction de la réponse";
                                 grainDev2.grain_data.custom_data = {

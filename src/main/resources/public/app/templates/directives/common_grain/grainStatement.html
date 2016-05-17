@@ -1,11 +1,13 @@
 <!-- edit -->
 <div data-ng-show="grainState == 'edit'">
-    <textarea style="height: 150px;" ng-model="statement" ng-blur="onBlurFunction()" placeholder="Énoncé"></textarea>
+    <editor ng-model="statement" placeholder="Énoncé"></editor>
 </div>
 
 <!-- perform -->
 <div data-ng-show="grainState == 'perform' || grainState == 'marking'">
-    <span>[[statement]]</span>
+    <div class="row">
+        <div ng-bind-html="statementHtml"></div>
+    </div>
 </div>
 
 

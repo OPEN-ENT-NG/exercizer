@@ -35,5 +35,10 @@ class TeacherEditSubjectCtrl {
         return this.subjectService.subjectById(this.subjectService.currentSubjectId);
     }
 
+    public subjectTitle(){
+        var currentSubject = this.getCurrentSubject();
+        return currentSubject.title;
+    }
+
 }
 

@@ -26,11 +26,16 @@ class TeacherCreateSubjectCtrl {
         this.subjectService.createSubject(
             this.subject,
             function(data){
+                console.info(data);
                 self.$location.path('/teacher/subject/edit')
             },
             function(err){
                 console.error(err);
             }
         );
+    }
+
+    public clickCancel(){
+
     }
 }

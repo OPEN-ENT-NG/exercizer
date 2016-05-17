@@ -1,6 +1,7 @@
 interface ISimpleAnswerService {
     createObjectCustomData() : ISimpleAnswerCustomData;
     createObjectCustomCopyData() : ISimpleAnswerCustomCopyData;
+    automaticCorrection(grain_copy : IGrainCopy, grain_scheduled : IGrainScheduled);
 }
 
 class SimpleAnswerService implements ISimpleAnswerService {
