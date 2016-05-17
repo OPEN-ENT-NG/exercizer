@@ -28,16 +28,11 @@ directives.push(
                         return GrainService.getGrainLabel(grain);
                     };
 
-                    scope.initSortable = function(){
-                        var  containerSortable = document.getElementById("sortable");
-                        console.log('containerSortable', containerSortable);
-                        containerSortable.sortable();
-                        containerSortable.disableSelection();
+                    scope.reOrder = function(grain){
+                        angular.forEach(scope.grainList, function(grainItem, key) {
+                            grainItem.order = parseFloat(grainItem.index) + 1;
+                        });
                     };
-
-
-
-
 
                 }
             };

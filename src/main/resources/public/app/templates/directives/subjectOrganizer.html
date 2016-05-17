@@ -1,9 +1,22 @@
-<h2>Organiser</h2>
-<h4 data-ng-click="clickOnShowPreview()">aperçu</h4>
-<h4 data-ng-click="clickOnAllToggle()">Tout replier</h4>
-<h4 data-ng-click="initSortable()">init sortable</h4>
+<div>
+    <h2>Organiser</h2>
 
 
-<ul id="sortable" data-ng-init="initSortable()">
-    <li class="ui-state-default" ng-repeat="grain in grainList">[[getGrainLabel(grain)]]</li>
-</ul>
+    <div class="row">
+        <div class="six cell" data-ng-click="clickOnAllToggle()">
+            <img src="/exercizer/public/assets/img/allToggle.PNG">
+        </div>
+        <div class="six cell" data-ng-click="clickOnShowPreview()">
+            <img src="/exercizer/public/assets/img/preview.PNG">
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <ul sortable-list class="thought-out-actions">
+                <li  ng-repeat="grain in grainList | orderObjectBy:'order':false" sortable-element ng-model="grain.order" ng-change="reOrder(grain)">
+                    [[getGrainLabel(grain)]]</li>
+            </ul>
+        </div>
+    </div>
+</div>
+

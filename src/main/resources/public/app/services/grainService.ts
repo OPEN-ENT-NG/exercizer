@@ -5,7 +5,6 @@ interface IGrainService {
     createGrain(grain:IGrain, callbackSuccess, callBackFail);
     updateGrain(grain:IGrain, callbackSuccess, callbackFail)
     getGrainListBySubjectId(subject_id, callbackSuccess, callbackFail);
-    reorderGrain(grain, array_grain);
     createObjectGrainData() : IGrainData
     grainListBySubjectId(subject_id) : IGrain[];
     isSetGrainListBySubjectId(subject_id) : boolean;
@@ -123,7 +122,7 @@ class GrainService implements IGrainService {
                 }
             } else{
                 // not possible
-                if(grain.id == item_grain.id){
+                if(grain.id === item_grain.id){
                     // the params grain have not a order yet
                 } else{
                     console.error(grain);
@@ -206,43 +205,6 @@ class GrainService implements IGrainService {
         }
     }
 
-    public reorderGrain(grain, array_grain){
-        // var
-        var currentPrevious;
-        var previous = null;
-        var next = null;
-        var oneIterationAfterMatch = false;
-        // loop
-        angular.forEach(array_grain, function(item_grain) {
-            if(grain.id == item_grain.id){
-                // match current grain
-                previous = currentPrevious;
-                oneIterationAfterMatch = true;
-            }
-            if(oneIterationAfterMatch == true){
-                // one iteration after match current grain
-                next = item_grain;
-                oneIterationAfterMatch = false;
-            }
-            currentPrevious = item_grain;
-        });
-        // average
-        var average = null;
-        if(previous && next){
-            average = (previous.order + next.order) / 2
-        } else{
-            if(previous){
-                average = previous.order -1;
-            } else if(next){
-                average = next.order +1;
-            } else {
-                throw "Not Possible";
-            }
-        }
-        // reorder
-        grain.order = average;
-
-    }
 
     public getGrainLabel(grain : IGrain){
         if(grain.grain_data.title){

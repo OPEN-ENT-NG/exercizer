@@ -2,18 +2,19 @@
 <lightbox-delete-grains></lightbox-delete-grains>
 
 <!-- PAGE -->
-<div data-ng-repeat="grain in grainList() | orderObjectBy:'order':false">
-    <div data-ng-switch="isNewGrain(grain)">
-        <div data-ng-switch-when="new">
-            <new-grain grain="grain"></new-grain>
+<div class="row">
+    <div data-ng-repeat="grain in grainList() | orderObjectBy:'order':false">
+        <div data-ng-switch="isNewGrain(grain)">
+            <div data-ng-switch-when="new">
+                <new-grain grain="grain"></new-grain>
+            </div>
+            <div data-ng-switch-when="grain">
+                <grain-edit grain="grain" grain-state="edit"></grain-edit>
+            </div>
+            <div data-ng-switch-default></div>
         </div>
-        <div data-ng-switch-when="grain">
-            <grain-edit grain="grain" grain-state="edit"></grain-edit>
-        </div>
-        <div data-ng-switch-default></div>
     </div>
 </div>
-
 <add-one-element></add-one-element>
 
 
