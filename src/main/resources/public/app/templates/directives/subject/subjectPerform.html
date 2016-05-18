@@ -15,7 +15,7 @@
             Rendre la copie plus tard
         </button>
         <button class="right-magnet cell" data-ng-click="clickOnAutoCorrection()" data-ng-show="display.buttonAutoCorrection()">
-            AutoCorrection
+            Aperçu d'une correction d'une copie
         </button>
     </div>
 </div>
@@ -55,9 +55,8 @@
                 <button class="right-magnet cell" data-ng-click="clickNextQuestion()" data-ng-show="display.buttonNextQuestion()">
                     Question suivante
                 </button>
-                <button class="right-magnet cell" data-ng-click="clickPreviousQuestion()" data-ng-show="display.buttonPreviousQuestion()">
-                    Question précèdente
-                </button>
+                <input type="button" class="button right-magnet cancel" data-ng-click="clickPreviousQuestion()" data-ng-show="display.buttonPreviousQuestion()" value="Question précèdente">
+
                 <button class="right-magnet cell" data-ng-click="startSubject()" data-ng-show="display.buttonStartSubject()">
                     Commencer
                 </button>
