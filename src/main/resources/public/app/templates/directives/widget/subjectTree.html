@@ -1,0 +1,10 @@
+<nav class="vertical">
+    <ul>
+        <li data-ng-repeat="grain in grainList()  | orderObjectBy:'order':false">
+            <a data-ng-class="isSelected(grain)" data-ng-click="clickOnGrain(grain)">
+                 [[getGrainLabel(grain)]]
+            </a>
+        </li>
+    </ul>
+</nav>
+

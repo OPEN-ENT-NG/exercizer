@@ -16,24 +16,41 @@ directives.push(
                      * VARIABLE
                      */
 
-                    var currentOrder = "subjectPresentation";
-                    var lowerOrder = null;
-                    var upperOrder = null;
-                    var _cacheGrainCopyList = null;
+                    var currentOrder;
+                    var lowerOrder;
+                    var upperOrder;
 
                     /**
-                     * GRAIN LIST
+                     * INIT
+                     */
+
+                    function reset(){
+                        currentOrder = "subjectPresentation";
+                        lowerOrder = null;
+                        upperOrder = null;
+                    }
+                    reset();
+
+                    /**
+                     * GET VARIABLE
                      */
 
                     scope.grainCopyList = function () {
-                        if (_cacheGrainCopyList) {
-                            // data here
-                        } else {
-                            if (scope.subjectCopy) {
-                                _cacheGrainCopyList = GrainCopyService.grainCopyListBySubjectCopyId(scope.subjectCopy.id);
-                            }
+                        if(scope.subjectCopy){
+                            return  GrainCopyService.grainCopyListBySubjectCopyId(scope.subjectCopy.id);
                         }
-                        return _cacheGrainCopyList;
+                    };
+
+                    scope.getSubjectTitle = function () {
+                        if (scope.subjectScheduled) {
+                            return scope.subjectScheduled.title;
+                        }
+                    };
+
+                    scope.getSubjectMaxScore = function () {
+                        if (scope.subjectScheduled) {
+                            return scope.subjectScheduled.max_score;
+                        }
                     };
 
                     /**
@@ -77,7 +94,7 @@ directives.push(
 
                     function findLowerOrder() {
                         var lower_order = null;
-                        angular.forEach(_cacheGrainCopyList, function (grain_copy, key) {
+                        angular.forEach(scope.grainCopyList(), function (grain_copy, key) {
                             if (lower_order) {
                                 if (grain_copy.order < lower_order) {
                                     lower_order = grain_copy.order;
@@ -91,7 +108,7 @@ directives.push(
 
                     function findUpperOrder() {
                         var upper_order = null;
-                        angular.forEach(_cacheGrainCopyList, function (grain_copy, key) {
+                        angular.forEach(scope.grainCopyList(), function (grain_copy, key) {
                             if (upper_order) {
                                 if (grain_copy.order > upper_order) {
                                     upper_order = grain_copy.order;
@@ -108,7 +125,7 @@ directives.push(
                             throw "cant find new lower order because old order is not set"
                         }
                         var newOrder = null;
-                        angular.forEach(_cacheGrainCopyList, function (grain_copy, key) {
+                        angular.forEach(scope.grainCopyList(), function (grain_copy, key) {
                             if (newOrder) {
                                 if (grain_copy.order < oldOrder && grain_copy.order > newOrder) {
                                     newOrder = grain_copy.order;
@@ -132,7 +149,7 @@ directives.push(
                             throw "cant find new lower order because previous lower order is not set"
                         }
                         var newOrder = null;
-                        angular.forEach(_cacheGrainCopyList, function (grain_copy, key) {
+                        angular.forEach(scope.grainCopyList(), function (grain_copy, key) {
                             if (newOrder) {
                                 if (grain_copy.order > oldOrder && grain_copy.order < newOrder) {
                                     newOrder = grain_copy.order;
@@ -151,21 +168,6 @@ directives.push(
                         return newOrder
                     }
 
-                    /**
-                     * GET VARIABLE
-                     */
-
-                    scope.getSubjectTitle = function () {
-                        if (scope.subjectScheduled) {
-                            return scope.subjectScheduled.title;
-                        }
-                    };
-
-                    scope.getSubjectMaxScore = function () {
-                        if (scope.subjectScheduled) {
-                            return scope.subjectScheduled.max_score;
-                        }
-                    };
 
                     /**
                      * DISPLAY
@@ -196,7 +198,15 @@ directives.push(
                         buttonStartSubject: function () {
                             return currentOrder == "subjectPresentation"
                         }
-                    }
+                    };
+
+                    /**
+                     * EXTERNAL EVENT
+                     */
+                    scope.$on('RESET_SUBJECT_PERFORM', function (event, result) {
+                        reset();
+                    });
+
                 }
             };
         }]

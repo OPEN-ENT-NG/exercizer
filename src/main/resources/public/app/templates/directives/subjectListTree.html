@@ -1,10 +1,13 @@
 <nav class="vertical">
     <ul>
         <li>
+            <a data-ng-click="toggleDisplaySubjectContent()"> toggle</a>
+        </li>
+        <li>
             <a class="selected">
                 Mes sujets
             </a>
-            <ul>
+            <ul data-ng-show="displaySubjectContent">
                 <li>
                     <a class="selected">
                         Sujet 1

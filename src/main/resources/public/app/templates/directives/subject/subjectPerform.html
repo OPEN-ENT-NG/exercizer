@@ -22,12 +22,13 @@
 
 <div class="row">
     <!-- part navigation -->
+    <!-- part navigation -->
     <div class="three cell">
         <span>Temps restant : </span>
-        <nav-subject-perform grain-list="grainCopyList()"
-                             click-on-grain-copy-from-parent="clickOnGrainCopyInNav(grainCopy)">
+        <subject-tree subject-copy="subjectCopy"
+                        click-on-grain-copy-from-parent="clickOnGrainCopyInNav(grainCopy)">
 
-        </nav-subject-perform>
+        </subject-tree>
     </div>
     <!-- part grain -->
     <div class="nine cell">

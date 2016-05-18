@@ -7,7 +7,7 @@ directives.push(
                 scope : {
                   subject : "="
                 },
-                templateUrl: 'exercizer/public/app/templates/directives/subjectOrganizer.html',
+                templateUrl: 'exercizer/public/app/templates/directives/widget/subjectOrganizer.html',
                 link:(scope : any, element, attrs) => {
 
                     function init(){
@@ -18,6 +18,7 @@ directives.push(
 
                     scope.clickOnShowPreview = function(){
                         PreviewSubjectService.initPreviewSubject();
+                        $rootScope.$broadcast('RESET_SUBJECT_PERFORM', null);
                     };
 
                     scope.clickOnAllToggle = function(){
@@ -32,6 +33,8 @@ directives.push(
                         angular.forEach(scope.grainList, function(grainItem, key) {
                             grainItem.order = parseFloat(grainItem.index) + 1;
                         });
+                        console.log('grainList', scope.grainList);
+
                     };
 
                 }

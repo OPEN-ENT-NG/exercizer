@@ -6,6 +6,7 @@ interface IGrainCopyService {
     createObjectGrainCopyFromGrain(grain:IGrain) : IGrainCopy;
     addGrainCopyToGrainCopyList(grain_copy:IGrainCopy);
     createGrainCopyList(subject_copy_id);
+    getGrainCopyLabel(grainCopy : IGrainCopy);
 }
 
 class GrainCopyService implements IGrainCopyService {
@@ -111,6 +112,14 @@ class GrainCopyService implements IGrainCopyService {
     public createGrainCopyList(subject_copy_id){
         if(!this._grainCopyList[subject_copy_id]){
             this._grainCopyList[subject_copy_id] = {};
+        }
+    }
+
+    public getGrainCopyLabel(grainCopy : IGrainCopy){
+        if(grainCopy.grain_copy_data.title){
+            return grainCopy.grain_copy_data.title
+        } else{
+            return 'Enoncé';
         }
     }
 

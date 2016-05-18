@@ -1,9 +1,0 @@
-<div class="row">
-    <span>navigation</span>
-    <div class="twelve" data-ng-repeat="grainCopy in grainList | orderObjectBy:'order':false" >
-        <div data-ng-click="clickOnGrainCopy(grainCopy)"
-                data-ng-class="isCurrent()">
-            [[getGrainLabel(grainCopy)]]
-        </div>
-    </div>
-</div>
