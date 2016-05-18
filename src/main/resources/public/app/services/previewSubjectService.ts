@@ -79,6 +79,8 @@ class PreviewSubjectService implements IPreviewSubjectService {
 
         // Get subject
         var subject = this.subjectService.subjectById(this.subjectService.currentSubjectId);
+        //compute max score
+        this.subjectService.computeMaxScoreForCurrentSubject();
         // Create subject scheduled
         this._subjectScheduled = this.subjectScheduledService.createObjectSubjectScheduledFromSubject(subject);
         // Create subject copy

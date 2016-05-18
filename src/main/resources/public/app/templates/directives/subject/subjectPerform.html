@@ -7,7 +7,7 @@
     </div>
     <div class="nine cell">
         <span>[[getSubjectTitle()]]</span>
-        <span>[[getSubjectMaxScore()]]</span>
+        <span>/[[getSubjectMaxScore()]]</span>
         <button class="right-magnet cell" data-ng-show="display.buttonReturnCopy()">
             Rendre la copie
         </button>
@@ -38,10 +38,10 @@
                     <article>
                         <div class="row">
                             <div class="twelve cell">
-                                <div>Sujet à rendre avant le : </div>
+                                <div>Sujet à rendre avant le : <i>[[getDueDate()]]</i></div>
                             </div>
                             <div class="twelve cell">
-                                <div>Durée de réalisation : </div>
+                                <div>Durée de réalisation : <i>[[getDuration()]]</i></div>
                             </div>
                         </div>
                     </article>

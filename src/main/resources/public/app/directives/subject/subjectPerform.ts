@@ -20,6 +20,8 @@ directives.push(
                     var lowerOrder;
                     var upperOrder;
 
+                    var msgToDefine = "à définir lors de la programmation.";
+
                     /**
                      * INIT
                      */
@@ -50,6 +52,22 @@ directives.push(
                     scope.getSubjectMaxScore = function () {
                         if (scope.subjectScheduled) {
                             return scope.subjectScheduled.max_score;
+                        }
+                    };
+
+                    scope.getDueDate = function(){
+                        if(scope.subjectScheduled && scope.subjectScheduled.due_date){
+                            return scope.subjectScheduled.due_date;
+                        } else{
+                            return msgToDefine;
+                        }
+                    };
+
+                    scope.getDuration = function(){
+                        if(scope.subjectScheduled && scope.subjectScheduled.duration){
+                            return scope.subjectScheduled.duration;
+                        } else{
+                            return msgToDefine;
                         }
                     };
 
