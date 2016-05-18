@@ -10,10 +10,17 @@ directives.push(
                 templateUrl: 'exercizer/public/app/templates/directives/widget/subjectOrganizer.html',
                 link:(scope : any, element, attrs) => {
 
-                    function init(){
-                        scope.grainList = GrainService.grainListBySubjectId(scope.subject.id);
-                    }
-                    init();
+                    scope.isReordering = false;
+                    var _cacheGrainList = null;
+
+                    scope.grainList = function(){
+                      if(scope.isReordering){
+                      } else{
+                          _cacheGrainList = GrainService.grainListBySubjectId(scope.subject.id);
+                      }
+                        return _cacheGrainList;
+                    };
+
 
 
                     scope.clickOnShowPreview = function(){
@@ -30,10 +37,12 @@ directives.push(
                     };
 
                     scope.reOrder = function(grain){
-                        angular.forEach(scope.grainList, function(grainItem, key) {
-                            grainItem.order = parseFloat(grainItem.index) + 1;
+                        angular.forEach(scope.grainList(), function(grainItem, key) {
+                            if(grainItem.order != parseFloat(grainItem.index) + 1){
+                                grainItem.order = parseFloat(grainItem.index) + 1;
+                                // TODO : update grain
+                            }
                         });
-                        console.log('grainList', scope.grainList);
 
                     };
 
