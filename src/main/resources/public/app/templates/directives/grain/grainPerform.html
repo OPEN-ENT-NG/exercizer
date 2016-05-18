@@ -3,19 +3,19 @@
         <statement-perform grain-copy="grainCopy"></statement-perform>
     </div>
     <div data-ng-hide="getTypeNameByCurrentGrain() == 'statement'">
-        <div ng-switch on="getTypeNameByCurrentGrain()">
+        <div data-ng-switch on="getTypeNameByCurrentGrain()">
             <div class="row">
-                <div class="one cell">
-                    <exercizer-help></exercizer-help>
+                <div class="two cell">
+                    <grain-icon type-name="getTypeNameByCurrentGrain()"></grain-icon>
                 </div>
                 <div class="two cell">
                     <grain-max-score grain-state="[[grainState]]"
                                      max-score="grainCopy.grain_copy_data.max_score"></grain-max-score>
                 </div>
-                <div class="two cell">
+                <div class="four cell">
                     <grain-title grain-state="[[grainState]]" title="grainCopy.grain_copy_data.title"></grain-title>
                 </div>
-                <div class="tree cell">
+                <div class="four cell">
                     <grain-hint grain-state="[[grainState]]" hint="grainCopy.grain_copy_data.hint"></grain-hint>
                 </div>
             </div>
@@ -26,10 +26,10 @@
                 </div>
             </div>
             <!-- HERE SWITCH ON EXERCISE -->
-            <div class="animate-switch" ng-switch-when="simpleAnswer">
+            <div class="animate-switch" data-ng-switch-when="simpleAnswer">
                 <simple-answer-perform grain-copy="grainCopy" grain-state="[[grainState]]"></simple-answer-perform>
             </div>
-            <div class="animate-switch" ng-switch-default></div>
+            <div class="animate-switch" data-ng-switch-default></div>
         </div>
     </div>
 </article>

@@ -65,6 +65,14 @@ class SubjectService implements ISubjectService {
     }
 
     /**
+     * GETTER currentSubjectId
+     * @returns {number}
+     */
+    public get currentSubjectId():number {
+        return this._currentSubjectId;
+    }
+
+    /**
      * SETTER currentSubjectId
      * @param value
      */

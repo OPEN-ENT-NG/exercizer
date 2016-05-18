@@ -16,10 +16,8 @@ directives.push(
                      * VARIABLE
                      */
 
-                    var currentOrder;
                     var lowerOrder;
                     var upperOrder;
-
                     var msgToDefine = "à définir lors de la programmation.";
 
                     /**
@@ -27,7 +25,7 @@ directives.push(
                      */
 
                     function reset(){
-                        currentOrder = "subjectPresentation";
+                        scope.currentOrder = "subjectPresentation";
                         lowerOrder = null;
                         upperOrder = null;
                     }
@@ -75,26 +73,32 @@ directives.push(
                      * EVENT PAGE
                      */
 
-                    scope.clickOnGrainCopyInNav = function (grain_copy) {
-                        currentOrder = grain_copy.order;
-                    };
-
                     scope.clickNextQuestion = function () {
-                        currentOrder = findNextOrder(currentOrder);
+                        var newOrder  = findNextOrder(scope.currentOrder);
+                        if(newOrder){
+                            scope.currentOrder = newOrder;
+                        } else{
+                            // new order = null means that current grain is the last grain
+                            scope.currentOrder = 'subjectEndPage';
+                        }
                     };
 
                     scope.clickPreviousQuestion = function () {
-                        currentOrder = findPreviousOrder(currentOrder);
+                        scope.currentOrder = findPreviousOrder(scope.currentOrder);
                     };
 
                     scope.startSubject = function () {
                         lowerOrder = findLowerOrder();
                         upperOrder = findUpperOrder();
-                        currentOrder = lowerOrder;
+                        scope.currentOrder = lowerOrder;
                     };
 
                     scope.clickOnAutoCorrection = function () {
                         PreviewSubjectService.initAutoCorrection();
+                    };
+
+                    scope.tackBackCopy = function(){
+                      console.log('TODO : tackBackCopy');
                     };
 
 
@@ -103,11 +107,11 @@ directives.push(
                      */
 
                     function isFirstQuestion() {
-                        return currentOrder == lowerOrder
+                        return scope.currentOrder == lowerOrder
                     }
 
                     function isLastQuestion() {
-                        return currentOrder == upperOrder
+                        return scope.currentOrder == upperOrder
                     }
 
                     function findLowerOrder() {
@@ -156,9 +160,6 @@ directives.push(
                                 }
                             }
                         });
-                        if (!newOrder) {
-                            throw "Not possible to access lower than the fist question"
-                        }
                         return newOrder
                     }
 
@@ -180,9 +181,6 @@ directives.push(
                                 }
                             }
                         });
-                        if (!newOrder) {
-                            throw "Not possible to access upper than the last question"
-                        }
                         return newOrder
                     }
 
@@ -192,9 +190,6 @@ directives.push(
                      */
 
                     scope.display = {
-                        buttonReturnCopy: function () {
-                            return scope.subjectState == "studentPerform"
-                        },
                         buttonAutoCorrection: function () {
                             return scope.subjectState == "preview"
                         },
@@ -202,19 +197,22 @@ directives.push(
                             return scope.subjectState == "studentPerform"
                         },
                         pagePresentationSubject: function () {
-                            return currentOrder == "subjectPresentation"
+                            return scope.currentOrder == "subjectPresentation"
                         },
                         grainCopyByOrder: function (order) {
-                            return currentOrder == order
+                            return scope.currentOrder == order
                         },
                         buttonNextQuestion: function () {
-                            return (!isLastQuestion() && currentOrder != "subjectPresentation")
+                            return (scope.currentOrder != "subjectPresentation" && scope.currentOrder != 'subjectEndPage');
                         },
                         buttonPreviousQuestion: function () {
-                            return (!isFirstQuestion() && currentOrder != "subjectPresentation")
+                            return (!isFirstQuestion() && scope.currentOrder != "subjectPresentation" && scope.currentOrder != 'subjectEndPage')
                         },
                         buttonStartSubject: function () {
-                            return currentOrder == "subjectPresentation"
+                            return scope.currentOrder == "subjectPresentation"
+                        },
+                        buttonReturnCopy : function(){
+                            return scope.currentOrder == "subjectEndPage"
                         }
                     };
 

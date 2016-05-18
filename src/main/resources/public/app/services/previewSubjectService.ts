@@ -1,9 +1,10 @@
 interface IPreviewSubjectService {
+    initPreviewSubject();
+    initAutoCorrection();
     displayPreviewSubjectPerform : boolean
     displayPreviewCopyCorrect:boolean
-    initPreviewSubject();
     subjectCopy :ISubjectCopy;
-    initAutoCorrection();
+    subjectScheduled : ISubjectScheduled
 }
 
 class PreviewSubjectService implements IPreviewSubjectService {
@@ -15,12 +16,20 @@ class PreviewSubjectService implements IPreviewSubjectService {
         'GrainService',
         'GrainCopyService',
         'GrainScheduledService'
-
     ];
 
+    /**
+     * VARIABLES
+     */
     private _displayPreviewSubjectPerform : boolean;
     private _displayPreviewCopyCorrect : boolean;
 
+    private _subjectCopy : ISubjectCopy;
+    private _subjectScheduled : ISubjectScheduled;
+
+    /**
+     * SERVICES
+     */
     private subjectService;
     private subjectScheduledService;
     private copyService;
@@ -28,15 +37,13 @@ class PreviewSubjectService implements IPreviewSubjectService {
     private grainCopyService;
     private grainScheduledService;
 
-    private _subjectCopy : ISubjectCopy;
-    private _subjectScheduled : ISubjectScheduled;
-
     constructor(subjectService,
                 SubjectScheduledService,
                 CopyService,
                 GrainService,
                 GrainCopyService,
                 GrainScheduledService) {
+        // set display light box to false
         this._displayPreviewSubjectPerform = false;
         this._displayPreviewCopyCorrect = false;
         this.subjectService = subjectService;
@@ -48,37 +55,63 @@ class PreviewSubjectService implements IPreviewSubjectService {
 
     }
 
+    /**
+     * GETTER displayPreviewSubjectPerform
+     * @returns {boolean}
+     */
     public get displayPreviewSubjectPerform():boolean {
         return this._displayPreviewSubjectPerform;
     }
 
+    /**
+     * SETTER displayPreviewSubjectPerform
+     * @param value
+     */
     public set displayPreviewSubjectPerform(value:boolean) {
         this._displayPreviewSubjectPerform = value;
     }
 
-
+    /**
+     * GETTER displayPreviewCopyCorrect
+     * @returns {boolean}
+     */
     public get displayPreviewCopyCorrect():boolean {
         return this._displayPreviewCopyCorrect;
     }
 
+    /**
+     * SETTER displayPreviewCopyCorrect
+     * @param value
+     */
     public set displayPreviewCopyCorrect(value:boolean) {
         this._displayPreviewCopyCorrect = value;
     }
 
+    /**
+     * GETTER subjectCopy
+     * @returns {ISubjectCopy}
+     */
     public get subjectCopy():ISubjectCopy {
         return this._subjectCopy;
     }
 
+    /**
+     * GETTER subjectScheduled
+     * @returns {ISubjectScheduled}
+     */
     public get subjectScheduled():ISubjectScheduled {
         return this._subjectScheduled;
     }
 
+    /**
+     * Init The preview of the subject
+     */
     public initPreviewSubject(){
         var self = this;
+        // display lightbox preview perform
         this._displayPreviewSubjectPerform = true;
-
         // Get subject
-        var subject = this.subjectService.subjectById(this.subjectService.currentSubjectId);
+        var subject = this.subjectService.getCurrentSubject();
         //compute max score
         this.subjectService.computeMaxScoreForCurrentSubject();
         // Create subject scheduled
@@ -112,6 +145,9 @@ class PreviewSubjectService implements IPreviewSubjectService {
         });
     }
 
+    /**
+     * Init the preview of the auto correction
+     */
     public initAutoCorrection(){
         this._displayPreviewSubjectPerform = false;
         this._displayPreviewCopyCorrect = true;

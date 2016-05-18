@@ -7,47 +7,76 @@ directives.push(
                 scope: {
                     subject: "=",
                     subjectCopy: "=",
-                    clickOnGrainCopyFromParent: '&'
+                    currentItem: '='
 
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/widget/subjectTree.html',
                 link: (scope:any, element, attrs) => {
 
-                    var _selectedGrain = null;
+                    /**
+                     * Varibales
+                     */
+                    function isSubjectNav(){
+                        return !!scope.subject;
+                    }
 
-                    // grain could be 'grain' or 'grain copy'
-                    scope.grainList = function () {
-                        if (scope.subject) {
+                    function isSubjectCopyNav(){
+                        return !!scope.subjectCopy;
+                    }
+
+                    /**
+                     * Get item
+                     * could be grain or grainCopy
+                     * @returns {any}
+                     */
+                    scope.itemList = function () {
+                        if (isSubjectNav()) {
                             return GrainService.grainListBySubjectId(scope.subject.id);
                         }
-                        if (scope.subjectCopy) {
+                        if (isSubjectCopyNav()) {
                             return GrainCopyService.grainCopyListBySubjectCopyId(scope.subjectCopy.id);
                         }
                     };
 
-                    scope.getGrainLabel = function (grain) {
-                        if (scope.subject) {
-                            return GrainService.getGrainLabel(grain);
+                    /**
+                     * Get item Label
+                     * @param item
+                     * @returns {any}
+                     */
+                    scope.getItemLabel = function (item) {
+                        if (isSubjectNav()) {
+                            return GrainService.getGrainLabel(item);
                         }
-                        if (scope.subjectCopy) {
-                            return GrainCopyService.getGrainCopyLabel(grain);
-                        }
-                    };
-
-                    scope.isSelected = function (grain) {
-                        if (_selectedGrain && _selectedGrain.id == grain.id) {
-                            return 'selected';
-                        } else {
-                            return null;
+                        if (isSubjectCopyNav()) {
+                            return GrainCopyService.getGrainCopyLabel(item);
                         }
                     };
 
-                    scope.clickOnGrain = function (grain) {
-                        _selectedGrain = grain;
-                        if (scope.subjectCopy) {
-                            scope.clickOnGrainCopyFromParent({grainCopy: grain});
+
+                    /**
+                     * Click item in nav
+                     * @param item
+                     */
+                    scope.clickOnOneItem = function (item) {
+                        if(item.order){
+                            scope.currentItem = item.order;
+                        } else{
+                            scope.currentItem = item;
                         }
+
                     };
+
+                    /**
+                     * Display
+                     */
+                    scope.display  = {
+                        subjectPresentation : function(){
+                            return isSubjectCopyNav();
+                        },
+                        subjectEndPage : function(){
+                            return isSubjectCopyNav();
+                        }
+                    }
 
                 }
             };

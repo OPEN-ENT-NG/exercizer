@@ -5,33 +5,28 @@
         </button>
         &nbsp;
     </div>
-    <div class="nine cell">
+    <div class="one cell">
+        <span> / [[getSubjectMaxScore()]]</span>
+    </div>
+    <div class="eight cell">
         <span>[[getSubjectTitle()]]</span>
-        <span>/[[getSubjectMaxScore()]]</span>
-        <button class="right-magnet cell" data-ng-show="display.buttonReturnCopy()">
-            Rendre la copie
-        </button>
-        <button class="right-magnet cell" data-ng-show="display.buttonReturnCopy()">
-            Rendre la copie plus tard
-        </button>
-        <button class="right-magnet cell" data-ng-click="clickOnAutoCorrection()" data-ng-show="display.buttonAutoCorrection()">
-            Aperçu d'une correction d'une copie
-        </button>
+        <input type="button" class="button right-magnet cancel" data-ng-click="clickOnAutoCorrection()" data-ng-show="display.buttonAutoCorrection()" value="Aperçu d'une correction d'une copie">
     </div>
 </div>
 
 <div class="row">
     <!-- part navigation -->
-    <!-- part navigation -->
     <div class="three cell">
-        <span>Temps restant : </span>
+        <div class="row">
+            <span>Temps restant : libre</span>
+        </div>
         <subject-tree subject-copy="subjectCopy"
-                        click-on-grain-copy-from-parent="clickOnGrainCopyInNav(grainCopy)">
+                      current-item="currentOrder">
 
         </subject-tree>
     </div>
-    <!-- part grain -->
-    <div class="nine cell">
+    <!-- PART GRAIN  -->
+    <div class="nine cell scrollable">
         <div class="row">
             <div class="twelve cell">
                 <div data-ng-show="display.pagePresentationSubject()">
@@ -51,15 +46,27 @@
                     <grain-perform grain-copy="grainCopy" grain-state="perform"></grain-perform>
                 </div>
             </div>
+        </div>
+        <!-- BUTTON PART -->
+        <div class="row">
             <div class="twelve cell">
+                <!-- button next question -->
                 <button class="right-magnet cell" data-ng-click="clickNextQuestion()" data-ng-show="display.buttonNextQuestion()">
-                    Question suivante
+                    Suivant
                 </button>
-                <input type="button" class="button right-magnet cancel" data-ng-click="clickPreviousQuestion()" data-ng-show="display.buttonPreviousQuestion()" value="Question précèdente">
-
+                <!-- button previous question -->
+                <input type="button" class="button right-magnet cancel" data-ng-click="clickPreviousQuestion()" data-ng-show="display.buttonPreviousQuestion()" value="Précèdent">
+                <!-- button return copy-->
+                <button class="right-magnet cell" data-ng-show="display.buttonReturnCopy()">
+                    Rendre la copie
+                </button>
+                <!-- button return copy later-->
+                <input type="button" class="button right-magnet cancel" data-ng-show="display.buttonReturnCopy()" value="Rendre la copie plus tard">
+                <!-- button start -->
                 <button class="right-magnet cell" data-ng-click="startSubject()" data-ng-show="display.buttonStartSubject()">
                     Commencer
                 </button>
+
             </div>
         </div>
     </div>
