@@ -1,4 +1,4 @@
-<div>
+<div  data-ng-mouseenter="isReordering = true" data-ng-mouseleave="isReordering = false">
     <h2>Organiser</h2>
 
 
@@ -13,7 +13,7 @@
     <div class="row">
         <div>
             <ul sortable-list class="thought-out-actions">
-                <li  ng-repeat="grain in grainList | orderObjectBy:'order':false" sortable-element ng-model="grain.order" ng-change="reOrder(grain)">
+                <li  ng-repeat="grain in grainList() | orderObjectBy:'order':false" sortable-element ng-model="grain.index" ng-change="reOrder(grain)">
                     [[getGrainLabel(grain)]]</li>
             </ul>
         </div>
