@@ -2,16 +2,22 @@
 directives.push(
     {
         name: "grainHint",
-        injections: [ () => {
+        injections: [() => {
             return {
                 restrict: "E",
                 scope: {
                     hint: '=',
                     grainState: '@',
-                    onBlurFunction : "&"
+                    onBlurFunction: "&"
                 },
                 templateUrl: "exercizer/public/app/templates/directives/common_grain/grainHint.html",
-                link:(scope : any, element, attrs) => {
+                link: (scope:any, element, attrs) => {
+
+                    scope.displayHintPerform = false;
+
+                    scope.toggleDisplayHintPerform = function () {
+                        scope.displayHintPerform = !scope.displayHintPerform;
+                    }
 
                 }
             };

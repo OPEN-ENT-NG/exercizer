@@ -12,7 +12,12 @@
 
 <!-- perform -->
 <div data-ng-show="grainState == 'perform' || grainState == 'marking'">
-    <span>[[hint]]</span>
+    <div data-ng-click="toggleDisplayHintPerform()">
+        <img src="/exercizer/public/assets/img/hint.PNG">
+    </div>
+    <div data-ng-show="displayHintPerform">
+        [[hint]]
+    </div>
 </div>
 
 
