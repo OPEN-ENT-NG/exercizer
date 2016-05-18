@@ -3,10 +3,7 @@ routes.define(function($routeProvider){
         .when('/teacher/home', {
             action: 'teacherHome'
         })
-        .when('/teacher/subject/create', {
-            action: 'teacherSubjectCreate'
-        })
-        .when('/teacher/subject/edit', {
+        .when('/teacher/subject/edit/:subjectId/', {
             action: 'teacherSubjectEdit'
         })
         .otherwise({
@@ -22,10 +19,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
     route({
         teacherHome: function(params){
             template.open('main', 'teacher-home');
-        },
-        teacherSubjectCreate: function(params){
-            template.open('main', 'teacher-subject-create');
-
         },
         teacherSubjectEdit: function(params){
             template.open('main', 'teacher-subject-edit');
@@ -79,6 +72,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('SubjectScheduledService', SubjectScheduledService );
         module.service('CopyService', CopyService );
         module.service('CompareStringService', CompareStringService );
+        module.service('ToolsService', ToolsService );
 
         /**
          * Controllers

@@ -1,6 +1,3 @@
-/**
- * Created by jun on 22/04/2016.
- */
 interface IGrainService {
     createGrain(grain:IGrain, callbackSuccess, callBackFail);
     updateGrain(grain:IGrain, callbackSuccess, callbackFail)
