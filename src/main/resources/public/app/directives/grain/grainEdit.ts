@@ -53,7 +53,6 @@ directives.push(
                         SelectedGrainService.toggleGrainInSelectedGrainList(scope.grain,scope.isGrainSelected );
                     };
 
-
                     /**
                      * EVENT
                      */
