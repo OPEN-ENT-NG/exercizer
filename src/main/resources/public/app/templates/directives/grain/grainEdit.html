@@ -58,7 +58,12 @@
                     </div>
                     <div class="row">
                         <div class="twelve cell">
-                            <grain-add-document state="edit"></grain-add-document>
+                            <grain-add-document grain = "grain" state="edit"></grain-add-document>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="twelve cell">
+                            <grain-document document-list = "grain.grain_data.documentList" state="edit"></grain-document>
                         </div>
                     </div>
                     <div ng-switch on="getTypeNameByCurrentGrain()">
