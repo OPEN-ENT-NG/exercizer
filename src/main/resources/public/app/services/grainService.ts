@@ -176,7 +176,9 @@ class GrainService implements IGrainService {
 
     private addGrainToGrainList(grain:IGrain) {
         if(!this._grainList[grain.subject_id]){
-            throw "Grain List missing";
+            var err = "Grain List missing";
+            console.error(err);
+            throw err;
         }
         this._grainList[grain.subject_id][grain.id] = grain;
     }
@@ -188,6 +190,7 @@ class GrainService implements IGrainService {
         } else {
             this._getGrainListBySubjectId(subject_id,
                 function (data) {
+                    // data is an array of grain
                     self._createGrainList(subject_id);
                     angular.forEach(data, function(grain, key) {
                         self.addGrainToGrainList(grain);

@@ -97,19 +97,19 @@ class GrainTypeService implements IGrainTypeService {
                 id: 1,
                 name: "statement",
                 publicName: "Enoncer",
-                picture: "http://www.barmitzvah-online.com/wp-content/uploads/2013/12/question-300x300.jpg"
+                illustration: ""
             },
             {
                 id: 2,
                 name: "openQuestion",
                 publicName: "Question Libre",
-                picture: "http://www.barmitzvah-online.com/wp-content/uploads/2013/12/question-300x300.jpg"
+                illustration: "ouverte"
             },
             {
                 id: 3,
                 name: "simpleAnswer",
                 publicName: "Réponse Simple",
-                picture: "http://www.barmitzvah-online.com/wp-content/uploads/2013/12/question-300x300.jpg"
+                illustration: "simple"
             }
         ];
     }

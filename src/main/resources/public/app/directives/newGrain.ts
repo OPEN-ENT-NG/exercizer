@@ -24,6 +24,10 @@ directives.push(
                         return GrainTypeService.exerciseTypeList;
                     };
 
+                    scope.getIllustrationUrl = function(illustration){
+                        return "/exercizer/public/assets/illustrations/"+illustration+".html";
+                    };
+
                     scope.clickExerciseType = function(type){
                         scope.grain.grain_type_id = type.id;
                         GrainService.updateGrain(
