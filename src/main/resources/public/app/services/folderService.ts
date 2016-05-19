@@ -3,7 +3,10 @@ interface IFolderService {
     updateFolder(folder : IFolder, callbackSuccess, callBackFail);
     deleteFolder(folder : IFolder, callbackSuccess, callbackFail);
     getFolderById(params, callbackSuccess, callbackFail);
+    createObjectFolder() : IFolder;
+    modifyFolderAParentIdByFolderBId(folderId, parentFolderId);
     folderList : IFolder[];
+    currentFolderId;
 }
 
 class FolderService implements IFolderService {
@@ -16,7 +19,9 @@ class FolderService implements IFolderService {
     private serverUrl : string;
     private $http : any;
 
-    private _folderList : IFolder[];
+    private _folderList : any;
+    private _folderTree;
+    private _currentFolderId;
 
     constructor(
         serverUrl,
@@ -25,10 +30,19 @@ class FolderService implements IFolderService {
         this.serverUrl = serverUrl;
         this.$http = $http;
 
-        this._folderList = [];
-
+        // init folder list as an object
+        this._folderList = {
+        };
     }
 
+
+    public get currentFolderId() {
+        return this._currentFolderId;
+    }
+
+    public set currentFolderId(value) {
+        this._currentFolderId = value;
+    }
 
     public get folderList() : IFolder[] {
         return this._folderList;
@@ -40,12 +54,22 @@ class FolderService implements IFolderService {
             folder,
             function(data){
                 self.addFolderToFolderList(data);
-                callbackSuccess(data);
+                if(callbackSuccess){
+                    callbackSuccess(data);
+                }
             },
             function(err){
                 console.error(err);
             }
         );
+    }
+
+    public createObjectFolder() : IFolder {
+        return {
+            id: null,
+            label : null,
+            parent_folder_id : null
+        }
     }
 
     public updateFolder(folder : IFolder, callbackSuccess, callbackFail){
@@ -74,18 +98,25 @@ class FolderService implements IFolderService {
         )
     }
 
-    public getFolderById(params, callbackSuccess, callbackFail){
+    public getFolderById(folderId, callbackSuccess, callbackFail){
         var self = this;
-        if(params.folder.id in this._folderList){
-            callbackSuccess(this._folderList[params.folder.id])
+        if(this._folderList[folderId]){
+            callbackSuccess(this._folderList[folderId])
         } else {
-            this._getFolderById(params.folder.id,
+            this._getFolderById(folderId,
                 function(data) {
-                    self._folderList[params.folder.id] = data;
+                    self._folderList[folderId] = data;
                     callbackSuccess(data);
                 },
-                callbackFail()
+                callbackFail
             );
+        }
+    }
+
+
+    public modifyFolderAParentIdByFolderBId(folderId, parentFolderId){
+        if(this._folderList[folderId]){
+            this._folderList[folderId].parent_folder_id = parentFolderId;
         }
     }
 
@@ -103,7 +134,8 @@ class FolderService implements IFolderService {
 
 
     private _getFolderById(params, callbackSuccess, callbackFail){
-        var req: any;
+        throw "not implemented";
+        /*var req: any;
         var self = this;
         req = this.$http({
             method: 'GET',
@@ -128,7 +160,7 @@ class FolderService implements IFolderService {
                 console.error(headers);
                 console.error(config);
                 callbackFail(data);
-            });
+            });*/
     }
 
     private _updateFolder(folder : IFolder, callbackSuccess, callbackFail){
@@ -158,6 +190,7 @@ class FolderService implements IFolderService {
                 console.error(config);
                 callbackFail(data);
             });
+
     }
 
     private _createFolder(folder : IFolder, callbackSuccess, callbackFail){

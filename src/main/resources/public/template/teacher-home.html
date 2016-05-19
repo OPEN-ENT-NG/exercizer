@@ -23,7 +23,7 @@
     </div>
     <div class="row rigid-grid">
         <section class="four cell">
-            <subjects-tree data-show-create-folder="true"></subjects-tree>
+            <teacher-folder-list-tree folder-list="teacherHomeCtrl.folderList()"></teacher-folder-list-tree>
         </section>
         <section class="margin-four">
             <nav class="twelve cell">
@@ -33,7 +33,11 @@
                 </div>
             </nav>
             <div class="twelve cell">
-                TEST
+                <div class="fallen dominos">
+                    <domino-folder data-ng-repeat="folder in teacherHomeCtrl.folderList()" folder = "folder"></domino-folder>
+                    <domino-subject data-ng-repeat="subject in teacherHomeCtrl.subjectList()"
+                                    subject="subject"></domino-subject>
+                </div>
             </div>
         </section>
     </div>

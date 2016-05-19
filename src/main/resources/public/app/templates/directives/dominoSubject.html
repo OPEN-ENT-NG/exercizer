@@ -1,0 +1,19 @@
+<div class="item">
+    <section class="domino cyan">
+        <div class="top">
+            <img class="absolute" data-ng-src="[[getSubjectPicture()]]" />
+        </div>
+        <div class="bottom">
+            <div class="content">
+                <div class="cell">
+                    <strong data-ng-click="clickOnSubjectTitle()">[[getSubjectTitle()]]</strong>
+                    <br />[[getSubjectModificationDate()]]
+                    <br />
+                </div>
+                <div ng-show="canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
+                    <input type="checkbox" data-ng-model="subject.selected" class="right-magnet cell" />
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -12,7 +12,7 @@
         <button class="right-magnet cell">
             Programmer
         </button>
-        <input type="button" class="button right-magnet cancel"  value="Terminer">
+        <input type="button" data-ng-click="teacherEditSubjectCtrl.goHome()" class="button right-magnet cancel"  value="Terminer">
 
     </div>
     <div class="row">
@@ -22,7 +22,7 @@
                     <subject-organizer subject="teacherEditSubjectCtrl.getCurrentSubject()" ></subject-organizer>
                 </article>
                 <article>
-                    <subject-list-tree data-show-create-folder="false"></subject-list-tree>
+                    <teacher-subject-list-tree></teacher-subject-list-tree>
                 </article>
             </nav>
         </section>

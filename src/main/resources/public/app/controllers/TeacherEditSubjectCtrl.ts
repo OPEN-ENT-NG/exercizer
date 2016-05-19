@@ -5,7 +5,8 @@ class TeacherEditSubjectCtrl {
         'GrainService',
         'SubjectService',
         'GrainTypeService',
-        'SelectedGrainService'
+        'SelectedGrainService',
+        '$location'
 
     ];
 
@@ -16,6 +17,7 @@ class TeacherEditSubjectCtrl {
     private subjectService;
     private grainTypeService;
     private selectedGrainService;
+    private location;
 
     /**
      * Variables
@@ -28,7 +30,8 @@ class TeacherEditSubjectCtrl {
         GrainService,
         SubjectService,
         GrainTypeService,
-        SelectedGrainService
+        SelectedGrainService,
+        $location
 
     ) {
         this._subjectId = $routeParams.subjectId;
@@ -38,6 +41,7 @@ class TeacherEditSubjectCtrl {
         this.selectedGrainService = SelectedGrainService;
         // set the params subjectId (url) in the subjectService
         this.subjectService.currentSubjectId = this._subjectId;
+        this.location = $location;
     }
 
     /**
@@ -72,6 +76,10 @@ class TeacherEditSubjectCtrl {
         if(subject){
             return subject.title;
         }
+    }
+
+    public goHome(){
+        this.location.path('/teacher/home');
     }
 }
 

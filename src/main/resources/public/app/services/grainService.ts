@@ -186,7 +186,9 @@ class GrainService implements IGrainService {
     public getGrainListBySubjectId(subject_id, callbackSuccess, callbackFail) {
         var self = this;
         if (this._isSetGrainList[subject_id]) {
-            callbackSuccess(this.grainListBySubjectId(subject_id))
+            if(callbackSuccess){
+                callbackSuccess(this.grainListBySubjectId(subject_id))
+            }
         } else {
             this._getGrainListBySubjectId(subject_id,
                 function (data) {

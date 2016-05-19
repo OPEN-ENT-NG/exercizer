@@ -1,0 +1,13 @@
+<ul>
+    <li data-ng-repeat="folder in folderList | orderObjectBy:'label':false "
+        data-ng-click="clickOnFolder(folder)"
+        dragstart="drag(folder, $originalEvent)"
+        dragcondition="dragCondition(folder)"
+        dragdrop="dropTo(folder, $originalEvent)"
+        dropcondition="dropCondition(folder)"
+    >
+        <a data-ng-if="folder.parent_folder_id==parentFolderId">
+            [[folder.label]]
+        </a>
+    </li>
+</ul>
