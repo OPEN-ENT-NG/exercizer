@@ -3,7 +3,8 @@ interface ISubjectService {
     updateSubject(subject:ISubject, callbackSuccess, callbackFail)
     getSubjectList(params, callbackSuccess, callbackFail);
     getSubjectById(subjectId):ISubject
-    getCurrentSubject() : ISubject
+    getCurrentSubject(): ISubject
+    createObjectSubject(): ISubject
     subjectList : ISubject[];
     isSetSubjectList : boolean;
     currentSubjectId : number;

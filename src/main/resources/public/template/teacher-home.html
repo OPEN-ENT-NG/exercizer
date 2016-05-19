@@ -1,8 +1,7 @@
 <div data-ng-controller="TeacherHomeCtrl as teacherHomeCtrl">
 
     <!-- LIGHT BOX -->
-    <lightbox-create-subject is-displayed="teacherHomeCtrl.displayLightboxCreateSubject"></lightbox-create-subject>
-
+    <lightbox-subject-properties data-is-displayed="teacherHomeCtrl.openLightboxSubjectProperties"></lightbox-subject-properties>
     <!-- PAGE -->
     <div class="row">
         <h1>
@@ -18,7 +17,7 @@
                 Bibliothèque
             </header>
         </div>
-        <button class="right-magnet cell" data-ng-click="teacherHomeCtrl.clickCreateNewSubject()">
+        <button class="right-magnet cell" data-ng-click="teacherHomeCtrl.displaySubjectProperties()">
             Nouveau sujet
         </button>
     </div>

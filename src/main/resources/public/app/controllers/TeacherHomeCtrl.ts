@@ -2,32 +2,33 @@ class TeacherHomeCtrl {
 
     private $location;
 
-
     static $inject = [
         '$location',
+        'SubjectService',
     ];
-
-    private _displayLightboxCreateSubject : boolean;
+    
+    private _subjectService: ISubjectService;
+    private _openLightboxSubjectProperties: boolean;
 
     constructor(
-        $location
-
+        $location,
+        SubjectService: ISubjectService
     ) {
         this.$location = $location;
-        this._displayLightboxCreateSubject = false;
-    }
+        this._subjectService = SubjectService;
+        this._openLightboxSubjectProperties = false;
+    };
 
+    get openLightboxSubjectProperties(): boolean {
+        return this._openLightboxSubjectProperties;
+    };
 
-    get displayLightboxCreateSubject():boolean {
-        return this._displayLightboxCreateSubject;
-    }
+    set openLightboxSubjectProperties(value: boolean) {
+        this._openLightboxSubjectProperties = value;
+    };
 
-    set displayLightboxCreateSubject(value:boolean) {
-        this._displayLightboxCreateSubject = value;
-    }
-
-    public clickCreateNewSubject() {
-        this._displayLightboxCreateSubject =  true;
+    public displaySubjectProperties() {
+        this._openLightboxSubjectProperties = true;
     };
 
 

@@ -1,0 +1,28 @@
+<lightbox data-show="isDisplayed" data-on-close="closeLightbox()">
+    <h1>Exercizer - [[ isNewSubject ? 'créer' : 'éditer' ]] un sujet</h1>
+    <div class="row">
+        <form name="formSubjectProperties">
+            <div class="rigid-grid row">
+                <div class="two cell clip height-two">
+                    <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail">
+                        <image-select data-ng-model="subject.picture" default="/img/illustrations/collaborativeeditor-default.png"></image-select>
+                    </div>
+                </div>
+                <div class="margin-two height-three">
+                    <div class="twelve cell horizontal-spacing">
+                        <input type="text" data-ng-model="subject.title" class="twelve cell" placeholder="Titre du sujet">
+                        <textarea data-ng-model="subject.description" class="twelve cell" placeholder="Description"></textarea>
+                    </div>
+                    <div class="twelve cell horizontal-spacing vertical-spacing">
+                        <button data-ng-click="saveSubjectProperties()" class="right-magnet">
+                            Enregistrer
+                        </button>
+                        <button data-ng-click="closeLightbox()" class="right-magnet cancel">
+                            Annuler
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</lightbox>

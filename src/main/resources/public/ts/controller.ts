@@ -78,7 +78,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
          * Controllers
          */
         module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
-        module.controller('TeacherCreateSubjectCtrl', TeacherCreateSubjectCtrl);
         module.controller('TeacherEditSubjectCtrl', TeacherEditSubjectCtrl);
 
         /**
