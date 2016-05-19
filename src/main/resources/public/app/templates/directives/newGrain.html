@@ -28,6 +28,7 @@
         </div>
         <div class="one cell" ng-repeat="type in exerciseTypeList()">
             <div data-ng-click="clickExerciseType(type)">{{type.publicName}}</div>
+            <div data-ng-include = "getIllustrationUrl(type.illustration)"></div>
         </div>
     </div>
 </article>
