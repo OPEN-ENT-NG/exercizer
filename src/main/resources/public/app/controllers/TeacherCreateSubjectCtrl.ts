@@ -26,8 +26,13 @@ class TeacherCreateSubjectCtrl {
         this.subjectService.createSubject(
             this.subject,
             function(data){
-                console.info(data);
-                self.$location.path('/teacher/subject/edit')
+                // data is subject
+                if(data.id){
+                    self.$location.path('/teacher/subject/edit/'+data.id)
+                } else{
+                    console.error('new subject has no id');
+                    throw "";
+                }
             },
             function(err){
                 console.error(err);

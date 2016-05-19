@@ -77,6 +77,9 @@ class SubjectService implements ISubjectService {
      * @param value
      */
     public set currentSubjectId(value:number) {
+        // set un other current subject
+        // get grain list link to this subject
+        this.grainService.getGrainListBySubjectId(value, null, null);
         this._currentSubjectId = value;
     }
 
