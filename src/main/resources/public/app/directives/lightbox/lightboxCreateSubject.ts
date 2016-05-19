@@ -5,18 +5,18 @@ directives.push(
             return {
                 restrict: 'E',
                 scope: {
-                    isDisplay :"="
+                    isDisplayed :"="
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxCreateSubject.html',
                 link:(scope : any, element, attrs) => {
 
 
                     scope.display = function(){
-                        return scope.isDisplay || false;
+                        return scope.isDisplayed || false;
                     };
 
                     scope.hide = function(){
-                        scope.isDisplay = false;
+                        scope.isDisplayed = false;
                     }
                 }
             };
