@@ -8,9 +8,8 @@ directives.push(
                     isDisplayed :"="
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxCreateSubject.html',
-                link:(scope : any, element, attrs) => {
-
-
+                link:(scope : any) => {
+                    
                     scope.display = function(){
                         return scope.isDisplayed || false;
                     };

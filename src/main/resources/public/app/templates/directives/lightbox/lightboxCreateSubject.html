@@ -1,24 +1,24 @@
 <div data-ng-controller="TeacherCreateSubjectCtrl as teacherCreateSubjectCtrl">
-    <lightbox data-show="display()" data-on-close="teacherCreateSubjectCtrl.clickCancel(); hide()">
+    <lightbox data-show="display()" data-on-close="hide(); teacherCreateSubjectCtrl.clickCancel();">
         <h1>Exercizer - créer un sujet</h1>
         <div class="row">
-            <form name="form">
+            <form name="formCreateSubject">
                 <div class="rigid-grid row">
                     <div class="two cell clip height-two">
                         <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail">
-                            <image-select ng-model="teacherCreateSubjectCtrl.subject.picture" default="/img/illustrations/collaborativeeditor-default.png"></image-select>
+                            <image-select data-ng-model="teacherCreateSubjectCtrl.subject.picture" default="/img/illustrations/collaborativeeditor-default.png"></image-select>
                         </div>
                     </div>
                     <div class="margin-two height-three">
                         <div class="twelve cell horizontal-spacing">
-                            <input type="text" data-ng-model="teacherCreateSubjectCtrl.subject.title" class="twelve cell" placeholder="Titre du sujet" required>
+                            <input type="text" data-ng-model="teacherCreateSubjectCtrl.subject.title" class="twelve cell" placeholder="Titre du sujet">
                             <textarea data-ng-model="teacherCreateSubjectCtrl.subject.description" class="twelve cell" placeholder="Description"></textarea>
                         </div>
-                        <div class="twelve cell horizontal-spacing">
-                            <button data-ng-click="teacherCreateSubjectCtrl.clickSaveSubject(); hide()" class="right-magnet" data-ng-disabled="form.$invalid">
+                        <div class="twelve cell horizontal-spacing vertical-spacing">
+                            <button data-ng-click="teacherCreateSubjectCtrl.clickSaveSubject();" class="right-magnet">
                                 Enregistrer
                             </button>
-                            <button data-ng-click="teacherCreateSubjectCtrl.clickCancel(); hide()" class="right-magnet cancel">
+                            <button data-ng-click="hide(); teacherCreateSubjectCtrl.clickCancel();" class="right-magnet cancel">
                                 Annuler
                             </button>
                         </div>

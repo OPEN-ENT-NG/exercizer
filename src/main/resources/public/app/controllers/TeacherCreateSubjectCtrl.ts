@@ -1,6 +1,3 @@
-/**
- * Created by Erwan_LP on 29/04/2016.
- */
 class TeacherCreateSubjectCtrl {
 
     private $location;
@@ -9,6 +6,7 @@ class TeacherCreateSubjectCtrl {
         '$location',
         'SubjectService',
     ];
+    
     public subject : ISubject;
     private subjectService;
 
@@ -21,21 +19,26 @@ class TeacherCreateSubjectCtrl {
 
     }
 
-    public clickSaveSubject(){
-        var self = this;
-        this.subjectService.createSubject(
-            this.subject,
-            function(data){
-                console.info(data);
-                self.$location.path('/teacher/subject/edit')
-            },
-            function(err){
-                console.error(err);
-            }
-        );
+    public clickSaveSubject() {
+        
+        if (!this.subject || !this.subject.title || this.subject.title.length === 0) {
+            notify.info('Veuillez renseigner un titre.');
+        } else {
+            var self = this;
+            this.subjectService.createSubject(
+                this.subject,
+                function(data){
+                    console.info(data);
+                    self.$location.path('/teacher/subject/edit')
+                },
+                function(err){
+                    console.error(err);
+                }
+            );
+        }
     }
 
-    public clickCancel(){
-
+    public clickCancel() {
+        this.subject = this.subjectService.createObjectSubject();
     }
 }
