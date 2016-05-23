@@ -73,6 +73,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('CopyService', CopyService );
         module.service('CompareStringService', CompareStringService );
         module.service('ToolsService', ToolsService );
+        module.service('DragService', DragService );
 
         /**
          * Controllers

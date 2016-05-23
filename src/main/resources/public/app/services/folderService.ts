@@ -4,7 +4,7 @@ interface IFolderService {
     deleteFolder(folder : IFolder, callbackSuccess, callbackFail);
     getFolderById(params, callbackSuccess, callbackFail);
     createObjectFolder() : IFolder;
-    modifyFolderAParentIdByFolderBId(folderId, parentFolderId);
+    setParentFolderIdToThisFolderById(folderId, parentFolderId);
     folderList : IFolder[];
     currentFolderId;
 }
@@ -114,7 +114,7 @@ class FolderService implements IFolderService {
     }
 
 
-    public modifyFolderAParentIdByFolderBId(folderId, parentFolderId){
+    public setParentFolderIdToThisFolderById(folderId, parentFolderId){
         if(this._folderList[folderId]){
             this._folderList[folderId].parent_folder_id = parentFolderId;
         }

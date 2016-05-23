@@ -45,6 +45,10 @@ directives.push(
                         resetNewFolder();
                     };
 
+                    scope.goToRoot = function(){
+                      FolderService.currentFolderId = null;
+                    };
+
                     /**
                      * NEW FOLDER
                      */

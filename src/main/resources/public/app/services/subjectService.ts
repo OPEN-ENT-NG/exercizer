@@ -5,6 +5,7 @@ interface ISubjectService {
     getSubjectById(subjectId):ISubject
     getCurrentSubject(): ISubject
     createObjectSubject(): ISubject
+    setFolderIdToThisSubject(subjectId, folderId)
     subjectList : ISubject[];
     isSetSubjectList : boolean;
     currentSubjectId : number;
@@ -204,6 +205,17 @@ class SubjectService implements ISubjectService {
             throw "";
         }
         this._subjectList[subject.id] = subject;
+    }
+
+    /**
+     *
+     * @param subjectId
+     * @param folderId
+     */
+    public setFolderIdToThisSubject(subjectId, folderId){
+        if(this._subjectList[subjectId]){
+            this._subjectList[subjectId].folder_id = folderId;
+        }
     }
 
 

@@ -1,6 +1,14 @@
-<div class="item">
+<div class="item"
+     data-ng-if="filterFolder()"
+>
     <section class="domino cyan">
-        <div class="top">
+        <div
+                class="top"
+                dragstart="drag(subject, $originalEvent)"
+                dragcondition="dragCondition(subject)"
+                dragdrop="dropTo(subject, $originalEvent)"
+                dropcondition="dropCondition(subject)"
+        >
             <img class="absolute" data-ng-src="[[getSubjectPicture()]]" />
         </div>
         <div class="bottom">
