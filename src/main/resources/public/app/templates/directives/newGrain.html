@@ -1,23 +1,16 @@
 <article class="statement-or-question" ng-if="state =='statementOrQuestion'">
-    <div class="row">
-        <div class="one cell">&nbsp;</div>
-        <div class="ten cell text">Ajouter ...</div>
-        <div class="one cell">&nbsp;</div>
-    </div>
-    <div class="row image">
-        <div class="one cell">&nbsp;</div>
-        <div class="five cell" data-ng-click="clickStatement()">
-            <img src="/exercizer/public/assets/img/statement.PNG">
-        </div>
-        <div class="five cell" data-ng-click="clickQuestion()">
-            <img src="/exercizer/public/assets/img/question.PNG">
-        </div>
+    <div class="eight cell vertical-spacing">
+        <button class="flat-button"  data-ng-click="clickStatement()">
+            Énoncé&nbsp;&nbsp;<i class="doc-text"></i>
+        </button>
 
-        <div class="one cell">&nbsp;</div>
+        <button class="flat-button"  data-ng-click="clickQuestion()">
+            Question&nbsp;&nbsp;<i class="help"></i>
+        </button>
     </div>
 </article>
 
-<article class="choice-question-type" ng-if="state =='choiceExerciseType'">
+<article class="choice-question-type" data-ng-if="state =='choiceExerciseType'">
     <div class="row">
         <div class="one cell"><exercizer-help></exercizer-help></div>
         <div class="eleven cell">Choisisser un question ...</div>

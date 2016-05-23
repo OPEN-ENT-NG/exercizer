@@ -22,7 +22,7 @@ directives.push(
                         if(FolderService.currentFolderId){
                             return scope.folder.parent_folder_id == FolderService.currentFolderId;
                         } else{
-                            return true;
+                            return scope.folder.parent_folder_id == null;
                         }
                     }
                  }

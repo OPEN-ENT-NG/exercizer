@@ -5,7 +5,7 @@ directives.push(
             return {
                 restrict: "E",
                 scope: {
-                    grain: '=',
+                    isToggle :'='
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/common_grain/grainToggle.html',
                 link:(scope : any, element, attrs) => {
