@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'teacherFolderListTree',
-        injections: ['FolderService', (FolderService) => {
+        injections: ['FolderService','DragService', (FolderService, DragService) => {
             return {
                 restrict: 'E',
                 templateUrl: 'exercizer/public/app/templates/directives/widget/teacherFolderListTree.html',
@@ -61,6 +61,14 @@ directives.push(
                     function resetNewFolder() {
                         scope.newFolder = FolderService.createObjectFolder();
                     }
+
+                    /**
+                     * DRAG
+                     */
+                    scope.dropToRoot = function($originalEvent){
+                        DragService.dropTo(null, $originalEvent, scope);
+                    };
+
 
                     /**
                      * DISPLAY

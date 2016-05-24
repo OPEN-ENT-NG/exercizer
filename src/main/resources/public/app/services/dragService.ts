@@ -92,31 +92,42 @@ class DragService implements IDragService {
         if(this.isSubject(originalItem)){
             if(this.isSubject(targetItem)){
                 throw "not possible";
-            }
-            if(this.isFolder(targetItem)){
-                console.log('move', originalItem, 'to', targetItem);
+            } else if(this.isFolder(targetItem)){
                 this.subjectService.setFolderIdToThisSubject(originalItem.id, targetItem.id)
+            } else{
+                //default
+                // drop on root
+                this.subjectService.setFolderIdToThisSubject(originalItem.id, null)
             }
         }
         if(this.isFolder(originalItem)){
             if(this.isSubject(targetItem)){
                 throw "not possible";
-            }
-            if(this.isFolder(targetItem)){
-                console.log('move', originalItem, 'to', targetItem);
-                this.folderService.setParentFolderIdToThisFolderById(originalItem.id, targetItem.id);
+            } else if(this.isFolder(targetItem)){
+                this.folderService.setParentFolderId(originalItem.id, targetItem.id);
+            } else {
+                // default
+                // drop on root
+                this.folderService.setParentFolderId(originalItem.id, null);
+
             }
         }
     }
 
     //TODO move in Service and improve it
     private isSubject(object: any){
-        return !!object.title;
+        if(object && object.title){
+            return true
+        } else{
+            return false;
+        }
     }
-
     private isFolder(object: any){
-        return !!object.label;
-    }
+        if(object && object.label){
+            return true
+        } else{
+            return false;
+        }    }
 
 
 

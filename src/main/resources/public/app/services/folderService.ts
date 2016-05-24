@@ -4,7 +4,8 @@ interface IFolderService {
     deleteFolder(folder : IFolder, callbackSuccess, callbackFail);
     getFolderById(params, callbackSuccess, callbackFail);
     createObjectFolder() : IFolder;
-    setParentFolderIdToThisFolderById(folderId, parentFolderId);
+    setParentFolderId(originFolderId, targetFolderId);
+    getListOfSubFolderByFolderId(folderId);
     folderList : IFolder[];
     currentFolderId;
 }
@@ -22,6 +23,7 @@ class FolderService implements IFolderService {
     private _folderList : any;
     private _folderTree;
     private _currentFolderId;
+    private _folderListByParentFolderId;
 
     constructor(
         serverUrl,
@@ -31,8 +33,8 @@ class FolderService implements IFolderService {
         this.$http = $http;
 
         // init folder list as an object
-        this._folderList = {
-        };
+        this._folderList = {};
+        this._folderListByParentFolderId = {}
     }
 
 
@@ -114,9 +116,51 @@ class FolderService implements IFolderService {
     }
 
 
-    public setParentFolderIdToThisFolderById(folderId, parentFolderId){
-        if(this._folderList[folderId]){
-            this._folderList[folderId].parent_folder_id = parentFolderId;
+    public setParentFolderId(originFolderId, targetFolderId){
+        var originFolder = this._folderList[originFolderId];
+        if(!originFolder){
+            console.error('originFolder or targetFolder is not defined');
+            throw ""
+        }
+        if(targetFolderId == null){
+            // drag to root
+            if(originFolder.parent_folder_id){
+                delete this._folderListByParentFolderId[originFolder.parent_folder_id][originFolderId];
+                originFolder.parent_folder_id = null;
+            }
+        } else{
+            // drag to other folder
+            var targetFolder = this._folderList[targetFolderId];
+            // check if there are no loop in folder
+            if(this.isAParentOf(originFolder, targetFolder)){
+                console.error("Loop folder not allowed");
+            } else {
+                // check if the folder is not drop in itself
+                if(originFolderId == targetFolderId){
+                    console.error("A folder can't be placed in itself");
+                } else {
+                    // before change parent folder id
+                    // delete folder from old _folderListByParentFolderId
+                    if(originFolder.parent_folder_id){
+                        delete this._folderListByParentFolderId[originFolder.parent_folder_id][originFolderId];
+                    }
+                    originFolder.parent_folder_id = targetFolderId;
+                    // after change parent folder id
+                    //  add folder to new _folderListByParentFolderId
+                    this._folderListByParentFolderId[targetFolderId][originFolderId] = originFolder;
+                }
+            }
+        }
+
+    }
+
+    private isAParentOf(originFolder, targetFolder) : boolean{
+        if(targetFolder.parent_folder_id ==  null){
+            return false;
+        } else if(originFolder.id == targetFolder.parent_folder_id){
+            return true;
+        } else{
+            return this.isAParentOf(originFolder, this._folderList[targetFolder.parent_folder_id]);
         }
     }
 
@@ -129,6 +173,22 @@ class FolderService implements IFolderService {
             // overwrite
         }
         this._folderList[folder.id] = folder;
+    }
+
+    public getListOfSubFolderByFolderId(folderId){
+        if(this._folderListByParentFolderId[folderId]){
+            // already set
+        } else{
+            // init _folderListByParentFolderId for this id
+            this._folderListByParentFolderId[folderId] = {};
+            // build it
+            angular.forEach(this._folderList, function(value, key) {
+                if(value.parent_folder_id == folderId){
+                    this._folderListByParentFolderId[folderId][value.id] = value;
+                }
+            });
+        }
+        return this._folderListByParentFolderId[folderId];
     }
 
 

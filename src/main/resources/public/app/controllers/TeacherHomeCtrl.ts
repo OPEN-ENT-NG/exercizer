@@ -8,6 +8,7 @@ class TeacherHomeCtrl {
     private subjectService;
     private grainService;
     private _openLightboxSubjectProperties: boolean;
+    private _displayList : string;
 
 
 
@@ -29,10 +30,19 @@ class TeacherHomeCtrl {
         this.subjectService = SubjectService;
         this.grainService = GrainService;
         this.$location = $location;
-        this._displayLightboxCreateSubject = false;
         this.feedExercizer();
         this._openLightboxSubjectProperties = false;
+        this._displayList = 'domino';
 
+    }
+
+
+    public get displayList():string {
+        return this._displayList;
+    }
+
+    public set displayList(value:string) {
+        this._displayList = value;
     }
 
     get openLightboxSubjectProperties(): boolean {
@@ -68,10 +78,6 @@ class TeacherHomeCtrl {
         var folder3 = self.folderService.createObjectFolder();
         folder3.label = "C Folder";
         this.folderService.createFolder(folder3,  null, null);
-        var folder4 = self.folderService.createObjectFolder();
-        folder4.label = "D Folder";
-        this.folderService.createFolder(folder4,  null, null);
-
         // create subject
         var subject:ISubject = this.subjectService.createObjectSubject();
         subject.id = null;

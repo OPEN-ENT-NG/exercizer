@@ -1,10 +1,13 @@
-<li data-ng-click="clickOnFolder(item)"
-    dragstart="drag(item, $originalEvent)"
-    dragcondition="dragCondition(item)"
-    dragdrop="dropTo(item, $originalEvent)"
-    dropcondition="dropCondition(item)"
->
-    <a data-ng-if="!item.parent_folder_id">
+<li>
+    <a
+        class="folder-title"
+        data-ng-if="isItemDisplayed()"
+        dragstart="drag(item, $originalEvent)"
+        dragcondition="dragCondition(item)"
+        dragdrop="dropTo(item, $originalEvent)"
+        dropcondition="dropCondition(item)"
+        data-ng-click="clickOnFolder(item)"
+    >
         [[item.label]]
     </a>
 </li>

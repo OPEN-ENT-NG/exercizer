@@ -1,7 +1,8 @@
 <div data-ng-controller="TeacherHomeCtrl as teacherHomeCtrl">
 
     <!-- LIGHT BOX -->
-    <lightbox-subject-properties data-is-displayed="teacherHomeCtrl.openLightboxSubjectProperties"></lightbox-subject-properties>
+    <lightbox-subject-properties
+            data-is-displayed="teacherHomeCtrl.openLightboxSubjectProperties"></lightbox-subject-properties>
     <!-- PAGE -->
     <div class="row">
         <h1>
@@ -28,17 +29,65 @@
         <section class="margin-four">
             <nav class="twelve cell">
                 <div class="cell right-magnet">
-                    <i class="show-list"></i>
-                    <i class="show-icons selected"></i>
+                    <i data-ng-click="teacherHomeCtrl.displayList = 'array'"
+                       class="show-list"
+                       data-ng-class="{selected: teacherHomeCtrl.displayList == 'array'}"
+
+                    ></i>
+                    <i data-ng-click="teacherHomeCtrl.displayList = 'domino'"
+                       class="show-icons"
+                       data-ng-class="{selected: teacherHomeCtrl.displayList == 'domino'}"
+
+                    ></i>
+                    [[displayList]]
                 </div>
             </nav>
-            <div class="twelve cell">
+            <!-- domino part -->
+            <div class="twelve cell" data-ng-show="teacherHomeCtrl.displayList == 'domino'">
                 <div class="fallen dominos">
-                    <domino-folder data-ng-repeat="folder in teacherHomeCtrl.folderList()" folder = "folder"></domino-folder>
-                    <domino-subject data-ng-repeat="subject in teacherHomeCtrl.subjectList()"
-                                    subject="subject"></domino-subject>
+                    <domino data-ng-repeat="folder in teacherHomeCtrl.folderList()"
+                            folder="folder"
+                            type='folder'
+
+                    ></domino>
+                    <domino data-ng-repeat="subject in teacherHomeCtrl.subjectList()"
+                          subject="subject"
+                          type='subject'
+                    ></domino>
                 </div>
             </div>
+            <!-- array part -->
+            <div class="twelve cell" data-ng-show="teacherHomeCtrl.displayList == 'array'">
+                <table class="list-view">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="icon">
+                            <input type="checkbox" ng-model="boxes.selectAll" ng-click="switchSelectAll()" />
+                        </th>
+                        <!-- icon folder -->
+                        <th><i class="drag-anchor"></i></th>
+                        <th scope="col">
+                            <span> Nom</span>
+                        </th>
+                        <!-- drag-anchor -->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr    list-item
+                           data-ng-repeat="folder in teacherHomeCtrl.folderList()"
+                           folder="folder"
+                           type='folder'
+                    >
+                    <tr    list-item
+                           data-ng-repeat="subject in teacherHomeCtrl.subjectList()"
+                           subject="subject"
+                           type='subject'
+                    >
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </section>
     </div>
 </div>

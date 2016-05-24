@@ -1,3 +1,7 @@
 .scrollable{
     overflow: auto;
 }
+
+.padding-top-10-percent{
+    padding-top : 10%;
+}

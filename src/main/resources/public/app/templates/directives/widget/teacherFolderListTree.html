@@ -26,10 +26,14 @@
 <nav class="vertical dragging-zone-folder">
     <ul>
         <li>
-            <a class="selected" data-ng-click="toggleDisplayMySubjectList(); goToRoot()">
+            <a
+                    class="selected"
+                    data-ng-click="toggleDisplayMySubjectList(); goToRoot()"
+                    dragdrop="dropToRoot($originalEvent)"
+            >
                 Mes sujets
             </a>
-            <folder-container folder-list="folderList"></folder-container>
+            <folder-container is-root="true" folder-list="folderList"></folder-container>
         </li>
     </ul>
     <a class="classic-link" data-ng-click="clickCreateFolder()">
