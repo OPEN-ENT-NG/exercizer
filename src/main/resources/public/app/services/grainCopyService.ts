@@ -62,7 +62,7 @@ class GrainCopyService implements IGrainCopyService {
             title: null,
             max_score: null,
             statement: null,
-            documentList: null,
+            document_list: null,
             hint: null,
             custom_copy_data: null
         };
@@ -95,7 +95,7 @@ class GrainCopyService implements IGrainCopyService {
         grain_copy.grain_copy_data.title = grain.grain_data.title;
         grain_copy.grain_copy_data.max_score = grain.grain_data.max_score;
         grain_copy.grain_copy_data.statement = grain.grain_data.statement;
-        grain_copy.grain_copy_data.documentList = grain.grain_data.documentList;
+        grain_copy.grain_copy_data.document_list = grain.grain_data.document_list;
         grain_copy.grain_copy_data.hint = grain.grain_data.hint;
         grain_copy.grain_copy_data.custom_copy_data = grain.grain_data.custom_data;
         return grain_copy;

@@ -1,0 +1,24 @@
+<article>
+    <div class="row">
+        <h2>Organiser</h2>
+    </div>
+
+    <div class="row">
+        <button class="right-magnet cell flat-button">
+            Aperçu&nbsp;&nbsp;<i class="eye"></i>
+        </button>
+
+        <button class="right-magnet cell flat-button" data-ng-click="foldAllGrain()">
+            Tout plier&nbsp;&nbsp;<i class="up-open"></i>
+        </button>
+    </div>
+
+    <div class="row" style="overflow-y:scroll; max-height: 250px;">
+        <ul data-sortable-list class="thought-out-actions">
+            <li data-ng-repeat="grain in grainList | orderObjectBy:'order':false"
+                    data-sortable-element>
+                [[ getGrainTypePublicName(grain.grain_type_id) ]]
+            </li>
+        </ul>
+    </div>
+</article>

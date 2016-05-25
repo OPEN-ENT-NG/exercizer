@@ -11,52 +11,43 @@ directives.push(
                         isDisplayed: '='
                     },
                     templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxSubjectProperties.html',
-                    link:(scope: any) => {
+                    link:(scope:any) => {
 
                         function _init() {
-                            scope.isNewSubject = false;
-                            scope.subject = SubjectService.getCurrentSubject();
 
-                            if (!scope.subject || angular.isUndefined(scope.subject)) {
-                                scope.subject = SubjectService.createObjectSubject();
+                            var _currentSubjectId = SubjectService.currentSubjectId;
+
+                            if (!angular.isUndefined(_currentSubjectId)) {
+                                scope.isNewSubject = false;
+                                scope.subject = SubjectService.getById(_currentSubjectId);
+                            } else {
                                 scope.isNewSubject = true;
+                                scope.subject = new Subject();
                             }
                         }
 
                         scope.saveSubjectProperties = function() {
 
                             if (!scope.subject.title || scope.subject.title.length === 0) {
-                                notify.info('Veuillez renseigner un titre.');
+                                notify.error('Veuillez renseigner un titre.');
 
                             } else {
 
                                 if (scope.isNewSubject) {
-                                    SubjectService.createSubject(
-                                        scope.subject,
-                                        function (data) {
-                                            //TODO remove console log
-                                            console.info(data);
-                                            $location.path('/teacher/subject/edit')
-                                        },
-                                        function (err) {
-                                            notify.error(err);
-                                        }
-                                    );
+                                    SubjectService.create(scope.subject).then(function(subject) {
+                                        SubjectService.currentSubjectId = subject.id;
+                                        $location.path('/teacher/subject/edit/' + subject.id);
+                                    }, function(err) {
+                                        notify.error(err);
+                                    });
 
                                 } else {
-
-                                    SubjectService.updateSubject(
-                                        scope.subject,
-                                        function(data) {
-                                            //TODO remove console log
-                                            console.info(data);
-                                            notify.info('Les propriétés du sujet ont été mises à jour.');
-                                            scope.isDisplayed = false;
-                                        },
-                                        function(err) {
-                                            notify.error(err);
-                                        }
-                                    )
+                                    SubjectService.update(scope.subject).then(function() {
+                                        SubjectService.currentSubjectId = undefined;
+                                        scope.isDisplayed = false;
+                                    }, function(err) {
+                                        notify.error(err);
+                                    });
                                 }
                             }
                         };
@@ -65,11 +56,9 @@ directives.push(
                             scope.isDisplayed = false;
                         };
                         
-                        scope.$watch('isDisplayed', function(isDisplayed: boolean) {
+                        scope.$watch('isDisplayed', function(isDisplayed:boolean) {
                             if (isDisplayed) {
                                 _init();
-                            } else {
-                                scope.subject = SubjectService.createObjectSubject();
                             }
                         });
                     }

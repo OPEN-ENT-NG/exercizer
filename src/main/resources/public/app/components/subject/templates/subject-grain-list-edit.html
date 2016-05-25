@@ -1,0 +1,29 @@
+<!-- GRAIN LIST -->
+<div class="row">
+    <div data-ng-repeat="grain in grainList | orderObjectBy:'order':false">
+
+        <div data-ng-switch="grain.grain_type_id">
+            <div data-ng-switch-when="1">
+                <choose data-grain="grain"></choose>
+            </div>
+            <div data-ng-switch-when="2">
+                <choose-answer data-grain="grain"></choose-answer>
+            </div>
+            <div data-ng-switch-default>
+                <edit-grain data-grain="grain"></edit-grain>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- BUTTON ADD NEW GRAIN -->
+<add-new-grain data-subject="subject"></add-new-grain>
+
+
+<!-- TOASTER -->
+<toaster-subject-grain-list-edit data-subject="subject"></toaster-subject-grain-list-edit>
+
+
+<!-- LIGHT BOX
+<lightbox-delete-grains></lightbox-delete-grains>-->

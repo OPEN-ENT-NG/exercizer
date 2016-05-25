@@ -1,0 +1,40 @@
+<div data-ng-controller="EditSubjectController as editSubjectController">
+
+    <!-- LEFT NAV -->
+    <div class="row">
+        <h1 class="cell">
+            Exercizer - [[ editSubjectController.subject.title ]]
+        </h1>
+
+        <button class="right-magnet cell">
+            Programmer
+        </button>
+
+        <button class="right-magnet cell flat-button">
+            Terminer
+        </button>
+    </div>
+
+    <div class="row">
+        <!-- LEFT STICKY NAV -->
+        <section class="four cell vertical">
+            <nav data-stick-to-top class="hash-magnet floating-navigation">
+                <div class="row">
+                    <subject-organizer data-subject="editSubjectController.subject" ></subject-organizer>
+                </div>
+            </nav>
+        </section>
+
+        <!-- GRAIN LIST -->
+        <section class="eight cell">
+            <subject-grain-list-edit data-subject="editSubjectController.subject"></subject-grain-list-edit>
+        </section>
+    </div>
+
+
+    <!-- LIGHT BOXES
+    <lightbox-preview-subject-perform></lightbox-preview-subject-perform>
+    <lightbox-preview-copy-correction></lightbox-preview-copy-correction>-->
+
+</div>
+

@@ -4,7 +4,7 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 
-/// <reference path="./jquery.d.ts" />
+/// <reference path="jquery.d.ts" />
 
 declare var angular: ng.IAngularStatic;
 

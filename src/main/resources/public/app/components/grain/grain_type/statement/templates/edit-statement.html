@@ -1,0 +1,14 @@
+<article>
+    <toggle-header data-grain="grain"></toggle-header>
+
+    <div class="row" data-ng-if="!isFolded" >
+        <editor data-ng-model="grain.grain_data.custom_data.statement"></editor>
+    </div>
+
+    <div class="row" data-ng-if="isFolded">
+        <toggle-aside data-grain="grain" data-cell-count="two"></toggle-aside>
+        <div class="ten cell">
+            <div class="vertical-spacing" data-ng-bind-html="statementHtml"></div>
+        </div>
+    </div>
+</article>

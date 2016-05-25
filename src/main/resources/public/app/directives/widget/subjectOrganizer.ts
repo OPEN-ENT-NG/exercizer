@@ -1,6 +1,6 @@
 directives.push(
     {
-        name: "subjectOrganizer",
+        name: "subjectOrganizerBak",
         injections: [ 'PreviewSubjectService','$rootScope','GrainService', (PreviewSubjectService,$rootScope, GrainService) => {
             return {
                 restrict: "E",

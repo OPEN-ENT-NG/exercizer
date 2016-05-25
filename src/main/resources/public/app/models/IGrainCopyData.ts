@@ -3,7 +3,7 @@ interface IGrainCopyData {
     title: string,
     max_score: number,
     statement: string,
-    documentList: IDocument[];
+    document_list: IGrainDocument[];
     hint: string,
     custom_copy_data: any;
 

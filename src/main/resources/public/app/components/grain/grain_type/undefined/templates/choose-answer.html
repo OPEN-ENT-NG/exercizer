@@ -1,0 +1,13 @@
+<article>
+    <text-header data-text="Choisir un type de question..." data-grain="grain"></text-header>
+    <div class="row">
+        <toggle-aside data-grain="grain" data-cell-count="four"></toggle-aside>
+        <div class="eight cell">
+            <ul style="overflow-x: scroll; list-style-type: none; margin:0; padding:0;" class="vertical-spacing" data-ng-repeat="grainType in grainTypeList">
+                <li>
+                    <i data-ng-class="grainType.illustration" data-tooltip="[[ grainType.public_name ]]" data-ng-click="displayNextStep(grainType.id)"></i>
+                </li>
+            </ul>
+        </div>
+    </div>
+</article>
