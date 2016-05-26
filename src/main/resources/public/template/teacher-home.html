@@ -2,7 +2,11 @@
 
     <!-- LIGHT BOX -->
     <lightbox-subject-properties
-            data-is-displayed="teacherHomeCtrl.openLightboxSubjectProperties"></lightbox-subject-properties>
+            data-is-displayed="teacherHomeCtrl.openLightboxSubjectProperties"
+    ></lightbox-subject-properties>
+    <lightbox-edit-folder></lightbox-edit-folder>
+    <lightbox-schedule-subject></lightbox-schedule-subject>
+    <lightbox-delete-selection></lightbox-delete-selection>
     <!-- PAGE -->
     <div class="row">
         <h1>
@@ -24,7 +28,23 @@
     </div>
     <div class="row rigid-grid">
         <section class="four cell">
-            <teacher-folder-list-tree folder-list="teacherHomeCtrl.folderList()"></teacher-folder-list-tree>
+            <nav class="vertical dragging-zone-folder">
+                <ul>
+                    <li>
+                        <a  class="selected"
+                            data-ng-click="toggleDisplayMySubjectList(); goToRoot()"
+                            dragdrop="dropToRoot($originalEvent)"
+                        >
+                            Mes sujets
+                        </a>
+                        <div data-ng-repeat="item in  teacherHomeCtrl.folderList() | orderObjectBy:'label':false" ></div>
+                        <folder-item   item = "item" is-root = "true" parent-id="parentId"></folder-item>
+                    </li>
+                </ul>
+                <a class="classic-link" data-ng-click="teacherHomeCtrl.clickCreateFolder()">
+                    Créer un nouveau dossier
+                </a>
+            </nav>
         </section>
         <section class="margin-four">
             <nav class="twelve cell">
@@ -39,55 +59,127 @@
                        data-ng-class="{selected: teacherHomeCtrl.displayList == 'domino'}"
 
                     ></i>
-                    [[displayList]]
                 </div>
             </nav>
             <!-- domino part -->
             <div class="twelve cell" data-ng-show="teacherHomeCtrl.displayList == 'domino'">
                 <div class="fallen dominos">
-                    <domino data-ng-repeat="folder in teacherHomeCtrl.folderList()"
-                            folder="folder"
-                            type='folder'
+                    <!-- folder part -->
+                    <div data-ng-repeat="folder in teacherHomeCtrl.folderList()">
+                        <div class="item" data-ng-if="teacherHomeCtrl.filterFolderByParentFolder(folder)">
+                            <section class="domino">
+                                <div
+                                        class="top"
+                                        style="padding-top : 10%;"
+                                        dragstart="teacherHomeCtrl.drag(folder, $originalEvent)"
+                                        dragcondition="teacherHomeCtrl.dragFolderCondition(folder)"
+                                        dragdrop="teacherHomeCtrl.dropTo(folder, $originalEvent)"
+                                        dropcondition="teacherHomeCtrl.dropFolderCondition(folder)"
+                                >
+                                    <a class="container">
+                                        <i class="folder-large"></i>
+                                    </a>
+                                </div>
+                                <div class="bottom">
+                                    <div class="content">
+                                        <div class="cell">
+                                            <strong data-ng-click="teacherHomeCtrl.clickOnFolderTitle()">[[folder.label]]</strong>
+                                            <br />
+                                            <br />
+                                        </div>
+                                        <div data-ng-show="teacherHomeCtrl.canManageFolder()" class="bottom-locked eleven vertical-spacing-twice">
+                                            <input  type="checkbox" data-ng-model="folder.selected" class="right-magnet cell" data-ng-change="teacherHomeCtrl.selectFolder(folder)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <!-- subject part -->
+                    <div data-ng-repeat="subject in teacherHomeCtrl.subjectList()">
+                        <div  class="item"  data-ng-if="teacherHomeCtrl.filterSubjectByParentFolder(subject)" >
+                            <section class="domino">
+                                <div
+                                        class="top"
+                                        dragstart="teacherHomeCtrl.drag(subject, $originalEvent)"
+                                        dragcondition="teacherHomeCtrl.dragSubjectCondition(subject)"
+                                        dragdrop="teacherHomeCtrl.dropTo(subject, $originalEvent)"
+                                        dropcondition="dropSubjectCondition.dropCondition(subject)"
+                                >
+                                    <img class="absolute" data-ng-src="[[teacherHomeCtrl.getSubjectPicture(subject)]]" />
+                                </div>
+                                <div class="bottom">
+                                    <div class="content">
+                                        <div class="cell">
+                                            <strong data-ng-click="teacherHomeCtrl.clickOnSubjectTitle()">[[subject.title]]</strong>
+                                            <br />
+                                            <span>[[getSubjectModificationDate()]]</span>
+                                            <br />
+                                        </div>
+                                        <div data-ng-show="teacherHomeCtrl.canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
+                                            <input type="checkbox" data-ng-model="subject.selected" class="right-magnet cell" data-ng-change="selectItem(subject)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
 
-                    ></domino>
-                    <domino data-ng-repeat="subject in teacherHomeCtrl.subjectList()"
-                          subject="subject"
-                          type='subject'
-                    ></domino>
                 </div>
             </div>
+
             <!-- array part -->
             <div class="twelve cell" data-ng-show="teacherHomeCtrl.displayList == 'array'">
                 <table class="list-view">
                     <thead>
                     <tr>
                         <th scope="col" class="icon">
-                            <input type="checkbox" ng-model="boxes.selectAll" ng-click="switchSelectAll()" />
+                            <input type="checkbox" data-ng-click="" data-ng-model="teacherHomeCtrl.selectAll"  />
                         </th>
                         <!-- icon folder -->
                         <th><i class="drag-anchor"></i></th>
                         <th scope="col">
-                            <span> Nom</span>
+                            <span>Nom</span>
                         </th>
-                        <!-- drag-anchor -->
                     </tr>
                     </thead>
                     <tbody>
-                    <tr    list-item
-                           data-ng-repeat="folder in teacherHomeCtrl.folderList()"
-                           folder="folder"
-                           type='folder'
-                    >
-                    <tr    list-item
-                           data-ng-repeat="subject in teacherHomeCtrl.subjectList()"
-                           subject="subject"
-                           type='subject'
-                    >
+                    <!-- folder list-->
+                    <tr data-ng-repeat="folder in teacherHomeCtrl.folderList()">
+                        <td data-ng-if="teacherHomeCtrl.filterFolderByParentFolder(folder)">
+                            <input type="checkbox" data-ng-model="item.selected"/>
+                        </td>
+                        <td     dragstart="drag(getItem(), $originalEvent)"
+                                dragcondition="dragCondition(getItem())"
+                                dragdrop="dropTo(getItem(), $originalEvent)"
+                                dropcondition="dropCondition(getItem())"
+                                data-ng-if="teacherHomeCtrl.filterFolderByParentFolder(folder)">
+                            <i class="folder"></i>
+                        </td>
+                        <td data-ng-if="teacherHomeCtrl.filterFolderByParentFolder(folder)">
+                            <a data-ng-click="clickOnTitle()">[[folder.label]]</a>
+                        </td>
+                    </tr>
+                    <!-- subject  list -->
+                    <tr data-ng-repeat="subject in teacherHomeCtrl.subjectList()">
+                        <td data-ng-if="teacherHomeCtrl.filterSubjectByParentFolder(subject)">
+                            <input type="checkbox" data-ng-model="item.selected"/>
+                        </td>
+                        <td     dragstart="drag(getItem(), $originalEvent)"
+                                dragcondition="dragCondition(getItem())"
+                                dragdrop="dropTo(getItem(), $originalEvent)"
+                                dropcondition="dropCondition(getItem())"
+                                data-ng-if="teacherHomeCtrl.filterSubjectByParentFolder(subject)">
+                            <i class="pdf"></i>
+                        </td>
+                        <td data-ng-if="teacherHomeCtrl.filterSubjectByParentFolder(subject)">
+                            <a data-ng-click="clickOnTitle()">[[subject.title]]</a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-
         </section>
     </div>
+    <toaster></toaster>
 </div>

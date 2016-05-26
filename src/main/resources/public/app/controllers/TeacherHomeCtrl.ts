@@ -4,9 +4,13 @@ class TeacherHomeCtrl {
      * INJECT
      */
     private $location;
+    private $scope;
     private folderService;
     private subjectService;
+    private selectionService;
+    private lightboxService;
     private grainService;
+    private dragService;
     private _openLightboxSubjectProperties: boolean;
     private _displayList : string;
 
@@ -16,7 +20,11 @@ class TeacherHomeCtrl {
         '$location',
         'FolderService',
         'SubjectService',
-        'GrainService'
+        'GrainService',
+        'SelectionService',
+        'DragService',
+        '$scope',
+        'LightboxService'
     ];
 
 
@@ -24,7 +32,11 @@ class TeacherHomeCtrl {
         $location,
         FolderService,
         SubjectService: ISubjectService,
-        GrainService
+        GrainService,
+        SelectionService,
+        DragService,
+        $scope,
+        LightboxService
     ) {
         this.folderService = FolderService;
         this.subjectService = SubjectService;
@@ -33,7 +45,10 @@ class TeacherHomeCtrl {
         this.feedExercizer();
         this._openLightboxSubjectProperties = false;
         this._displayList = 'domino';
-
+        this.selectionService = SelectionService;
+        this.dragService = DragService;
+        this.$scope = $scope;
+        this.lightboxService = LightboxService;
     }
 
 
@@ -59,12 +74,114 @@ class TeacherHomeCtrl {
 
     public subjectList(){
         return this.subjectService.subjectList;
-
     }
 
     public folderList(){
         return this.folderService.folderList;
     }
+
+    /**
+     * GETTER
+     */
+
+    public canManageFolder(){
+        return true;
+    }
+    public canManageSubject(){
+        return true;
+    }
+
+    public getSubjectPicture (subject) {
+        var defaultPicture = "/assets/themes/leo/img/illustrations/poll-default.png";
+        return subject.picture || defaultPicture;
+    };
+
+    public getSubjectModificationDate(subject) {
+        return subject.modified ? "Modifié le " + subject.modified : ""
+    };
+
+
+    /**
+     * EVENT
+     */
+
+    public clickOnFolderTitle(folder){
+        this.folderService.currentFolderId = folder.id;
+    }
+    public clickOnSubjectTitle(subject){
+        if(subject.id){
+            this.$location.path('/teacher/subject/edit/' + subject.id);
+        }
+    }
+
+    public selectFolder(folder){
+        folder.selected = folder.selected? true : false;
+        this.selectionService.toggleFolder(folder.id, folder.selected);
+    }
+    public selectSubject(subject){
+        subject.selected = subject.selected? true : false;
+        this.selectionService.toggleSubject(subject.id, subject.selected);
+    }
+
+    public clickCreateFolder() {
+        this.lightboxService.showLightboxEditFolderForNewFolder();
+    };
+
+    public goToRoot(){
+        this.folderService.currentFolderId = null;
+    };
+
+    /**
+     * FILTER
+     */
+
+    public filterFolderByParentFolder(folder) {
+        if (this.folderService.currentFolderId) {
+            return  folder.parent_folder_id == this.folderService.currentFolderId
+        }
+        return  folder.parent_folder_id == null;
+    }
+    public filterSubjectByParentFolder(subject) {
+        if (this.folderService.currentFolderId) {
+            return subject.folder_id == this.folderService.currentFolderId
+        }
+        return subject.folder_id == null;
+    }
+
+    /**
+     * DRAG
+     */
+
+    public drag(item, $originalEvent) {
+        this.dragService.drag(item, $originalEvent);
+    }
+
+    public dragFolderCondition(item) {
+        return this.dragService.canDragFolderInPage(item);
+    };
+    public dragSubjectCondition(item) {
+        return this.dragService.canDragSubjectInPage(item);
+    };
+
+    public dropTo (targetItem, $originalEvent) {
+        this.dragService.dropTo(targetItem, $originalEvent, this.$scope);
+    };
+
+    public dropFolderCondition(targetItem) {
+        return this.dragService.canDropOnFolderInPage(targetItem);
+
+    }
+    public dropSubjectCondition(targetItem) {
+        return this.dragService.canDropOnSubjectInPage(targetItem);
+    };
+
+    public dropToRoot($originalEvent){
+        this.dragService.dropTo(null, $originalEvent, scope);
+    };
+
+    /**
+     * FEED
+     */
 
     private feedExercizer(){
         var self = this;
@@ -82,56 +199,9 @@ class TeacherHomeCtrl {
         var subject:ISubject = this.subjectService.createObjectSubject();
         subject.id = null;
         subject.title = "Subject Test";
-        this.subjectService.createSubject(
-            subject,
-            function (data) {
+        this.subjectService.createSubject(subject,
+            function(data){
                 console.error(data);
-                self.grainService.getGrainListBySubjectId(
-                    data.id,
-                    function () {
-                        // create grain dev
-                        var grainDev = self.grainService.createObjectGrain();
-                        grainDev.subject_id = data.id;
-                        grainDev.grain_type_id = "3";
-                        grainDev.grain_data.title = "Exercise Test";
-                        grainDev.grain_data.max_score = "5";
-                        grainDev.grain_data.statement = "<div class=\"ng-scope\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean posuere rhoncus dui sit amet sagittis. Vestibulum felis quam, commodo euismod egestas pellentesque, porta nec urna.&nbsp;</div>";
-                        grainDev.grain_data.hint = "La réponse est 3 ";
-                        grainDev.grain_data.correction = "Correction de la réponse";
-                        grainDev.grain_data.custom_data = {
-                            correct_answer: "3"
-                        };
-
-                        self.grainService.createGrain(
-                            grainDev,
-                            function () {
-                                var grainDev2 = self.grainService.createObjectGrain();
-                                grainDev2.subject_id = data.id;
-                                grainDev2.grain_type_id = "3";
-                                grainDev2.grain_data.title = "Exercise Test Numero 2";
-                                grainDev2.grain_data.max_score = "5";
-                                grainDev2.grain_data.statement = "<div class=\"ng-scope\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean posuere rhoncus dui sit amet sagittis. Vestibulum felis quam, commodo euismod egestas pellentesque, porta nec urna.&nbsp;</div>";
-                                grainDev2.grain_data.hint = "La réponse est 3 ";
-                                grainDev2.grain_data.correction = "Correction de la réponse";
-                                grainDev2.grain_data.custom_data = {
-                                    correct_answer: "3"
-                                };
-                                self.grainService.createGrain(grainDev2, null, null);
-                            },
-                            null
-                        );
-                    },
-                    null);
-
-
-            },
-            function (err) {
-
-            }
-        );
-
-
+            }, null);
     }
-
-
 }

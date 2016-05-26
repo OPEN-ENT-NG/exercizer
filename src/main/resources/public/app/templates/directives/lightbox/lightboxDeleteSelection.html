@@ -1,0 +1,18 @@
+<lightbox show="isDisplayed()" on-close="hide()">
+    <h2>Supprimer</h2>
+    <p>Voulez-vous vraiment supprimer ces élements ?</p>
+    <ul data-ng-show="list.folderList.length !=0">
+            <li data-ng-repeat="folderId in list.folderList">
+                [[getFolderLabelById(folderId)]]
+            </li>
+    </ul>
+    <ul data-ng-show="list.subjectList.length !=0">
+            <li data-ng-repeat="subjectId in list.subjectList">
+                [[getSubjectTitleById(subjectId)]]
+            </li>
+    </ul>
+    <div class="row">
+        <button data-ng-click="deleteSelection()" class="right-magnet">Supprimer</button>
+        <input type="button" class="cancel right-magnet" i18n-value="cancel" data-ng-click="hide()" />
+    </div>
+</lightbox>

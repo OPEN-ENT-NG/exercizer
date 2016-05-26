@@ -1,11 +1,11 @@
 interface IFolderService {
-    createFolder(folder : IFolder, callbackSuccess, callBackFail);
-    updateFolder(folder : IFolder, callbackSuccess, callBackFail);
-    deleteFolder(folder : IFolder, callbackSuccess, callbackFail);
-    getFolderById(params, callbackSuccess, callbackFail);
+    createFolder(folder:IFolder, callbackSuccess, callBackFail);
+    updateFolder(folder:IFolder, callbackSuccess, callBackFail);
+    deleteFolder(folder:IFolder, callbackSuccess, callbackFail);
     createObjectFolder() : IFolder;
     setParentFolderId(originFolderId, targetFolderId);
     getListOfSubFolderByFolderId(folderId);
+    folderById(id) : IFolder;
     folderList : IFolder[];
     currentFolderId;
 }
@@ -17,24 +17,26 @@ class FolderService implements IFolderService {
         '$http'
     ];
 
-    private serverUrl : string;
-    private $http : any;
+    // inject
+    private serverUrl:string;
+    private $http:any;
+    private $scope; // Evil
 
-    private _folderList : any;
-    private _folderTree;
+    // variables
+    private _folderList:any;
+    // TODO move to controller;
     private _currentFolderId;
     private _folderListByParentFolderId;
 
-    constructor(
-        serverUrl,
-        $http
-    ) {
+    constructor(serverUrl,
+                $http
+                ) {
         this.serverUrl = serverUrl;
         this.$http = $http;
 
         // init folder list as an object
         this._folderList = {};
-        this._folderListByParentFolderId = {}
+        this._folderListByParentFolderId = {};
     }
 
 
@@ -46,102 +48,116 @@ class FolderService implements IFolderService {
         this._currentFolderId = value;
     }
 
-    public get folderList() : IFolder[] {
+    public get folderList():IFolder[] {
         return this._folderList;
     }
 
-    public createFolder(folder : IFolder, callbackSuccess, callBackFail) {
+    public folderById(id):IFolder {
+        return this._folderList[id];
+    }
+
+    public createObjectFolder():IFolder {
+        return {
+            id: null,
+            label: null,
+            parent_folder_id: null
+        }
+    }
+
+    public createFolder(folder:IFolder, callbackSuccess, callBackFail) {
         var self = this;
         this._createFolder(
             folder,
-            function(data){
+            function (data) {
                 self.addFolderToFolderList(data);
-                if(callbackSuccess){
+                if (callbackSuccess) {
                     callbackSuccess(data);
                 }
             },
-            function(err){
+            function (err) {
                 console.error(err);
             }
         );
     }
 
-    public createObjectFolder() : IFolder {
-        return {
-            id: null,
-            label : null,
-            parent_folder_id : null
+    private addFolderToFolderList(folder:IFolder) {
+        if (this._folderList[folder.id]) {
+            delete this._folderList[folder.id];
         }
+        this._folderList[folder.id] = folder;
     }
 
-    public updateFolder(folder : IFolder, callbackSuccess, callbackFail){
+
+    public updateFolder(folder:IFolder, callbackSuccess, callbackFail) {
+        var self = this;
         this._updateFolder(
             folder,
-            function(data){
-                this.addFolderToFolderList(data);
-                callbackSuccess(data);
+            function (data) {
+                // data is a folder;
+                self.addFolderToFolderList(data);
+                console.log(self._folderList);
+                if (callbackSuccess) {
+                    callbackSuccess(data);
+                }
             },
-            function(err){
-                console.error(err);
+            function (err) {
+                if (callbackFail) {
+                    callbackFail(err)
+                }
             }
         )
     }
 
-    public deleteFolder(folder : IFolder, callbackSuccess, callbackFail){
+    public deleteFolder(folder:IFolder, callbackSuccess, callbackFail) {
+        var self = this;
         this._deleteFolder(
             folder,
-            function(data){
-                this.removeFolderToFolderList(data);
-                callbackSuccess(data);
+            function (data) {
+                console.log(data);
+                self.removeFolderToFolderList(data);
+                console.log(self._folderList);
+                if(callbackSuccess){
+                    callbackSuccess(data);
+                }
             },
-            function(err){
-                console.error(err);
+            function (err) {
+                if (callbackFail) {
+                    callbackFail(err)
+                }
             }
         )
     }
 
-    public getFolderById(folderId, callbackSuccess, callbackFail){
-        var self = this;
-        if(this._folderList[folderId]){
-            callbackSuccess(this._folderList[folderId])
-        } else {
-            this._getFolderById(folderId,
-                function(data) {
-                    self._folderList[folderId] = data;
-                    callbackSuccess(data);
-                },
-                callbackFail
-            );
-        }
+    private removeFolderToFolderList(folder:IFolder) {
+        delete this._folderList[folder.id];
     }
 
-
-    public setParentFolderId(originFolderId, targetFolderId){
+    public setParentFolderId(originFolderId, targetFolderId) {
         var originFolder = this._folderList[originFolderId];
-        if(!originFolder){
+        if (!originFolder) {
             console.error('originFolder or targetFolder is not defined');
             throw ""
         }
-        if(targetFolderId == null){
+        if (targetFolderId == null) {
             // drag to root
-            if(originFolder.parent_folder_id){
+            if (originFolder.parent_folder_id) {
                 delete this._folderListByParentFolderId[originFolder.parent_folder_id][originFolderId];
                 originFolder.parent_folder_id = null;
             }
-        } else{
+        } else {
             // drag to other folder
             var targetFolder = this._folderList[targetFolderId];
             // check if there are no loop in folder
-            if(this.isAParentOf(originFolder, targetFolder)){
+            if (this.isAParentOf(originFolder, targetFolder)) {
                 console.error("Loop folder not allowed");
             } else {
                 // check if the folder is not drop in itself
-                if(originFolderId == targetFolderId){
+                if (originFolderId == targetFolderId) {
                     console.error("A folder can't be placed in itself");
                 } else {
                     // before change parent folder id
                     // delete folder from old _folderListByParentFolderId
-                    if(originFolder.parent_folder_id){
+                    if (originFolder.parent_folder_id) {
                         delete this._folderListByParentFolderId[originFolder.parent_folder_id][originFolderId];
                     }
                     originFolder.parent_folder_id = targetFolderId;
@@ -154,36 +170,25 @@ class FolderService implements IFolderService {
 
     }
 
-    private isAParentOf(originFolder, targetFolder) : boolean{
-        if(targetFolder.parent_folder_id ==  null){
+    private isAParentOf(originFolder, targetFolder):boolean {
+        if (targetFolder.parent_folder_id == null) {
             return false;
-        } else if(originFolder.id == targetFolder.parent_folder_id){
+        } else if (originFolder.id == targetFolder.parent_folder_id) {
             return true;
-        } else{
+        } else {
             return this.isAParentOf(originFolder, this._folderList[targetFolder.parent_folder_id]);
         }
     }
 
-    private removeFolderToFolderList(folder : IFolder) {
-        delete this._folderList[folder.id];
-    }
-
-    private addFolderToFolderList(folder : IFolder){
-        if(this._folderList[folder.id]){
-            // overwrite
-        }
-        this._folderList[folder.id] = folder;
-    }
-
-    public getListOfSubFolderByFolderId(folderId){
-        if(this._folderListByParentFolderId[folderId]){
+    public getListOfSubFolderByFolderId(folderId) {
+        if (this._folderListByParentFolderId[folderId]) {
             // already set
-        } else{
+        } else {
             // init _folderListByParentFolderId for this id
             this._folderListByParentFolderId[folderId] = {};
             // build it
-            angular.forEach(this._folderList, function(value, key) {
-                if(value.parent_folder_id == folderId){
+            angular.forEach(this._folderList, function (value, key) {
+                if (value.parent_folder_id == folderId) {
                     this._folderListByParentFolderId[folderId][value.id] = value;
                 }
             });
@@ -192,107 +197,24 @@ class FolderService implements IFolderService {
     }
 
 
-
-    private _getFolderById(params, callbackSuccess, callbackFail){
-        throw "not implemented";
-        /*var req: any;
-        var self = this;
-        req = this.$http({
-            method: 'GET',
-            url: self.serverUrl+'/folders/get',
-            params: {
-                "folder_id": params.folder.id,
-            },
-            paramSerializer: '$httpParamSerializerJQLike'
-        });
-        req
-            .success(function (data, status, headers, config) {
-                if (status == 200) {
-                    // DATA  : list of folder
-                    callbackSuccess(data);
-                } else{
-                    callbackFail(data);
-                }
-            })
-            .error(function (data, status, headers, config) {
-                console.error(data);
-                console.error(status);
-                console.error(headers);
-                console.error(config);
-                callbackFail(data);
-            });*/
+    private _updateFolder(folder:IFolder, callbackSuccess, callbackFail) {
+        if (callbackSuccess) {
+            callbackSuccess(folder);
+        }
     }
 
-    private _updateFolder(folder : IFolder, callbackSuccess, callbackFail){
-        var req: any;
-        var self = this;
-        req = this.$http({
-            method: 'POST',
-            url: self.serverUrl+'/folders/update/' + folder.id,
-            params: {
-                "folder": folder,
-            },
-            paramSerializer: '$httpParamSerializerJQLike'
-        });
-        req
-            .success(function (data, status, headers, config) {
-                if (status == 200) {
-                    // DATA : folder
-                    callbackSuccess(data);
-                } else{
-                    callbackFail(data);
-                }
-            })
-            .error(function (data, status, headers, config) {
-                console.error(data);
-                console.error(status);
-                console.error(headers);
-                console.error(config);
-                callbackFail(data);
-            });
-
-    }
-
-    private _createFolder(folder : IFolder, callbackSuccess, callbackFail){
-        /**
-         * TEMP
-         */
+    private _createFolder(folder:IFolder, callbackSuccess, callbackFail) {
         folder.id = Math.floor((Math.random() * 1000) + 1);
-        callbackSuccess(folder);
-        /*
-         var req: any;
-         var self = this;
-         req = this.$http({
-         method: 'POST',
-         url: self.serverUrl+'/Folders/create/',
-         params: {
-         "folder": folder,
-         },
-         paramSerializer: '$httpParamSerializerJQLike'
-         });
-         req
-         .success(function (data, status, headers, config) {
-         if (status == 200) {
-         // DATA : folder
-         callbackSuccess(data);
-         } else{
-         callbackFail(data);
-         }
-         })
-         .error(function (data, status, headers, config) {
-         console.error(data);
-         console.error(status);
-         console.error(headers);
-         console.error(config);
-         callbackFail(data);
-         });
-         */
+        if (callbackSuccess) {
+            callbackSuccess(folder);
+        }
     }
 
-    private _deleteFolder(folder : IFolder, callbackSuccess, callbackFail) {
-        // TODO
+    private _deleteFolder(folder:IFolder, callbackSuccess, callbackFail) {
+        if (callbackSuccess) {
+            callbackSuccess(folder);
+        }
     }
-
 
 
 }

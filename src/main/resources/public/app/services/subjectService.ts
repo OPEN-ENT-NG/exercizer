@@ -2,7 +2,7 @@ interface ISubjectService {
     createSubject(subject:ISubject, callbackSuccess, callBackFail);
     updateSubject(subject:ISubject, callbackSuccess, callbackFail)
     getSubjectList(params, callbackSuccess, callbackFail);
-    getSubjectById(subjectId):ISubject
+    subjectById(subjectId):ISubject
     getCurrentSubject(): ISubject
     createObjectSubject(): ISubject
     setFolderIdToThisSubject(subjectId, folderId)
@@ -115,15 +115,11 @@ class SubjectService implements ISubjectService {
      * @returns {ISubject}
      */
     public getCurrentSubject():ISubject {
-        return this.getSubjectById(this._currentSubjectId);
+        return this.subjectById(this._currentSubjectId);
     }
 
-    /**
-     * Get Subject By Id
-     * @param subjectId
-     * @returns {ISubject}
-     */
-    public getSubjectById(subjectId):ISubject {
+
+    public subjectById(subjectId):ISubject {
         if (this._subjectList[subjectId]) {
             return this._subjectList[subjectId]
         } else {
@@ -169,7 +165,9 @@ class SubjectService implements ISubjectService {
             function (data) {
                 // data is a subject
                 self.addSubjectToSubjectList(data);
-                callbackSuccess(data);
+                if(callbackSuccess){
+                    callbackSuccess(data);
+                }
             },
             function (err) {
                 console.error(err);
