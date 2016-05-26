@@ -1,32 +1,32 @@
 interface IFolder {
     id:number;
+    folder_id:number;
     created:string;
     modified:string;
-    folder_id:number;
     label:string;
 }
 
 class Folder implements IFolder {
 
     private _id:number;
+    private _folder_id:number;
     private _created:string;
     private _modified:string;
-    private _folder_id:number;
     private _label:string;
     
     constructor
     (
         id?:number,
+        folder_id?:number,
         created?:string,
         modified?:string,
-        folder_id?:number,
         label?:string
     )
     {
         this._id = id;
+        this._folder_id = folder_id;
         this._created = created;
         this._modified = modified;
-        this._folder_id = folder_id;
         this._label = label;
     }
 
@@ -36,6 +36,14 @@ class Folder implements IFolder {
 
     set id(value:number) {
         this._id = value;
+    }
+
+    get folder_id():number {
+        return this._folder_id;
+    }
+
+    set folder_id(value:number) {
+        this._folder_id = value;
     }
 
     get created():string {
@@ -52,14 +60,6 @@ class Folder implements IFolder {
 
     set modified(value:string) {
         this._modified = value;
-    }
-
-    get folder_id():number {
-        return this._folder_id;
-    }
-
-    set folder_id(value:number) {
-        this._folder_id = value;
     }
 
     get label():string {

@@ -7,7 +7,10 @@ interface ISubjectCopy {
     final_score:number;
     calculated_score:number;
     comment:string;
-    has_been_submitted:boolean;
+    has_been_started:boolean;
+    submitted:string;
+    is_correction_on_going:boolean;
+    is_corrected:boolean;
     is_deleted:boolean;
 }
 
@@ -21,9 +24,12 @@ class SubjectCopy implements  ISubjectCopy {
     private _final_score:number;
     private _calculated_score:number;
     private _comment:string;
-    private _has_been_submitted:boolean;
+    private _has_been_started:boolean;
+    private _submitted:string;
+    private _is_correction_on_going:boolean;
+    private _is_corrected:boolean;
     private _is_deleted:boolean;
-    
+
     constructor
     (
         id?:number,
@@ -34,7 +40,10 @@ class SubjectCopy implements  ISubjectCopy {
         final_score?:number,
         calculated_score?:number,
         comment?:string,
-        has_been_submitted?:boolean,
+        has_been_started?:boolean,
+        submitted?:string,
+        is_correction_on_going?:boolean,
+        is_corrected?:boolean,
         is_deleted?:boolean
     )
     {
@@ -45,8 +54,11 @@ class SubjectCopy implements  ISubjectCopy {
         this._modified = modified;
         this._final_score = final_score;
         this._calculated_score = calculated_score;
-        this. _comment = comment;
-        this._has_been_submitted = has_been_submitted;
+        this._comment = comment;
+        this._has_been_started = has_been_started;
+        this._submitted = submitted;
+        this._is_correction_on_going = is_correction_on_going;
+        this._is_corrected = is_corrected;
         this._is_deleted = is_deleted;
     }
 
@@ -114,12 +126,36 @@ class SubjectCopy implements  ISubjectCopy {
         this._comment = value;
     }
 
-    get has_been_submitted():boolean {
-        return this._has_been_submitted;
+    get has_been_started():boolean {
+        return this._has_been_started;
     }
 
-    set has_been_submitted(value:boolean) {
-        this._has_been_submitted = value;
+    set has_been_started(value:boolean) {
+        this._has_been_started = value;
+    }
+
+    get submitted():string {
+        return this._submitted;
+    }
+
+    set submitted(value:string) {
+        this._submitted = value;
+    }
+
+    get is_correction_on_going():boolean {
+        return this._is_correction_on_going;
+    }
+
+    set is_correction_on_going(value:boolean) {
+        this._is_correction_on_going = value;
+    }
+
+    get is_corrected():boolean {
+        return this._is_corrected;
+    }
+
+    set is_corrected(value:boolean) {
+        this._is_corrected = value;
     }
 
     get is_deleted():boolean {

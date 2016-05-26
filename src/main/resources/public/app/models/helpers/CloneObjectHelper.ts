@@ -1,6 +1,6 @@
 class CloneObjectHelper {
     static clone( originalObject , circular ) {
-        // First create an empty object with
+        // First persist an empty object with
         // same prototype of our original source
 
         var propertyIndex, descriptor, keys, current, nextSource, indexOf,

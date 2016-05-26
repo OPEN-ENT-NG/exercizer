@@ -61,7 +61,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Subject edit events
          */
-
+        
         // edit subject controller - received events
         module.constant('E_GRAIN_LIST_UPDATED', 'GRAIN_LIST_UPDATED_');
         module.constant('E_ADD_GRAIN', 'ADD_GRAIN_');
@@ -72,8 +72,12 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_GRAIN_SELECTED', 'GRAIN_SELECTED_');
         module.constant('E_DUPLICATE_SELECTED_GRAIN_LIST', 'DUPLICATE_SELECTED_GRAIN_LIST_');
         module.constant('E_REMOVE_SELECTED_GRAIN_LIST', 'REMOVE_SELECTED_GRAIN_LIST_');
+        module.constant('E_ADD_GRAIN_DOCUMENT', 'ADD_GRAIN_DOCUMENT_');
+        module.constant('E_REMOVE_GRAIN_DOCUMENT', 'REMOVE_GRAIN_DOCUMENT_');
         module.constant('E_CONFIRM_REMOVE_GRAIN', 'E_CONFIRM_REMOVE_GRAIN_');
         module.constant('E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST', 'E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST_');
+        module.constant('E_CONFIRM_ADD_GRAIN_DOCUMENT', 'E_CONFIRM_GRAIN_DOCUMENT_');
+        module.constant('E_CONFIRM_REMOVE_GRAIN_DOCUMENT', 'E_CONFIRM_REMOVE_GRAIN_DOCUMENT_');
         // edit subject controller - broadcast events
         module.constant('E_REFRESH_GRAIN_LIST', 'REFRESH_GRAIN_LIST_');
         module.constant('E_TOGGLE_GRAIN', 'TOGGLE_GRAIN_');
@@ -82,23 +86,20 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_TOGGLE_SUBJECT_EDIT_TOASTER', 'TOGGLE_SUBJECT_EDIT_TOASTER_');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN', 'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST', 'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST_');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT', 'E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT_');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', 'E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT_');
 
         /**
          * Services
          */
+        
         module.service('UserService', UserService);
         module.service('SubjectService', SubjectService);
-        module.service('FolderService', FolderService);
         module.service('GrainService', GrainService);
         module.service('GrainTypeService', GrainTypeService);
+        
+        // exercises
         module.service('SimpleAnswerService', SimpleAnswerService);
-        module.service('GrainCopyService', GrainCopyService);
-        module.service('GrainScheduledService', GrainScheduledService);
-        module.service('SelectedGrainService', SelectedGrainService);
-        module.service('PreviewSubjectService', PreviewSubjectService);
-        module.service('SubjectScheduledService', SubjectScheduledService );
-        module.service('CopyService', CopyService );
-        module.service('ToolsService', ToolsService );
 
         /**
          * Controllers

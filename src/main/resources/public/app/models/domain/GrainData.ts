@@ -3,8 +3,8 @@ interface IGrainData {
     max_score:number;
     statement:string;
     document_list:IGrainDocument[];
-    hint:string;
-    correction:string;
+    answer_hint:string;
+    answer_explanation:string;
     custom_data:any;
 }
 
@@ -14,27 +14,27 @@ class GrainData implements IGrainData {
     private _max_score:number;
     private _statement:string;
     private _document_list:IGrainDocument[];
-    private _hint:string;
-    private _correction :string;
+    private _answer_hint:string;
+    private _answer_explanation :string;
     private _custom_data:any;
-    
+
     constructor
     (
-        title?:string, 
-        max_score?:number, 
-        statement?:string, 
-        document_list?:IGrainDocument[], 
-        hint?:string, 
-        correction?:string, 
+        title?:string,
+        max_score?:number,
+        statement?:string,
+        document_list?:IGrainDocument[],
+        answer_hint?:string,
+        answer_explanation?:string,
         custom_data?:any
-    ) 
+    )
     {
         this._title = title;
         this._max_score = max_score;
         this._statement = statement;
         this._document_list = document_list;
-        this._hint = hint;
-        this._correction = correction;
+        this._answer_hint = answer_hint;
+        this._answer_explanation = answer_explanation;
         this._custom_data = custom_data;
     }
 
@@ -70,20 +70,20 @@ class GrainData implements IGrainData {
         this._document_list = value;
     }
 
-    get hint():string {
-        return this._hint;
+    get answer_hint():string {
+        return this._answer_hint;
     }
 
-    set hint(value:string) {
-        this._hint = value;
+    set answer_hint(value:string) {
+        this._answer_hint = value;
     }
 
-    get correction():string {
-        return this._correction;
+    get answer_explanation():string {
+        return this._answer_explanation;
     }
 
-    set correction(value:string) {
-        this._correction = value;
+    set answer_explanation(value:string) {
+        this._answer_explanation = value;
     }
 
     get custom_data():any {

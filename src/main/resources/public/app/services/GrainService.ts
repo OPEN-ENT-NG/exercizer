@@ -1,5 +1,5 @@
 interface IGrainService {
-    create(grain:IGrain):ng.IPromise<IGrain>;
+    persist(grain:IGrain):ng.IPromise<IGrain>;
     update(grain:IGrain):ng.IPromise<IGrain>;
     remove(grain:IGrain):ng.IPromise<boolean>;
     duplicate(grain:IGrain):ng.IPromise<IGrain>
@@ -26,7 +26,7 @@ class GrainService implements IGrainService {
         this._listMappedBySubjectId = {};
     }
 
-    public create = function(grain:IGrain):ng.IPromise<IGrain> {
+    public persist = function(grain:IGrain):ng.IPromise<IGrain> {
         var self = this,
             deferred = this._$q.defer();
 
@@ -101,7 +101,7 @@ class GrainService implements IGrainService {
             duplicatedGrain.grain_data.title += '_copie';
         }
 
-        return this.create(duplicatedGrain);
+        return this.persist(duplicatedGrain);
     };
 
 

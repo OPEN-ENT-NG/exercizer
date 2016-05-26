@@ -25,6 +25,10 @@ directives.push(
 
                             scope.isFolded = false;
 
+                            scope.updateGrain = function() {
+                                scope.$emit(E_UPDATE_GRAIN + scope.grain.subject_id, scope.grain);
+                            };
+
                             scope.$on(E_TOGGLE_GRAIN + scope.grain.subject_id, function(event, grain:IGrain) {
                                 if (grain.id === scope.grain.id) {
                                     scope.isFolded = !scope.isFolded;
