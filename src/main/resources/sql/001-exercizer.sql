@@ -28,9 +28,9 @@ CREATE TABLE exercizer.folder(
 
 CREATE TABLE exercizer.subject(
 	id BIGSERIAL PRIMARY KEY,
-  folder_id BIGINT NULL,
-  original_subject_id BIGINT NULL,
-  owner VARCHAR(36) NOT NULL,
+    folder_id BIGINT NULL,
+    original_subject_id BIGINT NULL,
+    owner VARCHAR(36) NOT NULL,
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	modified TIMESTAMP NOT NULL DEFAULT NOW(),
 	visibility VARCHAR(9),
@@ -60,9 +60,9 @@ CREATE TABLE exercizer.scripts (
 
 CREATE TABLE exercizer.grain_type(
 	id BIGSERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  public_name VARCHAR(255) NOT NULL,
-  illustration VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    public_name VARCHAR(255) NOT NULL,
+    illustration VARCHAR(255) NOT NULL,
 	is_in_list BOOL NOT NULL DEFAULT FALSE
 );
 
@@ -70,7 +70,7 @@ CREATE TABLE exercizer.grain(
 	id BIGSERIAL NOT NULL PRIMARY KEY,
 	subject_id BIGINT NOT NULL,
 	grain_type_id BIGINT NOT NULL,
-  original_grain_id BIGINT NULL,
+    original_grain_id BIGINT NULL,
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	modified TIMESTAMP NOT NULL DEFAULT NOW(),
 	order BIGINT NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE exercizer.grain(
 CREATE TABLE exercizer.subject_scheduled(
 	id BIGSERIAL PRIMARY KEY,
 	subject_id BIGINT NOT NULL,
-  owner VARCHAR(36) NOT NULL,
+    owner VARCHAR(36) NOT NULL,
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	title VARCHAR(255) NOT NULL,
 	description TEXT NULL,
@@ -129,14 +129,14 @@ CREATE TABLE exercizer.subject_copy(
 CREATE TABLE exercizer.grain_copy(
 	id BIGSERIAL NOT NULL PRIMARY KEY,
 	subject_copy_id BIGINT NOT NULL,
-  grain_type_id BIGINT NOT NULL,
+    grain_type_id BIGINT NOT NULL,
 	grain_scheduled_id BIGINT NOT NULL,
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	modified TIMESTAMP NOT NULL DEFAULT NOW(),
 	final_score NUMERIC(6,2),
 	calculated_score NUMERIC(6,2),
 	comment TEXT,
-  grain_copy_data JSON NULL,
+    grain_copy_data JSON NULL,
 	CONSTRAINT grain_copy_subject_copy_fk FOREIGN KEY(subject_copy_id) REFERENCES exercizer.subject_copy(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT grain_copy_grain_scheduled_fk FOREIGN KEY(grain_scheduled_id) REFERENCES exercizer.grain_scheduled(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT grain_copy_grain_type_fk FOREIGN KEY(grain_type_id) REFERENCES exercizer.grain_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION
