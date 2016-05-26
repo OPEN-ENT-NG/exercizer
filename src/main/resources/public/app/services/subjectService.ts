@@ -206,6 +206,38 @@ class SubjectService implements ISubjectService {
     }
 
     /**
+     * Delet Folder
+     * @param subject
+     */
+    public deleteSubject(subject : ISubject, callbackSuccess, callbackFail){
+        var self = this;
+        this._deleteSubject(
+            subject,
+            function (data) {
+                //data is subject
+                self.removeSubjectFromSubjectList(data);
+                if(callbackSuccess){
+                    callbackSuccess(data);
+                }
+            },
+            function (err) {
+                console.error(err);
+                if(callbackFail){
+                    callbackFail(err);
+                }
+           }
+        )
+    }
+
+    /**
+     * Remove subject to subject List
+     * @param subject
+     */
+    private removeSubjectFromSubjectList(subject:ISubject) {
+        delete this._subjectList[subject.id];
+    }
+
+    /**
      *
      * @param subjectId
      * @param folderId
@@ -268,32 +300,13 @@ class SubjectService implements ISubjectService {
 
     private _updateSubject(subject:ISubject, callbackSuccess, callbackFail) {
         callbackSuccess(subject);
-        /* var req:any;
-         var self = this;
-         req = this.$http({
-         method: 'POST',
-         url: self.serverUrl + '/subjects/update/' + subject.id,
-         params: {
-         "subject": subject,
-         },
-         paramSerializer: '$httpParamSerializerJQLike'
-         });
-         req
-         .success(function (data, status, headers, config) {
-         if (status == 200) {
-         // DATA : subject
-         callbackSuccess(data);
-         } else {
-         callbackFail(data);
-         }
-         })
-         .error(function (data, status, headers, config) {
-         console.error(data);
-         console.error(status);
-         console.error(headers);
-         console.error(config);
-         callbackFail(data);
-         });*/
+    }
+
+    private _deleteSubject(subject : ISubject, callbackSuccess, callbackFail){
+        subject.is_deleted = true;
+        if(callbackSuccess){
+            callbackSuccess(subject);
+        }
     }
 
     private _createSubject(subject:ISubject, callbackSuccess, callbackFail) {
@@ -304,33 +317,5 @@ class SubjectService implements ISubjectService {
             subject.id = this.toolsService.createId();
         }
         callbackSuccess(subject);
-        /*
-         var req: any;
-         var self = this;
-         req = this.$http({
-         method: 'POST',
-         url: self.serverUrl+'/subjects/create/',
-         params: {
-         "subject": subject,
-         },
-         paramSerializer: '$httpParamSerializerJQLike'
-         });
-         req
-         .success(function (data, status, headers, config) {
-         if (status == 200) {
-         // DATA : subject
-         callbackSuccess(data);
-         } else{
-         callbackFail(data);
-         }
-         })
-         .error(function (data, status, headers, config) {
-         console.error(data);
-         console.error(status);
-         console.error(headers);
-         console.error(config);
-         callbackFail(data);
-         });
-         */
     }
 }

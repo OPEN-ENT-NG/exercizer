@@ -33,7 +33,7 @@
                 <ul>
                     <li>
                         <a  class="selected"
-                            data-ng-click="toggleDisplayMySubjectList(); goToRoot()"
+                            data-ng-click="teacherHomeCtrl.goToRoot()"
                             dragdrop="dropToRoot($originalEvent)"
                         >
                             Mes sujets
@@ -120,7 +120,7 @@
                                             <br />
                                         </div>
                                         <div data-ng-show="teacherHomeCtrl.canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
-                                            <input type="checkbox" data-ng-model="subject.selected" class="right-magnet cell" data-ng-change="selectItem(subject)"/>
+                                            <input type="checkbox" data-ng-model="subject.selected" class="right-magnet cell" data-ng-change="teacherHomeCtrl.selectSubject(subject)"/>
                                         </div>
                                     </div>
                                 </div>

@@ -30,7 +30,7 @@ directives.push(
                         });
                         // delete subject
                         angular.forEach(scope.list.subjectList, function(id, key) {
-                            //TODO delete subject;
+                            SubjectService.deleteSubject(SubjectService.subjectById(id))
                         });
 
                         scope.hide();
