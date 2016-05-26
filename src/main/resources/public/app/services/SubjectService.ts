@@ -1,5 +1,4 @@
 interface ISubjectService {
-    resolve():ng.IPromise<ISubject>;
     create(subject:ISubject):ng.IPromise<ISubject>;
     update(subject:ISubject):ng.IPromise<ISubject>;
     remove(id:number):ng.IPromise<ISubject>;
@@ -33,16 +32,6 @@ class SubjectService implements ISubjectService {
         // TODO remove
         this._listMappedById = {};
     }
-
-    public resolve = function():ng.IPromise<ISubject> {
-        var self = this,
-            deferred = this._$q.defer();
-        
-        this._listMappedById = {};
-        deferred.resolve();
-
-        return deferred.promise;
-    };
 
     public create = function(subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
