@@ -115,7 +115,7 @@ class FolderService implements IFolderService {
             function (data) {
                 console.log(data);
                 self.removeFolderToFolderList(data);
-                console.log(self._folderList);
+                self.removeFolderToFolderListByParentFolderId(data);
                 if(callbackSuccess){
                     callbackSuccess(data);
                 }
@@ -130,6 +130,24 @@ class FolderService implements IFolderService {
 
     private removeFolderToFolderList(folder:IFolder) {
         delete this._folderList[folder.id];
+    }
+
+    private removeFolderToFolderListByParentFolderId(folder: IFolder){
+        var self = this;
+        angular.forEach(this._folderListByParentFolderId, function (value_1, key_1) {
+            if(folder.id == key_1){
+                // delete parent folder
+                delete self._folderListByParentFolderId[key_1];
+            }
+            if(value_1){
+                angular.forEach(value_1, function (value_2, key_2) {
+                    if(folder.id == key_2){
+                        // delete children folder
+                        delete self._folderListByParentFolderId[key_1][key_2];
+                    }
+                });
+            }
+        });
     }
 
     public setParentFolderId(originFolderId, targetFolderId) {

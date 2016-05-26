@@ -27,6 +27,7 @@
         </button>
     </div>
     <div class="row rigid-grid">
+        <!-- navigation -->
         <section class="four cell">
             <nav class="vertical dragging-zone-folder">
                 <ul>
@@ -37,8 +38,9 @@
                         >
                             Mes sujets
                         </a>
-                        <div data-ng-repeat="item in  teacherHomeCtrl.folderList() | orderObjectBy:'label':false" ></div>
-                        <folder-item   item = "item" is-root = "true" parent-id="parentId"></folder-item>
+                        <div data-ng-repeat="item in  teacherHomeCtrl.folderList() | orderObjectBy:'label':false" >
+                            <folder-item   item = "item" is-root = "true" parent-id="parentId"></folder-item>
+                        </div>
                     </li>
                 </ul>
                 <a class="classic-link" data-ng-click="teacherHomeCtrl.clickCreateFolder()">
@@ -46,6 +48,7 @@
                 </a>
             </nav>
         </section>
+        <!-- main page -->
         <section class="margin-four">
             <nav class="twelve cell">
                 <div class="cell right-magnet">
@@ -83,7 +86,7 @@
                                 <div class="bottom">
                                     <div class="content">
                                         <div class="cell">
-                                            <strong data-ng-click="teacherHomeCtrl.clickOnFolderTitle()">[[folder.label]]</strong>
+                                            <strong data-ng-click="teacherHomeCtrl.clickOnFolderTitle(folder)">[[folder.label]]</strong>
                                             <br />
                                             <br />
                                         </div>

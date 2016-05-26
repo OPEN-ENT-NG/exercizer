@@ -8,7 +8,6 @@ directives.push(
                 templateUrl: 'exercizer/public/app/templates/directives/lightbox/lightboxDeleteSelection.html',
                 link: (scope:any, element, attrs) => {
 
-                    console.log('lightboxDeleteSelection', scope);;
                     scope.list = null;
 
                     scope.isDisplayed = function () {

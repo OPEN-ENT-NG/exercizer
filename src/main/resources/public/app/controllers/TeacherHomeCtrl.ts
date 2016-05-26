@@ -176,7 +176,7 @@ class TeacherHomeCtrl {
     };
 
     public dropToRoot($originalEvent){
-        this.dragService.dropTo(null, $originalEvent, scope);
+        this.dragService.dropTo(null, $originalEvent, this.$scope);
     };
 
     /**
