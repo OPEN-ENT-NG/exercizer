@@ -1,6 +1,6 @@
 <div data-ng-controller="EditSubjectController as editSubjectController">
 
-    <!-- LEFT NAV -->
+    <!-- TOP HEADER -->
     <div class="row">
         <h1 class="cell">
             Exercizer - [[ editSubjectController.subject.title ]]
@@ -20,20 +20,27 @@
         <section class="four cell vertical">
             <nav data-stick-to-top class="hash-magnet floating-navigation">
                 <div class="row">
-                    <subject-organizer data-subject="editSubjectController.subject" ></subject-organizer>
+                    <subject-edit-organizer data-subject="editSubjectController.subject" ></subject-edit-organizer>
                 </div>
             </nav>
         </section>
 
         <!-- GRAIN LIST -->
         <section class="eight cell">
-            <subject-grain-list-edit data-subject="editSubjectController.subject"></subject-grain-list-edit>
+            <subject-edit-grain-list data-subject="editSubjectController.subject"></subject-edit-grain-list>
+            <!-- BUTTON ADD NEW GRAIN -->
+            <subject-edit-button-add-new-grain data-subject="editSubjectController.subject"></subject-edit-button-add-new-grain>
         </section>
     </div>
 
+    <!-- TOASTER -->
+    <subject-edit-toaster data-subject="editSubjectController.subject"></subject-edit-toaster>
 
-    <!-- LIGHT BOXES
-    <lightbox-preview-subject-perform></lightbox-preview-subject-perform>
+
+    <!-- LIGHT BOXES -->
+    <subject-edit-modal-remove-grain data-subject="editSubjectController.subject"></subject-edit-modal-remove-grain>
+    <subject-edit-modal-remove-selected-grain-list data-subject="editSubjectController.subject"></subject-edit-modal-remove-selected-grain-list>
+    <!--<lightbox-preview-subject-perform></lightbox-preview-subject-perform>
     <lightbox-preview-copy-correction></lightbox-preview-copy-correction>-->
 
 </div>

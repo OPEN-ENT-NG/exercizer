@@ -1,0 +1,27 @@
+<div class="row">
+
+    <!-- grain type icon -->
+    <div class="two cell">
+        <div data-ng-switch="grainType.id">
+            <div data-ng-switch-when="3">
+                <i data-ng-class="grainType.illustration" data-tooltip="[[ grainType.public_name ]]"></i>
+            </div>
+            <div data-ng-switch-default style="width:15px; height:15px;" data-tooltip="[[ grainType.public_name ]]">
+                <div data-ng-include="getGrainIllustrationURL(grainType.illustration)"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- grain toggle icon -->
+    <div class="cell right-magnet" data-ng-click="toggleGrain()">
+        <i data-ng-show="isFolded" data-tooltip="Déplier" class="down-open"></i>
+        <i data-ng-hide="isFolded" data-tooltip="Plier" class="up-open"></i>
+    </div>
+
+    <!-- grain trash icon -->
+    <div class="cell right-magnet horizontal-spacing" data-tooltip="Supprimer" data-ng-click="removeGrain()">
+        <i class="trash"></i>
+    </div>
+
+</div>

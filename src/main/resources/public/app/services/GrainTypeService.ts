@@ -29,10 +29,17 @@ class GrainTypeService implements IGrainTypeService {
         var grainTypeList:IGrainType[] = [],
             self = this;
         
-        grainTypeList.push(new GrainType(1, 'choose', 'À définir'));
-        grainTypeList.push(new GrainType(2, 'chooseAnswer', 'Choix de la question à définir'));
-        grainTypeList.push(new GrainType(3, 'statement', 'Énoncé', 'doc-text'));
-        grainTypeList.push(new GrainType(4, 'simple_answer', 'Réponse simple', 'simple'));
+        grainTypeList.push(new GrainType(1, 'choose', 'Ajouter...', undefined, false));
+        grainTypeList.push(new GrainType(2, 'chooseAnswer', 'Choisir un type de question...', undefined, false));
+        grainTypeList.push(new GrainType(3, 'statement', 'Énoncé', 'doc-text', false));
+        grainTypeList.push(new GrainType(4, 'simple_answer', 'Réponse simple', 'simple', true));
+        grainTypeList.push(new GrainType(5, 'open_answer', 'Réponse ouverte', 'ouverte', true));
+        grainTypeList.push(new GrainType(6, 'multiple_answers', 'Réponses multiples', 'multiple', true));
+        grainTypeList.push(new GrainType(7, 'qcm', 'QCM', 'qcm', true));
+        grainTypeList.push(new GrainType(8, 'association', 'Association', 'association', true));
+        grainTypeList.push(new GrainType(9, 'order', 'Mise en ordre', 'ordre', true));
+        grainTypeList.push(new GrainType(10, 'text_to_fill', 'Texte à trous', 'textetrous', true));
+        grainTypeList.push(new GrainType(11, 'area_select', 'Zone à remplir', 'zoneselect', true));
         
         angular.forEach(grainTypeList, function(grainType:IGrainType) {
             self._listMappedById[grainType.id] = grainType;

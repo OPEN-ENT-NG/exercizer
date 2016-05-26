@@ -1,0 +1,17 @@
+<!-- GRAIN LIST -->
+<div class="row">
+    <div data-ng-repeat="grain in grainList | orderObjectBy:'order':false">
+
+        <div data-ng-switch="grain.grain_type_id">
+            <div data-ng-switch-when="1">
+                <choose data-grain="grain"></choose>
+            </div>
+            <div data-ng-switch-when="2">
+                <choose-answer data-grain="grain"></choose-answer>
+            </div>
+            <div data-ng-switch-default>
+                <grain-edit data-grain="grain"></grain-edit>
+            </div>
+        </div>
+    </div>
+</div>

@@ -72,12 +72,16 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_GRAIN_SELECTED', 'GRAIN_SELECTED_');
         module.constant('E_DUPLICATE_SELECTED_GRAIN_LIST', 'DUPLICATE_SELECTED_GRAIN_LIST_');
         module.constant('E_REMOVE_SELECTED_GRAIN_LIST', 'REMOVE_SELECTED_GRAIN_LIST_');
+        module.constant('E_CONFIRM_REMOVE_GRAIN', 'E_CONFIRM_REMOVE_GRAIN_');
+        module.constant('E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST', 'E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST_');
         // edit subject controller - broadcast events
         module.constant('E_REFRESH_GRAIN_LIST', 'REFRESH_GRAIN_LIST_');
         module.constant('E_TOGGLE_GRAIN', 'TOGGLE_GRAIN_');
         module.constant('E_FORCE_FOLDING_GRAIN', 'FORCE_FOLDING_GRAIN_');
         module.constant('E_SELECT_GRAIN', 'E_SELECT_GRAIN_');
         module.constant('E_TOGGLE_SUBJECT_EDIT_TOASTER', 'TOGGLE_SUBJECT_EDIT_TOASTER_');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN', 'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST', 'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST_');
 
         /**
          * Services
@@ -94,7 +98,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('PreviewSubjectService', PreviewSubjectService);
         module.service('SubjectScheduledService', SubjectScheduledService );
         module.service('CopyService', CopyService );
-        module.service('CompareStringService', CompareStringService );
         module.service('ToolsService', ToolsService );
 
         /**
