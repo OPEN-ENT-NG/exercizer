@@ -97,26 +97,16 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('SubjectService', SubjectService);
         module.service('GrainService', GrainService);
         module.service('GrainTypeService', GrainTypeService);
-        
-        // exercises
         module.service('SimpleAnswerService', SimpleAnswerService);
-        module.service('GrainCopyService', GrainCopyService);
-        module.service('GrainScheduledService', GrainScheduledService);
-        module.service('StatementService', StatementService);
-        module.service('SelectedGrainService', SelectedGrainService);
-        module.service('PreviewSubjectService', PreviewSubjectService);
-        module.service('SubjectScheduledService', SubjectScheduledService );
-        module.service('CopyService', CopyService );
-        module.service('CompareStringService', CompareStringService );
-        module.service('ToolsService', ToolsService );
         module.service('DragService', DragService );
         module.service('SelectionService', SelectionService );
         module.service('LightboxService', LightboxService );
+        module.service('FolderService', FolderService );
 
         /**
          * Controllers
          */
-        module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
+        module.controller('TeacherDashboardController', TeacherDashboardController);
         module.controller('EditSubjectController', EditSubjectController);
 
         /**

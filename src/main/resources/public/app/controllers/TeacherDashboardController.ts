@@ -1,4 +1,4 @@
-class TeacherHomeCtrl {
+class TeacherDashboardController {
 
     /**
      * INJECT
@@ -73,7 +73,7 @@ class TeacherHomeCtrl {
     };
 
     public subjectList(){
-        return this.subjectService.subjectList;
+        return this.subjectService.getList();
     }
 
     public folderList(){
@@ -184,24 +184,25 @@ class TeacherHomeCtrl {
      */
 
     private feedExercizer(){
+
         var self = this;
+
         // create folder
-        var folder = self.folderService.createObjectFolder();
-        folder.label = "A Folder";
-        this.folderService.createFolder(folder,  null, null);
-        var folder2 = self.folderService.createObjectFolder();
-        folder2.label = "B Folder";
-        this.folderService.createFolder(folder2,  null, null);
-        var folder3 = self.folderService.createObjectFolder();
-        folder3.label = "C Folder";
-        this.folderService.createFolder(folder3,  null, null);
+        var folderA = new Folder(null, null, null, null, "A Folder");
+        var folderB = new Folder(null, null, null, null, "B Folder");
+        var folderC = new Folder(null, null, null, null, "C Folder");
+        this.folderService.createFolder(folderA,  null, null);
+        this.folderService.createFolder(folderB,  null, null);
+        this.folderService.createFolder(folderC,  null, null);
+
         // create subject
-        var subject:ISubject = this.subjectService.createObjectSubject();
-        subject.id = null;
-        subject.title = "Subject Test";
-        this.subjectService.createSubject(subject,
-            function(data){
-                console.error(data);
-            }, null);
+        var subject = new Subject(null, null,null, null,null,null,null,"My Subject", "My description", null, null, null, null);
+
+        var promise = this.subjectService.persist(subject);
+        promise.then(function(subject) {
+            console.log('Success: ', subject);
+        }, function(subject) {
+            console.log('Failed: ', subject);
+        });
     }
 }

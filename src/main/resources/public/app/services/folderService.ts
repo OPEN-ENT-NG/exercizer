@@ -60,6 +60,8 @@ class FolderService implements IFolderService {
         return {
             id: null,
             label: null,
+            created: null,
+            modified : null,
             parent_folder_id: null
         }
     }

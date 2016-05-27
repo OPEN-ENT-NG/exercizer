@@ -95,15 +95,17 @@ class DragService implements IDragService {
     private actionAfterDragAndDrop(targetItem,originalItem){
 
         if(this.isSubject(originalItem)){
-            //this.selectionService.toggleSubject(originalItem.id, false);
+            //this.selectionService.toggleSubject(originalItem.i d, false);
             if(this.isSubject(targetItem)){
                 throw "not possible";
             } else if(this.isFolder(targetItem)){
-                this.subjectService.setFolderIdToThisSubject(originalItem.id, targetItem.id)
+                var subject = this.subjectService.getById(this.getId(originalItem));
+                subject.folder_id = targetItem.id;
             } else{
                 //default
                 // drop on root
-                this.subjectService.setFolderIdToThisSubject(originalItem.id, null)
+                var subject = this.subjectService.getById(this.getId(originalItem));
+                subject.folder_id = null;
             }
         }
         if(this.isFolder(originalItem)){
@@ -111,11 +113,12 @@ class DragService implements IDragService {
             if(this.isSubject(targetItem)){
                 throw "not possible";
             } else if(this.isFolder(targetItem)){
-                this.folderService.setParentFolderId(originalItem.id, targetItem.id);
+                this.folderService.setParentFolderId(this.getId(originalItem), this.getId(targetItem));
+
             } else {
                 // default
                 // drop on root
-                this.folderService.setParentFolderId(originalItem.id, null);
+                this.folderService.setParentFolderId(this.getId(originalItem), null);
 
             }
         }
@@ -123,18 +126,29 @@ class DragService implements IDragService {
 
     //TODO move in Service and improve it
     private isSubject(object: any){
-        if(object && object.title){
+        if(object && object._title){
             return true
         } else{
             return false;
         }
     }
     private isFolder(object: any){
-        if(object && object.label){
+        if(object && object._label){
             return true
         } else{
             return false;
-        }    }
+        }
+    }
+
+    private getId(object : any){
+        var id = object._id;
+        if(id){
+            return id
+        } else{
+            console.error('no _id in this object', object);
+            throw "";
+        }
+    }
 
 
 
