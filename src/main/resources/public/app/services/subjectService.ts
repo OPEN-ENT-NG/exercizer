@@ -77,7 +77,7 @@ class SubjectService implements ISubjectService {
 
     public getList = function():ISubject[] {
         var self = this;
-        
+
         return Object.keys(this._listMappedById).map(function(v) {
             return this._listMappedById[v];
         }, self);
