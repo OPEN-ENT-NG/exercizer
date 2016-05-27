@@ -4,10 +4,12 @@ directives.push(
         injections:
             [
                 'GrainTypeService',
+                'E_PREVIEW_PERFORM_SUBJECT',
                 'E_FOLD_GRAIN_LIST',
                 'E_REFRESH_GRAIN_LIST',
                 (
                     GrainTypeService,
+                    E_PREVIEW_PERFORM_SUBJECT,
                     E_FOLD_GRAIN_LIST,
                     E_REFRESH_GRAIN_LIST
                 ) => {
@@ -27,6 +29,10 @@ directives.push(
                             
                             scope.toggle = function() {
                                 scope.isFolded = !scope.isFolded;
+                            };
+                            
+                            scope.previewPerformSubject = function() {
+                                scope.$emit(E_PREVIEW_PERFORM_SUBJECT + scope.subject.id);
                             };
 
                             scope.foldAllGrain = function() {

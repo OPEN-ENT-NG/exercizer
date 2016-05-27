@@ -2,7 +2,7 @@ interface ISubjectCopyService {
     persist(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
     update(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
     remove(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
-    createFromSubjectScheduled(subjectScheduled:ISubjectScheduled):ISubjectCopy;
+    createFromSubjectScheduled(subjectScheduled:ISubjectScheduled):ng.IPromise<any>;
     getList():ISubjectCopy[];
     getById(id:number):ng.IPromise<ISubjectCopy>;
     currentSubjectCopyId:number;
@@ -12,7 +12,9 @@ class SubjectService implements ISubjectCopyService {
 
     static $inject = [
         '$q',
-        '$http'
+        '$http',
+        'GrainScheduledService',
+        'GrainCopyService'
     ];
 
     private _listMappedById:{[id:number]:ISubjectCopy;};
@@ -21,11 +23,15 @@ class SubjectService implements ISubjectCopyService {
     constructor
     (
         private _$q:ng.IQService,
-        private _$http:ng.IHttpService
+        private _$http:ng.IHttpService,
+        private _grainScheduledService,
+        private _grainCopyService
     )
     {
         this._$q = _$q;
         this._$http = _$http;
+        this._grainScheduledService = _grainScheduledService;
+        this._grainCopyService = _grainCopyService;
 
         // TODO remove
         this._listMappedById = {};
@@ -67,12 +73,27 @@ class SubjectService implements ISubjectCopyService {
         return deferred.promise;
     };
 
-    public createFromSubjectScheduled = function(subjectScheduled:ISubjectScheduled):ISubjectCopy {
-        var subjectCopy = new SubjectCopy();
+    public createFromSubjectScheduled = function(subjectScheduled:ISubjectScheduled):ng.IPromise<any> {
+        var deferred = this._$q.defer(),
+            subjectCopy = new SubjectCopy(),
+            grainCopyList = [];
 
         subjectCopy.subject_scheduled_id = subjectScheduled.id;
 
-        return subjectCopy;
+        this._grainScheduledService.getListBySubjectScheludedId(subjectScheduled.id).then(
+            function(grainScheduledList) {
+                grainCopyList = this._grainCopyService.createGrainCopyList(grainScheduledList);
+
+                deferred.resolve({
+                    subjectCopy: subjectCopy,
+                    grainCopyList: grainCopyList
+                });
+
+            }, function(err) {
+                notify.error(err);
+            });
+
+        return deferred.promise;
     };
 
     public getList = function():ISubjectCopy[] {

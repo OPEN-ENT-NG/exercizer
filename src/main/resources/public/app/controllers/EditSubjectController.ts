@@ -4,6 +4,8 @@ class EditSubjectController {
         '$scope',
         '$location',
         'SubjectService',
+        'SubjectScheduledService',
+        'SubjectCopyService',
         'GrainService',
         'GrainTypeService',
         // received events
@@ -22,6 +24,7 @@ class EditSubjectController {
         'E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST',
         'E_CONFIRM_ADD_GRAIN_DOCUMENT',
         'E_CONFIRM_REMOVE_GRAIN_DOCUMENT',
+        'E_PREVIEW_PERFORM_SUBJECT',
         // broadcast events
         'E_REFRESH_GRAIN_LIST',
         'E_TOGGLE_GRAIN',
@@ -31,7 +34,8 @@ class EditSubjectController {
         'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN',
         'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST',
         'E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT',
-        'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT'
+        'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT',
+        'E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT'
     ];
 
     private _subject:ISubject;
@@ -42,6 +46,8 @@ class EditSubjectController {
         private _$scope:ng.IScope,
         private _$location:ng.ILocationService,
         private _subjectService:ISubjectService,
+        private _subjectScheduledService:ISubjectScheduledService,
+        private _subjectCopyService:ISubjectCopyService,
         private _grainService:IGrainService,
         private _grainTypeService:IGrainTypeService,
         // received events
@@ -60,6 +66,7 @@ class EditSubjectController {
         private _E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST,
         private _E_CONFIRM_ADD_GRAIN_DOCUMENT,
         private _E_CONFIRM_REMOVE_GRAIN_DOCUMENT,
+        private _E_PREVIEW_PERFORM_SUBJECT,
         // broadcast events
         private _E_REFRESH_GRAIN_LIST,
         private _E_TOGGLE_GRAIN,
@@ -69,12 +76,15 @@ class EditSubjectController {
         private _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN,
         private _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST,
         private _E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT,
-        private _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT
+        private _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT,
+        private _E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT
     )
     {
         this._$scope = _$scope;
         this._$location = _$location;
         this._subjectService = _subjectService;
+        this._subjectScheduledService = _subjectScheduledService;
+        this._subjectCopyService = _subjectCopyService;
         this._grainService = _grainService;
         this._grainTypeService = _grainTypeService;
 
@@ -100,6 +110,7 @@ class EditSubjectController {
             this._E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST = _E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST + this._subject.id;
             this._E_CONFIRM_ADD_GRAIN_DOCUMENT = _E_CONFIRM_ADD_GRAIN_DOCUMENT + this._subject.id;
             this._E_CONFIRM_REMOVE_GRAIN_DOCUMENT = _E_CONFIRM_REMOVE_GRAIN_DOCUMENT + this._subject.id;
+            this._E_PREVIEW_PERFORM_SUBJECT = _E_PREVIEW_PERFORM_SUBJECT + this._subject.id;
             // broadcast events
             this._E_REFRESH_GRAIN_LIST = _E_REFRESH_GRAIN_LIST + this._subject.id;
             this._E_TOGGLE_GRAIN = _E_TOGGLE_GRAIN + this._subject.id;
@@ -110,6 +121,7 @@ class EditSubjectController {
             this._E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST = _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST + this._subject.id;
             this._E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT = _E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT + this._subject.id;
             this._E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT = _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT + this._subject.id;
+            this._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT = _E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT + this._subject.id;
 
             var self = this;
             this._eventsHandler(self);
@@ -300,7 +312,40 @@ class EditSubjectController {
             _handleUpdateGrain(grain);
         });
 
-        // init
+        function _handlePreviewPerformSubject() {
+            var subjectScheduled,
+                grainScheduledList,
+                subjectCopy,
+                grainCopyList;
+
+            self._subjectScheduledService.createFromSubject(self._subject).then(
+                function(subjectScheduledGrainScheduledList) {
+                    subjectScheduled = subjectScheduledGrainScheduledList.subjectScheduled;
+                    grainScheduledList = subjectScheduledGrainScheduledList.grainScheduledList;
+
+                    self._subjectCopyService.createFromSubjectScheduled(subjectScheduled).then(
+                        function(subjectCopyGrainCopyList) {
+                            subjectCopy = subjectCopyGrainCopyList.subjectCopy;
+                            grainCopyList = subjectCopyGrainCopyList.grainCopyList;
+
+                            self._$scope.$broadcast(self._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT, subjectScheduled, grainScheduledList, subjectCopy, grainCopyList);
+                        },
+                        function(err) {
+                            notify.error(err);
+                        }
+                    )
+                },
+                function(err) {
+                    notify.error(err);
+                }
+            );
+        }
+
+        self._$scope.$on(self._E_PREVIEW_PERFORM_SUBJECT, function() {
+            _handlePreviewPerformSubject();
+        });
+
+// init
         _handleGrainListUpdated();
     };
 

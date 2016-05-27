@@ -2,7 +2,7 @@ interface IGrainScheduledService {
     persist(grainScheduled:IGrainScheduled):ng.IPromise<IGrainScheduled>;
     update(grainScheduled:IGrainScheduled):ng.IPromise<IGrainScheduled>;
     remove(grainScheduled:IGrainScheduled):ng.IPromise<boolean>;
-    createFromGrain(grain:IGrain):IGrainScheduled;
+    createGrainScheduledList(grainList:IGrain[]):IGrainScheduled[];
     getListBySubjectScheludedId(subjectScheduledId:number):ng.IPromise<IGrainScheduled[]>;
 }
 
@@ -88,15 +88,17 @@ class GrainScheduledService implements IGrainScheduledService {
 
         return deferred.promise;
     };
-
-    public createFromGrain = function(grain:IGrain):IGrainScheduled {
-        var grainScheduled = new GrainScheduled();
-
-        grainScheduled.grain_type_id = grain.grain_type_id;
-        grainScheduled.order = grain.order;
-        grainScheduled.grain_data = CloneObjectHelper.clone(grain.grain_data, true);
-
-        return grainScheduled;
+    
+    public createGrainScheduledList = function(grainList:IGrain[]):IGrainScheduled[] {
+        var grainScheduledList = [];
+        
+        angular.forEach(grainList, function(grain:IGrain) {
+            if (grain.grain_type_id > 2) {
+                grainScheduledList.push(this._createFromGrain(grain));
+            }
+        }, this);
+        
+        return grainScheduledList;
     };
 
     public getListBySubjectScheludedId = function(subjectScheduledId:number):ng.IPromise<IGrainScheduled[]> {
@@ -113,5 +115,15 @@ class GrainScheduledService implements IGrainScheduledService {
 
 
         return deferred.promise;
+    };
+
+    private _createFromGrain = function(grain:IGrain):IGrainScheduled {
+        var grainScheduled = new GrainScheduled();
+
+        grainScheduled.grain_type_id = grain.grain_type_id;
+        grainScheduled.order = grain.order;
+        grainScheduled.grain_data = CloneObjectHelper.clone(grain.grain_data, true);
+
+        return grainScheduled;
     };
 }

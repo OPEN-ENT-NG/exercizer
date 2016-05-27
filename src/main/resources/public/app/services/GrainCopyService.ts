@@ -2,7 +2,7 @@ interface IGrainCopyService {
     persist(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy>;
     update(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy>;
     remove(grainCopy:IGrainCopy):ng.IPromise<boolean>;
-    createFromGrainScheduled(grainScheduled:IGrainScheduled):IGrainCopy;
+    createGrainCopyList(grainScheduledList:IGrainScheduled[]):IGrainCopy[];
     getListBySubjectCopyId(subjectCopyId:number):ng.IPromise<IGrainCopy[]>;
 }
 
@@ -87,23 +87,15 @@ class GrainCopyService implements IGrainCopyService {
 
         return deferred.promise;
     };
-    
-    public createFromGrainScheduled = function(grainScheduled:IGrainScheduled):IGrainCopy {
-        var grainCopy = new GrainCopy();
-        
-        grainCopy.grain_type_id = grainScheduled.grain_type_id;
-        grainCopy.grain_scheduled_id = grainScheduled.id;
-        grainCopy.order = grainScheduled.order;
-        grainCopy.grain_copy_data = new GrainCopyData();
-        grainCopy.grain_copy_data.title = grainScheduled.grain_data.title;
-        grainCopy.grain_copy_data.max_score = grainScheduled.grain_data.max_score;
-        grainCopy.grain_copy_data.statement = grainScheduled.grain_data.statement;
-        grainCopy.grain_copy_data.document_list = grainScheduled.grain_data.document_list;
-        grainCopy.grain_copy_data.answer_hint = grainScheduled.grain_data.answer_hint;
-        grainCopy.grain_copy_data.document_list = grainScheduled.grain_data.document_list;
-        grainCopy.grain_copy_data.custom_copy_data = this._createCustomCopyData(grainScheduled.grain_data.custom_data);
-        
-        return grainCopy;
+
+    public createGrainCopyList = function(grainScheduledList:IGrainScheduled[]):IGrainCopy[] {
+        var grainCopyList = [];
+
+        angular.forEach(grainScheduledList, function(grainScheduled:IGrainScheduled) {
+            grainCopyList.push(this._createFromGrainScheduled(grainScheduled));
+        }, this);
+
+        return grainCopyList;
     };
 
     public getListBySubjectCopyId = function(subjectCopyId:number):ng.IPromise<IGrainCopy[]> {
@@ -120,6 +112,24 @@ class GrainCopyService implements IGrainCopyService {
 
 
         return deferred.promise;
+    };
+
+    private _createFromGrainScheduled = function(grainScheduled:IGrainScheduled):IGrainCopy {
+        var grainCopy = new GrainCopy();
+
+        grainCopy.grain_type_id = grainScheduled.grain_type_id;
+        grainCopy.grain_scheduled_id = grainScheduled.id;
+        grainCopy.order = grainScheduled.order;
+        grainCopy.grain_copy_data = new GrainCopyData();
+        grainCopy.grain_copy_data.title = grainScheduled.grain_data.title;
+        grainCopy.grain_copy_data.max_score = grainScheduled.grain_data.max_score;
+        grainCopy.grain_copy_data.statement = grainScheduled.grain_data.statement;
+        grainCopy.grain_copy_data.document_list = grainScheduled.grain_data.document_list;
+        grainCopy.grain_copy_data.answer_hint = grainScheduled.grain_data.answer_hint;
+        grainCopy.grain_copy_data.document_list = grainScheduled.grain_data.document_list;
+        grainCopy.grain_copy_data.custom_copy_data = this._createCustomCopyData(grainScheduled.grain_data.custom_data);
+
+        return grainCopy;
     };
 
     private _createCustomCopyData = function(customData:any):any {

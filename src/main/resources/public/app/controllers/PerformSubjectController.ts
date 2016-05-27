@@ -31,23 +31,16 @@ class PerformSubjectController {
         this._grainService = _grainService;
         this._grainTypeService = _grainTypeService;
 
-        if (angular.isUndefined(this._subjectService.currentSubjectId)) {
-            this._$location.path('/teacher/home');
-        } else {
+        // received events
+        // broadcast events
 
-            this._subject = this._subjectService.getById(this._subjectService.currentSubjectId);
-            this._selectedGrainList = [];
-
-            // received events
-            // broadcast events
-
-            var self = this;
-            this._eventsHandler(self);
-        }
+        var self = this;
+        this._eventsHandler(self);
     }
 
     private _eventsHandler = function(self) {
 
+        console.log(self._$scope);
         // init
     };
 
