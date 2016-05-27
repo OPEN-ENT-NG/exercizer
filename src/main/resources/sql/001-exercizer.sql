@@ -20,8 +20,8 @@ CREATE TABLE exercizer.members (
 
 CREATE TABLE exercizer.folder(
 	id BIGSERIAL PRIMARY KEY,
-  created TIMESTAMP NOT NULL DEFAULT NOW(),
-  modified TIMESTAMP NOT NULL DEFAULT NOW(),
+    created TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified TIMESTAMP NOT NULL DEFAULT NOW(),
 	folder_id BIGINT NULL,
 	label VARCHAR(255) NOT NULL
 );
