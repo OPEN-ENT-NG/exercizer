@@ -78,6 +78,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST', 'CONFIRM_REMOVE_SELECTED_GRAIN_LIST_');
         module.constant('E_CONFIRM_ADD_GRAIN_DOCUMENT', 'CONFIRM_GRAIN_DOCUMENT_');
         module.constant('E_CONFIRM_REMOVE_GRAIN_DOCUMENT', 'CONFIRM_REMOVE_GRAIN_DOCUMENT_');
+
         // edit subject controller - broadcast events
         module.constant('E_REFRESH_GRAIN_LIST', 'REFRESH_GRAIN_LIST_');
         module.constant('E_TOGGLE_GRAIN', 'TOGGLE_GRAIN_');
@@ -87,7 +88,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST_');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT_');
-        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT_');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT');
 
         /**
          * Services

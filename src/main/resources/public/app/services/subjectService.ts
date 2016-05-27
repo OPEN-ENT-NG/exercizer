@@ -1,7 +1,7 @@
 interface ISubjectService {
     persist(subject:ISubject):ng.IPromise<ISubject>;
     update(subject:ISubject):ng.IPromise<ISubject>;
-    remove(id:number):ng.IPromise<ISubject>;
+    remove(subject:ISubject):ng.IPromise<ISubject>;
     getList():ISubject[];
     getById(id:number):ISubject;
     currentSubjectId:number;
@@ -61,10 +61,9 @@ class SubjectService implements ISubjectService {
         return deferred.promise;
     };
 
-    public remove = function(id:number):ng.IPromise<ISubject> {
+    public remove = function(subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
-            deferred = this._$q.defer(),
-            subject = this._listMappedById[id];
+            deferred = this._$q.defer();
 
         //TODO remove when using real API
         subject.is_deleted = true;
