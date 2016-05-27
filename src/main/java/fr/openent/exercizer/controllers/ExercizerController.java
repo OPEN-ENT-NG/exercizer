@@ -8,10 +8,10 @@ import fr.wseduc.security.SecuredAction;
 
 public class ExercizerController extends ControllerHelper {
 
-	@Get("")
-	@SecuredAction("exercizer.view")
-	public void view(final HttpServerRequest request) {
-		renderView(request);
-	}
+    @Get("")
+    @SecuredAction("exercizer.view")
+    public void view(final HttpServerRequest request) {
+        renderView(request);
+    }
 
 }

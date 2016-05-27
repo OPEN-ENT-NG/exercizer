@@ -1,0 +1,6 @@
+<!-- TITLE & SCORE -->
+<div class="row vertical-spacing">
+    <input type="text" class="six cell" data-ng-model="grain.grain_data.title" data-on-blur-function="updateGrain()" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question" />
+    <input type="text" class="cell right-magnet" data-ng-model="grain.grain_data.max_score" data-on-blur-function="updateGrain()" data-restrict-input="^([0-9]|[1-9](\d{1,2})?)(\.\d{1,2})?$" placeholder="Pondération" />
+    <em class="high-importance cell right-magnet">Question sur /</em>
+</div>

@@ -4,7 +4,7 @@ routes.define(function($routeProvider){
             action: 'teacherHome'
         })
         .when('/teacher/subject/edit/:subjectId/', {
-            action: 'teacherSubjectEdit'
+            action: 'editSubject'
         })
         .otherwise({
             redirectTo: '/teacher/home'
@@ -15,16 +15,18 @@ var directives = [];
 var controllers = [];
 var services = [];
 
-function ExercizerController($scope, $rootScope, model, template, route, date, $route){
+function ExercizerController($scope, $rootScope, model, template, route, date, $route) {
+    
     route({
-        teacherHome: function(params){
+        teacherHome: function() {
             template.open('main', 'teacher-home');
         },
-        teacherSubjectEdit: function(params){
-            template.open('main', 'teacher-subject-edit');
+        editSubject: function() {
+            template.open('main', 'edit-subject');
 
         }
     });
+    
     $route.reload()
 
 }
@@ -53,16 +55,50 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Constants
          */
-         // TODO define url server
+         // FIXME
         module.constant("serverUrl", "http://foo.com");
+
+        /**
+         * Subject edit events
+         */
+        
+        // edit subject controller - received events
+        module.constant('E_GRAIN_LIST_UPDATED', 'GRAIN_LIST_UPDATED_');
+        module.constant('E_ADD_GRAIN', 'ADD_GRAIN_');
+        module.constant('E_UPDATE_GRAIN', 'UPDATE_GRAIN_');
+        module.constant('E_REMOVE_GRAIN', 'REMOVE_GRAIN_');
+        module.constant('E_GRAIN_TOGGLED', 'GRAIN_TOGGLED_');
+        module.constant('E_FOLD_GRAIN_LIST', 'FOLD_GRAIN_LIST_');
+        module.constant('E_GRAIN_SELECTED', 'GRAIN_SELECTED_');
+        module.constant('E_DUPLICATE_SELECTED_GRAIN_LIST', 'DUPLICATE_SELECTED_GRAIN_LIST_');
+        module.constant('E_REMOVE_SELECTED_GRAIN_LIST', 'REMOVE_SELECTED_GRAIN_LIST_');
+        module.constant('E_ADD_GRAIN_DOCUMENT', 'ADD_GRAIN_DOCUMENT_');
+        module.constant('E_REMOVE_GRAIN_DOCUMENT', 'REMOVE_GRAIN_DOCUMENT_');
+        module.constant('E_CONFIRM_REMOVE_GRAIN', 'CONFIRM_REMOVE_GRAIN_');
+        module.constant('E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST', 'CONFIRM_REMOVE_SELECTED_GRAIN_LIST_');
+        module.constant('E_CONFIRM_ADD_GRAIN_DOCUMENT', 'CONFIRM_GRAIN_DOCUMENT_');
+        module.constant('E_CONFIRM_REMOVE_GRAIN_DOCUMENT', 'CONFIRM_REMOVE_GRAIN_DOCUMENT_');
+        // edit subject controller - broadcast events
+        module.constant('E_REFRESH_GRAIN_LIST', 'REFRESH_GRAIN_LIST_');
+        module.constant('E_TOGGLE_GRAIN', 'TOGGLE_GRAIN_');
+        module.constant('E_FORCE_FOLDING_GRAIN', 'FORCE_FOLDING_GRAIN_');
+        module.constant('E_SELECT_GRAIN', 'E_SELECT_GRAIN_');
+        module.constant('E_TOGGLE_SUBJECT_EDIT_TOASTER', 'TOGGLE_SUBJECT_EDIT_TOASTER_');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST_');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT_');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT_');
 
         /**
          * Services
          */
+        
+        module.service('UserService', UserService);
         module.service('SubjectService', SubjectService);
-        module.service('FolderService', FolderService);
         module.service('GrainService', GrainService);
         module.service('GrainTypeService', GrainTypeService);
+        
+        // exercises
         module.service('SimpleAnswerService', SimpleAnswerService);
         module.service('GrainCopyService', GrainCopyService);
         module.service('GrainScheduledService', GrainScheduledService);
@@ -81,7 +117,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
          * Controllers
          */
         module.controller('TeacherHomeCtrl', TeacherHomeCtrl);
-        module.controller('TeacherEditSubjectCtrl', TeacherEditSubjectCtrl);
+        module.controller('EditSubjectController', EditSubjectController);
 
         /**
          * Directives

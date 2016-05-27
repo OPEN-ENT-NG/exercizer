@@ -4,7 +4,7 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 
-/// <reference path="./jquery.d.ts" />
+/// <reference path="jquery.d.ts" />
 
 declare var angular: ng.IAngularStatic;
 
@@ -97,7 +97,7 @@ declare namespace ng {
          *
          * When passed two or more arguments, a new module is created. If passed only one argument, an existing module (the name passed as the first argument to module) is retrieved.
          *
-         * @param name The name of the module to create or retrieve.
+         * @param name The name of the module to persist or retrieve.
          * @param requires The names of modules this module depends on. If specified then new module is being created. If unspecified then the module is being retrieved for further configuration.
          * @param configFn Optional configuration function for the module.
          */
@@ -147,7 +147,7 @@ declare namespace ng {
         constant(name: string, value: any): IModule;
         constant(object: Object): IModule;
         /**
-         * The $controller service is used by Angular to create new controllers.
+         * The $controller service is used by Angular to persist new controllers.
          *
          * This provider allows controller registration via the register method.
          *
@@ -156,7 +156,7 @@ declare namespace ng {
          */
         controller(name: string, controllerConstructor: Function): IModule;
         /**
-         * The $controller service is used by Angular to create new controllers.
+         * The $controller service is used by Angular to persist new controllers.
          *
          * This provider allows controller registration via the register method.
          *
