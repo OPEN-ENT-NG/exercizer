@@ -100,8 +100,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('GrainTypeService', GrainTypeService);
         module.service('SimpleAnswerService', SimpleAnswerService);
         module.service('DragService', DragService );
-        module.service('SelectionService', SelectionService );
-        module.service('LightboxService', LightboxService );
         module.service('FolderService', FolderService );
 
         /**
