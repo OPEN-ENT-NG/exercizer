@@ -19,7 +19,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
     
     route({
         teacherHome: function() {
-            template.open('main', 'teacher-home');
+            template.open('main', 'teacher-dashboard');
         },
         editSubject: function() {
             template.open('main', 'edit-subject');
