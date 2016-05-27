@@ -78,7 +78,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST', 'CONFIRM_REMOVE_SELECTED_GRAIN_LIST_');
         module.constant('E_CONFIRM_ADD_GRAIN_DOCUMENT', 'CONFIRM_GRAIN_DOCUMENT_');
         module.constant('E_CONFIRM_REMOVE_GRAIN_DOCUMENT', 'CONFIRM_REMOVE_GRAIN_DOCUMENT_');
-
+        module.constant('E_PREVIEW_PERFORM_SUBJECT', 'PREVIEW_PERFORM_SUBJECT_');
         // edit subject controller - broadcast events
         module.constant('E_REFRESH_GRAIN_LIST', 'REFRESH_GRAIN_LIST_');
         module.constant('E_TOGGLE_GRAIN', 'TOGGLE_GRAIN_');
@@ -89,6 +89,8 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST_');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT_');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT_');
+        module.constant('E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT', 'DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT');
 
         /**
          * Services
@@ -96,7 +98,11 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         
         module.service('UserService', UserService);
         module.service('SubjectService', SubjectService);
+        module.service('SubjectScheduled', SubjectScheduled);
+        module.service('SubjectCopy', SubjectCopy);
         module.service('GrainService', GrainService);
+        module.service('GrainScheduled', GrainScheduled);
+        module.service('GrainCopy', GrainCopy);
         module.service('GrainTypeService', GrainTypeService);
         module.service('SimpleAnswerService', SimpleAnswerService);
         module.service('DragService', DragService );
@@ -107,6 +113,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
          */
         module.controller('TeacherDashboardController', TeacherDashboardController);
         module.controller('EditSubjectController', EditSubjectController);
+        module.controller('PerformSubjectController', PerformSubjectController);
 
         /**
          * Directives
