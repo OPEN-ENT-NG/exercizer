@@ -8,7 +8,8 @@ directives.push(
                 scope: {
                     item: "=",
                     isRoot: "=",
-                    parentId : "="
+                    parentId : "=",
+                    setCurrentFolder : "&"
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/partials/folderItem.html',
                 link: (scope:any, element, attrs) => {
@@ -43,7 +44,7 @@ directives.push(
                      */
 
                     scope.clickOnFolder = function (folder) {
-                        FolderService.currentFolderId = folder.id;
+                        scope.setCurrentFolder({myParam: folder});
                     };
 
                     /**

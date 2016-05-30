@@ -33,7 +33,6 @@ class TeacherDashboardController {
     }
 
     public createSubject = function(){
-        console.log('createSubject');
         this._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT", null);
     };
 
