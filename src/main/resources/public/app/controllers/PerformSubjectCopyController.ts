@@ -57,7 +57,7 @@ class PerformSubjectCopyController {
 
     public preview(subject:ISubject) {
         
-        var grainList = this._grainService.getListBySubjectId(subject.id).then(
+        this._grainService.getListBySubjectId(subject.id).then(
             function(grainList) {
                 this._subjectScheduled = this._subjectScheduledService.createFromSubject(subject);
                 this._subjectCopy = this._subjectCopyService.createFromSubjectScheduled(this._subjectScheduled);

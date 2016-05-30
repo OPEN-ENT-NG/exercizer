@@ -19,6 +19,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
     
     route({
         teacherHome: function() {
+        // model.me foreach jusqu'à trouver teacher / student
             template.open('main', 'teacher-dashboard');
         },
         editSubject: function() {

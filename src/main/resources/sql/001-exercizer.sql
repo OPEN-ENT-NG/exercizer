@@ -20,6 +20,7 @@ CREATE TABLE exercizer.members (
 
 CREATE TABLE exercizer.folder(
 	id BIGSERIAL PRIMARY KEY,
+	owner VARCHAR(36) NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT NOW(),
     modified TIMESTAMP NOT NULL DEFAULT NOW(),
 	folder_id BIGINT NULL,
@@ -33,13 +34,12 @@ CREATE TABLE exercizer.subject(
     owner VARCHAR(36) NOT NULL,
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	modified TIMESTAMP NOT NULL DEFAULT NOW(),
-	visibility VARCHAR(9),
 	title VARCHAR(255) NOT NULL,
 	description TEXT NULL,
 	picture VARCHAR(255) NULL,
 	is_library_subject BOOL NOT NULL DEFAULT FALSE,
 	is_deleted BOOL NOT NULL DEFAULT FALSE,
-	CONSTRAINT subject_owner_fk FOREIGN KEY(owner) REFERENCES rbs.users(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT subject_owner_fk FOREIGN KEY(owner) REFERENCES exercizer.users(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT subject_folder_fk FOREIGN KEY (id) REFERENCES exercizer.folder(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT subject_original_subject_fk FOREIGN KEY (original_subject_id) REFERENCES exercizer.subject(id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
@@ -123,7 +123,7 @@ CREATE TABLE exercizer.subject_copy(
 	has_been_submitted BOOL NOT NULL DEFAULT FALSE,
 	is_deleted BOOL NOT NULL DEFAULT FALSE,
 	CONSTRAINT subject_copy_subject_scheduled_fk FOREIGN KEY(subject_scheduled_id) REFERENCES exercizer.subject_scheduled(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT subject_copy_owner_fk FOREIGN KEY(owner) REFERENCES rbs.users(id) ON UPDATE NO ACTION ON DELETE NO ACTION
+	CONSTRAINT subject_copy_owner_fk FOREIGN KEY(owner) REFERENCES exercizer.users(id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE exercizer.grain_copy(
