@@ -61,7 +61,7 @@ directives.push(
 
                         scope.clickOnSubjectTitle = function (subject) {
                             if (subject.id) {
-                                this.$location.path('/teacher/subject/edit/' + subject.id);
+                                $location.path('/teacher/subject/edit/' + subject.id);
                             }
                         };
 
