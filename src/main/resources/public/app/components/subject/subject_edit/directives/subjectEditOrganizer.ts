@@ -4,12 +4,12 @@ directives.push(
         injections:
             [
                 'GrainTypeService',
-                'E_PREVIEW_PERFORM_SUBJECT',
+                'E_PREVIEW_PERFORM_SUBJECT_COPY',
                 'E_FOLD_GRAIN_LIST',
                 'E_REFRESH_GRAIN_LIST',
                 (
                     GrainTypeService,
-                    E_PREVIEW_PERFORM_SUBJECT,
+                    E_PREVIEW_PERFORM_SUBJECT_COPY,
                     E_FOLD_GRAIN_LIST,
                     E_REFRESH_GRAIN_LIST
                 ) => {
@@ -31,8 +31,8 @@ directives.push(
                                 scope.isFolded = !scope.isFolded;
                             };
                             
-                            scope.previewPerformSubject = function() {
-                                scope.$emit(E_PREVIEW_PERFORM_SUBJECT + scope.subject.id);
+                            scope.previewPerformSubjectCopy = function() {
+                                scope.$emit(E_PREVIEW_PERFORM_SUBJECT_COPY + scope.subject.id);
                             };
 
                             scope.foldAllGrain = function() {

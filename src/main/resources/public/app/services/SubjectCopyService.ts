@@ -2,13 +2,13 @@ interface ISubjectCopyService {
     persist(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
     update(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
     remove(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
-    createFromSubjectScheduled(subjectScheduled:ISubjectScheduled):ng.IPromise<any>;
+    createFromSubjectScheduled(subjectScheduled:ISubjectScheduled):ISubjectCopy;
     getList():ISubjectCopy[];
     getById(id:number):ng.IPromise<ISubjectCopy>;
     currentSubjectCopyId:number;
 }
 
-class SubjectService implements ISubjectCopyService {
+class SubjectCopyService implements ISubjectCopyService {
 
     static $inject = [
         '$q',
@@ -73,27 +73,11 @@ class SubjectService implements ISubjectCopyService {
         return deferred.promise;
     };
 
-    public createFromSubjectScheduled = function(subjectScheduled:ISubjectScheduled):ng.IPromise<any> {
-        var deferred = this._$q.defer(),
-            subjectCopy = new SubjectCopy(),
-            grainCopyList = [];
-
+    public createFromSubjectScheduled = function(subjectScheduled:ISubjectScheduled):ISubjectCopy {
+        var subjectCopy = new SubjectCopy();
         subjectCopy.subject_scheduled_id = subjectScheduled.id;
-
-        this._grainScheduledService.getListBySubjectScheludedId(subjectScheduled.id).then(
-            function(grainScheduledList) {
-                grainCopyList = this._grainCopyService.createGrainCopyList(grainScheduledList);
-
-                deferred.resolve({
-                    subjectCopy: subjectCopy,
-                    grainCopyList: grainCopyList
-                });
-
-            }, function(err) {
-                notify.error(err);
-            });
-
-        return deferred.promise;
+        subjectCopy.has_been_started = false;
+        return subjectCopy;
     };
 
     public getList = function():ISubjectCopy[] {

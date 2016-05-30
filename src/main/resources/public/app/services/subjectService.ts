@@ -2,6 +2,7 @@ interface ISubjectService {
     persist(subject:ISubject):ng.IPromise<ISubject>;
     update(subject:ISubject):ng.IPromise<ISubject>;
     remove(id:number):ng.IPromise<ISubject>;
+    schedule(subject:ISubject, preview:boolean);
     getList():ISubject[];
     getById(id:number):ISubject;
     currentSubjectId:number;
@@ -74,6 +75,10 @@ class SubjectService implements ISubjectService {
         }, 2000, self, subject);
 
         return deferred.promise;
+    };
+    
+    public schedule = function(subject:ISubject, preview:boolean) {
+        
     };
 
     public getList = function():ISubject[] {

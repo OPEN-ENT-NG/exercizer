@@ -42,7 +42,6 @@ class TeacherDashboardController {
 
     }
 
-
     get openLightboxSubjectProperties(): boolean {
         return this._openLightboxSubjectProperties;
     };
@@ -66,6 +65,7 @@ class TeacherDashboardController {
         this.folderService.createFolder(folderA,  null, null);
         this.folderService.createFolder(folderB,  null, null);
         this.folderService.createFolder(folderC,  null, null);
+
 
         // create subject
         var subject = new Subject(null, null,null, null,null,null,null,"My Subject", "My description", null, null, null, null);

@@ -24,7 +24,7 @@ class EditSubjectController {
         'E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST',
         'E_CONFIRM_ADD_GRAIN_DOCUMENT',
         'E_CONFIRM_REMOVE_GRAIN_DOCUMENT',
-        'E_PREVIEW_PERFORM_SUBJECT',
+        'E_PREVIEW_PERFORM_SUBJECT_COPY',
         // broadcast events
         'E_REFRESH_GRAIN_LIST',
         'E_TOGGLE_GRAIN',
@@ -35,7 +35,7 @@ class EditSubjectController {
         'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST',
         'E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT',
         'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT',
-        'E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT'
+        'E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY'
     ];
 
     private _subject:ISubject;
@@ -66,7 +66,7 @@ class EditSubjectController {
         private _E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST,
         private _E_CONFIRM_ADD_GRAIN_DOCUMENT,
         private _E_CONFIRM_REMOVE_GRAIN_DOCUMENT,
-        private _E_PREVIEW_PERFORM_SUBJECT,
+        private _E_PREVIEW_PERFORM_SUBJECT_COPY,
         // broadcast events
         private _E_REFRESH_GRAIN_LIST,
         private _E_TOGGLE_GRAIN,
@@ -77,7 +77,7 @@ class EditSubjectController {
         private _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST,
         private _E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT,
         private _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT,
-        private _E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT
+        private _E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY
     )
     {
         this._$scope = _$scope;
@@ -110,7 +110,7 @@ class EditSubjectController {
             this._E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST = _E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST + this._subject.id;
             this._E_CONFIRM_ADD_GRAIN_DOCUMENT = _E_CONFIRM_ADD_GRAIN_DOCUMENT + this._subject.id;
             this._E_CONFIRM_REMOVE_GRAIN_DOCUMENT = _E_CONFIRM_REMOVE_GRAIN_DOCUMENT + this._subject.id;
-            this._E_PREVIEW_PERFORM_SUBJECT = _E_PREVIEW_PERFORM_SUBJECT + this._subject.id;
+            this._E_PREVIEW_PERFORM_SUBJECT_COPY = _E_PREVIEW_PERFORM_SUBJECT_COPY + this._subject.id;
             // broadcast events
             this._E_REFRESH_GRAIN_LIST = _E_REFRESH_GRAIN_LIST + this._subject.id;
             this._E_TOGGLE_GRAIN = _E_TOGGLE_GRAIN + this._subject.id;
@@ -121,7 +121,7 @@ class EditSubjectController {
             this._E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST = _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST + this._subject.id;
             this._E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT = _E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT + this._subject.id;
             this._E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT = _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT + this._subject.id;
-            this._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT = _E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT + this._subject.id;
+            this._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY = _E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY + this._subject.id;
 
             var self = this;
             this._eventsHandler(self);
@@ -327,8 +327,7 @@ class EditSubjectController {
                         function(subjectCopyGrainCopyList) {
                             subjectCopy = subjectCopyGrainCopyList.subjectCopy;
                             grainCopyList = subjectCopyGrainCopyList.grainCopyList;
-
-                            self._$scope.$broadcast(self._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT, subjectScheduled, grainScheduledList, subjectCopy, grainCopyList);
+                            self._$scope.$broadcast(self._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY, subjectScheduled, grainScheduledList, subjectCopy, grainCopyList);
                         },
                         function(err) {
                             notify.error(err);
@@ -341,11 +340,12 @@ class EditSubjectController {
             );
         }
 
-        self._$scope.$on(self._E_PREVIEW_PERFORM_SUBJECT, function() {
-            _handlePreviewPerformSubject();
+        self._$scope.$on(self._E_PREVIEW_PERFORM_SUBJECT_COPY, function() {
+            self._$scope.$broadcast(self._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY);
+
         });
 
-// init
+        // init
         _handleGrainListUpdated();
     };
 

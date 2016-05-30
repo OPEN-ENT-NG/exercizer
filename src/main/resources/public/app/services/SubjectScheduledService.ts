@@ -2,7 +2,7 @@ interface ISubjectScheduledService {
     persist(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled>;
     update(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled>;
     remove(id:number):ng.IPromise<ISubjectScheduled>;
-    createFromSubject(subject:ISubject):ng.IPromise<any>;
+    createFromSubject(subject:ISubject):ISubjectScheduled;
     getList():ISubjectScheduled[];
     getById(id:number):ISubjectScheduled;
     currentSubjectScheduledId:number;
@@ -79,31 +79,16 @@ class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
-    public createFromSubject = function(subject:ISubject):ng.IPromise<any> {
-        var deferred = this._$q.defer(),
-            subjectScheduled = new SubjectScheduled(),
-            grainScheduledList = [];
+    public createFromSubject = function(subject:ISubject):ISubjectScheduled {
+        var subjectScheduled = new SubjectScheduled();
 
         subjectScheduled.subject_id = subject.id;
         subjectScheduled.title = subject.title;
         subjectScheduled.description = subject.description;
         subjectScheduled.picture = subject.picture;
         subjectScheduled.max_score = subject.max_score;
-
-        this._grainService.getListBySubjectId(subject.id).then(
-            function(grainList) {
-                grainScheduledList = this._grainScheduledService.createGrainScheduledList(grainList);
-
-                deferred.resolve({
-                    subjectScheduled: subjectScheduled,
-                    grainScheduledList: grainScheduledList
-                });
-
-            }, function(err) {
-                notify.error(err);
-            });
-
-        return deferred.promise;
+        
+        return subjectScheduled;
     };
 
     public getList = function():ISubjectScheduled[] {

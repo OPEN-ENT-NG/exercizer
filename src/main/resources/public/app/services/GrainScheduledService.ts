@@ -3,7 +3,7 @@ interface IGrainScheduledService {
     update(grainScheduled:IGrainScheduled):ng.IPromise<IGrainScheduled>;
     remove(grainScheduled:IGrainScheduled):ng.IPromise<boolean>;
     createGrainScheduledList(grainList:IGrain[]):IGrainScheduled[];
-    getListBySubjectScheludedId(subjectScheduledId:number):ng.IPromise<IGrainScheduled[]>;
+    getListBySubjectScheduledId(subjectScheduledId:number):ng.IPromise<IGrainScheduled[]>;
 }
 
 class GrainScheduledService implements IGrainScheduledService {
@@ -13,18 +13,17 @@ class GrainScheduledService implements IGrainScheduledService {
         '$http'
     ];
 
-    private _listMappedBySubjectScheludedId:{[subjectScheduledId:number]:IGrainScheduled[]};
+    private _listMappedBySubjectScheduledId:{[subjectScheduledId:number]:IGrainScheduled[]};
 
     constructor
     (
         private _$q:ng.IQService,
-        private _$http:ng.IHttpService,
-        private _grainTypeService:IGrainTypeService
+        private _$http:ng.IHttpService
     )
     {
         this._$q = _$q;
         this._$http = _$http;
-        this._listMappedBySubjectScheludedId = {};
+        this._listMappedBySubjectScheduledId = {};
     }
 
     public persist = function(grainScheduled:IGrainScheduled):ng.IPromise<IGrainScheduled> {
@@ -35,11 +34,11 @@ class GrainScheduledService implements IGrainScheduledService {
         grainScheduled.id = Math.floor(Math.random() * (999999999 - 1)) + 1; // TODO backend
 
         setTimeout(function(self, grainScheduled) {
-            if (angular.isUndefined(self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id])) {
-                self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id] = [];
+            if (angular.isUndefined(self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id])) {
+                self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id] = [];
             }
 
-            self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id].push(grainScheduled);
+            self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id].push(grainScheduled);
 
             deferred.resolve(grainScheduled);
         }, 100, self, grainScheduled);
@@ -53,12 +52,12 @@ class GrainScheduledService implements IGrainScheduledService {
 
         //TODO remove when using real API
         setTimeout(function(self, grainScheduled) {
-            if (angular.isUndefined(self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id])) {
-                self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id] = [];
+            if (angular.isUndefined(self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id])) {
+                self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id] = [];
             }
 
-            var index = self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id].indexOf(grainScheduled);
-            self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id][index] = grainScheduled;
+            var index = self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id].indexOf(grainScheduled);
+            self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id][index] = grainScheduled;
 
             deferred.resolve(grainScheduled);
         }, 100, self, grainScheduled);
@@ -72,14 +71,14 @@ class GrainScheduledService implements IGrainScheduledService {
 
         //TODO remove when using real API
         setTimeout(function(self, grainScheduled) {
-            if (angular.isUndefined(self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id])) {
-                self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id] = [];
+            if (angular.isUndefined(self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id])) {
+                self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id] = [];
             }
 
-            var grainScheduledIndex = self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id].indexOf(grainScheduled);
+            var grainScheduledIndex = self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id].indexOf(grainScheduled);
 
             if (grainScheduledIndex !== -1) {
-                self._listMappedBySubjectScheludedId[grainScheduled.subject_copy_id].splice(grainScheduledIndex, 1);
+                self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id].splice(grainScheduledIndex, 1);
                 deferred.resolve(true);
             }
 
@@ -101,16 +100,16 @@ class GrainScheduledService implements IGrainScheduledService {
         return grainScheduledList;
     };
 
-    public getListBySubjectScheludedId = function(subjectScheduledId:number):ng.IPromise<IGrainScheduled[]> {
+    public getListBySubjectScheduledId = function(subjectScheduledId:number):ng.IPromise<IGrainScheduled[]> {
         var self = this,
             deferred = this._$q.defer();
 
         //TODO remove when using real API
         setTimeout(function(self, subjectScheduledId) {
-            if (angular.isUndefined(self._listMappedBySubjectScheludedId[subjectScheduledId])) {
-                self._listMappedBySubjectScheludedId[subjectScheduledId] = [];
+            if (angular.isUndefined(self._listMappedBySubjectScheduledId[subjectScheduledId])) {
+                self._listMappedBySubjectScheduledId[subjectScheduledId] = [];
             }
-            deferred.resolve(self._listMappedBySubjectScheludedId[subjectScheduledId]);
+            deferred.resolve(self._listMappedBySubjectScheduledId[subjectScheduledId]);
         }, 100, self, subjectScheduledId);
 
 

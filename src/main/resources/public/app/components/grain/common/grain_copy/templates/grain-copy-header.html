@@ -1,0 +1,33 @@
+<div class="row">
+
+    <!-- grain type icon -->
+    <div class="two cell">
+        <div data-ng-switch="grainType.id">
+            <div data-ng-switch-when="3">
+                <i data-ng-class="grainType.illustration" data-tooltip="[[ grainType.public_name ]]"></i>
+            </div>
+            <div data-ng-switch-default style="width:15px; height:15px;" data-tooltip="[[ grainType.public_name ]]">
+                <div data-ng-include="getGrainIllustrationURL(grainType.illustration)"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- grain copy score and title -->
+    <div class="height cell">
+        <h2>/&nbsp;[[ grainCopy.grain_copy_data.max_score ]]/&nbsp;&nbsp;[[ grainCopy.grain_copy_data.title ]]</h2>
+    </div>
+
+    <!-- grain copy toggle hint button -->
+    <a class="comment right-magnet cell"
+       data-ng-click="toggleGrainCopyHint()">
+        Aide à la réponse&nbsp;&nbsp;
+        <i data-ng-show="isAnswerHintFolded" data-tooltip="Déplier" class="down-open"></i>
+        <i data-ng-hide="isAnswerHintFolded" data-tooltip="Plier" class="up-open"></i>
+    </a>
+
+</div>
+
+<!-- grain copy hint -->
+<div class="row vertical-spacing" data-hide="isAnswerHintFolded" data-ng-if="!angular.isUndefined(grainCopy.grain_copy_data.answer_hint) && grainCopy.grain_copy_data.answer_hint.length > 0">
+    <p>[[ !angular.isUndefined(grainCopy.grain_copy_data.answer_hint) && grainCopy.grain_copy_data.answer_hint.length > 0 ? grainCopy.grain_copy_data.answer_hint : 'Aucune aide spécifiée.' ]]</p>
+</div>
