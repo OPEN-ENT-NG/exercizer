@@ -1,13 +1,13 @@
-<lightbox show="isDisplayed()" on-close="hide()">
+<lightbox show="isDisplayed" on-close="hide()">
     <h2>Supprimer</h2>
     <p>Voulez-vous vraiment supprimer ces élements ?</p>
-    <ul data-ng-show="list.folderList.length !=0">
-            <li data-ng-repeat="folderId in list.folderList">
+    <ul data-ng-show="folderList.length !=0">
+            <li data-ng-repeat="folderId in folderList">
                 [[getFolderLabelById(folderId)]]
             </li>
     </ul>
-    <ul data-ng-show="list.subjectList.length !=0">
-            <li data-ng-repeat="subjectId in list.subjectList">
+    <ul data-ng-show="subjectList.length !=0">
+            <li data-ng-repeat="subjectId in subjectList">
                 [[getSubjectTitleById(subjectId)]]
             </li>
     </ul>

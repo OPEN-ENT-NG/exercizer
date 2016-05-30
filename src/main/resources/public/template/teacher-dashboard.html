@@ -1,12 +1,4 @@
 <div data-ng-controller="TeacherDashboardController as teacherDashboardController">
-
-    <!-- LIGHT BOX -->
-    <lightbox-subject-properties
-            data-is-displayed="teacherDashboardController.openLightboxSubjectProperties"
-    ></lightbox-subject-properties>
-    <lightbox-edit-folder></lightbox-edit-folder>
-    <lightbox-schedule-subject></lightbox-schedule-subject>
-    <lightbox-delete-selection></lightbox-delete-selection>
     <!-- PAGE -->
     <div class="row">
         <h1>
@@ -22,9 +14,15 @@
                 Bibliothèque
             </header>
         </div>
-        <button class="right-magnet cell" data-ng-click="teacherDashboardController.displaySubjectProperties()">
+        <button class="right-magnet cell" data-ng-click="teacherDashboardController.createSubject()">
             Nouveau sujet
         </button>
     </div>
+    <!-- switch -->
     <teacher-dashboard-subject-list></teacher-dashboard-subject-list>
+    <!-- lightBox -->
+    <teacher-dashboard-toaster></teacher-dashboard-toaster>
+    <teacher-dashboard-remove-selected-folder-and-subject></teacher-dashboard-remove-selected-folder-and-subject>
+    <teacher-dashboard-folder-edit></teacher-dashboard-folder-edit>
+    <teacher-dashboard-subject-edit></teacher-dashboard-subject-edit>
 </div>

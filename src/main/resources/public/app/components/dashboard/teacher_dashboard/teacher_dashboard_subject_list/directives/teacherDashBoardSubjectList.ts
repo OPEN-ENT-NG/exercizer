@@ -1,8 +1,8 @@
 directives.push(
     {
         name: 'teacherDashboardSubjectList',
-        injections: ['SubjectService', 'FolderService', 'DragService',
-            (SubjectService, FolderService, DragService) => {
+        injections: ['SubjectService', 'FolderService', 'DragService','$location',
+            (SubjectService, FolderService, DragService, $location) => {
                 return {
                     restrict: 'E',
                     scope: {
@@ -51,7 +51,7 @@ directives.push(
                          */
 
                         scope.clickOnFolderTitle = function (folder) {
-                            FolderService.currentFolderId = folder.id;
+                            scope.currentFolderId = folder.id;
                         };
 
                         scope.clickOnSubjectTitle = function (subject) {
@@ -62,21 +62,20 @@ directives.push(
 
                         scope.selectFolder = function (folder) {
                             folder.selected = folder.selected ? true : false;
-                            // TODO
-                            //this.selectionService.toggleFolder(folder.id, folder.selected);
+                            scope.$emit("E_SELECT_FOLDER", folder);
                         };
                         scope.selectSubject = function (subject) {
                             subject.selected = subject.selected ? true : false;
-                            // TODO
-                            // this.selectionService.toggleSubject(subject.id, subject.selected);
+                            scope.$emit("E_SELECT_SUBJECT", subject);
+
                         };
 
                         scope.clickCreateFolder = function () {
-                            // this.lightboxService.showLightboxEditFolderForNewFolder();
+                            scope.$emit("E_CREATE_FOLDER");
                         };
 
                         scope.goToRoot = function () {
-                            FolderService.currentFolderId = null;
+                            scope.currentFolderId = null;
                         };
 
                         /**
@@ -84,14 +83,14 @@ directives.push(
                          */
 
                         scope.filterFolderByParentFolder = function (folder) {
-                            if (FolderService.currentFolderId) {
-                                return folder.parent_folder_id == FolderService.currentFolderId
+                            if (scope.currentFolderId) {
+                                return folder.parent_folder_id == scope.currentFolderId
                             }
                             return folder.parent_folder_id == null;
                         };
                         scope.filterSubjectByParentFolder = function (subject) {
-                            if (FolderService.currentFolderId) {
-                                return subject.folder_id == FolderService.currentFolderId
+                            if (scope.currentFolderId) {
+                                return subject.folder_id == scope.currentFolderId
                             }
                             return subject.folder_id == null;
                         };

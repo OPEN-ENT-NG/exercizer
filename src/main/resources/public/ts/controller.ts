@@ -88,6 +88,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST_');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT_');
+        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT_');
         module.constant('E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY', 'DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY_');
 
@@ -115,8 +116,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('GrainTypeService', GrainTypeService);
         module.service('SimpleAnswerService', SimpleAnswerService);
         module.service('DragService', DragService );
-        module.service('SelectionService', SelectionService );
-        module.service('LightboxService', LightboxService );
         module.service('FolderService', FolderService );
 
         /**

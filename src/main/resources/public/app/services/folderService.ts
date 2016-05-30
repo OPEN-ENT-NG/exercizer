@@ -91,13 +91,10 @@ class FolderService implements IFolderService {
 
 
     public updateFolder(folder:IFolder, callbackSuccess, callbackFail) {
-        var self = this;
         this._updateFolder(
             folder,
             function (data) {
                 // data is a folder;
-                self.addFolderToFolderList(data);
-                console.log(self._folderList);
                 if (callbackSuccess) {
                     callbackSuccess(data);
                 }
@@ -115,7 +112,6 @@ class FolderService implements IFolderService {
         this._deleteFolder(
             folder,
             function (data) {
-                console.log(data);
                 self.removeFolderToFolderList(data);
                 self.removeFolderToFolderListByParentFolderId(data);
                 if(callbackSuccess){
