@@ -61,7 +61,8 @@ class SubjectService implements ISubjectService {
 
     public remove = function (subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            subject = this._listMappedById[id];
 
         //TODO remove when using real API
         subject.is_deleted = true;
