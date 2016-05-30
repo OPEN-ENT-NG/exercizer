@@ -52,6 +52,10 @@ class TeacherDashboardController {
             self._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER", null);
         });
 
+        self._$scope.$on("E_SCHEDULE_SUBJECT", function (event, subject) {
+            self._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_SCHEDULE_SUBJECT", subject);
+        });
+
         self._$scope.$on("E_EDIT_FOLDER", function (event, folder) {
             self._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER", folder);
         });
