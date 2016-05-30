@@ -31,7 +31,6 @@ public class SubjectController extends ControllerHelper {
 
     @Post("/subject")
     @ApiDoc("Persist a new subject.")
-    @SecuredAction("exercizer.subject.persist")
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -48,7 +47,6 @@ public class SubjectController extends ControllerHelper {
 
     @Put("/subject")
     @ApiDoc("Update a subject.")
-    @SecuredAction("exercizer.subject.update")
     public void update(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -65,7 +63,6 @@ public class SubjectController extends ControllerHelper {
 
     @Delete("/subject")
     @ApiDoc("Delete (logically) a subject.")
-    @SecuredAction("exercizer.subject.remove")
     public void remove(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -82,7 +79,7 @@ public class SubjectController extends ControllerHelper {
 
     @Get("/subjects")
     @ApiDoc("Get subject list.")
-    @SecuredAction("exercizer.subject.list")
+    //@SecuredAction("exercizer.subject.list")
     public void list(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
