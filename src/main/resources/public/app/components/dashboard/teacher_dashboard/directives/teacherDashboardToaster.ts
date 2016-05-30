@@ -25,7 +25,6 @@ directives.push(
                             scope.subjectList = subjectList;
                             scope.folderList = folderList;
                         }
-
                     });
 
                     var listToasterItem = [
@@ -89,6 +88,7 @@ directives.push(
                             publicName : "Supprimer",
                             actionOnClick : function(){
                                 scope.$emit("E_REMOVE_SELECTED_FOLDER_SUBJECT");
+                                hide();
                             },
                             display : function(){
                                 return true;
