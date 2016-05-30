@@ -1,5 +1,0 @@
-Add edit directive:
-/exercizer/src/main/resources/public/app/templates/directives/grain/grainEdit.html
-
-Add perform directive
-/exercizer/src/main/resources/public/app/templates/directives/grain/grainPerform.html
