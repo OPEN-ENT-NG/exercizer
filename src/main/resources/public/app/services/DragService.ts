@@ -15,12 +15,10 @@ class DragService implements IDragService {
 
     private folderService;
     private subjectService;
-    private selectionService;
 
     static $inject = [
         'FolderService',
         'SubjectService',
-        'SelectionService'
     ];
 
 
@@ -32,7 +30,6 @@ class DragService implements IDragService {
     ) {
         this.folderService = FolderService;
         this.subjectService = SubjectService;
-        this.selectionService = SelectionService;
     }
 
 
@@ -95,7 +92,6 @@ class DragService implements IDragService {
     private actionAfterDragAndDrop(targetItem,originalItem){
 
         if(this.isSubject(originalItem)){
-            //this.selectionService.toggleSubject(originalItem.i d, false);
             if(this.isSubject(targetItem)){
                 throw "not possible";
             } else if(this.isFolder(targetItem)){
@@ -109,7 +105,6 @@ class DragService implements IDragService {
             }
         }
         if(this.isFolder(originalItem)){
-           // this.selectionService.toggleFolder(originalItem.id, false);
             if(this.isSubject(targetItem)){
                 throw "not possible";
             } else if(this.isFolder(targetItem)){

@@ -11,7 +11,6 @@ directives.push(
                     scope.isDisplayed = false;
 
                     scope.$on("E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT", function(event, subject) {
-                        console.log('subject',subject)
 
                         if(subject !== null){
                             scope.isNewSubject = false;

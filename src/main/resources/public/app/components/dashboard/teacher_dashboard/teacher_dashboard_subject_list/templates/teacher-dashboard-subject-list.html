@@ -11,7 +11,7 @@
                         Mes sujets
                     </a>
                     <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false" >
-                        <folder-item   item = "item" is-root = "true" parent-id="parentId"></folder-item>
+                        <folder-item   item = "item" is-root = "true" set-current-folder="setCurrentFolder(myParam)" parent-id="parentId"></folder-item>
                     </div>
                 </li>
             </ul>
@@ -86,7 +86,7 @@
                             <div class="bottom">
                                 <div class="content">
                                     <div class="cell">
-                                        <strong data-ng-click="clickOnSubjectTitle()">[[subject.title]]</strong>
+                                        <strong data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</strong>
                                         <br />
                                         <span>[[getSubjectModificationDate()]]</span>
                                         <br />

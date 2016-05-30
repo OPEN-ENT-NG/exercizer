@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'teacherDashboardSubjectList',
-        injections: ['SubjectService', 'FolderService', 'DragService','$location',
+        injections: ['SubjectService', 'FolderService', 'DragService', '$location',
             (SubjectService, FolderService, DragService, $location) => {
                 return {
                     restrict: 'E',
@@ -15,6 +15,7 @@ directives.push(
                          * INIT
                          */
                         scope.displayList = 'domino';
+                        scope.currentFolderId = null;
 
                         /**
                          * GETTER
@@ -41,7 +42,7 @@ directives.push(
                         };
 
                         scope.getSubjectModificationDate = function (subject) {
-                            if(subject){
+                            if (subject) {
                                 return subject.modified ? "Modifié le " + subject.modified : ""
                             }
                         };
@@ -51,12 +52,16 @@ directives.push(
                          */
 
                         scope.clickOnFolderTitle = function (folder) {
+                            scope.setCurrentFolder(folder);
+                        };
+
+                        scope.setCurrentFolder = function(folder){
                             scope.currentFolderId = folder.id;
                         };
 
                         scope.clickOnSubjectTitle = function (subject) {
                             if (subject.id) {
-                                this.$location.path('/teacher/subject/edit/' + subject.id);
+                                $location.path('/teacher/subject/edit/' + subject.id);
                             }
                         };
 

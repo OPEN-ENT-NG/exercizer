@@ -14,13 +14,14 @@ class FolderService implements IFolderService {
 
     static $inject = [
         'serverUrl',
-        '$http'
+        '$http',
+        'SubjectService',
     ];
 
     // inject
     private serverUrl:string;
     private $http:any;
-    private $scope; // Evil
+    private subjectService;
 
     // variables
     private _folderList:any;
@@ -29,7 +30,8 @@ class FolderService implements IFolderService {
     private _folderListByParentFolderId;
 
     constructor(serverUrl,
-                $http
+                $http,
+                SubjectService
                 ) {
         this.serverUrl = serverUrl;
         this.$http = $http;
@@ -37,6 +39,7 @@ class FolderService implements IFolderService {
         // init folder list as an object
         this._folderList = {};
         this._folderListByParentFolderId = {};
+        this.subjectService = SubjectService;
     }
 
 
@@ -57,13 +60,7 @@ class FolderService implements IFolderService {
     }
 
     public createObjectFolder():IFolder {
-        return {
-            id: null,
-            label: null,
-            created: null,
-            modified : null,
-            parent_folder_id: null
-        }
+        throw "DEPRECATED USE NEW FOLDER";
     }
 
     public createFolder(folder:IFolder, callbackSuccess, callBackFail) {
@@ -114,6 +111,8 @@ class FolderService implements IFolderService {
             function (data) {
                 self.removeFolderToFolderList(data);
                 self.removeFolderToFolderListByParentFolderId(data);
+                self.deleteChildrenFolder(data);
+                self.deleteChildrenSubject(data);
                 if(callbackSuccess){
                     callbackSuccess(data);
                 }
@@ -124,6 +123,19 @@ class FolderService implements IFolderService {
                 }
             }
         )
+    }
+
+    private deleteChildrenSubject(folder){
+        this.subjectService.deleteSubjectChildrenOfFolder(folder);
+    }
+
+    private deleteChildrenFolder(folder){
+        var self = this;
+        angular.forEach(this._folderList, function (value, key) {
+            if(value.parent_folder_id === folder.id){
+                self.deleteFolder(value, null, null);
+            }
+        });
     }
 
     private removeFolderToFolderList(folder:IFolder) {

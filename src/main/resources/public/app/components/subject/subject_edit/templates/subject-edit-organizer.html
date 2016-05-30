@@ -20,10 +20,14 @@
         </div>
 
         <div class="row" style="overflow-y:scroll; height: 200px; border:1px dotted lightgrey;">
-            <ul data-sortable-list class="thought-out-actions">
+            <!-- do not add data- before sortable-list and sortable element -->
+            <ul sortable-list class="thought-out-actions">
                 <li data-ng-repeat="grain in grainList | orderObjectBy:'order':false"
-                    data-sortable-element>
-                    [[ getGrainTypePublicName(grain.grain_type_id) ]]
+                    sortable-element
+                    data-ng-change="reOrder()"
+                    data-ng-model="grain.index"
+                >
+                    [[ getGrainName(grain) ]]
                 </li>
             </ul>
         </div>

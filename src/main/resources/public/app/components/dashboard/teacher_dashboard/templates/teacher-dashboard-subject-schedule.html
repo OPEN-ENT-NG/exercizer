@@ -1,0 +1,20 @@
+<lightbox data-show="isDisplayed" data-on-close="hide()">
+    <h1>Programme le sujet</h1>
+    <div class="row">
+        <form name="form">
+            <div class="row">
+                <div class="twelve cell">
+                    [[subject]]
+                </div>
+                <div class="twelve cell">
+                    <button data-ng-click="schedule()" class="right-magnet" data-ng-disabled="form.$invalid">
+                        Programmer
+                    </button>
+                    <button data-ng-click="hide()" class="right-magnet cancel">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</lightbox>

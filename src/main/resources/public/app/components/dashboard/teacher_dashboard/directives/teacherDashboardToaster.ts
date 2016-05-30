@@ -25,7 +25,6 @@ directives.push(
                             scope.subjectList = subjectList;
                             scope.folderList = folderList;
                         }
-
                     });
 
                     var listToasterItem = [
@@ -41,7 +40,6 @@ directives.push(
                                 if(scope.subjectList.length == 1){
                                     // subject is selected
                                     var subject = SubjectService.getById(scope.subjectList[0]);
-                                    console.log('subject',subject);
                                     scope.$emit("E_EDIT_SUBJECT", subject);
                                 }
                             },
@@ -61,7 +59,8 @@ directives.push(
                         {
                             publicName : "Programmer",
                             actionOnClick : function(){
-                                console.log('Not implemented');
+                                var subject = SubjectService.getById(scope.subjectList[0]);
+                                scope.$emit("E_SCHEDULE_SUBJECT", subject);
                             },
                             display : function(){
                                 return scope.subjectList.length == 1 && scope.folderList.length == 0
@@ -89,6 +88,7 @@ directives.push(
                             publicName : "Supprimer",
                             actionOnClick : function(){
                                 scope.$emit("E_REMOVE_SELECTED_FOLDER_SUBJECT");
+                                hide();
                             },
                             display : function(){
                                 return true;
