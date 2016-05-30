@@ -1,6 +1,7 @@
 interface IFolder {
     id:number;
     parent_folder_id:number;
+    owner:string;
     created:string;
     modified:string;
     label:string;
@@ -10,6 +11,7 @@ class Folder implements IFolder {
 
     private _id:number;
     private _parent_folder_id:number;
+    private _owner:string;
     private _created:string;
     private _modified:string;
     private _label:string;
@@ -18,6 +20,7 @@ class Folder implements IFolder {
     (
         id?:number,
         parent_folder_id?:number,
+        owner?:string,
         created?:string,
         modified?:string,
         label?:string
@@ -25,6 +28,7 @@ class Folder implements IFolder {
     {
         this._id = id;
         this._parent_folder_id = parent_folder_id;
+        this._owner = owner;
         this._created = created;
         this._modified = modified;
         this._label = label;
@@ -44,6 +48,14 @@ class Folder implements IFolder {
 
     set parent_folder_id(value:number) {
         this._parent_folder_id = value;
+    }
+
+    set owner(value:string) {
+        this._owner = value;
+    }
+
+    get created():string {
+        return this._created;
     }
 
     get created():string {

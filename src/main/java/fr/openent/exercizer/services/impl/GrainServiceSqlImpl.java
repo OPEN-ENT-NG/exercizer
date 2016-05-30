@@ -20,7 +20,7 @@ public class GrainServiceSqlImpl extends SqlCrudService implements IGrainService
 
     @Override
     public void persist(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.create(resource, user, handler);
+        sql.insert("exercizer.grain", resource, SqlResult.validUniqueResultHandler(handler));
     }
 
     @Override

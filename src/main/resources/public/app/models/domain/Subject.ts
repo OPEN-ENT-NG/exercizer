@@ -5,7 +5,6 @@ interface ISubject {
     owner:string;
     created:string;
     modified:string;
-    visibility:string;
     title:string;
     description:string;
     picture:string;

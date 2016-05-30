@@ -23,10 +23,6 @@ import java.util.List;
 
 public class SubjectController extends ControllerHelper {
 
-    private static final String SCHEMA_PERSIST_SUBJECT = "createSubject";
-    private static final String SCHEMA_UPDATE_SUBJECT = "updateSubject";
-    private static final String SCHEMA_REMOVE_SUBJECT = "removeSubject";
-
     private final ISubjectService subjectService;
 
     public SubjectController() {
@@ -40,7 +36,7 @@ public class SubjectController extends ControllerHelper {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, pathPrefix + SCHEMA_PERSIST_SUBJECT, new Handler<JsonObject>() {
+                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
                     @Override
                     public void handle(JsonObject resource) {
                        subjectService.persist(resource, user, notEmptyResponseHandler(request));
@@ -57,7 +53,7 @@ public class SubjectController extends ControllerHelper {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, pathPrefix + SCHEMA_UPDATE_SUBJECT, new Handler<JsonObject>() {
+                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
                     @Override
                     public void handle(JsonObject resource) {
                         subjectService.update(resource, user, notEmptyResponseHandler(request));
@@ -74,7 +70,7 @@ public class SubjectController extends ControllerHelper {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, pathPrefix + SCHEMA_REMOVE_SUBJECT, new Handler<JsonObject>() {
+                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
                     @Override
                     public void handle(JsonObject resource) {
                         subjectService.remove(resource, user, notEmptyResponseHandler(request));

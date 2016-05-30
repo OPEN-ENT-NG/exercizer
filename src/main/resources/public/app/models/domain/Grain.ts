@@ -2,7 +2,6 @@ interface IGrain {
     id:number;
     subject_id:number;
     grain_type_id:number;
-    original_grain_id:number;
     created:string;
     modified:string;
     order:number;
@@ -14,7 +13,6 @@ class Grain implements IGrain {
     private _id:number;
     private _subject_id:number;
     private _grain_type_id:number;
-    private _original_grain_id:number;
     private _created:string;
     private _modified:string;
     private _order:number;
@@ -25,7 +23,6 @@ class Grain implements IGrain {
         id?:number,
         subject_id?:number,
         grain_type_id?:number,
-        original_grain_id?:number,
         created?:string,
         modified?:string,
         order?:number,
@@ -35,7 +32,6 @@ class Grain implements IGrain {
         this._id = id;
         this._subject_id = subject_id;
         this._grain_type_id = grain_type_id;
-        this._original_grain_id = original_grain_id;
         this._created = created;
         this._modified = modified;
         this._order = order;
@@ -64,14 +60,6 @@ class Grain implements IGrain {
 
     set grain_type_id(value:number) {
         this._grain_type_id = value;
-    }
-
-    get original_grain_id():number {
-        return this._original_grain_id;
-    }
-
-    set original_grain_id(value:number) {
-        this._original_grain_id = value;
     }
 
     get created():string {
