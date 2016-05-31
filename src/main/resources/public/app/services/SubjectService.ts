@@ -43,7 +43,7 @@ class SubjectService implements ISubjectService {
                 data: subject
             };
 
-        this._$http(request).then(
+        /*this._$http(request).then(
             function(response) {
                 
                 console.log(response);
@@ -51,7 +51,15 @@ class SubjectService implements ISubjectService {
             function(err) {
                 notify.error(err);
             }
-        );
+        );*/
+
+        //TODO update when using real API
+        subject.id = Math.floor(Math.random() * (999999999 - 1)) + 1; // FIXME backend
+        subject.owner = this._userService.currentUserId; // FIXME backend
+        setTimeout(function(self, subject) {
+            self._listMappedById[subject.id] = subject;
+            deferred.resolve(subject);
+        }, 100, self, subject);
 
         return deferred.promise;
     };
