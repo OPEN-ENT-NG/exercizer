@@ -120,7 +120,7 @@ class GrainScheduledService implements IGrainScheduledService {
         var grainScheduled = new GrainScheduled();
 
         grainScheduled.grain_type_id = grain.grain_type_id;
-        grainScheduled.order = grain.order;
+        grainScheduled.order_by = grain.order_by;
         grainScheduled.grain_data = CloneObjectHelper.clone(grain.grain_data, true);
 
         return grainScheduled;

@@ -20,9 +20,12 @@ class SubjectService implements ISubjectService {
     private _currentSubjectId:number;
 
     constructor
-    (private _$q:ng.IQService,
-     private _$http:ng.IHttpService,
-     private _userService:IUserService) {
+    (
+        private _$q:ng.IQService,
+        private _$http:ng.IHttpService,
+        private _userService:IUserService
+    )
+    {
         this._$q = _$q;
         this._$http = _$http;
         this._userService = _userService;
@@ -33,15 +36,22 @@ class SubjectService implements ISubjectService {
 
     public persist = function (subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject',
+                data: subject
+            };
 
-        //TODO update when using real API
-        subject.id = Math.floor(Math.random() * (999999999 - 1)) + 1; // FIXME backend
-        subject.owner = this._userService.currentUserId; // FIXME backend
-        setTimeout(function (self, subject) {
-            self._listMappedById[subject.id] = subject;
-            deferred.resolve(subject);
-        }, 100, self, subject);
+        this._$http(request).then(
+            function(response) {
+                
+                console.log(response);
+            },
+            function(err) {
+                notify.error(err);
+            }
+        );
 
         return deferred.promise;
     };
@@ -61,21 +71,29 @@ class SubjectService implements ISubjectService {
 
     public remove = function (subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
-            deferred = this._$q.defer(),
-            subject = this._listMappedById[id];
+            deferred = this._$q.defer();
 
         //TODO remove when using real API
-        subject.is_deleted = true;
-        setTimeout(function (self, subject) {
-            delete self._listMappedById[subject.id];
-            deferred.resolve(subject);
-        }, 2000, self, subject);
+        setTimeout(function(self, subject) {
+            if (angular.isUndefined(self._listMappedById[subject.id])) {
+                self._listMappedById[subject.id] = [];
+            }
+
+            var grainIndex = self._listMappedById[subject.id].indexOf(subject);
+
+            if (grainIndex !== -1) {
+                self._listMappedById[subject.id].splice(grainIndex, 1);
+                deferred.resolve(true);
+            }
+
+            deferred.resolve(false);
+        }, 100, self, subject);
 
         return deferred.promise;
     };
 
     public deleteSubjectChildrenOfFolder = function (folder:IFolder) {
-         var self = this;
+        var self = this;
         angular.forEach(this._listMappedById, function (value, key) {
             if (value.folder_id === folder.id) {
                 self.remove(value);

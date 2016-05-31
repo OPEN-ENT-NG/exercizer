@@ -37,7 +37,7 @@ class GrainTypeService implements IGrainTypeService {
         grainTypeList.push(new GrainType(6, 'multiple_answers', 'Réponses multiples', 'multiple', true));
         grainTypeList.push(new GrainType(7, 'qcm', 'QCM', 'qcm', true));
         grainTypeList.push(new GrainType(8, 'association', 'Association', 'association', true));
-        grainTypeList.push(new GrainType(9, 'order', 'Mise en ordre', 'ordre', true));
+        grainTypeList.push(new GrainType(9, 'order_by', 'Mise en ordre', 'ordre', true));
         grainTypeList.push(new GrainType(10, 'text_to_fill', 'Texte à trous', 'textetrous', true));
         grainTypeList.push(new GrainType(11, 'area_select', 'Zone à remplir', 'zoneselect', true));
         

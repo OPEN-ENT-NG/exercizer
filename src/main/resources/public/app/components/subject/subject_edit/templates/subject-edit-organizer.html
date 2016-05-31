@@ -22,7 +22,7 @@
         <div class="row" style="overflow-y:scroll; height: 200px; border:1px dotted lightgrey;">
             <!-- do not add data- before sortable-list and sortable element -->
             <ul sortable-list class="thought-out-actions">
-                <li data-ng-repeat="grain in grainList | orderObjectBy:'order':false"
+                <li data-ng-repeat="grain in grainList | orderObjectBy:'order_by':false"
                     sortable-element
                     data-ng-change="reOrder()"
                     data-ng-model="grain.index"

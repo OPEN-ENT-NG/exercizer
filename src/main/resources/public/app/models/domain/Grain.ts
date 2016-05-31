@@ -4,7 +4,7 @@ interface IGrain {
     grain_type_id:number;
     created:string;
     modified:string;
-    order:number;
+    order_by:number;
     grain_data:IGrainData;
 }
 
@@ -15,7 +15,7 @@ class Grain implements IGrain {
     private _grain_type_id:number;
     private _created:string;
     private _modified:string;
-    private _order:number;
+    private _order_by:number;
     private _grain_data:IGrainData;
 
     constructor
@@ -25,7 +25,7 @@ class Grain implements IGrain {
         grain_type_id?:number,
         created?:string,
         modified?:string,
-        order?:number,
+        order_by?:number,
         grain_data?:IGrainData
     )
     {
@@ -34,7 +34,7 @@ class Grain implements IGrain {
         this._grain_type_id = grain_type_id;
         this._created = created;
         this._modified = modified;
-        this._order = order;
+        this._order_by = order_by;
         this._grain_data = grain_data;
     }
 
@@ -78,12 +78,12 @@ class Grain implements IGrain {
         this._modified = value;
     }
 
-    get order():number {
-        return this._order;
+    get order_by():number {
+        return this._order_by;
     }
 
-    set order(value:number) {
-        this._order = value;
+    set order_by(value:number) {
+        this._order_by = value;
     }
 
     get grain_data():IGrainData {

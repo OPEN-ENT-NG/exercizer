@@ -50,16 +50,12 @@ class Folder implements IFolder {
         this._parent_folder_id = value;
     }
 
+    get owner():string {
+        return this._owner;
+    }
+
     set owner(value:string) {
         this._owner = value;
-    }
-
-    get created():string {
-        return this._created;
-    }
-
-    get created():string {
-        return this._created;
     }
 
     set created(value:string) {

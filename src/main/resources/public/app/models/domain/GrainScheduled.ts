@@ -3,7 +3,7 @@ interface IGrainScheduled {
     subject_scheduled_id:number;
     grain_type_id:number;
     created:string;
-    order:number;
+    order_by:number;
     grain_data:IGrainData;
 }
 
@@ -13,7 +13,7 @@ class GrainScheduled implements IGrainScheduled {
     private _subject_scheduled_id:number;
     private _grain_type_id:number;
     private _created:string;
-    private _order:number;
+    private _order_by:number;
     private _grain_data:IGrainData;
 
     constructor
@@ -21,7 +21,7 @@ class GrainScheduled implements IGrainScheduled {
         id?:number,
         subject_scheduled_id?:number,
         grain_type_id?:number,
-        order?:number,
+        order_by?:number,
         created?:string,
         grain_data?:IGrainData
     )
@@ -30,7 +30,7 @@ class GrainScheduled implements IGrainScheduled {
         this._subject_scheduled_id = subject_scheduled_id;
         this._grain_type_id = grain_type_id;
         this._created = created;
-        this._order = order;
+        this._order_by = order_by;
         this._grain_data = grain_data;
     }
 
@@ -66,12 +66,12 @@ class GrainScheduled implements IGrainScheduled {
         this._created = value;
     }
 
-    get order():number {
-        return this._order;
+    get order_by():number {
+        return this._order_by;
     }
 
-    set order(value:number) {
-        this._order = value;
+    set order_by(value:number) {
+        this._order_by = value;
     }
 
     get grain_data():IGrainData {

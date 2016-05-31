@@ -19,7 +19,7 @@ CREATE TABLE exercizer.members (
 );
 
 CREATE TABLE exercizer.folder(
-	id BIGSERIAL PRIMARY KEY,
+	id BIGSERIAL NOT NULL PRIMARY KEY,
 	parent_folder_id BIGINT NULL,
 	owner VARCHAR(36) NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -28,7 +28,7 @@ CREATE TABLE exercizer.folder(
 );
 
 CREATE TABLE exercizer.subject(
-	id BIGSERIAL PRIMARY KEY,
+	id BIGSERIAL NOT NULL PRIMARY KEY,
     folder_id BIGINT NULL,
     original_subject_id BIGINT NULL,
     owner VARCHAR(36) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE exercizer.scripts (
 );
 
 CREATE TABLE exercizer.grain_type(
-	id BIGSERIAL PRIMARY KEY,
+	id BIGSERIAL NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     public_name VARCHAR(255) NOT NULL,
     illustration VARCHAR(255) NOT NULL,
@@ -73,14 +73,14 @@ CREATE TABLE exercizer.grain(
 	grain_type_id BIGINT NOT NULL,
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	modified TIMESTAMP NOT NULL DEFAULT NOW(),
-	order BIGINT NOT NULL,
+	order_by INTEGER NOT NULL,
 	grain_data JSON NULL,
 	CONSTRAINT grain_subject_fk FOREIGN KEY(subject_id) REFERENCES exercizer.subject(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT grain_grain_type_fk FOREIGN KEY(grain_type_id) REFERENCES exercizer.grain_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT grain_grain_type_fk FOREIGN KEY(grain_type_id) REFERENCES exercizer.grain_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE exercizer.subject_scheduled(
-	id BIGSERIAL PRIMARY KEY,
+	id BIGSERIAL NOT NULL PRIMARY KEY,
 	subject_id BIGINT NOT NULL,
     owner VARCHAR(36) NOT NULL,
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -102,10 +102,10 @@ CREATE TABLE exercizer.grain_scheduled(
 	subject_scheduled_id BIGINT NOT NULL,
 	grain_type_id BIGINT NOT NULL,
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
-	order BIGINT NOT NULL,
+	order_by INTEGER NOT NULL,
 	grain_data JSON NULL,
 	CONSTRAINT grain_scheduled_subject_fk FOREIGN KEY(subject_scheduled_id) REFERENCES exercizer.subject_scheduled(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT grain_scheduled_grain_type_fk FOREIGN KEY(grain_type_id) REFERENCES exercizer.grain_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT grain_scheduled_grain_type_fk FOREIGN KEY(grain_type_id) REFERENCES exercizer.grain_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE exercizer.subject_copy(
@@ -116,11 +116,11 @@ CREATE TABLE exercizer.subject_copy(
 	modified TIMESTAMP NOT NULL DEFAULT NOW(),
 	final_score FLOAT NULL,
 	calculated_score FLOAT NULL,
-	comment TEXT,
+	comment TEXT NULL,
 	has_been_started BOOL NOT NULL DEFAULT FALSE,
 	submitted_date TIMESTAMP NULL,
-	is_correction_on_going NOT NULL DEFAULT FALSE,
-	is_corrected NOT NULL DEFAULT FALSE,
+	is_correction_on_going BOOL NOT NULL DEFAULT FALSE,
+	is_corrected BOOL NOT NULL DEFAULT FALSE,
 	is_deleted BOOL NOT NULL DEFAULT FALSE,
 	CONSTRAINT subject_copy_subject_scheduled_fk FOREIGN KEY(subject_scheduled_id) REFERENCES exercizer.subject_scheduled(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT subject_copy_owner_fk FOREIGN KEY(owner) REFERENCES exercizer.users(id) ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -133,10 +133,10 @@ CREATE TABLE exercizer.grain_copy(
 	grain_scheduled_id BIGINT NOT NULL,
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	modified TIMESTAMP NOT NULL DEFAULT NOW(),
-	order BIGINT NOT NULL,
+	order_by INTEGER NOT NULL,
 	final_score FLOAT NULL,
 	calculated_score FLOAT NULL,
-	comment TEXT,
+	comment TEXT NULL,
     grain_copy_data JSON NULL,
 	CONSTRAINT grain_copy_subject_copy_fk FOREIGN KEY(subject_copy_id) REFERENCES exercizer.subject_copy(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT grain_copy_grain_scheduled_fk FOREIGN KEY(grain_scheduled_id) REFERENCES exercizer.grain_scheduled(id) ON UPDATE NO ACTION ON DELETE NO ACTION,

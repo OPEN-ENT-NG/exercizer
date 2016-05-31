@@ -5,7 +5,7 @@ interface IGrainCopy {
     grain_scheduled_id:number;
     created:string;
     modified:string;
-    order:number;
+    order_by:number;
     final_score:number;
     calculated_score:number;
     comment:string;
@@ -20,7 +20,7 @@ class GrainCopy implements IGrainCopy {
     private _grain_scheduled_id:number;
     private _created:string;
     private _modified:string;
-    private _order:number;
+    private _order_by:number;
     private _final_score:number;
     private _calculated_score:number;
     private _comment:string;
@@ -35,7 +35,7 @@ class GrainCopy implements IGrainCopy {
         grain_scheduled_id?:number, 
         created?:string, 
         modified?:string, 
-        order?:number, 
+        order_by?:number, 
         final_score?:number, 
         calculated_score?:number, 
         comment?:string, 
@@ -48,7 +48,7 @@ class GrainCopy implements IGrainCopy {
         this._grain_scheduled_id = grain_scheduled_id;
         this._created = created;
         this._modified = modified;
-        this._order = order;
+        this._order_by = order_by;
         this._final_score = final_score;
         this._calculated_score = calculated_score;
         this._comment = comment;
@@ -103,12 +103,12 @@ class GrainCopy implements IGrainCopy {
         this._modified = value;
     }
 
-    get order():number {
-        return this._order;
+    get order_by():number {
+        return this._order_by;
     }
 
-    set order(value:number) {
-        this._order = value;
+    set order_by(value:number) {
+        this._order_by = value;
     }
 
     get final_score():number {

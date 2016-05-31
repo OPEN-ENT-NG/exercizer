@@ -10,7 +10,7 @@
                         [[subject.title]]
                     </a>
                     <ul data-ng-show="display.subjectById[subject.id]">
-                        <li data-ng-repeat="item in itemListBySubjectId(subject.id)  | orderObjectBy:'order':false">
+                        <li data-ng-repeat="item in itemListBySubjectId(subject.id)  | orderObjectBy:'order_by':false">
                             <a >
                                 [[getItemLabel(item)]]
                             </a>
