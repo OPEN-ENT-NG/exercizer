@@ -5,6 +5,7 @@ interface IFolderService {
     createObjectFolder() : IFolder;
     setParentFolderId(originFolderId, targetFolderId);
     getListOfSubFolderByFolderId(folderId);
+    duplicateFolder(folder: IFolder, callbackSuccess, callBackFail)
     folderById(id) : IFolder;
     folderList : IFolder[];
     currentFolderId;
@@ -77,6 +78,18 @@ class FolderService implements IFolderService {
                 console.error(err);
             }
         );
+    }
+
+    public duplicateFolder(folder: IFolder, callbackSuccess, callBackFail){
+        var newFolder = new Folder();
+        this.createFolder(newFolder,
+        function(data){
+            data.label = folder.label + "_(copie)";
+            if(callbackSuccess){
+                callbackSuccess(data);
+            }
+
+        }, null);
     }
 
     private addFolderToFolderList(folder:IFolder) {
@@ -191,6 +204,9 @@ class FolderService implements IFolderService {
                     originFolder.parent_folder_id = targetFolderId;
                     // after change parent folder id
                     //  add folder to new _folderListByParentFolderId
+                    if(!this._folderListByParentFolderId[targetFolderId]){
+                        this._folderListByParentFolderId[targetFolderId] = [];
+                    }
                     this._folderListByParentFolderId[targetFolderId][originFolderId] = originFolder;
                 }
             }
