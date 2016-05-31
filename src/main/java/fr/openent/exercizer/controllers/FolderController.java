@@ -55,7 +55,7 @@ public class FolderController extends ControllerHelper {
     }
 
     @Delete("/folder")
-    @ApiDoc("Delete (logically) a folder.")
+    @ApiDoc("Delete a folder.")
     public void remove(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override

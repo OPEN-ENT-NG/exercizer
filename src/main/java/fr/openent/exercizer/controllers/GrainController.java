@@ -59,7 +59,7 @@ public class GrainController extends ControllerHelper {
     }
 
     @Delete("/grain")
-    @ApiDoc("Delete (logically) a grain.")
+    @ApiDoc("Delete a grain.")
     public void remove(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
