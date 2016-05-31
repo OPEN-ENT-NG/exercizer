@@ -1,33 +1,79 @@
 routes.define(function($routeProvider){
     $routeProvider
-        .when('/teacher/home', {
-            action: 'teacherHome'
+        .when('/dashboard', {
+            action: 'dashboard'
         })
-        .when('/teacher/subject/edit/:subjectId/', {
+        .when('/subject/edit/:subjectId/', {
             action: 'editSubject'
         })
+        .when('/subject/copy/perform/:subjectCopyId', {
+            action: 'performSubjectCopy'
+        })
+        .when('/subject/copy/view/:subjectCopyId', {
+            action: 'viewSubjectCopy'
+        })
         .otherwise({
-            redirectTo: '/teacher/home'
+            redirectTo: '/dashboard'
         });
 });
 
 var directives = [];
-var controllers = [];
-var services = [];
 
 function ExercizerController($scope, $rootScope, model, template, route, date, $route) {
-    
-    route({
-        teacherHome: function() {
-        // model.me foreach jusqu'à trouver teacher / student
-            template.open('main', 'teacher-dashboard');
-        },
-        editSubject: function() {
-            template.open('main', 'edit-subject');
 
+    const teacherProfile = 'Teacher';
+    const studentProfile = 'Student';
+    var _userProfile;
+    
+    angular.forEach(model.me.profiles, function(profile) {
+        if (profile === teacherProfile) {
+            _userProfile = teacherProfile;
+            return;
+        }
+
+        if (profile === studentProfile) {
+            _userProfile = studentProfile;
+            return;
         }
     });
-    
+
+    route({
+        dashboard: function() {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'teacher-dashboard');
+            } else if (_userProfile === studentProfile) {
+                template.open('main', 'student-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        editSubject: function() {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'edit-subject');
+            } else if (_userProfile === studentProfile) {
+                template.open('main', 'student-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        performSubjectCopy: function() {
+            if (_userProfile === studentProfile) {
+                template.open('main', 'perform-subject-copy');
+            } else if (_userProfile === teacherProfile) {
+                template.open('main', 'teacher-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        viewSubjectCopy: function() {
+            if (_userProfile === teacherProfile || _userProfile === studentProfile) {
+                template.open('main', 'view-subject');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        }
+    });
+
     $route.reload()
 
 }
@@ -56,13 +102,13 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Constants
          */
-         // FIXME
+        // FIXME
         module.constant("serverUrl", "http://foo.com");
 
         /**
          * Subject edit events
          */
-        
+
         // edit subject controller - received events
         module.constant('E_GRAIN_LIST_UPDATED', 'GRAIN_LIST_UPDATED_');
         module.constant('E_ADD_GRAIN', 'ADD_GRAIN_');
@@ -102,7 +148,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_CURRENT_GRAIN_COPY_CHANGED', 'CURRENT_GRAIN_COPY_CHANGED_');
         // perform subject copy controller - broadcast events
         module.constant('E_CURRENT_GRAIN_COPY_CHANGE', 'CURRENT_GRAIN_COPY_CHANGER_');
-       
+
         /**
          * Services
          */
@@ -132,7 +178,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         directives.forEach((item) => {
             module.directive(item.name, item.injections);
         });
-
     }
 };
 

@@ -131,10 +131,28 @@ class EditSubjectController {
     private _eventsHandler = function(self) {
 
         function _handleGrainListUpdated() {
+
             self._grainService.getListBySubjectId(self._subject.id).then(
                 function (grainList) {
-                    self._$scope.$broadcast(self._E_REFRESH_GRAIN_LIST, grainList);
-                    self._$scope.$broadcast(self._E_TOGGLE_SUBJECT_EDIT_TOASTER, self._selectedGrainList.length);
+                    var maxScore = 0;
+                    angular.forEach(grainList, function(grain:IGrain) {
+                        if (grain.grain_type_id > 3 && !angular.isUndefined(grain.grain_data.max_score)) {
+                            maxScore += grain.grain_data.max_score;
+                        }
+                    });
+                    
+                    self._subject.max_score = maxScore;
+
+                    self._subjectService.update(self._subject).then(
+                        function(subject:ISubject) {
+                            self._subject = subject;
+                            self._$scope.$broadcast(self._E_REFRESH_GRAIN_LIST, grainList);
+                            self._$scope.$broadcast(self._E_TOGGLE_SUBJECT_EDIT_TOASTER, self._selectedGrainList.length);
+                        },
+                        function(err) {
+                            notify.error(err);
+                        }
+                    );
                 },
                 function (err) {
                     notify.error(err);
@@ -311,35 +329,7 @@ class EditSubjectController {
         self._$scope.$on(self._E_CONFIRM_REMOVE_GRAIN_DOCUMENT, function(event, grain:IGrain) {
             _handleUpdateGrain(grain);
         });
-
-        function _handlePreviewPerformSubject() {
-            var subjectScheduled,
-                grainScheduledList,
-                subjectCopy,
-                grainCopyList;
-
-            self._subjectScheduledService.createFromSubject(self._subject).then(
-                function(subjectScheduledGrainScheduledList) {
-                    subjectScheduled = subjectScheduledGrainScheduledList.subjectScheduled;
-                    grainScheduledList = subjectScheduledGrainScheduledList.grainScheduledList;
-
-                    self._subjectCopyService.createFromSubjectScheduled(subjectScheduled).then(
-                        function(subjectCopyGrainCopyList) {
-                            subjectCopy = subjectCopyGrainCopyList.subjectCopy;
-                            grainCopyList = subjectCopyGrainCopyList.grainCopyList;
-                            self._$scope.$broadcast(self._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY, subjectScheduled, grainScheduledList, subjectCopy, grainCopyList);
-                        },
-                        function(err) {
-                            notify.error(err);
-                        }
-                    )
-                },
-                function(err) {
-                    notify.error(err);
-                }
-            );
-        }
-
+        
         self._$scope.$on(self._E_PREVIEW_PERFORM_SUBJECT_COPY, function() {
             self._$scope.$broadcast(self._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY);
 

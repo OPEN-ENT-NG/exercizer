@@ -66,7 +66,13 @@ class SubjectService implements ISubjectService {
 
     public update = function (subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            request = {
+                method: 'PUT',
+                url: 'exercizer/subject',
+                data: subject
+            };
+        
         console.log('delete subject');
         //TODO remove when using real API
         setTimeout(function (self, subject) {
@@ -79,7 +85,12 @@ class SubjectService implements ISubjectService {
 
     public remove = function (subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            request = {
+                method: 'DELETE',
+                url: 'exercizer/subject',
+                data: subject
+            };
 
         //TODO remove when using real API
         setTimeout(function(self, subject) {
