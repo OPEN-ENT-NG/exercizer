@@ -1,17 +1,21 @@
 interface IOrderCustomData {
     correct_answer_list:any[];
+    no_error_allowed : boolean;
 }
 
 class OrderCustomData implements IOrderCustomData {
 
     private _correct_answer_list:any[];
+    private _no_error_allowed : boolean;
 
     constructor
     (
-        correct_answer_list?:any[]
+        correct_answer_list?:any[],
+        no_error_allowed? : boolean
     )
     {
         this._correct_answer_list = correct_answer_list || [];
+        this._no_error_allowed = no_error_allowed || false;
     }
 
     get correct_answer_list():any[] {
@@ -20,5 +24,14 @@ class OrderCustomData implements IOrderCustomData {
 
     set correct_answer_list(value:any[]) {
         this._correct_answer_list = value;
+    }
+
+
+    get no_error_allowed():boolean {
+        return this._no_error_allowed;
+    }
+
+    set no_error_allowed(value:boolean) {
+        this._no_error_allowed = value;
     }
 }
