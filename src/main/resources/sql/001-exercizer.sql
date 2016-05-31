@@ -32,16 +32,16 @@ CREATE TABLE exercizer.subject(
     folder_id BIGINT NULL,
     original_subject_id BIGINT NULL,
     owner VARCHAR(36) NOT NULL,
-	created TIMESTAMP NOT NULL DEFAULT NOW(),
-	modified TIMESTAMP NOT NULL DEFAULT NOW(),
+	created TIMESTAMP DEFAULT NOW(),
+	modified TIMESTAMP DEFAULT NOW(),
 	title VARCHAR(255) NOT NULL,
 	description TEXT NULL,
 	picture VARCHAR(255) NULL,
 	max_score FLOAT NULL,
-	is_library_subject BOOL NOT NULL DEFAULT FALSE,
-	is_deleted BOOL NOT NULL DEFAULT FALSE,
+	is_library_subject BOOL DEFAULT FALSE,
+	is_deleted BOOL DEFAULT FALSE,
 	CONSTRAINT subject_owner_fk FOREIGN KEY(owner) REFERENCES exercizer.users(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT subject_folder_fk FOREIGN KEY (id) REFERENCES exercizer.folder(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT subject_folder_fk FOREIGN KEY (folder_id) REFERENCES exercizer.folder(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT subject_original_subject_fk FOREIGN KEY (original_subject_id) REFERENCES exercizer.subject(id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 

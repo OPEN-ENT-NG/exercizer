@@ -12,7 +12,7 @@ import org.vertx.java.core.json.JsonObject;
 
 import java.util.List;
 
-public class GrainServiceSqlImpl extends SqlCrudService implements IGrainService {
+public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IGrainService {
 
     public GrainServiceSqlImpl() {
         super("exercizer", "grain");
@@ -20,17 +20,17 @@ public class GrainServiceSqlImpl extends SqlCrudService implements IGrainService
 
     @Override
     public void persist(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        sql.insert("exercizer.grain", resource, SqlResult.validUniqueResultHandler(handler));
+        super.persist(resource, user, handler);
     }
 
     @Override
     public void update(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.update(resource.getString("id"), resource, user, handler);
+        super.update(resource, user, handler);
     }
 
     @Override
     public void remove(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.delete(resource.getString("id"), user, handler);
+        super.delete(resource, user, handler);
     }
 
     @Override
@@ -45,7 +45,8 @@ public class GrainServiceSqlImpl extends SqlCrudService implements IGrainService
                 .append(" JOIN exercizer.subject s ON g.subject_id = s.id")
                 .append(" LEFT JOIN exercizer.subject_shares AS ss ON s.id = ss.resource_id")
                 .append(" LEFT JOIN exercizer.members AS m ON (ss.member_id = m.id AND m.group_id IS NOT NULL)")
-                .append(" WHERE s.id = " + resource.getString("id"));
+                .append(" WHERE s.id = ")
+                .append(resource.getString("id"));
 
         query.append(" AND ss.member_id IN ").append(Sql.listPrepared(groupsAndUserIds.toArray()));
         for (String groupOrUser : groupsAndUserIds) {

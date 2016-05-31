@@ -6,10 +6,10 @@ routes.define(function($routeProvider){
         .when('/subject/edit/:subjectId/', {
             action: 'editSubject'
         })
-        .when('/subject/copy/perform/:subjectCopyId', {
+        .when('/subject/copy/perform/:subjectCopyId/', {
             action: 'performSubjectCopy'
         })
-        .when('/subject/copy/view/:subjectCopyId', {
+        .when('/subject/copy/view/:subjectCopyId/', {
             action: 'viewSubjectCopy'
         })
         .otherwise({
@@ -23,61 +23,46 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 
     const teacherProfile = 'Teacher';
     const studentProfile = 'Student';
+    var _userProfile = teacherProfile; // FIXME model.me.profiles
 
-    setTimeout(function() {
-        var _userProfile;
-
-        angular.forEach(model.me.profiles, function(profile) {
-            if (profile === teacherProfile) {
-                _userProfile = teacherProfile;
-                return;
+    route({
+        dashboard: function () {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'teacher-dashboard');
+            } else if (_userProfile === studentProfile) {
+                template.open('main', 'student-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
             }
-
-            if (profile === studentProfile) {
-                _userProfile = studentProfile;
-                return;
+        },
+        editSubject: function () {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'edit-subject');
+            } else if (_userProfile === studentProfile) {
+                template.open('main', 'student-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
             }
-        });
-
-        route({
-            dashboard: function () {
-                if (_userProfile === teacherProfile) {
-                    template.open('main', 'teacher-dashboard');
-                } else if (_userProfile === studentProfile) {
-                    template.open('main', 'student-dashboard');
-                } else {
-                    template.open('main', '401-exercizer');
-                }
-            },
-            editSubject: function () {
-                if (_userProfile === teacherProfile) {
-                    template.open('main', 'edit-subject');
-                } else if (_userProfile === studentProfile) {
-                    template.open('main', 'student-dashboard');
-                } else {
-                    template.open('main', '401-exercizer');
-                }
-            },
-            performSubjectCopy: function () {
-                if (_userProfile === studentProfile) {
-                    template.open('main', 'perform-subject-copy');
-                } else if (_userProfile === teacherProfile) {
-                    template.open('main', 'teacher-dashboard');
-                } else {
-                    template.open('main', '401-exercizer');
-                }
-            },
-            viewSubjectCopy: function () {
-                if (_userProfile === teacherProfile || _userProfile === studentProfile) {
-                    template.open('main', 'view-subject');
-                } else {
-                    template.open('main', '401-exercizer');
-                }
+        },
+        performSubjectCopy: function () {
+            if (_userProfile === studentProfile) {
+                template.open('main', 'perform-subject-copy');
+            } else if (_userProfile === teacherProfile) {
+                template.open('main', 'teacher-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
             }
-        });
+        },
+        viewSubjectCopy: function () {
+            if (_userProfile === teacherProfile || _userProfile === studentProfile) {
+                template.open('main', 'view-subject');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        }
+    });
 
-        $route.reload();
-    }, 500);
+    $route.reload();
 }
 
 (window as any).AngularExtensions = {

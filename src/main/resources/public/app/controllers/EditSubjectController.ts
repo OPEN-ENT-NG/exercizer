@@ -89,7 +89,7 @@ class EditSubjectController {
         this._grainTypeService = _grainTypeService;
 
         if (angular.isUndefined(this._subjectService.currentSubjectId)) {
-            this._$location.path('/teacher/home');
+            this._$location.path('/dashboard');
         } else {
 
             this._subject = this._subjectService.getById(this._subjectService.currentSubjectId);

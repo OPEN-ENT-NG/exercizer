@@ -17,10 +17,13 @@ class TeacherDashboardController {
         'SubjectService'
     ];
 
-    constructor($location,
-                $scope,
-                FolderService,
-                SubjectService:ISubjectService) {
+    constructor(
+        $location,
+        $scope,
+        FolderService,
+        SubjectService:ISubjectService
+    )
+    {
         var self = this;
         this._$location = $location;
         this._$scope = $scope;
@@ -29,7 +32,6 @@ class TeacherDashboardController {
         this._selectedSubjectList = [];
         this._selectedFolderList = [];
         this._eventsHandler(self);
-        this.feedExercizer();
     }
 
     public createSubject = function(){
@@ -37,18 +39,39 @@ class TeacherDashboardController {
     };
 
     private _eventsHandler = function (self) {
+        
+        function _toggleItem(id, isSelected, list) {
+            var index = list.indexOf(id);
+            if (isSelected) {
+                if (index === -1) {
+                    // the item is not in the list
+                    list.push(id);
+                } else {
+                    // the item is in the list
+                    console.error('try to add an item in the list but the item is already in the list');
+                }
+            } else {
+                if (index === -1) {
+                    // the item is not in the list
+                    console.error('try to remove an item from the list but item missing');
+                } else{
+                    // the item is not in the list
+                    list.splice(index, 1);
+                }
+            }
+        }
 
         self._$scope.$on('E_SELECT_FOLDER', function (event, folder) {
-            self._toggleItem(folder.id, folder.selected, self._selectedFolderList);
+            _toggleItem(folder.id, folder.selected, self._selectedFolderList);
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_TOASTER',  self._selectedSubjectList, self._selectedFolderList);
         });
 
         self._$scope.$on('E_SELECT_SUBJECT', function (event, subject) {
-            self._toggleItem(subject.id, subject.selected, self._selectedSubjectList);
+            _toggleItem(subject.id, subject.selected, self._selectedSubjectList);
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_TOASTER',  self._selectedSubjectList, self._selectedFolderList);
         });
 
-        self._$scope.$on('E_CREATE_FOLDER', function (event) {
+        self._$scope.$on('E_CREATE_FOLDER', function () {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER', null);
         });
 
@@ -64,18 +87,18 @@ class TeacherDashboardController {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT', subject);
         });
 
-        self._$scope.$on('E_REMOVE_SELECTED_FOLDER_SUBJECT', function (event) {
+        self._$scope.$on('E_REMOVE_SELECTED_FOLDER_SUBJECT', function () {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_REMOVE_SELECTED_FOLDER_SUBJECT', self._selectedSubjectList, self._selectedFolderList);
         });
 
-        self._$scope.$on('E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT', function (event) {
+        self._$scope.$on('E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT', function () {
             // delete folder
-            angular.forEach(self._selectedFolderList, function (id, key) {
+            angular.forEach(self._selectedFolderList, function (id) {
                 self._folderService.deleteFolder(self._folderService.folderById(id), null, null)
             });
             self._selectedFolderList = [];
             // delete subject
-            angular.forEach(self._selectedSubjectList, function (id, key) {
+            angular.forEach(self._selectedSubjectList, function (id) {
                 var promise = self._subjectService.remove(self._subjectService.getById(id))
                 promise.then(function(data){
                 })
@@ -85,29 +108,7 @@ class TeacherDashboardController {
         });
     };
 
-    private _toggleItem(id, isSelected, list) {
-        var index = list.indexOf(id);
-        if (isSelected) {
-            if (index === -1) {
-                // the item is not in the list
-                list.push(id);
-            } else {
-                // the item is in the list
-                console.error('try to add an item in the list but the item is already in the list');
-            }
-        } else {
-            if (index === -1) {
-                // the item is not in the list
-                console.error('try to remove an item from the list but item missing');
-            } else{
-                // the item is not in the list
-                list.splice(index, 1);
-            }
-        }
-    }
-
     private feedExercizer() {
-
         var self = this;
         // create folder
         var folderA = new Folder(null, null, null, null, 'A Folder');
@@ -117,7 +118,7 @@ class TeacherDashboardController {
         this._folderService.createFolder(folderB, null, null);
         this._folderService.createFolder(folderC, null, null);
         // create subject
-        var subject = new Subject(null, null, null, null, null, null, null, 'My Subject', 'My description', null, null, null, null);
+        var subject = new Subject(null, null, null, null, null, null, 'My Subject', 'My description', null, null, null, null);
         var promise = this._subjectService.persist(subject);
     }
 }

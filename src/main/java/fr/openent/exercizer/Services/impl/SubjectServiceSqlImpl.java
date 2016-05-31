@@ -2,7 +2,6 @@ package fr.openent.exercizer.services.impl;
 
 import java.util.List;
 
-import org.entcore.common.service.impl.SqlCrudService;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
@@ -12,25 +11,25 @@ import org.vertx.java.core.json.JsonObject;
 import fr.wseduc.webutils.Either;
 import fr.openent.exercizer.services.ISubjectService;
 
-public class SubjectServiceSqlImpl extends SqlCrudService implements ISubjectService {
+public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements ISubjectService {
 
     public SubjectServiceSqlImpl() {
-        super("exercizer", "subject");
+        super("exercizer", "subject", "subject_shares");
     }
 
     @Override
     public void persist(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.create(resource, user, handler);
+        super.persist(resource, user, handler);
     }
 
     @Override
     public void update(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.update(resource.getString("id"), resource, user, handler);
+        super.update(resource, user, handler);
     }
 
     @Override
     public void remove(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.update(resource.getString("id"), resource, user, handler);
+        super.remove(resource, user, handler);
     }
 
     @Override

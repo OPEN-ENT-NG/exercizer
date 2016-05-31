@@ -1,16 +1,14 @@
 <lightbox data-show="isDisplayed" data-on-close="hide()">
-    <h1 data-ng-show="state == 'create'">Nouveau dossier</h1>
-    <h1 data-ng-show="state == 'edit'">Editer le subject</h1>
+    <h1>Exercizer - [[ state === 'create' ? 'créer' : 'éditer' ]] un dossier</h1>
     <div class="row">
         <form name="form">
             <div class="row">
                 <div class="twelve cell">
-                    <input type="text" data-ng-model="currentFolder.label" class="twelve cell" placeholder="Nom du dossier"
-                           required>
+                    <input type="text" data-ng-model="currentFolder.label" class="twelve cell" placeholder="Nom du dossier">
                 </div>
-                <div class="twelve cell">
-                    <button data-ng-click="save()" class="right-magnet" data-ng-disabled="form.$invalid">
-                        Sauvegarder
+                <div class="twelve cell horizontal-spacing vertical-spacing">
+                    <button data-ng-click="save()" class="right-magnet">
+                        [[ state === 'create' ? 'Créer' : 'Sauvegarder' ]]
                     </button>
                     <button data-ng-click="hide()" class="right-magnet cancel">
                         Annuler

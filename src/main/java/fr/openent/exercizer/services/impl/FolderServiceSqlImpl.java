@@ -9,7 +9,7 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-public class FolderServiceSqlImpl extends SqlCrudService implements IFolderService {
+public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IFolderService {
 
     public FolderServiceSqlImpl() {
         super("exercizer", "folder");
@@ -17,17 +17,17 @@ public class FolderServiceSqlImpl extends SqlCrudService implements IFolderServi
 
     @Override
     public void persist(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.create(resource, user, handler);
+        super.persist(resource, user, handler);
     }
 
     @Override
     public void update(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.update(resource.getString("id"), resource, user, handler);
+        super.update(resource, user, handler);
     }
 
     @Override
     public void remove(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.delete(resource.getString("id"), user, handler);
+        super.delete(resource, user, handler);
     }
 
     @Override

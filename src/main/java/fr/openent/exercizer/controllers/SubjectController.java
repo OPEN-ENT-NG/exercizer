@@ -4,6 +4,8 @@ import static org.entcore.common.http.response.DefaultResponseHandler.arrayRespo
 import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
+import fr.wseduc.webutils.Either;
+import fr.wseduc.webutils.http.Renders;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;

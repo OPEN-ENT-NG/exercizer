@@ -43,24 +43,16 @@ class SubjectService implements ISubjectService {
                 data: subject
             };
 
-        /*this._$http(request).then(
+        this._$http(request).then(
             function(response) {
-                
-                console.log(response);
+                subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                self._listMappedById[subject.id] = subject;
+                deferred.resolve(subject);
             },
-            function(err) {
-                notify.error(err);
+            function() {
+                deferred.reject("Une erreur est survenue lors de la sauvegarde des propriétés du sujet.");
             }
-        );*/
-
-        
-        //TODO update when using real API
-        subject.id = Math.floor(Math.random() * (999999999 - 1)) + 1; // FIXME backend
-        subject.owner = this._userService.currentUserId; // FIXME backend
-        setTimeout(function(self, subject) {
-            self._listMappedById[subject.id] = subject;
-            deferred.resolve(subject);
-        }, 100, self, subject);
+        );
 
         return deferred.promise;
     };
