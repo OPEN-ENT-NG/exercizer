@@ -7,6 +7,9 @@
         <grain-edit-statement data-grain="grain"></grain-edit-statement>
 
         <grain-edit-button-add-new-grain-document data-grain="grain"></grain-edit-button-add-new-grain-document>
+
+        <grain-edit-grain-document-list data-grain="grain"></grain-edit-grain-document-list>
+
         <div class=" row vertical-spacing">
             <span>Mode de correction : </span>
             <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
@@ -27,8 +30,6 @@
                 </a>
             </div>
         </div>
-
-        <grain-edit-grain-document-list data-grain="grain"></grain-edit-grain-document-list>
 
         <grain-edit-answer-hint data-grain="grain"></grain-edit-answer-hint>
 
