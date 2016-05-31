@@ -32,10 +32,11 @@ directives.push(
                                 if(index !== -1){
                                     scope.grain.grain_data.custom_data.correct_answer_list.splice(index, 1);
                                 }
+                                scope.updateGrain();
                             };
 
                             if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
-                                scope.grain.grain_data.custom_data = new MultipleAnswerCustomData();
+                                scope.grain.grain_data.custom_data = new QcmCustomData();
                             }
 
                             scope.isFolded = false;
