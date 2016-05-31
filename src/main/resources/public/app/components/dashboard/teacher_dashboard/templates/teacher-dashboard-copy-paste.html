@@ -1,0 +1,24 @@
+<lightbox show="isDisplayed" on-close="hide()">
+    <h2>Supprimer</h2>
+    <p>Voulez-vous vraiment copier ces élements ?</p>
+    <ul data-ng-show="folderList.length !=0">
+            <li data-ng-repeat="folderId in folderList">
+                [[getFolderLabelById(folderId)]]
+            </li>
+    </ul>
+    <ul data-ng-show="subjectList.length !=0">
+            <li data-ng-repeat="subjectId in subjectList">
+                [[getSubjectTitleById(subjectId)]]
+            </li>
+    </ul>
+    <div class="row">
+        <span> Selection du dossier cible : </span>
+        <select data-ng-model="data.selectedFolder">
+            <option data-ng-repeat="folder in allFolderList" value="[[folder.id]]">[[folder.label]]</option>
+        </select>
+    </div>
+    <div class="row">
+        <button data-ng-click="pasteSelection()" class="right-magnet">Copier</button>
+        <input type="button" class="cancel right-magnet" i18n-value="cancel" data-ng-click="hide()" />
+    </div>
+</lightbox>

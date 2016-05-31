@@ -78,10 +78,10 @@ directives.push(
                         {
                             publicName : "Copier",
                             actionOnClick : function(){
-                                console.log('Not implemented');
+                                scope.$emit("E_COPY_SELECTED_FOLDER_SUBJECT");
                             },
                             display : function(){
-                                return false;
+                                return true;
                             }
                         },
                         {

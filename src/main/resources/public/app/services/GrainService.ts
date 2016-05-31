@@ -91,17 +91,25 @@ class GrainService implements IGrainService {
         return deferred.promise;
     };
 
-    public duplicate = function(grain:IGrain):ng.IPromise<IGrain> {
+    public duplicate = function(grain:IGrain, keepOrder: boolean = false):ng.IPromise<IGrain> {
 
         var duplicatedGrain = CloneObjectHelper.clone(grain, true);
         duplicatedGrain.id = undefined;
-        duplicatedGrain.order = undefined;
+        if(keepOrder === false){
+            duplicatedGrain.order = undefined;
+        }
 
         if (duplicatedGrain.grain_type_id > 3) {
             duplicatedGrain.grain_data.title += '_copie';
         }
 
         return this.persist(duplicatedGrain);
+    };
+
+    public copyOf = function(grain:IGrain):ng.IPromise<IGrain> {
+        var duplicatedGrain = CloneObjectHelper.clone(grain, true);
+        duplicatedGrain.id = undefined;
+        return duplicatedGrain;
     };
 
 

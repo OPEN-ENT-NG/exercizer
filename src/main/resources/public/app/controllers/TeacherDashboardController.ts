@@ -60,6 +60,10 @@ class TeacherDashboardController {
             self._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER", folder);
         });
 
+        self._$scope.$on("E_COPY_SELECTED_FOLDER_SUBJECT", function (event) {
+            self._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_COPY_PASTE", self._selectedSubjectList, self._selectedFolderList);
+        });
+
         self._$scope.$on("E_EDIT_SUBJECT", function (event, subject) {
             self._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT", subject);
         });
@@ -76,14 +80,71 @@ class TeacherDashboardController {
             self._selectedFolderList = [];
             // delete subject
             angular.forEach(self._selectedSubjectList, function (id, key) {
-                var promise = self._subjectService.remove(self._subjectService.getById(id))
+                var promise = self._subjectService.remove(self._subjectService.getById(id));
                 promise.then(function(data){
                 })
             });
             self._selectedSubjectList = [];
 
         });
+
+        self._$scope.$on("E_CONFIRM_COPY_PASTE", function (event, folder) {
+            var folderParentId = folder ? folder.id : null;
+            self.duplicateFolderList(self._selectedFolderList, folderParentId);
+            self.duplicateSubjectList(self._selectedSubjectList, folderParentId);
+        });
     };
+    private duplicateSubjectList(list, folderParentId){
+        console.log('duplicateSubjectList', list, folderParentId);
+        var self = this;
+        angular.forEach(list, function (subject, key) {
+            var id;
+            if(subject instanceof Subject){
+                id = subject.id;
+            } else{
+                id = subject;
+            }
+            var promise = self._subjectService.duplicate(self._subjectService.getById(id));
+            promise.then(function(data){
+                data.folder_id = folderParentId;
+            });
+        });
+    }
+
+    private duplicateFolderList (list, folderParentId){
+        var self = this;
+        angular.forEach(list, function (folder, key) {
+            var id;
+            if(folder instanceof Folder){
+                id = folder.id;
+            } else{
+                id = folder;
+            }
+            self._folderService.duplicateFolder(self._folderService.folderById(id),
+                function(data){
+                    // data is folder
+                    if(folderParentId){
+                        self._folderService.setParentFolderId(data.id, folderParentId);
+                    }
+                    // duplicate children folder
+                    var childrenFolder = self._folderService.getListOfSubFolderByFolderId(id);
+                    if(childrenFolder){
+                        self.duplicateFolderList(childrenFolder, data.id);
+                    }
+                    // duplicate children subject
+                    var childrenSubject = self._subjectService.getListByFolderId(id);
+                    if(childrenSubject.length != 0){
+                        console.log('have children subject', childrenSubject);
+                        self.duplicateSubjectList(childrenSubject,data.id);
+                    }
+                }
+            );
+
+        });
+    }
+
+
+
 
     private toggleItem(id, isSelected, list) {
         var index = list.indexOf(id);
