@@ -65,7 +65,6 @@ class SubjectService implements ISubjectService {
                 // data is subject
                 var promiseGrainList = self._grainService.getListBySubjectId(subject.id);
                 promiseGrainList.then(function(dataGrainList){
-                    console.log('dataGrainList',dataGrainList );
                     angular.forEach(dataGrainList, function(grain, key) {
                         var newGrain = self._grainService.copyOf(grain);
                             //data is grain
@@ -83,17 +82,13 @@ class SubjectService implements ISubjectService {
     };
 
     public getListByFolderId(folderId){
-        console.log('getListByFolderId', folderId);
         var self = this;
         var array = {};
         angular.forEach(self._listMappedById, function(value, key) {
             if(value.folder_id  == folderId){
                 array[value.id] = value;
-                console.log('MATCH');
             }
         });
-        console.log('return array :', array);
-
         return array;
     }
 
