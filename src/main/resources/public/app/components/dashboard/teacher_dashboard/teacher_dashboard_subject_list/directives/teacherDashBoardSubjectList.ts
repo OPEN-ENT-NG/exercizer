@@ -16,6 +16,47 @@ directives.push(
                          */
                         scope.displayList = 'domino';
                         scope.currentFolderId = null;
+                        scope.autocomplete = {
+                            subjectList: null
+                        };
+
+                        /**
+                         * AUTOCOMPLETE
+                         */
+
+                        scope.clickOnAutocompletee = function () {
+                            if (scope.subjectList()) {
+                                scope.autocomplete.subjectList = createListAutoComplete();
+                            }
+                        };
+
+                        scope.clickOnItem = function(subject){
+                            $location.path('/teacher/subject/edit/' + subject.id);
+                        };
+
+                        function createListAutoComplete() {
+                            var array = [];
+                            angular.forEach(scope.subjectList(), function (value) {
+                                var folder = null,
+                                    folderString = "";
+                                if (value.folder_id) {
+                                    folder = FolderService.folderById(value.folder_id);
+                                    if (folder) {
+                                        folderString = " [ " + folder.label + " ]";
+                                    }
+                                }
+                                var obj = {
+                                    title: value.title,
+                                    name: value.title + folderString,
+                                    id: value.id,
+                                    toString: function () {
+                                        return this.name;
+                                    }
+                                };
+                                array.push(obj);
+                            });
+                            return array;
+                        }
 
                         /**
                          * GETTER
@@ -55,7 +96,7 @@ directives.push(
                             scope.setCurrentFolder(folder);
                         };
 
-                        scope.setCurrentFolder = function(folder){
+                        scope.setCurrentFolder = function (folder) {
                             scope.currentFolderId = folder.id;
                         };
 

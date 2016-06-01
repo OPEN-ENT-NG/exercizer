@@ -1,6 +1,15 @@
 <div class="row rigid-grid">
     <!-- navigation -->
     <section class="four cell">
+        <div class="row">
+            <div class="ten cell" data-ng-click="clickOnAutocompletee()">
+                <autocomplete
+                        options="autocomplete.subjectList"
+                        ng-change="clickOnItem(selectedItem)"
+                        ng-model="selectedItem">
+                </autocomplete>
+            </div>
+        </div>
         <nav class="vertical dragging-zone-folder">
             <ul>
                 <li>
@@ -11,7 +20,12 @@
                         Mes sujets
                     </a>
                     <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false" >
-                        <folder-item   item = "item" is-root = "true" set-current-folder="setCurrentFolder(myParam)" parent-id="parentId"></folder-item>
+                        <folder-nav-item   item = "item"
+                                       is-root = "true"
+                                       set-current-folder-fn="setCurrentFolder"
+                                       parent-id="parentId"
+                                       current-folder-id = "currentFolderId"
+                        ></folder-nav-item>
                     </div>
                 </li>
             </ul>
@@ -122,7 +136,7 @@
                 <!-- folder list-->
                 <tr data-ng-repeat="folder in folderList()">
                     <td data-ng-if="filterFolderByParentFolder(folder)">
-                        <input type="checkbox" data-ng-model="item.selected"/>
+                        <input type="checkbox" data-ng-model="folder.selected"/>
                     </td>
                     <td     dragstart="drag(getItem(), $originalEvent)"
                             dragcondition="dragCondition(getItem())"
@@ -132,13 +146,13 @@
                         <i class="folder"></i>
                     </td>
                     <td data-ng-if="filterFolderByParentFolder(folder)">
-                        <a data-ng-click="clickOnTitle()">[[folder.label]]</a>
+                        <a data-ng-click="clickOnFolderTitle(folder)">[[folder.label]]</a>
                     </td>
                 </tr>
                 <!-- subject  list -->
                 <tr data-ng-repeat="subject in subjectList()">
                     <td data-ng-if="filterSubjectByParentFolder(subject)">
-                        <input type="checkbox" data-ng-model="item.selected"/>
+                        <input type="checkbox" data-ng-model="subject.selected"/>
                     </td>
                     <td     dragstart="drag(getItem(), $originalEvent)"
                             dragcondition="dragCondition(getItem())"
@@ -148,7 +162,7 @@
                         <i class="pdf"></i>
                     </td>
                     <td data-ng-if="filterSubjectByParentFolder(subject)">
-                        <a data-ng-click="clickOnTitle()">[[subject.title]]</a>
+                        <a data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</a>
                     </td>
                 </tr>
                 </tbody>

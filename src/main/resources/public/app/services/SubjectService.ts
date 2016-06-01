@@ -2,8 +2,10 @@ interface ISubjectService {
     persist(subject:ISubject):ng.IPromise<ISubject>;
     update(subject:ISubject):ng.IPromise<ISubject>;
     remove(subject:ISubject):ng.IPromise<ISubject>;
+    duplicate (subject:ISubject):ng.IPromise<ISubject>
     deleteSubjectChildrenOfFolder(folder:IFolder);
     getList():ISubject[];
+    getListByFolderId(folderId);
     getById(id:number):ISubject;
     currentSubjectId:number;
 }
@@ -13,22 +15,25 @@ class SubjectService implements ISubjectService {
     static $inject = [
         '$q',
         '$http',
-        'UserService'
+        'UserService',
+        'GrainService'
     ];
 
     private _listMappedById:{[id:number]:ISubject;};
     private _currentSubjectId:number;
+    private _grainService;
 
     constructor
-    (
-        private _$q:ng.IQService,
-        private _$http:ng.IHttpService,
-        private _userService:IUserService
-    )
-    {
+    (private _$q:ng.IQService,
+     private _$http:ng.IHttpService,
+     private _userService:IUserService,
+     GrainService) {
         this._$q = _$q;
         this._$http = _$http;
         this._userService = _userService;
+        this._grainService =GrainService;
+
+        // TODO remove
         this._listMappedById = {};
 
         var self = this,
@@ -73,6 +78,46 @@ class SubjectService implements ISubjectService {
         return deferred.promise;
     };
 
+    public duplicate = function (subject:ISubject, duplicateGrain : boolean = true):ng.IPromise<ISubject> {
+        var self = this;
+        var duplicatedSubject = CloneObjectHelper.clone(subject, true);
+        duplicatedSubject.id = undefined;
+        duplicatedSubject.title += '_copie';
+        duplicatedSubject.selected = false;
+        if(duplicateGrain === true){
+            var deferred = this._$q.defer();
+            var promisePersist = this.persist(duplicatedSubject);
+            promisePersist.then(function(dataSubject){
+                // data is subject
+                var promiseGrainList = self._grainService.getListBySubjectId(subject.id);
+                promiseGrainList.then(function(dataGrainList){
+                    angular.forEach(dataGrainList, function(grain, key) {
+                        var newGrain = self._grainService.copyOf(grain);
+                            //data is grain
+                        newGrain.subject_id = dataSubject.id;
+                        console.log(newGrain);
+                        self._grainService.persist(newGrain);
+                    });
+                    deferred.resolve(dataSubject);
+                });
+            });
+            return deferred.promise;
+        } else {
+            return this.persist(duplicatedSubject);
+        }
+    };
+
+    public getListByFolderId(folderId){
+        var self = this;
+        var array = {};
+        angular.forEach(self._listMappedById, function(value, key) {
+            if(value.folder_id  == folderId){
+                array[value.id] = value;
+            }
+        });
+        return array;
+    }
+
     public update = function (subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer(),
@@ -81,7 +126,7 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
-        
+
         console.log('delete subject');
         //TODO remove when using real API
         setTimeout(function (self, subject) {

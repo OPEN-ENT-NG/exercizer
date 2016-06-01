@@ -1,0 +1,110 @@
+<lightbox data-show="isDisplayed" data-on-close="hide()">
+    <h1>Programme</h1>
+    <div class="row">
+        <div class="three cell">
+            <nav class="vertical">
+                <ul>
+                    <li>
+                        <a  data-ng-class="{'selected' : state == 'assignSubject'}"
+                            data-ng-click="state='assignSubject'"
+                        >
+                            Attribuer le sujet
+                        </a>
+
+                    </li>
+                    <li>
+                        <a  data-ng-class="{'selected' : state == 'option'}"
+                            data-ng-click="state='option'"
+                        >
+                            Option de programmation
+                        </a>
+
+                    </li>
+                    <li>
+                        <a  data-ng-class="{'selected' : state == 'schedule'}"
+                            data-ng-click="state='schedule'"
+                        >
+                            Programmer
+                        </a>
+
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="nine cell">
+            <div data-ng-show="state == 'assignSubject'">
+                <div class="row vertical-spacing">
+                    <h3>Rechercher un utilisateur ou un groupe</h3>
+                    <autocomplete
+                            options="data.lists"
+                            ng-change="clickOnItem(selectedItem)"
+                            ng-model="selectedItem">
+                    </autocomplete>
+                </div>
+                <div class="row vertical-spacing">
+                    <div class="six cell">
+                        <h3>Groupes ajoutés</h3>
+                        <div class="row" data-ng-repeat="group in data.groupList">
+                            <div class="one cell">&nbsp;</div>
+                            <div class="one cell" data-ng-click="removeGroup(group)"><i class="trash"></i></div>
+                            <div class="one cell">&nbsp;</div>
+                            <div class="nine cell">[[group.toString()]]</div>
+                        </div>
+                    </div>
+                    <div class="six cell">
+                        <h3>Utilisateur ajouté</h3>
+                    </div>
+                </div>
+                <div class="row vertical-spacing">
+                    <button class="right-magnet cell" data-ng-click="state = 'option'">
+                        Suivant
+                    </button>
+                    <input type="button" class="button right-magnet cancel" data-ng-click="hide()" value="Annuler">
+                </div>
+            </div>
+            <div data-ng-show="state == 'option'">
+                <div class="row  vertical-spacing">
+                    <h3>Options</h3>
+                </div>
+                <div class="row">
+                    <div class="six cell"><span> Date de debut : </span></div>
+                    <date-picker ng-model="option.begin_date"  class="six cell"></date-picker>
+                </div>
+                <div class="row">
+                    <div class="six cell"><span> Date de fin : </span></div>
+                    <date-picker ng-model="option.due_date"  class="six cell"></date-picker>
+                </div>
+                <div class="row">
+                    <input type="checkbox" data-ng-model="option.is_one_shot_submit"/>
+                    <span>Rendu définif</span>
+                </div>
+                <div class="row vertical-spacing">
+                    <input type="checkbox" data-ng-model="option.automatic_display"/>
+                    <span>Affichage du resultat automatique pour les eleves</span>
+                </div>
+                <div class="row vertical-spacing">
+                    <span>Temps estimé du devoir </span>
+                    <input type="text" data-ng-model="option.estimated_duration"/>
+                    <span>minute</span>
+                </div>
+                <div class="row vertical-spacing">
+                    <button class="right-magnet cell" data-ng-click="state = 'schedule'">
+                        Suivant
+                    </button>
+                    <input type="button" class="button right-magnet cancel" data-ng-click="state = 'assignSubject'" value="Précedent">
+                </div>
+            </div>
+            <div data-ng-show="state == 'schedule'">
+                <div class="row">
+                    <h3>Etes vous sûr de vouloir programmer ce sujet ?</h3>
+                </div>
+                <div class="row vertical-spacing">
+                    <button class="right-magnet cell" data-ng-click="scheduleSubject()">
+                        Programmer
+                    </button>
+                    <input type="button" class="button right-magnet cancel" data-ng-click="state = 'option'" value="Précedent">
+                </div>
+            </div>
+        </div>
+    </div>
+</lightbox>

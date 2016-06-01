@@ -1,0 +1,10 @@
+<ul>
+    <folder-nav-item
+            data-ng-repeat="item in folderList | orderObjectBy:'label':false"
+            item = "item"
+            is-root = "isRoot"
+            parent-id="parentId"
+            set-current-folder-fn="setCurrentFolder"
+            current-folder-id = "currentFolderId"
+    ></folder-nav-item>
+</ul>

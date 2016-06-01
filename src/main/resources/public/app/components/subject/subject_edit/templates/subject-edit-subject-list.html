@@ -1,0 +1,15 @@
+<article>
+    <div class="row">
+        Mes sujets
+    </div>
+    <ul>
+        <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false" >
+            <folder-nav-item   item = "item"
+                           is-root = "true"
+                           set-current-folder-fn="setCurrentFolder"
+                           parent-id="parentId"
+                           current-folder-id = "currentFolderId"
+            ></folder-nav-item>
+        </div>
+    </ul>
+</article>

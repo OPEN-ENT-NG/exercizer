@@ -1,0 +1,52 @@
+<article>
+    <grain-edit-toggle-header data-grain="grain"></grain-edit-toggle-header>
+
+    <div data-ng-if="!isFolded" >
+        <grain-edit-title-score data-grain="grain"></grain-edit-title-score>
+
+        <grain-edit-statement data-grain="grain"></grain-edit-statement>
+
+        <grain-edit-button-add-new-grain-document data-grain="grain"></grain-edit-button-add-new-grain-document>
+
+        <grain-edit-grain-document-list data-grain="grain"></grain-edit-grain-document-list>
+
+        <div class=" row vertical-spacing">
+            <span>Mode de correction : </span>
+            <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
+            <span>Erreur non autorisée</span>
+        </div>
+        <div class="row vertical-spacing">
+            <ul sortable-list class="thought-out-actions">
+                <li data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list | orderObjectBy:'order_by':false"
+                    sortable-element
+                    data-ng-change="reOrder()"
+                    data-ng-model="answer.index"
+                >
+                    <div class="one cell" style="text-align: center; border:1px solid black; border-radius: 5px;">[[answer.order_by]]</div>
+                    <div class="one cell">&nbsp;</div>
+                    <input type="text" class="eight cell" data-ng-model="answer.text" data-ng-blur="updateGrain()" value="[[answer.text ]]" placeholder="Indiquer une réponse" />
+                    <div class="one cell">&nbsp;</div>
+                    <div class="one cell" data-ng-click="deleteAnswer(answer)"><i class="trash"></i></div>
+                </li>
+            </ul>
+
+            <div class="row vertical-spacing">
+                <a data-ng-click="addAnswer()" class="twelve cell comment" style="text-align: center">
+                    Ajouter une réponse
+                </a>
+            </div>
+        </div>
+
+        <grain-edit-answer-hint data-grain="grain"></grain-edit-answer-hint>
+
+        <grain-edit-answer-explanation data-grain="grain"></grain-edit-answer-explanation>
+    </div>
+
+    <div class="row" data-ng-if="isFolded">
+        <grain-edit-toggle-aside data-grain="grain" data-cell-count="one"></grain-edit-toggle-aside>
+        <div class="eleven cell vertical-spacing">
+            <h2>[[ grain.grain_data.title ]]&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
+        </div>
+    </div>
+</article>
+

@@ -15,35 +15,35 @@ directives.push(
                             subject: '='
                         },
                         templateUrl: 'exercizer/public/app/components/subject/subject_edit/templates/subject-edit-modal-grain-document.html',
-                        link:(scope:any) => {
+                        link:(scope : any, element, attr) => {
 
                             scope.isDisplayed = false;
                             scope.grain = undefined;
-                            scope.mediaLibraryItem = undefined;
 
-                            scope.addGrainDocument = function() {
+                            scope.addGrainDocument = function(mediaLibraryItem) {
                                 var grainDocument = new GrainDocument();
 
-                                grainDocument.id = scope.mediaLibraryItem._id;
-                                grainDocument.owner = scope.mediaLibraryItem.owner;
-                                grainDocument.ownerName = scope.mediaLibraryItem.ownerName;
-                                grainDocument.created = scope.mediaLibraryItem.created._i;
-                                grainDocument.title = scope.mediaLibraryItem.title;
-                                grainDocument.name = scope.mediaLibraryItem.name;
+                                grainDocument.id = mediaLibraryItem._id;
+                                grainDocument.owner = mediaLibraryItem.owner;
+                                grainDocument.ownerName = mediaLibraryItem.ownerName;
+                                grainDocument.created = mediaLibraryItem.created ? mediaLibraryItem.created.toISOString() :null;
+                                grainDocument.title = mediaLibraryItem.title;
+                                grainDocument.name = mediaLibraryItem.name;
                                 grainDocument.path = '/workspace/document/' + grainDocument.id;
 
+
                                 if (angular.isUndefined(scope.grain.grain_data)) {
-                                    scope.grain.grain_data = new GrainData();
+                                    throw "Grain has no grain data";
                                 }
 
                                 if (angular.isUndefined(scope.grain.grain_data.document_list)) {
                                     scope.grain.grain_data.document_list = [];
                                 }
 
-                                scope.grain.grain.grain_data.document_list.push(grainDocument);
+                                scope.grain.grain_data.document_list.push(grainDocument);
 
                                 scope.$emit(E_CONFIRM_ADD_GRAIN_DOCUMENT + scope.subject.id, scope.grain);
-                                scope.isDisplayed = false;
+                                scope.close();
                             };
 
                             scope.close = function() {

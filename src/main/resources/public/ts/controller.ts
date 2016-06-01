@@ -149,6 +149,9 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('GrainCopyService', GrainCopyService);
         module.service('GrainTypeService', GrainTypeService);
         module.service('SimpleAnswerService', SimpleAnswerService);
+        module.service('QcmService', QcmService);
+        module.service('OpenAnswerService', OpenAnswerService);
+        module.service('OrderService', OrderService);
         module.service('DragService', DragService );
         module.service('FolderService', FolderService );
 
