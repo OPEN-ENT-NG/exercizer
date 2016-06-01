@@ -26,7 +26,7 @@ directives.push(
                                 grainDocument.id = mediaLibraryItem._id;
                                 grainDocument.owner = mediaLibraryItem.owner;
                                 grainDocument.ownerName = mediaLibraryItem.ownerName;
-                                grainDocument.created = mediaLibraryItem.created ? mediaLibraryItem.created._i : null;
+                                grainDocument.created = mediaLibraryItem.created ? mediaLibraryItem.created.toISOString() :null;
                                 grainDocument.title = mediaLibraryItem.title;
                                 grainDocument.name = mediaLibraryItem.name;
                                 grainDocument.path = '/workspace/document/' + grainDocument.id;
