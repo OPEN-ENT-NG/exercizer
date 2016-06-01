@@ -101,38 +101,39 @@ class EditSubjectController {
         } else {
             this._$location.path('/teacher/home');
         }
-
-        this._selectedGrainList = [];
-        // received events
-        this._E_GRAIN_LIST_UPDATED = _E_GRAIN_LIST_UPDATED + this._subject.id;
-        this._E_ADD_GRAIN = _E_ADD_GRAIN + this._subject.id;
-        this._E_REMOVE_GRAIN = _E_REMOVE_GRAIN + this._subject.id;
-        this._E_GRAIN_TOGGLED = _E_GRAIN_TOGGLED + this._subject.id;
-        this._E_FOLD_GRAIN_LIST = _E_FOLD_GRAIN_LIST + this._subject.id;
-        this._E_GRAIN_SELECTED = _E_GRAIN_SELECTED + this._subject.id;
-        this._E_DUPLICATE_SELECTED_GRAIN_LIST = _E_DUPLICATE_SELECTED_GRAIN_LIST + this._subject.id;
-        this._E_REMOVE_SELECTED_GRAIN_LIST = _E_REMOVE_SELECTED_GRAIN_LIST + this._subject.id;
-        this._E_ADD_GRAIN_DOCUMENT = _E_ADD_GRAIN_DOCUMENT + this._subject.id;
-        this._E_REMOVE_GRAIN_DOCUMENT = _E_REMOVE_GRAIN_DOCUMENT + this._subject.id;
-        this._E_CONFIRM_REMOVE_GRAIN = _E_CONFIRM_REMOVE_GRAIN + this._subject.id;
-        this._E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST = _E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST + this._subject.id;
-        this._E_CONFIRM_ADD_GRAIN_DOCUMENT = _E_CONFIRM_ADD_GRAIN_DOCUMENT + this._subject.id;
-        this._E_CONFIRM_REMOVE_GRAIN_DOCUMENT = _E_CONFIRM_REMOVE_GRAIN_DOCUMENT + this._subject.id;
-        this._E_PREVIEW_PERFORM_SUBJECT_COPY = _E_PREVIEW_PERFORM_SUBJECT_COPY + this._subject.id;
-        // broadcast events
-        this._E_REFRESH_GRAIN_LIST = _E_REFRESH_GRAIN_LIST + this._subject.id;
-        this._E_TOGGLE_GRAIN = _E_TOGGLE_GRAIN + this._subject.id;
-        this._E_FORCE_FOLDING_GRAIN = _E_FORCE_FOLDING_GRAIN + this._subject.id;
-        this._E_SELECT_GRAIN = _E_SELECT_GRAIN + this._subject.id;
-        this._E_TOGGLE_SUBJECT_EDIT_TOASTER = _E_TOGGLE_SUBJECT_EDIT_TOASTER + this._subject.id;
-        this._E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN = _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN + this._subject.id;
-        this._E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST = _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST + this._subject.id;
-        this._E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT = _E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT + this._subject.id;
-        this._E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT = _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT + this._subject.id;
-        this._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY = _E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY + this._subject.id;
-
-        var self = this;
-        this._eventsHandler(self);
+        // if the subject is found
+        if(this._subject){
+            this._selectedGrainList = [];
+            // received events
+            this._E_GRAIN_LIST_UPDATED = _E_GRAIN_LIST_UPDATED + this._subject.id;
+            this._E_ADD_GRAIN = _E_ADD_GRAIN + this._subject.id;
+            this._E_REMOVE_GRAIN = _E_REMOVE_GRAIN + this._subject.id;
+            this._E_GRAIN_TOGGLED = _E_GRAIN_TOGGLED + this._subject.id;
+            this._E_FOLD_GRAIN_LIST = _E_FOLD_GRAIN_LIST + this._subject.id;
+            this._E_GRAIN_SELECTED = _E_GRAIN_SELECTED + this._subject.id;
+            this._E_DUPLICATE_SELECTED_GRAIN_LIST = _E_DUPLICATE_SELECTED_GRAIN_LIST + this._subject.id;
+            this._E_REMOVE_SELECTED_GRAIN_LIST = _E_REMOVE_SELECTED_GRAIN_LIST + this._subject.id;
+            this._E_ADD_GRAIN_DOCUMENT = _E_ADD_GRAIN_DOCUMENT + this._subject.id;
+            this._E_REMOVE_GRAIN_DOCUMENT = _E_REMOVE_GRAIN_DOCUMENT + this._subject.id;
+            this._E_CONFIRM_REMOVE_GRAIN = _E_CONFIRM_REMOVE_GRAIN + this._subject.id;
+            this._E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST = _E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST + this._subject.id;
+            this._E_CONFIRM_ADD_GRAIN_DOCUMENT = _E_CONFIRM_ADD_GRAIN_DOCUMENT + this._subject.id;
+            this._E_CONFIRM_REMOVE_GRAIN_DOCUMENT = _E_CONFIRM_REMOVE_GRAIN_DOCUMENT + this._subject.id;
+            this._E_PREVIEW_PERFORM_SUBJECT_COPY = _E_PREVIEW_PERFORM_SUBJECT_COPY + this._subject.id;
+            // broadcast events
+            this._E_REFRESH_GRAIN_LIST = _E_REFRESH_GRAIN_LIST + this._subject.id;
+            this._E_TOGGLE_GRAIN = _E_TOGGLE_GRAIN + this._subject.id;
+            this._E_FORCE_FOLDING_GRAIN = _E_FORCE_FOLDING_GRAIN + this._subject.id;
+            this._E_SELECT_GRAIN = _E_SELECT_GRAIN + this._subject.id;
+            this._E_TOGGLE_SUBJECT_EDIT_TOASTER = _E_TOGGLE_SUBJECT_EDIT_TOASTER + this._subject.id;
+            this._E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN = _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN + this._subject.id;
+            this._E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST = _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST + this._subject.id;
+            this._E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT = _E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT + this._subject.id;
+            this._E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT = _E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT + this._subject.id;
+            this._E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY = _E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY + this._subject.id;
+            var self = this;
+            this._eventsHandler(self);
+        }
     }
 
     private _eventsHandler = function (self) {

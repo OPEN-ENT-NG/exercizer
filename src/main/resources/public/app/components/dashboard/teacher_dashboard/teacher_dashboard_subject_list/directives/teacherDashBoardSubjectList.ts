@@ -48,13 +48,12 @@ directives.push(
                                 var obj = {
                                     title: value.title,
                                     name: value.title + folderString,
-                                    id: value.is,
+                                    id: value.id,
                                     toString: function () {
                                         return this.name;
                                     }
                                 };
                                 array.push(obj);
-
                             });
                             return array;
                         }
