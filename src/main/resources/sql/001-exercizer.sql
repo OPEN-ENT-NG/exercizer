@@ -22,8 +22,8 @@ CREATE TABLE exercizer.folder(
 	id BIGSERIAL NOT NULL PRIMARY KEY,
 	parent_folder_id BIGINT NULL,
 	owner VARCHAR(36) NOT NULL,
-    created TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified TIMESTAMP NOT NULL DEFAULT NOW(),
+    created TIMESTAMP DEFAULT NOW(),
+    modified TIMESTAMP DEFAULT NOW(),
 	label VARCHAR(255) NOT NULL
 );
 
@@ -71,8 +71,8 @@ CREATE TABLE exercizer.grain(
 	id BIGSERIAL NOT NULL PRIMARY KEY,
 	subject_id BIGINT NOT NULL,
 	grain_type_id BIGINT NOT NULL,
-	created TIMESTAMP NOT NULL DEFAULT NOW(),
-	modified TIMESTAMP NOT NULL DEFAULT NOW(),
+	created TIMESTAMP DEFAULT NOW(),
+	modified TIMESTAMP DEFAULT NOW(),
 	order_by INTEGER NOT NULL,
 	grain_data JSON NULL,
 	CONSTRAINT grain_subject_fk FOREIGN KEY(subject_id) REFERENCES exercizer.subject(id) ON UPDATE NO ACTION ON DELETE NO ACTION,

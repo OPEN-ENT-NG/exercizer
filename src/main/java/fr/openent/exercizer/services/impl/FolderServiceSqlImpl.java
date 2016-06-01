@@ -2,8 +2,6 @@ package fr.openent.exercizer.services.impl;
 
 import fr.openent.exercizer.services.IFolderService;
 import fr.wseduc.webutils.Either;
-import org.entcore.common.service.VisibilityFilter;
-import org.entcore.common.service.impl.SqlCrudService;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
@@ -15,23 +13,35 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
         super("exercizer", "folder");
     }
 
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
     @Override
-    public void persist(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.persist(resource, user, handler);
+    public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+        super.persist(resource, true, user, handler);
     }
 
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
     @Override
-    public void update(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
+    public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         super.update(resource, user, handler);
     }
 
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
     @Override
-    public void remove(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
+    public void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         super.delete(resource, user, handler);
     }
 
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
     @Override
-    public void list(UserInfos user, Handler<Either<String, JsonArray>> handler) {
-        super.list(VisibilityFilter.OWNER, user, handler);
+    public void list(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
+        super.list(user, handler);
     }
 }

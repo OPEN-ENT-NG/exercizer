@@ -9,12 +9,12 @@ interface IFolder {
 
 class Folder implements IFolder {
 
-    private _id:number;
-    private _parent_folder_id:number;
-    private _owner:string;
-    private _created:string;
-    private _modified:string;
-    private _label:string;
+    id:number;
+    parent_folder_id:number;
+    owner:string;
+    created:string;
+    modified:string;
+    label:string;
     
     constructor
     (
@@ -26,55 +26,11 @@ class Folder implements IFolder {
         label?:string
     )
     {
-        this._id = id;
-        this._parent_folder_id = parent_folder_id;
-        this._owner = owner;
-        this._created = created;
-        this._modified = modified;
-        this._label = label;
-    }
-
-    get id():number {
-        return this._id;
-    }
-
-    set id(value:number) {
-        this._id = value;
-    }
-
-    get parent_folder_id():number {
-        return this._parent_folder_id;
-    }
-
-    set parent_folder_id(value:number) {
-        this._parent_folder_id = value;
-    }
-
-    get owner():string {
-        return this._owner;
-    }
-
-    set owner(value:string) {
-        this._owner = value;
-    }
-
-    set created(value:string) {
-        this._created = value;
-    }
-
-    get modified():string {
-        return this._modified;
-    }
-
-    set modified(value:string) {
-        this._modified = value;
-    }
-
-    get label():string {
-        return this._label;
-    }
-
-    set label(value:string) {
-        this._label = value;
+        this.id = id;
+        this.parent_folder_id = parent_folder_id;
+        this.owner = owner;
+        this.created = created;
+        this.modified = modified;
+        this.label = label;
     }
 }

@@ -37,13 +37,13 @@ directives.push(
                         };
 
                         scope.getSubjectPicture = function (subject) {
-                            var defaultPicture = "/assets/themes/leo/img/illustrations/poll-default.png";
+                            var defaultPicture = '/assets/themes/leo/img/illustrations/poll-default.png';
                             return subject.picture || defaultPicture;
                         };
 
                         scope.getSubjectModificationDate = function (subject) {
                             if (subject) {
-                                return subject.modified ? "Modifié le " + subject.modified : ""
+                                return subject.modified ? 'Modifié le ' + subject.modified : ''
                             }
                         };
 
@@ -67,16 +67,17 @@ directives.push(
 
                         scope.selectFolder = function (folder) {
                             folder.selected = folder.selected ? true : false;
-                            scope.$emit("E_SELECT_FOLDER", folder);
+                            scope.$emit('E_SELECT_FOLDER', folder);
                         };
+                        
                         scope.selectSubject = function (subject) {
                             subject.selected = subject.selected ? true : false;
-                            scope.$emit("E_SELECT_SUBJECT", subject);
+                            scope.$emit('E_SELECT_SUBJECT', subject);
 
                         };
 
                         scope.clickCreateFolder = function () {
-                            scope.$emit("E_CREATE_FOLDER");
+                            scope.$emit('E_CREATE_FOLDER');
                         };
 
                         scope.goToRoot = function () {

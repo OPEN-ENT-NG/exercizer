@@ -23,61 +23,85 @@ public class FolderController extends ControllerHelper {
     }
 
     @Post("/folder")
-    @ApiDoc("Persist a new folder.")
+    @ApiDoc("Persists a folder.")
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-                    @Override
-                    public void handle(JsonObject resource) {
-                        folderService.persist(resource, user, notEmptyResponseHandler(request));
-                    }
-                });
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            folderService.persist(resource, user, notEmptyResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
             }
         });
     }
 
     @Put("/folder")
-    @ApiDoc("Update a folder.")
+    @ApiDoc("Updates a folder.")
     public void update(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-                    @Override
-                    public void handle(JsonObject resource) {
-                        folderService.update(resource, user, notEmptyResponseHandler(request));
-                    }
-                });
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            folderService.update(resource, user, notEmptyResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
             }
         });
     }
 
     @Delete("/folder")
-    @ApiDoc("Delete a folder.")
+    @ApiDoc("Deletes a folder.")
     public void remove(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-                    @Override
-                    public void handle(JsonObject resource) {
-                        folderService.remove(resource, user, notEmptyResponseHandler(request));
-                    }
-                });
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            folderService.remove(resource, user, notEmptyResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
             }
         });
     }
 
     @Get("/folders")
-    @ApiDoc("Get folder list.")
+    @ApiDoc("Gets folder list.")
     //@SecuredAction("exercizer.folder.list")
     public void list(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                folderService.list(user, arrayResponseHandler(request));
+                if (user != null) {
+                    folderService.list(user, arrayResponseHandler(request));
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
             }
         });
     }

@@ -2,14 +2,20 @@ package fr.openent.exercizer.services.impl;
 
 import fr.wseduc.webutils.Either;
 
+import org.entcore.common.service.VisibilityFilter;
 import org.entcore.common.service.impl.SqlCrudService;
+import org.entcore.common.sql.Sql;
+import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
+import java.util.List;
+
 import static org.entcore.common.sql.Sql.parseId;
+import static org.entcore.common.sql.SqlResult.validResultsHandler;
 import static org.entcore.common.sql.SqlResult.validRowsResultHandler;
 import static org.entcore.common.sql.SqlResult.validUniqueResultHandler;
 
@@ -23,35 +29,139 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         super(schema, table);
     }
 
-    protected void persist(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
+    /**
+     * Persists a resource.
+     *
+     * @param resource the resource
+     * @param hasOwnerField if true, puts the current id as the owner of the resource
+     * @param user the current user
+     * @param handler the handler
+     */
+    protected void persist(final JsonObject resource, final Boolean hasOwnerField, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         SqlStatementsBuilder s = new SqlStatementsBuilder();
         String userQuery = "SELECT " + schema + "merge_users(?,?)";
         s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
 
-        resource.putString("owner", user.getUserId());
-        s.insert(resourceTable, resource, "*");
+        if (hasOwnerField) {
+            resource.putString("owner", user.getUserId());
+            s.insert(resourceTable, resource, "*");
+        }
         sql.transaction(s.build(), validUniqueResultHandler(1, handler));
     }
 
-    protected void update(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        StringBuilder sb = new StringBuilder();
+    /**
+     * Updates a resource.
+     *
+     * @param resource the resource
+     * @param user the current user
+     * @param handler the handler
+     */
+    protected void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+        StringBuilder query = new StringBuilder();
         JsonArray values = new JsonArray();
 
         for (String attr : resource.getFieldNames()) {
-            sb.append(attr).append(" = ?, ");
+            query.append(attr).append(" = ?, ");
             values.add(resource.getValue(attr));
         }
 
-        String updateQuery = "UPDATE " + schema + resourceTable + " SET " + sb.toString() + "modified = NOW() " + "WHERE id = ? RETURNING *";
+        String updateQuery = "UPDATE " + resourceTable + " SET " + query.toString() + "modified = NOW() " + "WHERE id = ? RETURNING *";
         sql.prepared(updateQuery, values.add(parseId(resource.getString("id"))), validRowsResultHandler(handler));
     }
 
-    protected void remove(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
+    /**
+     * Removes logically a resource.
+     *
+     * @param resource the resource
+     * @param user the current user
+     * @param handler the handler
+     */
+    protected void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         resource.putBoolean("is_deleted", true);
         update(resource, user, handler);
     }
 
-    protected void delete(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
+    /**
+     * Deletes a resource.
+     *
+     * @param resource the resource
+     * @param user the current user
+     * @param handler the handler
+     */
+    protected void delete(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         super.delete(resource.getString("id"), user, handler);
+    }
+
+    /**
+     * Returns the list of resources which have the current user as owner.
+     *
+     * @param user the current user
+     * @param handler the handler
+     */
+    protected void list(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
+        super.list(VisibilityFilter.OWNER, user, handler);
+    }
+
+    /**
+     * Returns the list of shared resources according to the current user.
+     *
+     * @param groupsAndUserIds the groups and user ids
+     * @param user the current user
+     * @param handler the handler
+     */
+    protected void list(final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
+        StringBuilder query = new StringBuilder();
+        JsonArray values = new JsonArray();
+
+        query.append("SELECT r.*,")
+                .append(" json_agg(row_to_json(row(rs.member_id,rs.action)::")
+                .append(schema)
+                .append("share_tuple)) AS shared,")
+                .append(" array_to_json(array_agg(m.group_id)) AS groups")
+                .append(" FROM ")
+                .append(resourceTable)
+                .append(" AS r")
+                .append(" LEFT JOIN ")
+                .append(shareTable)
+                .append(" AS rs ON r.id = rs.resource_id")
+                .append(" LEFT JOIN ")
+                .append(schema)
+                .append("members as m ON (rs.member_id = m.id AND m.group_id IS NOT NULL)");
+
+        query.append(" WHERE rs.member_id IN ").append(Sql.listPrepared((groupsAndUserIds.toArray())));
+        for (String groupOrUser : groupsAndUserIds) {
+            values.add(groupOrUser);
+        }
+
+        query.append(" OR r.owner = ? ");
+        values.add(user.getUserId());
+
+        query.append(" GROUP BY r.id").append(" ORDER BY r.id");
+
+        sql.prepared(query.toString(), values, SqlResult.parseShared(handler));
+    }
+
+    /**
+     * Returns a list of resources according to a other resource.
+     *
+     * @param resource the resource
+     * @param resourceIdentifierName the other resource identifier in the resource table
+     * @param resourceTable the other resource table (with schema)
+     * @param handler the handler
+     */
+    protected void list(final JsonObject resource, final String resourceIdentifierName, final String resourceTable, final Handler<Either<String, JsonArray>> handler) {
+        StringBuilder query = new StringBuilder();
+
+        query.append("SELECT DISTINCT(o.*)")
+                .append(" FROM ")
+                .append(super.resourceTable)
+                .append(" AS o")
+                .append(" LEFT JOIN ")
+                .append(resourceTable)
+                .append(" AS r ON r.id = o.")
+                .append(resourceIdentifierName)
+                .append(" WHERE r.id = ? ");
+
+        sql.prepared(query.toString(), new JsonArray().add(resource.getString("id")), SqlResult.validResultsHandler(handler));
     }
 }

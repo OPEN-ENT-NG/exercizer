@@ -6,16 +6,25 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import java.util.List;
-
 public interface IGrainService {
 
-    void persist(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler);
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
+    void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
-    void update(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler);
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
+    void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
-    void remove(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler);
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
+    void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
-    void listBySubject(JsonObject resource, List<String> groupsAndUserIds, UserInfos user, Handler<Either<String, JsonArray>> handler);
-
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
+    void list(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
 }

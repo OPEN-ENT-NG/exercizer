@@ -27,71 +27,83 @@ public class GrainController extends ControllerHelper {
     }
 
     @Post("/grain")
-    @ApiDoc("Persist a new grain.")
+    @ApiDoc("Persists a grain.")
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-                    @Override
-                    public void handle(JsonObject resource) {
-                        grainService.persist(resource, user, notEmptyResponseHandler(request));
-                    }
-                });
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            grainService.persist(resource, user, notEmptyResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
             }
         });
     }
 
     @Put("/grain")
-    @ApiDoc("Update a grain.")
+    @ApiDoc("Updates a grain.")
     public void update(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-                    @Override
-                    public void handle(JsonObject resource) {
-                        grainService.update(resource, user, notEmptyResponseHandler(request));
-                    }
-                });
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            grainService.update(resource, user, notEmptyResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
             }
         });
     }
 
     @Delete("/grain")
-    @ApiDoc("Delete a grain.")
+    @ApiDoc("Deletes a grain.")
     public void remove(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-                    @Override
-                    public void handle(JsonObject resource) {
-                        grainService.remove(resource, user, notEmptyResponseHandler(request));
-                    }
-                });
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            grainService.list(resource, arrayResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
             }
         });
     }
 
     @Get("/grains")
-    @ApiDoc("Get grain list.")
+    @ApiDoc("Gets grain list.")
     //@SecuredAction("exercizer.grain.list")
     public void list(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
                 if (user != null) {
-                    final List<String> groupsAndUserIds = new ArrayList<>();
-                    groupsAndUserIds.add(user.getUserId());
-                    if (user.getGroupsIds() != null) {
-                        groupsAndUserIds.addAll(user.getGroupsIds());
-                    }
-
                     RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
                         @Override
-                        public void handle(JsonObject resource) {
-                            grainService.listBySubject(resource, groupsAndUserIds, user, arrayResponseHandler(request));
+                        public void handle(final JsonObject resource) {
+                            grainService.list(resource, arrayResponseHandler(request));
                         }
                     });
                 }

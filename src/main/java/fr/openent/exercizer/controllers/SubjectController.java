@@ -4,8 +4,6 @@ import static org.entcore.common.http.response.DefaultResponseHandler.arrayRespo
 import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
-import fr.wseduc.webutils.Either;
-import fr.wseduc.webutils.http.Renders;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
@@ -17,7 +15,6 @@ import fr.wseduc.rs.Delete;
 import fr.wseduc.rs.Get;
 import fr.wseduc.rs.Post;
 import fr.wseduc.rs.Put;
-import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.request.RequestUtils;
 
 import java.util.ArrayList;
@@ -32,62 +29,80 @@ public class SubjectController extends ControllerHelper {
     }
 
     @Post("/subject")
-    @ApiDoc("Persist a new subject.")
+    @ApiDoc("Persists a subject.")
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-                    @Override
-                    public void handle(JsonObject resource) {
-                       subjectService.persist(resource, user, notEmptyResponseHandler(request));
-                    }
-                });
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            subjectService.persist(resource, user, notEmptyResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
             }
         });
     }
 
     @Put("/subject")
-    @ApiDoc("Update a subject.")
+    @ApiDoc("Updates a subject.")
     public void update(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-                    @Override
-                    public void handle(JsonObject resource) {
-                        subjectService.update(resource, user, notEmptyResponseHandler(request));
-                    }
-                });
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            subjectService.update(resource, user, notEmptyResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
             }
         });
     }
 
     @Delete("/subject")
-    @ApiDoc("Delete (logically) a subject.")
+    @ApiDoc("Deletes (logically) a subject.")
     public void remove(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
-                RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-                    @Override
-                    public void handle(JsonObject resource) {
-                        subjectService.remove(resource, user, notEmptyResponseHandler(request));
-                    }
-                });
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            subjectService.remove(resource, user, notEmptyResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
             }
         });
     }
 
     @Get("/subjects")
-    @ApiDoc("Get subject list.")
+    @ApiDoc("Gets subject list.")
     //@SecuredAction("exercizer.subject.list")
     public void list(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
                 if (user != null) {
-                    List<String> groupsAndUserIds = new ArrayList<>();
+                    final List<String> groupsAndUserIds = new ArrayList<>();
                     groupsAndUserIds.add(user.getUserId());
                     if (user.getGroupsIds() != null) {
                         groupsAndUserIds.addAll(user.getGroupsIds());
@@ -99,24 +114,25 @@ public class SubjectController extends ControllerHelper {
                     log.debug("User not found in session.");
                     unauthorized(request);
                 }
+
             }
         });
     }
 
     @Get("/subject/share/json/:id")
-    @ApiDoc("List rights for a given subject")
+    @ApiDoc("Lists rights for a given subject")
     public void share(final HttpServerRequest request) {
     		super.shareJson(request, false);
     	}
 
     @Put("/subject/share/json/:id")
-    @ApiDoc("Add rights for a given resource")
+    @ApiDoc("Adds rights for a given resource")
     public void shareSubmit(final HttpServerRequest request) {
     		super.shareJsonSubmit(request, null, false);
     	}
 
     @Put("/subject/share/remove/:id")
-    @ApiDoc("Remove rights for a given resource")
+    @ApiDoc("Removes rights for a given resource")
     public void shareRemove(final HttpServerRequest request) {
     		super.removeShare(request, false);
     	}

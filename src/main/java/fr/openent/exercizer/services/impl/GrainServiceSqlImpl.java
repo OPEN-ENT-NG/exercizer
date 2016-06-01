@@ -2,15 +2,10 @@ package fr.openent.exercizer.services.impl;
 
 import fr.openent.exercizer.services.IGrainService;
 import fr.wseduc.webutils.Either;
-import org.entcore.common.service.impl.SqlCrudService;
-import org.entcore.common.sql.Sql;
-import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
-
-import java.util.List;
 
 public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IGrainService {
 
@@ -18,46 +13,35 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
         super("exercizer", "grain");
     }
 
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
     @Override
-    public void persist(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-        super.persist(resource, user, handler);
+    public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+        super.persist(resource, false, user, handler);
     }
 
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
     @Override
-    public void update(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
+    public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         super.update(resource, user, handler);
     }
 
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
     @Override
-    public void remove(JsonObject resource, UserInfos user, Handler<Either<String, JsonObject>> handler) {
+    public void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         super.delete(resource, user, handler);
     }
 
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
     @Override
-    public void listBySubject(JsonObject resource, List<String> groupsAndUserIds, UserInfos user, Handler<Either<String, JsonArray>> handler) {
-        StringBuilder query = new StringBuilder();
-        JsonArray values = new JsonArray();
-
-        query.append("SELECT g.*,")
-                .append(" json_agg(row_to_json(row(subject_shares.member_id,subject_shares.action)::exercizer.subject_shares)) as shared,")
-                .append(" array_to_json(array_agg(m.group_id)) as groups")
-                .append(" FROM exercizer.grain AS g")
-                .append(" JOIN exercizer.subject s ON g.subject_id = s.id")
-                .append(" LEFT JOIN exercizer.subject_shares AS ss ON s.id = ss.resource_id")
-                .append(" LEFT JOIN exercizer.members AS m ON (ss.member_id = m.id AND m.group_id IS NOT NULL)")
-                .append(" WHERE s.id = ")
-                .append(resource.getString("id"));
-
-        query.append(" AND ss.member_id IN ").append(Sql.listPrepared(groupsAndUserIds.toArray()));
-        for (String groupOrUser : groupsAndUserIds) {
-            values.add(groupOrUser);
-        }
-
-        query.append(" OR s.owner = ? ");
-        values.add(user.getUserId());
-
-        query.append(" GROUP BY g.id").append(" ORDER BY g.id");
-
-        Sql.getInstance().prepared(query.toString(), values, SqlResult.parseShared(handler));
+    public void list(final JsonObject resource, final Handler<Either<String, JsonArray>> handler) {
+        super.list(resource, "subject_id", "exercizer.subject", handler);
     }
 }
