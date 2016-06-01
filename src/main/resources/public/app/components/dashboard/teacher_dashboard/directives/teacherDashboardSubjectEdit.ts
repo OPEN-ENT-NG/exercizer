@@ -6,11 +6,11 @@ directives.push(
                 restrict: 'E',
                 scope: {},
                 templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/templates/teacher-dashboard-subject-edit.html',
-                link: (scope:any, element, attrs) => {
+                link: (scope:any) => {
 
                     scope.isDisplayed = false;
 
-                    scope.$on("E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT", function(event, subject) {
+                    scope.$on('E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT', function(event, subject) {
 
                         if(subject !== null){
                             scope.isNewSubject = false;
@@ -33,7 +33,7 @@ directives.push(
                             if (scope.isNewSubject) {
                                 SubjectService.persist(scope.subject).then(function(subject) {
                                     SubjectService.currentSubjectId = subject.id;
-                                    $location.path('/teacher/subject/edit/' + subject.id);
+                                    $location.path('/subject/edit/' + subject.id);
                                 }, function(err) {
                                     notify.error(err);
                                 });

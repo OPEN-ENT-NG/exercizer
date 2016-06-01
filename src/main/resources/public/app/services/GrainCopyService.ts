@@ -119,7 +119,7 @@ class GrainCopyService implements IGrainCopyService {
 
         grainCopy.grain_type_id = grainScheduled.grain_type_id;
         grainCopy.grain_scheduled_id = grainScheduled.id;
-        grainCopy.order = grainScheduled.order;
+        grainCopy.order_by = grainScheduled.order_by;
         grainCopy.grain_copy_data = new GrainCopyData();
         grainCopy.grain_copy_data.title = grainScheduled.grain_data.title;
         grainCopy.grain_copy_data.max_score = grainScheduled.grain_data.max_score;

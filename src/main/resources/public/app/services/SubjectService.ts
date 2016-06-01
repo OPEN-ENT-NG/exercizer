@@ -35,19 +35,45 @@ class SubjectService implements ISubjectService {
 
         // TODO remove
         this._listMappedById = {};
+
+        var self = this,
+            request = {
+                method: 'GET',
+                url: 'exercizer/subjects'
+            };
+
+        this._$http(request).then(
+            function(response) {
+                angular.forEach(response.data, function(subjectObject) {
+                    var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject));
+                    self._listMappedById[subject.id] = subject;
+                });
+            },
+            function() {
+                notify.error('Une erreur est survenue lors de la récupération de vos sujets.');
+            }
+        );
     }
 
     public persist = function (subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject',
+                data: subject
+            };
 
-        //TODO update when using real API
-        subject.id = Math.floor(Math.random() * (999999999 - 1)) + 1; // FIXME backend
-        subject.owner = this._userService.currentUserId; // FIXME backend
-        setTimeout(function (self, subject) {
-            self._listMappedById[subject.id] = subject;
-            deferred.resolve(subject);
-        }, 100, self, subject);
+        this._$http(request).then(
+            function(response) {
+                subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                self._listMappedById[subject.id] = subject;
+                deferred.resolve(subject);
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors de la sauvegarde des propriétés du sujet.');
+            }
+        );
 
         return deferred.promise;
     };
@@ -94,7 +120,13 @@ class SubjectService implements ISubjectService {
 
     public update = function (subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            request = {
+                method: 'PUT',
+                url: 'exercizer/subject',
+                data: subject
+            };
+
         console.log('delete subject');
         //TODO remove when using real API
         setTimeout(function (self, subject) {
@@ -107,13 +139,28 @@ class SubjectService implements ISubjectService {
 
     public remove = function (subject:ISubject):ng.IPromise<ISubject> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            request = {
+                method: 'DELETE',
+                url: 'exercizer/subject',
+                data: subject
+            };
+
         //TODO remove when using real API
-        subject.is_deleted = true;
-        setTimeout(function (self, subject) {
-            delete self._listMappedById[subject.id];
-            deferred.resolve(subject);
-        }, 2000, self, subject);
+        setTimeout(function(self, subject) {
+            if (angular.isUndefined(self._listMappedById[subject.id])) {
+                self._listMappedById[subject.id] = [];
+            }
+
+            var grainIndex = self._listMappedById[subject.id].indexOf(subject);
+
+            if (grainIndex !== -1) {
+                self._listMappedById[subject.id].splice(grainIndex, 1);
+                deferred.resolve(true);
+            }
+
+            deferred.resolve(false);
+        }, 100, self, subject);
 
         return deferred.promise;
     };
@@ -127,12 +174,8 @@ class SubjectService implements ISubjectService {
         });
     };
 
-    public getList = function ():ISubject[] {
-        var self = this;
-
-        return Object.keys(this._listMappedById).map(function (v) {
-            return this._listMappedById[v];
-        }, self);
+    public getList = function():ISubject[] {
+        return MapToListHelper.toList(this._listMappedById);
     };
 
     public getById = function (id:number):ISubject {

@@ -32,7 +32,7 @@ class GrainService implements IGrainService {
 
         //TODO update when using real API
         grain.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
-        if (angular.isUndefined(grain.order)){
+        if (angular.isUndefined(grain.order_by)){
             grain = this._setOrderToGrain(grain);
         }
         
@@ -134,8 +134,8 @@ class GrainService implements IGrainService {
             newOrder:number;
 
         angular.forEach(this._listMappedBySubjectId[grain.subject_id], function(currentGrain) {
-            if(!angular.isUndefined(currentGrain.order) && currentGrain.order > maxOrder) {
-                maxOrder = currentGrain.order;
+            if(!angular.isUndefined(currentGrain.order_by) && currentGrain.order_by > maxOrder) {
+                maxOrder = currentGrain.order_by;
             }
         });
 
@@ -145,7 +145,7 @@ class GrainService implements IGrainService {
             newOrder = 1;
         }
 
-        grain.order = newOrder;
+        grain.order_by = newOrder;
         
         return grain;
     }

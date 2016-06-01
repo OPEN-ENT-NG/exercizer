@@ -14,14 +14,14 @@ interface IFolderService {
 class FolderService implements IFolderService {
 
     static $inject = [
-        'serverUrl',
         '$http',
+        '$q',
         'SubjectService',
     ];
 
     // inject
-    private serverUrl:string;
     private $http:any;
+    private $q:any;
     private subjectService;
 
     // variables
@@ -30,17 +30,37 @@ class FolderService implements IFolderService {
     private _currentFolderId;
     private _folderListByParentFolderId;
 
-    constructor(serverUrl,
-                $http,
-                SubjectService
-                ) {
-        this.serverUrl = serverUrl;
+    constructor(
+        $http,
+        $q,
+        SubjectService
+    )
+    {
         this.$http = $http;
-
+        this.$q = $q;
+        this.subjectService = SubjectService;
         // init folder list as an object
         this._folderList = {};
         this._folderListByParentFolderId = {};
-        this.subjectService = SubjectService;
+
+        var self = this,
+            request = {
+                method: 'GET',
+                url: 'exercizer/folders'
+            };
+
+        this.$http(request).then(
+            function(response) {
+                angular.forEach(response.data, function(folderObject) {
+                    var folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(folderObject));
+                    self._folderList[folder.id] = folder;
+                });
+            },
+            function() {
+                notify.error('Une erreur est survenue lors de la récupération de vos dossiers.');
+            }
+        );
+
     }
 
 
@@ -65,19 +85,7 @@ class FolderService implements IFolderService {
     }
 
     public createFolder(folder:IFolder, callbackSuccess, callBackFail) {
-        var self = this;
-        this._createFolder(
-            folder,
-            function (data) {
-                self.addFolderToFolderList(data);
-                if (callbackSuccess) {
-                    callbackSuccess(data);
-                }
-            },
-            function (err) {
-                console.error(err);
-            }
-        );
+        this._persist(folder).then(callbackSuccess, callBackFail);
     }
 
     public duplicateFolder(folder: IFolder, callbackSuccess, callBackFail){
@@ -247,11 +255,27 @@ class FolderService implements IFolderService {
         }
     }
 
-    private _createFolder(folder:IFolder, callbackSuccess, callbackFail) {
-        folder.id = Math.floor((Math.random() * 1000) + 1);
-        if (callbackSuccess) {
-            callbackSuccess(folder);
-        }
+    private _persist(folder:IFolder):ng.IPromise<IFolder> {
+        var self = this,
+            deferred = this.$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/folder',
+                data: folder
+            };
+
+        this.$http(request).then(
+            function(response) {
+                folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(response.data));
+                self.addFolderToFolderList(folder);
+                deferred.resolve(folder);
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors de la création du dossier.');
+            }
+        );
+
+        return deferred.promise;
     }
 
     private _deleteFolder(folder:IFolder, callbackSuccess, callbackFail) {

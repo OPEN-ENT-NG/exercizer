@@ -8,7 +8,7 @@ interface ISubjectCopy {
     calculated_score:number;
     comment:string;
     has_been_started:boolean;
-    submitted:string;
+    submitted_date:string;
     is_correction_on_going:boolean;
     is_corrected:boolean;
     is_deleted:boolean;
@@ -25,7 +25,7 @@ class SubjectCopy implements  ISubjectCopy {
     private _calculated_score:number;
     private _comment:string;
     private _has_been_started:boolean;
-    private _submitted:string;
+    private _submitted_date:string;
     private _is_correction_on_going:boolean;
     private _is_corrected:boolean;
     private _is_deleted:boolean;
@@ -41,7 +41,7 @@ class SubjectCopy implements  ISubjectCopy {
         calculated_score?:number,
         comment?:string,
         has_been_started?:boolean,
-        submitted?:string,
+        submitted_date?:string,
         is_correction_on_going?:boolean,
         is_corrected?:boolean,
         is_deleted?:boolean
@@ -56,7 +56,7 @@ class SubjectCopy implements  ISubjectCopy {
         this._calculated_score = calculated_score;
         this._comment = comment;
         this._has_been_started = has_been_started;
-        this._submitted = submitted;
+        this._submitted_date = submitted_date;
         this._is_correction_on_going = is_correction_on_going;
         this._is_corrected = is_corrected;
         this._is_deleted = is_deleted;
@@ -134,12 +134,12 @@ class SubjectCopy implements  ISubjectCopy {
         this._has_been_started = value;
     }
 
-    get submitted():string {
-        return this._submitted;
+    get submitted_date():string {
+        return this._submitted_date;
     }
 
-    set submitted(value:string) {
-        this._submitted = value;
+    set submitted_date(value:string) {
+        this._submitted_date = value;
     }
 
     get is_correction_on_going():boolean {
