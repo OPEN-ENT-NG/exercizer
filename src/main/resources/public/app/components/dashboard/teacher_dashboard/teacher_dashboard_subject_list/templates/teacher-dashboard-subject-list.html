@@ -20,12 +20,12 @@
                         Mes sujets
                     </a>
                     <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false" >
-                        <folder-item   item = "item"
+                        <folder-nav-item   item = "item"
                                        is-root = "true"
                                        set-current-folder-fn="setCurrentFolder"
                                        parent-id="parentId"
                                        current-folder-id = "currentFolderId"
-                        ></folder-item>
+                        ></folder-nav-item>
                     </div>
                 </li>
             </ul>

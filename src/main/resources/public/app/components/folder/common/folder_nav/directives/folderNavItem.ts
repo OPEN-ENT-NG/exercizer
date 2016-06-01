@@ -1,6 +1,6 @@
 directives.push(
     {
-        name: 'folderItem',
+        name: 'folderNavItem',
         injections: ['FolderService', 'DragService', '$compile', (FolderService, DragService, $compile) => {
             return {
                 restrict: 'E',
@@ -12,7 +12,7 @@ directives.push(
                     setCurrentFolderFn : "&",
                     currentFolderId : "="
                 },
-                templateUrl: 'exercizer/public/app/templates/directives/partials/folderItem.html',
+                templateUrl: 'exercizer/public/app/components/folder/common/folder_nav/templates/folder-nav-item.html',
                 link: (scope:any, element, attrs) => {
 
                     scope.folderList = FolderService.folderList;
@@ -37,7 +37,7 @@ directives.push(
                             if(scope.isItemDisplayed()){
                                 // if displayed item
                                 element.children()
-                                    .after($compile("<folder-container class=append is-root='false' parent-id = 'item.id' folder-list='subFolderList' set-current-folder-fn='setCurrentFolder' current-folder-id = 'currentFolderId'></folder-container>")(scope))
+                                    .after($compile("<folder-nav-container class=append is-root='false' parent-id = 'item.id' folder-list='subFolderList' set-current-folder-fn='setCurrentFolder' current-folder-id = 'currentFolderId'></folder-nav-container>")(scope))
                             }
                         }
                     }, true);

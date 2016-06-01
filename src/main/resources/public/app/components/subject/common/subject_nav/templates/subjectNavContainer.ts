@@ -1,6 +1,6 @@
 directives.push(
     {
-        name: 'folderContainer',
+        name: 'subjectNavContainer',
         injections: ['FolderService', (FolderService) => {
             return {
                 restrict: 'E',
@@ -12,10 +12,9 @@ directives.push(
                     setCurrentFolderFn : "&",
                     currentFolderId : "="
                 },
-                templateUrl: 'exercizer/public/app/templates/directives/partials/folderContainer.html',
+                templateUrl: 'exercizer/public/app/components/subject/common/subject_nav/directives/subject-nav-container.html',
                 link: (scope:any, element, attrs) => {
 
-                    scope.setCurrentFolder = scope.setCurrentFolderFn();
                 }
             };
         }]
