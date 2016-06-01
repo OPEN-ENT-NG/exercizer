@@ -1,6 +1,15 @@
 <div class="row rigid-grid">
     <!-- navigation -->
     <section class="four cell">
+        <div class="row">
+            <div class="ten cell" data-ng-click="clickOnAutocompletee()">
+                <autocomplete
+                        options="autocomplete.subjectList"
+                        ng-change="clickOnItem(selectedItem)"
+                        ng-model="selectedItem">
+                </autocomplete>
+            </div>
+        </div>
         <nav class="vertical dragging-zone-folder">
             <ul>
                 <li>
