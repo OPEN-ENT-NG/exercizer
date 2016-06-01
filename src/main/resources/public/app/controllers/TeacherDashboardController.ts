@@ -54,22 +54,27 @@ class TeacherDashboardController {
 
         self._$scope.$on("E_SCHEDULE_SUBJECT", function (event, subject) {
             self._$scope.$broadcast("E_DISPLAY_MODAL_SCHEDULE_SUBJECT", subject);
+            self.resetSelectedSubjectList();
         });
 
         self._$scope.$on("E_EDIT_FOLDER", function (event, folder) {
             self._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER", folder);
+            self.resetSelectedFolderList();
         });
 
         self._$scope.$on("E_COPY_SELECTED_FOLDER_SUBJECT", function (event) {
             self._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_COPY_PASTE", self._selectedSubjectList, self._selectedFolderList);
+            // reset list in confirm
         });
 
         self._$scope.$on("E_EDIT_SUBJECT", function (event, subject) {
             self._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT", subject);
+            self.resetSelectedSubjectList();
         });
 
         self._$scope.$on("E_REMOVE_SELECTED_FOLDER_SUBJECT", function (event) {
             self._$scope.$broadcast("E_DISPLAY_DASHBOARD_MODAL_REMOVE_SELECTED_FOLDER_SUBJECT", self._selectedSubjectList, self._selectedFolderList);
+            // reset list in confirm
         });
 
         self._$scope.$on("E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT", function (event) {
@@ -77,25 +82,24 @@ class TeacherDashboardController {
             angular.forEach(self._selectedFolderList, function (id, key) {
                 self._folderService.deleteFolder(self._folderService.folderById(id), null, null)
             });
-            self._selectedFolderList = [];
+            self.resetSelectedFolderList();
             // delete subject
             angular.forEach(self._selectedSubjectList, function (id, key) {
                 var promise = self._subjectService.remove(self._subjectService.getById(id));
                 promise.then(function(data){
                 })
             });
-            self._selectedSubjectList = [];
-
+            self.resetSelectedSubjectList();
         });
 
         self._$scope.$on("E_CONFIRM_COPY_PASTE", function (event, folder) {
             var folderParentId = folder ? folder.id : null;
             self.duplicateFolderList(self._selectedFolderList, folderParentId);
             self.duplicateSubjectList(self._selectedSubjectList, folderParentId);
+            self.resetSelectedList();
         });
     };
     private duplicateSubjectList(list, folderParentId){
-        console.log('duplicateSubjectList', list, folderParentId);
         var self = this;
         angular.forEach(list, function (subject, key) {
             var id;
@@ -120,21 +124,35 @@ class TeacherDashboardController {
             } else{
                 id = folder;
             }
+            if(id == folderParentId){
+                console.error('try to duplicate a folder in itself');
+                throw "";
+
+            }
             self._folderService.duplicateFolder(self._folderService.folderById(id),
                 function(data){
-                    // data is folder
+                    // ---
+                    // data.id is the id of the folder created
+                    // id is the id of the folder duplicated (origin)
+                    // folderParentId is the folder where the folder is duplicate
+                    // ---
+                    // set parent folder id to the folder created
                     if(folderParentId){
                         self._folderService.setParentFolderId(data.id, folderParentId);
                     }
-                    // duplicate children folder
+                    // get children folder of the folder duplicated
                     var childrenFolder = self._folderService.getListOfSubFolderByFolderId(id);
+                    // we want to remove from this list the folder create just now
+                    angular.forEach(childrenFolder, function(value){
+                       console.log('value') ;
+                    });
+                    // if children exit , duplicate it
                     if(childrenFolder){
                         self.duplicateFolderList(childrenFolder, data.id);
                     }
-                    // duplicate children subject
+                    // duplicate children subject of the folder duplicated
                     var childrenSubject = self._subjectService.getListByFolderId(id);
                     if(childrenSubject.length != 0){
-                        console.log('have children subject', childrenSubject);
                         self.duplicateSubjectList(childrenSubject,data.id);
                     }
                 }
@@ -143,15 +161,13 @@ class TeacherDashboardController {
         });
     }
 
-
-
-
     private toggleItem(id, isSelected, list) {
         var index = list.indexOf(id);
         if (isSelected) {
             if (index === -1) {
                 // the item is not in the list
                 list.push(id);
+                // force attribut selected in object
             } else {
                 // the item is in the list
                 console.error('try to add an item in the list but the item is already in the list');
@@ -166,7 +182,6 @@ class TeacherDashboardController {
             }
         }
     }
-
     private feedExercizer() {
 
         var self = this;
@@ -180,5 +195,37 @@ class TeacherDashboardController {
         // create subject
         var subject = new Subject(null, null, null, null, null, null, null, "My Subject", "My description", null, null, null, null);
         var promise = this._subjectService.persist(subject);
+    }
+
+    private resetSelectedFolderList(){
+        var self = this,
+            folder;
+        angular.forEach(self._selectedFolderList, function(id){
+            folder = self._folderService.folderById(id) || null;
+            if(folder !== null){
+                folder.selected = false;
+            }
+        });
+        this._selectedFolderList = [];
+        self._$scope.$broadcast("E_DISPLAY_DASHBOARD_TOASTER",  self._selectedSubjectList, self._selectedFolderList);
+
+    }
+    private resetSelectedSubjectList(){
+        var self = this,
+            subject;
+        angular.forEach(self._selectedSubjectList, function(id){
+            subject = self._subjectService.getById(id) || null;
+            if(subject !== null){
+                subject.selected = false;
+            }
+        });
+        this._selectedSubjectList = [];
+        self._$scope.$broadcast("E_DISPLAY_DASHBOARD_TOASTER",  self._selectedSubjectList, self._selectedFolderList);
+
+    }
+
+    private resetSelectedList(){
+        this.resetSelectedFolderList();
+        this.resetSelectedSubjectList();
     }
 }

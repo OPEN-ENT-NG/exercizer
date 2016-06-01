@@ -9,12 +9,15 @@ directives.push(
                     item: "=",
                     isRoot: "=",
                     parentId : "=",
-                    setCurrentFolder : "&"
+                    setCurrentFolderFn : "&",
+                    currentFolderId : "="
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/partials/folderItem.html',
                 link: (scope:any, element, attrs) => {
 
                     scope.folderList = FolderService.folderList;
+
+                    scope.setCurrentFolder = scope.setCurrentFolderFn();
 
                     scope.$watch('folderList', function () {
                         // set subjectFolderList
@@ -34,7 +37,7 @@ directives.push(
                             if(scope.isItemDisplayed()){
                                 // if displayed item
                                 element.children()
-                                    .after($compile("<folder-container class=append is-root='false' parent-id = 'item.id' folder-list='subFolderList'></folder-container>")(scope))
+                                    .after($compile("<folder-container class=append is-root='false' parent-id = 'item.id' folder-list='subFolderList' set-current-folder-fn='setCurrentFolder' current-folder-id = 'currentFolderId'></folder-container>")(scope))
                             }
                         }
                     }, true);
@@ -44,7 +47,7 @@ directives.push(
                      */
 
                     scope.clickOnFolder = function (folder) {
-                        scope.setCurrentFolder({myParam: folder});
+                            scope.setCurrentFolder(folder);
                     };
 
                     /**
@@ -79,6 +82,12 @@ directives.push(
                         } else {
                             // sub folder
                             return scope.item.parent_folder_id == scope.parentId;
+                        }
+                    };
+
+                    scope.isCurrentFolder = function(item){
+                        if(item.id == scope.currentFolderId){
+                            return 'selected';
                         }
                     }
 

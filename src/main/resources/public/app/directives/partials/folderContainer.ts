@@ -8,11 +8,14 @@ directives.push(
                 scope: {
                     folderList: "=",
                     isRoot: "=",
-                    parentId :"="
+                    parentId :"=",
+                    setCurrentFolderFn : "&",
+                    currentFolderId : "="
                 },
                 templateUrl: 'exercizer/public/app/templates/directives/partials/folderContainer.html',
                 link: (scope:any, element, attrs) => {
 
+                    scope.setCurrentFolder = scope.setCurrentFolderFn();
                 }
             };
         }]

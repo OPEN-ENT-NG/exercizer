@@ -7,6 +7,7 @@
         dragdrop="dropTo(item, $originalEvent)"
         dropcondition="dropCondition(item)"
         data-ng-click="clickOnFolder(item)"
+        data-ng-class="isCurrentFolder(item)"
     >
         [[item.label]]
     </a>
