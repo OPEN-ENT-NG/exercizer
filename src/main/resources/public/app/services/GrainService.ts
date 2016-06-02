@@ -149,21 +149,17 @@ class GrainService implements IGrainService {
                     url: 'exercizer/grains',
                     data : subject
                 };
+            
+            this._listMappedBySubjectId[subject.id] = [];
 
             this._$http(request).then(
                 function (response) {
-                    self._listMappedBySubjectId = {};
                     var grain;
                     angular.forEach(response.data, function (grainObject) {
-                        var grainJson = JSON.stringify(grainObject);
-                        grain = SerializationHelper.toInstance(new Grain(), grainJson);
-                        grain.grain_data = SerializationHelper.toInstance(new GrainData(), grainObject.grain_data);
+                        grain = SerializationHelper.toInstance(new Grain(), JSON.stringify(grainObject));
                         switch (grain.grain_type_id){
                             case 4:
                                 grain.grain_data.cutom_data =  SerializationHelper.toInstance(new SimpleAnswerCustomData(), grainObject.grain_data.cutom_data);
-                                break;
-                            case 5:
-                                // no custom data
                                 break;
                             case 6:
                                 grain.grain_data.cutom_data =  SerializationHelper.toInstance(new MultipleAnswerCustomData(), grainObject.grain_data.cutom_data);
@@ -177,14 +173,8 @@ class GrainService implements IGrainService {
                             case 9:
                                 grain.grain_data.cutom_data =  SerializationHelper.toInstance(new OrderCustomData(), grainObject.grain_data.cutom_data);
                                 break;
-                            default:
-                                if (grain.grain_type_id === 1 || grain.grain_type_id === 2 ||grain.grain_type_id === 3){
-                                    // ok
-                                } else{
-                                    console.error('type not defined');
-                                }
                         }
-                        self._listMappedBySubjectId[subject.id] = grain;
+                        self._listMappedBySubjectId[subject.id].push(grain);
                     });
                     deferred.resolve(self._listMappedBySubjectId[subject.id]);
                 },
@@ -193,17 +183,6 @@ class GrainService implements IGrainService {
                 }
             );
         }
-
-
-
-        //TODO remove when using real API
-        setTimeout(function(self, subject) {
-            if (angular.isUndefined(self._listMappedBySubjectId[subject.id])) {
-                self._listMappedBySubjectId[subject.id] = [];
-            }
-            deferred.resolve(self._listMappedBySubjectId[subject.id]);
-        }, 100, self, subject);
-
 
         return deferred.promise;
     };

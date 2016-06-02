@@ -67,7 +67,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         }
 
         String updateQuery = "UPDATE " + resourceTable + " SET " + query.toString() + "modified = NOW() " + "WHERE id = ? RETURNING *";
-        sql.prepared(updateQuery, values.add(parseId(resource.getString("id"))), validRowsResultHandler(handler));
+        sql.prepared(updateQuery, values.add(resource.getInteger("id")), validRowsResultHandler(handler));
     }
 
     /**
@@ -90,7 +90,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      * @param handler the handler
      */
     protected void delete(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        super.delete(resource.getString("id"), user, handler);
+        super.delete(resource.getInteger("id").toString(), user, handler);
     }
 
     /**
@@ -153,7 +153,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     protected void list(final JsonObject resource, final String resourceIdentifierName, final String resourceTable, final Handler<Either<String, JsonArray>> handler) {
         StringBuilder query = new StringBuilder();
 
-        query.append("SELECT DISTINCT(o.*)")
+        query.append("SELECT o.*")
                 .append(" FROM ")
                 .append(super.resourceTable)
                 .append(" AS o")
@@ -163,7 +163,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(resourceIdentifierName)
                 .append(" WHERE r.id = ? ");
 
-        sql.prepared(query.toString(), new JsonArray().add(parseId(resource.getString("id"))), SqlResult.validResultsHandler(handler));
+        sql.prepared(query.toString(), new JsonArray().add(resource.getInteger("id")), SqlResult.validResultHandler(handler));
     }
 
     /**
@@ -177,7 +177,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     protected void list(final String resourceIdentifierName, final String resourceTable, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
         StringBuilder query = new StringBuilder();
 
-        query.append("SELECT DISTINCT(o.*)")
+        query.append("SELECT o.*")
                 .append(" FROM ")
                 .append(super.resourceTable)
                 .append(" AS o")
@@ -187,6 +187,6 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(resourceIdentifierName)
                 .append(" WHERE r.owner = ?");
 
-        sql.prepared(query.toString(), new JsonArray().add(user.getUserId()), SqlResult.validResultsHandler(handler));
+        sql.prepared(query.toString(), new JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
     }
 }
