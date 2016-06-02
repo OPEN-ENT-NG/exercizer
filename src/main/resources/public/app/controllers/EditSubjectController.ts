@@ -55,7 +55,7 @@ class EditSubjectController {
 
         function _handleGrainListUpdated() {
 
-            self._grainService.getListBySubjectId(self._subject.id).then(
+            self._grainService.getListBySubject(self._subject).then(
                 function (grainList) {
                     var maxScore = 0;
                     angular.forEach(grainList, function (grain:IGrain) {
@@ -154,7 +154,7 @@ class EditSubjectController {
         });
 
         function _handleFoldGrainList() {
-            self._grainService.getListBySubjectId(self._subject.id).then(
+            self._grainService.getListBySubject(self._subjectd).then(
                 function (grainList) {
                     angular.forEach(grainList, function (grain:IGrain) {
                         if (grain.grain_type_id > 2) {

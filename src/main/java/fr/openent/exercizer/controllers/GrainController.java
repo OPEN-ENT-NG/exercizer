@@ -92,7 +92,7 @@ public class GrainController extends ControllerHelper {
         });
     }
 
-    @Get("/grains")
+    @Post("/grains")
     @ApiDoc("Gets grain list.")
     //@SecuredAction("exercizer.grain.list")
     public void list(final HttpServerRequest request) {
