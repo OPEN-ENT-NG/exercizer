@@ -3,9 +3,7 @@ directives.push(
         name: 'subjectEditButtonAddNewGrain',
         injections:
             [
-                'E_ADD_GRAIN',
                 (
-                    E_ADD_GRAIN
                 ) => {
                     return {
                         restrict: 'E',
@@ -22,7 +20,7 @@ directives.push(
                                 newGrain.grain_data = new GrainData();
                                 newGrain.grain_type_id = 1;
 
-                                scope.$emit(E_ADD_GRAIN + scope.subject.id, newGrain);
+                                scope.$emit("E_ADD_GRAIN", newGrain);
                             };
                         }
                     };

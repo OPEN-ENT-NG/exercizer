@@ -2,11 +2,9 @@ directives.push(
     {
         name: 'subjectEditModalRemoveGrain',
         injections: [
-            'E_CONFIRM_REMOVE_GRAIN',
-            'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN',
+
             (
-                E_CONFIRM_REMOVE_GRAIN,
-                E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN
+
             ) => {
                 return {
                     restrict: 'E',
@@ -20,7 +18,7 @@ directives.push(
                         scope.grain = undefined;
 
                         scope.confirm = function() {
-                            scope.$emit(E_CONFIRM_REMOVE_GRAIN + scope.subject.id, scope.grain);
+                            scope.$emit("E_CONFIRM_REMOVE_GRAIN", scope.grain);
                             scope.isDisplayed = false;
                         };
 
@@ -28,7 +26,7 @@ directives.push(
                             scope.isDisplayed = false;
                         };
 
-                        scope.$on(E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN + scope.subject.id, function(event, grain:IGrain) {
+                        scope.$on("E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN", function(event, grain:IGrain) {
                             scope.grain = grain;
                             scope.isDisplayed = true;
                         });

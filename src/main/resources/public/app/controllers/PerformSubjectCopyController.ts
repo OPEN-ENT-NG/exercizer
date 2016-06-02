@@ -9,10 +9,6 @@ class PerformSubjectCopyController {
         'GrainScheduledService',
         'GrainCopyService',
         'GrainTypeService',
-        // received events
-        'E_UPDATE_GRAIN_COPY',
-        'E_CURRENT_GRAIN_COPY_CHANGED'
-        // broadcast events
     ];
 
     private _subjectScheduled:ISubjectScheduled;
@@ -31,12 +27,7 @@ class PerformSubjectCopyController {
         private _grainService:IGrainService,
         private _grainScheduledService:IGrainScheduledService,
         private _grainCopyService:IGrainCopyService,
-        private _grainTypeService:IGrainTypeService,
-        // received events
-        private _E_UPDATE_GRAIN_COPY,
-        private _E_CURRENT_GRAIN_COPY_CHANGED,
-        // broadcast events
-        private _E_CURRENT_GRAIN_COPY_CHANGE
+        private _grainTypeService:IGrainTypeService
     )
     {
         this._$scope = _$scope;
@@ -47,12 +38,6 @@ class PerformSubjectCopyController {
         this._grainCopyService = _grainCopyService;
         this._grainTypeService = _grainTypeService;
         this._hasDataBeenLoaded = false;
-
-        // received events
-        this._E_UPDATE_GRAIN_COPY = _E_UPDATE_GRAIN_COPY;
-        this._E_CURRENT_GRAIN_COPY_CHANGED = _E_CURRENT_GRAIN_COPY_CHANGED;
-        // broadcast events
-        this._E_CURRENT_GRAIN_COPY_CHANGE = _E_CURRENT_GRAIN_COPY_CHANGE;
     }
 
     public preview(subject:ISubject) {
@@ -120,7 +105,7 @@ class PerformSubjectCopyController {
             );
         }
 
-        self._$scope.$on(self._E_UPDATE_GRAIN_COPY, function(event, grainCopy:IGrainCopy) {
+        self._$scope.$on("E_UPDATE_GRAIN_COPY", function(event, grainCopy:IGrainCopy) {
             if (!self._previewing) {
                 _handleUpdateGrainCopy(grainCopy);
             } else {
@@ -128,15 +113,15 @@ class PerformSubjectCopyController {
             }
         });
 
-        self._$scope.$on(self._E_CURRENT_GRAIN_COPY_CHANGED, function(event, grainCopy:IGrainCopy) {
+        self._$scope.$on("E_CURRENT_GRAIN_COPY_CHANGED", function(event, grainCopy:IGrainCopy) {
             if (!self._subjectCopy.has_been_started) {
                 self._subjectCopy.has_been_started = true;
             }
-            self._$scope.$broadcast(self._E_CURRENT_GRAIN_COPY_CHANGE, grainCopy);
+            self._$scope.$broadcast("E_CURRENT_GRAIN_COPY_CHANGE", grainCopy);
         });
         
         // init
-        self._$scope.$broadcast(self._E_CURRENT_GRAIN_COPY_CHANGE, undefined);
+        self._$scope.$broadcast("E_CURRENT_GRAIN_COPY_CHANGE", undefined);
         self._hasDataBeenLoaded = true;
     };
 

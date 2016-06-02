@@ -3,9 +3,7 @@ directives.push(
         name: 'subjectPerformCopyDisplayCurrentGrainCopy',
         injections:
             [
-                'E_CURRENT_GRAIN_COPY_CHANGE',
                 (
-                    E_CURRENT_GRAIN_COPY_CHANGE
                 ) => {
                     return {
                         restrict: 'E',
@@ -17,7 +15,7 @@ directives.push(
                         link:(scope:any) => {
                             scope.currentGrainCopy = undefined;
                             
-                            scope.$on(E_CURRENT_GRAIN_COPY_CHANGE + scope.subjectCopy.id, function(event, grainCopy:IGrainCopy) {
+                            scope.$on("E_CURRENT_GRAIN_COPY_CHANGE", function(event, grainCopy:IGrainCopy) {
                                scope.currentGrainCopy = grainCopy; 
                             });
                         }

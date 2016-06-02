@@ -4,14 +4,9 @@ directives.push(
         injections:
             [
                 '$sce',
-                'E_UPDATE_GRAIN',
-                'E_TOGGLE_GRAIN',
-                'E_FORCE_FOLDING_GRAIN',
                 (
-                    $sce,
-                    E_UPDATE_GRAIN,
-                    E_TOGGLE_GRAIN,
-                    E_FORCE_FOLDING_GRAIN
+                    $sce
+
                 ) => {
                     return {
                         restrict: 'E',
@@ -29,14 +24,14 @@ directives.push(
 
                             scope.isFolded = false;
 
-                            scope.$on(E_TOGGLE_GRAIN + scope.grain.subject_id, function(event, grain:IGrain) {
+                            scope.$on("E_TOGGLE_GRAIN", function(event, grain:IGrain) {
                                 if (grain.id === scope.grain.id) {
                                     scope.statementHtml = $sce.trustAsHtml(scope.grain.grain_data.custom_data.statement);
                                     scope.isFolded = !scope.isFolded;
                                 }
                             });
 
-                            scope.$on(E_FORCE_FOLDING_GRAIN + scope.grain.subject_id, function() {
+                            scope.$on("E_FORCE_FOLDING_GRAIN", function() {
                                 scope.statementHtml = $sce.trustAsHtml(scope.grain.grain_data.custom_data.statement);
                                 scope.isFolded = true;
                             });
@@ -56,7 +51,7 @@ directives.push(
                             element.find('editor').on('editor-blur', function(){
                                 if(isEditorFocus){
                                     isEditorFocus = false;
-                                    scope.$emit(E_UPDATE_GRAIN + scope.grain.subject_id, scope.grain);
+                                    scope.$emit("E_UPDATE_GRAIN", scope.grain);
                                 }
                             });
                         }

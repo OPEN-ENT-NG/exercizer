@@ -3,6 +3,7 @@ interface ISubjectService {
     update(subject:ISubject):ng.IPromise<ISubject>;
     remove(subject:ISubject):ng.IPromise<ISubject>;
     duplicate (subject:ISubject):ng.IPromise<ISubject>
+    loadSubjectList ();
     deleteSubjectChildrenOfFolder(folder:IFolder);
     getList():ISubject[];
     getListByFolderId(folderId);
@@ -28,28 +29,8 @@ class SubjectService implements ISubjectService {
      GrainService) {
         this._$q = _$q;
         this._$http = _$http;
-        this._grainService =GrainService;
+        this._grainService = GrainService;
 
-        // TODO remove
-        this._listMappedById = {};
-
-        var self = this,
-            request = {
-                method: 'GET',
-                url: 'exercizer/subjects'
-            };
-
-        this._$http(request).then(
-            function(response) {
-                angular.forEach(response.data, function(subjectObject) {
-                    var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject));
-                    self._listMappedById[subject.id] = subject;
-                });
-            },
-            function() {
-                notify.error('Une erreur est survenue lors de la récupération de vos sujets.');
-            }
-        );
     }
 
     public persist = function (subject:ISubject):ng.IPromise<ISubject> {
@@ -62,12 +43,12 @@ class SubjectService implements ISubjectService {
             };
 
         this._$http(request).then(
-            function(response) {
+            function (response) {
                 subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
                 self._listMappedById[subject.id] = subject;
                 deferred.resolve(subject);
             },
-            function() {
+            function () {
                 deferred.reject('Une erreur est survenue lors de la sauvegarde des propriétés du sujet.');
             }
         );
@@ -75,20 +56,20 @@ class SubjectService implements ISubjectService {
         return deferred.promise;
     };
 
-    public duplicate = function (subject:ISubject, duplicateGrain : boolean = true):ng.IPromise<ISubject> {
+    public duplicate = function (subject:ISubject, duplicateGrain:boolean = true):ng.IPromise<ISubject> {
         var self = this;
         var duplicatedSubject = CloneObjectHelper.clone(subject, true);
         duplicatedSubject.id = undefined;
         duplicatedSubject.title += '_copie';
         duplicatedSubject.selected = false;
-        if(duplicateGrain === true){
+        if (duplicateGrain === true) {
             var deferred = this._$q.defer();
             var promisePersist = this.persist(duplicatedSubject);
-            promisePersist.then(function(dataSubject){
+            promisePersist.then(function (dataSubject) {
                 // data is subject
                 var promiseGrainList = self._grainService.getListBySubjectId(subject.id);
-                promiseGrainList.then(function(dataGrainList){
-                    angular.forEach(dataGrainList, function(grain, key) {
+                promiseGrainList.then(function (dataGrainList) {
+                    angular.forEach(dataGrainList, function (grain, key) {
                         var newGrain = self._grainService.copyOf(grain);
                         //data is grain
                         newGrain.subject_id = dataSubject.id;
@@ -104,11 +85,11 @@ class SubjectService implements ISubjectService {
         }
     };
 
-    public getListByFolderId(folderId){
+    public getListByFolderId(folderId) {
         var self = this;
         var array = {};
-        angular.forEach(self._listMappedById, function(value, key) {
-            if(value.folder_id  == folderId){
+        angular.forEach(self._listMappedById, function (value, key) {
+            if (value.folder_id == folderId) {
                 array[value.id] = value;
             }
         });
@@ -123,7 +104,7 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
-        
+
         //TODO remove when using real API
         setTimeout(function (self, subject) {
             self._listMappedById[subject.id] = subject;
@@ -143,7 +124,7 @@ class SubjectService implements ISubjectService {
             };
 
         //TODO remove when using real API
-        setTimeout(function(self, subject) {
+        setTimeout(function (self, subject) {
             if (angular.isUndefined(self._listMappedById[subject.id])) {
                 self._listMappedById[subject.id] = [];
             }
@@ -170,8 +151,42 @@ class SubjectService implements ISubjectService {
         });
     };
 
-    public getList = function():ISubject[] {
-        return MapToListHelper.toList(this._listMappedById);
+    public loadSubjectList = function () {
+        var deferred = this._$q.defer();
+        if (!angular.isUndefined(this._listMappedById)) {
+            deferred.resolve(MapToListHelper.toList(this._listMappedById));
+        } else {
+            var self = this,
+                request = {
+                    method: 'GET',
+                    url: 'exercizer/subjects'
+                };
+
+            this._$http(request).then(
+                function (response) {
+                    self._listMappedById = {};
+                    angular.forEach(response.data, function (subjectObject) {
+                        var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject));
+                        self._listMappedById[subject.id] = subject;
+                    });
+                    deferred.resolve(MapToListHelper.toList(self._listMappedById));
+                },
+                function () {
+                    deferred.reject('Une erreur est survenue lors de la récupération de vos sujets.');
+                }
+            );
+        }
+        return deferred.promise;
+    };
+
+
+    public getList = function ():ISubject[] {
+        if (!angular.isUndefined(this._listMappedById)) {
+            return MapToListHelper.toList(this._listMappedById);
+        } else {
+            return [];
+        }
+
     };
 
     public getById = function (id:number):ISubject {

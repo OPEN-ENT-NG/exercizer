@@ -2,9 +2,7 @@ directives.push(
     {
         name: 'choose',
         injections: [ 
-            'E_UPDATE_GRAIN',
             (
-                E_UPDATE_GRAIN
             ) => {
             return {
                 restrict: 'E',
@@ -17,7 +15,7 @@ directives.push(
                         
                         scope.grain.grain_type_id = grainTypeId;
                         
-                        scope.$emit(E_UPDATE_GRAIN + scope.grain.subject_id, scope.grain);
+                        scope.$emit("E_UPDATE_GRAIN", scope.grain);
                     }
                 }
             };

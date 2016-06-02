@@ -3,13 +3,9 @@ directives.push(
         name: 'editSimpleAnswer',
         injections:
             [
-                'E_UPDATE_GRAIN',
-                'E_TOGGLE_GRAIN',
-                'E_FORCE_FOLDING_GRAIN',
+
                 (
-                    E_UPDATE_GRAIN,
-                    E_TOGGLE_GRAIN,
-                    E_FORCE_FOLDING_GRAIN
+
                 ) => {
                     return {
                         restrict: 'E',
@@ -26,16 +22,16 @@ directives.push(
                             scope.isFolded = false;
 
                             scope.updateGrain = function() {
-                                scope.$emit(E_UPDATE_GRAIN + scope.grain.subject_id, scope.grain);
+                                scope.$emit("E_UPDATE_GRAIN", scope.grain);
                             };
 
-                            scope.$on(E_TOGGLE_GRAIN + scope.grain.subject_id, function(event, grain:IGrain) {
+                            scope.$on("E_TOGGLE_GRAIN", function(event, grain:IGrain) {
                                 if (grain.id === scope.grain.id) {
                                     scope.isFolded = !scope.isFolded;
                                 }
                             });
 
-                            scope.$on(E_FORCE_FOLDING_GRAIN + scope.grain.subject_id, function() {
+                            scope.$on("E_FORCE_FOLDING_GRAIN", function() {
                                 scope.isFolded = true;
                             });
                         }
