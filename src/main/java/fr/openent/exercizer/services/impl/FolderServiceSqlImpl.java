@@ -18,7 +18,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
      */
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        super.persist(resource, true, user, handler);
+        super.persist(resource, Boolean.TRUE, user, handler);
     }
 
     /**

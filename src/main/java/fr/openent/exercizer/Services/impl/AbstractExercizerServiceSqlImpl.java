@@ -78,7 +78,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      * @param handler the handler
      */
     protected void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        resource.putBoolean("is_deleted", true);
+        resource.putBoolean("is_deleted", Boolean.TRUE);
         update(resource, user, handler);
     }
 
@@ -143,7 +143,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     }
 
     /**
-     * Returns a list of resources according to a other resource.
+     * Returns a list of resources according to another resource.
      *
      * @param resource the resource
      * @param resourceIdentifierName the other resource identifier in the resource table
