@@ -65,7 +65,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         }
 
         String updateQuery = "UPDATE " + resourceTable + " SET " + query.toString() + "modified = NOW() " + "WHERE id = ? RETURNING *";
-        sql.prepared(updateQuery, values.add(resource.getInteger("id")), validRowsResultHandler(handler));
+        sql.prepared(updateQuery, values.add(resource.getInteger("id")), validUniqueResultHandler(1, handler));
     }
 
     /**

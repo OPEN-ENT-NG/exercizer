@@ -26,6 +26,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
      */
     @Override
     public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+        JsonObject grainData = new JsonObject();
         super.update(resource, user, handler);
     }
 
