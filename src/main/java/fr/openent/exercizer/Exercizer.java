@@ -14,6 +14,7 @@ public class Exercizer extends BaseServer {
         addController(new SubjectController());
         addController(new GrainController());
         addController(new GrainTypeController());
+        addController(new SubjectScheduledController());
     }
 
 }

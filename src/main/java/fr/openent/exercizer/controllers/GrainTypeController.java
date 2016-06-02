@@ -1,6 +1,5 @@
 package fr.openent.exercizer.controllers;
 
-
 import fr.openent.exercizer.services.IGrainTypeService;
 import fr.openent.exercizer.services.impl.GrainTypeServiceSqlImpl;
 import fr.wseduc.rs.ApiDoc;
