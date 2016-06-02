@@ -93,7 +93,7 @@ class SubjectService implements ISubjectService {
                 promiseGrainList.then(function(dataGrainList){
                     angular.forEach(dataGrainList, function(grain, key) {
                         var newGrain = self._grainService.copyOf(grain);
-                            //data is grain
+                        //data is grain
                         newGrain.subject_id = dataSubject.id;
                         console.log(newGrain);
                         self._grainService.persist(newGrain);
@@ -126,8 +126,7 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
-
-        console.log('delete subject');
+        
         //TODO remove when using real API
         setTimeout(function (self, subject) {
             self._listMappedById[subject.id] = subject;

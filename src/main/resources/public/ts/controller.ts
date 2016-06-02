@@ -123,7 +123,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST_');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT_');
         module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT');
-        module.constant('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', 'DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT_');
         module.constant('E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY', 'DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY_');
 
         /**
@@ -134,7 +133,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.constant('E_UPDATE_GRAIN_COPY', 'UPDATE_GRAIN_COPY_');
         module.constant('E_CURRENT_GRAIN_COPY_CHANGED', 'CURRENT_GRAIN_COPY_CHANGED_');
         // perform subject copy controller - broadcast events
-        module.constant('E_CURRENT_GRAIN_COPY_CHANGE', 'CURRENT_GRAIN_COPY_CHANGER_');
+        module.constant('E_CURRENT_GRAIN_COPY_CHANGE', 'CURRENT_GRAIN_COPY_CHANGE_');
 
         /**
          * Services

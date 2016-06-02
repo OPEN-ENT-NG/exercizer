@@ -44,8 +44,9 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
 
         if (hasOwnerField) {
             resource.putString("owner", user.getUserId());
-            s.insert(resourceTable, resource, "*");
         }
+
+        s.insert(resourceTable, resource, "*");
         sql.transaction(s.build(), validUniqueResultHandler(1, handler));
     }
 

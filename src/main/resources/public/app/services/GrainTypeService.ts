@@ -1,7 +1,7 @@
 interface IGrainTypeService {
+    resolve():ng.IPromise<IGrainType[]>
     getList():IGrainType[];
     getById(id:number):IGrainType;
-    getByName(name:string):IGrainType;
 }
 
 class GrainTypeService implements IGrainTypeService {
@@ -12,7 +12,6 @@ class GrainTypeService implements IGrainTypeService {
     ];
 
     private _listMappedById: {[id:number]:IGrainType};
-    private _listMappedByName: {[name:string]:IGrainType};
 
     constructor
     (
@@ -22,44 +21,43 @@ class GrainTypeService implements IGrainTypeService {
     {
         this._$q = _$q;
         this._$http = _$http;
-        this._listMappedById = {};
-        this._listMappedByName = {};
-
-        // TODO remove when using real api
-        var grainTypeList:IGrainType[] = [],
-            self = this;
-        
-        grainTypeList.push(new GrainType(1, 'choose', 'Ajouter...', undefined, false));
-        grainTypeList.push(new GrainType(2, 'chooseAnswer', 'Choisir un type de question...', undefined, false));
-        grainTypeList.push(new GrainType(3, 'statement', 'Énoncé', 'doc-text', false));
-        grainTypeList.push(new GrainType(4, 'simple_answer', 'Réponse simple', 'simple', true));
-        grainTypeList.push(new GrainType(5, 'open_answer', 'Réponse ouverte', 'ouverte', true));
-        grainTypeList.push(new GrainType(6, 'multiple_answers', 'Réponses multiples', 'multiple', true));
-        grainTypeList.push(new GrainType(7, 'qcm', 'QCM', 'qcm', true));
-        grainTypeList.push(new GrainType(8, 'association', 'Association', 'association', true));
-        grainTypeList.push(new GrainType(9, 'order_by', 'Mise en ordre', 'ordre', true));
-        grainTypeList.push(new GrainType(10, 'text_to_fill', 'Texte à trous', 'textetrous', true));
-        grainTypeList.push(new GrainType(11, 'area_select', 'Zone à remplir', 'zoneselect', true));
-        
-        angular.forEach(grainTypeList, function(grainType:IGrainType) {
-            self._listMappedById[grainType.id] = grainType;
-            self._listMappedByName[grainType.name] = grainType;
-        });
     }
 
-    public getList = function():IGrainType[] {
-        var self = this;
+    public resolve = function():ng.IPromise<IGrainType[]> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: 'exercizer/grain-types'
+            };
 
-        return Object.keys(this._listMappedById).map(function(v) {
-            return this._listMappedById[v];
-        }, self);
+        if (!angular.isUndefined(this._listMappedById)) {
+            deferred.resolve(this.getList());
+        } else {
+            this._$http(request).then(
+                function (response) {
+                    self._listMappedById = {};
+                    angular.forEach(response.data, function (grainTypeObject) {
+                        var grainType = SerializationHelper.toInstance(new GrainType(), JSON.stringify(grainTypeObject));
+                        self._listMappedById[grainType.id] = grainType;
+                    });
+
+                    deferred.resolve(self.getList());
+                },
+                function () {
+                    deferred.reject('Une erreur est survenue lors de la récupération des types des éléments du sujet.');
+                }
+            );
+        }
+
+        return deferred.promise;
+    };
+
+    public getList = function():IGrainType[] {
+        return MapToListHelper.toList(this._listMappedById);
     };
     
     public getById = function(id:number):IGrainType {
         return this._listMappedById[id];
-    };
-    
-    public getByName = function(name:string):IGrainType {
-        return this._listMappedByName[name];
     };
 }

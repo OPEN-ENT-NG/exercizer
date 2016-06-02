@@ -63,8 +63,8 @@ CREATE TABLE exercizer.grain_type(
 	id BIGSERIAL NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     public_name VARCHAR(255) NOT NULL,
-    illustration VARCHAR(255) NOT NULL,
-	is_in_list BOOL NOT NULL DEFAULT FALSE
+    illustration VARCHAR(255) NULL,
+	is_in_list BOOL DEFAULT FALSE
 );
 
 CREATE TABLE exercizer.grain(

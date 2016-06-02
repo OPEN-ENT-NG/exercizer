@@ -30,6 +30,30 @@ class GrainService implements IGrainService {
         var self = this,
             deferred = this._$q.defer();
 
+        if (angular.isUndefined(grain.order_by)) {
+            console.log(grain);
+            grain = this._setOrderToGrain(grain);
+        }
+
+        var grainObject = angular.copy(grain);
+        grainObject.grain_data = JSON.stringify(grainObject.grain_data);
+
+        var request = {
+                method: 'POST',
+                url: 'exercizer/grain',
+                data: grainObject
+            };
+
+        this._$http(request).then(
+            function(response) {
+                console.log(response)
+            },
+            function(error) {
+                console.log(error)
+            }
+        );
+
+
         //TODO update when using real API
         grain.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
         if (angular.isUndefined(grain.order_by)){

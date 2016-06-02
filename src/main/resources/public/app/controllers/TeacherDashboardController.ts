@@ -29,7 +29,6 @@ class TeacherDashboardController {
         this._selectedSubjectList = [];
         this._selectedFolderList = [];
         this._eventsHandler(self);
-        this.feedExercizer();
     }
 
     public createSubject = function(){
@@ -181,20 +180,6 @@ class TeacherDashboardController {
                 list.splice(index, 1);
             }
         }
-    }
-    private feedExercizer() {
-
-        var self = this;
-        // create folder
-        var folderA = new Folder(null, null, null, null, "A Folder");
-        var folderB = new Folder(null, null, null, null, "B Folder");
-        var folderC = new Folder(null, null, null, null, "C Folder");
-        this._folderService.createFolder(folderA, null, null);
-        this._folderService.createFolder(folderB, null, null);
-        this._folderService.createFolder(folderC, null, null);
-        // create subject
-        var subject = new Subject(null, null, null, null, null, null, null, "My Subject", "My description", null, null, null, null);
-        var promise = this._subjectService.persist(subject);
     }
 
     private resetSelectedFolderList(){
