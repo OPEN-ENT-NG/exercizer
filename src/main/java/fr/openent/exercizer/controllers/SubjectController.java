@@ -120,19 +120,19 @@ public class SubjectController extends ControllerHelper {
     }
 
     @Get("/subject/share/json/:id")
-    @ApiDoc("Lists rights for a given subject")
+    @ApiDoc("Lists rights for a given subject.")
     public void share(final HttpServerRequest request) {
     		super.shareJson(request, false);
     	}
 
     @Put("/subject/share/json/:id")
-    @ApiDoc("Adds rights for a given resource")
+    @ApiDoc("Adds rights for a given subject.")
     public void shareSubmit(final HttpServerRequest request) {
     		super.shareJsonSubmit(request, null, false);
     	}
 
     @Put("/subject/share/remove/:id")
-    @ApiDoc("Removes rights for a given resource")
+    @ApiDoc("Removes rights for a given subject.")
     public void shareRemove(final HttpServerRequest request) {
     		super.removeShare(request, false);
     	}

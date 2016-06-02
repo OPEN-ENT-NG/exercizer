@@ -157,12 +157,36 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(" FROM ")
                 .append(super.resourceTable)
                 .append(" AS o")
-                .append(" LEFT JOIN ")
+                .append(" JOIN ")
                 .append(resourceTable)
                 .append(" AS r ON r.id = o.")
                 .append(resourceIdentifierName)
                 .append(" WHERE r.id = ? ");
 
-        sql.prepared(query.toString(), new JsonArray().add(resource.getString("id")), SqlResult.validResultsHandler(handler));
+        sql.prepared(query.toString(), new JsonArray().add(parseId(resource.getString("id"))), SqlResult.validResultsHandler(handler));
+    }
+
+    /**
+     * Returns a list of resources according to another resource which belongs to the current user.
+     *
+     * @param resourceIdentifierName the other resource identifier in the resource table
+     * @param resourceTable the other resource table (with schema)
+     * @param user the current user
+     * @param handler the handler
+     */
+    protected void list(final String resourceIdentifierName, final String resourceTable, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
+        StringBuilder query = new StringBuilder();
+
+        query.append("SELECT DISTINCT(o.*)")
+                .append(" FROM ")
+                .append(super.resourceTable)
+                .append(" AS o")
+                .append(" JOIN ")
+                .append(resourceTable)
+                .append(" AS r ON o.id = r.")
+                .append(resourceIdentifierName)
+                .append(" WHERE r.owner = ?");
+
+        sql.prepared(query.toString(), new JsonArray().add(user.getUserId()), SqlResult.validResultsHandler(handler));
     }
 }
