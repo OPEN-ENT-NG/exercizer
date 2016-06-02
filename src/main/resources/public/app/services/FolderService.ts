@@ -1,12 +1,14 @@
 interface IFolderService {
-    persist(folder:IFolder):ng.IPromise<IFolder>;
-    update(folder:IFolder):ng.IPromise<IFolder>;
-    remove(folder:IFolder) : ng.IPromise<IFolder>;
-    duplicate(folder:IFolder) : ng.IPromise<IFolder>;
+    createFolder(folder:IFolder, callbackSuccess, callBackFail);
+    updateFolder(folder:IFolder, callbackSuccess, callBackFail);
+    deleteFolder(folder:IFolder, callbackSuccess, callbackFail);
+    createObjectFolder() : IFolder;
     setParentFolderId(originFolderId, targetFolderId);
     getListOfSubFolderByFolderId(folderId);
-    folderById(id:number) : IFolder;
+    duplicateFolder(folder: IFolder, callbackSuccess, callBackFail)
+    folderById(id) : IFolder;
     folderList : IFolder[];
+    currentFolderId;
 }
 
 class FolderService implements IFolderService {
@@ -14,220 +16,163 @@ class FolderService implements IFolderService {
     static $inject = [
         '$http',
         '$q',
-        'SubjectService'
+        'SubjectService',
     ];
 
-    // Inject
-    private _$http;
-    private _$q:ng.IQService;
-    private _subjectService;
+    // inject
+    private $http:any;
+    private $q:any;
+    private subjectService;
 
-    // Variable
+    // variables
     private _folderList:any;
+    // TODO move to controller;
+    private _currentFolderId;
     private _folderListByParentFolderId;
 
-    constructor($http, $q, SubjectService) {
-        this._$http = $http;
-        this._$q = $q;
-        this._subjectService = SubjectService;
+    constructor(
+        $http,
+        $q,
+        SubjectService
+    )
+    {
+        this.$http = $http;
+        this.$q = $q;
+        this.subjectService = SubjectService;
         // init folder list as an object
         this._folderList = {};
         this._folderListByParentFolderId = {};
-        this.loadFolderList();
-    }
 
-    /**
-     * get folder list
-     * @returns {any}
-     */
-    public get folderList():IFolder[] {
-        return this._folderList;
-    }
-
-    /**
-     * Get folder by id
-     * @param id
-     * @returns {*}
-     */
-    public folderById(id:number):IFolder {
-        return this._folderList[id];
-    }
-
-    /**
-     * load folder
-     * @returns {IPromise<T>}
-     * @private
-     */
-    private loadFolderList() {
         var self = this,
-            deferred = this._$q.defer(),
             request = {
                 method: 'GET',
                 url: 'exercizer/folders'
             };
-        this._$http(request).then(
-            function (response) {
-                var folder;
-                angular.forEach(response.data, function (folderObject) {
-                    folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(folderObject));
+
+        this.$http(request).then(
+            function(response) {
+                angular.forEach(response.data, function(folderObject) {
+                    var folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(folderObject));
                     self._folderList[folder.id] = folder;
                 });
-                deferred.resolve(self._folderList);
             },
-            function () {
-                deferred.reject('Une erreur est survenue lors de la récupération de vos dossiers.');
+            function() {
+                notify.error('Une erreur est survenue lors de la récupération de vos dossiers.');
             }
         );
-        return deferred.promise;
+
     }
 
-    /**
-     * get list of fodler by folder parent id
-     * @param folderId
-     * @returns {any}
-     */
-    public getListOfSubFolderByFolderId(folderId) {
-        if (this._folderListByParentFolderId[folderId]) {
-            // already set
-        } else {
-            // init _folderListByParentFolderId for this id
-            this._folderListByParentFolderId[folderId] = {};
-            // build it
-            angular.forEach(this._folderList, function (value, key) {
-                if (value.parent_folder_id == folderId) {
-                    this._folderListByParentFolderId[folderId][value.id] = value;
-                }
-            });
+
+    public get currentFolderId() {
+        return this._currentFolderId;
+    }
+
+    public set currentFolderId(value) {
+        this._currentFolderId = value;
+    }
+
+    public get folderList():IFolder[] {
+        return this._folderList;
+    }
+
+    public folderById(id):IFolder {
+        return this._folderList[id];
+    }
+
+    public createObjectFolder():IFolder {
+        throw "DEPRECATED USE NEW FOLDER";
+    }
+
+    public createFolder(folder:IFolder, callbackSuccess, callBackFail) {
+        this._persist(folder).then(callbackSuccess, callBackFail);
+    }
+
+    public duplicateFolder(folder: IFolder, callbackSuccess, callBackFail){
+        var newFolder = new Folder();
+        this.createFolder(newFolder,
+        function(data){
+            data.label = folder.label + "_(copie)";
+            if(callbackSuccess){
+                callbackSuccess(data);
+            }
+
+        }, null);
+    }
+
+    private addFolderToFolderList(folder:IFolder) {
+        if (this._folderList[folder.id]) {
+            delete this._folderList[folder.id];
         }
-        return this._folderListByParentFolderId[folderId];
+        this._folderList[folder.id] = folder;
     }
 
-    /**
-     * persist a folder
-     * @param folder
-     * @returns {IPromise<T>}
-     */
-    public persist(folder:IFolder):ng.IPromise<IFolder> {
-        var self = this,
-            deferred = this._$q.defer(),
-            request = {
-                method: 'POST',
-                url: 'exercizer/folder',
-                data: folder
-            };
-        this._$http(request).then(
-            function (response) {
-                folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(response.data));
-                self._folderList[folder.id] = folder;
-                deferred.resolve(folder);
+
+    public updateFolder(folder:IFolder, callbackSuccess, callbackFail) {
+        this._updateFolder(
+            folder,
+            function (data) {
+                // data is a folder;
+                if (callbackSuccess) {
+                    callbackSuccess(data);
+                }
             },
-            function () {
-                deferred.reject('Une erreur est survenue lors de la création du dossier.');
+            function (err) {
+                if (callbackFail) {
+                    callbackFail(err)
+                }
             }
-        );
-        return deferred.promise;
+        )
     }
 
-    /**
-     * update a folder
-     * @param folder
-     * @returns {IPromise<T>}
-     */
-    public update(folder:IFolder):ng.IPromise<IFolder> {
-        var self = this,
-            deferred = this._$q.defer(),
-            request = {
-                method: 'PUT',
-                url: 'exercizer/folder',
-                data: folder
-            };
-        this._$http(request).then(
-            function (response) {
-                folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(response.data));
-                self._folderList[folder.id] = folder;
-                deferred.resolve(folder);
+    public deleteFolder(folder:IFolder, callbackSuccess, callbackFail) {
+        var self = this;
+        this._deleteFolder(
+            folder,
+            function (data) {
+                self.removeFolderToFolderList(data);
+                self.removeFolderToFolderListByParentFolderId(data);
+                self.deleteChildrenFolder(data);
+                self.deleteChildrenSubject(data);
+                if(callbackSuccess){
+                    callbackSuccess(data);
+                }
             },
-            function () {
-                deferred.reject('Une erreur est survenue lors de la création du dossier.');
+            function (err) {
+                if (callbackFail) {
+                    callbackFail(err)
+                }
             }
-        );
-        return deferred.promise;
+        )
     }
 
-    /**
-     * remove folder
-     * @param folder
-     * @returns {IPromise<T>}
-     */
-    public remove(folder:IFolder):ng.IPromise<IFolder> {
-        var self = this,
-            deferred = this._$q.defer(),
-            request = {
-                method: 'DELETE',
-                url: 'exercizer/folder',
-                data: folder
-            };
-        this._$http(request).then(
-            function (response) {
-                folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(response.data));
-                delete self._folderList[folder.id];
-                self.removeFolderToFolderListByParentFolderId(folder);
-                self.deleteChildrenFolder(folder);
-                self.deleteChildrenSubject(folder);
-                deferred.resolve();
-            },
-            function () {
-                deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
-            }
-        );
-        return deferred.promise;
+    private deleteChildrenSubject(folder){
+        this.subjectService.deleteSubjectChildrenOfFolder(folder);
     }
 
-    private deleteChildrenSubject(folder:IFolder) {
-        this._subjectService.deleteSubjectChildrenOfFolder(folder);
-    }
-
-    private deleteChildrenFolder(folder:IFolder) {
+    private deleteChildrenFolder(folder){
         var self = this;
         angular.forEach(this._folderList, function (value, key) {
-            if (value.parent_folder_id === folder.id) {
-                self.remove(value);
+            if(value.parent_folder_id === folder.id){
+                self.deleteFolder(value, null, null);
             }
         });
     }
 
-    /**
-     * duplicate a folder
-     * @param folder
-     * @returns {IPromise<T>}
-     */
-    public duplicate(folder:IFolder):ng.IPromise<IFolder> {
-        var self = this,
-            deferred = this._$q.defer(),
-            newFolder = new Folder();
-        newFolder.label = folder.label + "_copie";
-        this.persist(newFolder)
-            .then(function (dataFolder) {
-                    deferred.resolve(dataFolder);
-                }
-            );
-        return deferred.promise;
+    private removeFolderToFolderList(folder:IFolder) {
+        delete this._folderList[folder.id];
     }
 
-    /**
-     * remove folder list  in folderListByFolderID
-     * @param folder
-     */
-    private removeFolderToFolderListByParentFolderId(folder:IFolder) {
+    private removeFolderToFolderListByParentFolderId(folder: IFolder){
         var self = this;
         angular.forEach(this._folderListByParentFolderId, function (value_1, key_1) {
-            if (folder.id == key_1) {
+            if(folder.id == key_1){
                 // delete parent folder
                 delete self._folderListByParentFolderId[key_1];
             }
-            if (value_1) {
+            if(value_1){
                 angular.forEach(value_1, function (value_2, key_2) {
-                    if (folder.id == key_2) {
+                    if(folder.id == key_2){
                         // delete children folder
                         delete self._folderListByParentFolderId[key_1][key_2];
                     }
@@ -236,11 +181,6 @@ class FolderService implements IFolderService {
         });
     }
 
-    /**
-     * set parent id to a folder
-     * @param originFolderId
-     * @param targetFolderId
-     */
     public setParentFolderId(originFolderId, targetFolderId) {
         var originFolder = this._folderList[originFolderId];
         if (!originFolder) {
@@ -272,7 +212,7 @@ class FolderService implements IFolderService {
                     originFolder.parent_folder_id = targetFolderId;
                     // after change parent folder id
                     //  add folder to new _folderListByParentFolderId
-                    if (!this._folderListByParentFolderId[targetFolderId]) {
+                    if(!this._folderListByParentFolderId[targetFolderId]){
                         this._folderListByParentFolderId[targetFolderId] = [];
                     }
                     this._folderListByParentFolderId[targetFolderId][originFolderId] = originFolder;
@@ -282,12 +222,6 @@ class FolderService implements IFolderService {
 
     }
 
-    /**
-     * check if a folder is a parent of a other folder
-     * @param originFolder
-     * @param targetFolder
-     * @returns {boolean}
-     */
     private isAParentOf(originFolder, targetFolder):boolean {
         if (targetFolder.parent_folder_id == null) {
             return false;
@@ -297,4 +231,58 @@ class FolderService implements IFolderService {
             return this.isAParentOf(originFolder, this._folderList[targetFolder.parent_folder_id]);
         }
     }
+
+    public getListOfSubFolderByFolderId(folderId) {
+        if (this._folderListByParentFolderId[folderId]) {
+            // already set
+        } else {
+            // init _folderListByParentFolderId for this id
+            this._folderListByParentFolderId[folderId] = {};
+            // build it
+            angular.forEach(this._folderList, function (value, key) {
+                if (value.parent_folder_id == folderId) {
+                    this._folderListByParentFolderId[folderId][value.id] = value;
+                }
+            });
+        }
+        return this._folderListByParentFolderId[folderId];
+    }
+
+
+    private _updateFolder(folder:IFolder, callbackSuccess, callbackFail) {
+        if (callbackSuccess) {
+            callbackSuccess(folder);
+        }
+    }
+
+    private _persist(folder:IFolder):ng.IPromise<IFolder> {
+        var self = this,
+            deferred = this.$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/folder',
+                data: folder
+            };
+
+        this.$http(request).then(
+            function(response) {
+                folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(response.data));
+                self.addFolderToFolderList(folder);
+                deferred.resolve(folder);
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors de la création du dossier.');
+            }
+        );
+
+        return deferred.promise;
+    }
+
+    private _deleteFolder(folder:IFolder, callbackSuccess, callbackFail) {
+        if (callbackSuccess) {
+            callbackSuccess(folder);
+        }
+    }
+
+
 }
