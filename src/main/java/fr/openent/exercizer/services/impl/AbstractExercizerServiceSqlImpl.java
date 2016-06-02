@@ -33,18 +33,13 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      * Persists a resource.
      *
      * @param resource the resource
-     * @param hasOwnerField if true, puts the current id as the owner of the resource
      * @param user the current user
      * @param handler the handler
      */
-    protected void persist(final JsonObject resource, final Boolean hasOwnerField, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+    protected void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         SqlStatementsBuilder s = new SqlStatementsBuilder();
         String userQuery = "SELECT " + schema + "merge_users(?,?)";
         s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
-
-        if (hasOwnerField) {
-            resource.putString("owner", user.getUserId());
-        }
 
         s.insert(resourceTable, resource, "*");
         sql.transaction(s.build(), validUniqueResultHandler(1, handler));
@@ -62,24 +57,15 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         JsonArray values = new JsonArray();
 
         for (String attr : resource.getFieldNames()) {
-            query.append(attr).append(" = ?, ");
-            values.add(resource.getValue(attr));
+
+            if (!attr.equals("modified") && !attr.equals("created")) {
+                query.append(attr).append(" = ?, ");
+                values.add(resource.getValue(attr));
+            }
         }
 
         String updateQuery = "UPDATE " + resourceTable + " SET " + query.toString() + "modified = NOW() " + "WHERE id = ? RETURNING *";
         sql.prepared(updateQuery, values.add(resource.getInteger("id")), validRowsResultHandler(handler));
-    }
-
-    /**
-     * Removes logically a resource.
-     *
-     * @param resource the resource
-     * @param user the current user
-     * @param handler the handler
-     */
-    protected void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        resource.putBoolean("is_deleted", Boolean.TRUE);
-        update(resource, user, handler);
     }
 
     /**
@@ -161,7 +147,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(resourceTable)
                 .append(" AS r ON r.id = o.")
                 .append(resourceIdentifierName)
-                .append(" WHERE r.id = ? ");
+                .append(" WHERE r.id = ?");
 
         sql.prepared(query.toString(), new JsonArray().add(resource.getInteger("id")), SqlResult.validResultHandler(handler));
     }

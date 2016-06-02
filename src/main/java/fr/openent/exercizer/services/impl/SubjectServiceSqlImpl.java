@@ -20,7 +20,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        super.persist(resource, Boolean.TRUE, user, handler);
+        resource.putString("owner", user.getUserId());
+        super.persist(resource, user, handler);
     }
 
     /**
@@ -36,7 +37,9 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        super.remove(resource, user, handler);
+        resource.putValue("folder_id", null);
+        resource.putBoolean("is_deleted", Boolean.TRUE);
+        update(resource, user, handler);
     }
 
     /**
