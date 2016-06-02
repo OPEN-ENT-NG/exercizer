@@ -4,10 +4,8 @@ directives.push(
         injections:
             [
                 'GrainTypeService',
-                'E_UPDATE_GRAIN',
                 (
-                    GrainTypeService,
-                    E_UPDATE_GRAIN
+                    GrainTypeService
                 ) => {
                     return {
                         restrict: 'E',
@@ -25,7 +23,7 @@ directives.push(
                             
                             scope.displayNextStep = function(grainTypeId:number) {
                                 scope.grain.grain_type_id = grainTypeId;
-                                scope.$emit(E_UPDATE_GRAIN + scope.grain.subject_id, scope.grain);
+                                scope.$emit("E_UPDATE_GRAIN", scope.grain);
                             }
                         }
                     };

@@ -1,5 +1,4 @@
 interface IGrainTypeService {
-    resolve():ng.IPromise<IGrainType[]>
     getList():IGrainType[];
     getById(id:number):IGrainType;
 }
@@ -21,16 +20,16 @@ class GrainTypeService implements IGrainTypeService {
     {
         this._$q = _$q;
         this._$http = _$http;
+        this.resolve();
     }
 
-    public resolve = function():ng.IPromise<IGrainType[]> {
+    private resolve = function():ng.IPromise<IGrainType[]> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
                 method: 'GET',
                 url: 'exercizer/grain-types'
             };
-
         if (!angular.isUndefined(this._listMappedById)) {
             deferred.resolve(this.getList());
         } else {
@@ -49,7 +48,6 @@ class GrainTypeService implements IGrainTypeService {
                 }
             );
         }
-
         return deferred.promise;
     };
 

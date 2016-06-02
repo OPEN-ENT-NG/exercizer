@@ -4,16 +4,9 @@ directives.push(
         injections:
             [
                 'GrainTypeService',
-                'E_REMOVE_GRAIN',
-                'E_GRAIN_TOGGLED',
-                'E_TOGGLE_GRAIN',
-                'E_FORCE_FOLDING_GRAIN',
                 (
-                    GrainTypeService,
-                    E_REMOVE_GRAIN,
-                    E_GRAIN_TOGGLED,
-                    E_TOGGLE_GRAIN,
-                    E_FORCE_FOLDING_GRAIN
+                    GrainTypeService
+
                 ) => {
                     return {
                         restrict: 'E',
@@ -27,24 +20,24 @@ directives.push(
                             scope.isFolded = false;
 
                             scope.toggleGrain = function() {
-                                scope.$emit(E_GRAIN_TOGGLED + scope.grain.subject_id, scope.grain);
+                                scope.$emit("E_GRAIN_TOGGLED", scope.grain);
                             };
 
                             scope.removeGrain = function() {
-                                scope.$emit(E_REMOVE_GRAIN + scope.grain.subject_id, scope.grain);
+                                scope.$emit("E_REMOVE_GRAIN", scope.grain);
                             };
 
                             scope.getGrainIllustrationURL = function(grainIllustration:string) {
                                 return '/exercizer/public/assets/illustrations/' + grainIllustration + '.html';
                             };
                             
-                            scope.$on(E_TOGGLE_GRAIN + scope.grain.subject_id, function(event, grain) {
+                            scope.$on("E_TOGGLE_GRAIN", function(event, grain) {
                                 if (grain.id === scope.grain.id) {
                                     scope.isFolded = !scope.isFolded;
                                 }
                             });
                             
-                            scope.$on(E_FORCE_FOLDING_GRAIN + scope.grain.subject_id, function() {
+                            scope.$on("E_FORCE_FOLDING_GRAIN", function() {
                                scope.isFolded = true; 
                             });
                         }

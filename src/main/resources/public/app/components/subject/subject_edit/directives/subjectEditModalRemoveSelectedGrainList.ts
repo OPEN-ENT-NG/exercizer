@@ -2,11 +2,7 @@ directives.push(
     {
         name: 'subjectEditModalRemoveSelectedGrainList',
         injections: [
-            'E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST',
-            'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST',
             (
-                E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST,
-                E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST
             ) => {
                 return {
                     restrict: 'E',
@@ -19,7 +15,7 @@ directives.push(
                         scope.isDisplayed = false;
 
                         scope.confirm = function() {
-                            scope.$emit(E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST + scope.subject.id);
+                            scope.$emit("E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST");
                             scope.isDisplayed = false;
                         };
                         
@@ -27,7 +23,7 @@ directives.push(
                             scope.isDisplayed = false;
                         };
 
-                        scope.$on(E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST + scope.subject.id, function() {
+                        scope.$on("E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST", function() {
                             scope.isDisplayed = true;
                         });
                     }

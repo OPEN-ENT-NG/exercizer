@@ -3,15 +3,7 @@ directives.push(
         name: 'subjectEditSubjectList',
         injections: [
             'FolderService',
-            'E_PREVIEW_PERFORM_SUBJECT_COPY',
-            'E_FOLD_GRAIN_LIST',
-            'E_REFRESH_GRAIN_LIST',
-            'E_UPDATE_GRAIN',
-            (FolderService,
-             E_PREVIEW_PERFORM_SUBJECT_COPY,
-             E_FOLD_GRAIN_LIST,
-             E_REFRESH_GRAIN_LIST,
-            E_UPDATE_GRAIN
+            (FolderService
              ) => {
                 return {
                     restrict: 'E',

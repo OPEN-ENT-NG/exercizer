@@ -3,11 +3,7 @@ directives.push(
         name: 'subjectEditModalGrainDocument',
         injections:
             [
-                'E_CONFIRM_ADD_GRAIN_DOCUMENT',
-                'E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT',
                 (
-                    E_CONFIRM_ADD_GRAIN_DOCUMENT,
-                    E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT
                 ) => {
                     return {
                         restrict: 'E',
@@ -42,7 +38,7 @@ directives.push(
 
                                 scope.grain.grain_data.document_list.push(grainDocument);
 
-                                scope.$emit(E_CONFIRM_ADD_GRAIN_DOCUMENT + scope.subject.id, scope.grain);
+                                scope.$emit("E_CONFIRM_ADD_GRAIN_DOCUMENT", scope.grain);
                                 scope.close();
                             };
 
@@ -50,7 +46,7 @@ directives.push(
                                 scope.isDisplayed = false;
                             };
 
-                            scope.$on(E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT + scope.subject.id, function(event, grain:IGrain) {
+                            scope.$on("E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT", function(event, grain:IGrain) {
                                 scope.grain = grain;
                                 scope.isDisplayed = true;
                             });

@@ -2,11 +2,7 @@ directives.push(
     {
         name: 'grainEditToggleAside',
         injections: [
-            'E_GRAIN_SELECTED',
-            'E_SELECT_GRAIN',
             (
-                E_GRAIN_SELECTED,
-                E_SELECT_GRAIN
             ) => {
                 return {
                     restrict: 'E',
@@ -19,10 +15,10 @@ directives.push(
                         scope.isGrainSelected = false;
 
                         scope.toggleGrainSelection = function() {
-                            scope.$emit(E_GRAIN_SELECTED + scope.grain.subject_id, scope.grain);
+                            scope.$emit("E_GRAIN_SELECTED", scope.grain);
                         };
 
-                        scope.$on(E_SELECT_GRAIN + scope.grain.subject_id, function(event, grain:IGrain) {
+                        scope.$on("E_SELECT_GRAIN", function(event, grain:IGrain) {
                             if (grain.id === scope.grain.id) {
                                 scope.isGrainSelected = !scope.isGrainSelected;
                             }

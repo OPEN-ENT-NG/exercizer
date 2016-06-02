@@ -31,7 +31,7 @@ directives.push(
                         };
 
                         scope.clickOnItem = function(subject){
-                            $location.path('/teacher/subject/edit/' + subject.id);
+                            $location.path('/subject/edit/' + subject.id);
                         };
 
                         function createListAutoComplete() {
@@ -102,7 +102,7 @@ directives.push(
 
                         scope.clickOnSubjectTitle = function (subject) {
                             if (subject.id) {
-                                $location.path('/teacher/subject/edit/' + subject.id);
+                                $location.path('/subject/edit/' + subject.id);
                             }
                         };
 

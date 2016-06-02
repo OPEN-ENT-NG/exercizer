@@ -3,14 +3,10 @@ directives.push(
         name: 'subjectEditToaster',
         injections:
             [
-                'E_DUPLICATE_SELECTED_GRAIN_LIST',
-                'E_REMOVE_SELECTED_GRAIN_LIST',
-                'E_TOGGLE_SUBJECT_EDIT_TOASTER',
+
 
                 (
-                    E_DUPLICATE_SELECTED_GRAIN_LIST,
-                    E_REMOVE_SELECTED_GRAIN_LIST,
-                    E_TOGGLE_SUBJECT_EDIT_TOASTER
+
                 ) => {
                     return {
                         restrict: 'E',
@@ -23,14 +19,14 @@ directives.push(
                             scope.isDisplayed = false;
 
                             scope.duplicateSelectedGrainList = function() {
-                                scope.$emit(E_DUPLICATE_SELECTED_GRAIN_LIST + scope.subject.id);
+                                scope.$emit("E_DUPLICATE_SELECTED_GRAIN_LIST");
                             };
 
                             scope.removeSelectedGrainList = function() {
-                                scope.$emit(E_REMOVE_SELECTED_GRAIN_LIST + scope.subject.id);
+                                scope.$emit("E_REMOVE_SELECTED_GRAIN_LIST");
                             };
                             
-                            scope.$on(E_TOGGLE_SUBJECT_EDIT_TOASTER + scope.subject.id, function(event, selectedGrainListCount) {
+                            scope.$on("E_TOGGLE_SUBJECT_EDIT_TOASTER", function(event, selectedGrainListCount) {
                                 scope.isDisplayed = selectedGrainListCount !== 0;
                             });
                         }

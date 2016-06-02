@@ -3,9 +3,7 @@ directives.push(
         name: 'subjectEditModalPreviewPerformSubjectCopy',
         injections:
             [
-                'E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY',
                 (
-                    E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY
                 ) => {
                     return {
                         restrict: 'E',
@@ -26,7 +24,7 @@ directives.push(
                                 return '/exercizer/public/template/perform-subject-copy.html';
                             };
 
-                            scope.$on(E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY + scope.subject.id, function() {
+                            scope.$on("E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY", function() {
                                 scope.isDisplayed = true;
                             });
                         }

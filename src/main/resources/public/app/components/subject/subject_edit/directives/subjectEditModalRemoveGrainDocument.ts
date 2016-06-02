@@ -3,11 +3,7 @@ directives.push(
         name: 'subjectEditModalRemoveGrainDocument',
         injections:
             [
-                'E_CONFIRM_REMOVE_GRAIN_DOCUMENT',
-                'E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT',
                 (
-                    E_CONFIRM_REMOVE_GRAIN_DOCUMENT,
-                    E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT
                 ) => {
                     return {
                         restrict: 'E',
@@ -29,7 +25,7 @@ directives.push(
 
                                     if (grainDocumentIndex !== -1) {
                                         scope.grain.grain_data.document_list.splice(grainDocumentIndex, 1);
-                                        scope.$emit(E_CONFIRM_REMOVE_GRAIN_DOCUMENT + scope.subject.id, scope.grain);
+                                        scope.$emit("E_CONFIRM_REMOVE_GRAIN_DOCUMENT", scope.grain);
                                     }
                                 }
 
@@ -40,7 +36,7 @@ directives.push(
                                 scope.isDisplayed = false;
                             };
 
-                            scope.$on(E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT + scope.subject.id, function(event, grain:IGrain, grainDocument:IGrainDocument) {
+                            scope.$on("E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT", function(event, grain:IGrain, grainDocument:IGrainDocument) {
                                 scope.grain = grain;
                                 scope.grainDocument = grainDocument;
                                 scope.isDisplayed = true;

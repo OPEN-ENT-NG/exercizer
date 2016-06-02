@@ -3,9 +3,7 @@ directives.push(
         name: 'grainEditStatement',
         injections:
             [
-                'E_UPDATE_GRAIN',
                 (
-                    E_UPDATE_GRAIN
                 ) => {
                     return {
                         restrict: 'E',
@@ -30,7 +28,7 @@ directives.push(
                             element.find('editor').on('editor-blur', function(){
                                 if(isEditorFocus){
                                     isEditorFocus = false;
-                                    scope.$emit(E_UPDATE_GRAIN + scope.grain.subject_id, scope.grain);
+                                    scope.$emit("E_UPDATE_GRAIN", scope.grain);
                                 }
                             });
                         }

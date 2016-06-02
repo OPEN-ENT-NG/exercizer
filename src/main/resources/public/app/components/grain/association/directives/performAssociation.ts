@@ -15,7 +15,7 @@ directives.push(
                     link:(scope:any) => {
 
                         scope.updateGrainCopy = function() {
-                            scope.$emit(E_UPDATE_GRAIN_COPY + scope.grainCopy.subject_copy_id, scope.grainCopy);
+                            scope.$emit("E_UPDATE_GRAIN_COPY", scope.grainCopy);
                         };
 
                     }
