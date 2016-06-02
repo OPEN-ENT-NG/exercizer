@@ -56,6 +56,7 @@ class EditSubjectController {
 
             self._grainService.getListBySubject(self._subject).then(
                 function (grainList) {
+                    console.log(grainList);
                     var maxScore = 0;
                     angular.forEach(grainList, function (grain:IGrain) {
                         if (grain.grain_type_id > 3 && !angular.isUndefined(grain.grain_data.max_score)) {
