@@ -15,7 +15,6 @@ class SubjectService implements ISubjectService {
     static $inject = [
         '$q',
         '$http',
-        'UserService',
         'GrainService'
     ];
 
@@ -26,11 +25,9 @@ class SubjectService implements ISubjectService {
     constructor
     (private _$q:ng.IQService,
      private _$http:ng.IHttpService,
-     private _userService:IUserService,
      GrainService) {
         this._$q = _$q;
         this._$http = _$http;
-        this._userService = _userService;
         this._grainService =GrainService;
 
         // TODO remove

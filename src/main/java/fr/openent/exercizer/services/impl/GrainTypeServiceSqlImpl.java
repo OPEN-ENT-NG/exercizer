@@ -2,10 +2,11 @@ package fr.openent.exercizer.services.impl;
 
 import fr.openent.exercizer.services.IGrainTypeService;
 import fr.wseduc.webutils.Either;
+import org.entcore.common.service.impl.SqlCrudService;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 
-public class GrainTypeServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IGrainTypeService {
+public class GrainTypeServiceSqlImpl extends SqlCrudService implements IGrainTypeService {
 
     public GrainTypeServiceSqlImpl() {
         super("exercizer", "grain_type");
