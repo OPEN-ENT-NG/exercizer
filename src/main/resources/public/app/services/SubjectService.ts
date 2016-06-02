@@ -8,7 +8,6 @@ interface ISubjectService {
     getList():ISubject[];
     getListByFolderId(folderId);
     getById(id:number):ISubject;
-    currentSubjectId:number;
 }
 
 class SubjectService implements ISubjectService {
@@ -19,138 +18,46 @@ class SubjectService implements ISubjectService {
         'GrainService'
     ];
 
-    private _listMappedById:{[id:number]:ISubject;};
-    private _currentSubjectId:number;
+    // Inject
+    private _$q:ng.IQService;
+    private _$http:ng.IHttpService;
     private _grainService;
 
-    constructor
-    (private _$q:ng.IQService,
-     private _$http:ng.IHttpService,
-     GrainService) {
-        this._$q = _$q;
-        this._$http = _$http;
+    // Variables
+    private _listMappedById:{[id:number]:ISubject;};
+
+    constructor($q, $http, GrainService) {
+        this._$q = $q;
+        this._$http = $http;
         this._grainService = GrainService;
-
     }
 
-    public persist = function (subject:ISubject):ng.IPromise<ISubject> {
-        var self = this,
-            deferred = this._$q.defer(),
-            request = {
-                method: 'POST',
-                url: 'exercizer/subject',
-                data: subject
-            };
-
-        this._$http(request).then(
-            function (response) {
-                subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
-                self._listMappedById[subject.id] = subject;
-                deferred.resolve(subject);
-            },
-            function () {
-                deferred.reject('Une erreur est survenue lors de la sauvegarde des propriétés du sujet.');
-            }
-        );
-
-        return deferred.promise;
-    };
-
-    public duplicate = function (subject:ISubject, duplicateGrain:boolean = true):ng.IPromise<ISubject> {
-        var self = this;
-        var duplicatedSubject = CloneObjectHelper.clone(subject, true);
-        duplicatedSubject.id = undefined;
-        duplicatedSubject.title += '_copie';
-        duplicatedSubject.selected = false;
-        if (duplicateGrain === true) {
-            var deferred = this._$q.defer();
-            var promisePersist = this.persist(duplicatedSubject);
-            promisePersist.then(function (dataSubject) {
-                // data is subject
-                var promiseGrainList = self._grainService.getListBySubjectId(subject.id);
-                promiseGrainList.then(function (dataGrainList) {
-                    angular.forEach(dataGrainList, function (grain, key) {
-                        var newGrain = self._grainService.copyOf(grain);
-                        //data is grain
-                        newGrain.subject_id = dataSubject.id;
-                        console.log(newGrain);
-                        self._grainService.persist(newGrain);
-                    });
-                    deferred.resolve(dataSubject);
-                });
-            });
-            return deferred.promise;
+    /**
+     * get list of subject
+     * @returns {any}
+     */
+    public getList = function ():ISubject[] {
+        if (!angular.isUndefined(this._listMappedById)) {
+            return MapToListHelper.toList(this._listMappedById);
         } else {
-            return this.persist(duplicatedSubject);
+            return [];
         }
+
     };
 
-    public getListByFolderId(folderId) {
-        var self = this;
-        var array = {};
-        angular.forEach(self._listMappedById, function (value, key) {
-            if (value.folder_id == folderId) {
-                array[value.id] = value;
-            }
-        });
-        return array;
-    }
-
-    public update = function (subject:ISubject):ng.IPromise<ISubject> {
-        var self = this,
-            deferred = this._$q.defer(),
-            request = {
-                method: 'PUT',
-                url: 'exercizer/subject',
-                data: subject
-            };
-
-        //TODO remove when using real API
-        setTimeout(function (self, subject) {
-            self._listMappedById[subject.id] = subject;
-            deferred.resolve(subject);
-        }, 100, self, subject);
-
-        return deferred.promise;
+    /**
+     * get subject by id
+     * @param id
+     * @returns {any}
+     */
+    public getById = function (id:number):ISubject {
+        return this._listMappedById[id];
     };
 
-    public remove = function (subject:ISubject):ng.IPromise<ISubject> {
-        var self = this,
-            deferred = this._$q.defer(),
-            request = {
-                method: 'DELETE',
-                url: 'exercizer/subject',
-                data: subject
-            };
-
-        //TODO remove when using real API
-        setTimeout(function (self, subject) {
-            if (angular.isUndefined(self._listMappedById[subject.id])) {
-                self._listMappedById[subject.id] = [];
-            }
-
-            var grainIndex = self._listMappedById[subject.id].indexOf(subject);
-
-            if (grainIndex !== -1) {
-                self._listMappedById[subject.id].splice(grainIndex, 1);
-                deferred.resolve(true);
-            }
-
-            deferred.resolve(false);
-        }, 100, self, subject);
-
-        return deferred.promise;
-    };
-
-    public deleteSubjectChildrenOfFolder = function (folder:IFolder) {
-        var self = this;
-        angular.forEach(this._listMappedById, function (value, key) {
-            if (value.folder_id === folder.id) {
-                self.remove(value);
-            }
-        });
-    };
-
+    /**
+     * load subject
+     * @returns {IPromise<T>}
+     */
     public loadSubjectList = function () {
         var deferred = this._$q.defer();
         if (!angular.isUndefined(this._listMappedById)) {
@@ -179,25 +86,150 @@ class SubjectService implements ISubjectService {
         return deferred.promise;
     };
 
-
-    public getList = function ():ISubject[] {
-        if (!angular.isUndefined(this._listMappedById)) {
-            return MapToListHelper.toList(this._listMappedById);
-        } else {
-            return [];
-        }
-
+    /**
+     * persist a subject
+     * @param subject
+     * @returns {IPromise<T>}
+     */
+    public persist = function (subject:ISubject):ng.IPromise<ISubject> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject',
+                data: subject
+            };
+        this._$http(request).then(
+            function (response) {
+                subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                self._listMappedById[subject.id] = subject;
+                deferred.resolve(subject);
+            },
+            function () {
+                deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
+            }
+        );
+        return deferred.promise;
     };
 
-    public getById = function (id:number):ISubject {
-        return this._listMappedById[id];
+    /**
+     * update a subject
+     * @param subject
+     * @returns {IPromise<T>}
+     */
+    public update = function (subject:ISubject):ng.IPromise<ISubject> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'PUT',
+                url: 'exercizer/subject',
+                data: subject
+            };
+        this._$http(request).then(
+            function (response) {
+                subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                self._listMappedById[subject.id] = subject;
+                deferred.resolve(subject);
+            },
+            function () {
+                deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
+            }
+        );
+        return deferred.promise;
     };
 
-    get currentSubjectId():number {
-        return this._currentSubjectId;
+    /**
+     * remove a subject
+     * @param subject
+     * @returns {IPromise<T>}
+     */
+    public remove = function (subject:ISubject):ng.IPromise<ISubject> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'DELETE',
+                url: 'exercizer/subject',
+                data: subject
+            };
+        this._$http(request).then(
+            function (response) {
+                subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                delete self._listMappedById[subject.id];
+                deferred.resolve();
+            },
+            function () {
+                deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
+            }
+        );
+        return deferred.promise;
+    };
+
+    /**
+     * duplicate a subject
+     * @param subject
+     * @param duplicateGrain
+     * @returns {any}
+     */
+    public duplicate = function (subject:ISubject, duplicateGrain:boolean = true):ng.IPromise<ISubject> {
+        var self = this,
+            deferred = this._$q.defer();
+        // clone subject
+        var duplicatedSubject = CloneObjectHelper.clone(subject, true);
+        // remove some attributes
+        duplicatedSubject.id = undefined;
+        delete duplicatedSubject.shared;
+        delete duplicatedSubject.selected;
+        // rename subject
+        duplicatedSubject.title += '_copie';
+        // persist new subject
+        this.persist(duplicatedSubject)
+            .then(function (dataSubject) {
+                    if (duplicateGrain === true) {
+                        self._grainService.getListBySubject(subject.id)
+                            .then(function (dataGrainList) {
+                                var newGrain;
+                                angular.forEach(dataGrainList, function (grain, key) {
+                                    // no use grainService.duplicate because want to change subject_id
+                                    newGrain = self._grainService.copyOf(grain);
+                                    newGrain.subject_id = dataSubject.id;
+                                    self._grainService.persist(newGrain);
+                                });
+                                deferred.resolve(dataSubject);
+                            })
+                    } else {
+                        deferred.resolve(dataSubject);
+                    }
+                }
+            );
+        return deferred.promise;
+    };
+
+    /**
+     * get list of subject by folder
+     * @param folderId
+     * @returns {{}}
+     */
+    public getListByFolderId(folderId) {
+        var self = this,
+            array = {};
+        angular.forEach(self._listMappedById, function (value, key) {
+            if (value.folder_id == folderId) {
+                array[value.id] = value;
+            }
+        });
+        return array;
     }
 
-    set currentSubjectId(value:number) {
-        this._currentSubjectId = value;
-    }
+    /**
+     * remove all subject in a folder
+     * @param folder
+     */
+    public deleteSubjectChildrenOfFolder = function (folder:IFolder) {
+        var self = this;
+        angular.forEach(this._listMappedById, function (value, key) {
+            if (value.folder_id === folder.id) {
+                self.remove(value);
+            }
+        });
+    };
 }

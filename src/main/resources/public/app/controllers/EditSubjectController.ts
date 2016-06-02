@@ -41,7 +41,6 @@ class EditSubjectController {
                 console.log('redirect');
                 //self._$location.path('/dashboard');
             } else {
-                self._subjectService.currentSubjectId = subjectId;
                 self._selectedGrainList = [];
                 self._eventsHandler(self);
             }

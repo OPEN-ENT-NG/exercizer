@@ -11,7 +11,6 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/subject/common/subject_nav/directives/subject-nav-item.html',
                 link: (scope:any, element, attrs) => {
 
-
                 }
             };
         }]
