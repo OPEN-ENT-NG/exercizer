@@ -62,18 +62,19 @@ class SubjectService implements ISubjectService {
         duplicatedSubject.id = undefined;
         duplicatedSubject.title += '_copie';
         duplicatedSubject.selected = false;
+        delete duplicatedSubject.shared;
+        delete duplicatedSubject.selected;
         if (duplicateGrain === true) {
             var deferred = this._$q.defer();
             var promisePersist = this.persist(duplicatedSubject);
             promisePersist.then(function (dataSubject) {
                 // data is subject
-                var promiseGrainList = self._grainService.getListBySubjectId(subject.id);
+                var promiseGrainList = self._grainService.getListBySubject(subject.id);
                 promiseGrainList.then(function (dataGrainList) {
                     angular.forEach(dataGrainList, function (grain, key) {
                         var newGrain = self._grainService.copyOf(grain);
                         //data is grain
                         newGrain.subject_id = dataSubject.id;
-                        console.log(newGrain);
                         self._grainService.persist(newGrain);
                     });
                     deferred.resolve(dataSubject);

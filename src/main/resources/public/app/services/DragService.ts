@@ -121,14 +121,14 @@ class DragService implements IDragService {
 
     //TODO move in Service and improve it
     private isSubject(object: any){
-        if(object && object._title){
+        if(object && object.title){
             return true
         } else{
             return false;
         }
     }
     private isFolder(object: any){
-        if(object && object._label){
+        if(object && object.label){
             return true
         } else{
             return false;
@@ -136,7 +136,7 @@ class DragService implements IDragService {
     }
 
     private getId(object : any){
-        var id = object._id;
+        var id = object.id;
         if(id){
             return id
         } else{
