@@ -163,6 +163,6 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(resourceIdentifierName)
                 .append(" WHERE r.id = ? ");
 
-        sql.prepared(query.toString(), new JsonArray().add(resource.getString("id")), SqlResult.validResultsHandler(handler));
+        sql.prepared(query.toString(), new JsonArray().add(resource.getNumber("id")), SqlResult.validResultsHandler(handler));
     }
 }

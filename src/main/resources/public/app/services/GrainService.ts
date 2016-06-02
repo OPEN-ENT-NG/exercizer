@@ -3,7 +3,7 @@ interface IGrainService {
     update(grain:IGrain):ng.IPromise<IGrain>;
     remove(grain:IGrain):ng.IPromise<boolean>;
     duplicate(grain:IGrain):ng.IPromise<IGrain>
-    getListBySubjectId(subjectId:number):ng.IPromise<IGrain[]>;
+    getListBySubject(subject: ISubject):ng.IPromise<IGrain[]>;
 }
 
 class GrainService implements IGrainService {
@@ -49,7 +49,7 @@ class GrainService implements IGrainService {
                 console.log(response)
             },
             function(error) {
-                console.log(error)
+                console.error(error)
             }
         );
 
@@ -137,17 +137,72 @@ class GrainService implements IGrainService {
     };
 
 
-    public getListBySubjectId = function(subjectId:number):ng.IPromise<IGrain[]> {
-        var self = this,
-            deferred = this._$q.defer();
+    public getListBySubject = function(subject:ISubject):ng.IPromise<IGrain[]> {
+        var deferred = this._$q.defer();
+        // TODO change
+        if (!angular.isUndefined(this._listMappedBySubjectId[subject.id])) {
+            deferred.resolve(this._listMappedBySubjectId[subject.id]);
+        } else {
+            var self = this,
+                request = {
+                    method: 'POST',
+                    url: 'exercizer/grains',
+                    data : subject
+                };
+
+            this._$http(request).then(
+                function (response) {
+                    self._listMappedBySubjectId = {};
+                    var grain;
+                    angular.forEach(response.data, function (grainObject) {
+                        var grainJson = JSON.stringify(grainObject);
+                        grain = SerializationHelper.toInstance(new Grain(), grainJson);
+                        grain.grain_data = SerializationHelper.toInstance(new GrainData(), grainObject.grain_data);
+                        switch (grain.grain_type_id){
+                            case 4:
+                                grain.grain_data.cutom_data =  SerializationHelper.toInstance(new SimpleAnswerCustomData(), grainObject.grain_data.cutom_data);
+                                break;
+                            case 5:
+                                // no custom data
+                                break;
+                            case 6:
+                                grain.grain_data.cutom_data =  SerializationHelper.toInstance(new MultipleAnswerCustomData(), grainObject.grain_data.cutom_data);
+                                break;
+                            case 7:
+                                grain.grain_data.cutom_data =  SerializationHelper.toInstance(new QcmCustomData(), grainObject.grain_data.cutom_data);
+                                break;
+                            case 8:
+                                grain.grain_data.cutom_data =  SerializationHelper.toInstance(new AssociationCustomData(), grainObject.grain_data.cutom_data);
+                                break;
+                            case 9:
+                                grain.grain_data.cutom_data =  SerializationHelper.toInstance(new OrderCustomData(), grainObject.grain_data.cutom_data);
+                                break;
+                            default:
+                                if (grain.grain_type_id === 1 || grain.grain_type_id === 2 ||grain.grain_type_id === 3){
+                                    // ok
+                                } else{
+                                    console.error('type not defined');
+                                }
+                        }
+                        self._listMappedBySubjectId[subject.id] = grain;
+                    });
+                    deferred.resolve(self._listMappedBySubjectId[subject.id]);
+                },
+                function () {
+                    deferred.reject('Une erreur est survenue lors de la récupération de vos grain.');
+                }
+            );
+        }
+
+
 
         //TODO remove when using real API
-        setTimeout(function(self, subjectId) {
-            if (angular.isUndefined(self._listMappedBySubjectId[subjectId])) {
-                self._listMappedBySubjectId[subjectId] = [];
+        setTimeout(function(self, subject) {
+            if (angular.isUndefined(self._listMappedBySubjectId[subject.id])) {
+                self._listMappedBySubjectId[subject.id] = [];
             }
-            deferred.resolve(self._listMappedBySubjectId[subjectId]);
-        }, 100, self, subjectId);
+            deferred.resolve(self._listMappedBySubjectId[subject.id]);
+        }, 100, self, subject);
 
 
         return deferred.promise;
