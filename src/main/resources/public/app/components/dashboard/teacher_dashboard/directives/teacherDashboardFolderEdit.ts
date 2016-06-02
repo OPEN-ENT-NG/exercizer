@@ -35,10 +35,10 @@ directives.push(
                             if(scope.state === 'create'){
                                 var folder = new Folder();
                                 folder.label = angular.copy(scope.currentFolder.label);
-                                FolderService.createFolder(folder, null, null);
+                                FolderService.persist(folder);
                             } else if(scope.state === 'edit'){
                                 scope.folder.label = angular.copy(scope.currentFolder.label);
-                                FolderService.updateFolder(scope.folder, null, null);
+                                FolderService.update(scope.folder);
                             }
                             
                             scope.hide();

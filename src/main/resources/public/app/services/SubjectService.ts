@@ -183,24 +183,24 @@ class SubjectService implements ISubjectService {
         duplicatedSubject.title += '_copie';
         // persist new subject
         this.persist(duplicatedSubject)
-            .then( function(dataSubject){
-                if(duplicateGrain === true){
-                    self._grainService.getListBySubject(subject.id)
-                        .then(function(dataGrainList){
-                            var newGrain;
-                            angular.forEach(dataGrainList, function (grain, key) {
-                                // no use grainService.duplicate because want to change subject_id
-                                newGrain = self._grainService.copyOf(grain);
-                                newGrain.subject_id = dataSubject.id;
-                                self._grainService.persist(newGrain);
-                            });
-                            deferred.resolve(dataSubject);
-                        })
-                } else{
-                    deferred.resolve(dataSubject);
+            .then(function (dataSubject) {
+                    if (duplicateGrain === true) {
+                        self._grainService.getListBySubject(subject.id)
+                            .then(function (dataGrainList) {
+                                var newGrain;
+                                angular.forEach(dataGrainList, function (grain, key) {
+                                    // no use grainService.duplicate because want to change subject_id
+                                    newGrain = self._grainService.copyOf(grain);
+                                    newGrain.subject_id = dataSubject.id;
+                                    self._grainService.persist(newGrain);
+                                });
+                                deferred.resolve(dataSubject);
+                            })
+                    } else {
+                        deferred.resolve(dataSubject);
+                    }
                 }
-            }
-        );
+            );
         return deferred.promise;
     };
 

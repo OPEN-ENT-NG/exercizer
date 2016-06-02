@@ -81,7 +81,7 @@ class TeacherDashboardController {
         self._$scope.$on("E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT", function (event) {
             // delete folder
             angular.forEach(self._selectedFolderList, function (id, key) {
-                self._folderService.deleteFolder(self._folderService.folderById(id), null, null)
+                self._folderService.remove(self._folderService.folderById(id));
             });
             self.resetSelectedFolderList();
             // delete subject

@@ -18,7 +18,7 @@ class FolderService implements IFolderService {
     ];
 
     // Inject
-    private _$http:ng.IHttpServic;
+    private _$http;
     private _$q:ng.IQService;
     private _subjectService;
 
@@ -49,7 +49,7 @@ class FolderService implements IFolderService {
      * @param id
      * @returns {*}
      */
-    public folderById(id):IFolder {
+    public folderById(id:number):IFolder {
         return this._folderList[id];
     }
 
@@ -165,15 +165,15 @@ class FolderService implements IFolderService {
             request = {
                 method: 'DELETE',
                 url: 'exercizer/folder',
-                data: subject
+                data: folder
             };
         this._$http(request).then(
             function (response) {
-                folder = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(response.data));
                 delete self._folderList[folder.id];
-                self.removeFolderToFolderListByParentFolderId(data);
-                self.deleteChildrenFolder(data);
-                self.deleteChildrenSubject(data);
+                self.removeFolderToFolderListByParentFolderId(folder);
+                self.deleteChildrenFolder(folder);
+                self.deleteChildrenSubject(folder);
                 deferred.resolve();
             },
             function () {
@@ -183,15 +183,15 @@ class FolderService implements IFolderService {
         return deferred.promise;
     }
 
-    private deleteChildrenSubject(folder) {
+    private deleteChildrenSubject(folder:IFolder) {
         this._subjectService.deleteSubjectChildrenOfFolder(folder);
     }
 
-    private deleteChildrenFolder(folder) {
+    private deleteChildrenFolder(folder:IFolder) {
         var self = this;
         angular.forEach(this._folderList, function (value, key) {
             if (value.parent_folder_id === folder.id) {
-                self.remove(value, null, null);
+                self.remove(value);
             }
         });
     }
@@ -201,18 +201,18 @@ class FolderService implements IFolderService {
      * @param folder
      * @returns {IPromise<T>}
      */
-     private duplicate (folder:IFolder):ng.IPromise<IFolder> {
-         var self = this,
-             deferred = this._$q.defer(),
-             newFolder = new Folder();
-         newFolder.label = folder.label + "_copie";
-         this.persist(newFolder)
-             .then(function (dataFolder) {
-                 deferred.resolve(dataFolder);
-                 }
-             );
-         return deferred.promise;
-     }
+    public duplicate(folder:IFolder):ng.IPromise<IFolder> {
+        var self = this,
+            deferred = this._$q.defer(),
+            newFolder = new Folder();
+        newFolder.label = folder.label + "_copie";
+        this.persist(newFolder)
+            .then(function (dataFolder) {
+                    deferred.resolve(dataFolder);
+                }
+            );
+        return deferred.promise;
+    }
 
     /**
      * remove folder list  in folderListByFolderID
@@ -284,7 +284,7 @@ class FolderService implements IFolderService {
 
     /**
      * check if a folder is a parent of a other folder
-      * @param originFolder
+     * @param originFolder
      * @param targetFolder
      * @returns {boolean}
      */

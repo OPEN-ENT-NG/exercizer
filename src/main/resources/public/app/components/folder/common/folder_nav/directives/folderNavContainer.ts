@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'folderNavContainer',
-        injections: ['FolderService', (FolderService) => {
+        injections: [() => {
             return {
                 restrict: 'E',
                 replace  : true,
