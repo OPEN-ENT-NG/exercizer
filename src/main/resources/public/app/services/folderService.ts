@@ -145,8 +145,6 @@ class FolderService implements IFolderService {
         delete folder.selected;
         this._$http(request).then(
             function (response) {
-                folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(response.data));
-                self._folderList[folder.id] = folder;
                 deferred.resolve(folder);
             },
             function () {

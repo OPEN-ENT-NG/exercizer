@@ -117,7 +117,7 @@ class SubjectService implements ISubjectService {
      * @param subject
      * @returns {IPromise<T>}
      */
-    public update = function (subject:ISubject):ng.IPromise<ISubject> {
+    public update = function (subject):ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -125,10 +125,10 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
+        delete subject.shared;
+        delete subject.selected;
         this._$http(request).then(
-            function (response) {
-                subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
-                self._listMappedById[subject.id] = subject;
+            function (responce) {
                 deferred.resolve(subject);
             },
             function () {
@@ -143,7 +143,7 @@ class SubjectService implements ISubjectService {
      * @param subject
      * @returns {IPromise<T>}
      */
-    public remove = function (subject:ISubject):ng.IPromise<ISubject> {
+    public remove = function (subject):ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -151,6 +151,9 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
+        // remove some attributes
+        delete subject.shared;
+        delete subject.selected;
         this._$http(request).then(
             function (response) {
                 subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
