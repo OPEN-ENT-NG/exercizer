@@ -93,9 +93,10 @@ class FolderService implements IFolderService {
             // init _folderListByParentFolderId for this id
             this._folderListByParentFolderId[folderId] = {};
             // build it
+            var self = this;
             angular.forEach(this._folderList, function (value, key) {
                 if (value.parent_folder_id == folderId) {
-                    this._folderListByParentFolderId[folderId][value.id] = value;
+                    self._folderListByParentFolderId[folderId][value.id] = value;
                 }
             });
         }
@@ -278,6 +279,7 @@ class FolderService implements IFolderService {
                 }
             }
         }
+        this.update(this.folderById(originFolder.id));
 
     }
 

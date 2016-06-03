@@ -235,4 +235,14 @@ class SubjectService implements ISubjectService {
             }
         });
     };
+
+    /**
+     * set folder id to a subject and update the subject
+     * @param subject
+     * @param folderId
+     */
+    public setFolderId = function(subject :ISubject,folderId: number){
+        subject.folder_id = folderId;
+        this.update(subject);
+    }
 }
