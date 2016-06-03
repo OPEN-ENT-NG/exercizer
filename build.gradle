@@ -54,7 +54,7 @@ def configurePom(def pom) {
             developer {
 				id 'jneu'
 				name 'Julien_Neuhart'
-				email 'julien.neuhart@thecodingmachine.com'
+				email 'j.neuhart@thecodingmachine.com'
 			}
             developer {
 				id 'elep'

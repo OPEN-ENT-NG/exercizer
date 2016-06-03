@@ -75,25 +75,23 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
             }
 
             insertColumnsQuery.append(attr);
-        }
-
-        insertQuery.append(insertColumnsQuery).append(") VALUES (");
-
-        for (String attr : resource.getFieldNames()) {
 
             if (insertValuesQuery.length() != 0) {
                 insertValuesQuery.append(", ");
             }
 
             if (jsonFields.contains(attr)) {
-                insertValuesQuery.append(attr).append(" = ?::JSON, ");
+                insertValuesQuery.append(attr).append(" = ?::JSON");
             } else {
-                insertValuesQuery.append(attr).append(" = ?, ");
+                insertValuesQuery.append(attr).append(" = ?");
             }
             values.add(resource.getValue(attr));
         }
 
-        insertQuery.append(insertValuesQuery).append(") RETURNING *");
+        insertQuery.append(insertColumnsQuery)
+                .append(") VALUES (")
+                .append(insertValuesQuery)
+                .append(") RETURNING *");
 
         s.prepared(insertQuery.toString(), values);
         sql.transaction(s.build(), validUniqueResultHandler(1, handler));

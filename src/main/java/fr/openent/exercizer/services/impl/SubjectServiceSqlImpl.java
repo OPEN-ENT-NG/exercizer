@@ -23,10 +23,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         JsonObject subject = SubjectParser.beforePersist(resource, user);
-        JsonArray jsonFields = new JsonArray();
-        jsonFields.add("grain_data");
-
-        super.persist(jsonFields, subject, user, handler);
+        super.persist(subject, user, handler);
     }
 
     /**
