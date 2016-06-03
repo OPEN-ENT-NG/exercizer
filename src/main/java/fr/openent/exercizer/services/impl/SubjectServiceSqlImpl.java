@@ -29,6 +29,9 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+        if (resource.containsField("shared")) {
+            resource.removeField("shared");
+        }
         super.update(resource, user, handler);
     }
 
