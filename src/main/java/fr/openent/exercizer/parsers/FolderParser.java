@@ -16,6 +16,14 @@ public class FolderParser {
             folder.removeField("selected");
         }
 
+        if (folder.containsField("modified")) {
+            folder.removeField("modified");
+        }
+
+        if (folder.containsField("created")) {
+            folder.removeField("created");
+        }
+
         return folder;
     }
 

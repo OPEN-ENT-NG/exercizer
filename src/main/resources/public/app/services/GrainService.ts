@@ -38,13 +38,13 @@ class GrainService implements IGrainService {
             grain = this._setOrderToGrain(grain);
         }
 
-        /*var grainObject = angular.copy(grain);
-        grainObject.grain_data = JSON.stringify(grainObject.grain_data);*/
+        var grainObject = angular.copy(grain);
+        grainObject.grain_data = JSON.stringify(grainObject.grain_data);
 
         var request = {
                 method: 'POST',
                 url: 'exercizer/grain',
-                data: grain
+                data: grainObject
             };
 
         this._$http(request).then(
@@ -71,13 +71,13 @@ class GrainService implements IGrainService {
         var self = this,
             deferred = this._$q.defer();
 
-        /*var grainObject = angular.copy(grain);
-        grainObject.grain_data = JSON.stringify(grainObject.grain_data);*/
+        var grainObject = angular.copy(grain);
+        grainObject.grain_data = JSON.stringify(grainObject.grain_data);
 
         var request = {
             method: 'PUT',
             url: 'exercizer/grain',
-            data: grain
+            data: grainObject
         };
 
         this._$http(request).then(
@@ -185,7 +185,19 @@ class GrainService implements IGrainService {
     public instantiateGrain = function(grainObject:any):IGrain {
         var grain = SerializationHelper.toInstance(new Grain(), JSON.stringify(grainObject));
         grain.grain_data = SerializationHelper.toInstance(new GrainData(), grainObject.grain_data);
-        grain.grain_data.custom_data = this._grainTypeService.instantiateCustomData(grain.grain_data, grain.grain_type_id);
+
+        if (grain.grain_type_id > 3 && !angular.isUndefined(grainObject.grain_data.document_list)) {
+
+            if (angular.isUndefined(grain.grain_data.document_list)) {
+                grain.grain_data.document_list = [];
+            }
+
+            angular.forEach(grainObject.grain_data.document_list, function(GrainDocumentObject:any) {
+                grain.grain_data.document_list.push(SerializationHelper.toInstance(new GrainDocument(), GrainDocumentObject));
+            })
+        }
+
+        grain.grain_data.custom_data = this._grainTypeService.instantiateCustomData(grainObject, grain.grain_type_id);
 
         return grain;
     };

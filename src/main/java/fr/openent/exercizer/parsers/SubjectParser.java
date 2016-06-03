@@ -20,6 +20,14 @@ public class SubjectParser {
             subject.removeField("selected");
         }
 
+        if (subject.containsField("modified")) {
+            subject.removeField("modified");
+        }
+
+        if (subject.containsField("created")) {
+            subject.removeField("created");
+        }
+
         return subject;
     }
 

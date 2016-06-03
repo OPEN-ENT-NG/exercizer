@@ -7,6 +7,7 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import fr.wseduc.webutils.Either;
 import fr.openent.exercizer.services.ISubjectService;
+import org.vertx.java.core.json.impl.Json;
 
 import java.util.List;
 
@@ -22,7 +23,10 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         JsonObject subject = SubjectParser.beforePersist(resource, user);
-        super.persist(subject, user, handler);
+        JsonArray jsonFields = new JsonArray();
+        jsonFields.add("grain_data");
+
+        super.persist(jsonFields, subject, user, handler);
     }
 
     /**

@@ -37,19 +37,19 @@ class GrainTypeService implements IGrainTypeService {
         
         switch (grainTypeId) {
             case 4:
-                customData =  SerializationHelper.toInstance(new SimpleAnswerCustomData(), grainObject.grain_data.cutom_data);
+                customData =  SerializationHelper.toInstance(new SimpleAnswerCustomData(), grainObject.grain_data.custom_data);
                 break;
             case 6:
-                customData =  SerializationHelper.toInstance(new MultipleAnswerCustomData(), grainObject.grain_data.cutom_data);
+                customData =  SerializationHelper.toInstance(new MultipleAnswerCustomData(), grainObject.grain_data.custom_data);
                 break;
             case 7:
-                customData =  SerializationHelper.toInstance(new QcmCustomData(), grainObject.grain_data.cutom_data);
+                customData =  SerializationHelper.toInstance(new QcmCustomData(), grainObject.grain_data.custom_data);
                 break;
             case 8:
-                customData =  SerializationHelper.toInstance(new AssociationCustomData(), grainObject.grain_data.cutom_data);
+                customData =  SerializationHelper.toInstance(new AssociationCustomData(), grainObject.grain_data.custom_data);
                 break;
             case 9:
-                customData =  SerializationHelper.toInstance(new OrderCustomData(), grainObject.grain_data.cutom_data);
+                customData =  SerializationHelper.toInstance(new OrderCustomData(), grainObject.grain_data.custom_data);
                 break;
         }
         
