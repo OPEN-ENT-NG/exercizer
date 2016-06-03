@@ -93,11 +93,12 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     /**
      * Returns the list of shared resources according to the current user.
      *
+     * @param filters some custom filters
      * @param groupsAndUserIds the groups and user ids
      * @param user the current user
      * @param handler the handler
      */
-    protected void list(final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
+    protected void list(final JsonArray filters, final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
         StringBuilder query = new StringBuilder();
         JsonArray values = new JsonArray();
 
@@ -116,13 +117,19 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(schema)
                 .append("members as m ON (rs.member_id = m.id AND m.group_id IS NOT NULL)");
 
-        query.append(" WHERE rs.member_id IN ").append(Sql.listPrepared((groupsAndUserIds.toArray())));
+        query.append(" WHERE (rs.member_id IN ").append(Sql.listPrepared((groupsAndUserIds.toArray())));
         for (String groupOrUser : groupsAndUserIds) {
             values.add(groupOrUser);
         }
 
-        query.append(" OR r.owner = ? ");
+        query.append(" OR r.owner = ?) ");
         values.add(user.getUserId());
+
+        if (filters.size() > 0 ) {
+            for (Object filter : filters) {
+                query.append(" AND ").append(filter.toString());
+            }
+        }
 
         query.append(" GROUP BY r.id").append(" ORDER BY r.id");
 

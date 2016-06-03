@@ -48,6 +48,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void list(final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-        super.list(groupsAndUserIds, user, handler);
+        JsonArray filters = new JsonArray();
+        filters.addString("is_deleted = false");
+        super.list(filters, groupsAndUserIds, user, handler);
     }
 }
