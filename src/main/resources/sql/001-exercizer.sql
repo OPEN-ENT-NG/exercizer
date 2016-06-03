@@ -24,7 +24,8 @@ CREATE TABLE exercizer.folder(
 	owner VARCHAR(36) NOT NULL,
     created TIMESTAMP DEFAULT NOW(),
     modified TIMESTAMP DEFAULT NOW(),
-	label VARCHAR(255) NOT NULL
+	label VARCHAR(255) NOT NULL,
+	CONSTRAINT folder_parent_folder_fk FOREIGN KEY (parent_folder_id) REFERENCES exercizer.folder(id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE exercizer.subject(
