@@ -1,5 +1,6 @@
 package fr.openent.exercizer.services.impl;
 
+import fr.openent.exercizer.parsers.FolderParser;
 import fr.openent.exercizer.services.IFolderService;
 import fr.wseduc.webutils.Either;
 import org.entcore.common.user.UserInfos;
@@ -18,8 +19,8 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
      */
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        resource.putString("owner", user.getUserId());
-        super.persist(resource, user, handler);
+        JsonObject folder = FolderParser.beforePersist(resource, user);
+        super.persist(folder, user, handler);
     }
 
     /**
@@ -27,7 +28,8 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
      */
     @Override
     public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        super.update(resource, user, handler);
+        JsonObject folder = FolderParser.beforeUpdate(resource);
+        super.update(folder, user, handler);
     }
 
     /**

@@ -1,5 +1,6 @@
 package fr.openent.exercizer.services.impl;
 
+import fr.openent.exercizer.parsers.SubjectParser;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
@@ -20,8 +21,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        resource.putString("owner", user.getUserId());
-        super.persist(resource, user, handler);
+        JsonObject subject = SubjectParser.beforePersist(resource, user);
+        super.persist(subject, user, handler);
     }
 
     /**
@@ -29,10 +30,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        if (resource.containsField("shared")) {
-            resource.removeField("shared");
-        }
-        super.update(resource, user, handler);
+        JsonObject subject = SubjectParser.beforeUpdate(resource);
+        super.update(subject, user, handler);
     }
 
     /**
@@ -40,9 +39,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        resource.putValue("folder_id", null);
-        resource.putBoolean("is_deleted", Boolean.TRUE);
-        update(resource, user, handler);
+        JsonObject subject = SubjectParser.beforeRemove(resource);
+        update(subject, user, handler);
     }
 
     /**
@@ -50,6 +48,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void list(final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-        super.list(groupsAndUserIds, user, handler);
+        JsonArray filters = new JsonArray();
+        filters.addString("is_deleted = false");
+        super.list(filters, groupsAndUserIds, user, handler);
     }
 }
