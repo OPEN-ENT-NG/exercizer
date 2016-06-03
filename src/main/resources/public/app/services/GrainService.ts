@@ -184,7 +184,8 @@ class GrainService implements IGrainService {
 
     public instantiateGrain = function(grainObject:any):IGrain {
         var grain = SerializationHelper.toInstance(new Grain(), JSON.stringify(grainObject));
-        grain.grain_data.custom_data = this._grainTypeService.instantiateCustomData(grainObject, grain.grain_type_id);
+        grain.grain_data = SerializationHelper.toInstance(new GrainData(), grainObject.grain_data);
+        grain.grain_data.custom_data = this._grainTypeService.instantiateCustomData(grain.grain_data, grain.grain_type_id);
 
         return grain;
     };
