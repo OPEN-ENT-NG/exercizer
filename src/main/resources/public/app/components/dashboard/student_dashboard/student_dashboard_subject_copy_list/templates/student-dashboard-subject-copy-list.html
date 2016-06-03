@@ -1,0 +1,40 @@
+<div>
+    <div class="row vertical-spacing">
+        <article class="five cell">
+                <div class="row vertical-spacing">
+                    <h2>Cette semaine</h2>
+                </div>
+                <div class="row vertical-spacing">
+                    <input type="text" data-ng-model="search.text_1" placeholder="Rechercher">
+                </div>
+                <div class="row vertical-spacing">
+                    <div data-ng-repeat="subjectCopy in subjectCopyList | filter: filterOnSubjectScheduledTitle(search.text_1) | filter: filterOnSubjectScheduledDueDate(today, dateInAWeek) | orderBy:orderBySubjectScheduledDueDate">
+                        <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
+                    </div>
+                </div>
+        </article>
+        <div class="one cell">&nbsp;</div>
+        <article class="five cell">
+            <div class="row vertical-spacing">
+                <h2>Plus tard</h2>
+                <div class="row vertical-spacing">
+                    <div class="five cell">
+                        <input type="text" data-ng-model="search.text_2" placeholder="Rechercher">
+                    </div>
+                    <div class="five cell">
+                        <div class="two cell" style="text-align: center">Du</div>
+                        <date-picker data-ng-model="search.beginDate"  class="four cell"></date-picker>
+                        <div class="two cell" style="text-align: center">Au</div>
+                        <date-picker data-ng-model="search.endDate"  class="four cell"></date-picker>
+                    </div>
+                </div>
+                <div class="row vertical-spacing">
+                    <div data-ng-repeat="subjectCopy in subjectCopyList | filter: filterOnSubjectScheduledTitle(search.text_2) | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | orderBy:orderBySubjectScheduledDueDate">
+                        <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+  </article>
+</div>
