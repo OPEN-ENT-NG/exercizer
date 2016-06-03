@@ -161,6 +161,8 @@ class FolderService implements IFolderService {
      * @returns {IPromise<T>}
      */
     public remove(folder:IFolder):ng.IPromise<IFolder> {
+        this.deleteChildrenFolder(folder);
+        this.deleteChildrenSubject(folder);
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -172,8 +174,6 @@ class FolderService implements IFolderService {
             function (response) {
                 delete self._folderList[folder.id];
                 self.removeFolderToFolderListByParentFolderId(folder);
-                self.deleteChildrenFolder(folder);
-                self.deleteChildrenSubject(folder);
                 deferred.resolve();
             },
             function () {
