@@ -1,1 +1,23 @@
-<h1>Student dashboard</h1>
+<div data-ng-controller="StudentDashboardController as studentDashboardController">
+    <!-- PAGE -->
+    <div class="row">
+        <h1>
+            Exercizer
+        </h1>
+    </div>
+    <div class="row twelve cell tabs">
+        <div class="cell">
+            <header class="selected">
+                Mes sujets
+            </header>
+            <header>
+                Terminés
+            </header>
+        </div>
+    </div>
+    <div class="vertical-spacing">
+        &nbsp;
+    </div>
+    <!-- switch -->
+    <student-dashboard-subject-copy-list></student-dashboard-subject-copy-list>
+</div>

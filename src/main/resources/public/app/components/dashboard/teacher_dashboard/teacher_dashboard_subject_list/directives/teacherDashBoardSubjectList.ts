@@ -24,14 +24,18 @@ directives.push(
                          * AUTOCOMPLETE
                          */
 
-                        scope.clickOnAutocompletee = function () {
+                        scope.clickOnAutoComplete = function () {
                             if (scope.subjectList()) {
                                 scope.autocomplete.subjectList = createListAutoComplete();
                             }
                         };
 
-                        scope.clickOnItem = function(subject){
-                            $location.path('/subject/edit/' + subject.id);
+                        scope.clickOnItem = function(subjectFromAutoComplete){
+                            var subject = SubjectService.getById(subjectFromAutoComplete.id);
+                            subject.selected = true;
+                            scope.$emit('E_SELECT_SUBJECT', subject);
+                            scope.currentFolderId =  subject.folder_id || null;
+
                         };
 
                         function createListAutoComplete() {

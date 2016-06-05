@@ -2,7 +2,7 @@
     <!-- navigation -->
     <section class="four cell">
         <div class="row">
-            <div class="ten cell" data-ng-click="clickOnAutocompletee()">
+            <div class="ten cell" data-ng-click="clickOnAutoComplete()">
                 <autocomplete
                         options="autocomplete.subjectList"
                         ng-change="clickOnItem(selectedItem)"
@@ -54,7 +54,7 @@
         <div class="twelve cell" data-ng-show="displayList == 'domino'">
             <div class="fallen dominos">
                 <!-- folder part -->
-                <div data-ng-repeat="folder in folderList()">
+                <div data-ng-repeat="folder in folderList() | orderObjectBy:'label':false">
                     <div class="item" data-ng-if="filterFolderByParentFolder(folder)">
                         <section class="domino">
                             <div
@@ -85,7 +85,7 @@
                     </div>
                 </div>
                 <!-- subject part -->
-                <div data-ng-repeat="subject in subjectList()">
+                <div data-ng-repeat="subject in subjectList() | orderObjectBy:'title':false">
                     <div  class="item"  data-ng-if="filterSubjectByParentFolder(subject)" >
                         <section class="domino">
                             <div
@@ -134,14 +134,14 @@
                 </thead>
                 <tbody>
                 <!-- folder list-->
-                <tr data-ng-repeat="folder in folderList()">
+                <tr data-ng-repeat="folder in folderList() | orderObjectBy:'label':false">
                     <td data-ng-if="filterFolderByParentFolder(folder)">
                         <input type="checkbox" data-ng-model="folder.selected"/>
                     </td>
-                    <td     dragstart="drag(getItem(), $originalEvent)"
-                            dragcondition="dragCondition(getItem())"
-                            dragdrop="dropTo(getItem(), $originalEvent)"
-                            dropcondition="dropCondition(getItem())"
+                    <td     dragstart="drag(folder, $originalEvent)"
+                            dragcondition="dragFolderCondition(folder)"
+                            dragdrop="dropTo(folder, $originalEvent)"
+                            dropcondition="dropFolderCondition(folder)"
                             data-ng-if="filterFolderByParentFolder(folder)">
                         <i class="folder"></i>
                     </td>
@@ -150,16 +150,16 @@
                     </td>
                 </tr>
                 <!-- subject  list -->
-                <tr data-ng-repeat="subject in subjectList()">
+                <tr data-ng-repeat="subject in subjectList() | orderObjectBy:'title':false">
                     <td data-ng-if="filterSubjectByParentFolder(subject)">
                         <input type="checkbox" data-ng-model="subject.selected"/>
                     </td>
-                    <td     dragstart="drag(getItem(), $originalEvent)"
-                            dragcondition="dragCondition(getItem())"
-                            dragdrop="dropTo(getItem(), $originalEvent)"
-                            dropcondition="dropCondition(getItem())"
+                    <td     dragstart="drag(subject, $originalEvent)"
+                            dragcondition="dragSubjectCondition(subject)"
+                            dragdrop="dropTo(subject, $originalEvent)"
+                            dropcondition="dropSubjectCondition(subject)"
                             data-ng-if="filterSubjectByParentFolder(subject)">
-                        <i class="pdf"></i>
+                        <i class="doc-text"></i>
                     </td>
                     <td data-ng-if="filterSubjectByParentFolder(subject)">
                         <a data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</a>

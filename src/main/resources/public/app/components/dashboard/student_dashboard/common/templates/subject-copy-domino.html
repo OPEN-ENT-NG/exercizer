@@ -1,0 +1,23 @@
+<div class="fallen dominos">
+    <div class="item" style="width: 100%;max-width: none">
+        <section class="domino">
+            <div class="top">
+                <img data-ng-src="[[getSubjectCopyPicture()]]" class="fixed twelve cell" />
+            </div>
+            <div class="bottom">
+                <div class="content">
+                    <div class="ten cell">
+                        <h4><span class="token important">[[textIfSubjectCopyStartPerforming()]]</span>[[getSubjectScheduledTitle()]]</h4>
+                        <span data-ng-bind="getSubjectCopyDueDate() |  date:'dd/MM/yyyy'"></span>
+                        <br/>
+                        [[getSubjectScheduledOwner()]]
+                    </div>
+                    <div class="two cell">
+                        <h4>/ [[getSubjectScheduledMaxScore()]]</h4>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

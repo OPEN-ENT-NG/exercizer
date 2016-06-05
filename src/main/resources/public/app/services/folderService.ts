@@ -1,12 +1,12 @@
 interface IFolderService {
-    persist(folder: IFolder): ng.IPromise<IFolder>;
-    update(folder: IFolder): ng.IPromise<IFolder>;
-    remove(folder: IFolder): ng.IPromise<IFolder>;
-    duplicate(folder: IFolder): ng.IPromise<IFolder>;
+    persist(folder:IFolder):ng.IPromise<IFolder>;
+    update(folder:IFolder):ng.IPromise<IFolder>;
+    remove(folder:IFolder) : ng.IPromise<IFolder>;
+    duplicate(folder:IFolder) : ng.IPromise<IFolder>;
     setParentFolderId(originFolderId, targetFolderId);
     getListOfSubFolderByFolderId(folderId);
-    folderById(id: number): IFolder;
-    folderList: IFolder[];
+    folderById(id:number) : IFolder;
+    folderList : IFolder[];
 }
 
 class FolderService implements IFolderService {
@@ -19,11 +19,11 @@ class FolderService implements IFolderService {
 
     // Inject
     private _$http;
-    private _$q: ng.IQService;
+    private _$q:ng.IQService;
     private _subjectService;
 
     // Variable
-    private _folderList: any;
+    private _folderList:any;
     private _folderListByParentFolderId;
 
     constructor($http, $q, SubjectService) {
@@ -40,7 +40,7 @@ class FolderService implements IFolderService {
      * get folder list
      * @returns {any}
      */
-    public get folderList(): IFolder[] {
+    public get folderList():IFolder[] {
         return this._folderList;
     }
 
@@ -49,7 +49,7 @@ class FolderService implements IFolderService {
      * @param id
      * @returns {*}
      */
-    public folderById(id: number): IFolder {
+    public folderById(id:number):IFolder {
         return this._folderList[id];
     }
 
@@ -66,15 +66,15 @@ class FolderService implements IFolderService {
                 url: 'exercizer/folders'
             };
         this._$http(request).then(
-            function(response) {
+            function (response) {
                 var folder;
-                angular.forEach(response.data, function(folderObject) {
+                angular.forEach(response.data, function (folderObject) {
                     folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(folderObject));
                     self._folderList[folder.id] = folder;
                 });
                 deferred.resolve(self._folderList);
             },
-            function() {
+            function () {
                 deferred.reject('Une erreur est survenue lors de la récupération de vos dossiers.');
             }
         );
@@ -93,9 +93,10 @@ class FolderService implements IFolderService {
             // init _folderListByParentFolderId for this id
             this._folderListByParentFolderId[folderId] = {};
             // build it
-            angular.forEach(this._folderList, function(value, key) {
+            var self = this;
+            angular.forEach(this._folderList, function (value, key) {
                 if (value.parent_folder_id == folderId) {
-                    this._folderListByParentFolderId[folderId][value.id] = value;
+                    self._folderListByParentFolderId[folderId][value.id] = value;
                 }
             });
         }
@@ -107,7 +108,7 @@ class FolderService implements IFolderService {
      * @param folder
      * @returns {IPromise<T>}
      */
-    public persist(folder: IFolder): ng.IPromise<IFolder> {
+    public persist(folder:IFolder):ng.IPromise<IFolder> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -116,12 +117,12 @@ class FolderService implements IFolderService {
                 data: folder
             };
         this._$http(request).then(
-            function(response) {
+            function (response) {
                 folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(response.data));
                 self._folderList[folder.id] = folder;
                 deferred.resolve(folder);
             },
-            function() {
+            function () {
                 deferred.reject('Une erreur est survenue lors de la création du dossier.');
             }
         );
@@ -133,7 +134,7 @@ class FolderService implements IFolderService {
      * @param folder
      * @returns {IPromise<T>}
      */
-    public update(folder): ng.IPromise<IFolder> {
+    public update(folder):ng.IPromise<IFolder> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -144,10 +145,10 @@ class FolderService implements IFolderService {
         // delete selected
         delete folder.selected;
         this._$http(request).then(
-            function(response) {
+            function (response) {
                 deferred.resolve(folder);
             },
-            function() {
+            function () {
                 deferred.reject('Une erreur est survenue lors de la création du dossier.');
             }
         );
@@ -159,7 +160,9 @@ class FolderService implements IFolderService {
      * @param folder
      * @returns {IPromise<T>}
      */
-    public remove(folder: IFolder): ng.IPromise<IFolder> {
+    public remove(folder:IFolder):ng.IPromise<IFolder> {
+        this.deleteChildrenFolder(folder);
+        this.deleteChildrenSubject(folder);
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -168,27 +171,25 @@ class FolderService implements IFolderService {
                 data: folder
             };
         this._$http(request).then(
-            function(response) {
+            function (response) {
                 delete self._folderList[folder.id];
                 self.removeFolderToFolderListByParentFolderId(folder);
-                self.deleteChildrenFolder(folder);
-                self.deleteChildrenSubject(folder);
                 deferred.resolve();
             },
-            function() {
+            function () {
                 deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
             }
         );
         return deferred.promise;
     }
 
-    private deleteChildrenSubject(folder: IFolder) {
+    private deleteChildrenSubject(folder:IFolder) {
         this._subjectService.deleteSubjectChildrenOfFolder(folder);
     }
 
-    private deleteChildrenFolder(folder: IFolder) {
+    private deleteChildrenFolder(folder:IFolder) {
         var self = this;
-        angular.forEach(this._folderList, function(value, key) {
+        angular.forEach(this._folderList, function (value, key) {
             if (value.parent_folder_id === folder.id) {
                 self.remove(value);
             }
@@ -287,7 +288,7 @@ class FolderService implements IFolderService {
      * @param targetFolder
      * @returns {boolean}
      */
-    private isAParentOf(originFolder, targetFolder): boolean {
+    private isAParentOf(originFolder, targetFolder):boolean {
         if (targetFolder.parent_folder_id == null) {
             return false;
         } else if (originFolder.id == targetFolder.parent_folder_id) {
