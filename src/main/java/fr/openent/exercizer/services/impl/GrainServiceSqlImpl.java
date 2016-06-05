@@ -1,5 +1,6 @@
 package fr.openent.exercizer.services.impl;
 
+import fr.openent.exercizer.parsers.GrainParser;
 import fr.openent.exercizer.services.IGrainService;
 import fr.wseduc.webutils.Either;
 import org.entcore.common.user.UserInfos;
@@ -18,9 +19,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
      */
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        JsonArray jsonFields = new JsonArray();
-        jsonFields.add("grain_data");
-        super.persist(jsonFields, resource, user, handler);
+    	super.persist(resource, user, handler);
     }
 
     /**
@@ -28,7 +27,8 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
      */
     @Override
     public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        super.update(resource, user, handler);
+    	JsonObject grain = GrainParser.beforeUpdate(resource);
+        super.update(grain, user, handler);
     }
 
     /**

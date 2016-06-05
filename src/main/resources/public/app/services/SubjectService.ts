@@ -1,13 +1,13 @@
 interface ISubjectService {
-    persist(subject:ISubject):ng.IPromise<ISubject>;
-    update(subject:ISubject):ng.IPromise<ISubject>;
-    remove(subject:ISubject):ng.IPromise<ISubject>;
-    duplicate (subject:ISubject):ng.IPromise<ISubject>
-    loadSubjectList ();
-    deleteSubjectChildrenOfFolder(folder:IFolder);
-    getList():ISubject[];
+    persist(subject: ISubject): ng.IPromise<ISubject>;
+    update(subject: ISubject): ng.IPromise<ISubject>;
+    remove(subject: ISubject): ng.IPromise<ISubject>;
+    duplicate(subject: ISubject): ng.IPromise<ISubject>
+    loadSubjectList();
+    deleteSubjectChildrenOfFolder(folder: IFolder);
+    getList(): ISubject[];
     getListByFolderId(folderId);
-    getById(id:number):ISubject;
+    getById(id: number): ISubject;
 }
 
 class SubjectService implements ISubjectService {
@@ -19,12 +19,12 @@ class SubjectService implements ISubjectService {
     ];
 
     // Inject
-    private _$q:ng.IQService;
-    private _$http:ng.IHttpService;
+    private _$q: ng.IQService;
+    private _$http: ng.IHttpService;
     private _grainService;
 
     // Variables
-    private _listMappedById:{[id:number]:ISubject;};
+    private _listMappedById: { [id: number]: ISubject; };
 
     constructor($q, $http, GrainService) {
         this._$q = $q;
@@ -36,7 +36,7 @@ class SubjectService implements ISubjectService {
      * get list of subject
      * @returns {any}
      */
-    public getList = function ():ISubject[] {
+    public getList = function(): ISubject[] {
         if (!angular.isUndefined(this._listMappedById)) {
             return MapToListHelper.toList(this._listMappedById);
         } else {
@@ -50,7 +50,7 @@ class SubjectService implements ISubjectService {
      * @param id
      * @returns {any}
      */
-    public getById = function (id:number):ISubject {
+    public getById = function(id: number): ISubject {
         return this._listMappedById[id];
     };
 
@@ -58,7 +58,7 @@ class SubjectService implements ISubjectService {
      * load subject
      * @returns {IPromise<T>}
      */
-    public loadSubjectList = function () {
+    public loadSubjectList = function() {
         var deferred = this._$q.defer();
         if (!angular.isUndefined(this._listMappedById)) {
             deferred.resolve(MapToListHelper.toList(this._listMappedById));
@@ -70,15 +70,15 @@ class SubjectService implements ISubjectService {
                 };
 
             this._$http(request).then(
-                function (response) {
+                function(response) {
                     self._listMappedById = {};
-                    angular.forEach(response.data, function (subjectObject) {
+                    angular.forEach(response.data, function(subjectObject) {
                         var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject));
                         self._listMappedById[subject.id] = subject;
                     });
                     deferred.resolve(MapToListHelper.toList(self._listMappedById));
                 },
-                function () {
+                function() {
                     deferred.reject('Une erreur est survenue lors de la récupération de vos sujets.');
                 }
             );
@@ -91,7 +91,7 @@ class SubjectService implements ISubjectService {
      * @param subject
      * @returns {IPromise<T>}
      */
-    public persist = function (subject:ISubject):ng.IPromise<ISubject> {
+    public persist = function(subject: ISubject): ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -100,12 +100,12 @@ class SubjectService implements ISubjectService {
                 data: subject
             };
         this._$http(request).then(
-            function (response) {
+            function(response) {
                 subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
                 self._listMappedById[subject.id] = subject;
                 deferred.resolve(subject);
             },
-            function () {
+            function() {
                 deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
             }
         );
@@ -117,7 +117,7 @@ class SubjectService implements ISubjectService {
      * @param subject
      * @returns {IPromise<T>}
      */
-    public update = function (subject):ng.IPromise<ISubject> {
+    public update = function(subject): ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -128,10 +128,10 @@ class SubjectService implements ISubjectService {
         delete subject.shared;
         delete subject.selected;
         this._$http(request).then(
-            function (responce) {
+            function(responce) {
                 deferred.resolve(subject);
             },
-            function () {
+            function() {
                 deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
             }
         );
@@ -143,7 +143,7 @@ class SubjectService implements ISubjectService {
      * @param subject
      * @returns {IPromise<T>}
      */
-    public remove = function (subject):ng.IPromise<ISubject> {
+    public remove = function(subject): ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -155,12 +155,12 @@ class SubjectService implements ISubjectService {
         delete subject.shared;
         delete subject.selected;
         this._$http(request).then(
-            function (response) {
+            function(response) {
                 subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
                 delete self._listMappedById[subject.id];
                 deferred.resolve();
             },
-            function () {
+            function() {
                 deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
             }
         );
@@ -173,7 +173,7 @@ class SubjectService implements ISubjectService {
      * @param duplicateGrain
      * @returns {any}
      */
-    public duplicate = function (subject:ISubject, duplicateGrain:boolean = true):ng.IPromise<ISubject> {
+    public duplicate = function(subject: ISubject, duplicateGrain: boolean = true): ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer();
         // clone subject
@@ -186,23 +186,23 @@ class SubjectService implements ISubjectService {
         duplicatedSubject.title += '_copie';
         // persist new subject
         this.persist(duplicatedSubject)
-            .then(function (dataSubject) {
-                    if (duplicateGrain === true) {
-                        self._grainService.getListBySubject(subject.id)
-                            .then(function (dataGrainList) {
-                                var newGrain;
-                                angular.forEach(dataGrainList, function (grain, key) {
-                                    // no use grainService.duplicate because want to change subject_id
-                                    newGrain = self._grainService.copyOf(grain);
-                                    newGrain.subject_id = dataSubject.id;
-                                    self._grainService.persist(newGrain);
-                                });
-                                deferred.resolve(dataSubject);
-                            })
-                    } else {
-                        deferred.resolve(dataSubject);
-                    }
+            .then(function(dataSubject) {
+                if (duplicateGrain === true) {
+                    self._grainService.getListBySubject(subject.id)
+                        .then(function(dataGrainList) {
+                            var newGrain;
+                            angular.forEach(dataGrainList, function(grain, key) {
+                                // no use grainService.duplicate because want to change subject_id
+                                newGrain = self._grainService.copyOf(grain);
+                                newGrain.subject_id = dataSubject.id;
+                                self._grainService.persist(newGrain);
+                            });
+                            deferred.resolve(dataSubject);
+                        })
+                } else {
+                    deferred.resolve(dataSubject);
                 }
+            }
             );
         return deferred.promise;
     };
@@ -215,7 +215,7 @@ class SubjectService implements ISubjectService {
     public getListByFolderId(folderId) {
         var self = this,
             array = {};
-        angular.forEach(self._listMappedById, function (value, key) {
+        angular.forEach(self._listMappedById, function(value, key) {
             if (value.folder_id == folderId) {
                 array[value.id] = value;
             }
@@ -227,9 +227,9 @@ class SubjectService implements ISubjectService {
      * remove all subject in a folder
      * @param folder
      */
-    public deleteSubjectChildrenOfFolder = function (folder:IFolder) {
+    public deleteSubjectChildrenOfFolder = function(folder: IFolder) {
         var self = this;
-        angular.forEach(this._listMappedById, function (value, key) {
+        angular.forEach(this._listMappedById, function(value, key) {
             if (value.folder_id === folder.id) {
                 self.remove(value);
             }

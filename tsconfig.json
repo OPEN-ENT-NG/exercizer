@@ -4,7 +4,6 @@
         "outFile": "scripts.min.js",
         "moduleResolution": "node",
         "isolatedModules": false,
-        "jsx": "react",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "declaration": false,

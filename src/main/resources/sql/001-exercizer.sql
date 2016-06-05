@@ -75,7 +75,7 @@ CREATE TABLE exercizer.grain(
 	created TIMESTAMP DEFAULT NOW(),
 	modified TIMESTAMP DEFAULT NOW(),
 	order_by INTEGER NOT NULL,
-	grain_data JSON NULL,
+	grain_data TEXT NULL,
 	CONSTRAINT grain_subject_fk FOREIGN KEY(subject_id) REFERENCES exercizer.subject(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT grain_grain_type_fk FOREIGN KEY(grain_type_id) REFERENCES exercizer.grain_type(id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
@@ -83,7 +83,7 @@ CREATE TABLE exercizer.grain(
 CREATE TABLE exercizer.subject_scheduled(
 	id BIGSERIAL NOT NULL PRIMARY KEY,
 	subject_id BIGINT NOT NULL,
-    owner VARCHAR(36) NOT NULL,
+  owner VARCHAR(36) NOT NULL,
 	created TIMESTAMP DEFAULT NOW(),
 	title VARCHAR(255) NOT NULL,
 	description TEXT NULL,

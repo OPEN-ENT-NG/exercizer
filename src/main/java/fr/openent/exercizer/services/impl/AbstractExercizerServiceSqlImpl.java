@@ -14,9 +14,6 @@ import org.vertx.java.core.json.JsonObject;
 
 import java.util.List;
 
-import static org.entcore.common.sql.Sql.parseId;
-import static org.entcore.common.sql.SqlResult.validResultsHandler;
-import static org.entcore.common.sql.SqlResult.validRowsResultHandler;
 import static org.entcore.common.sql.SqlResult.validUniqueResultHandler;
 
 abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
@@ -42,58 +39,6 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
 
         s.insert(resourceTable, resource, "*");
-        sql.transaction(s.build(), validUniqueResultHandler(1, handler));
-    }
-
-    /**
-     * Persists a resource with JSON fields.
-     *
-     * @param jsonFields the JSON fields
-     * @param resource the resource
-     * @param user the current user
-     * @param handler the handler
-     */
-    protected void persist(final JsonArray jsonFields, final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        SqlStatementsBuilder s = new SqlStatementsBuilder();
-        String userQuery = "SELECT " + schema + "merge_users(?,?)";
-        s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
-
-        StringBuilder insertQuery = new StringBuilder();
-        StringBuilder insertColumnsQuery = new StringBuilder();
-        StringBuilder insertValuesQuery = new StringBuilder();
-        JsonArray values = new JsonArray();
-
-
-        insertQuery.append("INSERT INTO ")
-                .append(resourceTable)
-                .append( "(");
-
-        for (String attr : resource.getFieldNames()) {
-
-            if (insertColumnsQuery.length() != 0) {
-                insertColumnsQuery.append(", ");
-            }
-
-            insertColumnsQuery.append(attr);
-
-            if (insertValuesQuery.length() != 0) {
-                insertValuesQuery.append(", ");
-            }
-
-            if (jsonFields.contains(attr)) {
-                insertValuesQuery.append(attr).append(" = ?::JSON");
-            } else {
-                insertValuesQuery.append(attr).append(" = ?");
-            }
-            values.add(resource.getValue(attr));
-        }
-
-        insertQuery.append(insertColumnsQuery)
-                .append(") VALUES (")
-                .append(insertValuesQuery)
-                .append(") RETURNING *");
-
-        s.prepared(insertQuery.toString(), values);
         sql.transaction(s.build(), validUniqueResultHandler(1, handler));
     }
 
