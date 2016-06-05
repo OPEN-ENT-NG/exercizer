@@ -30,7 +30,7 @@ class TeacherDashboardController {
         this._selectedFolderList = [];
         this._eventsHandler(self);
         // load subject;
-        this._subjectService.loadSubjectList();
+        this._subjectService.resolve();
     }
 
     public createSubject = function(){

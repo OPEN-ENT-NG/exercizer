@@ -14,8 +14,6 @@ import org.vertx.java.core.json.JsonObject;
 
 import java.util.List;
 
-import static org.entcore.common.sql.SqlResult.validUniqueResultHandler;
-
 abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
 
     AbstractExercizerServiceSqlImpl(String schema, String table, String shareTable) {
@@ -39,7 +37,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
 
         s.insert(resourceTable, resource, "*");
-        sql.transaction(s.build(), validUniqueResultHandler(1, handler));
+        sql.transaction(s.build(), SqlResult.validUniqueResultHandler(1, handler));
     }
 
     /**
@@ -70,7 +68,8 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      * @param handler the handler
      */
     protected void delete(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        super.delete(resource.getInteger("id").toString(), user, handler);
+    	String query = "DELETE FROM " + resourceTable + " WHERE id = ? RETURNING *";
+		sql.prepared(query, new JsonArray().add(resource.getInteger("id")), SqlResult.validUniqueResultHandler(handler));
     }
 
     /**

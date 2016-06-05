@@ -80,7 +80,7 @@ public class GrainController extends ControllerHelper {
                     RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
                         @Override
                         public void handle(final JsonObject resource) {
-                            grainService.list(resource, arrayResponseHandler(request));
+                            grainService.remove(resource, user, notEmptyResponseHandler(request));
                         }
                     });
                 }

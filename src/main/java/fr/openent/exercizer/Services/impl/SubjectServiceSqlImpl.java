@@ -1,13 +1,12 @@
 package fr.openent.exercizer.services.impl;
 
-import fr.openent.exercizer.parsers.SubjectParser;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import fr.wseduc.webutils.Either;
+import fr.openent.exercizer.parsers.SubjectParser;
 import fr.openent.exercizer.services.ISubjectService;
-import org.vertx.java.core.json.impl.Json;
 
 import java.util.List;
 

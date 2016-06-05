@@ -15,14 +15,17 @@ class EditSubjectController {
     private _selectedGrainList:IGrain[];
 
     constructor
-    ($routeParams,
-     private _$scope:ng.IScope,
-     private _$location:ng.ILocationService,
-     private _subjectService:ISubjectService,
-     private _subjectScheduledService:ISubjectScheduledService,
-     private _subjectCopyService:ISubjectCopyService,
-     private _grainService:IGrainService,
-     private _grainTypeService:IGrainTypeService) {
+    (
+        private _$routeParams,
+        private _$scope:ng.IScope,
+        private _$location:ng.ILocationService,
+        private _subjectService:ISubjectService,
+        private _subjectScheduledService:ISubjectScheduledService,
+        private _subjectCopyService:ISubjectCopyService,
+        private _grainService:IGrainService,
+        private _grainTypeService:IGrainTypeService
+    ) {
+        
         this._$scope = _$scope;
         this._$location = _$location;
         this._subjectService = _subjectService;
@@ -30,23 +33,22 @@ class EditSubjectController {
         this._subjectCopyService = _subjectCopyService;
         this._grainService = _grainService;
         this._grainTypeService = _grainTypeService;
+        
+        var self = this,
+            subjectId = _$routeParams['subjectId'];
 
-        // SUBJECT ID BY URL
-        var subjectId = $routeParams.subjectId;
-        var promise = this._subjectService.loadSubjectList();
-        var self = this;
-        promise.then(function (data) {
+        this._subjectService.resolve().then(function() {
             self._subject = self._subjectService.getById(subjectId);
-            if (!self._subject) {
-                console.log('redirect');
-                //self._$location.path('/dashboard');
+
+            if (angular.isUndefined(self._subject)) {
+                self.redirectToDashboard();
             } else {
                 self._selectedGrainList = [];
                 self._eventsHandler(self);
             }
-        }, function (msg) {
-            notify.error(msg);
-
+            
+        }, function(err) {
+            notify.error(err);
         });
     }
 
@@ -56,11 +58,13 @@ class EditSubjectController {
 
             self._grainService.getListBySubject(self._subject).then(
                 function (grainList) {
-                    console.log(grainList);
                     var maxScore = 0;
                     angular.forEach(grainList, function (grain:IGrain) {
                         if (grain.grain_type_id > 3 && !angular.isUndefined(grain.grain_data.max_score)) {
-                            maxScore += grain.grain_data.max_score;
+                            if (angular.isString(grain.grain_data.max_score)) {
+                                grain.grain_data.max_score = parseFloat(grain.grain_data.max_score.toString());
+                            }
+                            maxScore += grain.grain_data.max_score
                         }
                     });
 
@@ -69,8 +73,8 @@ class EditSubjectController {
                     self._subjectService.update(self._subject).then(
                         function (subject:ISubject) {
                             self._subject = subject;
-                            self._$scope.$broadcast("E_REFRESH_GRAIN_LIST", grainList);
-                            self._$scope.$broadcast("E_TOGGLE_SUBJECT_EDIT_TOASTER", self._selectedGrainList.length);
+                            self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', grainList);
+                            self._$scope.$broadcast('E_TOGGLE_SUBJECT_EDIT_TOASTER', self._selectedGrainList.length);
                         },
                         function (err) {
                             notify.error(err);
@@ -83,7 +87,7 @@ class EditSubjectController {
             );
         }
 
-        self._$scope.$on("E_GRAIN_LIST_UPDATED", function () {
+        self._$scope.$on('E_GRAIN_LIST_UPDATED', function () {
             _handleGrainListUpdated();
         });
 
@@ -98,7 +102,7 @@ class EditSubjectController {
             );
         }
 
-        self._$scope.$on("E_ADD_GRAIN", function (event, grain:IGrain) {
+        self._$scope.$on('E_ADD_GRAIN', function (event, grain:IGrain) {
             _handleAddGrain(grain);
         });
 
@@ -113,7 +117,7 @@ class EditSubjectController {
             );
         }
 
-        self._$scope.$on("E_UPDATE_GRAIN", function (event, grain:IGrain) {
+        self._$scope.$on('E_UPDATE_GRAIN', function (event, grain:IGrain) {
             _handleUpdateGrain(grain);
         });
 
@@ -134,11 +138,11 @@ class EditSubjectController {
             );
         }
 
-        self._$scope.$on("E_REMOVE_GRAIN", function (event, grain:IGrain) {
-            self._$scope.$broadcast("E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN", grain);
+        self._$scope.$on('E_REMOVE_GRAIN', function (event, grain:IGrain) {
+            self._$scope.$broadcast('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN', grain);
         });
 
-        self._$scope.$on("E_CONFIRM_REMOVE_GRAIN", function (event, grain:IGrain) {
+        self._$scope.$on('E_CONFIRM_REMOVE_GRAIN', function (event, grain:IGrain) {
             _handleRemoveGrain(grain);
         });
 
@@ -146,22 +150,22 @@ class EditSubjectController {
             if (grain.grain_type_id > 2) {
                 _handleUpdateGrain(grain);
             }
-            self._$scope.$broadcast("E_TOGGLE_GRAIN", grain);
+            self._$scope.$broadcast('E_TOGGLE_GRAIN', grain);
         }
 
-        self._$scope.$on("E_GRAIN_TOGGLED", function (event, grain:IGrain) {
+        self._$scope.$on('E_GRAIN_TOGGLED', function (event, grain:IGrain) {
             _handleGrainToggled(grain);
         });
 
         function _handleFoldGrainList() {
-            self._grainService.getListBySubject(self._subjectd).then(
+            self._grainService.getListBySubject(self._subject).then(
                 function (grainList) {
                     angular.forEach(grainList, function (grain:IGrain) {
                         if (grain.grain_type_id > 2) {
                             _handleUpdateGrain(grain);
                         }
                     });
-                    self._$scope.$broadcast("E_FORCE_FOLDING_GRAIN");
+                    self._$scope.$broadcast('E_FORCE_FOLDING_GRAIN');
                 },
                 function (err) {
                     notify.error(err);
@@ -169,7 +173,7 @@ class EditSubjectController {
             );
         }
 
-        self._$scope.$on("E_FOLD_GRAIN_LIST", function () {
+        self._$scope.$on('E_FOLD_GRAIN_LIST', function () {
             _handleFoldGrainList();
         });
 
@@ -182,10 +186,10 @@ class EditSubjectController {
                 self._selectedGrainList.push(grain);
             }
 
-            self._$scope.$broadcast("E_TOGGLE_SUBJECT_EDIT_TOASTER", self._selectedGrainList.length);
+            self._$scope.$broadcast('E_TOGGLE_SUBJECT_EDIT_TOASTER', self._selectedGrainList.length);
         }
 
-        self._$scope.$on("E_GRAIN_SELECTED", function (event, grain:IGrain) {
+        self._$scope.$on('E_GRAIN_SELECTED', function (event, grain:IGrain) {
             _handleGrainSelected(grain);
         });
 
@@ -194,7 +198,7 @@ class EditSubjectController {
             self._grainService.duplicate(grain).then(
                 function () {
                     self._selectedGrainList.splice(0, 1);
-                    self._$scope.$broadcast("E_SELECT_GRAIN", grain);
+                    self._$scope.$broadcast('E_SELECT_GRAIN', grain);
                     if (self._selectedGrainList.length > 0) {
                         _handleDuplicateSelectedGrain();
                     } else {
@@ -207,7 +211,7 @@ class EditSubjectController {
             );
         }
 
-        self._$scope.$on("E_DUPLICATE_SELECTED_GRAIN_LIST", function () {
+        self._$scope.$on('E_DUPLICATE_SELECTED_GRAIN_LIST', function () {
             _handleDuplicateSelectedGrain();
         });
 
@@ -216,7 +220,7 @@ class EditSubjectController {
             self._grainService.remove(grain).then(
                 function () {
                     self._selectedGrainList.splice(0, 1);
-                    self._$scope.$broadcast("E_SELECT_GRAIN", grain);
+                    self._$scope.$broadcast('E_SELECT_GRAIN', grain);
                     if (self._selectedGrainList.length > 0) {
                         _handleRemoveSelectedGrain();
                     } else {
@@ -229,32 +233,32 @@ class EditSubjectController {
             );
         }
 
-        self._$scope.$on("E_REMOVE_SELECTED_GRAIN_LIST", function () {
-            self._$scope.$broadcast("E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST");
+        self._$scope.$on('E_REMOVE_SELECTED_GRAIN_LIST', function () {
+            self._$scope.$broadcast('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_SELECTED_GRAIN_LIST');
         });
 
-        self._$scope.$on("E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST", function () {
+        self._$scope.$on('E_CONFIRM_REMOVE_SELECTED_GRAIN_LIST', function () {
             _handleRemoveSelectedGrain();
         });
 
-        self._$scope.$on("E_ADD_GRAIN_DOCUMENT", function (event, grain:IGrain) {
-            self._$scope.$broadcast("E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT", grain);
+        self._$scope.$on('E_ADD_GRAIN_DOCUMENT', function (event, grain:IGrain) {
+            self._$scope.$broadcast('E_DISPLAY_SUBJECT_EDIT_MODAL_GRAIN_DOCUMENT', grain);
         });
 
-        self._$scope.$on("E_CONFIRM_ADD_GRAIN_DOCUMENT", function (event, grain:IGrain) {
+        self._$scope.$on('E_CONFIRM_ADD_GRAIN_DOCUMENT', function (event, grain:IGrain) {
             _handleUpdateGrain(grain);
         });
 
-        self._$scope.$on("E_REMOVE_GRAIN_DOCUMENT", function (event, grain:IGrain, grainDocument:IGrainDocument) {
-            self._$scope.$broadcast("E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT", grain, grainDocument);
+        self._$scope.$on('E_REMOVE_GRAIN_DOCUMENT', function (event, grain:IGrain, grainDocument:IGrainDocument) {
+            self._$scope.$broadcast('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN_DOCUMENT', grain, grainDocument);
         });
 
-        self._$scope.$on("E_CONFIRM_REMOVE_GRAIN_DOCUMENT", function (event, grain:IGrain) {
+        self._$scope.$on('E_CONFIRM_REMOVE_GRAIN_DOCUMENT', function (event, grain:IGrain) {
             _handleUpdateGrain(grain);
         });
 
-        self._$scope.$on("E_PREVIEW_PERFORM_SUBJECT_COPY", function () {
-            self._$scope.$broadcast("E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY");
+        self._$scope.$on('E_PREVIEW_PERFORM_SUBJECT_COPY', function () {
+            self._$scope.$broadcast('E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY');
 
         });
 
@@ -270,8 +274,8 @@ class EditSubjectController {
         this._subject = value;
     }
 
-    public goHome() {
-        this._$location.path('/teacher/home');
+    public redirectToDashboard() {
+        this._$location.path('/dashboard');
     }
 }
 
