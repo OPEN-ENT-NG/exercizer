@@ -1,30 +1,38 @@
-<div data-ng-controller="TeacherDashboardController as teacherDashboardController">
-    <!-- PAGE -->
+<div data-ng-controller="TeacherDashboardController as teacherDashboardController" data-ng-init="teacherDashboardController.currentTab = 1">
+    <!-- TABS -->
     <div class="row">
         <h1>
             Exercizer
         </h1>
     </div>
-    <div class="row twelve cell tabs">
+    <div class="row twelve cell tabs" style="margin-bottom: 30px;">
         <div class="cell">
-            <header class="selected">
+            <header data-ng-click="teacherDashboardController.currentTab = 1" data-ng-class="{ selected: teacherDashboardController.currentTab === 1 }">
                 Mes sujets
             </header>
-            <header>
+            <header class="horizontal-spacing" data-ng-click="teacherDashboardController.currentTab = 2" data-ng-class="{ selected: teacherDashboardController.currentTab === 2 }">
+                Corrections
+            </header>
+            <header data-ng-click="teacherDashboardController.currentTab = 3" data-ng-class="{ selected: teacherDashboardController.currentTab === 3 }">
                 Bibliothèque
             </header>
         </div>
-        <button class="right-magnet cell" data-ng-click="teacherDashboardController.createSubject()">
-            Nouveau sujet
-        </button>
     </div>
-    <!-- switch -->
-    <teacher-dashboard-subject-list></teacher-dashboard-subject-list>
-    <!-- lightBox -->
-    <teacher-dashboard-toaster></teacher-dashboard-toaster>
-    <teacher-dashboard-remove-selected-folder-and-subject></teacher-dashboard-remove-selected-folder-and-subject>
-    <teacher-dashboard-folder-edit></teacher-dashboard-folder-edit>
-    <teacher-dashboard-subject-edit></teacher-dashboard-subject-edit>
-    <teacher-dashboard-copy-paste></teacher-dashboard-copy-paste>
-    <subject-schedule></subject-schedule>
+
+    <!-- TAB'S PAGES -->
+    <div data-ng-switch="teacherDashboardController.currentTab">
+        <div data-ng-switch-when="1">
+            <div data-ng-include data-src="'/exercizer/public/template/teacher-dashboard-subject-tab.html'"></div>
+        </div>
+        <div data-ng-switch-when="2">
+            <div class="row">
+                <h1>Corrections</h1>
+            </div>
+        </div>
+        <div data-ng-switch-when="3">
+            <div class="row">
+                <h1>Bibliothèque</h1>
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,4 +1,5 @@
 interface IFolderService {
+    resolve(): ng.IPromise<boolean>;
     persist(folder:IFolder):ng.IPromise<IFolder>;
     update(folder:IFolder):ng.IPromise<IFolder>;
     remove(folder:IFolder) : ng.IPromise<IFolder>;
@@ -30,10 +31,32 @@ class FolderService implements IFolderService {
         this._$http = $http;
         this._$q = $q;
         this._subjectService = SubjectService;
-        // init folder list as an object
+        
         this._folderList = {};
         this._folderListByParentFolderId = {};
-        this.loadFolderList();
+    }
+
+    public resolve(): ng.IPromise<boolean> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: 'exercizer/folders'
+            };
+        
+        this._$http(request).then(
+            function (response) {
+                angular.forEach(response.data, function (folderObject) {
+                    var folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(folderObject));
+                    self._folderList[folder.id] = folder;
+                });
+                deferred.resolve(self._folderList);
+            },
+            function () {
+                deferred.reject('Une erreur est survenue lors de la récupération de vos dossiers.');
+            }
+        );
+        return deferred.promise;
     }
 
     /**
@@ -51,34 +74,6 @@ class FolderService implements IFolderService {
      */
     public folderById(id:number):IFolder {
         return this._folderList[id];
-    }
-
-    /**
-     * load folder
-     * @returns {IPromise<T>}
-     * @private
-     */
-    private loadFolderList() {
-        var self = this,
-            deferred = this._$q.defer(),
-            request = {
-                method: 'GET',
-                url: 'exercizer/folders'
-            };
-        this._$http(request).then(
-            function (response) {
-                var folder;
-                angular.forEach(response.data, function (folderObject) {
-                    folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(folderObject));
-                    self._folderList[folder.id] = folder;
-                });
-                deferred.resolve(self._folderList);
-            },
-            function () {
-                deferred.reject('Une erreur est survenue lors de la récupération de vos dossiers.');
-            }
-        );
-        return deferred.promise;
     }
 
     /**
@@ -100,6 +95,7 @@ class FolderService implements IFolderService {
                 }
             });
         }
+        
         return this._folderListByParentFolderId[folderId];
     }
 
@@ -171,13 +167,13 @@ class FolderService implements IFolderService {
                 data: folder
             };
         this._$http(request).then(
-            function (response) {
+            function () {
                 delete self._folderList[folder.id];
-                self.removeFolderToFolderListByParentFolderId(folder);
+                self._removeFolderToFolderListByParentFolderId(folder);
                 deferred.resolve();
             },
             function () {
-                deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
+                deferred.reject('Une erreur est survenue lors de la suppression du dossier.');
             }
         );
         return deferred.promise;
@@ -202,38 +198,21 @@ class FolderService implements IFolderService {
      * @returns {IPromise<T>}
      */
     public duplicate(folder: IFolder): ng.IPromise<IFolder> {
-        var self = this,
-            deferred = this._$q.defer(),
+        var deferred = this._$q.defer(),
             newFolder = new Folder();
-        newFolder.label = folder.label + "_copie";
-        this.persist(newFolder)
-            .then(function(dataFolder) {
-                deferred.resolve(dataFolder);
-            }
-            );
-        return deferred.promise;
-    }
+        
+        newFolder.label = folder.label + '_copie';
 
-    /**
-     * remove folder list  in folderListByFolderID
-     * @param folder
-     */
-    private removeFolderToFolderListByParentFolderId(folder: IFolder) {
-        var self = this;
-        angular.forEach(this._folderListByParentFolderId, function(value_1, key_1) {
-            if (folder.id == key_1) {
-                // delete parent folder
-                delete self._folderListByParentFolderId[key_1];
+        this.persist(newFolder).then(
+            function(duplicatedFolder: IFolder) {
+                deferred.resolve(duplicatedFolder);
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors de la duplication du dossier.')
             }
-            if (value_1) {
-                angular.forEach(value_1, function(value_2, key_2) {
-                    if (folder.id == key_2) {
-                        // delete children folder
-                        delete self._folderListByParentFolderId[key_1][key_2];
-                    }
-                });
-            }
-        });
+
+        );
+        return deferred.promise;
     }
 
     /**
@@ -257,7 +236,7 @@ class FolderService implements IFolderService {
             // drag to other folder
             var targetFolder = this._folderList[targetFolderId];
             // check if there are no loop in folder
-            if (this.isAParentOf(originFolder, targetFolder)) {
+            if (this._isAParentOf(originFolder, targetFolder)) {
                 console.error("Loop folder not allowed");
             } else {
                 // check if the folder is not drop in itself
@@ -283,18 +262,41 @@ class FolderService implements IFolderService {
     }
 
     /**
+     * remove folder list  in folderListByFolderID
+     * @param folder
+     */
+    private _removeFolderToFolderListByParentFolderId(folder: IFolder) {
+        var self = this;
+        angular.forEach(this._folderListByParentFolderId, function(value_1, key_1) {
+            if (folder.id == key_1) {
+                // delete parent folder
+                delete self._folderListByParentFolderId[key_1];
+            }
+            if (value_1) {
+                angular.forEach(value_1, function(value_2, key_2) {
+                    if (folder.id == key_2) {
+                        // delete children folder
+                        delete self._folderListByParentFolderId[key_1][key_2];
+                    }
+                });
+            }
+        });
+    }
+
+    /**
      * check if a folder is a parent of a other folder
      * @param originFolder
      * @param targetFolder
      * @returns {boolean}
      */
-    private isAParentOf(originFolder, targetFolder):boolean {
+    private _isAParentOf(originFolder, targetFolder):boolean {
         if (targetFolder.parent_folder_id == null) {
             return false;
         } else if (originFolder.id == targetFolder.parent_folder_id) {
             return true;
         } else {
-            return this.isAParentOf(originFolder, this._folderList[targetFolder.parent_folder_id]);
+            return this._isAParentOf(originFolder, this._folderList[targetFolder.parent_folder_id]);
         }
     }
+
 }

@@ -12,9 +12,6 @@ interface IDragService {
 
 class DragService implements IDragService {
 
-    private folderService;
-    private subjectService;
-
     static $inject = [
         'FolderService',
         'SubjectService',
@@ -22,13 +19,12 @@ class DragService implements IDragService {
 
 
     constructor(
-        FolderService,
-        SubjectService,
-        SelectionService
+        private _folderService,
+        private _subjectService
 
     ) {
-        this.folderService = FolderService;
-        this.subjectService = SubjectService;
+        this._folderService = _folderService;
+        this._subjectService = _subjectService;
     }
 
 
@@ -94,12 +90,12 @@ class DragService implements IDragService {
             if (this.isSubject(targetItem)) {
                 throw "not possible";
             } else if (this.isFolder(targetItem)) {
-                var subject = this.subjectService.getById(this.getId(originalItem));
+                var subject = this._subjectService.getById(this.getId(originalItem));
                 subject.folder_id = targetItem.id;
             } else {
                 //default
                 // drop on root
-                var subject = this.subjectService.getById(this.getId(originalItem));
+                var subject = this._subjectService.getById(this.getId(originalItem));
                 subject.folder_id = null;
             }
         }
@@ -107,12 +103,12 @@ class DragService implements IDragService {
             if (this.isSubject(targetItem)) {
                 throw "not possible";
             } else if (this.isFolder(targetItem)) {
-                this.folderService.setParentFolderId(this.getId(originalItem), this.getId(targetItem));
+                this._folderService._setParentFolderId(this.getId(originalItem), this.getId(targetItem));
 
             } else {
                 // default
                 // drop on root
-                this.folderService.setParentFolderId(this.getId(originalItem), null);
+                this._folderService._setParentFolderId(this.getId(originalItem), null);
 
             }
         }

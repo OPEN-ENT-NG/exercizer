@@ -2,8 +2,10 @@ interface IGrainService {
     persist(grain: IGrain): ng.IPromise<IGrain>;
     update(grain: IGrain): ng.IPromise<IGrain>;
     remove(grain: IGrain): ng.IPromise<boolean>;
+    removeList(grain: IGrain[], subject: ISubject): ng.IPromise<boolean>;
+    duplicate(grain: IGrain, subject: ISubject): ng.IPromise<IGrain>;
+    duplicateList(grainList: IGrain[], subject: ISubject): ng.IPromise<boolean>;
     getListBySubject(subject: ISubject): ng.IPromise<IGrain[]>;
-    duplicate(grain: IGrain): ng.IPromise<IGrain>
     instantiateGrain(grainObject: any): IGrain;
 }
 
@@ -112,7 +114,7 @@ class GrainService implements IGrainService {
             url: 'exercizer/grain',
             data: grainObject
         };
-        
+
         this._$http(request).then(
             function() {
                 var grainIndex = self._listMappedBySubjectId[grain.subject_id].indexOf(grain);
@@ -129,6 +131,63 @@ class GrainService implements IGrainService {
         );
 
 
+        return deferred.promise;
+    };
+
+    public removeList = function(grainList: IGrain[], subject: ISubject): ng.IPromise<boolean> {
+        var self = this,
+            deferred = this._$q.defer(),
+            grain = grainList[0];
+
+        this.remove(grain).then(
+            function () {
+                grainList.splice(0, 1);
+                if (grainList.length > 0) {
+                    self.duplicateList(grainList, subject);
+                } else {
+                    deferred.resolve(true);
+                }
+            },
+            function () {
+                deferred.reject('Une erreur est survenue lors de la duplication d\'élément du sujet à dupliquer.');
+            }
+        );
+
+        return deferred.promise;
+    };
+
+    public duplicate = function(grain: IGrain, subject: ISubject): ng.IPromise<IGrain> {
+
+        var duplicatedGrain = CloneObjectHelper.clone(grain, true);
+        duplicatedGrain.id = undefined;
+        duplicatedGrain.subject_id = angular.isUndefined(subject) ? this._subject : subject;
+
+        if (duplicatedGrain.grain_type_id > 3) {
+            duplicatedGrain.grain_data.title += '_copie';
+        }
+
+        return this.persist(duplicatedGrain);
+    };
+
+    public duplicateList = function(grainList: IGrain[], subject: ISubject): ng.IPromise<boolean> {
+        var self = this,
+            deferred = this._$q.defer(),
+            grain = grainList[0];
+        
+        this.duplicate(grain).then(
+            function () {
+                grainList.splice(0, 1);
+                if (grainList.length > 0) {
+                    self.duplicateList(grainList, subject);
+                } else {
+                   deferred.resolve(true);
+                }
+            },
+            function () {
+                deferred.reject('Une erreur est survenue lors de la duplication d\'élément du sujet à dupliquer.');
+            }
+        );
+        
         return deferred.promise;
     };
 
@@ -162,28 +221,6 @@ class GrainService implements IGrainService {
         }
 
         return deferred.promise;
-    };
-
-    public duplicate = function(grain: IGrain, keepOrder: boolean = false): ng.IPromise<IGrain> {
-
-        var duplicatedGrain = CloneObjectHelper.clone(grain, true);
-        duplicatedGrain.id = undefined;
-
-        if (keepOrder === false) {
-            duplicatedGrain.order_by = undefined;
-        }
-
-        if (duplicatedGrain.grain_type_id > 3) {
-            duplicatedGrain.grain_data.title += '_copie';
-        }
-
-        return this.persist(duplicatedGrain);
-    };
-
-    public copyOf = function(grain: IGrain): ng.IPromise<IGrain> {
-        var duplicatedGrain = CloneObjectHelper.clone(grain, true);
-        duplicatedGrain.id = undefined;
-        return duplicatedGrain;
     };
 
     public instantiateGrain = function(grainObject: any): IGrain {

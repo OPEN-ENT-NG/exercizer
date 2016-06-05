@@ -5,7 +5,7 @@ directives.push(
             return {
                 restrict: 'E',
                 scope: {},
-                templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/templates/teacher-dashboard-copy-paste.html',
+                templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/templates/teacher-dashboard-copy-paste.html',
                 link: (scope:any, element, attrs) => {
 
                     scope.isDisplayed = false;

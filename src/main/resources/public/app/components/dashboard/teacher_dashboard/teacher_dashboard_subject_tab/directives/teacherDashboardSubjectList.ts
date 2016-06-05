@@ -8,7 +8,7 @@ directives.push(
                     scope: {
                         subject: '='
                     },
-                    templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_list/templates/teacher-dashboard-subject-list.html',
+                    templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/templates/teacher-dashboard-subject-list.html',
                     link: (scope:any) => {
 
                         /**
@@ -46,7 +46,7 @@ directives.push(
                                 if (value.folder_id) {
                                     folder = FolderService.folderById(value.folder_id);
                                     if (folder) {
-                                        folderString = " [ " + folder.label + " ]";
+                                        folderString = " (" + folder.label + ")";
                                     }
                                 }
                                 var obj = {
@@ -124,6 +124,11 @@ directives.push(
                         scope.clickCreateFolder = function () {
                             scope.$emit('E_CREATE_FOLDER');
                         };
+
+                        scope.addNewSubject = function() {
+                            scope.$emit('E_ADD_NEW_SUBJECT', null);
+                        };
+
 
                         scope.goToRoot = function () {
                             scope.currentFolderId = null;

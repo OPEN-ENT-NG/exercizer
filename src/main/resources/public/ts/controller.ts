@@ -115,6 +115,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
          * Controllers
          */
         module.controller('TeacherDashboardController', TeacherDashboardController);
+        module.controller('TeacherDashboardSubjectTabController', TeacherDashboardSubjectTabController);
         module.controller('EditSubjectController', EditSubjectController);
         module.controller('PerformSubjectCopyController', PerformSubjectCopyController);
 

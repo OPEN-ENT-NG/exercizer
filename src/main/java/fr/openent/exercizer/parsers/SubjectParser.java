@@ -7,7 +7,22 @@ public class SubjectParser {
 
     public static JsonObject beforePersist(final JsonObject subject, final UserInfos user) {
         subject.putString("owner", user.getUserId());
+        
+        if (subject.containsField("shared")) {
+            subject.removeField("shared");
+        }
+        
+        if (subject.containsField("selected")) {
+            subject.removeField("selected");
+        }
 
+        if (subject.containsField("modified")) {
+            subject.removeField("modified");
+        }
+
+        if (subject.containsField("created")) {
+            subject.removeField("created");
+        }
         return subject;
     }
 

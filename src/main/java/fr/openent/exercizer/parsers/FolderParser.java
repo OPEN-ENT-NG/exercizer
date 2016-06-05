@@ -7,6 +7,18 @@ public class FolderParser {
 
     public static JsonObject beforePersist(final JsonObject folder, final UserInfos user) {
         folder.putString("owner", user.getUserId());
+        
+        if (folder.containsField("selected")) {
+        	folder.removeField("selected");
+        }
+
+        if (folder.containsField("modified")) {
+        	folder.removeField("modified");
+        }
+
+        if (folder.containsField("created")) {
+        	folder.removeField("created");
+        }
 
         return folder;
     }

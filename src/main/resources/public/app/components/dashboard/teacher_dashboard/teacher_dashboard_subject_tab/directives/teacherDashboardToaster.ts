@@ -5,7 +5,7 @@ directives.push(
             return {
                 restrict: 'E',
                 scope : {},
-                templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/templates/teacher-dashboard-toaster.html',
+                templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/templates/teacher-dashboard-toaster.html',
                 link:(scope:any) => {
 
                     scope.subjectList = [];
@@ -50,7 +50,7 @@ directives.push(
                         {
                             publicName : 'Partager',
                             actionOnClick : function(){
-                                console.log('Not implemented');
+                                notify.error('Not implemented yet');
                             },
                             display : function(){
                                 return false;
@@ -69,7 +69,7 @@ directives.push(
                         {
                             publicName : 'Publier dans la bibliothèque',
                             actionOnClick : function(){
-                                console.log('Not implemented');
+                                notify.error('Not implemented yet');
                             },
                             display : function(){
                                 return false;
@@ -94,7 +94,7 @@ directives.push(
                                 return true;
                             }
                         }
-                    ];;
+                    ];
 
                 }
             };

@@ -5,13 +5,13 @@ directives.push(
             return {
                 restrict: 'E',
                 scope: {},
-                templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/templates/teacher-dashboard-remove-selected-folder-and-subject.html',
-                link: (scope:any, element, attrs) => {
+                templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/templates/teacher-dashboard-remove-selected-folder-and-subject.html',
+                link: (scope:any) => {
 
                     scope.isDisplayed = false;
 
                     // event to display model
-                    scope.$on("E_DISPLAY_DASHBOARD_MODAL_REMOVE_SELECTED_FOLDER_SUBJECT", function(event, selectedSubjectList, selectedFolderList) {
+                    scope.$on('E_DISPLAY_DASHBOARD_MODAL_REMOVE_SELECTED_FOLDER_SUBJECT', function(event, selectedSubjectList, selectedFolderList) {
                         scope.isDisplayed = true;
                         scope.subjectList = selectedSubjectList;
                         scope.folderList = selectedFolderList;
@@ -19,7 +19,7 @@ directives.push(
 
                     // confirm delete
                     scope.deleteSelection = function () {
-                        scope.$emit("E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT");
+                        scope.$emit('E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT');
                         scope.hide();
                     };
 

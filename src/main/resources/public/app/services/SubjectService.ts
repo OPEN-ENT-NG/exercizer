@@ -3,10 +3,10 @@ interface ISubjectService {
     persist(subject: ISubject): ng.IPromise<ISubject>;
     update(subject: ISubject): ng.IPromise<ISubject>;
     remove(subject: ISubject): ng.IPromise<boolean>;
+    duplicate(subject: ISubject): ng.IPromise<ISubject>;
     getList(): ISubject[];
     getListByFolderId(folderId);
     getById(id: number): ISubject;
-    duplicate(subject: ISubject): ng.IPromise<ISubject>;
     deleteSubjectChildrenOfFolder(folder: IFolder);
     getList(): ISubject[];
     getListByFolderId(folderId);
@@ -21,18 +21,17 @@ class SubjectService implements ISubjectService {
         'GrainService'
     ];
 
-    // Inject
-    private _$q: ng.IQService;
-    private _$http: ng.IHttpService;
-    private _grainService;
-
-    // Variables
     private _listMappedById: { [id: number]: ISubject; };
 
-    constructor($q, $http, GrainService) {
-        this._$q = $q;
-        this._$http = $http;
-        this._grainService = GrainService;
+    constructor
+    (
+        private _$q: ng.IQService,
+        private _$http: ng.IHttpService,
+        private _grainService: IGrainService
+    ) {
+        this._$q = _$q;
+        this._$http = _$http;
+        this._grainService = _grainService;
     }
 
     public resolve = function(): ng.IPromise<boolean> {
@@ -118,15 +117,62 @@ class SubjectService implements ISubjectService {
                 data: subject
             };
 
-        this._$http(request).then(
-            function() {
-                delete self._listMappedById[subject.id];
-                deferred.resolve(true);
+        this._grainService.getListBySubject(subject).then(
+            function(grainList) {
+                self._grainService.removeList(grainList, subject).then(
+                    function() {
+                        self._$http(request).then(
+                            function() {
+                                delete self._listMappedById[subject.id];
+                                deferred.resolve(true);
+                            },
+                            function() {
+                                deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
+                            }
+                        );
+                    },
+                    function() {
+                        deferred.reject('Une erreur est survenue lors de la suppression des éléments sujet.');
+                    });
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
-            }
-        );
+                deferred.reject('Une erreur est survenue lors de la récupération des éléments du sujets.');
+            });
+
+
+        return deferred.promise;
+    };
+
+    public duplicate = function(subject: ISubject, folder: IFolder = undefined): ng.IPromise<ISubject> {
+        var self = this,
+            deferred = this._$q.defer();
+
+        var duplicatedSubject = CloneObjectHelper.clone(subject, true);
+        duplicatedSubject.id = undefined;
+        duplicatedSubject.folder_id = angular.isUndefined(folder) ? null : folder.id;
+        duplicatedSubject.title += '_copie';
+
+        this.persist(duplicatedSubject).then(
+            function(duplicatedSubject: ISubject) {
+                self._grainService.getListBySubject(subject).then(
+                    function(grainList: IGrain[]) {
+                        self._grainService.duplicateList(grainList, duplicatedSubject).then(
+                            function() {
+                                deferred.resolve(duplicatedSubject);
+                            },
+                            function() {
+                                deferred.reject('Une erreur est survenue lors de la duplication des éléments du sujet à copier');
+                            }
+                        )
+                    },
+                    function() {
+                        deferred.reject('Une erreur est survenue lors de la récupération des éléments du sujet à copier.')
+                    }
+                )},
+            function() {
+                deferred.reject('Une erreur est survenue lors de la duplication du sujet à copier.');
+            });
+
         return deferred.promise;
     };
 
@@ -155,46 +201,6 @@ class SubjectService implements ISubjectService {
 
     public getById = function(id:number):ISubject {
         return this._listMappedById[id];
-    };
-
-    /**
-     * duplicate a subject
-     * @param subject
-     * @param duplicateGrain
-     * @returns {any}
-     */
-    public duplicate = function(subject: ISubject, duplicateGrain: boolean = true): ng.IPromise<ISubject> {
-        var self = this,
-            deferred = this._$q.defer();
-        // clone subject
-        var duplicatedSubject = CloneObjectHelper.clone(subject, true);
-        // remove some attributes
-        duplicatedSubject.id = undefined;
-        delete duplicatedSubject.shared;
-        delete duplicatedSubject.selected;
-        // rename subject
-        duplicatedSubject.title += '_copie';
-        // persist new subject
-        this.persist(duplicatedSubject)
-            .then(function(dataSubject) {
-                    if (duplicateGrain === true) {
-                        self._grainService.getListBySubject(subject.id)
-                            .then(function(dataGrainList) {
-                                var newGrain;
-                                angular.forEach(dataGrainList, function(grain, key) {
-                                    // no use grainService.duplicate because want to change subject_id
-                                    newGrain = self._grainService.copyOf(grain);
-                                    newGrain.subject_id = dataSubject.id;
-                                    self._grainService.persist(newGrain);
-                                });
-                                deferred.resolve(dataSubject);
-                            })
-                    } else {
-                        deferred.resolve(dataSubject);
-                    }
-                }
-            );
-        return deferred.promise;
     };
 
     /**
