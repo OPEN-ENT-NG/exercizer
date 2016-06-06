@@ -249,6 +249,9 @@ class FolderService implements IFolderService {
                         delete this._folderListByParentFolderId[originFolder.parent_folder_id][originFolderId];
                     }
                     originFolder.parent_folder_id = targetFolderId;
+                    // persist folder
+                    this.update(this.folderById(originFolder.id));
+
                     // after change parent folder id
                     //  add folder to new _folderListByParentFolderId
                     if (!this._folderListByParentFolderId[targetFolderId]) {

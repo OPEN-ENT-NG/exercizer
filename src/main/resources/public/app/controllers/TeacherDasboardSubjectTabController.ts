@@ -146,10 +146,6 @@ class TeacherDashboardSubjectTabController {
                         // id is the id of the folder duplicated (origin)
                         // folderParentId is the folder where the folder is duplicate
                         // ---
-                        // set parent folder id to the folder created
-                        if(folderParentId){
-                            self._folderService.setParentFolderId(duplicatedFolder.id, folderParentId);
-                        }
                         // get children folder of the folder duplicated
                         var childrenFolder = self._folderService.getListOfSubFolderByFolderId(id);
                     
@@ -162,6 +158,10 @@ class TeacherDashboardSubjectTabController {
                     
                         if(childrenSubject.length != 0){
                             self._duplicateSubjectList(childrenSubject,duplicatedFolder.id);
+                        }
+                        // set parent folder id to the folder created
+                        if(folderParentId){
+                            self._folderService.setParentFolderId(duplicatedFolder.id, folderParentId);
                         }
                 },
                     function(err) {

@@ -92,7 +92,6 @@ class DragService implements IDragService {
             } else if (this.isFolder(targetItem)) {
                 var subject = this._subjectService.getById(this.getId(originalItem));
                 this._subjectService.setFolderId(subject, targetItem.id);
-                subject.folder_id = targetItem.id;
             } else {
                 //default
                 // drop on root
