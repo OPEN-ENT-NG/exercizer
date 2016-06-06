@@ -1,13 +1,15 @@
-<section class="toggle-buttons" data-ng-class="{ hide: isHidden }">
-    <div class="toggle">
-        <div class="row">
-            <div class="cell" data-ng-repeat="item in itemList">
-                <button
-                        data-ng-show="item.display()"
-                        data-ng-click="item.actionOnClick()">
-                    [[item.publicName]]
-                </button>
+<div class="ng-cloak">
+    <section class="toggle-buttons" data-ng-class="{ hide: isHidden }">
+        <div class="toggle">
+            <div class="row">
+                <div class="cell" data-ng-repeat="item in itemList">
+                    <button
+                            data-ng-show="item.display()"
+                            data-ng-click="item.actionOnClick()">
+                        [[item.publicName]]
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</div>
