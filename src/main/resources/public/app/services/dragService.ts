@@ -91,12 +91,13 @@ class DragService implements IDragService {
                 throw "not possible";
             } else if (this.isFolder(targetItem)) {
                 var subject = this._subjectService.getById(this.getId(originalItem));
+                this._subjectService.setFolderId(subject, targetItem.id);
                 subject.folder_id = targetItem.id;
             } else {
                 //default
                 // drop on root
                 var subject = this._subjectService.getById(this.getId(originalItem));
-                subject.folder_id = null;
+                this._subjectService.setFolderId(subject, null);
             }
         }
         if (this.isFolder(originalItem)) {

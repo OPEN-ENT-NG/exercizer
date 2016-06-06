@@ -223,7 +223,6 @@ class SubjectService implements ISubjectService {
      * @param folderId
      */
     public setFolderId = function(subject :ISubject,folderId: number){
-        // TODO Folder service ?
         subject.folder_id = folderId;
         this.update(subject);
     }
