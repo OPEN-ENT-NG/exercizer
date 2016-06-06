@@ -160,7 +160,7 @@ class GrainService implements IGrainService {
 
         var duplicatedGrain = CloneObjectHelper.clone(grain, true);
         duplicatedGrain.id = undefined;
-        duplicatedGrain.subject_id = angular.isUndefined(subject) ? this._subject : subject;
+        duplicatedGrain.subject_id = angular.isUndefined(subject) ? null : subject.id;
 
         if (duplicatedGrain.grain_type_id > 3) {
             duplicatedGrain.grain_data.title += '_copie';
@@ -174,7 +174,7 @@ class GrainService implements IGrainService {
             deferred = this._$q.defer(),
             grain = grainList[0];
         
-        this.duplicate(grain).then(
+        this.duplicate(grain, subject).then(
             function () {
                 grainList.splice(0, 1);
                 if (grainList.length > 0) {
