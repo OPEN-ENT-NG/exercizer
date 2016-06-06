@@ -1,7 +1,13 @@
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
-var privateConfig = require('./privateConfig');
-
+try{
+    var privateConfig = require('./privateConfig');
+} catch(e){
+    var privateConfig = {
+        springboardModsPath: ""
+    }
+}
+console.log(privateConfig);
 var tsProject = ts.createProject('./tsconfig.json');
 var springboardModsPath = privateConfig.springboardModsPath;
 
