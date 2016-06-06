@@ -12,10 +12,13 @@
             </li>
     </ul>
     <div class="row">
-        <span> Sélection du dossier cible - <em class="low-importance">si non précisé, les éléments :</em>&nbsp;</span>
-        <select data-ng-model="data.selectedFolder" class="six cell">
+        <label class="four cell margin-one"> Sélection du dossier cible&nbsp;* :</label>
+        <select data-ng-model="data.selectedFolder" class="four cell">
             <option data-ng-repeat="folder in allFolderList" value="[[folder.id]]">[[folder.label]]</option>
         </select>
+    </div>
+    <div class="row">
+        *&nbsp;<em class="low-importance">si non précisé, la copie se fera à la racine</em>
     </div>
     <div class="row">
         <button data-ng-click="pasteSelection()" class="right-magnet">Copier</button>
