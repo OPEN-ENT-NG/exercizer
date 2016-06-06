@@ -7,6 +7,7 @@ interface IFolderService {
     setParentFolderId(originFolderId, targetFolderId);
     getListOfSubFolderByFolderId(folderId);
     folderById(id:number) : IFolder;
+    isAParentOf(originFolder, targetFolder):boolean;
     folderList : IFolder[];
 }
 
@@ -236,7 +237,7 @@ class FolderService implements IFolderService {
             // drag to other folder
             var targetFolder = this._folderList[targetFolderId];
             // check if there are no loop in folder
-            if (this._isAParentOf(originFolder, targetFolder)) {
+            if (this.isAParentOf(originFolder, targetFolder)) {
                 console.error("Loop folder not allowed");
             } else {
                 // check if the folder is not drop in itself
@@ -292,13 +293,16 @@ class FolderService implements IFolderService {
      * @param targetFolder
      * @returns {boolean}
      */
-    private _isAParentOf(originFolder, targetFolder):boolean {
+    public isAParentOf(originFolder, targetFolder):boolean {
+        if(!originFolder || !targetFolder){
+            return false;
+        }
         if (targetFolder.parent_folder_id == null) {
             return false;
         } else if (originFolder.id == targetFolder.parent_folder_id) {
             return true;
         } else {
-            return this._isAParentOf(originFolder, this._folderList[targetFolder.parent_folder_id]);
+            return this.isAParentOf(originFolder, this._folderList[targetFolder.parent_folder_id]);
         }
     }
 
