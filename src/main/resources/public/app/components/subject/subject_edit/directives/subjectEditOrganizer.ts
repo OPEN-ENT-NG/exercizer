@@ -2,12 +2,7 @@ directives.push(
     {
         name: 'subjectEditOrganizer',
         injections:
-            [
-                'GrainTypeService',
-
-                (
-                    GrainTypeService
-                ) => {
+            ['GrainTypeService', (GrainTypeService) => {
                     return {
                         restrict: 'E',
                         scope: {
@@ -41,6 +36,11 @@ directives.push(
                                     var grainType = GrainTypeService.getById(grain.grain_type_id);
                                     return grainType.public_name;
                                 }
+                            };
+
+                            scope.getGrainIllustrationURL = function(grainTypeId:number) {
+                                var grainType = GrainTypeService.getById(grainTypeId);
+                                return '/exercizer/public/assets/illustrations/' + grainType.illustration + '.html';
                             };
 
                             scope.reOrder = function () {
