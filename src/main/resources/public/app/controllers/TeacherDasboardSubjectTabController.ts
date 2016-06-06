@@ -137,9 +137,15 @@ class TeacherDashboardSubjectTabController {
             } else {
                 id = folder;
             }
-            
+            var currentFolder = self._folderService.folderById(id);
+            var targetFolder = null;
+            if(folderParentId){
+                targetFolder = self._folderService.folderById(folderParentId);
+            }
             if(id == folderParentId){
                 notify.error('Vous ne pouvez pas ajouter le dossier dans lui-même. Utilisez plutôt l\'action copier (si disponible).');
+            } else if(self._folderService.isAParentOf(currentFolder, targetFolder)){
+                notify.error('Vous ne pouvez pas ajouter le dossier dans lui-même.');
             } else {
                 self._folderService.duplicate(self._folderService.folderById(id)).then(function(duplicatedFolder: IFolder) {
                         // ---
