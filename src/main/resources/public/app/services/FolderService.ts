@@ -158,39 +158,51 @@ class FolderService implements IFolderService {
      * @returns {IPromise<T>}
      */
     public remove(folder:IFolder):ng.IPromise<IFolder> {
-        this.deleteChildrenFolder(folder);
-        this.deleteChildrenSubject(folder);
-        var self = this,
-            deferred = this._$q.defer(),
-            request = {
-                method: 'DELETE',
-                url: 'exercizer/folder',
-                data: folder
-            };
-        this._$http(request).then(
-            function () {
-                delete self._folderList[folder.id];
-                self._removeFolderToFolderListByParentFolderId(folder);
-                deferred.resolve();
-            },
-            function () {
-                deferred.reject('Une erreur est survenue lors de la suppression du dossier.');
+        var deferred = this._$q.defer(),
+            self = this;
+        // before delete children
+        var promises = [];
+        promises.push(this.deleteChildrenFolder(folder));
+        promises.push(this._subjectService.deleteSubjectChildrenOfFolder(folder));
+        this._$q.all(promises).then(
+            function(results) {
+                    var request = {
+                        method: 'DELETE',
+                        url: 'exercizer/folder',
+                        data: folder
+                    };
+                    self._$http(request).then(
+                    function () {
+                        delete self._folderList[folder.id];
+                        self._removeFolderToFolderListByParentFolderId(folder);
+                        deferred.resolve();
+                    },
+                    function () {
+                        deferred.reject('Une erreur est survenue lors de la suppression du dossier.');
+                    }
+                );
             }
         );
         return deferred.promise;
     }
 
-    private deleteChildrenSubject(folder:IFolder) {
-        this._subjectService.deleteSubjectChildrenOfFolder(folder);
-    }
-
     private deleteChildrenFolder(folder:IFolder) {
-        var self = this;
+        var self = this,
+            deferred = this._$q.defer();
+        var promises = [];
         angular.forEach(this._folderList, function (value, key) {
             if (value.parent_folder_id === folder.id) {
-                self.remove(value);
+                promises.push(self.remove(value));
             }
         });
+        this._$q.all(promises).then(
+            // success
+            // results: an array of data objects from each deferred.resolve(data) call
+            function(results) {
+                deferred.resolve();
+            }
+        );
+        return deferred.promise;
     }
 
     /**

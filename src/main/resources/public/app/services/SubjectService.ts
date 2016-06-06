@@ -209,13 +209,22 @@ class SubjectService implements ISubjectService {
      * @param folder
      */
     public deleteSubjectChildrenOfFolder = function(folder: IFolder) {
-        // TODO Folder service ?
-        var self = this;
+        var self = this,
+            deferred = this._$q.defer();
+        var promises = [];
         angular.forEach(this._listMappedById, function(value, key) {
             if (value.folder_id === folder.id) {
-                self.remove(value);
+                promises.push(self.remove(value));
             }
         });
+        this._$q.all(promises).then(
+            // success
+            // results: an array of data objects from each deferred.resolve(data) call
+            function(results) {
+                deferred.resolve();
+            }
+        );
+        return deferred.promise;
     };
 
     /**
