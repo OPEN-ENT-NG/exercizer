@@ -44,6 +44,10 @@ class TeacherDashboardSubjectTabController {
 
     private _eventsHandler = function (self) {
 
+        self._$scope.$on('E_RESET_SELECTED_LIST', function() {
+            self._resetSelectedList();
+        });
+
         self._$scope.$on('E_ADD_NEW_SUBJECT', function() {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT', null);
         });
