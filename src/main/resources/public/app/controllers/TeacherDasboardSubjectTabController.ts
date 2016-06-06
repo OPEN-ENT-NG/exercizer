@@ -22,9 +22,7 @@ class TeacherDashboardSubjectTabController {
         this._$scope = _$scope;
         this._folderService = _folderService;
         this._subjectService = _subjectService;
-
-        this._selectedSubjectList = [];
-        this._selectedFolderList = [];
+        this._resetSelectedList();
 
         this._folderService.resolve().then(
             function() {
@@ -197,13 +195,12 @@ class TeacherDashboardSubjectTabController {
     }
 
     private _resetSelectedFolderList(){
-        var self = this,
-            folder;
-        
-        angular.forEach(self._selectedFolderList, function(id){
-            folder = self._folderService.folderById(id) || null;
+        var self = this;
+        angular.forEach(self._folderService.folderList, function(folder : any){
             if(folder !== null){
-                folder.selected = false;
+                if(folder.selected){
+                    folder.selected = false;
+                }
             }
         });
         
@@ -212,13 +209,12 @@ class TeacherDashboardSubjectTabController {
 
     }
     private _resetSelectedSubjectList(){
-        var self = this,
-            subject;
-        
-        angular.forEach(self._selectedSubjectList, function(id){
-            subject = self._subjectService.getById(id) || null;
+        var self = this;
+        angular.forEach(self._subjectService.getList(), function(subject : any){
             if(subject !== null){
-                subject.selected = false;
+                if(subject.selected){
+                    subject.selected = false;
+                }
             }
         });
         

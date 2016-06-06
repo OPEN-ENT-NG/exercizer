@@ -88,7 +88,7 @@ directives.push(
                                 var obj = createObjectGroup(res);
                                 array.push(obj);
                             } else{
-                                console.log("impossible to find class name");
+                                console.error("impossible to find class name");
                             }
                         });
                         return array;
