@@ -15,16 +15,15 @@
                 <li>
                     <a  class="selected"
                         data-ng-click="goToRoot()"
-                        dragdrop="dropToRoot($originalEvent)"
-                    >
+                        dragdrop="dropToRoot($originalEvent)">
                         Mes sujets
                     </a>
                     <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false" >
-                        <folder-nav-item   item = "item"
-                                       is-root = "true"
-                                       set-current-folder-fn="setCurrentFolder"
-                                       parent-id="parentId"
-                                       current-folder-id = "currentFolderId"
+                        <folder-nav-item item="item"
+                                         is-root="true"
+                                         parent-id="parentId"
+                                         current-folder-id="currentFolderId"
+                                         set-current-folder-fn="setCurrentFolder"
                         ></folder-nav-item>
                     </div>
                 </li>
@@ -60,14 +59,11 @@
                 <div data-ng-repeat="folder in folderList() | orderObjectBy:'label':false">
                     <div class="item" data-ng-if="filterFolderByParentFolder(folder)">
                         <section class="domino">
-                            <div
-                                    class="top"
-                                    style="padding-top : 10%;"
+                            <div class="top" style="padding-top : 10%;"
                                     dragstart="drag(folder, $originalEvent)"
                                     dragcondition="dragFolderCondition(folder)"
                                     dragdrop="dropTo(folder, $originalEvent)"
-                                    dropcondition="dropFolderCondition(folder)"
-                            >
+                                    dropcondition="dropFolderCondition(folder)">
                                 <a class="container">
                                     <i class="folder-large"></i>
                                 </a>
@@ -91,13 +87,11 @@
                 <div data-ng-repeat="subject in subjectList() | orderObjectBy:'title':false">
                     <div  class="item"  data-ng-if="filterSubjectByParentFolder(subject)" >
                         <section class="domino">
-                            <div
-                                    class="top"
+                            <div class="top"
                                     dragstart="drag(subject, $originalEvent)"
                                     dragcondition="dragSubjectCondition(subject)"
                                     dragdrop="dropTo(subject, $originalEvent)"
-                                    dropcondition="dropSubjectCondition.dropCondition(subject)"
-                            >
+                                    dropcondition="dropSubjectCondition.dropCondition(subject)">
                                 <img class="absolute" data-ng-src="[[getSubjectPicture(subject)]]" />
                             </div>
                             <div class="bottom">
@@ -141,11 +135,11 @@
                     <td data-ng-if="filterFolderByParentFolder(folder)">
                         <input type="checkbox" data-ng-model="folder.selected"/>
                     </td>
-                    <td     dragstart="drag(folder, $originalEvent)"
-                            dragcondition="dragFolderCondition(folder)"
-                            dragdrop="dropTo(folder, $originalEvent)"
-                            dropcondition="dropFolderCondition(folder)"
-                            data-ng-if="filterFolderByParentFolder(folder)">
+                    <td data-ng-if="filterFolderByParentFolder(folder)"
+                        dragstart="drag(folder, $originalEvent)"
+                        dragcondition="dragFolderCondition(folder)"
+                        dragdrop="dropTo(folder, $originalEvent)"
+                        dropcondition="dropFolderCondition(folder)">
                         <i class="folder"></i>
                     </td>
                     <td data-ng-if="filterFolderByParentFolder(folder)">
@@ -157,11 +151,11 @@
                     <td data-ng-if="filterSubjectByParentFolder(subject)">
                         <input type="checkbox" data-ng-model="subject.selected"/>
                     </td>
-                    <td     dragstart="drag(subject, $originalEvent)"
-                            dragcondition="dragSubjectCondition(subject)"
-                            dragdrop="dropTo(subject, $originalEvent)"
-                            dropcondition="dropSubjectCondition(subject)"
-                            data-ng-if="filterSubjectByParentFolder(subject)">
+                    <td data-ng-if="filterSubjectByParentFolder(subject)"
+                        dragstart="drag(subject, $originalEvent)"
+                        dragcondition="dragSubjectCondition(subject)"
+                        dragdrop="dropTo(subject, $originalEvent)"
+                        dropcondition="dropSubjectCondition(subject)">
                         <i class="doc-text"></i>
                     </td>
                     <td data-ng-if="filterSubjectByParentFolder(subject)">

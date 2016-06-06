@@ -11,15 +11,15 @@
         <grain-edit-grain-document-list data-grain="grain"></grain-edit-grain-document-list>
 
         <div class=" row vertical-spacing">
-            <span>Mode de correction : </span>
+            <span>Mode de correction :&nbsp;</span>
             <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
-            <span>Erreur non autorisée</span>
+            <span>erreur non autorisée</span>
         </div>
         <div class="row vertical-spacing">
             <div  class="row" data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
                 <div class="one cell"><input type="checkbox" data-ng-model="answer.isChecked" data-ng-change="updateGrain()" /></div>
                 <div class="one cell">&nbsp;</div>
-                <input type="text" class="eight cell" data-ng-model="answer.text" data-ng-blur="updateGrain()" value="[[answer.text]]" placeholder="Indiquer une réponse" />
+                <input type="text" class="eight cell" data-ng-model="answer.text" data-ng-blur="updateGrain()" value="[[answer.text]]" placeholder="Indiquez une proposition" />
                 <div class="one cell">&nbsp;</div>
                 <div class="one cell" data-ng-click="deleteAnswer(answer)"><i class="trash"></i></div>
             </div>
@@ -39,7 +39,7 @@
     <div class="row" data-ng-if="isFolded">
         <grain-edit-toggle-aside data-grain="grain" data-cell-count="one"></grain-edit-toggle-aside>
         <div class="eleven cell vertical-spacing">
-            <h2>[[ grain.grain_data.title ]]&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
+            <h2>[[ grain.grain_data.title ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
         </div>
     </div>
 </article>

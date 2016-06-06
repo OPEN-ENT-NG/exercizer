@@ -4,8 +4,7 @@
             <div class="cell" data-ng-repeat="item in itemList">
                 <button
                         data-ng-show="item.display()"
-                        data-ng-click="item.actionOnClick()"
-                >
+                        data-ng-click="item.actionOnClick()">
                     [[item.publicName]]
                 </button>
             </div>
