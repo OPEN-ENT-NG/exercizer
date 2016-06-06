@@ -176,7 +176,7 @@ class EditSubjectController {
 
         function _handleDuplicateSelectedGrain() {
             var grain = self._selectedGrainList[0];
-            self._grainService.duplicate(grain).then(
+            self._grainService.duplicate(grain, self._subject).then(
                 function () {
                     self._selectedGrainList.splice(0, 1);
                     self._$scope.$broadcast('E_SELECT_GRAIN', grain);

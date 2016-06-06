@@ -143,13 +143,13 @@ class GrainService implements IGrainService {
                 function () {
                     grainList.splice(0, 1);
                     if (grainList.length > 0) {
-                        self.duplicateList(grainList, subject);
+                        self.removeList(grainList, subject);
                     } else {
                         deferred.resolve(true);
                     }
                 },
                 function () {
-                    deferred.reject('Une erreur est survenue lors de la duplication d\'élément du sujet à dupliquer.');
+                    deferred.reject('Une erreur est survenue lors de la suppression des éléments d\'un sujet.');
                 }
             );
         }
@@ -160,7 +160,7 @@ class GrainService implements IGrainService {
 
         var duplicatedGrain = CloneObjectHelper.clone(grain, true);
         duplicatedGrain.id = undefined;
-        duplicatedGrain.subject_id = angular.isUndefined(subject) ? null : subject.id;
+        duplicatedGrain.subject_id = subject.id;
 
         if (duplicatedGrain.grain_type_id > 3) {
             duplicatedGrain.grain_data.title += '_copie';
