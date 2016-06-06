@@ -3,6 +3,7 @@ interface ISubjectService {
     persist(subject: ISubject): ng.IPromise<ISubject>;
     update(subject: ISubject): ng.IPromise<ISubject>;
     remove(subject: ISubject): ng.IPromise<boolean>;
+    removeList(subjectList: ISubject[]):ng.IPromise<boolean>
     duplicate(subject: ISubject): ng.IPromise<ISubject>;
     getList(): ISubject[];
     getListByFolderId(folderId);
@@ -119,7 +120,8 @@ class SubjectService implements ISubjectService {
 
         this._grainService.getListBySubject(subject).then(
             function(grainList) {
-                self._grainService.removeList(grainList, subject).then(
+                var grainListCopy = angular.copy(grainList);
+                self._grainService.removeList(grainListCopy, subject).then(
                     function() {
                         self._$http(request).then(
                             function() {
@@ -143,6 +145,30 @@ class SubjectService implements ISubjectService {
         return deferred.promise;
     };
 
+    public removeList = function(subjectList: ISubject[]):ng.IPromise<boolean> {
+        var self = this,
+            deferred = this._$q.defer();
+        if (subjectList.length === 0) {
+            deferred.resolve(true);
+        } else {
+            var subject = subjectList[0];
+            this.remove(subject).then(
+                function () {
+                    subjectList.splice(0, 1);
+                    if (subjectList.length > 0) {
+                        self.removeList(subjectList, subject);
+                    } else {
+                        deferred.resolve(true);
+                    }
+                },
+                function () {
+                    deferred.reject('Une erreur est survenue lors de la suppression des sujets.');
+                }
+            );
+        }
+        return deferred.promise;
+    };
+    
     public duplicate = function(subject: ISubject, folder: IFolder = undefined): ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer();
