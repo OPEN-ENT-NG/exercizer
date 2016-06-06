@@ -33,6 +33,7 @@ directives.push(
                         scope.clickOnItem = function(subjectFromAutoComplete){
                             var subject = SubjectService.getById(subjectFromAutoComplete.id);
                             subject.selected = true;
+                            scope.$emit('E_RESET_SELECTED_LIST', subject);
                             scope.$emit('E_SELECT_SUBJECT', subject);
                             scope.currentFolderId =  subject.folder_id || null;
 

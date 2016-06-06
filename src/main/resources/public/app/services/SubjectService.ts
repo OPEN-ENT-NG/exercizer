@@ -156,7 +156,8 @@ class SubjectService implements ISubjectService {
             function(duplicatedSubject: ISubject) {
                 self._grainService.getListBySubject(subject).then(
                     function(grainList: IGrain[]) {
-                        self._grainService.duplicateList(grainList, duplicatedSubject).then(
+                        var grainListCopy = angular.copy(grainList);
+                        self._grainService.duplicateList(grainListCopy, duplicatedSubject).then(
                             function() {
                                 deferred.resolve(duplicatedSubject);
                             },
@@ -223,7 +224,6 @@ class SubjectService implements ISubjectService {
      * @param folderId
      */
     public setFolderId = function(subject :ISubject,folderId: number){
-        // TODO Folder service ?
         subject.folder_id = folderId;
         this.update(subject);
     }

@@ -1,12 +1,12 @@
 interface IGrainService {
-    persist(grain: IGrain): ng.IPromise<IGrain>;
-    update(grain: IGrain): ng.IPromise<IGrain>;
-    remove(grain: IGrain): ng.IPromise<boolean>;
-    removeList(grain: IGrain[], subject: ISubject): ng.IPromise<boolean>;
-    duplicate(grain: IGrain, subject: ISubject): ng.IPromise<IGrain>;
-    duplicateList(grainList: IGrain[], subject: ISubject): ng.IPromise<boolean>;
-    getListBySubject(subject: ISubject): ng.IPromise<IGrain[]>;
-    instantiateGrain(grainObject: any): IGrain;
+    persist(grain:IGrain): ng.IPromise<IGrain>;
+    update(grain:IGrain): ng.IPromise<IGrain>;
+    remove(grain:IGrain): ng.IPromise<boolean>;
+    removeList(grain:IGrain[], subject:ISubject): ng.IPromise<boolean>;
+    duplicate(grain:IGrain, subject:ISubject): ng.IPromise<IGrain>;
+    duplicateList(grainList:IGrain[], subject:ISubject): ng.IPromise<boolean>;
+    getListBySubject(subject:ISubject): ng.IPromise<IGrain[]>;
+    instantiateGrain(grainObject:any): IGrain;
 }
 
 class GrainService implements IGrainService {
@@ -17,21 +17,19 @@ class GrainService implements IGrainService {
         'GrainTypeService'
     ];
 
-    private _listMappedBySubjectId: { [subjectId: number]: IGrain[] };
+    private _listMappedBySubjectId:{ [subjectId: number]: IGrain[] };
 
     constructor
-    (
-        private _$q: ng.IQService,
-        private _$http: ng.IHttpService,
-        private _grainTypeService: IGrainTypeService
-    ) {
+    (private _$q:ng.IQService,
+     private _$http:ng.IHttpService,
+     private _grainTypeService:IGrainTypeService) {
         this._$q = _$q;
         this._$http = _$http;
         this._grainTypeService = _grainTypeService;
         this._listMappedBySubjectId = {};
     }
 
-    public persist = function(grain: IGrain): ng.IPromise<IGrain> {
+    public persist = function (grain:IGrain):ng.IPromise<IGrain> {
         var self = this,
             deferred = this._$q.defer();
 
@@ -49,7 +47,7 @@ class GrainService implements IGrainService {
         };
 
         this._$http(request).then(
-            function(response) {
+            function (response) {
                 var grain = self.instantiateGrain(response.data);
 
                 if (angular.isUndefined(self._listMappedBySubjectId[grain.subject_id])) {
@@ -60,7 +58,7 @@ class GrainService implements IGrainService {
 
                 deferred.resolve(grain);
             },
-            function() {
+            function () {
                 deferred.reject('Une erreur est survenue lors de la création de l\'élément.')
             }
         );
@@ -68,7 +66,7 @@ class GrainService implements IGrainService {
         return deferred.promise;
     };
 
-    public update = function(grain: IGrain): ng.IPromise<IGrain> {
+    public update = function (grain:IGrain):ng.IPromise<IGrain> {
         var self = this,
             deferred = this._$q.defer();
 
@@ -82,7 +80,7 @@ class GrainService implements IGrainService {
         };
 
         this._$http(request).then(
-            function(response) {
+            function (response) {
                 var grain = self.instantiateGrain(response.data);
 
                 if (angular.isUndefined(self._listMappedBySubjectId[grain.subject_id])) {
@@ -94,7 +92,7 @@ class GrainService implements IGrainService {
 
                 deferred.resolve(grain);
             },
-            function() {
+            function () {
                 deferred.reject('Une erreur est survenue lors de la mise à jour de l\'élément.')
             }
         );
@@ -102,7 +100,7 @@ class GrainService implements IGrainService {
         return deferred.promise;
     };
 
-    public remove = function(grain: IGrain): ng.IPromise<boolean> {
+    public remove = function (grain:IGrain):ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer();
 
@@ -116,7 +114,7 @@ class GrainService implements IGrainService {
         };
 
         this._$http(request).then(
-            function() {
+            function () {
                 var grainIndex = self._listMappedBySubjectId[grain.subject_id].indexOf(grain);
 
                 if (grainIndex !== -1) {
@@ -125,7 +123,7 @@ class GrainService implements IGrainService {
 
                 deferred.resolve(true);
             },
-            function() {
+            function () {
                 deferred.reject('Un erreur est survenue lors de la suppression de l\'élément.')
             }
         );
@@ -134,33 +132,35 @@ class GrainService implements IGrainService {
         return deferred.promise;
     };
 
-    public removeList = function(grainList: IGrain[], subject: ISubject): ng.IPromise<boolean> {
+    public removeList = function (grainList:IGrain[], subject:ISubject):ng.IPromise<boolean> {
         var self = this,
-            deferred = this._$q.defer(),
-            grain = grainList[0];
-
-        this.remove(grain).then(
-            function () {
-                grainList.splice(0, 1);
-                if (grainList.length > 0) {
-                    self.duplicateList(grainList, subject);
-                } else {
-                    deferred.resolve(true);
+            deferred = this._$q.defer();
+        if (grainList.length === 0) {
+            deferred.resolve(true);
+        } else {
+            var grain = grainList[0];
+            this.remove(grain).then(
+                function () {
+                    grainList.splice(0, 1);
+                    if (grainList.length > 0) {
+                        self.duplicateList(grainList, subject);
+                    } else {
+                        deferred.resolve(true);
+                    }
+                },
+                function () {
+                    deferred.reject('Une erreur est survenue lors de la duplication d\'élément du sujet à dupliquer.');
                 }
-            },
-            function () {
-                deferred.reject('Une erreur est survenue lors de la duplication d\'élément du sujet à dupliquer.');
-            }
-        );
-
+            );
+        }
         return deferred.promise;
     };
 
-    public duplicate = function(grain: IGrain, subject: ISubject): ng.IPromise<IGrain> {
+    public duplicate = function (grain:IGrain, subject:ISubject):ng.IPromise<IGrain> {
 
         var duplicatedGrain = CloneObjectHelper.clone(grain, true);
         duplicatedGrain.id = undefined;
-        duplicatedGrain.subject_id = angular.isUndefined(subject) ? this._subject : subject;
+        duplicatedGrain.subject_id = angular.isUndefined(subject) ? null : subject.id;
 
         if (duplicatedGrain.grain_type_id > 3) {
             duplicatedGrain.grain_data.title += '_copie';
@@ -169,29 +169,32 @@ class GrainService implements IGrainService {
         return this.persist(duplicatedGrain);
     };
 
-    public duplicateList = function(grainList: IGrain[], subject: ISubject): ng.IPromise<boolean> {
+    public duplicateList = function (grainList:IGrain[], subject:ISubject):ng.IPromise<boolean> {
         var self = this,
-            deferred = this._$q.defer(),
-            grain = grainList[0];
-        
-        this.duplicate(grain).then(
-            function () {
-                grainList.splice(0, 1);
-                if (grainList.length > 0) {
-                    self.duplicateList(grainList, subject);
-                } else {
-                   deferred.resolve(true);
+            deferred = this._$q.defer();
+        if (grainList.length === 0) {
+            deferred.resolve(true);
+        } else {
+            var grain = grainList[0];
+            this.duplicate(grain, subject).then(
+                function () {
+                    grainList.splice(0, 1);
+                    if (grainList.length > 0) {
+                        self.duplicateList(grainList, subject);
+                    } else {
+                        deferred.resolve(true);
+                    }
+                },
+                function () {
+                    deferred.reject('Une erreur est survenue lors de la duplication d\'élément du sujet à dupliquer.');
                 }
-            },
-            function () {
-                deferred.reject('Une erreur est survenue lors de la duplication d\'élément du sujet à dupliquer.');
-            }
-        );
-        
+            );
+
+        }
         return deferred.promise;
     };
 
-    public getListBySubject = function(subject: ISubject): ng.IPromise<IGrain[]> {
+    public getListBySubject = function (subject:ISubject):ng.IPromise<IGrain[]> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -207,14 +210,14 @@ class GrainService implements IGrainService {
             this._listMappedBySubjectId[subject.id] = [];
 
             this._$http(request).then(
-                function(response) {
-                    angular.forEach(response.data, function(grainObject) {
+                function (response) {
+                    angular.forEach(response.data, function (grainObject) {
                         self._listMappedBySubjectId[subject.id].push(self.instantiateGrain(grainObject));
                     });
 
                     deferred.resolve(self._listMappedBySubjectId[subject.id]);
                 },
-                function() {
+                function () {
                     deferred.reject('Une erreur est survenue lors de la récupération de vos grain.');
                 }
             );
@@ -223,17 +226,17 @@ class GrainService implements IGrainService {
         return deferred.promise;
     };
 
-    public instantiateGrain = function(grainObject: any): IGrain {
+    public instantiateGrain = function (grainObject:any):IGrain {
         var grain = SerializationHelper.toInstance(new Grain(), JSON.stringify(grainObject));
         grain.grain_data = SerializationHelper.toInstance(new GrainData(), grainObject.grain_data);
         return grain;
     };
 
-    private _setOrderToGrain(grain: IGrain): IGrain {
-        var maxOrder: number = null,
-            newOrder: number;
+    private _setOrderToGrain(grain:IGrain):IGrain {
+        var maxOrder:number = null,
+            newOrder:number;
 
-        angular.forEach(this._listMappedBySubjectId[grain.subject_id], function(currentGrain) {
+        angular.forEach(this._listMappedBySubjectId[grain.subject_id], function (currentGrain) {
             if (!angular.isUndefined(currentGrain.order_by) && currentGrain.order_by > maxOrder) {
                 maxOrder = currentGrain.order_by;
             }

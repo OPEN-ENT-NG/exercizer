@@ -22,9 +22,7 @@ class TeacherDashboardSubjectTabController {
         this._$scope = _$scope;
         this._folderService = _folderService;
         this._subjectService = _subjectService;
-
-        this._selectedSubjectList = [];
-        this._selectedFolderList = [];
+        this._resetSelectedList();
 
         this._folderService.resolve().then(
             function() {
@@ -43,6 +41,10 @@ class TeacherDashboardSubjectTabController {
     }
 
     private _eventsHandler = function (self) {
+
+        self._$scope.$on('E_RESET_SELECTED_LIST', function() {
+            self._resetSelectedList();
+        });
 
         self._$scope.$on('E_ADD_NEW_SUBJECT', function() {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT', null);
@@ -135,19 +137,21 @@ class TeacherDashboardSubjectTabController {
             } else {
                 id = folder;
             }
-            
+            var currentFolder = self._folderService.folderById(id);
+            var targetFolder = null;
+            if(folderParentId){
+                targetFolder = self._folderService.folderById(folderParentId);
+            }
             if(id == folderParentId){
                 notify.error('Vous ne pouvez pas ajouter le dossier dans lui-même. Utilisez plutôt l\'action copier (si disponible).');
+            } else if(self._folderService.isAParentOf(currentFolder, targetFolder)){
+                notify.error('Vous ne pouvez pas ajouter le dossier dans lui-même.');
             } else {
                 self._folderService.duplicate(self._folderService.folderById(id)).then(function(duplicatedFolder: IFolder) {
                         // ---
                         // id is the id of the folder duplicated (origin)
                         // folderParentId is the folder where the folder is duplicate
                         // ---
-                        // set parent folder id to the folder created
-                        if(folderParentId){
-                            self._folderService.setParentFolderId(duplicatedFolder.id, folderParentId);
-                        }
                         // get children folder of the folder duplicated
                         var childrenFolder = self._folderService.getListOfSubFolderByFolderId(id);
                     
@@ -160,6 +164,10 @@ class TeacherDashboardSubjectTabController {
                     
                         if(childrenSubject.length != 0){
                             self._duplicateSubjectList(childrenSubject,duplicatedFolder.id);
+                        }
+                        // set parent folder id to the folder created
+                        if(folderParentId){
+                            self._folderService.setParentFolderId(duplicatedFolder.id, folderParentId);
                         }
                 },
                     function(err) {
@@ -193,13 +201,12 @@ class TeacherDashboardSubjectTabController {
     }
 
     private _resetSelectedFolderList(){
-        var self = this,
-            folder;
-        
-        angular.forEach(self._selectedFolderList, function(id){
-            folder = self._folderService.folderById(id) || null;
+        var self = this;
+        angular.forEach(self._folderService.folderList, function(folder : any){
             if(folder !== null){
-                folder.selected = false;
+                if(folder.selected){
+                    folder.selected = false;
+                }
             }
         });
         
@@ -208,13 +215,12 @@ class TeacherDashboardSubjectTabController {
 
     }
     private _resetSelectedSubjectList(){
-        var self = this,
-            subject;
-        
-        angular.forEach(self._selectedSubjectList, function(id){
-            subject = self._subjectService.getById(id) || null;
+        var self = this;
+        angular.forEach(self._subjectService.getList(), function(subject : any){
             if(subject !== null){
-                subject.selected = false;
+                if(subject.selected){
+                    subject.selected = false;
+                }
             }
         });
         
