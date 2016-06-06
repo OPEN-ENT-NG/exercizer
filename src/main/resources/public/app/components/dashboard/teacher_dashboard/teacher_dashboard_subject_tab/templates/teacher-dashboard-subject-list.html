@@ -133,7 +133,7 @@
                 <!-- folder list-->
                 <tr data-ng-repeat="folder in folderList() | orderObjectBy:'label':false">
                     <td data-ng-if="filterFolderByParentFolder(folder)">
-                        <input type="checkbox" data-ng-model="folder.selected"/>
+                        <input type="checkbox" data-ng-model="folder.selected" data-ng-change="selectFolder(folder)"/>
                     </td>
                     <td data-ng-if="filterFolderByParentFolder(folder)"
                         dragstart="drag(folder, $originalEvent)"
@@ -149,7 +149,7 @@
                 <!-- subject  list -->
                 <tr data-ng-repeat="subject in subjectList() | orderObjectBy:'title':false">
                     <td data-ng-if="filterSubjectByParentFolder(subject)">
-                        <input type="checkbox" data-ng-model="subject.selected"/>
+                        <input type="checkbox" data-ng-model="subject.selected" data-ng-change="selectSubject(subject)"/>
                     </td>
                     <td data-ng-if="filterSubjectByParentFolder(subject)"
                         dragstart="drag(subject, $originalEvent)"
