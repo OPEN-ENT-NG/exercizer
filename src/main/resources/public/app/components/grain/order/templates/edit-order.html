@@ -24,7 +24,7 @@
                 >
                     <div class="one cell" style="text-align: center; border:1px solid black; border-radius: 5px;">[[answer.order_by]]</div>
                     <div class="one cell">&nbsp;</div>
-                    <input type="text" class="eight cell" data-ng-model="answer.text" data-ng-blur="updateGrain()" value="[[answer.text ]]" placeholder="Indiquez une réponse" />
+                    <input type="text" class="eight cell" data-ng-model="answer.text" complete-change="updateGrain()" value="[[answer.text ]]" placeholder="Indiquez une réponse" />
                     <div class="one cell">&nbsp;</div>
                     <div class="one cell" data-ng-click="deleteAnswer(answer)"><i class="trash"></i></div>
                 </li>

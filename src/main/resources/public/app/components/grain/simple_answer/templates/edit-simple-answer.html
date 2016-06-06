@@ -11,7 +11,7 @@
         <grain-edit-grain-document-list data-grain="grain"></grain-edit-grain-document-list>
 
         <div class="row vertical-spacing">
-            <input type="text" class="twelve cell" data-ng-model="grain.grain_data.custom_data.correct_answer" data-ng-blur="updateGrain()" placeholder="Indiquez la réponse" />
+            <input type="text" class="twelve cell" data-ng-model="grain.grain_data.custom_data.correct_answer" complete-change="updateGrain()" placeholder="Indiquez la réponse" />
         </div>
 
         <grain-edit-answer-hint data-grain="grain"></grain-edit-answer-hint>
