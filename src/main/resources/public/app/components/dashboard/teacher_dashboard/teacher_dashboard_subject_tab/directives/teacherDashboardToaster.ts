@@ -6,7 +6,7 @@ directives.push(
                 restrict: 'E',
                 scope : {},
                 controller: function($scope) {
-                    $scope.isHidden = true;
+                    $scope.isDisplayed = false;
                 },
                 templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/templates/teacher-dashboard-toaster.html',
                 compile: function(element, attributes){
@@ -18,7 +18,7 @@ directives.push(
                             scope.folderList = [];
 
                             function hide(){
-                                scope.isHidden = true;
+                                scope.isDisplayed = false;
                             }
                             hide();
 
@@ -27,7 +27,7 @@ directives.push(
                                 if(length === 0){
                                     hide();
                                 } else{
-                                    scope.isHidden = false;
+                                    scope.isDisplayed = true;
                                     scope.subjectList = subjectList;
                                     scope.folderList = folderList;
                                 }
