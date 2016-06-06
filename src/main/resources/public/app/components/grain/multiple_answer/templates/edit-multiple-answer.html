@@ -17,7 +17,7 @@
         </div>
         <div class="row vertical-spacing">
             <div data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
-                <input type="text" class="ten cell" data-ng-model="answer.text" data-ng-blur="updateGrain()" value="[[answer.text]]" placeholder="Indiquez une réponse" />
+                <input type="text" class="ten cell" data-ng-model="answer.text" complete-change="updateGrain()" value="[[answer.text]]" placeholder="Indiquez une réponse" />
                 <div class="one cell">&nbsp;</div>
                 <div class="one cell" data-ng-click="deleteAnswer(answer)"><i class="trash"></i></div>
             </div>

@@ -147,9 +147,6 @@ class EditSubjectController {
         });
 
         function _handleGrainToggled(grain:IGrain) {
-            if (grain.grain_type_id > 2) {
-                _handleUpdateGrain(grain);
-            }
             self._$scope.$broadcast('E_TOGGLE_GRAIN', grain);
         }
 
@@ -157,24 +154,8 @@ class EditSubjectController {
             _handleGrainToggled(grain);
         });
 
-        function _handleFoldGrainList() {
-            self._grainService.getListBySubject(self._subject).then(
-                function (grainList) {
-                    angular.forEach(grainList, function (grain:IGrain) {
-                        if (grain.grain_type_id > 2) {
-                            _handleUpdateGrain(grain);
-                        }
-                    });
-                    self._$scope.$broadcast('E_FORCE_FOLDING_GRAIN');
-                },
-                function (err) {
-                    notify.error(err);
-                }
-            );
-        }
-
         self._$scope.$on('E_FOLD_GRAIN_LIST', function () {
-            _handleFoldGrainList();
+            self._$scope.$broadcast('E_FORCE_FOLDING_GRAIN');
         });
 
         function _handleGrainSelected(grain:IGrain) {
