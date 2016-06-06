@@ -1,8 +1,8 @@
-<div class="row rigid-grid">
+<div class="row">
     <!-- navigation -->
-    <section class="four cell">
+    <section class="three cell vertical">
         <div class="row">
-            <div class="ten cell" data-ng-click="clickOnAutoComplete()">
+            <div class="eleven cell" data-ng-click="clickOnAutoComplete()">
                 <autocomplete
                         options="autocomplete.subjectList"
                         ng-change="clickOnItem(selectedItem)"
@@ -34,8 +34,8 @@
         </nav>
     </section>
     <!-- main page -->
-    <section class="margin-four">
-        <nav class="twelve cell">
+    <section class="nine cell">
+        <div class="row">
             <div class="cell">
                 <button data-ng-click="addNewSubject()">Nouveau sujet</button>
             </div>
@@ -51,9 +51,9 @@
 
                 ></i>
             </div>
-        </nav>
+        </div>
         <!-- domino part -->
-        <div class="twelve cell" data-ng-show="displayList == 'domino'">
+        <div class="row" data-ng-show="displayList == 'domino'">
             <div class="fallen dominos">
                 <!-- folder part -->
                 <div data-ng-repeat="folder in folderList() | orderObjectBy:'label':false">
@@ -115,7 +115,7 @@
         </div>
 
         <!-- array part -->
-        <div class="twelve cell" data-ng-show="displayList == 'array'">
+        <div class="row" data-ng-show="displayList == 'array'">
             <table class="list-view">
                 <thead>
                 <tr>

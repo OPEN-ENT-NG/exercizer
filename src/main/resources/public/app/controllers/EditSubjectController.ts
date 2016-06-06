@@ -13,6 +13,7 @@ class EditSubjectController {
 
     private _subject:ISubject;
     private _selectedGrainList:IGrain[];
+    private _hasDataLoaded: boolean;
 
     constructor
     (
@@ -33,6 +34,7 @@ class EditSubjectController {
         this._subjectCopyService = _subjectCopyService;
         this._grainService = _grainService;
         this._grainTypeService = _grainTypeService;
+        this._hasDataLoaded = false;
         
         var self = this,
             subjectId = _$routeParams['subjectId'];
@@ -52,10 +54,13 @@ class EditSubjectController {
         });
     }
 
+    public redirectToDashboard() {
+        this._$location.path('/dashboard');
+    }
+
     private _eventsHandler = function (self) {
 
         function _handleGrainListUpdated() {
-
             self._grainService.getListBySubject(self._subject).then(
                 function (grainList) {
                     var maxScore = 0;
@@ -73,6 +78,7 @@ class EditSubjectController {
                     self._subjectService.update(self._subject).then(
                         function (subject:ISubject) {
                             self._subject = subject;
+                            self._hasDataLoaded = true;
                             self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', grainList);
                             self._$scope.$broadcast('E_TOGGLE_SUBJECT_EDIT_TOASTER', self._selectedGrainList.length);
                         },
@@ -250,13 +256,9 @@ class EditSubjectController {
     get subject():ISubject {
         return this._subject;
     }
-
-    set subject(value:ISubject) {
-        this._subject = value;
-    }
-
-    public redirectToDashboard() {
-        this._$location.path('/dashboard');
+    
+    get hasDataLoaded():boolean {
+        return this._hasDataLoaded;
     }
 }
 

@@ -1,52 +1,51 @@
 <div data-ng-controller="EditSubjectController as editSubjectController">
 
-    <!-- TOP HEADER -->
-    <div class="row">
-        <h1 class="cell">
-            Exercizer - [[ editSubjectController.subject.title ]]
-        </h1>
-
-        <button class="right-magnet cell">
-            Programmer
-        </button>
-
-        <button class="right-magnet cell flat-button" data-ng-click="editSubjectController.redirectToDashboard()">
-            Terminer
-        </button>
+    <!-- LOADER -->
+    <div class="row" data-ng-hide="editSubjectController.hasDataLoaded">
+        <div class="info">Chargement des données...</div>
     </div>
 
-    <div class="row">
-        <!-- LEFT STICKY NAV -->
-        <section class="four cell vertical">
-            <nav data-stick-to-top class="hash-magnet floating-navigation">
-                <div class="row">
-                    <subject-edit-organizer data-subject="editSubjectController.subject"></subject-edit-organizer>
-                </div>
-            </nav>
-            <!--<nav data-stick-to-top class="hash-magnet floating-navigation">
-                <div class="row">
-                    <subject-edit-subject-list></subject-edit-subject-list>
-                </div>
-            </nav>-->
-        </section>
+    <div data-ng-show="editSubjectController.hasDataLoaded">
 
-        <!-- GRAIN LIST -->
-        <section class="eight cell">
-            <subject-edit-grain-list data-subject="editSubjectController.subject"></subject-edit-grain-list>
+        <!-- TOP HEADER -->
+        <div class="row">
+            <h1 class="cell">
+                Exercizer - [[ editSubjectController.subject.title ]]
+            </h1>
 
-            <!-- BUTTON ADD NEW GRAIN -->
-            <subject-edit-button-add-new-grain data-subject="editSubjectController.subject"></subject-edit-button-add-new-grain>
-        </section>
+            <button class="right-magnet cell">
+                Programmer
+            </button>
+
+            <button class="right-magnet cell flat-button" data-ng-click="editSubjectController.redirectToDashboard()">
+                Terminer
+            </button>
+        </div>
+
+        <div class="row">
+            <!-- LEFT STICKY NAV -->
+            <section class="four cell vertical" >
+                <subject-edit-organizer data-subject="editSubjectController.subject"></subject-edit-organizer>
+            </section>
+
+            <!-- GRAIN LIST -->
+            <section class="eight cell">
+                <subject-edit-grain-list data-subject="editSubjectController.subject"></subject-edit-grain-list>
+
+                <!-- BUTTON ADD NEW GRAIN -->
+                <subject-edit-button-add-new-grain data-subject="editSubjectController.subject"></subject-edit-button-add-new-grain>
+            </section>
+        </div>
+
+        <!-- TOASTER -->
+        <subject-edit-toaster data-subject="editSubjectController.subject"></subject-edit-toaster>
+
+        <!-- LIGHT BOXES -->
+        <subject-edit-modal-remove-grain data-subject="editSubjectController.subject"></subject-edit-modal-remove-grain>
+        <subject-edit-modal-remove-selected-grain-list data-subject="editSubjectController.subject"></subject-edit-modal-remove-selected-grain-list>
+        <subject-edit-modal-grain-document data-subject="editSubjectController.subject"></subject-edit-modal-grain-document>
+        <subject-edit-modal-remove-grain-document data-subject="editSubjectController.subject"></subject-edit-modal-remove-grain-document>
+        <subject-edit-modal-preview-perform-subject-copy data-subject="editSubjectController.subject"></subject-edit-modal-preview-perform-subject-copy>
+
     </div>
-
-    <!-- TOASTER -->
-    <subject-edit-toaster data-subject="editSubjectController.subject"></subject-edit-toaster>
-
-    <!-- LIGHT BOXES -->
-    <subject-edit-modal-remove-grain data-subject="editSubjectController.subject"></subject-edit-modal-remove-grain>
-    <subject-edit-modal-remove-selected-grain-list data-subject="editSubjectController.subject"></subject-edit-modal-remove-selected-grain-list>
-    <subject-edit-modal-grain-document data-subject="editSubjectController.subject"></subject-edit-modal-grain-document>
-    <subject-edit-modal-remove-grain-document data-subject="editSubjectController.subject"></subject-edit-modal-remove-grain-document>
-    <subject-edit-modal-preview-perform-subject-copy data-subject="editSubjectController.subject"></subject-edit-modal-preview-perform-subject-copy>
-
 </div>
