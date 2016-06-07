@@ -53,9 +53,12 @@ class SubjectService implements ISubjectService {
                     angular.forEach(response.data, function(subjectObject) {
 
                         var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject));
+                        subject.owner = { userId: subject.owner };
+                        Behaviours.findRights('exercizer', subject);
                         self._listMappedById[subject.id] = subject;
 
                     });
+                    console.log('self._listMappedById', self._listMappedById);
 
                     deferred.resolve(true);
                 },
@@ -93,7 +96,7 @@ class SubjectService implements ISubjectService {
         var deferred = this._$q.defer(),
             request = {
                 method: 'PUT',
-                url: 'exercizer/subject',
+                url: 'exercizer/subject/'+ subject.id,
                 data: subject
             };
 
