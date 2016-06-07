@@ -1,21 +1,18 @@
 <div data-ng-controller="PerformSubjectCopyController as performSubjectCopyController">
 
-    <div data-ng-if="isPreview">
-        <div data-ng-init="performSubjectCopyController.preview(subject)"></div>
+    <!-- LOADER -->
+    <div class="row" data-ng-hide="performSubjectCopyController.hasDataLoaded">
+        <div class="info">Chargement des données...</div>
     </div>
 
-    <div data-ng-if="!isPreview">
-        <div data-ng-init="performSubjectCopyController.perform()"></div>
-    </div>
-
-    <div data-ng-if="performSubjectCopyController.hasDataBeenLoaded">
+    <div data-ng-if="performSubjectCopyController.hasDataLoaded && performSubjectCopyController.grainCopyList.length > 0">
 
         <!-- HEADER -->
-        <div data-ng-if="isPreview">
+        <div data-ng-if="previewing">
             <subject-perform-copy-preview-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"></subject-perform-copy-preview-header>
         </div>
 
-        <div data-ng-if="!isPreview">
+        <div data-ng-if="!previewing">
             <!--<subject-perform-copy-header></subject-perform-copy-header>-->
         </div>
 
@@ -39,5 +36,10 @@
         <!-- BOTTOM NAV -->
         <!--<subject-perform-copy-bottom-nav></subject-perform-copy-bottom-nav>-->
 
+    </div>
+
+    <!-- NO DATA -->
+    <div class="row" data-ng-if="performSubjectCopyController.hasDataLoaded && performSubjectCopyController.grainCopyList.length === 0">
+        <div class="warning">La copie ne contient pas d'éléments.</div>
     </div>
 </div>

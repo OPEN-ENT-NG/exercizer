@@ -53,7 +53,7 @@ public class SubjectController extends ControllerHelper {
     }
 
     @Put("/subject/:id")
-    @SecuredAction(type = ActionType.RESOURCE, value = "exercizer.contrib")
+    //@SecuredAction(type = ActionType.RESOURCE, value = "exercizer.contrib")
     @ApiDoc("Updates a subject.")
     public void update(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {

@@ -18,7 +18,7 @@ class PerformSubjectCopyController {
     private _grainCopyList:IGrainCopy[];
     private _grainScheduledList:IGrainScheduled[];
     private _previewing:boolean;
-    private _hasDataBeenLoaded:boolean;
+    private _hasDataLoaded:boolean;
 
     constructor
     (
@@ -41,44 +41,52 @@ class PerformSubjectCopyController {
         this._grainScheduledService = _grainScheduledService;
         this._grainCopyService = _grainCopyService;
         this._grainTypeService = _grainTypeService;
-        this._hasDataBeenLoaded = false;
+        this._hasDataLoaded = false;
 
-        var subjectId = _$routeParams['subjectId'];
+        var self = this,
+            subjectId = _$routeParams['subjectId'];
         
         if (!angular.isUndefined(subjectId)) {
-            var subject = this._subjectService.getById(subjectId);
+            this._subjectService.resolve().then(function() {
+                var subject = self._subjectService.getById(subjectId);
+
+                if (!angular.isUndefined(subject)) {
+                    self._preview(subject);
+                } else {
+                    self._$location.path('/dashboard');
+                }
+
+            }, function(err) {
+                notify.error(err);
+            });
             
-            if (!angular.isUndefined(subject)) {
-                this._preview(subject);
-            } else {
-                this._$location.path('/dashboard');
-            }
         } else {
+            // TODO  _$routeParams['subjectCopyId']
             this._perform();
         }
         
     }
 
     private _preview(subject:ISubject) {
+        var self = this;
+        this._previewing = true;
         
         this._grainService.getListBySubject(subject).then(
             function(grainList) {
-                this._subjectScheduled = this._subjectScheduledService.createFromSubject(subject);
-                this._subjectCopy = this._subjectCopyService.createFromSubjectScheduled(this._subjectScheduled);
-                this._grainScheduledList = this._grainScheduledService.createGrainScheduledList(grainList);
-                this._grainCopyList = this._grainCopyService.createGrainCopyList(this._grainScheduledList);
-                this._previewing = true;
+                self._subjectScheduled = self._subjectScheduledService.createFromSubject(subject);
+                self._subjectCopy = self._subjectCopyService.createFromSubjectScheduled(self._subjectScheduled);
+                self._grainScheduledList = self._grainScheduledService.createGrainScheduledList(grainList);
+                self._grainCopyList = self._grainCopyService.createGrainCopyList(self._grainScheduledList);
 
-                this._subjectScheduled.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
-                this._subjectCopy.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
+                self._subjectScheduled.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
+                self._subjectCopy.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
 
-                angular.forEach(this._grainCopyList, function(grainCopy:IGrainCopy) {
+                angular.forEach(self._grainCopyList, function(grainCopy:IGrainCopy) {
                     grainCopy.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
                 });
 
-                var self = this;
-                this._eventsHandler(self);
-                this._hasDataBeenLoaded = true;
+                self._eventsHandler(self);
+                self._hasDataLoaded = true;
             },
             function(err) {
                 notify.error(err);
@@ -94,7 +102,7 @@ class PerformSubjectCopyController {
 
         var self = this;
         this._eventsHandler(self);
-        this._hasDataBeenLoaded = true;
+        this._hasDataLoaded = true;
     }
 
     private _eventsHandler = function(self) {
@@ -143,32 +151,20 @@ class PerformSubjectCopyController {
         return this._subjectScheduled;
     }
 
-    set subjectScheduled(value:ISubjectScheduled) {
-        this._subjectScheduled = value;
-    }
-
     get subjectCopy():ISubjectCopy {
         return this._subjectCopy;
-    }
-
-    set subjectCopy(value:ISubjectCopy) {
-        this._subjectCopy = value;
     }
 
     get grainCopyList():IGrainCopy[] {
         return this._grainCopyList;
     }
 
-    set grainCopyList(value:IGrainCopy[]) {
-        this._grainCopyList = value;
+    get previewing():boolean {
+        return this._previewing;
     }
 
-    get hasDataBeenLoaded():boolean {
-        return this._hasDataBeenLoaded;
-    }
-
-    set hasDataBeenLoaded(value:boolean) {
-        this._hasDataBeenLoaded = value;
+    get hasDataLoaded():boolean {
+        return this._hasDataLoaded;
     }
 }
 
