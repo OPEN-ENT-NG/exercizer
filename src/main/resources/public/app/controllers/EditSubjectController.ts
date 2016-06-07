@@ -48,8 +48,8 @@ class EditSubjectController {
                 self._selectedGrainList = [];
                 self._grainService.getListBySubject(self._subject).then(
                     function(grainList) {
-                        self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', grainList);
                         self._eventsHandler(self);
+                        self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', grainList);
                         self._hasDataLoaded = true;
                     },
                     function(err) {
