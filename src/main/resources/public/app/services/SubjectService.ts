@@ -6,7 +6,6 @@ interface ISubjectService {
     removeList(subjectList: ISubject[]):ng.IPromise<boolean>
     duplicate(subject: ISubject): ng.IPromise<ISubject>;
     getList(): ISubject[];
-    getListByFolderId(folderId);
     getById(id: number): ISubject;
     deleteSubjectChildrenOfFolder(folder: IFolder);
     getList(): ISubject[];
@@ -52,7 +51,7 @@ class SubjectService implements ISubjectService {
 
                     angular.forEach(response.data, function(subjectObject) {
 
-                        var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject));
+                        var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject)) as any;
                         subject.owner = { userId: subject.owner };
                         Behaviours.findRights('exercizer', subject);
                         self._listMappedById[subject.id] = subject;
@@ -79,9 +78,12 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
+        delete subject.myRights;
+        delete subject.owner;
+
         this._$http(request).then(
             function(response) {
-                subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data)) as any;
                 self._listMappedById[subject.id] = subject;
                 deferred.resolve(subject);
             },
@@ -99,6 +101,8 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject/'+ subject.id,
                 data: subject
             };
+        delete subject.myRights;
+        subject.owner = subject.owner.userId;
 
         this._$http(request).then(
             function(response) {
@@ -120,6 +124,8 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
+        delete subject.myRights;
+        subject.owner = subject.owner.userId;
 
         this._grainService.getListBySubject(subject).then(
             function(grainList) {
@@ -175,13 +181,16 @@ class SubjectService implements ISubjectService {
     public duplicate = function(subject: ISubject, folder: IFolder = undefined): ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer();
-
+        // duplicate subject
         var duplicatedSubject = CloneObjectHelper.clone(subject, true);
+        //clean subject
         duplicatedSubject.id = undefined;
         duplicatedSubject.folder_id = angular.isUndefined(folder) ? null : folder.id;
         duplicatedSubject.title += '_copie';
-
+        delete duplicatedSubject.myRights;
+        // persist subject
         this.persist(duplicatedSubject).then(
+            // after persist subject, duplicate grain
             function(duplicatedSubject: ISubject) {
                 self._grainService.getListBySubject(subject).then(
                     function(grainList: IGrain[]) {
@@ -202,7 +211,24 @@ class SubjectService implements ISubjectService {
             function() {
                 deferred.reject('Une erreur est survenue lors de la duplication du sujet à copier.');
             });
+        return deferred.promise;
+    };
 
+    public duplicateList = function(list,parentFolder){
+        var self = this,
+            deferred = this._$q.defer(),
+            promises = [];
+        angular.forEach(list, function(value) {
+            promises.push(self.duplicate(value, parentFolder));
+        });
+        this._$q.all(promises).then(
+            function(data) {
+                deferred.resolve(data);
+            }, function(err) {
+                console.error(err);
+                deferred.reject(err);
+            }
+        );
         return deferred.promise;
     };
 
@@ -212,20 +238,16 @@ class SubjectService implements ISubjectService {
         } else {
             return [];
         }
-
     };
 
     public getListByFolderId(folderId:number): { [id: number]: ISubject; } {
-        // TODO FolderService ?
         var self = this,
             listByFolderId:{ [id: number]: ISubject; } = {};
-
         angular.forEach(self._listMappedById, function(subject:ISubject) {
             if (subject.folder_id == folderId) {
                 listByFolderId[subject.id] = subject;
             }
         });
-
         return listByFolderId;
     }
 
