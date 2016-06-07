@@ -1,9 +1,13 @@
-<div class="row vertical-spacing">
-    <div class="margin-four">
-        <strong>[[ subjectScheduled.title ]]&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;[[ subjectScheduled.max_score ]]</strong>
-    </div>
+<div class="row">
+    <h1 class="cell">
+        [[ subjectScheduled.title ]]&nbsp;/&nbsp;[[ subjectScheduled.max_score ]]
+    </h1>
 
-    <button class="cell right-magnet flat-button">
-        Aperçu de la correction de la copie
+    <button class="cell right-magnet">
+        Aperçu de la correction
+    </button>
+
+    <button class="cell right-magnet flat-button" data-ng-click="redirectToSubjectEdit()">
+        Retour à l'édition
     </button>
 </div>

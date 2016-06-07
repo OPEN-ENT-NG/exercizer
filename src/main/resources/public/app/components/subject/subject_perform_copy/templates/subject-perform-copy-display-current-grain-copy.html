@@ -1,11 +1,5 @@
 <div class="row">
-    <div data-ng-if="!currentGrainCopy">
-        <summary data-subject-scheduled="subjectScheduled"
-                 data-subject-copy="subjectCopy"
-                 data-first-grain-copy="firstGrainCopy">
-        </summary>
-    </div>
-    <div data-ng-if="currentGrainCopy" data-ng-switch="currentGrainCopy.id">
+    <div data-ng-switch="currentGrainCopy.grain_type_id">
         <div data-ng-switch-when="3">
             <perform-statement data-grain-copy="currentGrainCopy"></perform-statement>
         </div>
@@ -13,7 +7,7 @@
             <perform-simple-answer data-grain-copy="currentGrainCopy"></perform-simple-answer>
         </div>
         <div data-ng-switch-default>
-            <h1>NOT IMPLEMENTED YET.</h1>
+            <summary data-subject-scheduled="subjectScheduled"></summary>
         </div>
     </div>
 

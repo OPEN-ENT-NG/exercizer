@@ -2,7 +2,7 @@ directives.push(
     {
         name: 'subjectEditOrganizer',
         injections:
-            ['GrainTypeService', (GrainTypeService) => {
+            ['$location', 'GrainTypeService', ($location, GrainTypeService) => {
                     return {
                         restrict: 'E',
                         scope: {
@@ -22,7 +22,7 @@ directives.push(
                             };
 
                             scope.previewPerformSubjectCopy = function () {
-                                scope.$emit('E_PREVIEW_PERFORM_SUBJECT_COPY');
+                                $location.path('/subject/copy/preview/perform/' + scope.subject.id + '/');
                             };
 
                             scope.foldAllGrain = function () {

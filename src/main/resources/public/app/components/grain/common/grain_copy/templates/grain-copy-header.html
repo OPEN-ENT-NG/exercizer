@@ -13,12 +13,11 @@
     </div>
 
     <!-- grain copy score and title -->
-    <div class="height cell">
-        <h2>/&nbsp;[[ grainCopy.grain_copy_data.max_score ]]/&nbsp;&nbsp;[[ grainCopy.grain_copy_data.title ]]</h2>
-    </div>
+    <h2 class="cell">[[ grainCopy.grain_copy_data.title ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grainCopy.grain_copy_data.max_score ]]</h2>
 
     <!-- grain copy toggle hint button -->
     <a class="comment right-magnet cell"
+       data-ng-if="!angular.isUndefined(grainCopy.grain_copy_data.answer_hint) && grainCopy.grain_copy_data.answer_hint.length > 0"
        data-ng-click="toggleGrainCopyHint()">
         Aide à la réponse&nbsp;&nbsp;
         <i data-ng-show="isAnswerHintFolded" data-tooltip="Déplier" class="down-open"></i>
@@ -28,6 +27,6 @@
 </div>
 
 <!-- grain copy hint -->
-<div class="row vertical-spacing" data-hide="isAnswerHintFolded" data-ng-if="!angular.isUndefined(grainCopy.grain_copy_data.answer_hint) && grainCopy.grain_copy_data.answer_hint.length > 0">
-    <p>[[ !angular.isUndefined(grainCopy.grain_copy_data.answer_hint) && grainCopy.grain_copy_data.answer_hint.length > 0 ? grainCopy.grain_copy_data.answer_hint : 'Aucune aide spécifiée.' ]]</p>
+<div class="row" data-hide="isAnswerHintFolded" data-ng-if="!angular.isUndefined(grainCopy.grain_copy_data.answer_hint) && grainCopy.grain_copy_data.answer_hint.length > 0">
+    <p style="text-align: justify;">[[ grainCopy.grain_copy_data.answer_hint ]]</p>
 </div>

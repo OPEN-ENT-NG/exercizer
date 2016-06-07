@@ -1,12 +1,12 @@
-<nav data-stick-to-top class="hash-magnet floating-navigation">
+<nav class="vertical">
     <ul>
         <li>
-            <a data-ng-class="{selected: !currentGrainCopy}" data-ng-click="navigateTo()">
+            <a data-ng-class="{ selected: !currentGrainCopy }" data-ng-click="navigateTo()">
                 Résumé
             </a>
         </li>
         <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false">
-            <a data-ng-class="{selected: currentGrainCopy.id === grainCopy.id}"
+            <a data-ng-class="{ selected: currentGrainCopy.id === grainCopy.id }"
                data-ng-click="navigateTo(grainCopy)">
                 [[ grainCopy.grain_copy_data.title ]]
             </a>

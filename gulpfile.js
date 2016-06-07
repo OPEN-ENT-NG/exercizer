@@ -1,12 +1,11 @@
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
-try{
-    var privateConfig = require('./privateConfig');
-} catch(e){
-    var privateConfig = {
-        springboardModsPath: ""
-    }
-}
+var privateConfig = "";
+
+try {
+    privateConfig = require('./privateConfig');
+} catch(e) {}
+
 console.log(privateConfig);
 var tsProject = ts.createProject('./tsconfig.json');
 var springboardModsPath = privateConfig.springboardModsPath;
@@ -15,7 +14,7 @@ gulp.task('compile', function() {
     var tsResult = tsProject.src()
         .pipe(ts(tsProject));
 
-    return tsResult.js.pipe(gulp.dest('src/main/resources/public/js'));
+    return tsResult.js.pipe(gulp.dest('./src/main/resources/public/js'));
 });
 
 gulp.task('copy-resources', ['compile'], function() {
@@ -24,5 +23,5 @@ gulp.task('copy-resources', ['compile'], function() {
 });
 
 gulp.task('watch-resources', function() {
-    gulp.watch('src/main/resources/**/*', ['copy-resources']);
+    gulp.watch('./src/main/resources/**/*', ['copy-resources']);
 });
