@@ -3,7 +3,7 @@ interface IFolderService {
     persist(folder:IFolder):ng.IPromise<IFolder>;
     update(folder:IFolder):ng.IPromise<IFolder>;
     remove(folder:IFolder) : ng.IPromise<IFolder>;
-    duplicate(folder:IFolder) : ng.IPromise<IFolder>;
+    duplicate(folder: IFolder, parentFolder : IFolder, recursive : boolean) : ng.IPromise<IFolder>;
     setParentFolderId(originFolderId, targetFolderId);
     getListOfSubFolderByFolderId(folderId);
     folderById(id:number) : IFolder;
@@ -44,9 +44,9 @@ class FolderService implements IFolderService {
                 method: 'GET',
                 url: 'exercizer/folders'
             };
-        
         this._$http(request).then(
             function (response) {
+                // for each folder, add to list
                 angular.forEach(response.data, function (folderObject) {
                     var folder = SerializationHelper.toInstance(new Folder(), JSON.stringify(folderObject));
                     self._folderList[folder.id] = folder;
@@ -78,7 +78,7 @@ class FolderService implements IFolderService {
     }
 
     /**
-     * get list of fodler by folder parent id
+     * get list of folder by folder parent id
      * @param folderId
      * @returns {any}
      */
@@ -196,28 +196,58 @@ class FolderService implements IFolderService {
             }
         });
         this._$q.all(promises).then(
-            // success
-            // results: an array of data objects from each deferred.resolve(data) call
             function(results) {
                 deferred.resolve();
+            }, function(err){
+                console.error(err);
+                deferred.reject
             }
         );
         return deferred.promise;
     }
 
     /**
-     * duplicate a folder
+     * duplicate folder
      * @param folder
+     * @param parentFolder
+     * @param recursive
      * @returns {IPromise<T>}
      */
-    public duplicate(folder: IFolder): ng.IPromise<IFolder> {
+    public duplicate(folder: IFolder, parentFolder : IFolder, recursive : boolean): ng.IPromise<IFolder> {
         var deferred = this._$q.defer(),
-            newFolder = new Folder();
-        
-        newFolder.label = folder.label + '_copie';
-
+            self= this;
+        // create new folder
+        var newFolder = new Folder();
+            newFolder.label = folder.label + '_copie';
+        // verification
+        if(parentFolder && folder.id === parentFolder.id){
+            var msg = "Vous ne pouvez pas dupliquer le dossier dans lui-même.";
+            console.error(msg);
+            deferred.reject(msg)
+        }
+        if(self.isAParentOf(folder, parentFolder)){
+            var msg = "Vous ne pouvez pas dupliquer le dossier dans lui-même.";
+            console.error(msg);
+            deferred.reject(msg)
+        }
+        // persist it
         this.persist(newFolder).then(
             function(duplicatedFolder: IFolder) {
+                // if origin folder has children
+                var childrenFolder = self.getListOfSubFolderByFolderId(folder.id);
+                var childrenSubject = self._subjectService.getListByFolderId(folder.id);
+                if(childrenFolder){
+                    self.duplicateList(childrenFolder, duplicatedFolder)
+                }
+                if(childrenSubject){
+                    self._subjectService.duplicateList(childrenSubject,duplicatedFolder);
+                }
+                // set parent folder id
+                if(parentFolder){
+                    self.setParentFolderId(duplicatedFolder.id, parentFolder.id);
+                } else {
+                    self.setParentFolderId(duplicatedFolder.id, null);
+                }
                 deferred.resolve(duplicatedFolder);
             },
             function() {
@@ -227,6 +257,24 @@ class FolderService implements IFolderService {
         );
         return deferred.promise;
     }
+
+    public duplicateList(list, parentFolder){
+        var self = this,
+            deferred = this._$q.defer(),
+            promises = [];
+        angular.forEach(list, function(value) {
+            promises.push(self.duplicate(value,parentFolder, true));
+        });
+        this._$q.all(promises).then(
+            function(data) {
+                deferred.resolve(data);
+            }, function(err) {
+                console.error(err);
+                deferred.reject(err);
+            }
+        );
+        return deferred.promise;
+    };
 
     /**
      * set parent id to a folder

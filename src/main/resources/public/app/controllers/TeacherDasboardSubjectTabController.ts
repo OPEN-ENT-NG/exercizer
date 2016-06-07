@@ -90,13 +90,11 @@ class TeacherDashboardSubjectTabController {
         });
 
         self._$scope.$on('E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT', function () {
-            
             // delete subject list
             angular.forEach(self._selectedSubjectList, function (id) {
                 self._subjectService.remove(self._subjectService.getById(id));
             });
             self._resetSelectedSubjectList();
-            
             // delete folder list
             angular.forEach(self._selectedFolderList, function (id, key) {
                 self._folderService.remove(self._folderService.folderById(id));
@@ -104,79 +102,19 @@ class TeacherDashboardSubjectTabController {
             self._resetSelectedFolderList();
         });
 
-        self._$scope.$on('E_CONFIRM_COPY_PASTE', function (event, folder) {
-            var folderParentId = folder ? folder.id : null;
-            self._duplicateFolderList(self._selectedFolderList, folderParentId);
-            self._duplicateSubjectList(self._selectedSubjectList, folderParentId);
-            self._resetSelectedList();
+        self._$scope.$on('E_CONFIRM_COPY_PASTE', function (event, folderParent) {
+            // copy subject list
+            angular.forEach(self._selectedSubjectList, function (id) {
+                self._subjectService.duplicate(self._subjectService.getById(id), folderParent);
+            });
+            self._resetSelectedSubjectList();
+            // copy folder list
+            angular.forEach(self._selectedFolderList, function (id) {
+                self._folderService.duplicate(self._folderService.folderById(id), folderParent, true);
+            });
+            self._resetSelectedFolderList();
         });
     };
-
-    private _duplicateSubjectList(list, folderParentId){
-        var self = this;
-        angular.forEach(list, function (subject) {
-            var id;
-            if(subject instanceof Subject){
-                id = subject.id;
-            } else{
-                id = subject;
-            }
-            var promise = self._subjectService.duplicate(self._subjectService.getById(id));
-            promise.then(function(data){
-                data.folder_id = folderParentId;
-            });
-        });
-    }
-
-    private _duplicateFolderList (list, folderParentId){
-        var self = this;
-        angular.forEach(list, function (folder) {
-            var id;
-            if(folder instanceof Folder){
-                id = folder.id;
-            } else {
-                id = folder;
-            }
-            var currentFolder = self._folderService.folderById(id);
-            var targetFolder = null;
-            if(folderParentId){
-                targetFolder = self._folderService.folderById(folderParentId);
-            }
-            if(id == folderParentId){
-                notify.error('Vous ne pouvez pas ajouter le dossier dans lui-même. Utilisez plutôt l\'action copier (si disponible).');
-            } else if(self._folderService.isAParentOf(currentFolder, targetFolder)){
-                notify.error('Vous ne pouvez pas ajouter le dossier dans lui-même.');
-            } else {
-                self._folderService.duplicate(self._folderService.folderById(id)).then(function(duplicatedFolder: IFolder) {
-                        // ---
-                        // id is the id of the folder duplicated (origin)
-                        // folderParentId is the folder where the folder is duplicate
-                        // ---
-                        // get children folder of the folder duplicated
-                        var childrenFolder = self._folderService.getListOfSubFolderByFolderId(id);
-                    
-                        // if children exit , duplicate it
-                        if(childrenFolder){
-                            self._duplicateFolderList(childrenFolder, duplicatedFolder.id);
-                        }
-                        // duplicate children subject of the folder duplicated
-                        var childrenSubject = self._subjectService.getListByFolderId(id);
-                    
-                        if(childrenSubject.length != 0){
-                            self._duplicateSubjectList(childrenSubject,duplicatedFolder.id);
-                        }
-                        // set parent folder id to the folder created
-                        if(folderParentId){
-                            self._folderService.setParentFolderId(duplicatedFolder.id, folderParentId);
-                        }
-                },
-                    function(err) {
-                    notify.error(err);
-                });
-            }
-
-        });
-    }
 
     private _toggleItem(id, isSelected, list) {
         var index = list.indexOf(id);
@@ -209,7 +147,6 @@ class TeacherDashboardSubjectTabController {
                 }
             }
         });
-        
         this._selectedFolderList = [];
         self._$scope.$broadcast('E_DISPLAY_DASHBOARD_TOASTER',  self._selectedSubjectList, self._selectedFolderList);
 
@@ -223,7 +160,6 @@ class TeacherDashboardSubjectTabController {
                 }
             }
         });
-        
         this._selectedSubjectList = [];
         self._$scope.$broadcast('E_DISPLAY_DASHBOARD_TOASTER',  self._selectedSubjectList, self._selectedFolderList);
 
@@ -233,7 +169,4 @@ class TeacherDashboardSubjectTabController {
         this._resetSelectedFolderList();
         this._resetSelectedSubjectList();
     }
-
-
-
 }
