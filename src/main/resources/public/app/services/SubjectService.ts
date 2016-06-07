@@ -48,12 +48,11 @@ class SubjectService implements ISubjectService {
             this._$http(request).then(
                 function(response) {
                     self._listMappedById = {};
-
+                    var subject;
                     angular.forEach(response.data, function(subjectObject) {
 
-                        var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject)) as any;
-                        subject.owner = { userId: subject.owner };
-                        Behaviours.findRights('exercizer', subject);
+                        subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject)) as any;
+                        self._afterPullBack(subject);
                         self._listMappedById[subject.id] = subject;
 
                     });
@@ -78,12 +77,11 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
-        delete subject.myRights;
-        delete subject.owner;
-
+        self._beforePushBack(subject);
         this._$http(request).then(
             function(response) {
                 var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data)) as any;
+                self._afterPullBack(subject);
                 self._listMappedById[subject.id] = subject;
                 deferred.resolve(subject);
             },
@@ -100,13 +98,14 @@ class SubjectService implements ISubjectService {
                 method: 'PUT',
                 url: 'exercizer/subject/'+ subject.id,
                 data: subject
-            };
-        delete subject.myRights;
-        subject.owner = subject.owner.userId;
+            },
+            self = this;
+        this._beforePushBack(subject);
 
         this._$http(request).then(
             function(response) {
-                subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                self._afterPullBack(subject);
                 deferred.resolve(subject);
             },
             function() {
@@ -124,9 +123,7 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
-        delete subject.myRights;
-        subject.owner = subject.owner.userId;
-
+       self. _beforePushBack(subject);
         this._grainService.getListBySubject(subject).then(
             function(grainList) {
                 var grainListCopy = angular.copy(grainList);
@@ -187,7 +184,7 @@ class SubjectService implements ISubjectService {
         duplicatedSubject.id = undefined;
         duplicatedSubject.folder_id = angular.isUndefined(folder) ? null : folder.id;
         duplicatedSubject.title += '_copie';
-        delete duplicatedSubject.myRights;
+        this._beforePushBack(duplicatedSubject);
         // persist subject
         this.persist(duplicatedSubject).then(
             // after persist subject, duplicate grain
@@ -286,5 +283,16 @@ class SubjectService implements ISubjectService {
     public setFolderId = function(subject :ISubject,folderId: number){
         subject.folder_id = folderId;
         this.update(subject);
+    };
+
+    private _beforePushBack(subject){
+        delete subject.myRights;
+        subject.owner = subject.owner.userId;
+    }
+
+    private _afterPullBack(subject){
+        subject.owner = { userId: subject.owner };
+        Behaviours.findRights('exercizer', subject);
+
     }
 }
