@@ -103,10 +103,10 @@ class GrainService implements IGrainService {
     public remove = function (grain:IGrain):ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer();
-
+        // ?
         var grainObject = angular.copy(grain);
+        // stringify grain_data
         grainObject.grain_data = JSON.stringify(grainObject.grain_data);
-
         var request = {
             method: 'DELETE',
             url: 'exercizer/grain',
@@ -115,82 +115,63 @@ class GrainService implements IGrainService {
 
         this._$http(request).then(
             function () {
+                // delete grain from list
                 var grainIndex = self._listMappedBySubjectId[grain.subject_id].indexOf(grain);
-
                 if (grainIndex !== -1) {
                     self._listMappedBySubjectId[grain.subject_id].splice(grainIndex, 1);
                 }
-
                 deferred.resolve(true);
             },
             function () {
                 deferred.reject('Un erreur est survenue lors de la suppression de l\'élément.')
             }
         );
-
-
         return deferred.promise;
     };
 
-    public removeList = function (grainList:IGrain[], subject:ISubject):ng.IPromise<boolean> {
+    public removeList = function(grainList:IGrain[]):ng.IPromise<boolean>{
         var self = this,
-            deferred = this._$q.defer();
-        if (grainList.length === 0) {
-            deferred.resolve(true);
-        } else {
-            var grain = grainList[0];
-            this.remove(grain).then(
-                function () {
-                    grainList.splice(0, 1);
-                    if (grainList.length > 0) {
-                        self.removeList(grainList, subject);
-                    } else {
-                        deferred.resolve(true);
-                    }
-                },
-                function () {
-                    deferred.reject('Une erreur est survenue lors de la suppression des éléments d\'un sujet.');
-                }
-            );
-        }
+            deferred = this._$q.defer(),
+            promises = [];
+        angular.forEach(grainList, function(grain) {
+            promises.push(self.remove(grain));
+        });
+        this._$q.all(promises).then(
+            function(data) {
+                deferred.resolve(data);
+            }, function(err) {
+                console.error(err);
+                deferred.reject(err);
+            }
+        );
         return deferred.promise;
     };
 
     public duplicate = function (grain:IGrain, subject:ISubject):ng.IPromise<IGrain> {
-
         var duplicatedGrain = CloneObjectHelper.clone(grain, true);
         duplicatedGrain.id = undefined;
         duplicatedGrain.subject_id = subject.id;
-
         if (duplicatedGrain.grain_type_id > 3) {
             duplicatedGrain.grain_data.title += '_copie';
         }
-
         return this.persist(duplicatedGrain);
     };
 
-    public duplicateList = function (grainList:IGrain[], subject:ISubject):ng.IPromise<boolean> {
+    public duplicateList = function(grainList:IGrain[],subject:ISubject):ng.IPromise<boolean>{
         var self = this,
-            deferred = this._$q.defer();
-        if (grainList.length === 0) {
-            deferred.resolve(true);
-        } else {
-            var grain = grainList[0];
-            this.duplicate(grain, subject).then(
-                function () {
-                    grainList.splice(0, 1);
-                    if (grainList.length > 0) {
-                        self.duplicateList(grainList, subject);
-                    } else {
-                        deferred.resolve(true);
-                    }
-                },
-                function () {
-                    deferred.reject('Une erreur est survenue lors de la duplication d\'élément du sujet à dupliquer.');
-                }
-            );
-
-        }
+            deferred = this._$q.defer(),
+            promises = [];
+        angular.forEach(grainList, function(grain) {
+            promises.push(self.duplicate(grain, subject));
+        });
+        this._$q.all(promises).then(
+            function(data) {
+                deferred.resolve(data);
+            }, function(err) {
+                console.error(err);
+                deferred.reject(err);
+            }
+        );
         return deferred.promise;
     };
 
@@ -206,15 +187,12 @@ class GrainService implements IGrainService {
         if (!angular.isUndefined(this._listMappedBySubjectId[subject.id])) {
             deferred.resolve(this._listMappedBySubjectId[subject.id]);
         } else {
-
             this._listMappedBySubjectId[subject.id] = [];
-
             this._$http(request).then(
                 function (response) {
                     angular.forEach(response.data, function (grainObject) {
                         self._listMappedBySubjectId[subject.id].push(self.instantiateGrain(grainObject));
                     });
-
                     deferred.resolve(self._listMappedBySubjectId[subject.id]);
                 },
                 function () {
@@ -222,7 +200,6 @@ class GrainService implements IGrainService {
                 }
             );
         }
-
         return deferred.promise;
     };
 
