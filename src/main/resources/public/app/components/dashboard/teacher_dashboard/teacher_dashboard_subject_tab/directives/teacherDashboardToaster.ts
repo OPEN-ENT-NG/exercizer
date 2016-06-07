@@ -16,6 +16,7 @@ directives.push(
                         post: function(scope, element, attributes, controller, transcludeFn){
                             scope.subjectList = [];
                             scope.folderList = [];
+                            scope.lowerRight = null;
 
                             function hide(){
                                 scope.isDisplayed = false;
@@ -30,8 +31,32 @@ directives.push(
                                     scope.isDisplayed = true;
                                     scope.subjectList = subjectList;
                                     scope.folderList = folderList;
+                                    checkRightFn(subjectList);
                                 }
                             });
+
+                            function checkRightFn(subjectList){
+                                scope.lowerRight = 'owner';
+                                angular.forEach(subjectList, function(id){
+                                    var subject = SubjectService.getById(id);
+                                    console.log(subject);
+                                    if(model.me.hasRight(subject, 'owner')){
+                                        scope.lowerRight = 'owner';
+                                    }
+                                    if(model.me.hasRight(subject, 'exercizer.manager')){
+                                        scope.lowerRight = 'manager';
+                                    }
+                                    if(model.me.hasRight(subject, 'exercizer.contrib')){
+                                        scope.lowerRight = 'contrib';
+                                    }
+                                    if(model.me.hasRight(subject, 'exercizer.read')){
+                                        scope.lowerRight = 'read';
+                                    }
+                                });
+                                console.log(scope.lowerRight);
+                            }
+
+
 
                             scope.itemList = [
                                 {
@@ -59,7 +84,7 @@ directives.push(
                                         notify.error('Not implemented yet');
                                     },
                                     display : function(){
-                                        return false;
+                                        return scope.lowerRight == 'owner';
                                     }
                                 },
                                 {
@@ -78,7 +103,7 @@ directives.push(
                                         notify.error('Not implemented yet');
                                     },
                                     display : function(){
-                                        return false;
+                                        return scope.lowerRight == 'owner';
                                     }
                                 },
                                 {
@@ -87,7 +112,7 @@ directives.push(
                                         scope.$emit("E_COPY_SELECTED_FOLDER_SUBJECT");
                                     },
                                     display : function(){
-                                        return true;
+                                        return scope.lowerRight == 'contrib' || scope.lowerRight == 'manager' ||scope.lowerRight == 'owner';
                                     }
                                 },
                                 {
@@ -97,7 +122,7 @@ directives.push(
                                         hide();
                                     },
                                     display : function(){
-                                        return true;
+                                        return scope.lowerRight == 'contrib' || scope.lowerRight == 'manager' ||scope.lowerRight == 'owner';
                                     }
                                 }
                             ];
