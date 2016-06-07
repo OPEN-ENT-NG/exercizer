@@ -46,7 +46,16 @@ class EditSubjectController {
                 self.redirectToDashboard();
             } else {
                 self._selectedGrainList = [];
-                self._eventsHandler(self);
+                self._grainService.getListBySubject(self._subject).then(
+                    function(grainList) {
+                        self._eventsHandler(self);
+                        self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', grainList);
+                        self._hasDataLoaded = true;
+                    },
+                    function(err) {
+                        notify.error(err);
+                    }
+                );
             }
             
         }, function(err) {
@@ -78,7 +87,6 @@ class EditSubjectController {
                     self._subjectService.update(self._subject).then(
                         function (subject:ISubject) {
                             self._subject = subject;
-                            self._hasDataLoaded = true;
                             self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', grainList);
                             self._$scope.$broadcast('E_TOGGLE_SUBJECT_EDIT_TOASTER', self._selectedGrainList.length);
                         },
@@ -248,9 +256,6 @@ class EditSubjectController {
             self._$scope.$broadcast('E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY');
 
         });
-
-        // init
-        _handleGrainListUpdated();
     };
 
     get subject():ISubject {
