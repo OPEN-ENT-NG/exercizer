@@ -77,7 +77,9 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
-        self._beforePushBack(subject);
+        if(subject.id){
+            self._beforePushBack(subject);
+        }
         this._$http(request).then(
             function(response) {
                 var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data)) as any;
