@@ -53,7 +53,7 @@ class SubjectService implements ISubjectService {
                     angular.forEach(response.data, function(subjectObject) {
 
                         var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject));
-                        subject.owner = { userId: subject.owner };
+                        subject.owner = { userId: subject.owner } as any;
                         Behaviours.findRights('exercizer', subject);
                         self._listMappedById[subject.id] = subject;
 
@@ -171,7 +171,7 @@ class SubjectService implements ISubjectService {
         }
         return deferred.promise;
     };
-    
+
     public duplicate = function(subject: ISubject, folder: IFolder = undefined): ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer();
