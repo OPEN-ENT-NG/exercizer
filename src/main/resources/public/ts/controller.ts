@@ -6,6 +6,9 @@ routes.define(function($routeProvider){
         .when('/subject/edit/:subjectId/', {
             action: 'editSubject'
         })
+        .when('/subject/copy/preview/perform/:subjectId/', {
+            action: 'previewPerformSubjectCopy'
+        })
         .when('/subject/copy/perform/:subjectCopyId/', {
             action: 'performSubjectCopy'
         })
@@ -38,6 +41,15 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         editSubject: function () {
             if (_userProfile === teacherProfile) {
                 template.open('main', 'edit-subject');
+            } else if (_userProfile === studentProfile) {
+                template.open('main', 'student-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        previewPerformSubjectCopy: function () {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'perform-subject-copy');
             } else if (_userProfile === studentProfile) {
                 template.open('main', 'student-dashboard');
             } else {

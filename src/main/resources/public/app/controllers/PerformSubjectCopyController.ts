@@ -1,8 +1,10 @@
 class PerformSubjectCopyController {
 
     static $inject = [
+        '$routeParams',
         '$scope',
         '$location',
+        'SubjectService',
         'SubjectScheduledService',
         'SubjectCopyService',
         'GrainService',
@@ -20,27 +22,44 @@ class PerformSubjectCopyController {
 
     constructor
     (
+        private _$routeParams,
         private _$scope:ng.IScope,
         private _$location:ng.ILocationService,
+        private _subjectService:ISubjectService,
         private _subjectScheduledService:ISubjectScheduledService,
         private _subjectCopyService:ISubjectCopyService,
         private _grainService:IGrainService,
         private _grainScheduledService:IGrainScheduledService,
         private _grainCopyService:IGrainCopyService,
         private _grainTypeService:IGrainTypeService
-    )
-    {
+    ) {
         this._$scope = _$scope;
         this._$location = _$location;
+        this._subjectService = _subjectService;
         this._subjectScheduledService = _subjectScheduledService;
         this._subjectCopyService =_subjectCopyService;
         this._grainScheduledService = _grainScheduledService;
         this._grainCopyService = _grainCopyService;
         this._grainTypeService = _grainTypeService;
         this._hasDataBeenLoaded = false;
+
+        var subjectId = _$routeParams['subjectId'];
+        
+        if (!angular.isUndefined(subjectId)) {
+            var subject = this._subjectService.getById(subjectId);
+            
+            if (!angular.isUndefined(subject)) {
+                this._preview(subject);
+            } else {
+                this._$location.path('/dashboard');
+            }
+        } else {
+            this._perform();
+        }
+        
     }
 
-    public preview(subject:ISubject) {
+    private _preview(subject:ISubject) {
         
         this._grainService.getListBySubject(subject).then(
             function(grainList) {
@@ -68,13 +87,14 @@ class PerformSubjectCopyController {
         
     }
     
-    public perform() {
+    private _perform() {
         // TODO
 
         this._previewing = false;
 
         var self = this;
         this._eventsHandler(self);
+        this._hasDataBeenLoaded = true;
     }
 
     private _eventsHandler = function(self) {
