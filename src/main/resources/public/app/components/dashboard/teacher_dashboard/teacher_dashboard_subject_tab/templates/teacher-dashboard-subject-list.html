@@ -38,6 +38,7 @@
         <div class="row">
             <div class="cell">
                 <button data-ng-click="addNewSubject()">Nouveau sujet</button>
+                <button ng-if="me.hasWorkflow('fr-openent-exercizer-controllers-SubjectController|createSubject')" data-ng-click="addNewSubject()">Nouveau sujet</button>
             </div>
             <div class="cell right-magnet">
                 <i data-ng-click="displayList = 'array'"
