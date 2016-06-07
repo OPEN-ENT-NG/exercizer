@@ -53,7 +53,6 @@ directives.push(
                                         scope.lowerRight = 'read';
                                     }
                                 });
-                                console.log(scope.lowerRight);
                             }
 
 
@@ -81,10 +80,11 @@ directives.push(
                                 {
                                     publicName : 'Partager',
                                     actionOnClick : function(){
-                                        notify.error('Not implemented yet');
+                                        var subject = SubjectService.getById(scope.subjectList[0]);
+                                        scope.$emit('E_SHARE_SUBJECT', subject);
                                     },
                                     display : function(){
-                                        return scope.lowerRight == 'owner';
+                                        return scope.subjectList.length == 1 && scope.folderList.length == 0 && scope.lowerRight == 'owner';
                                     }
                                 },
                                 {
