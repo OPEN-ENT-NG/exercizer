@@ -59,6 +59,7 @@ class PerformSubjectCopyController {
 
                 var self = this;
                 this._eventsHandler(self);
+                this._hasDataBeenLoaded = true;
             },
             function(err) {
                 notify.error(err);
@@ -77,12 +78,6 @@ class PerformSubjectCopyController {
     }
 
     private _eventsHandler = function(self) {
-
-        // received events
-        this._E_UPDATE_GRAIN_COPY += this._subjectCopy.id;
-        this._E_CURRENT_GRAIN_COPY_CHANGED += this._subjectCopy.id;
-        // broadcast events
-        this._E_CURRENT_GRAIN_COPY_CHANGE += this._subjectCopy.id;
 
         function _updateLocalGrainCopyList(grainCopy:IGrainCopy) {
             for (var i = 0; i < self._grainCopyList.length; ++i) {
@@ -105,7 +100,7 @@ class PerformSubjectCopyController {
             );
         }
 
-        self._$scope.$on("E_UPDATE_GRAIN_COPY", function(event, grainCopy:IGrainCopy) {
+        self._$scope.$on('E_UPDATE_GRAIN_COPY', function(event, grainCopy:IGrainCopy) {
             if (!self._previewing) {
                 _handleUpdateGrainCopy(grainCopy);
             } else {
@@ -113,16 +108,15 @@ class PerformSubjectCopyController {
             }
         });
 
-        self._$scope.$on("E_CURRENT_GRAIN_COPY_CHANGED", function(event, grainCopy:IGrainCopy) {
+        self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
             if (!self._subjectCopy.has_been_started) {
                 self._subjectCopy.has_been_started = true;
             }
-            self._$scope.$broadcast("E_CURRENT_GRAIN_COPY_CHANGE", grainCopy);
+            self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
         });
         
         // init
-        self._$scope.$broadcast("E_CURRENT_GRAIN_COPY_CHANGE", undefined);
-        self._hasDataBeenLoaded = true;
+        self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', undefined);
     };
 
     get subjectScheduled():ISubjectScheduled {
