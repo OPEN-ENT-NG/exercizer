@@ -74,13 +74,17 @@ class PerformSubjectCopyController {
         this._grainService.getListBySubject(subject).then(
             function(grainList) {
                 self._subjectScheduled = self._subjectScheduledService.createFromSubject(subject);
-                self._subjectCopy = self._subjectCopyService.createFromSubjectScheduled(self._subjectScheduled);
-                self._grainScheduledList = self._grainScheduledService.createGrainScheduledList(grainList);
-                self._grainCopyList = self._grainCopyService.createGrainCopyList(self._grainScheduledList);
-
                 self._subjectScheduled.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
+
+                self._subjectCopy = self._subjectCopyService.createFromSubjectScheduled(self._subjectScheduled);
                 self._subjectCopy.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
 
+                self._grainScheduledList = self._grainScheduledService.createGrainScheduledList(grainList);
+                angular.forEach(self._grainScheduledList, function(grainScheduled:IGrainScheduled) {
+                    grainScheduled.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
+                });
+                self._grainCopyList = self._grainCopyService.createGrainCopyList(self._grainScheduledList);
+                
                 angular.forEach(self._grainCopyList, function(grainCopy:IGrainCopy) {
                     grainCopy.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
                 });

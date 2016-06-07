@@ -1,6 +1,6 @@
 directives.push(
     {
-        name: 'simpleAnswerPerform',
+        name: 'performSimpleAnswer',
         injections: [() => {
             return {
                 restrict: 'E',

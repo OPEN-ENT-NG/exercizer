@@ -5,27 +5,28 @@
         <div class="info">Chargement des données...</div>
     </div>
 
-    <div data-ng-if="performSubjectCopyController.hasDataLoaded && performSubjectCopyController.grainCopyList.length > 0">
+    <div data-ng-show="performSubjectCopyController.hasDataLoaded && performSubjectCopyController.grainCopyList.length > 0">
 
-        <!-- HEADER -->
-        <div data-ng-if="previewing">
+        <!-- PREVIEW HEADER -->
+        <div data-ng-show="performSubjectCopyController.previewing">
             <subject-perform-copy-preview-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"></subject-perform-copy-preview-header>
         </div>
 
-        <div data-ng-if="!previewing">
+        <!-- HEADER -->
+        <div data-ng-hide="performSubjectCopyController.previewing">
             <!--<subject-perform-copy-header></subject-perform-copy-header>-->
         </div>
 
         <div class="row">
-            <!-- LEFT STICKY NAV -->
-            <section class="four cell vertical">
+            <!-- LEFT NAV -->
+            <section class="three cell vertical">
                 <subject-copy-left-nav data-subject-copy="performSubjectCopyController.subjectCopy"
                                        data-grain-copy-list="performSubjectCopyController.grainCopyList">
                 </subject-copy-left-nav>
             </section>
 
-            <!-- CURRENT GRAIN DISPLAYED -->
-            <section class="eight cell">
+            <section class="nine cell">
+                <!-- CURRENT GRAIN DISPLAYED -->
                 <subject-perform-copy-display-current-grain-copy data-subject-scheduled="performSubjectCopyController.subjectScheduled"
                                                                  data-subject-copy="performSubjectCopyController.subjectCopy"
                                                                  data-first-grain-copy="performSubjectCopyController.grainCopyList[0]">
@@ -39,7 +40,7 @@
     </div>
 
     <!-- NO DATA -->
-    <div class="row" data-ng-if="performSubjectCopyController.hasDataLoaded && performSubjectCopyController.grainCopyList.length === 0">
+    <div class="row" data-ng-show="performSubjectCopyController.hasDataLoaded && performSubjectCopyController.grainCopyList.length === 0">
         <div class="warning">La copie ne contient pas d'éléments.</div>
     </div>
 </div>
