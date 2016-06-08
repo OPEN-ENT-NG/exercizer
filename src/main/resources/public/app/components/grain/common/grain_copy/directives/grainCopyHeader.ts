@@ -16,6 +16,10 @@ directives.push(
                         return '/exercizer/public/assets/illustrations/' + grainIllustration + '.html';
                     };
                     
+                    scope.hasAnswerHint = function() {
+                        return !angular.isUndefined(scope.grainCopy.grain_copy_data.answer_hint);
+                    };
+                    
                     scope.toggleGrainCopyHint = function() {
                         scope.isAnswerHintFolded = !scope.isAnswerHintFolded;
                     }

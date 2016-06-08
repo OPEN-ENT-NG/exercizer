@@ -20,7 +20,8 @@
 
     <!-- grain copy toggle hint button -->
     <a class="comment right-magnet cell"
-       data-ng-click="toggleGrainCopyHint()">
+       data-ng-click="toggleGrainCopyHint()"
+       data-ng-if="hasAnswerHint()">
         Aide à la réponse&nbsp;&nbsp;
         <i data-ng-show="isAnswerHintFolded" data-tooltip="Déplier" class="down-open"></i>
         <i data-ng-hide="isAnswerHintFolded" data-tooltip="Plier" class="up-open"></i>
@@ -29,6 +30,6 @@
 </div>
 
 <!-- grain copy hint -->
-<div class="row" data-ng-hide="isAnswerHintFolded">
-    <p style="text-align: justify;">[[ grainCopy.grain_copy_data.answer_hint ]]</p>
+<div class="row" data-ng-hide="isAnswerHintFolded" data-ng-if="hasAnswerHint()">
+    <div style="text-align: justify;" class="reduce-block-six comment">[[ grainCopy.grain_copy_data.answer_hint ]]</div>
 </div>

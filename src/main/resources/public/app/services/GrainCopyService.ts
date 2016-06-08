@@ -127,20 +127,7 @@ class GrainCopyService implements IGrainCopyService {
         grainCopy.grain_copy_data.document_list = grainScheduled.grain_data.document_list;
         grainCopy.grain_copy_data.answer_hint = grainScheduled.grain_data.answer_hint;
         grainCopy.grain_copy_data.document_list = grainScheduled.grain_data.document_list;
-        grainCopy.grain_copy_data.custom_copy_data = this._createCustomCopyData(grainScheduled.grain_data.custom_data);
 
         return grainCopy;
-    };
-
-    private _createCustomCopyData = function(customData:any):any {
-        var customDataCopyData;
-
-        if (customData instanceof StatementCustomData) {
-            customDataCopyData = new StatementCustomCopyData(customData.statement);
-        } else if (customData instanceof SimpleAnswerCustomData) {
-            customDataCopyData = new SimpleAnswerCustomCopyData();
-        }
-
-        return customDataCopyData;
     };
 }

@@ -3,7 +3,7 @@ class StringISOHelper {
         if (typeof str !== 'undefined' && str) {
             str = str.trim();
 
-            if (/\S/.test(str)) {
+            if (!str.replace(/\s/g, '').length) {
                 str = undefined;
             }
         } else if (!str) {

@@ -12,10 +12,16 @@ directives.push(
                     link:(scope:any) => {
                         scope.updateGrain = function() {
                             scope.grain.grain_data.title = StringISOHelper.toISO(scope.grain.grain_data.title);
+
+                            if (angular.isUndefined(scope.grain.grain_data.max_score) || !scope.grain.grain_data.max_score) {
+                                scope.grain.grain_data.max_score = 0;
+                            }
+
                             scope.$emit('E_UPDATE_GRAIN', scope.grain);
                         };
                     }
                 };
             }]
+
     }
 );

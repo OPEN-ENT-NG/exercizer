@@ -1,7 +1,8 @@
 interface IGrainTypeService {
     getList():IGrainType[];
     getById(id:number):IGrainType;
-    instantiateCustomData(grainData:IGrainData, grainTypeId:number):any;
+    instantiateCustomData(grainObject:any, grainTypeId:number):any;
+    instantiateCustomCopyData(grainCopyObject:any, grainTypeId:number):any;
 }
 
 class GrainTypeService implements IGrainTypeService {
@@ -36,23 +37,53 @@ class GrainTypeService implements IGrainTypeService {
         var customData = {};
         
         switch (grainTypeId) {
+            case 3:
+                customData = SerializationHelper.toInstance(new StatementCustomData(), grainObject.grain_data.custom_data);
+                break;
             case 4:
-                customData =  SerializationHelper.toInstance(new SimpleAnswerCustomData(), grainObject.grain_data.custom_data);
+                customData = SerializationHelper.toInstance(new SimpleAnswerCustomData(), grainObject.grain_data.custom_data);
                 break;
             case 6:
-                customData =  SerializationHelper.toInstance(new MultipleAnswerCustomData(), grainObject.grain_data.custom_data);
+                customData = SerializationHelper.toInstance(new MultipleAnswerCustomData(), grainObject.grain_data.custom_data);
                 break;
             case 7:
-                customData =  SerializationHelper.toInstance(new QcmCustomData(), grainObject.grain_data.custom_data);
+                customData = SerializationHelper.toInstance(new QcmCustomData(), grainObject.grain_data.custom_data);
                 break;
             case 8:
-                customData =  SerializationHelper.toInstance(new AssociationCustomData(), grainObject.grain_data.custom_data);
+                customData = SerializationHelper.toInstance(new AssociationCustomData(), grainObject.grain_data.custom_data);
                 break;
             case 9:
-                customData =  SerializationHelper.toInstance(new OrderCustomData(), grainObject.grain_data.custom_data);
+                customData = SerializationHelper.toInstance(new OrderCustomData(), grainObject.grain_data.custom_data);
                 break;
         }
         
+        return customData;
+    };
+
+    public instantiateCustomCopyData = function(grainCopyObject:any, grainTypeId:number):any {
+        var customData = {};
+
+        switch (grainTypeId) {
+            case 3:
+                customData = SerializationHelper.toInstance(new StatementCustomCopyData(), grainCopyObject.grain_copy_data.custom_copy_data);
+                break;
+            case 4:
+                customData = SerializationHelper.toInstance(new SimpleAnswerCustomCopyData(), grainCopyObject.grain_copy_data.custom_copy_data);
+                break;
+            case 6:
+                customData = SerializationHelper.toInstance(new MultipleAnswerCustomCopyData(), grainCopyObject.grain_copy_data.custom_copy_data);
+                break;
+            case 7:
+                customData = SerializationHelper.toInstance(new QcmCustomCopyData(), grainCopyObject.grain_copy_data.custom_copy_data);
+                break;
+            case 8:
+                customData = SerializationHelper.toInstance(new AssociationCustomCopyData(), grainCopyObject.grain_copy_data.custom_copy_data);
+                break;
+            case 9:
+                customData = SerializationHelper.toInstance(new OrderCustomCopyData(), grainCopyObject.grain_copy_data.custom_copy_data);
+                break;
+        }
+
         return customData;
     };
 
