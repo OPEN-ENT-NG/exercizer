@@ -121,6 +121,7 @@ class TeacherDashboardSubjectTabController {
                 );
             });
             self._resetSelectedFolderList();
+            self._$scope.$broadcast('E_RESET_SELECT_ALL');
         });
 
         self._$scope.$on('E_CONFIRM_COPY_PASTE', function (event, folderParent) {
@@ -150,6 +151,8 @@ class TeacherDashboardSubjectTabController {
                 );
             });
             self._resetSelectedFolderList();
+            self._$scope.$broadcast('E_RESET_SELECT_ALL');
+
         });
     };
 
