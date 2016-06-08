@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="row">
+    <button class="cell right-magnet" data-ng-click="navigateToNext()" data-ng-if="hasNext()">
+       Suivant
+    </button>
 
-</body>
-</html>
+    <button class="cell right-magnet flat-button" data-ng-click="navigateToPrevious()" data-ng-if="hasPrevious()">
+        Précédent
+    </button>
+</div>

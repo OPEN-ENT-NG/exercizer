@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" data-ng-if="grainType.id > 3">
 
     <!-- grain copy score and title -->
     <h2 class="cell vertical-spacing">[[ grainCopy.grain_copy_data.title ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grainCopy.grain_copy_data.max_score ]]</h2>
@@ -31,5 +31,5 @@
 
 <!-- grain copy hint -->
 <div class="row" data-ng-hide="isAnswerHintFolded" data-ng-if="hasAnswerHint()">
-    <div style="text-align: justify;" class="reduce-block-six comment">[[ grainCopy.grain_copy_data.answer_hint ]]</div>
+    <p style="text-align: justify"><em class="low-importance">[[ grainCopy.grain_copy_data.answer_hint ]]</em></p>
 </div>
