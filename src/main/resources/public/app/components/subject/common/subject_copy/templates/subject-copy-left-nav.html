@@ -8,7 +8,7 @@
         <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false">
             <a data-ng-class="{ selected: currentGrainCopy.id === grainCopy.id }"
                data-ng-click="navigateTo(grainCopy)">
-                [[ grainCopy.grain_copy_data.title ]]
+                [[ getGrainCopyName(grainCopy) ]]
             </a>
         </li>
     </ul>
