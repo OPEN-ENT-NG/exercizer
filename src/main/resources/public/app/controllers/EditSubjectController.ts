@@ -245,6 +245,7 @@ class EditSubjectController {
         });
 
         self._$scope.$on('E_PREVIEW_PERFORM_SUBJECT_COPY', function () {
+            _handleGrainListUpdated();
             self._$scope.$broadcast('E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY');
 
         });

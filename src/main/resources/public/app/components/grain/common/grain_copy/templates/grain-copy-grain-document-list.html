@@ -1,0 +1,18 @@
+<div class="row" data-ng-show="grainCopy.grain_copy_data.document_list.length > 0">
+    <table class="twelve">
+        <thead>
+        <tr>
+            <th>
+                Documents
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="grainDocument in grainCopy.grain_copy_data.document_list">
+            <td>
+                <a href="[[ grainDocument.path ]]" target="_blank">[[ grainDocument.name ]]</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
