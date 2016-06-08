@@ -97,12 +97,28 @@ class TeacherDashboardSubjectTabController {
         self._$scope.$on('E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT', function () {
             // delete subject list
             angular.forEach(self._selectedSubjectList, function (id) {
-                self._subjectService.remove(self._subjectService.getById(id));
+                self._subjectService.remove(self._subjectService.getById(id)).then(
+                    function(data){
+                    },
+                    function(err){
+                        console.error('fail', err);
+                        notify.error(err);
+
+                    }
+                );
             });
             self._resetSelectedSubjectList();
             // delete folder list
-            angular.forEach(self._selectedFolderList, function (id, key) {
-                self._folderService.remove(self._folderService.folderById(id));
+            angular.forEach(self._selectedFolderList, function (id) {
+                self._folderService.remove(self._folderService.folderById(id)).then(
+                    function(data){
+                    },
+                    function(err){
+                        console.error('fail', err);
+                        notify.error(err);
+
+                    }
+                );
             });
             self._resetSelectedFolderList();
         });
@@ -110,12 +126,28 @@ class TeacherDashboardSubjectTabController {
         self._$scope.$on('E_CONFIRM_COPY_PASTE', function (event, folderParent) {
             // copy subject list
             angular.forEach(self._selectedSubjectList, function (id) {
-                self._subjectService.duplicate(self._subjectService.getById(id), folderParent);
+                self._subjectService.duplicate(self._subjectService.getById(id), folderParent).then(
+                    function(data){
+                    },
+                    function(err){
+                        console.error('fail', err);
+                        notify.error(err);
+
+                    }
+                );
             });
             self._resetSelectedSubjectList();
             // copy folder list
             angular.forEach(self._selectedFolderList, function (id) {
-                self._folderService.duplicate(self._folderService.folderById(id), folderParent, true);
+                self._folderService.duplicate(self._folderService.folderById(id), folderParent, true).then(
+                    function(data){
+                    },
+                    function(err){
+                        console.error('fail', err);
+                        notify.error(err);
+
+                    }
+                );
             });
             self._resetSelectedFolderList();
         });

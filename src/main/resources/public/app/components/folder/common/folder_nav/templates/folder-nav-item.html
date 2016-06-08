@@ -5,8 +5,8 @@
         dragcondition="dragCondition(item)"
         dragdrop="dropTo(item, $originalEvent)"
         dropcondition="dropCondition(item)"
-        data-ng-click="clickOnFolder(item)"
-        data-ng-class="isCurrentFolder(item)">
-        [[ item.label ]]
+        data-ng-class="{selected: item.id == currentFolderId, opened: display.children == true}">
+        <i  data-ng-click="display.children = !display.children" class="arrow" data-ng-if="countChildren !== 0"></i>
+        <span data-ng-click="clickOnFolder(item)" >[[ item.label]]</span>
     </a>
 </li>

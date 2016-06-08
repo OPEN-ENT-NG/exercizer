@@ -98,6 +98,14 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
             };
         });
 
+        module.filter('filterIf', function() {
+            return function(i,b) {
+                if(b){
+                    return i;
+                }
+            };
+        });
+
         /**
          * Constants
          */

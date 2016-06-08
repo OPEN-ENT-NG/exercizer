@@ -106,7 +106,7 @@ class SubjectService implements ISubjectService {
 
         this._$http(request).then(
             function(response) {
-                var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                //var newSubject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
                 self._afterPullBack(subject);
                 deferred.resolve(subject);
             },
@@ -184,7 +184,11 @@ class SubjectService implements ISubjectService {
         var duplicatedSubject = CloneObjectHelper.clone(subject, true);
         //clean subject
         duplicatedSubject.id = undefined;
-        duplicatedSubject.folder_id = angular.isUndefined(folder) ? null : folder.id;
+        if(folder){
+            duplicatedSubject.folder_id = folder.id;
+        } else{
+            duplicatedSubject.folder_id = null;
+        }
         duplicatedSubject.title += '_copie';
         this._beforePushBack(duplicatedSubject);
         // persist subject
@@ -194,7 +198,7 @@ class SubjectService implements ISubjectService {
                 self._grainService.getListBySubject(subject).then(
                     function(grainList: IGrain[]) {
                         var grainListCopy = angular.copy(grainList);
-                        self._grainService.duplicateList(grainListCopy, duplicatedSubject).then(
+                        self._grainService.duplicateList(grainListCopy, duplicatedSubject, false).then(
                             function() {
                                 deferred.resolve(duplicatedSubject);
                             },
@@ -289,7 +293,11 @@ class SubjectService implements ISubjectService {
 
     private _beforePushBack(subject){
         delete subject.myRights;
-        subject.owner = subject.owner.userId;
+        if(subject.owner && subject.owner.userId){
+            subject.owner = subject.owner.userId;
+        } else{
+            console.error('subject should have owner.userId')
+        }
     }
 
     private _afterPullBack(subject){
