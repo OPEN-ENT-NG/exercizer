@@ -222,39 +222,36 @@ class FolderService implements IFolderService {
         // verification
         if(parentFolder && folder.id === parentFolder.id){
             var msg = "Vous ne pouvez pas dupliquer le dossier dans lui-même.";
-            console.error(msg);
-            deferred.reject(msg)
-        }
-        if(self.isAParentOf(folder, parentFolder)){
+            deferred.reject(msg);
+        } else if (self.isAParentOf(folder, parentFolder)){
             var msg = "Vous ne pouvez pas dupliquer le dossier dans lui-même.";
-            console.error(msg);
-            deferred.reject(msg)
+            deferred.reject(msg);
+        } else{
+            // persist it
+            this.persist(newFolder).then(
+                function(duplicatedFolder: IFolder) {
+                    // if origin folder has children
+                    var childrenFolder = self.getListOfSubFolderByFolderId(folder.id);
+                    var childrenSubject = self._subjectService.getListByFolderId(folder.id);
+                    if(childrenFolder){
+                        self.duplicateList(childrenFolder, duplicatedFolder)
+                    }
+                    if(childrenSubject){
+                        self._subjectService.duplicateList(childrenSubject,duplicatedFolder);
+                    }
+                    // set parent folder id
+                    if(parentFolder){
+                        self.setParentFolderId(duplicatedFolder.id, parentFolder.id);
+                    } else {
+                        self.setParentFolderId(duplicatedFolder.id, null);
+                    }
+                    deferred.resolve(duplicatedFolder);
+                },
+                function() {
+                    deferred.reject('Une erreur est survenue lors de la duplication du dossier.')
+                }
+            );
         }
-        // persist it
-        this.persist(newFolder).then(
-            function(duplicatedFolder: IFolder) {
-                // if origin folder has children
-                var childrenFolder = self.getListOfSubFolderByFolderId(folder.id);
-                var childrenSubject = self._subjectService.getListByFolderId(folder.id);
-                if(childrenFolder){
-                    self.duplicateList(childrenFolder, duplicatedFolder)
-                }
-                if(childrenSubject){
-                    self._subjectService.duplicateList(childrenSubject,duplicatedFolder);
-                }
-                // set parent folder id
-                if(parentFolder){
-                    self.setParentFolderId(duplicatedFolder.id, parentFolder.id);
-                } else {
-                    self.setParentFolderId(duplicatedFolder.id, null);
-                }
-                deferred.resolve(duplicatedFolder);
-            },
-            function() {
-                deferred.reject('Une erreur est survenue lors de la duplication du dossier.')
-            }
-
-        );
         return deferred.promise;
     }
 
@@ -299,10 +296,12 @@ class FolderService implements IFolderService {
             // check if there are no loop in folder
             if (this.isAParentOf(originFolder, targetFolder)) {
                 console.error("Loop folder not allowed");
+                notify.error("Deplacement non autorisé");
             } else {
                 // check if the folder is not drop in itself
                 if (originFolderId == targetFolderId) {
                     console.error("A folder can't be placed in itself");
+                    notify.error("Deplacement non autorisé");
                 } else {
                     // before change parent folder id
                     // delete folder from old _folderListByParentFolderId

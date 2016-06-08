@@ -16,6 +16,9 @@ directives.push(
                 link: (scope:any, element, attrs) => {
 
                     scope.folderList = FolderService.folderList;
+                    scope.display = {
+                        children : false
+                    };
 
                     scope.setCurrentFolder = scope.setCurrentFolderFn();
 
@@ -28,16 +31,16 @@ directives.push(
                             directiveDOM[0].remove();
                         }
                         // is folder list empty ?
-                        var count = 0;
+                        scope.countChildren = 0;
                         angular.forEach(scope.subFolderList, function (value, key) {
-                            count++
+                            scope.countChildren++
                         });
-                        if (count != 0) {
+                        if (scope.countChildren != 0) {
                             // if not empty
                             if(scope.isItemDisplayed()){
                                 // if displayed item
                                 element.children()
-                                    .after($compile("<folder-nav-container class=append is-root='false' parent-id = 'item.id' folder-list='subFolderList' set-current-folder-fn='setCurrentFolder' current-folder-id = 'currentFolderId'></folder-nav-container>")(scope))
+                                    .after($compile("<folder-nav-container class=append is-root='false' parent-id = 'item.id' folder-list='subFolderList' set-current-folder-fn='setCurrentFolder' current-folder-id = 'currentFolderId' display='display'></folder-nav-container>")(scope))
                             }
                         }
                     }, true);

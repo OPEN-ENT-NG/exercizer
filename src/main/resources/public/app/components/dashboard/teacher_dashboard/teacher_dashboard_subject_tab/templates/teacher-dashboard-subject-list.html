@@ -13,12 +13,12 @@
         <nav class="vertical dragging-zone-folder">
             <ul>
                 <li>
-                    <a  class="selected"
-                        data-ng-click="goToRoot()"
+                    <a  data-ng-class="{selected: currentFolderId == null, opened: displayMySubject == true}"
                         dragdrop="dropToRoot($originalEvent)">
-                        Mes sujets
+                        <i data-ng-click="displayMySubject = !displayMySubject" class="arrow"></i>
+                        <span data-ng-click="goToRoot()" >Mes sujets</span>
                     </a>
-                    <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false" >
+                    <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false | filterIf:displayMySubject" >
                         <folder-nav-item item="item"
                                          is-root="true"
                                          parent-id="parentId"

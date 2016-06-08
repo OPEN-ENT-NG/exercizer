@@ -10,7 +10,8 @@ directives.push(
                     isRoot: "=",
                     parentId :"=",
                     setCurrentFolderFn : "&",
-                    currentFolderId : "="
+                    currentFolderId : "=",
+                    display : "="
                 },
                 templateUrl: 'exercizer/public/app/components/folder/common/folder_nav/templates/folder-nav-container.html',
                 link: (scope:any, element, attrs) => {
