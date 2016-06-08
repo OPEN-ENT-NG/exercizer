@@ -45,6 +45,7 @@ directives.push(
                     element.find('editor').on('editor-blur', function(){
                         if(isEditorFocus){
                             isEditorFocus = false;
+                            scope.grain.grain_data.custom_data.statement = StringISOHelper.toISO(scope.grain.grain_data.custom_data.statement);
                             scope.$emit('E_UPDATE_GRAIN', scope.grain);
                         }
                     });
