@@ -198,7 +198,7 @@ class SubjectService implements ISubjectService {
                 self._grainService.getListBySubject(subject).then(
                     function(grainList: IGrain[]) {
                         var grainListCopy = angular.copy(grainList);
-                        self._grainService.duplicateList(grainListCopy, duplicatedSubject).then(
+                        self._grainService.duplicateList(grainListCopy, duplicatedSubject, false).then(
                             function() {
                                 deferred.resolve(duplicatedSubject);
                             },

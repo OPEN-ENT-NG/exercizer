@@ -147,22 +147,22 @@ class GrainService implements IGrainService {
         return deferred.promise;
     };
 
-    public duplicate = function (grain:IGrain, subject:ISubject):ng.IPromise<IGrain> {
+    public duplicate = function (grain:IGrain, subject:ISubject, rename : boolean = true):ng.IPromise<IGrain> {
         var duplicatedGrain = CloneObjectHelper.clone(grain, true);
         duplicatedGrain.id = undefined;
         duplicatedGrain.subject_id = subject.id;
-        if (duplicatedGrain.grain_type_id > 3) {
+        if (duplicatedGrain.grain_type_id > 3 && rename) {
             duplicatedGrain.grain_data.title += '_copie';
         }
         return this.persist(duplicatedGrain);
     };
 
-    public duplicateList = function(grainList:IGrain[],subject:ISubject):ng.IPromise<boolean>{
+    public duplicateList = function(grainList:IGrain[],subject:ISubject, rename : boolean = true):ng.IPromise<boolean>{
         var self = this,
             deferred = this._$q.defer(),
             promises = [];
         angular.forEach(grainList, function(grain) {
-            promises.push(self.duplicate(grain, subject));
+            promises.push(self.duplicate(grain, subject, rename));
         });
         this._$q.all(promises).then(
             function(data) {
