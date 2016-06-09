@@ -6,8 +6,23 @@
         <div data-ng-switch-when="4">
             <perform-simple-answer data-grain-copy="currentGrainCopy"></perform-simple-answer>
         </div>
+        <div data-ng-switch-when="5">
+            <perform-open-answer data-grain="currentGrainCopy"></perform-open-answer>
+        </div>
+        <div data-ng-switch-when="6">
+            <perform-multiple-answer data-grain="currentGrainCopy"></perform-multiple-answer>
+        </div>
+        <div data-ng-switch-when="7">
+            <perform-qcm data-grain="currentGrainCopy"></perform-qcm>
+        </div>
+        <div data-ng-switch-when="8">
+            <perform-association data-grain="currentGrainCopy"></perform-association>
+        </div>
+        <div data-ng-switch-when="9">
+            <perform-order data-grain="currentGrainCopy"></perform-order>
+        </div>
         <div data-ng-switch-default>
-            <summary data-subject-scheduled="subjectScheduled"></summary>
+            <perform-summary data-subject-scheduled="subjectScheduled"></perform-summary>
         </div>
     </div>
 

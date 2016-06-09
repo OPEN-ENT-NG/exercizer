@@ -1,32 +1,21 @@
-<div class="row">
-
-    <!-- grain type icon -->
-    <div class="two cell">
-        <div data-ng-switch="grainType.id">
-            <div data-ng-switch-when="3">
-                <i data-ng-class="grainType.illustration" data-tooltip="[[ grainType.public_name ]]"></i>
-            </div>
-            <div data-ng-switch-default style="width:15px; height:15px;" data-tooltip="[[ grainType.public_name ]]">
-                <div data-ng-include="getGrainIllustrationURL(grainType.illustration)"></div>
-            </div>
-        </div>
-    </div>
-</div>
+<h2 class="row" data-ng-if="grainType.id === 3">
+    [[ grainType.public_name ]]
+</h2>
 
 <div class="row" data-ng-if="grainType.id > 3">
-
-    <!-- grain copy score and title -->
-    <h2 class="cell vertical-spacing">[[ grainCopy.grain_copy_data.title ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grainCopy.grain_copy_data.max_score ]]</h2>
+    <h2 class="cell">
+        <i class="help"></i><span class="vertical-spacing">&nbsp;&nbsp;[[ grainCopy.grain_copy_data.title ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grainCopy.grain_copy_data.max_score ]]</span>
+    </h2>
 
     <!-- grain copy toggle hint button -->
     <a class="comment right-magnet cell"
+       style="margin: 0;"
        data-ng-click="toggleGrainCopyHint()"
        data-ng-if="hasAnswerHint()">
         Aide à la réponse&nbsp;&nbsp;
         <i data-ng-show="isAnswerHintFolded" data-tooltip="Déplier" class="down-open"></i>
         <i data-ng-hide="isAnswerHintFolded" data-tooltip="Plier" class="up-open"></i>
     </a>
-
 </div>
 
 <!-- grain copy hint -->

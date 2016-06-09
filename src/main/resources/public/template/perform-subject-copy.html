@@ -9,27 +9,30 @@
 
         <!-- PREVIEW HEADER -->
         <div data-ng-if="performSubjectCopyController.previewing">
-            <subject-perform-copy-preview-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"></subject-perform-copy-preview-header>
+            <subject-perform-copy-preview-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"
+                                                 data-subject-copy="performSubjectCopyController.subjectCopy"
+                                                 data-grain-scheduled-list="performSubjectCopyController.grainScheduledList"
+                                                 data-grain-copy-list="performSubjectCopyController.grainCopyList">
+            </subject-perform-copy-preview-header>
         </div>
 
         <!-- HEADER -->
         <div data-ng-if="!performSubjectCopyController.previewing">
+            <!-- TODO -->
             <!--<subject-perform-copy-header></subject-perform-copy-header>-->
         </div>
 
         <div class="row">
             <!-- LEFT NAV -->
             <section class="three cell vertical">
-                <subject-copy-left-nav data-subject-copy="performSubjectCopyController.subjectCopy"
+                <subject-copy-left-nav data-anchor-behaviour="false"
                                        data-grain-copy-list="performSubjectCopyController.grainCopyList">
                 </subject-copy-left-nav>
             </section>
 
             <section class="nine cell">
-                <!-- CURRENT GRAIN DISPLAYED -->
-                <subject-perform-copy-display-current-grain-copy data-subject-scheduled="performSubjectCopyController.subjectScheduled"
-                                                                 data-subject-copy="performSubjectCopyController.subjectCopy">
-                </subject-perform-copy-display-current-grain-copy>
+                <!-- CURRENT GRAIN COPY DISPLAYED -->
+                <subject-perform-copy-display-current-grain-copy></subject-perform-copy-display-current-grain-copy>
             </section>
         </div>
 
@@ -40,7 +43,11 @@
 
     <!-- NO DATA -->
     <div class="row" data-ng-if="performSubjectCopyController.hasDataLoaded && performSubjectCopyController.grainCopyList.length === 0">
-        <subject-perform-copy-preview-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"></subject-perform-copy-preview-header>
+        <subject-perform-copy-preview-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"
+                                             data-subject-copy="performSubjectCopyController.subjectCopy"
+                                             data-grain-scheduled-list="performSubjectCopyController.grainScheduledList"
+                                             data-grain-copy-list="performSubjectCopyController.grainCopyList">
+        </subject-perform-copy-preview-header>
         <div class="warning">La copie ne contient pas d'éléments.</div>
     </div>
 </div>

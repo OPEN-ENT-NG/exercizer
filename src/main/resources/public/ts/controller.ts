@@ -12,6 +12,12 @@ routes.define(function($routeProvider){
         .when('/subject/copy/perform/:subjectCopyId/', {
             action: 'performSubjectCopy'
         })
+        .when('/subject/copy/view/preview/:subjectId/', {
+            action: 'previewViewSubjectCopy'
+        })
+        .when('/subject/copy/view/:subjectId/:subjectCopyId/', {
+            action: 'viewSubjectCopyAsTeacher'
+        })
         .when('/subject/copy/view/:subjectCopyId/', {
             action: 'viewSubjectCopy'
         })
@@ -65,9 +71,29 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
                 template.open('main', '401-exercizer');
             }
         },
+        previewViewSubjectCopy: function () {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'view-subject-copy');
+            } else if (_userProfile === studentProfile) {
+                template.open('main', 'student-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        viewSubjectCopyAsTeacher: function () {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'view-subject-copy');
+            } else if (_userProfile === studentProfile) {
+                template.open('main', 'student-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
         viewSubjectCopy: function () {
-            if (_userProfile === teacherProfile || _userProfile === studentProfile) {
-                template.open('main', 'view-subject');
+            if (_userProfile === studentProfile) {
+                template.open('main', 'perform-subject-copy');
+            } else if (_userProfile === teacherProfile) {
+                template.open('main', 'teacher-dashboard');
             } else {
                 template.open('main', '401-exercizer');
             }
@@ -81,7 +107,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
     init: function(module){
 
         /**
-         * Filter
+         * Filters
          */
 
         module.filter('orderObjectBy', function() {
@@ -109,7 +135,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Constants
          */
-        // FIXME
+        // TODO remove
         module.constant("serverUrl", "http://foo.com");
 
         /**
@@ -138,6 +164,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.controller('TeacherDashboardSubjectTabController', TeacherDashboardSubjectTabController);
         module.controller('EditSubjectController', EditSubjectController);
         module.controller('PerformSubjectCopyController', PerformSubjectCopyController);
+        module.controller('ViewSubjectCopyController', ViewSubjectCopyController);
 
         /**
          * Directives

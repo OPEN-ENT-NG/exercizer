@@ -5,7 +5,6 @@ interface ISubjectCopyService {
     createFromSubjectScheduled(subjectScheduled:ISubjectScheduled):ISubjectCopy;
     getList():ISubjectCopy[];
     getById(id:number):ng.IPromise<ISubjectCopy>;
-    currentSubjectCopyId:number;
 }
 
 class SubjectCopyService implements ISubjectCopyService {
@@ -18,7 +17,7 @@ class SubjectCopyService implements ISubjectCopyService {
     ];
 
     private _listMappedById:{[id:number]:ISubjectCopy;};
-    private _currentSubjectCopyId:number;
+    private _tmpPreviewData:{subjectScheduled:ISubjectScheduled, subjectCopy:ISubjectCopy, grainScheduledList:IGrainScheduled[], grainCopyList:IGrainCopy[]};
 
     constructor
     (
@@ -97,12 +96,12 @@ class SubjectCopyService implements ISubjectCopyService {
 
         return deferred.promise;
     };
-
-    get currentSubjectCopyId():number {
-        return this._currentSubjectCopyId;
+    
+    get tmpPreviewData():{subjectScheduled:ISubjectScheduled; subjectCopy:ISubjectCopy; grainScheduledList:IGrainScheduled[]; grainCopyList:IGrainCopy[]} {
+        return this._tmpPreviewData;
     }
 
-    set currentSubjectCopyId(value:number) {
-        this._currentSubjectCopyId = value;
+    set tmpPreviewData(value:{subjectScheduled:ISubjectScheduled; subjectCopy:ISubjectCopy; grainScheduledList:IGrainScheduled[]; grainCopyList:IGrainCopy[]}) {
+        this._tmpPreviewData = value;
     }
 }
