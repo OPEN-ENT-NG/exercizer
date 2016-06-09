@@ -3,17 +3,17 @@ package fr.openent.exercizer.controllers;
 import fr.openent.exercizer.services.IGrainService;
 import fr.openent.exercizer.services.impl.GrainServiceSqlImpl;
 import fr.wseduc.rs.*;
+import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
+import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.http.filter.sql.ShareAndOwner;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
@@ -26,8 +26,10 @@ public class GrainController extends ControllerHelper {
         this.grainService = new GrainServiceSqlImpl();
     }
 
-    @Post("/grain")
+    @Post("/grain/:id")
     @ApiDoc("Persists a grain.")
+    @ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -48,8 +50,10 @@ public class GrainController extends ControllerHelper {
         });
     }
 
-    @Put("/grain")
+    @Put("/grain/:id")
     @ApiDoc("Updates a grain.")
+    @ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
     public void update(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -70,8 +74,10 @@ public class GrainController extends ControllerHelper {
         });
     }
 
-    @Delete("/grain")
+    @Delete("/grain/:id")
     @ApiDoc("Deletes a grain.")
+    @ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
     public void remove(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -92,9 +98,10 @@ public class GrainController extends ControllerHelper {
         });
     }
 
-    @Post("/grains")
+    @Post("/grains/:id")
     @ApiDoc("Gets grain list.")
-    //@SecuredAction("exercizer.grain.list")
+    @ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.read", type = ActionType.RESOURCE)
     public void list(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override

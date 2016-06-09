@@ -4,6 +4,8 @@ import fr.openent.exercizer.services.IGrainTypeService;
 import fr.openent.exercizer.services.impl.GrainTypeServiceSqlImpl;
 import fr.wseduc.rs.ApiDoc;
 import fr.wseduc.rs.Get;
+import fr.wseduc.security.SecuredAction;
+
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
@@ -22,7 +24,7 @@ public class GrainTypeController extends ControllerHelper {
 
     @Get("/grain-types")
     @ApiDoc("Gets grain type list.")
-    //@SecuredAction("exercizer.grain.type.list")
+    @SecuredAction("exercizer.grain.type.list")
     public void list(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
