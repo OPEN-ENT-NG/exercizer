@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'subjectSchedule',
-        injections: ['FolderService', 'SubjectService', (FolderService, SubjectService) => {
+        injections: ['GroupService', 'SubjectService', (GroupService, SubjectService) => {
             return {
                 restrict: 'E',
                 scope: {},
@@ -21,8 +21,8 @@ directives.push(
                     function reset(){
                         scope.state = 'assignSubject';
                         scope.data = {};
-                        scope.data.lists = getGroupList();
                         scope.data.groupList = [];
+                        scope.data.userList = [];
                         scope.option = {};
                     }
 
@@ -31,23 +31,25 @@ directives.push(
                      */
 
                     scope.clickOnItem = function(selectedItem){
-                        addInList(scope.data.groupList, selectedItem);
+                        if(selectedItem.groupOrUser == 'group'){
+                            addInList(scope.data.groupList, selectedItem);
+                        } else{
+                            addInList(scope.data.userList, selectedItem);
+                        }
+                    };
+
+                    scope.removeItem = function(selectedItem){
+                        if(selectedItem.groupOrUser == 'group'){
+                            removeInList(scope.data.groupList, selectedItem);
+                        } else{
+                            removeInList(scope.data.userList, selectedItem);
+                        }
                     };
 
                     scope.scheduleSubject = function(){
                         console.log('TODO programmer !');
                     };
 
-                    scope.removeGroup= function(group){
-                        var index = scope.data.groupList.indexOf(group);
-                        if(index !== -1){
-                            scope.data.groupList.splice(index, 1);
-                        }
-                    };
-
-                    scope.removeUser= function(user){
-                        console.log('TODO remove user', user);
-                    };
 
                     /**
                      * MODAL
@@ -58,6 +60,8 @@ directives.push(
                         scope.subject = subject;
                         scope.isDisplayed = true;
                         reset();
+                        scope.data.lists = createLists(subject);
+
                     });
 
                     scope.hide = function () {
@@ -79,25 +83,36 @@ directives.push(
                             console.error('item already in the list');
                         }
                     }
+                    function removeInList(list, item){
+                        var index = list.indexOf(item);
+                        if(index !== -1){
+                            list.splice(index, 1);
+                        }
+                    }
 
-                    function getGroupList(){
+                    function createLists(subject){
                         var array = [];
-                        angular.forEach(model.me.classNames, function(value){
-                            var res = value.split("$");
-                            if(res.length === 2){
-                                var obj = createObjectGroup(res);
-                                array.push(obj);
-                            } else{
-                                console.error("impossible to find class name");
+                        GroupService.getList(subject).then(
+                            function(data){
+                                console.log(data);
+                                angular.forEach(data.groups.visibles, function(group){
+                                        var obj = createObjectList(group.name, group.id, 'group');
+                                        array.push(obj);
+                                });
+                                angular.forEach(data.users.visibles, function(group){
+                                    var obj = createObjectList(group.username, group.id, 'user');
+                                    array.push(obj);
+                                })
                             }
-                        });
+                        );
                         return array;
                     }
 
-                    function createObjectGroup(res){
+                    function createObjectList(name, id, groupOrUser){
                         return {
-                            title : res[1],
-                            _id : res[0],
+                            title : name,
+                            _id : id,
+                            groupOrUser : groupOrUser,
                             toString : function() {
                                 return this.title;
                             }

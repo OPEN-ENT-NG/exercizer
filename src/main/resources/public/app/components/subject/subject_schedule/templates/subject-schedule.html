@@ -41,15 +41,21 @@
                 <div class="row vertical-spacing">
                     <div class="six cell">
                         <h3>Groupes ajoutés</h3>
-                        <div class="row" data-ng-repeat="group in data.groupList">
+                        <div class="row vertical-spacing" data-ng-repeat="group in data.groupList">
                             <div class="one cell">&nbsp;</div>
-                            <div class="one cell" data-ng-click="removeGroup(group)"><i class="trash"></i></div>
+                            <div class="one cell" data-ng-click="removeItem(group)"><i class="close"></i></div>
                             <div class="one cell">&nbsp;</div>
                             <div class="nine cell">[[group.toString()]]</div>
                         </div>
                     </div>
                     <div class="six cell">
-                        <h3>Utilisateur ajouté</h3>
+                        <h3>Utilisateurs ajoutés</h3>
+                        <div class="row vertical-spacing" data-ng-repeat="user in data.userList">
+                            <div class="one cell">&nbsp;</div>
+                            <div class="one cell" data-ng-click="removeItem(user)"><i class="close"></i></div>
+                            <div class="one cell">&nbsp;</div>
+                            <div class="nine cell">[[user.toString()]]</div>
+                        </div>
                     </div>
                 </div>
                 <div class="row vertical-spacing">
