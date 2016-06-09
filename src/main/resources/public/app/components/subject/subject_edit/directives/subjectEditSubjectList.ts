@@ -70,6 +70,18 @@ directives.push(
                             return array;
                         }
 
+                        /**
+                         * DRAG
+                         */
+
+                        scope.drag = function (item, $originalEvent) {
+                            try {
+                                $originalEvent.dataTransfer.setData('application/json', JSON.stringify(item));
+                            } catch (e) {
+                                $originalEvent.dataTransfer.setData('Text', JSON.stringify(item));
+                            }
+                        };
+
 
                     }
                 };
