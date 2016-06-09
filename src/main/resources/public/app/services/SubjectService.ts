@@ -183,14 +183,15 @@ class SubjectService implements ISubjectService {
         var duplicatedSubject = CloneObjectHelper.clone(subject, true);
         //clean subject
         duplicatedSubject.id = undefined;
+        duplicatedSubject.owner = undefined;
         if(folder){
             duplicatedSubject.folder_id = folder.id;
         } else{
             duplicatedSubject.folder_id = null;
         }
         duplicatedSubject.title += '_copie';
-        this._beforePushBack(duplicatedSubject);
         // persist subject
+        this._beforePushBack(duplicatedSubject);
         this.persist(duplicatedSubject).then(
             // after persist subject, duplicate grain
             function(duplicatedSubject: ISubject) {

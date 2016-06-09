@@ -78,7 +78,7 @@ directives.push(
                         };
 
                         scope.folderList = function () {
-                            return FolderService.folderList;
+                            return FolderService.getList();
                         };
 
                         scope.canManageFolder = function (fodler) {
@@ -93,12 +93,6 @@ directives.push(
                             return subject.picture || defaultPicture;
                         };
 
-                        scope.getSubjectModificationDate = function (subject) {
-                            if (subject) {
-                                return subject.modified ? 'Modifié le ' + subject.modified : ''
-                            }
-                        };
-
                         /**
                          * EVENT
                          */
@@ -109,6 +103,7 @@ directives.push(
                         };
 
                         scope.setCurrentFolder = function (folder) {
+                            scope.display.tab = 'mySubject';
                             scope.currentFolderId = folder.id;
                         };
 
@@ -161,17 +156,54 @@ directives.push(
                          * FILTER
                          */
 
-                        scope.filterFolderByParentFolder = function (folder) {
-                            if (scope.currentFolderId) {
-                                return folder.parent_folder_id == scope.currentFolderId
-                            }
-                            return folder.parent_folder_id == null;
+                        scope.filterFolderByParentFolderId = function () {
+                            return function (folder) {
+                                if(scope.currentFolderId){
+                                    return folder.parent_folder_id == scope.currentFolderId
+                                } else{
+                                    return folder.parent_folder_id == null;
+                                }
+                            };
                         };
-                        scope.filterSubjectByParentFolder = function (subject) {
-                            if (scope.currentFolderId) {
-                                return subject.folder_id == scope.currentFolderId
-                            }
-                            return subject.folder_id == null;
+
+                        scope.filterFolderTab = function (currentTab) {
+                            return function (folder) {
+                                if(currentTab  === 'mySubject'){
+                                    return true
+                                } else{
+                                    return false;
+                                }
+
+                            };
+                        };
+
+                        scope.filterSubjectTab = function (currentTab) {
+                            return function (subject) {
+                               if(model.me.hasRight(subject, 'owner') && currentTab == 'mySubject'){
+                                   return true
+                               } else if(!model.me.hasRight(subject, 'owner') && currentTab == 'subjectShared') {
+                                   return true
+
+                               } else{
+                                   return false;
+                               }
+                            };
+                        };
+
+                        scope.filterSubjectByParentFolderId = function (currentTab) {
+                            return function (subject) {
+                                if(currentTab == 'subjectShared'){
+                                    return true;
+                                } else{
+                                    if(scope.currentFolderId){
+                                        return subject.folder_id == scope.currentFolderId
+                                    } else{
+                                        return subject.folder_id == null;
+                                    }
+                                }
+
+
+                            };
                         };
 
                         /**

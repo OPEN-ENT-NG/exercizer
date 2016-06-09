@@ -3,7 +3,7 @@ console.log('Exercizer behaviours loaded');
 Behaviours.register('exercizer', {
     rights: {
         workflow: {
-            create: 'fr.openent.exercizer.controllers.SubjectController|createSubject',
+            create: 'fr.openent.exercizer.controllers.SubjectController|persist',
             list: 'fr.openent.exercizer.controllers.SubjectController|listSubject',
             view: 'fr.openent.exercizer.controllers.SubjectController|view'
 

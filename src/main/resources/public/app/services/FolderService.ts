@@ -100,6 +100,14 @@ class FolderService implements IFolderService {
         return this._folderListByParentFolderId[folderId];
     }
 
+    public getList = function(): IFolder[] {
+        if (!angular.isUndefined(this._folderList)) {
+            return MapToListHelper.toList(this._folderList);
+        } else {
+            return [];
+        }
+    };
+
     /**
      * persist a folder
      * @param folder

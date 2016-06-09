@@ -156,6 +156,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('DragService', DragService );
         module.service('FolderService', FolderService );
         module.service('DateService', DateService );
+        module.service('GroupService', GroupService );
 
         /**
          * Controllers

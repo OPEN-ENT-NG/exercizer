@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'subjectSchedule',
-        injections: ['FolderService', 'SubjectService', (FolderService, SubjectService) => {
+        injections: ['GroupService', '$q', (GroupService, $q) => {
             return {
                 restrict: 'E',
                 scope: {},
@@ -16,13 +16,14 @@ directives.push(
 
                     /**
                      * RESET
+                     * http://localhost:8090/userbook/visible/users/562-1454432933262
                      */
 
                     function reset(){
                         scope.state = 'assignSubject';
                         scope.data = {};
-                        scope.data.lists = getGroupList();
                         scope.data.groupList = [];
+                        scope.data.userList = [];
                         scope.option = {};
                     }
 
@@ -31,23 +32,44 @@ directives.push(
                      */
 
                     scope.clickOnItem = function(selectedItem){
-                        addInList(scope.data.groupList, selectedItem);
-                    };
-
-                    scope.scheduleSubject = function(){
-                        console.log('TODO programmer !');
-                    };
-
-                    scope.removeGroup= function(group){
-                        var index = scope.data.groupList.indexOf(group);
-                        if(index !== -1){
-                            scope.data.groupList.splice(index, 1);
+                        if(selectedItem.groupOrUser == 'group'){
+                            addInList(scope.data.groupList, selectedItem);
+                        } else{
+                            addInList(scope.data.userList, selectedItem);
                         }
                     };
 
-                    scope.removeUser= function(user){
-                        console.log('TODO remove user', user);
+                    scope.removeItem = function(selectedItem){
+                        if(selectedItem.groupOrUser == 'group'){
+                            removeInList(scope.data.groupList, selectedItem);
+                        } else{
+                            removeInList(scope.data.userList, selectedItem);
+                        }
                     };
+
+                    scope.scheduleSubject = function(){
+                        var idList = [];
+                        angular.forEach(scope.data.userList, function(user) {
+                            idList.push(user._id);
+                        });
+                        var promises = [];
+                        angular.forEach(scope.data.groupList, function(group) {
+                            promises.push(GroupService.getUserFromGroup(group));
+                        });
+                        $q.all(promises).then(
+                            function(data) {
+                                angular.forEach(data, function(userList) {
+                                    angular.forEach(userList, function(user) {
+                                        idList.push(user.id);
+                                    });
+                                });
+                                console.log(idList);
+                            }, function(err) {
+                                console.error(err);
+                            }
+                        );
+                    };
+
 
                     /**
                      * MODAL
@@ -58,6 +80,8 @@ directives.push(
                         scope.subject = subject;
                         scope.isDisplayed = true;
                         reset();
+                        scope.data.lists = createLists(subject);
+
                     });
 
                     scope.hide = function () {
@@ -79,25 +103,36 @@ directives.push(
                             console.error('item already in the list');
                         }
                     }
+                    function removeInList(list, item){
+                        var index = list.indexOf(item);
+                        if(index !== -1){
+                            list.splice(index, 1);
+                        }
+                    }
 
-                    function getGroupList(){
+                    function createLists(subject){
                         var array = [];
-                        angular.forEach(model.me.classNames, function(value){
-                            var res = value.split("$");
-                            if(res.length === 2){
-                                var obj = createObjectGroup(res);
-                                array.push(obj);
-                            } else{
-                                console.error("impossible to find class name");
+                        GroupService.getList(subject).then(
+                            function(data){
+                                console.log(data);
+                                angular.forEach(data.groups.visibles, function(group){
+                                        var obj = createObjectList(group.name, group.id, 'group');
+                                        array.push(obj);
+                                });
+                                angular.forEach(data.users.visibles, function(group){
+                                    var obj = createObjectList(group.username, group.id, 'user');
+                                    array.push(obj);
+                                })
                             }
-                        });
+                        );
                         return array;
                     }
 
-                    function createObjectGroup(res){
+                    function createObjectList(name, id, groupOrUser){
                         return {
-                            title : res[1],
-                            _id : res[0],
+                            title : name,
+                            _id : id,
+                            groupOrUser : groupOrUser,
                             toString : function() {
                                 return this.title;
                             }
