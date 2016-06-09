@@ -35,6 +35,12 @@ class SubjectCopyService implements ISubjectCopyService {
 
         // TODO remove
         this._listMappedById = {};
+        // feed
+    }
+
+
+    get listMappedById():{} {
+        return this._listMappedById;
     }
 
     public persist = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
@@ -81,11 +87,11 @@ class SubjectCopyService implements ISubjectCopyService {
     };
 
     public getList = function():ISubjectCopy[] {
-        var self = this;
-
-        return Object.keys(this._listMappedById).map(function(v) {
-            return this._listMappedById[v];
-        }, self);
+        if (!angular.isUndefined(this._listMappedById)) {
+            return MapToListHelper.toList(this._listMappedById);
+        } else {
+            return [];
+        }
     };
 
     public getById = function(id:number):ng.IPromise<ISubjectCopy> {
@@ -104,5 +110,66 @@ class SubjectCopyService implements ISubjectCopyService {
 
     set currentSubjectCopyId(value:number) {
         this._currentSubjectCopyId = value;
+    }
+
+    public loadSubjectCopy(){
+        var deferred = this._$q.defer();
+        var self = this;
+        var dataSubjectCopy = [
+            {
+                "id": "57516cf3747c0beeb0e4935f",
+                "subject_scheduled_id": "1",
+                "owner": "Margery",
+                "created": "1464968639",
+                "modified": "1464968639",
+                "final_score": null,
+                "calculated_score": null,
+                "comment": null,
+                "has_been_started": false,
+                "submitted_date": "1464968639",
+                "is_correction_on_going": false,
+                "is_corrected": false,
+                "is_deleted": false
+            },
+            {
+                "id": "57516cf30e4c380f559f236e",
+                "subject_scheduled_id": "2",
+                "owner": "Buckner",
+                "created": "1464968639",
+                "modified": "1464968639",
+                "final_score": null,
+                "calculated_score": null,
+                "comment": null,
+                "has_been_started": false,
+                "submitted_date": "1464968639",
+                "is_correction_on_going": false,
+                "is_corrected": false,
+                "is_deleted": false
+            },
+            {
+                "id": "57516cf319b958f7292ff510",
+                "subject_scheduled_id": "3",
+                "owner": "Kidd",
+                "created": "1464968639",
+                "modified": "1464968639",
+                "final_score": null,
+                "calculated_score": null,
+                "comment": null,
+                "has_been_started": true,
+                "submitted_date": "1464968639",
+                "is_correction_on_going": false,
+                "is_corrected": false,
+                "is_deleted": false
+            }
+        ];
+        setTimeout(function(){
+            angular.forEach(dataSubjectCopy, function(subjectCopy){
+                self._listMappedById[subjectCopy.id] = subjectCopy;
+            });
+            deferred.resolve(dataSubjectCopy);
+
+        }, 1000);
+
+        return deferred.promise;
     }
 }
