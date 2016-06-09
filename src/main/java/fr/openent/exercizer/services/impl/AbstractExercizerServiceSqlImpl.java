@@ -157,10 +157,11 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      *
      * @param resourceIdentifierName the other resource identifier in the resource table
      * @param resourceTable the other resource table (with schema)
+     * @param invert useful for some case
      * @param user the current user
      * @param handler the handler
      */
-    protected void list(final String resourceIdentifierName, final String resourceTable, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
+    protected void list(final String resourceIdentifierName, final String resourceTable, final Boolean invert, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
         StringBuilder query = new StringBuilder();
 
         query.append("SELECT o.*")
@@ -169,9 +170,12 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(" AS o")
                 .append(" JOIN ")
                 .append(resourceTable)
-                .append(" AS r ON o.id = r.")
-                .append(resourceIdentifierName)
-                .append(" WHERE r.owner = ?");
+                .append(" AS r ON o.")
+                .append(invert ? resourceIdentifierName : "id")
+                .append(" = r.")
+                .append(invert ? "id" : resourceIdentifierName)
+                .append(" WHERE")
+                .append(invert ? " o.owner = ?" : " r.owner = ?");
 
         sql.prepared(query.toString(), new JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
     }

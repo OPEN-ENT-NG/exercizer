@@ -54,6 +54,7 @@ public class SubjectScheduledController extends ControllerHelper {
 
     @Get("/subjects-scheduled")
     @ApiDoc("Gets subject scheduled list.")
+    @SecuredAction("exercizer.subject.scheduled.list")
     public void list(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -70,8 +71,8 @@ public class SubjectScheduledController extends ControllerHelper {
     }
 
     @Get("/subjects-scheduled-by-subjects-copy")
-    @ApiDoc("Gets subject scheduled list by subjects copy.")
-    //@SecuredAction("exercizer.folder.list")
+    @ApiDoc("Gets subject scheduled list by subject copy list.")
+    @SecuredAction("exercizer.subject.scheduled.list")
     public void listBySubjectCopyList(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override

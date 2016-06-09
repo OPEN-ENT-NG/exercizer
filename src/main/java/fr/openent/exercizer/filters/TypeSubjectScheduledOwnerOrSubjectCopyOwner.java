@@ -7,7 +7,7 @@ import org.vertx.java.core.http.HttpServerRequest;
 
 import fr.wseduc.webutils.http.Binding;
 
-public class TypeSubjectShareAndOwnerOrSubjectCopyOwner implements ResourcesProvider {
+public class TypeSubjectScheduledOwnerOrSubjectCopyOwner implements ResourcesProvider {
 
 	@Override
 	public void authorize(HttpServerRequest resourceRequest, Binding binding, UserInfos user,

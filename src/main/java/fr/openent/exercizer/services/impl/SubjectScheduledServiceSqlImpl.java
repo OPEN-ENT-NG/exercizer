@@ -35,7 +35,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
      */
     @Override
     public void listBySubjectCopyList(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-        super.list("subject_scheduled_id", "exercizer.subject_copy", user, handler);
+        super.list("subject_scheduled_id", "exercizer.subject_copy", Boolean.FALSE, user, handler);
     }
 
 }
