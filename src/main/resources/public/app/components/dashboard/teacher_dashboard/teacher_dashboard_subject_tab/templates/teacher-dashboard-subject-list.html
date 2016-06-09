@@ -10,15 +10,15 @@
                 </autocomplete>
             </div>
         </div>
-        <nav class="vertical dragging-zone-folder" data-ng-init="displayMySubject = true">
+        <nav class="vertical dragging-zone-folder" data-ng-init="display.tab = 'mySubject'; display.mySubjectSubFolder = true;">
             <ul>
                 <li>
-                    <a  data-ng-class="{selected: currentFolderId == null, opened: displayMySubject == true}"
+                    <a  data-ng-class="{selected: currentFolderId == null && display.tab == 'mySubject', opened: display.mySubjectSubFolder}"
                         dragdrop="dropToRoot($originalEvent)">
-                        <i data-ng-click="displayMySubject = !displayMySubject" class="arrow"></i>
-                        <span data-ng-click="goToRoot()" >Mes sujets</span>
+                        <i data-ng-click="display.mySubjectSubFolder = !display.mySubjectSubFolder" class="arrow"></i>
+                        <span data-ng-click="goToRoot(); display.tab = 'mySubject'" >Mes sujets</span>
                     </a>
-                    <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false | filterIf:displayMySubject" >
+                    <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false | filterIf:display.mySubjectSubFolder" >
                         <folder-nav-item item="item"
                                          is-root="true"
                                          parent-id="parentId"
@@ -26,6 +26,13 @@
                                          set-current-folder-fn="setCurrentFolder"
                         ></folder-nav-item>
                     </div>
+                </li>
+                <li>
+                    <a  data-ng-class="{selected: currentFolderId == null && display.tab == 'subjectShared'}"
+                        >
+                        <i class="arrow"></i>
+                        <span data-ng-click="goToRoot(); display.tab = 'subjectShared'">Sujets partagé avec moi</span>
+                    </a>
                 </li>
             </ul>
             <a class="classic-link" data-ng-click="clickCreateFolder()">
@@ -38,7 +45,6 @@
         <div class="row">
             <div class="cell">
                 <button data-ng-click="addNewSubject()"  workflow="exercizer.create">Nouveau sujet</button>
-                <button ng-if="me.hasWorkflow('fr-openent-exercizer-controllers-SubjectController|createSubject')" data-ng-click="addNewSubject()">Nouveau sujet</button>
             </div>
             <div class="cell right-magnet">
                 <i data-ng-click="displayList = 'array'"
@@ -57,8 +63,8 @@
         <div class="row" data-ng-show="displayList == 'domino'">
             <div class="fallen dominos">
                 <!-- folder part -->
-                <div data-ng-repeat="folder in folderList() | orderObjectBy:'label':false">
-                    <div class="item" data-ng-if="filterFolderByParentFolder(folder)">
+                <div data-ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'label':false">
+                    <div class="item">
                         <section class="domino">
                             <div class="top" style="padding-top : 10%;"
                                     dragstart="drag(folder, $originalEvent)"
@@ -85,10 +91,20 @@
                     </div>
                 </div>
                 <!-- subject part -->
-                <div data-ng-repeat="subject in subjectList() | orderObjectBy:'title':false">
-                    <div  class="item"  data-ng-if="filterSubjectByParentFolder(subject)" >
+                <!-- my subject -->
+                <div data-ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'title':false">
+                    <div  class="item" >
                         <section class="domino">
                             <div class="top"
+                                    data-ng-if="display.tab == 'mySubject'"
+                                    dragstart="drag(subject, $originalEvent)"
+                                    dragcondition="dragSubjectCondition(subject)"
+                                    dragdrop="dropTo(subject, $originalEvent)"
+                                    dropcondition="dropSubjectCondition.dropCondition(subject)">
+                                <img class="absolute" data-ng-src="[[getSubjectPicture(subject)]]" />
+                            </div>
+                            <div class="top"
+                                    data-ng-if="display.tab == 'subjectShared'"
                                     dragstart="drag(subject, $originalEvent)"
                                     dragcondition="dragSubjectCondition(subject)"
                                     dragdrop="dropTo(subject, $originalEvent)"
@@ -125,7 +141,7 @@
                         <input type="checkbox" data-ng-model="data.selectAll" data-ng-change="selectAllFn(data.selectAll)" />
                     </th>
                     <!-- icon folder -->
-                    <th><i class="drag-anchor"></i></th>
+                    <th><i class="drag-anchor" data-ng-if="display.tab == 'mySubject'"></i></th>
                     <th scope="col">
                         <span>Nom</span>
                     </th>
@@ -133,34 +149,34 @@
                 </thead>
                 <tbody>
                 <!-- folder list-->
-                <tr data-ng-repeat="folder in folderList() | orderObjectBy:'label':false">
-                    <td data-ng-if="filterFolderByParentFolder(folder)">
+                <tr data-ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'label':false">
+                    <td>
                         <input type="checkbox" data-ng-model="folder.selected" data-ng-change="selectFolder(folder)"/>
                     </td>
-                    <td data-ng-if="filterFolderByParentFolder(folder)"
+                    <td data-ng-if="display.tab == 'mySubject'"
                         dragstart="drag(folder, $originalEvent)"
                         dragcondition="dragFolderCondition(folder)"
                         dragdrop="dropTo(folder, $originalEvent)"
                         dropcondition="dropFolderCondition(folder)">
                         <i class="folder"></i>
                     </td>
-                    <td data-ng-if="filterFolderByParentFolder(folder)">
+                    <td>
                         <a data-ng-click="clickOnFolderTitle(folder)">[[folder.label]]</a>
                     </td>
                 </tr>
                 <!-- subject  list -->
-                <tr data-ng-repeat="subject in subjectList() | orderObjectBy:'title':false">
-                    <td data-ng-if="filterSubjectByParentFolder(subject)">
+                <tr data-ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'title':false">
+                    <td>
                         <input type="checkbox" data-ng-model="subject.selected" data-ng-change="selectSubject(subject)"/>
                     </td>
-                    <td data-ng-if="filterSubjectByParentFolder(subject)"
+                    <td data-ng-if="display.tab == 'mySubject'"
                         dragstart="drag(subject, $originalEvent)"
                         dragcondition="dragSubjectCondition(subject)"
                         dragdrop="dropTo(subject, $originalEvent)"
                         dropcondition="dropSubjectCondition(subject)">
                         <i class="doc-text"></i>
                     </td>
-                    <td data-ng-if="filterSubjectByParentFolder(subject)">
+                    <td>
                         <a data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</a>
                     </td>
                 </tr>
