@@ -1,6 +1,6 @@
 directives.push(
     {
-        name: 'sharePanel',
+        name: 'sharePanelModal',
         injections: [() => {
             return {
                 restrict: 'E',
@@ -9,13 +9,14 @@ directives.push(
                 link: (scope:any, element, attrs) => {
 
                     scope.isDisplayed = false;
-                    scope.subject = null;
+                    scope.subject = [];
 
                     // event to display model
                     scope.$on("E_DISPLAY_DASHBOARD_MODAL_SHARE", function(event, subject) {
                         console.log('E_DISPLAY_DASHBOARD_MODAL_SHARE');
                         scope.isDisplayed = true;
-                        scope.subject = subject;
+                        subject._id = subject.id;
+                        scope.subject = [subject];
                     });
 
                     // hide model

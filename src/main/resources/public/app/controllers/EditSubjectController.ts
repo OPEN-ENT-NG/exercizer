@@ -75,7 +75,7 @@ class EditSubjectController {
 
                     self._subject.max_score = maxScore;
 
-                    self._subjectService.update(self._subject).then(
+                    self._subjectService.update(self._subjectService.getById(self._subject.id)).then(
                         function (subject:ISubject) {
                             self._subject = subject;
                             self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', grainList);

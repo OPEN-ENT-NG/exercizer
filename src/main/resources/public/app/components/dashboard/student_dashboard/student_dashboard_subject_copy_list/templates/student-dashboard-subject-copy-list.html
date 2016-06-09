@@ -8,8 +8,12 @@
                     <input type="text" data-ng-model="search.text_1" placeholder="Rechercher">
                 </div>
                 <div class="row vertical-spacing">
-                    <div data-ng-repeat="subjectCopy in subjectCopyList | filter: filterOnSubjectScheduledTitle(search.text_1) | filter: filterOnSubjectScheduledDueDate(today, dateInAWeek) | orderBy:orderBySubjectScheduledDueDate">
+                    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: filterOnSubjectScheduledTitle(search.text_1) | filter: filterOnSubjectScheduledDueDate(today, dateInAWeek) | orderBy:orderBySubjectScheduledDueDate)">
                         <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
+                    </div>
+                    <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
+                        <img src="exercizer/public/assets/img/smiley.PNG"/>
+                        <h4>Vous n'avez aucun sujets à faire cette semaine</h4>
                     </div>
                 </div>
         </article>
@@ -29,8 +33,12 @@
                     </div>
                 </div>
                 <div class="row vertical-spacing">
-                    <div data-ng-repeat="subjectCopy in subjectCopyList | filter: filterOnSubjectScheduledTitle(search.text_2) | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | orderBy:orderBySubjectScheduledDueDate">
+                    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: filterOnSubjectScheduledTitle(search.text_2) | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | orderBy:orderBySubjectScheduledDueDate)">
                         <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
+                    </div>
+                    <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
+                        <img src="exercizer/public/assets/img/smiley.PNG"/>
+                        <h4>Vous n'avez aucun sujets à faire plus tard</h4>
                     </div>
                 </div>
             </div>

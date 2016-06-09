@@ -19,6 +19,12 @@ directives.push(
                         scope.autocomplete = {
                             subjectList: null
                         };
+                        scope.data = {};
+
+                        scope.$on('E_RESET_SELECT_ALL', function (event) {
+                          scope.data.selectAll = false;
+                        });
+
 
                         /**
                          * AUTOCOMPLETE
@@ -98,6 +104,7 @@ directives.push(
                          */
 
                         scope.clickOnFolderTitle = function (folder) {
+                            scope.data.selectAll = false;
                             scope.setCurrentFolder(folder);
                         };
 
@@ -133,6 +140,21 @@ directives.push(
 
                         scope.goToRoot = function () {
                             scope.currentFolderId = null;
+                        };
+
+                        scope.selectAllFn = function(selectAll){
+                            angular.forEach(scope.folderList(), function(folder){
+                                if(scope.filterFolderByParentFolder(folder)){
+                                    folder.selected = selectAll ? true : false;
+                                    scope.$emit('E_SELECT_FOLDER', folder);
+                                }
+                            });
+                            angular.forEach(scope.subjectList(), function(subject){
+                                if(scope.filterSubjectByParentFolder(subject)){
+                                    subject.selected = selectAll ? true : false;
+                                    scope.$emit('E_SELECT_SUBJECT', subject);
+                                }
+                            });
                         };
 
                         /**

@@ -21,7 +21,7 @@
         </div>
         <div class="row vertical-spacing">
             <div  class="row" data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
-                <input data-ng-show="grain.grain_data.custom_data.show_left_column" type="text" class="four cell" data-ng-model="answer.text_left" complete-change="updateGrain()" value="[[answer.text_left]]" placeholder="Indiquez une proposition" />
+                <input type="text" class="four cell" data-ng-model="answer.text_left" complete-change="updateGrain()" value="[[answer.text_left]]" placeholder="Indiquez une proposition" />
                 <div class="one cell">&nbsp;</div>
                 <input type="text" class="four cell" data-ng-model="answer.text_right" complete-change="updateGrain()" value="[[answer.text_right]]" placeholder="Indiquez une proposition" />
                 <div class="one cell">&nbsp;</div>

@@ -50,11 +50,9 @@ class SubjectService implements ISubjectService {
                     self._listMappedById = {};
                     var subject;
                     angular.forEach(response.data, function(subjectObject) {
-
                         subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject)) as any;
                         self._afterPullBack(subject);
                         self._listMappedById[subject.id] = subject;
-
                     });
                     console.log('self._listMappedById', self._listMappedById);
 
@@ -102,18 +100,19 @@ class SubjectService implements ISubjectService {
                 data: subject
             },
             self = this;
-        this._beforePushBack(subject);
+        if(this._beforePushBack(subject)){
 
-        this._$http(request).then(
-            function(response) {
-                //var newSubject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
-                self._afterPullBack(subject);
-                deferred.resolve(subject);
-            },
-            function() {
-                deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
-            }
-        );
+            this._$http(request).then(
+                function(response) {
+                    //var newSubject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                    self._afterPullBack(subject);
+                    deferred.resolve(subject);
+                },
+                function() {
+                    deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
+                }
+            );
+        }
         return deferred.promise;
     };
 
@@ -295,8 +294,9 @@ class SubjectService implements ISubjectService {
         delete subject.myRights;
         if(subject.owner && subject.owner.userId){
             subject.owner = subject.owner.userId;
+            return true
         } else{
-            console.error('subject should have owner.userId')
+            return false;
         }
     }
 

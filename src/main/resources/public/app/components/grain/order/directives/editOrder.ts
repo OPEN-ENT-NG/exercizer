@@ -15,6 +15,7 @@ directives.push(
                         var newOrder = parseFloat(getLastOrder()) + 1;
                         var newAnswer = {
                             order_by : newOrder,
+                            index : newOrder - 1,
                             text : ''
                         };
                         scope.grain.grain_data.custom_data.correct_answer_list.push(newAnswer);
@@ -22,11 +23,17 @@ directives.push(
                     };
 
                     scope.deleteAnswer = function(answer){
+                        var indexDeleted = answer.index;
                         var index = scope.grain.grain_data.custom_data.correct_answer_list.indexOf(answer);
                         if(index !== -1){
                             scope.grain.grain_data.custom_data.correct_answer_list.splice(index, 1);
                         }
-                        scope.updateGrain();
+                        angular.forEach(scope.grain.grain_data.custom_data.correct_answer_list, function(value, key){
+                            if(value.index > indexDeleted){
+                                value.index = parseFloat(value.index) - 1;
+                            }
+                        });
+                        scope.reOrder();
                     };
 
                     function getLastOrder(){
@@ -44,7 +51,7 @@ directives.push(
                     }
 
                     scope.reOrder = function(){
-                        angular.forEach(scope.grain.grain_data.custom_data.correct_answer_list, function(value){
+                        angular.forEach(scope.grain.grain_data.custom_data.correct_answer_list, function(value, key){
                             if(value.order_by != parseFloat(value.index) + 1){
                                 value.order_by = parseFloat(value.index) + 1;
                             }
