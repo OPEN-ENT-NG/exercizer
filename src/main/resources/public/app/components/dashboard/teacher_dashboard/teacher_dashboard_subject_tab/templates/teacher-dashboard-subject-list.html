@@ -37,7 +37,7 @@
     <section class="nine cell">
         <div class="row">
             <div class="cell">
-                <button data-ng-click="addNewSubject()">Nouveau sujet</button>
+                <button data-ng-click="addNewSubject()"  workflow="exercizer.create">Nouveau sujet</button>
                 <button ng-if="me.hasWorkflow('fr-openent-exercizer-controllers-SubjectController|createSubject')" data-ng-click="addNewSubject()">Nouveau sujet</button>
             </div>
             <div class="cell right-magnet">

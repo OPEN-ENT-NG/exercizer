@@ -31,6 +31,7 @@ public class SubjectController extends ControllerHelper {
     }
 
     @Post("/subject")
+    @SecuredAction("create")
     @ApiDoc("Persists a subject.")
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
