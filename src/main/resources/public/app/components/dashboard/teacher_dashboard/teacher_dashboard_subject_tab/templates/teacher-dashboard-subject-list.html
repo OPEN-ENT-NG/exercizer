@@ -10,7 +10,7 @@
                 </autocomplete>
             </div>
         </div>
-        <nav class="vertical dragging-zone-folder">
+        <nav class="vertical dragging-zone-folder" data-ng-init="displayMySubject = true">
             <ul>
                 <li>
                     <a  data-ng-class="{selected: currentFolderId == null, opened: displayMySubject == true}"
@@ -100,7 +100,8 @@
                                     <div class="cell">
                                         <strong data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</strong>
                                         <br />
-                                        <span>[[getSubjectModificationDate()]]</span>
+                                        <br/>
+                                        <span data-ng-if="subject.modified">Modifié le [[subject.modified | date: 'dd/MM/yyyy']]</span>
                                         <br />
                                     </div>
                                     <div data-ng-show="canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">

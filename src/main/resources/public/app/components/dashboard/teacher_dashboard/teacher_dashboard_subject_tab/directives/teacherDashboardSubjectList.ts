@@ -93,12 +93,6 @@ directives.push(
                             return subject.picture || defaultPicture;
                         };
 
-                        scope.getSubjectModificationDate = function (subject) {
-                            if (subject) {
-                                return subject.modified ? 'Modifié le ' + subject.modified : ''
-                            }
-                        };
-
                         /**
                          * EVENT
                          */
