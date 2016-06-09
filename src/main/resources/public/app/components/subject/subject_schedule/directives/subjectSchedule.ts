@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'subjectSchedule',
-        injections: ['GroupService', 'SubjectService', (GroupService, SubjectService) => {
+        injections: ['GroupService', '$q', (GroupService, $q) => {
             return {
                 restrict: 'E',
                 scope: {},
@@ -16,6 +16,7 @@ directives.push(
 
                     /**
                      * RESET
+                     * http://localhost:8090/userbook/visible/users/562-1454432933262
                      */
 
                     function reset(){
@@ -47,7 +48,26 @@ directives.push(
                     };
 
                     scope.scheduleSubject = function(){
-                        console.log('TODO programmer !');
+                        var idList = [];
+                        angular.forEach(scope.data.userList, function(user) {
+                            idList.push(user._id);
+                        });
+                        var promises = [];
+                        angular.forEach(scope.data.groupList, function(group) {
+                            promises.push(GroupService.getUserFromGroup(group));
+                        });
+                        $q.all(promises).then(
+                            function(data) {
+                                angular.forEach(data, function(userList) {
+                                    angular.forEach(userList, function(user) {
+                                        idList.push(user.id);
+                                    });
+                                });
+                                console.log(idList);
+                            }, function(err) {
+                                console.error(err);
+                            }
+                        );
                     };
 
 
