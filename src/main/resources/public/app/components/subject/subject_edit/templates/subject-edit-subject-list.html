@@ -1,15 +1,33 @@
-<article>
-    <div class="row">
-        Mes sujets
-    </div>
-    <ul>
-        <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false" >
-            <folder-nav-item   item = "item"
-                           is-root = "true"
-                           set-current-folder-fn="setCurrentFolder"
-                           parent-id="parentId"
-                           current-folder-id = "currentFolderId"
-            ></folder-nav-item>
+<nav data-stick-to-top class="hash-magnet floating-navigation">
+    <article>
+        <div class="row">
+            <h2 class="cell">Mes sujets</h2>
         </div>
-    </ul>
-</article>
+        <div class="row">
+            <div class="eleven cell" data-ng-click="clickOnAutoComplete()">
+                <autocomplete
+                        options="autocomplete.subjectList"
+                        ng-change="clickOnItem(selectedItem)"
+                        ng-model="selectedItem">
+                </autocomplete>
+            </div>
+        </div>
+        <div class="row" data-ng-if="subject">
+            <table class="list-view">
+                <thead>
+                <tr>
+                    <th>[[subject.title]]</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- grain list-->
+                <tr data-ng-repeat="grain in grainList | orderBy:'order_by'">
+                    <td dragstart="drag(grain, $originalEvent)">
+                        [[grain.grain_data.title]]
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+</nav>
