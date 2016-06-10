@@ -7,7 +7,7 @@ directives.push(
                 scope: {
                     grainCopy: '='
                 },
-                templateUrl: 'exercizer/public/app/components/grain/simple_answer/templates/perform-open-answer.html',
+                templateUrl: 'exercizer/public/app/components/grain/open_answer/templates/perform-open-answer.html',
                 link:(scope:any) => {
 
                     scope.updateGrainCopy = function() {

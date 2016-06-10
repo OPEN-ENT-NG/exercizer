@@ -39,6 +39,27 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         s.insert(resourceTable, resource, "*");
         sql.transaction(s.build(), SqlResult.validUniqueResultHandler(1, handler));
     }
+    
+    /**
+     * Persists a resource which contains another owner as the current user.
+     *
+     * @param resource the resource
+     * @param user the current user
+     * @param handler the handler
+     */
+    protected void persistWithAnotherOwner(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+        SqlStatementsBuilder s = new SqlStatementsBuilder();
+        
+        String userQuery = "SELECT " + schema + "merge_users(?,?)";
+        s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
+        
+        String anotherOwnerQuery = "SELECT " + schema + "merge_users(?,?)";
+        s.prepared(anotherOwnerQuery, new JsonArray().add(resource.getString("owner")).add(resource.getString("owner_username")));
+        resource.removeField("owner_username");
+        
+        s.insert(resourceTable, resource, "*");
+        sql.transaction(s.build(), SqlResult.validUniqueResultHandler(1, handler));
+    }
 
     /**
      * Updates a resource.
