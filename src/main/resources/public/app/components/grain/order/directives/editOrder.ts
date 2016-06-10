@@ -19,7 +19,7 @@ directives.push(
                             text : ''
                         };
                         scope.grain.grain_data.custom_data.correct_answer_list.push(newAnswer);
-
+                        scope.updateGrain();
                     };
 
                     scope.deleteAnswer = function(answer){
