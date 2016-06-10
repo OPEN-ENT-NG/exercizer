@@ -15,18 +15,17 @@
             <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
             <span>erreur non autorisée</span>
         </div>
+
         <div class="row vertical-spacing">
             <ul sortable-list class="thought-out-actions">
                 <li data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list | orderObjectBy:'order_by':false"
                     sortable-element
                     data-ng-change="reOrder()"
-                    data-ng-model="answer.index"
-                >
-                    <div class="one cell" style="text-align: center; border:1px solid black; border-radius: 5px;">[[answer.order_by]]</div>
+                    data-ng-model="answer.index">
+                    <div class="one cell" style="text-align: center; border:1px solid black; border-radius: 5px;">[[ answer.order_by ]]</div>
                     <div class="one cell">&nbsp;</div>
-                    <input type="text" class="eight cell" data-ng-model="answer.text" complete-change="updateGrain()" value="[[answer.text ]]" placeholder="Indiquez une réponse" />
-                    <div class="one cell">&nbsp;</div>
-                    <div class="one cell" data-ng-click="deleteAnswer(answer)"><i class="trash"></i></div>
+                    <input type="text" class="nine cell" data-ng-model="answer.text" complete-change="updateGrain()" value="[[ answer.text ]]" placeholder="Indiquez une réponse" />
+                    <div class="cell right-magnet" data-ng-click="deleteAnswer(answer)"><i class="close"></i></div>
                 </li>
             </ul>
 

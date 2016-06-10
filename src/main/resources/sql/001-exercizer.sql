@@ -94,6 +94,7 @@ CREATE TABLE exercizer.subject_scheduled(
 	estimated_duration VARCHAR(255) NULL,
 	is_over BOOL DEFAULT FALSE,
 	is_one_shot_submit BOOL DEFAULT FALSE,
+	has_automatic_display BOOL DEFAULT FALSE,
 	is_deleted BOOL DEFAULT FALSE,
 	CONSTRAINT subject_scheduled_subject_fk FOREIGN KEY (subject_id) REFERENCES exercizer.subject(id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );

@@ -171,6 +171,9 @@ class EditSubjectController {
                 self._selectedGrainList.splice(grainIndex, 1);
             } else {
                 self._selectedGrainList.push(grain);
+                self._selectedGrainList.sort(function(grainA:IGrain, grainB:IGrain) {
+                    return grainA.order_by - grainB.order_by;
+                })
             }
 
             self._$scope.$broadcast('E_TOGGLE_SUBJECT_EDIT_TOASTER', self._selectedGrainList.length);
