@@ -5,7 +5,7 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import fr.openent.exercizer.parsers.SubjectCopyParser;
+import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectCopyService;
 import fr.wseduc.webutils.Either;
 
@@ -20,7 +20,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
      */
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        JsonObject subjectCopy = SubjectCopyParser.beforePersist(resource, user);
+        JsonObject subjectCopy = ResourceParser.beforeAny(resource);
         super.persist(subjectCopy, user, handler);
     }
 
@@ -29,7 +29,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
      */
     @Override
     public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        JsonObject subjectCopy = SubjectCopyParser.beforeUpdate(resource);
+        JsonObject subjectCopy = ResourceParser.beforeAny(resource);
         super.update(subjectCopy, user, handler);
     }
     

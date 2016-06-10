@@ -13,11 +13,6 @@ public interface IGrainScheduledService {
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
-
-    /**
-     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
-     */
-    void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
     
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl

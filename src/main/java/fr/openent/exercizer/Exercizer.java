@@ -25,6 +25,9 @@ public class Exercizer extends BaseServer {
         subjectConf.setTable("subject");
         subjectConf.setShareTable("subject_shares");
         
+        SubjectController subjectController = new SubjectController();
+        subjectController.setShareService(new SqlShareService("exercizer", "subject_shares", eb, securedActions, null));
+        
         SqlConf grainConf = SqlConfs.createConf(GrainController.class.getName());
         grainConf.setSchema("exercizer");
         grainConf.setTable("subject");
@@ -34,9 +37,19 @@ public class Exercizer extends BaseServer {
         subjectScheduledConf.setSchema("exercizer");
         subjectScheduledConf.setTable("subject");
         subjectScheduledConf.setShareTable("subject_shares");
-
-        SubjectController subjectController = new SubjectController();
-        subjectController.setShareService(new SqlShareService("exercizer", "subject_shares", eb, securedActions, null));
+        
+        SqlConf grainScheduledConf = SqlConfs.createConf(GrainScheduledController.class.getName());
+        grainScheduledConf.setSchema("exercizer");
+        grainScheduledConf.setTable("subject");
+        grainScheduledConf.setShareTable("subject_shares");
+        
+        SqlConf subjectCopyConf = SqlConfs.createConf(SubjectCopyController.class.getName());
+        subjectCopyConf.setSchema("exercizer");
+        subjectCopyConf.setTable("subject_scheduled");
+        
+        SqlConf grainCopyConf = SqlConfs.createConf(GrainCopyController.class.getName());
+        grainCopyConf.setSchema("exercizer");
+        grainCopyConf.setTable("subject_scheduled");
         
         addController(new ExercizerController());
         addController(new FolderController());
@@ -44,6 +57,7 @@ public class Exercizer extends BaseServer {
         addController(new GrainController());
         addController(new GrainTypeController());
         addController(new SubjectScheduledController());
+        addController(new GrainScheduledController());
     }
 
 }

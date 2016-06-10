@@ -5,7 +5,7 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import fr.wseduc.webutils.Either;
-import fr.openent.exercizer.parsers.SubjectParser;
+import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectService;
 
 import java.util.List;
@@ -21,7 +21,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        JsonObject subject = SubjectParser.beforePersist(resource, user);
+        JsonObject subject = ResourceParser.beforeAny(resource);
+        subject.putString("owner", user.getUserId());
         super.persist(subject, user, handler);
     }
 
@@ -30,7 +31,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        JsonObject subject = SubjectParser.beforeUpdate(resource);
+    	JsonObject subject = ResourceParser.beforeAny(resource);
         super.update(subject, user, handler);
     }
 
@@ -39,7 +40,9 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
      */
     @Override
     public void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        JsonObject subject = SubjectParser.beforeRemove(resource);
+    	JsonObject subject = ResourceParser.beforeAny(resource);
+    	subject.putValue("folder_id", null);
+        subject.putBoolean("is_deleted", Boolean.TRUE);
         update(subject, user, handler);
     }
 

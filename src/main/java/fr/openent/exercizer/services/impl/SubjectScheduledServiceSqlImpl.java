@@ -1,5 +1,6 @@
 package fr.openent.exercizer.services.impl;
 
+import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.wseduc.webutils.Either;
 import org.entcore.common.user.UserInfos;
@@ -18,8 +19,9 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
      */
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        resource.putString("owner", user.getUserId());
-        super.persist(resource, user, handler);
+    	JsonObject subjectScheduled = ResourceParser.beforeAny(resource);
+    	subjectScheduled.putString("owner", user.getUserId());
+        super.persist(subjectScheduled, user, handler);
     }
 
     /**

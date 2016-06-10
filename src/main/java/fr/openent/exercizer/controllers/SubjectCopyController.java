@@ -5,6 +5,7 @@ import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyRe
 
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.http.filter.sql.OwnerOnly;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.vertx.java.core.Handler;
@@ -30,9 +31,9 @@ public class SubjectCopyController extends ControllerHelper {
 		this.subjectCopyService = new SubjectCopyServiceSqlImpl();
 	}
 	
-	@Post("/subject-copy")
+	@Post("/subject-copy/:id")
     @ApiDoc("Persists a subject copy.")
-    @ResourceFilter(TypeSubjectScheduledOwnerOrSubjectCopyOwner.class)
+	@ResourceFilter(OwnerOnly.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
@@ -80,8 +81,7 @@ public class SubjectCopyController extends ControllerHelper {
 	
 	@Get("/subjects-copy")
     @ApiDoc("Gets subject copy list.")
-	@ResourceFilter(TypeSubjectScheduledOwnerOrSubjectCopyOwner.class)
-	@SecuredAction(value = "", type = ActionType.RESOURCE)
+	@SecuredAction("exercizer.subject.copy.list")
     public void list(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -99,8 +99,7 @@ public class SubjectCopyController extends ControllerHelper {
 
     @Get("/subjects-copy-by-subjects-scheduled")
     @ApiDoc("Gets subject copy list by subject scheduled list.")
-    @ResourceFilter(TypeSubjectScheduledOwnerOrSubjectCopyOwner.class)
-	@SecuredAction(value = "", type = ActionType.RESOURCE)
+    @SecuredAction("exercizer.subject.copy.list")
     public void listBySubjectSheduledList(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
