@@ -5,8 +5,8 @@ directives.push(
             return {
                 restrict: 'E',
                 scope: {
-                    'subjectCopy': '=',
-                    'grainCopyList': '='
+                    'grainCopyList': '=',
+                    'anchorBehaviour': '='
                 },
                 templateUrl: 'exercizer/public/app/components/subject/common/subject_copy/templates/subject-copy-left-nav.html',
                 link:(scope:any) => {
@@ -20,13 +20,17 @@ directives.push(
                             return grainType.public_name;
                         }
                     };
-                    
+
                     scope.navigateTo = function(grainCopy:IGrainCopy = undefined) {
                         scope.$emit('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy);
                     };
 
                     scope.$on('E_CURRENT_GRAIN_COPY_CHANGE' , function(event, grainCopy:IGrainCopy) {
                         scope.currentGrainCopy = grainCopy;
+
+                        if (scope.anchorBehaviour) {
+                            // FIXME
+                            jQuery("html, body").animate({ scrollTop: jQuery(angular.isUndefined(grainCopy) ? '#summary' : '#' + grainCopy.id).height() }, 500);}
                     });
                 }
             };

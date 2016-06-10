@@ -82,11 +82,13 @@ class PerformSubjectCopyController {
                 self._grainScheduledList = self._grainScheduledService.createGrainScheduledList(grainList);
                 angular.forEach(self._grainScheduledList, function(grainScheduled:IGrainScheduled) {
                     grainScheduled.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
+                    grainScheduled.subject_scheduled_id = self._subjectScheduled.id;
                 });
-                self._grainCopyList = self._grainCopyService.createGrainCopyList(self._grainScheduledList);
                 
+                self._grainCopyList = self._grainCopyService.createGrainCopyList(self._grainScheduledList);
                 angular.forEach(self._grainCopyList, function(grainCopy:IGrainCopy) {
                     grainCopy.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
+                    grainCopy.subject_copy_id = self._subjectCopy.id;
                 });
 
                 self._eventsHandler(self);
@@ -112,12 +114,10 @@ class PerformSubjectCopyController {
     private _eventsHandler = function(self) {
 
         function _updateLocalGrainCopyList(grainCopy:IGrainCopy) {
-            for (var i = 0; i < self._grainCopyList.length; ++i) {
-                var currentGrainCopy = self._grainCopyList[i];
-                if (currentGrainCopy.id === grainCopy.id) {
-                    self._grainCopyList[i] = grainCopy;
-                    break;
-                }
+            var grainCopyIndex = self._grainCopyList.indexOf(grainCopy);
+            
+            if (grainCopyIndex !== -1) {
+                self._grainCopyList[grainCopyIndex] = grainCopy;
             }
         }
 
@@ -157,6 +157,13 @@ class PerformSubjectCopyController {
 
     get subjectCopy():ISubjectCopy {
         return this._subjectCopy;
+    }
+    
+    get grainScheduledList():IGrainScheduled[] {
+        if (this._previewing) {
+            return this._grainScheduledList;
+        }
+        return [];
     }
 
     get grainCopyList():IGrainCopy[] {

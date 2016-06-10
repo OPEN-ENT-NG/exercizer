@@ -1,1 +1,52 @@
-<h1>View subject copy</h1>
+<div data-ng-controller="ViewSubjectCopyController as viewSubjectCopyController">
+
+    <!-- LOADER -->
+    <div class="row" data-ng-hide="viewSubjectCopyController.hasDataLoaded">
+        <div class="info">Chargement des données...</div>
+    </div>
+
+    <div data-ng-if="viewSubjectCopyController.hasDataLoaded && viewSubjectCopyController.grainCopyList.length > 0">
+
+        <!-- PREVIEW HEADER -->
+        <div data-ng-if="viewSubjectCopyController.previewing">
+            <subject-view-copy-preview-header data-subject-scheduled="viewSubjectCopyController.subjectScheduled">
+            </subject-view-copy-preview-header>
+        </div>
+
+        <!-- TEACHER HEADER -->
+        <div data-ng-if="!viewSubjectCopyController.previewing && viewSubjectCopyController.isTeacher">
+           <!-- TODO -->
+        </div>
+
+        <!-- STUDENT HEADER -->
+        <div data-ng-if="!viewSubjectCopyController.previewing && !viewSubjectCopyController.isTeacher">
+            <!-- TODO -->
+        </div>
+
+        <div class="row">
+            <!-- LEFT NAV -->
+            <section class="three cell vertical">
+                <subject-copy-left-nav data-anchor-behaviour="true"
+                                       data-grain-copy-list="viewSubjectCopyController.grainCopyList">
+                </subject-copy-left-nav>
+            </section>
+
+            <section class="nine cell">
+                <!-- GRAIN COPY LIST -->
+                <subject-view-copy-grain-copy-list data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
+                                                   data-subject-copy="viewSubjectCopyController.subjectCopy"
+                                                   data-grain-scheduled-list="viewSubjectCopyController.grainScheduledList"
+                                                   data-grain-copy-list="viewSubjectCopyController.grainCopyList"
+                                                   data-is-teacher="viewSubjectCopyController.isTeacher">
+                </subject-view-copy-grain-copy-list>
+            </section>
+        </div>
+
+    </div>
+
+    <!-- NO DATA -->
+    <div class="row" data-ng-if="viewSubjectCopyController.hasDataLoaded && viewSubjectCopyController.grainCopyList.length === 0">
+        <!-- TODO HEADER -->
+        <div class="warning">La copie ne contient pas d'éléments.</div>
+    </div>
+</div>

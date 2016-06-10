@@ -2,7 +2,7 @@ class MultipleAnswerService implements IAutomaticCorrection {
 
     constructor() {}
 
-    public automaticCorrection(grainCopy:IGrainCopy, grainScheduled:IGrainScheduled):IGrainCopy {
+    public automaticCorrection(grainScheduled:IGrainScheduled, grainCopy:IGrainCopy):{calculated_score:number, answers_result:{}} {
 
         /*var isCorrect = CompareStringHelper.compare
         (
@@ -14,6 +14,6 @@ class MultipleAnswerService implements IAutomaticCorrection {
 
         // TODO
 
-        return grainCopy;
+        return;
     }
 }

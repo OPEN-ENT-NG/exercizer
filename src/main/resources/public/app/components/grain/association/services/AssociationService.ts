@@ -2,7 +2,7 @@ class AssociationService implements IAutomaticCorrection {
 
     constructor() {}
 
-    public automaticCorrection(grainCopy:IGrainCopy, grainScheduled:IGrainScheduled):IGrainCopy {
+    public automaticCorrection(grainScheduled:IGrainScheduled, grainCopy:IGrainCopy):{calculated_score:number, answers_result:{}} {
 
         /*var isCorrect = CompareStringHelper.compare
         (
@@ -13,7 +13,6 @@ class AssociationService implements IAutomaticCorrection {
         grainCopy.calculated_score = isCorrect ? grainScheduled.grain_data.max_score : 0;*/
 
         // TODO
-
-        return grainCopy;
+        return;
     }
 }

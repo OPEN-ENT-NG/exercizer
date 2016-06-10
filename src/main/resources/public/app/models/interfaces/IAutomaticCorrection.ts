@@ -1,3 +1,3 @@
 interface IAutomaticCorrection {
-    automaticCorrection(grainCopy:IGrainCopy, grainScheduled:IGrainScheduled):IGrainCopy;
+    automaticCorrection(grainScheduled:IGrainScheduled, grainCopy:IGrainCopy):{calculated_score:number, answers_result:{}};
 }

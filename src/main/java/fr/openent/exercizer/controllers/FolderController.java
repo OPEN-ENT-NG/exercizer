@@ -5,9 +5,12 @@ import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyRe
 import fr.openent.exercizer.services.IFolderService;
 import fr.openent.exercizer.services.impl.FolderServiceSqlImpl;
 import fr.wseduc.rs.*;
+import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
+import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.http.filter.sql.OwnerOnly;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.vertx.java.core.Handler;
@@ -24,6 +27,7 @@ public class FolderController extends ControllerHelper {
 
     @Post("/folder")
     @ApiDoc("Persists a folder.")
+    @SecuredAction("exercizer.folder.persist")
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -44,8 +48,10 @@ public class FolderController extends ControllerHelper {
         });
     }
 
-    @Put("/folder")
+    @Put("/folder/:id")
     @ApiDoc("Updates a folder.")
+    @ResourceFilter(OwnerOnly.class)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
     public void update(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -66,8 +72,10 @@ public class FolderController extends ControllerHelper {
         });
     }
 
-    @Delete("/folder")
+    @Delete("/folder/:id")
     @ApiDoc("Deletes a folder.")
+    @ResourceFilter(OwnerOnly.class)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
     public void remove(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -90,7 +98,7 @@ public class FolderController extends ControllerHelper {
 
     @Get("/folders")
     @ApiDoc("Gets folder list.")
-    //@SecuredAction("exercizer.folder.list")
+    @SecuredAction("exercizer.folder.list")
     public void list(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override

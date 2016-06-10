@@ -5,8 +5,12 @@ import fr.openent.exercizer.services.impl.SubjectScheduledServiceSqlImpl;
 import fr.wseduc.rs.ApiDoc;
 import fr.wseduc.rs.Get;
 import fr.wseduc.rs.Post;
+import fr.wseduc.security.ActionType;
+import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
+import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.http.filter.sql.ShareAndOwner;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.vertx.java.core.Handler;
@@ -24,8 +28,10 @@ public class SubjectScheduledController extends ControllerHelper {
         this.subjectScheduledService = new SubjectScheduledServiceSqlImpl();
     }
 
-    @Post("/subject-scheduled")
+    @Post("/subject-scheduled/:id")
     @ApiDoc("Persists a subject scheduled.")
+    @ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -48,7 +54,6 @@ public class SubjectScheduledController extends ControllerHelper {
 
     @Get("/subjects-scheduled")
     @ApiDoc("Gets subject scheduled list.")
-    //@SecuredAction("exercizer.folder.list")
     public void list(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
