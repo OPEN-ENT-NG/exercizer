@@ -180,7 +180,7 @@ class GrainService implements IGrainService {
             deferred = this._$q.defer(),
             request = {
                 method: 'POST',
-                url: 'exercizer/grains',
+                url: 'exercizer/grains/'+subject.id,
                 data: subject
             };
 
