@@ -1,5 +1,5 @@
 interface IGrainCopyService {
-    persist(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy>;
+    persist(grainCopy:IGrainCopy, subjectScheduled):ng.IPromise<IGrainCopy>;
     update(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy>;
     remove(grainCopy:IGrainCopy):ng.IPromise<boolean>;
     createGrainCopyList(grainScheduledList:IGrainScheduled[]):IGrainCopy[];
@@ -26,23 +26,29 @@ class GrainCopyService implements IGrainCopyService {
         this._listMappedBySubjectCopyId = {};
     }
 
-    public persist = function(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy> {
+    public persist = function(grainCopy:IGrainCopy, subjectScheduled):ng.IPromise<IGrainCopy> {
         var self = this,
             deferred = this._$q.defer();
 
-        //TODO update when using real API
-        grainCopy.id = Math.floor(Math.random() * (999999999 - 1)) + 1; // TODO backend
+        var request = {
+            method: 'POST',
+            url: 'exercizer/grain-copy/'+ subjectScheduled.id,
+            data: grainCopy
+        };
 
-        setTimeout(function(self, grainCopy) {
-            if (angular.isUndefined(self._listMappedBySubjectCopyId[grainCopy.subject_copy_id])) {
-                self._listMappedBySubjectCopyId[grainCopy.subject_copy_id] = [];
+        this._$http(request).then(
+            function (grainCopy) {
+                if (angular.isUndefined( self._listMappedBySubjectCopyId[grainCopy.subject_copy_id])) {
+                    self._listMappedBySubjectCopyId[grainCopy.subject_copy_id] = [];
+                }
+                self._listMappedBySubjectCopyId[grainCopy.subject_copy_id].push(grainCopy);
+
+                deferred.resolve(grainCopy);
+            },
+            function () {
+                deferred.reject('Une erreur est survenue lors d un grain copy.')
             }
-
-            self._listMappedBySubjectCopyId[grainCopy.subject_copy_id].push(grainCopy);
-
-            deferred.resolve(grainCopy);
-        }, 100, self, grainCopy);
-
+        );
         return deferred.promise;
     };
 

@@ -1,5 +1,5 @@
 interface IGrainScheduledService {
-    persist(grainScheduled:IGrainScheduled):ng.IPromise<IGrainScheduled>;
+    persist(grainScheduled:IGrainScheduled, subject : ISubject):ng.IPromise<IGrainScheduled>;
     update(grainScheduled:IGrainScheduled):ng.IPromise<IGrainScheduled>;
     remove(grainScheduled:IGrainScheduled):ng.IPromise<boolean>;
     createGrainScheduledList(grainList:IGrain[]):IGrainScheduled[];
@@ -26,23 +26,29 @@ class GrainScheduledService implements IGrainScheduledService {
         this._listMappedBySubjectScheduledId = {};
     }
 
-    public persist = function(grainScheduled:IGrainScheduled):ng.IPromise<IGrainScheduled> {
+    public persist = function(grainScheduled:IGrainScheduled, subject : ISubject):ng.IPromise<IGrainScheduled> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/grain-scheduled/'+ subject.id,
+                data: grainScheduled
+            };
+        this._$http(request).then(
+            function(response) {
+                var subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(response.data)) as any;
+                if (angular.isUndefined(self._listMappedBySubjectScheduledId[subjectScheduled.id])) {
+                    self._listMappedBySubjectScheduledId[subjectScheduled.id] = [];
+                }
 
-        //TODO update when using real API
-        grainScheduled.id = Math.floor(Math.random() * (999999999 - 1)) + 1; // TODO backend
+                self._listMappedBySubjectScheduledId[subjectScheduled.id].push(subjectScheduled);
 
-        setTimeout(function(self, grainScheduled) {
-            if (angular.isUndefined(self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id])) {
-                self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id] = [];
+                deferred.resolve(subjectScheduled);
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors de la sauvegarde d un exercie programmer.');
             }
-
-            self._listMappedBySubjectScheduledId[grainScheduled.subject_copy_id].push(grainScheduled);
-
-            deferred.resolve(grainScheduled);
-        }, 100, self, grainScheduled);
-
+        );
         return deferred.promise;
     };
 
@@ -90,29 +96,40 @@ class GrainScheduledService implements IGrainScheduledService {
     
     public createGrainScheduledList = function(grainList:IGrain[]):IGrainScheduled[] {
         var grainScheduledList = [];
-        
         angular.forEach(grainList, function(grain:IGrain) {
             if (grain.grain_type_id > 2) {
                 grainScheduledList.push(this._createFromGrain(grain));
             }
         }, this);
-        
         return grainScheduledList;
     };
 
     public getListBySubjectScheduledId = function(subjectScheduledId:number):ng.IPromise<IGrainScheduled[]> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/grains/'+subjectScheduledId,
+                data: subjectScheduledId
+            };
 
-        //TODO remove when using real API
-        setTimeout(function(self, subjectScheduledId) {
-            if (angular.isUndefined(self._listMappedBySubjectScheduledId[subjectScheduledId])) {
-                self._listMappedBySubjectScheduledId[subjectScheduledId] = [];
-            }
+        if (!angular.isUndefined(self._listMappedBySubjectScheduledId[subjectScheduledId])) {
             deferred.resolve(self._listMappedBySubjectScheduledId[subjectScheduledId]);
-        }, 100, self, subjectScheduledId);
-
-
+        } else {
+            self._listMappedBySubjectScheduledId[subjectScheduledId] = [];
+            this._$http(request).then(
+                function (response) {
+                    angular.forEach(response.data, function (grainScheduledObject) {
+                        var grainScheduled = SerializationHelper.toInstance(new GrainScheduled(), JSON.stringify(grainScheduledObject));
+                        self._listMappedBySubjectScheduledId[subjectScheduledId].push(grainScheduled);
+                    });
+                    deferred.resolve(self._listMappedBySubjectScheduledId[subjectScheduledId]);
+                },
+                function () {
+                    deferred.reject('Une erreur est survenue lors de la récupération de vos grain.');
+                }
+            );
+        }
         return deferred.promise;
     };
 
