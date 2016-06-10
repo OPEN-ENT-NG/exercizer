@@ -1,10 +1,17 @@
-<nav data-stick-to-top class="hash-magnet floating-navigation">
-    <article>
-        <div class="row">
-            <h2 class="cell">Mes sujets</h2>
+<article>
+    <div class="row">
+        <h2 class="cell">Mes sujets</h2>
+
+        <!-- grain toggle icon -->
+        <div class="cell right-magnet" data-ng-click="toggle()">
+            <i data-ng-show="isFolded" data-tooltip="Déplier" class="down-open"></i>
+            <i data-ng-hide="isFolded" data-tooltip="Plier" class="up-open"></i>
         </div>
+    </div>
+
+    <div data-ng-hide="isFolded">
         <div class="row">
-            <div class="eleven cell" data-ng-click="clickOnAutoComplete()">
+            <div class="twelve cell" data-ng-click="clickOnAutoComplete()">
                 <autocomplete
                         options="autocomplete.subjectList"
                         ng-change="clickOnItem(selectedItem)"
@@ -12,11 +19,11 @@
                 </autocomplete>
             </div>
         </div>
-        <div class="row" data-ng-if="subject">
+        <div class="row" data-ng-if="subject" style="overflow-y:scroll; max-height: 200px; border:1px dotted lightgrey;">
             <table class="list-view">
                 <thead>
                 <tr>
-                    <th class="cell twelve">[[subject.title]]</th>
+                    <th class="cell twelve">[[ subject.title ]]</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,7 +46,7 @@
                         </div>
                     </td>
                     <td class="cell ten">
-                        [[grain.grain_data.title]]
+                        [[ getGrainName(grain) ]]
                     </td>
                     <td class="cell one">
                         <i class="drag-anchor"></i>
@@ -48,5 +55,5 @@
                 </tbody>
             </table>
         </div>
-    </article>
-</nav>
+    </div>
+</article>

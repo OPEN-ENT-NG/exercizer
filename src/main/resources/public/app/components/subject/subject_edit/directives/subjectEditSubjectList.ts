@@ -7,8 +7,6 @@ directives.push(
              ) => {
                 return {
                     restrict: 'E',
-                    scope: {
-                    },
                     templateUrl: 'exercizer/public/app/components/subject/subject_edit/templates/subject-edit-subject-list.html',
                     link: (scope:any) => {
 
@@ -17,14 +15,30 @@ directives.push(
                         };
 
                         scope.grainList = [];
-
-                        /**
-                         * GETTER
-                         */
-
+                        scope.isFolded = true;
+                        
                         scope.subjectList = function () {
                             return SubjectService.getList();
                         };
+
+                        scope.getGrainIllustrationURL = function(grainTypeId:number) {
+                            var grainType = GrainTypeService.getById(grainTypeId);
+                            return '/exercizer/public/assets/illustrations/' + grainType.illustration + '.html';
+                        };
+                        
+                        scope.getGrainName = function (grain:IGrain) {
+                            if (grain.grain_data && grain.grain_data.title) {
+                                return grain.grain_data.title;
+                            } else {
+                                var grainType = GrainTypeService.getById(grain.grain_type_id);
+                                return grainType.public_name;
+                            }
+                        };
+
+                        scope.toggle = function () {
+                            scope.isFolded = !scope.isFolded;
+                        };
+                        
 
                         /**
                          * AUTOCOMPLETE
@@ -81,16 +95,6 @@ directives.push(
                                 $originalEvent.dataTransfer.setData('Text', JSON.stringify(item));
                             }
                         };
-
-                        /**
-                         * Illustration
-                         */
-                        scope.getGrainIllustrationURL = function(grainTypeId:number) {
-                            var grainType = GrainTypeService.getById(grainTypeId);
-                            return '/exercizer/public/assets/illustrations/' + grainType.illustration + '.html';
-                        };
-
-
                     }
                 };
             }
