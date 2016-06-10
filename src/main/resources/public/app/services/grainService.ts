@@ -42,7 +42,7 @@ class GrainService implements IGrainService {
 
         var request = {
             method: 'POST',
-            url: 'exercizer/grain',
+            url: 'exercizer/grain/'+ grain.subject_id,
             data: grainObject
         };
 
@@ -75,7 +75,7 @@ class GrainService implements IGrainService {
 
         var request = {
             method: 'PUT',
-            url: 'exercizer/grain',
+            url: 'exercizer/grain/'+grain.subject_id,
             data: grainObject
         };
 
@@ -109,7 +109,7 @@ class GrainService implements IGrainService {
         grainObject.grain_data = JSON.stringify(grainObject.grain_data);
         var request = {
             method: 'DELETE',
-            url: 'exercizer/grain',
+            url: 'exercizer/grain/'+grain.subject_id,
             data: grainObject
         };
 
