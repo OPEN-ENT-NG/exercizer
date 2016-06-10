@@ -11,6 +11,7 @@ interface ISubjectScheduled {
     due_date:string;
     estimated_duration:string;
     is_over:boolean;
+    has_automatic_display: boolean;
     is_one_shot_submit:boolean;
     is_deleted:boolean;
 }
@@ -29,6 +30,7 @@ class SubjectScheduled implements ISubjectScheduled {
     due_date:string;
     estimated_duration:string;
     is_over:boolean;
+    has_automatic_display: boolean;
     is_one_shot_submit:boolean;
     is_deleted:boolean;
     
@@ -46,6 +48,7 @@ class SubjectScheduled implements ISubjectScheduled {
         due_date?:string,
         estimated_duration?:string,
         is_over?:boolean,
+        has_automatic_display?:boolean,
         is_one_shot_submit?:boolean,
         is_deleted?:boolean
     )
@@ -62,6 +65,7 @@ class SubjectScheduled implements ISubjectScheduled {
         this.due_date = due_date;
         this.estimated_duration = estimated_duration;
         this.is_over = is_over;
+        this.has_automatic_display = has_automatic_display;
         this.is_one_shot_submit = is_one_shot_submit;
         this.is_deleted = is_deleted;
     }

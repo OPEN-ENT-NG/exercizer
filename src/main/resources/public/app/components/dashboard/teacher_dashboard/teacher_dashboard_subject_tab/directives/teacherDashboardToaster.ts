@@ -38,7 +38,6 @@ directives.push(
                             function checkRightFn(subjectList){
                                 angular.forEach(subjectList, function(id){
                                     var subject = SubjectService.getById(id);
-                                    console.log(subject);
                                     if(model.me.hasRight(subject, 'owner')){
                                         scope.lowerRight = 'owner';
                                     }
@@ -51,11 +50,8 @@ directives.push(
                                     else{
                                         scope.lowerRight = 'read';
                                     }
-                                    console.log(scope.lowerRight);
                                 });
                             }
-
-
 
                             scope.itemList = [
                                 {

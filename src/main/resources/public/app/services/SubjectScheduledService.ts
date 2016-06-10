@@ -44,17 +44,25 @@ class SubjectScheduledService implements ISubjectScheduledService {
 
     public persist = function(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled> {
         var self = this,
-            deferred = this._$q.defer();
-
-        //TODO update when using real API
-        subjectScheduled.id = Math.floor(Math.random() * (999999999 - 1)) + 1; // FIXME backend
-        setTimeout(function(self, subjectScheduled) {
-            self._listMappedById[subjectScheduled.id] = subjectScheduled;
-            deferred.resolve(subjectScheduled);
-        }, 100, self, subjectScheduled);
-
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject-scheduled/'+ subjectScheduled.subject_id,
+                data: subjectScheduled
+            };
+        this._$http(request).then(
+            function(response) {
+                var subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(response.data)) as any;
+                self._listMappedById[subjectScheduled.id] = subjectScheduled;
+                deferred.resolve(subjectScheduled);
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet programmé.');
+            }
+        );
         return deferred.promise;
     };
+
 
     public update = function(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled> {
         var self = this,

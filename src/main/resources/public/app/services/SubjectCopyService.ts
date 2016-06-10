@@ -44,15 +44,22 @@ class SubjectCopyService implements ISubjectCopyService {
 
     public persist = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
         var self = this,
-            deferred = this._$q.defer();
-
-        //TODO update when using real API
-        subjectCopy.id = Math.floor(Math.random() * (999999999 - 1)) + 1; // FIXME backend
-        setTimeout(function(self, subjectCopy) {
-            self._listMappedById[subjectCopy.id] = subjectCopy;
-            deferred.resolve(subjectCopy);
-        }, 100, self, subjectCopy);
-
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject-copy/'+ subjectCopy.subject_scheduled_id,
+                data: subjectCopy
+            };
+        this._$http(request).then(
+            function(response) {
+                var subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(response.data)) as any;
+                self._listMappedById[subjectCopy.id] = subjectCopy;
+                deferred.resolve(subjectCopy);
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors de la sauvegarde d une copie.');
+            }
+        );
         return deferred.promise;
     };
 
