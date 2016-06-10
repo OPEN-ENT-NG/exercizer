@@ -5,19 +5,30 @@ directives.push(
             return {
                 restrict: 'E',
                 scope : {
-                    grainCopy: '='
+                    grainScheduled: '=',
+                    grainCopy: '=',
+                    isTeacher: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/common/grain_copy/templates/grain-copy-footer.html',
                 link:(scope:any) => {
                     scope.isFolded = true;
 
                     scope.hasAnswerExplanation = function() {
-                        return !angular.isUndefined(scope.grainCopy.grain_copy_data.answer_explanation);
+                        return !angular.isUndefined(scope.grainScheduled.grain_data.answer_explanation);
+                    };
+                    
+                    scope.hasComment = function() {
+                        return !angular.isUndefined(scope.grainCopy.comment);
                     };
 
                     scope.toggle = function() {
                         scope.isFolded = !scope.isFolded;
-                    }
+                    };
+
+                    scope.updateGrain = function() {
+                        scope.grainCopy.comment = StringISOHelper.toISO(scope.grainCopy.comment);
+                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                    };
                 }
             };
         }]

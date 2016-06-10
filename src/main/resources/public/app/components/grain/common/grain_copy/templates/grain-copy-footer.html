@@ -1,20 +1,57 @@
-<hr style="width: 100%; border: 1px solid lightgrey;" />
+<hr class="row" style="border-bottom: 1px solid black;" />
 
 <div class="row">
-    <div class="five cell">
-        <div class="row">
-            <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="updateGrain()" style="height: 80px;" placeholder="Inquiquez un commentaire"></textarea>
+    <div class="cell right-magnet" data-ng-click="toggle()">
+        <i data-ng-show="isFolded" data-tooltip="Déplier" class="down-open"></i>
+        <i data-ng-hide="isFolded" data-tooltip="Plier" class="up-open"></i>
+    </div>
+</div>
+
+<div data-ng-show="isFolded">
+    <div class="row">
+        <div class="eight cell">
+            <h2 class="row">
+                Commentaire [[ hasComment() ? '(1)' : '(0)' ]]
+            </h2>
+        </div>
+        <div class="one cell">
+            &nbsp;
+        </div>
+        <div class="three cell">
+            <h2 class="row">
+                Résultat :&nbsp;[[ grainCopy.calculated_score ]]&nbsp;/&nbsp;[[ grainScheduled.grain_data.max_score ]]
+            </h2>
         </div>
     </div>
-    <div class="two cell">
-        &nbsp;
+</div>
+
+<div data-ng-hide="isFolded">
+    <div class="row" data-ng-if="hasAnswerExplanation()">
+        <p style="text-align: justify"><em class="medium-importance">[[ grainScheduled.grain_data.answer_explanation ]]</em></p>
     </div>
-    <div class="five cell">
-        <div class="row">
-            Résultat automatique :
+
+    <div class="row">
+        <div class="eight cell">
+            <h2 class="row">
+                Commentaire :
+            </h2>
+            <div class="row">
+                <textarea data-ng-model="grain_copy.comment" complete-change="updateGrain()" style="height: 80px;" placeholder="Indiquez un commentaire"></textarea>
+            </div>
         </div>
-        <div class="row">
-            Résultat final :
+        <div class="one cell">
+            &nbsp;
+        </div>
+        <div class="three cell">
+            <h2 class="row">
+                Résultats :
+            </h2>
+            <div class="row">
+                <strong>Score calculé :</strong>&nbsp;[[ grainCopy.calculated_score ]]&nbsp;/&nbsp;[[ grainScheduled.grain_data.max_score ]]
+            </div>
+            <div class="row vertical-spacing">
+                <strong>Score final :</strong>
+            </div>
         </div>
     </div>
 </div>
