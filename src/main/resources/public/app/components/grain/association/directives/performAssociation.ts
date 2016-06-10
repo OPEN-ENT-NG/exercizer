@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'performAssociation',
-        injections: ['E_UPDATE_GRAIN_COPY', (E_UPDATE_GRAIN_COPY) => {
+        injections: [() => {
             return {
                 restrict: 'E',
                 scope: {
@@ -13,7 +13,6 @@ directives.push(
                     scope.updateGrainCopy = function() {
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     };
-
                 }
             };
         }]
