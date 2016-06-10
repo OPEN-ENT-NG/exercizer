@@ -1,6 +1,6 @@
 <!-- GRAIN LIST -->
 <div class="row"
-     dragdrop="dropTo('subject', $originalEvent)">
+     dragdrop="dropTo(subject, $originalEvent)">
     <div data-ng-repeat="grain in grainList | orderObjectBy:'order_by':false">
 
         <div data-ng-switch="grain.grain_type_id">

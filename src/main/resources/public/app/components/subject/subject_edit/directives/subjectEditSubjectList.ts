@@ -2,8 +2,8 @@ directives.push(
     {
         name: 'subjectEditSubjectList',
         injections: [
-            'FolderService','SubjectService','GrainService',
-            (FolderService, SubjectService, GrainService
+            'FolderService','SubjectService','GrainService','GrainTypeService',
+            (FolderService, SubjectService, GrainService, GrainTypeService
              ) => {
                 return {
                     restrict: 'E',
@@ -80,6 +80,14 @@ directives.push(
                             } catch (e) {
                                 $originalEvent.dataTransfer.setData('Text', JSON.stringify(item));
                             }
+                        };
+
+                        /**
+                         * Illustration
+                         */
+                        scope.getGrainIllustrationURL = function(grainTypeId:number) {
+                            var grainType = GrainTypeService.getById(grainTypeId);
+                            return '/exercizer/public/assets/illustrations/' + grainType.illustration + '.html';
                         };
 
 

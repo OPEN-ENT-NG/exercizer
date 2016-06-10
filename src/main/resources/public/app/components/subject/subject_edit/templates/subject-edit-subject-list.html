@@ -16,14 +16,33 @@
             <table class="list-view">
                 <thead>
                 <tr>
-                    <th>[[subject.title]]</th>
+                    <th class="cell twelve">[[subject.title]]</th>
                 </tr>
                 </thead>
                 <tbody>
                 <!-- grain list-->
-                <tr data-ng-repeat="grain in grainList | orderBy:'order_by'">
-                    <td dragstart="drag(grain, $originalEvent)">
+                <tr data-ng-repeat="grain in grainList | orderBy:'order_by'" dragstart="drag(grain, $originalEvent)">
+                    <td class="cell one">
+                        <div data-ng-switch="grain.grain_type_id">
+                            <div data-ng-switch-when="1">
+                                <i class="info-pic"></i>
+                            </div>
+                            <div data-ng-switch-when="2">
+                                <i class="help"></i>
+                            </div>
+                            <div data-ng-switch-when="3">
+                                <i class="doc-text"></i>
+                            </div>
+                            <div data-ng-switch-default style="width:15px; height:15px;">
+                                <div data-ng-include="getGrainIllustrationURL(grain.grain_type_id)"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="cell ten">
                         [[grain.grain_data.title]]
+                    </td>
+                    <td class="cell one">
+                        <i class="drag-anchor"></i>
                     </td>
                 </tr>
                 </tbody>

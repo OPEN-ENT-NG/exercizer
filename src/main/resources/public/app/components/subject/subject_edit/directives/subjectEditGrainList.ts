@@ -2,8 +2,8 @@ directives.push(
     {
         name: 'subjectEditGrainList',
         injections:
-            ['DragService',
-                (DragService
+            ['DragService','GrainService',
+                (DragService,GrainService
                 ) => {
                     return {
                         restrict: 'E',
@@ -19,10 +19,12 @@ directives.push(
                                 scope.grainList = grainList;
                             });
 
-                            scope.dropTo = function (item,$originalEvent){
-                                var dataField = DragService.dropConditionFunction(item, $originalEvent);
+                            scope.dropTo = function (subject,$originalEvent){
+                                var dataField = DragService.dropConditionFunction(subject, $originalEvent);
                                 var originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
-                                console.log(originalItem);
+                                GrainService.duplicate(originalItem, subject);
+
+
                             }
                         }
                     };
