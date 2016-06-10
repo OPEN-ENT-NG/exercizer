@@ -144,7 +144,7 @@ class FolderService implements IFolderService {
             deferred = this._$q.defer(),
             request = {
                 method: 'PUT',
-                url: 'exercizer/folder',
+                url: 'exercizer/folder/'+folder.id,
                 data: folder
             };
         // delete selected
@@ -176,7 +176,7 @@ class FolderService implements IFolderService {
             function(results) {
                     var request = {
                         method: 'DELETE',
-                        url: 'exercizer/folder',
+                        url: 'exercizer/folder/'+folder.id,
                         data: folder
                     };
                     self._$http(request).then(
