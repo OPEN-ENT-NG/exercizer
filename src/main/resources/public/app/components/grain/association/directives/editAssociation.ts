@@ -10,12 +10,14 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/association/templates/edit-association.html',
                 link:(scope:any) => {
 
-                    scope.addAnswer = function(){
+                    scope.addAnswer = function() {
                         var newAnswer = {
                             text_left : '',
                             text_right : ''
                         };
+                        
                         scope.grain.grain_data.custom_data.correct_answer_list.push(newAnswer);
+                        scope.updateGrain();
                     };
 
                     scope.deleteAnswer = function(answer){
