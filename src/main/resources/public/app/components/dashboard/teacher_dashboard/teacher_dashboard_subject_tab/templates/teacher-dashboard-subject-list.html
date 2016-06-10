@@ -104,17 +104,14 @@
                                 <img class="absolute" data-ng-src="[[getSubjectPicture(subject)]]" />
                             </div>
                             <div class="top"
-                                    data-ng-if="display.tab == 'subjectShared'"
-                                    dragstart="drag(subject, $originalEvent)"
-                                    dragcondition="dragSubjectCondition(subject)"
-                                    dragdrop="dropTo(subject, $originalEvent)"
-                                    dropcondition="dropSubjectCondition.dropCondition(subject)">
+                                    data-ng-if="display.tab == 'subjectShared'">
                                 <img class="absolute" data-ng-src="[[getSubjectPicture(subject)]]" />
                             </div>
                             <div class="bottom">
                                 <div class="content">
                                     <div class="cell">
-                                        <strong data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</strong>
+                                        <strong data-ng-if="display.tab == 'mySubject'" data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</strong>
+                                        <strong data-ng-if="display.tab == 'subjectShared'">[[subject.title]]</strong>
                                         <br />
                                         <br/>
                                         <span data-ng-if="subject.modified">Modifié le [[subject.modified | date: 'dd/MM/yyyy']]</span>
@@ -141,7 +138,7 @@
                         <input type="checkbox" data-ng-model="data.selectAll" data-ng-change="selectAllFn(data.selectAll)" />
                     </th>
                     <!-- icon folder -->
-                    <th><i class="drag-anchor" data-ng-if="display.tab == 'mySubject'"></i></th>
+                    <th data-ng-if="display.tab == 'mySubject'"><i class="drag-anchor" ></i></th>
                     <th scope="col">
                         <span>Nom</span>
                     </th>
@@ -177,7 +174,8 @@
                         <i class="doc-text"></i>
                     </td>
                     <td>
-                        <a data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</a>
+                        <a data-ng-if="display.tab == 'mySubject'" data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</a>
+                        <a data-ng-if="display.tab == 'subjectShared'">[[subject.title]]</a>
                     </td>
                 </tr>
                 </tbody>

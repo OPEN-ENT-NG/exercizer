@@ -121,7 +121,7 @@ class SubjectService implements ISubjectService {
             deferred = this._$q.defer(),
             request = {
                 method: 'DELETE',
-                url: 'exercizer/subject',
+                url: 'exercizer/subject/'+subject.id,
                 data: subject
             };
        self. _beforePushBack(subject);

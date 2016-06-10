@@ -36,22 +36,22 @@ directives.push(
                             });
 
                             function checkRightFn(subjectList){
-                                scope.lowerRight = 'owner';
                                 angular.forEach(subjectList, function(id){
                                     var subject = SubjectService.getById(id);
                                     console.log(subject);
                                     if(model.me.hasRight(subject, 'owner')){
                                         scope.lowerRight = 'owner';
                                     }
-                                    if(model.me.hasRight(subject, 'exercizer.manager')){
+                                    else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager)){
                                         scope.lowerRight = 'manager';
                                     }
-                                    if(model.me.hasRight(subject, 'exercizer.contrib')){
-                                        scope.lowerRight = 'contrib';
+                                    else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)){
+                                        //scope.lowerRight = 'contrib';
                                     }
-                                    if(model.me.hasRight(subject, 'exercizer.read')){
+                                    else{
                                         scope.lowerRight = 'read';
                                     }
+                                    console.log(scope.lowerRight);
                                 });
                             }
 
@@ -74,7 +74,7 @@ directives.push(
                                         }
                                     },
                                     display : function(){
-                                        return scope.folderList.length + scope.subjectList.length == 1;
+                                        return scope.folderList.length + scope.subjectList.length == 1 && ( scope.lowerRight == 'owner' || scope.lowerRight == 'manager');
                                     }
                                 },
                                 {
@@ -84,7 +84,7 @@ directives.push(
                                         scope.$emit('E_SHARE_SUBJECT', subject);
                                     },
                                     display : function(){
-                                        return scope.subjectList.length == 1 && scope.folderList.length == 0 && scope.lowerRight == 'owner';
+                                        return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner' || scope.lowerRight == 'manager');
                                     }
                                 },
                                 {
@@ -94,7 +94,7 @@ directives.push(
                                         scope.$emit('E_SCHEDULE_SUBJECT', subject);
                                     },
                                     display : function(){
-                                        return scope.subjectList.length == 1 && scope.folderList.length == 0
+                                        return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner' || scope.lowerRight == 'manager');
                                     }
                                 },
                                 {
@@ -103,7 +103,7 @@ directives.push(
                                         notify.error('Not implemented yet');
                                     },
                                     display : function(){
-                                        return scope.lowerRight == 'owner';
+                                        return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner' || scope.lowerRight == 'manager');
                                     }
                                 },
                                 {
@@ -112,7 +112,7 @@ directives.push(
                                         scope.$emit("E_COPY_SELECTED_FOLDER_SUBJECT");
                                     },
                                     display : function(){
-                                        return scope.lowerRight == 'contrib' || scope.lowerRight == 'manager' ||scope.lowerRight == 'owner';
+                                        return true;
                                     }
                                 },
                                 {
