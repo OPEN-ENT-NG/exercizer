@@ -11,7 +11,7 @@ directives.push(
                 link:(scope:any) => {
                     scope.isFolded = true;
 
-                    scope.hasAnswerExpalantion = function() {
+                    scope.hasAnswerExplanation = function() {
                         return !angular.isUndefined(scope.grainCopy.grain_copy_data.answer_explanation);
                     };
 
