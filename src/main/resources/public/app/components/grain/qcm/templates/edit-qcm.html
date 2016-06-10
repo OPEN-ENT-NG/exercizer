@@ -15,20 +15,42 @@
             <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
             <span>erreur non autorisée</span>
         </div>
-        <div class="row vertical-spacing">
-            <div  class="row" data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
-                <div class="one cell"><input type="checkbox" data-ng-model="answer.isChecked" data-ng-change="updateGrain()" /></div>
-                <div class="one cell">&nbsp;</div>
-                <input type="text" class="eight cell" data-ng-model="answer.text" complete-change="updateGrain()" value="[[answer.text]]" placeholder="Indiquez une proposition" />
-                <div class="one cell">&nbsp;</div>
-                <div class="one cell" data-ng-click="deleteAnswer(answer)"><i class="trash"></i></div>
-            </div>
 
-            <div class="row vertical-spacing">
-                <a data-ng-click="addAnswer()" class="twelve cell comment" style="text-align: center">
-                    Ajouter une réponse
-                </a>
-            </div>
+        <div class="row">
+            <table class="twelve">
+                <thead>
+                <tr>
+                    <th style="width:20%;">
+                        Correctes
+                    </th>
+                    <th style="width:70%;">
+                        Réponses associées
+                    </th>
+                    <th style="text-align: right">
+                        Action
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
+                    <td>
+                        <input type="checkbox" data-ng-model="answer.isChecked" data-ng-change="updateGrain()" />
+                    </td>
+                    <td>
+                        <input type="text" style="width: 100%;" data-ng-model="answer.text" complete-change="updateGrain()" value="[[ answer.text ]]" placeholder="Indiquez une proposition" />
+                    </td>
+                    <td style="text-align: right">
+                        <i class="close" data-ng-click="deleteAnswer(answer)"></i>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <a data-ng-click="addAnswer()" class="twelve cell comment" style="text-align: center; margin-top: 0;">
+                Ajouter une proposition
+            </a>
         </div>
 
         <grain-edit-answer-hint data-grain="grain"></grain-edit-answer-hint>
