@@ -49,13 +49,13 @@ directives.push(
 
                     scope.scheduleSubject = function(){
                         createIdList(scope.data.userList,scope.data.groupList).then(
-                            function(idList){
-                                console.log('idList', idList);
+                            function(users){
+                                console.log('users', users);
                                 createSubjectScheduled(scope.subject, scope.option).then(
                                     function(subjectScheduled){
                                         console.log('subjectScheduled',subjectScheduled);
-                                        angular.forEach(idList, function(id){
-                                            createSubjectCopy(subjectScheduled, id).then(
+                                        angular.forEach(users, function(user){
+                                            createSubjectCopy(subjectScheduled, user).then(
                                                 function(subjectCopy){
                                                     console.log('subjectCopy',subjectCopy);
                                                 }
@@ -70,10 +70,13 @@ directives.push(
                     function createIdList(userList, groupList){
                         // get user target by the subject scheduled
                         var deferred = $q.defer();
-                        var idList = [];
+                        var users = [];
                         // part 1 : user
                         angular.forEach(userList, function(user) {
-                            idList.push(user._id);
+                            users.push({
+                                id : user._id,
+                                name : user.title
+                            });
                         });
                         // part 2 : group
                         var promises = [];
@@ -84,10 +87,13 @@ directives.push(
                             function(data) {
                                 angular.forEach(data, function(userList) {
                                     angular.forEach(userList, function(user) {
-                                        idList.push(user.id);
+                                        users.push({
+                                            id : user.id,
+                                            name : user.displayName
+                                        });
                                     });
                                 });
-                                deferred.resolve(idList);
+                                deferred.resolve(users);
 
                             }
                         );
@@ -143,12 +149,13 @@ directives.push(
                         return deferred.promise;
                     }
 
-                    function createSubjectCopy(subjectScheduled, id){
+                    function createSubjectCopy(subjectScheduled, user){
                         var deferred = $q.defer();
                         // create copy subject from subject scheduled;
                         var subjectCopy = SubjectCopyService.createFromSubjectScheduled(subjectScheduled);
                         // add attributes from option
-                        subjectCopy.owner = id;
+                        subjectCopy.owner = user.id;
+                        subjectCopy.owner_userName = user.name;
                         // persist subjectCopy
                         SubjectCopyService.persist(subjectCopy).then(
                             function(subjectCopy){
