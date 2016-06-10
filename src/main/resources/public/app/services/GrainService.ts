@@ -20,9 +20,11 @@ class GrainService implements IGrainService {
     private _listMappedBySubjectId:{ [subjectId: number]: IGrain[] };
 
     constructor
-    (private _$q:ng.IQService,
-     private _$http:ng.IHttpService,
-     private _grainTypeService:IGrainTypeService) {
+    (
+        private _$q:ng.IQService,
+        private _$http:ng.IHttpService,
+        private _grainTypeService:IGrainTypeService
+    ) {
         this._$q = _$q;
         this._$http = _$http;
         this._grainTypeService = _grainTypeService;
@@ -42,7 +44,7 @@ class GrainService implements IGrainService {
 
         var request = {
             method: 'POST',
-            url: 'exercizer/grain/'+ grain.subject_id,
+            url: 'exercizer/grain/' + grain.subject_id,
             data: grainObject
         };
 
@@ -75,7 +77,7 @@ class GrainService implements IGrainService {
 
         var request = {
             method: 'PUT',
-            url: 'exercizer/grain/'+grain.subject_id,
+            url: 'exercizer/grain/' + grain.subject_id,
             data: grainObject
         };
 
@@ -103,13 +105,13 @@ class GrainService implements IGrainService {
     public remove = function (grain:IGrain):ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer();
-        // ?
+       
         var grainObject = angular.copy(grain);
-        // stringify grain_data
         grainObject.grain_data = JSON.stringify(grainObject.grain_data);
+        
         var request = {
             method: 'DELETE',
-            url: 'exercizer/grain/'+grain.subject_id,
+            url: 'exercizer/grain/' + grain.subject_id,
             data: grainObject
         };
 
@@ -147,23 +149,34 @@ class GrainService implements IGrainService {
         return deferred.promise;
     };
 
-    public duplicate = function (grain:IGrain, subject:ISubject, rename : boolean = true):ng.IPromise<IGrain> {
+    public duplicate = function (grain:IGrain, subject:ISubject, rename: boolean = true):ng.IPromise<IGrain> {
+
         var duplicatedGrain = CloneObjectHelper.clone(grain, true);
         duplicatedGrain.id = undefined;
         duplicatedGrain.subject_id = subject.id;
-        if (duplicatedGrain.grain_type_id > 3 && rename) {
-            duplicatedGrain.grain_data.title += '_copie';
+
+        if (rename) { // duplicate action in edit subject page
+            
+            if (duplicatedGrain.grain_type_id > 3) {
+                duplicatedGrain.grain_data.title += '_copie';
+            }
+            
+            duplicatedGrain.order_by = undefined;
+            this._setOrderToGrain(duplicatedGrain);
         }
+
         return this.persist(duplicatedGrain);
     };
 
-    public duplicateList = function(grainList:IGrain[],subject:ISubject, rename : boolean = true):ng.IPromise<boolean>{
+    public duplicateList = function(grainList:IGrain[],subject:ISubject, rename: boolean = true):ng.IPromise<boolean>{
         var self = this,
             deferred = this._$q.defer(),
             promises = [];
+
         angular.forEach(grainList, function(grain) {
             promises.push(self.duplicate(grain, subject, rename));
         });
+
         this._$q.all(promises).then(
             function(data) {
                 deferred.resolve(data);
@@ -172,6 +185,7 @@ class GrainService implements IGrainService {
                 deferred.reject(err);
             }
         );
+        
         return deferred.promise;
     };
 
