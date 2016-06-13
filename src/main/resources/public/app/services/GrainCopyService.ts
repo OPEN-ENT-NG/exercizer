@@ -158,6 +158,40 @@ class GrainCopyService implements IGrainCopyService {
                     grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({text : correct_answer.text})
                 });
                 break;
+
+            case 9:
+                // Order by
+                grainCopy.grain_copy_data.custom_copy_data = new OrderCustomCopyData();
+                var newOrder = [],
+                    rand,
+                    set,
+                    alreadySet,
+                    self = this;
+                angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer, key){
+                    set = true;
+                    while (set){
+                        rand = self._getRandomIntInclusive(1, grainScheduled.grain_data.custom_data.correct_answer_list.length);
+                        alreadySet = false;
+                        angular.forEach(newOrder, function(value){
+                            if(value == rand){
+                                alreadySet =  true;
+                            }
+                        });
+                        if(!alreadySet){
+                            newOrder[key] = rand;
+                            set = false;
+                        }
+                    }
+                });
+                angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer, key){
+                    grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({
+                        text : correct_answer.text,
+                        order_by : newOrder[key],
+                        index : newOrder[key] - 1,
+
+                    })
+                });
+                break;
             default:
                 console.error('specific part of grain copy is not defined when creating from grain scheduled', grainScheduled);
 
@@ -165,4 +199,12 @@ class GrainCopyService implements IGrainCopyService {
 
         return grainCopy;
     };
+
+    // On renvoie un entier aléatoire entre une valeur min (incluse)
+    // et une valeur max (incluse).
+    // Attention : si on utilisait Math.round(), on aurait une distribution
+    // non uniforme !
+    private _getRandomIntInclusive(min, max) {
+        return Math.floor(Math.random() * (max - min +1)) + min;
+    }
 }

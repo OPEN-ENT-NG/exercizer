@@ -1,0 +1,17 @@
+<article id="[[ grainCopy.id ]]">
+    <grain-copy-header data-grain-copy="grainCopy"></grain-copy-header>
+    <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
+    <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
+    <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list  | orderObjectBy:'order_by':false" class="row vertical-spacing">
+        <input type="text" class="one cell" data-ng-model="filled_answer.order_by"
+                disabled />
+        <input type="text" class="eleven cell"
+               style="[[ isCorrect[key] ? 'color: green; border: 1px solid green;' : 'color: red; border: 1px solid red;' ]]"
+               data-ng-model="filled_answer.text"
+               placeholder="Aucune réponse renseignée" disabled />
+    </div>
+    <grain-copy-footer data-grain-scheduled="grainScheduled"
+                       data-grain-copy="grainCopy"
+                       data-is-teacher="isTeacher">
+    </grain-copy-footer>
+</article>

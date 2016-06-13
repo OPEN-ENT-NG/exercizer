@@ -1,8 +1,17 @@
-<article>
-    <grain-copy-header data-grain-copy="grainCopy"></grain-copy-header>
-    <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
+<grain-copy-header data-grain-copy="grainCopy"></grain-copy-header>
+<grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
+<grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
+<div class="row vertical-spacing">
+    <ul sortable-list class="thought-out-actions">
+        <li data-ng-repeat="filled_answer in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list | orderObjectBy:'order_by':false"
+            sortable-element
+            data-ng-change="reOrder()"
+            data-ng-model="filled_answer.index">
+            <div class="one cell" style="text-align: center; border:1px solid black; border-radius: 5px;">[[ filled_answer.order_by ]]</div>
+            <div class="one cell">&nbsp;</div>
+            <input type="text" class="nine cell" data-ng-model="filled_answer.text"  value="[[ filled_answer.text ]]" disabled/>
+        </li>
+    </ul>
+</div>
 
-    <div class="row vertical-spacing">
-        <input type="text" class="twelve cell" data-ng-model="grainCopy.grain_copy_data.custom_copy_data.filled_answer" data-ng-blur="updateGrainCopy()" placeholder="Indiquez la réponse" />
-    </div>
 </article>
