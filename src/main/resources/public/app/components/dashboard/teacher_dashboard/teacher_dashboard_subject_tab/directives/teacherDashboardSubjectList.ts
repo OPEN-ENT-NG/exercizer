@@ -103,6 +103,7 @@ directives.push(
                         };
 
                         scope.setCurrentFolder = function (folder) {
+                            scope.$emit('E_RESET_SELECTED_LIST');
                             scope.display.tab = 'mySubject';
                             scope.currentFolderId = folder.id;
                         };
@@ -134,6 +135,7 @@ directives.push(
 
 
                         scope.goToRoot = function () {
+                            scope.$emit('E_RESET_SELECTED_LIST');
                             scope.currentFolderId = null;
                         };
 
