@@ -57,7 +57,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         s.prepared(anotherOwnerQuery, new JsonArray().add(resource.getString("owner")).add(resource.getString("owner_username")));
         
         s.insert(resourceTable, resource, "*");
-        sql.transaction(s.build(), SqlResult.validUniqueResultHandler(handler));
+        sql.transaction(s.build(), SqlResult.validUniqueResultHandler(2, handler));
     }
 
     /**

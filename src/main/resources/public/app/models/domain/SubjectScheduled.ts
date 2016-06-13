@@ -41,7 +41,7 @@ class SubjectScheduled implements ISubjectScheduled {
         id?:number,
         subject_id?:number,
         owner?:string,
-        owner_username:string,
+        owner_username?:string,
         created?:string,
         title?:string,
         description?:string,
