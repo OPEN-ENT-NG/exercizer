@@ -4,7 +4,6 @@
                   data-subject-scheduled="subjectScheduled"
                   data-subject-copy="subjectCopy"
                   data-is-teacher="isTeacher">
-
     </view-summary>
 
     <div data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false">
@@ -22,7 +21,8 @@
             <div data-ng-switch-when="5">
                 <view-open-answer data-grain-scheduled="getGrainScheduled(grainCopy)"
                                   data-grain-copy="grainCopy"
-                                  data-is-teacher="isTeacher"></view-open-answer>
+                                  data-is-teacher="isTeacher">
+                </view-open-answer>
             </div>
             <div data-ng-switch-when="6">
                 <view-multiple-answer data-grain-scheduled="getGrainScheduled(grainCopy)"

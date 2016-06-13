@@ -26,8 +26,10 @@ directives.push(
                     };
 
                     scope.updateGrain = function() {
-                        scope.grainCopy.comment = StringISOHelper.toISO(scope.grainCopy.comment);
-                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                        if (scope.isTeacher) {
+                            scope.grainCopy.comment = StringISOHelper.toISO(scope.grainCopy.comment);
+                            scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                        }
                     };
                 }
             };
