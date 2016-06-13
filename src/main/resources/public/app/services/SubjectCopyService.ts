@@ -80,14 +80,31 @@ class SubjectCopyService implements ISubjectCopyService {
                 deferred.resolve(subjectCopy);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la sauvegarde d une copie.');
+                deferred.reject('Une erreur est survenue lors de la création d une copie.');
             }
         );
         return deferred.promise;
     };
 
     public update = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
-        throw "update subject copy not implemented";
+        var deferred = this._$q.defer(),
+            request = {
+                method: 'PUT',
+                url: 'exercizer/subject-copy',
+                data: subjectCopy
+            };
+        
+            this._$http(request).then(
+                function(response) {
+                    subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(response.data));
+                    deferred.resolve(subjectCopy);
+                },
+                function() {
+                    deferred.reject('Une erreur est survenue lors de la sauvegarde de la copie.');
+                }
+            );
+        
+        return deferred.promise;
     };
 
     public createFromSubjectScheduled = function(subjectScheduled:ISubjectScheduled):ISubjectCopy {

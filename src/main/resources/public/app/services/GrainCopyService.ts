@@ -56,17 +56,32 @@ class GrainCopyService implements IGrainCopyService {
         var self = this,
             deferred = this._$q.defer();
 
-        //TODO remove when using real API
-        setTimeout(function(self, grainCopy) {
-            if (angular.isUndefined(self._listMappedBySubjectCopyId[grainCopy.subject_copy_id])) {
-                self._listMappedBySubjectCopyId[grainCopy.subject_copy_id] = [];
+        var grainCopyObject = angular.copy(grainCopy);
+        grainCopyObject.grain_copy_data = JSON.stringify(grainCopyObject.grain_data);
+
+        var request = {
+            method: 'PUT',
+            url: 'exercizer/grain-copy',
+            data: grainCopyObject
+        };
+
+        this._$http(request).then(
+            function (response) {
+                var grainCopy = self.instantiateGrainCopy(response.data);
+
+                if (angular.isUndefined(self._listMappedBySubjectCopyId[grainCopy.subject_copy_id])) {
+                    self._listMappedBySubjectCopyId[grainCopy.subject_copy_id] = [];
+                }
+
+                var index = self._listMappedBySubjectCopyId[grainCopy.subject_copy_id].indexOf(grainCopy);
+                self._listMappedBySubjectCopyId[grainCopy.subject_copy_id][index] = grainCopy;
+
+                deferred.resolve(grainCopy);
+            },
+            function () {
+                deferred.reject('Une erreur est survenue lors de la mise à jour de l\'élément de la copie.')
             }
-
-            var index = self._listMappedBySubjectCopyId[grainCopy.subject_copy_id].indexOf(grainCopy);
-            self._listMappedBySubjectCopyId[grainCopy.subject_copy_id][index] = grainCopy;
-
-            deferred.resolve(grainCopy);
-        }, 100, self, grainCopy);
+        );
 
         return deferred.promise;
     };

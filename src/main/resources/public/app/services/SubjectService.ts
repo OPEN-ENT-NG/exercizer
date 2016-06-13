@@ -84,7 +84,7 @@ class SubjectService implements ISubjectService {
                 deferred.resolve(subject);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
+                deferred.reject('Une erreur est survenue lors de la création du sujet.');
             }
         );
         return deferred.promise;

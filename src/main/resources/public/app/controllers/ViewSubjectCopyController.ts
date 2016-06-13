@@ -174,6 +174,18 @@ class ViewSubjectCopyController {
             }
         }
 
+        function _handleUpdateSubjectCopy(subjectCopy:ISubjectCopy) {
+            self._subjectCopyService.update(subjectCopy).then(
+                function(subjectCopy:ISubjectCopy) {
+                    self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
+                    self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED');
+                },
+                function(err) {
+                    notify.info(err);
+                }
+            )
+        }
+
         function _handleUpdateGrainCopy(grainCopy:IGrainCopy) {
             self._grainCopyService.update(grainCopy).then(
                 function() {
@@ -195,10 +207,27 @@ class ViewSubjectCopyController {
         });
 
         self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
-            self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
+            if (!self._subjectCopy.is_corrected && !self._subjectCopy.is_correction_on_going && !self._previewing  && self._isTeacher) {
+                self._subjectCopy.is_correction_on_going = true;
+                self._subjectCopyService.update(self._subjectCopy).then(
+                    function(subjectCopy:ISubjectCopy) {
+                        self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
+                        self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
+                    },
+                    function(err) {
+                        notify.error(err);
+                    }
+                );
+            } else {
+                self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
+            }
         });
-        
-        // TODO E_UPDATE_SUBJECT_COPY
+
+        self._$scope.$on('E_UPDATE_SUBJECT_COPY', function(event, subjectCopy:ISubjectCopy) {
+            if (!self._previewing  && self._isTeacher) {
+                _handleUpdateSubjectCopy(subjectCopy);
+            }
+        });
 
         // init
         self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', undefined);

@@ -26,9 +26,12 @@ directives.push(
                     };
                     
                     scope.submitSubjectCopy = function() {
-                        scope.$emit('E_UPDATE_SUBJECT_COPY', scope.subject_copy);
-                        $location.path('/dashboard');
+                        scope.$emit('E_SUBJECT_COPY_SUBMITTED', scope.subjectCopy);
                     };
+                    
+                    scope.$on('E_SUBMIT_SUBJECT_COPY', function() {
+                        $location.path('/dashboard');
+                    })
                 }
             };
         }]

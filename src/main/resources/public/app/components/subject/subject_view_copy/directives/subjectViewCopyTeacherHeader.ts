@@ -13,10 +13,15 @@ directives.push(
                     scope.redirectToDashboard = function(isCorrected:boolean) {
                         if (isCorrected) {
                             scope.subjectCopy.is_corrected = true;
-                            scope.$emit('E_UPDATE_SUBJECT_COPY', scope.subject_copy);
+                            scope.$emit('E_UPDATE_SUBJECT_COPY', scope.subjectCopy);
+                        } else {
+                            $location.path('/dashboard');
                         }
-                        $location.path('/dashboard');
                     };
+                    
+                    scope.$on('E_SUBJECT_COPY_UPDATED', function() {
+                        $location.path('/dashboard');
+                    });
                 }
             };
         }]
