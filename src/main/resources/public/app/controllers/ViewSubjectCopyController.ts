@@ -126,6 +126,7 @@ class ViewSubjectCopyController {
 
         self._$scope.$on('E_UPDATE_GRAIN_COPY', function(event, grainCopy:IGrainCopy) {
             if (!self._previewing && self._isTeacher) {
+                // TODO update subject copy final score
                 _handleUpdateGrainCopy(grainCopy);
             } else {
                 _updateLocalGrainCopyList(grainCopy);
@@ -135,6 +136,8 @@ class ViewSubjectCopyController {
         self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
             self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
         });
+        
+        // TODO E_UPDATE_SUBJECT_COPY
 
         // init
         self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', undefined);

@@ -18,8 +18,9 @@
 
         <!-- HEADER -->
         <div data-ng-if="!performSubjectCopyController.previewing">
-            <!-- TODO -->
-            <!--<subject-perform-copy-header></subject-perform-copy-header>-->
+            <subject-perform-copy-student-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"
+                                                 data-subject-copy="performSubjectCopyController.subjectCopy">
+            </subject-perform-copy-student-header>
         </div>
 
         <div class="row">
@@ -43,11 +44,21 @@
 
     <!-- NO DATA -->
     <div class="row" data-ng-if="performSubjectCopyController.hasDataLoaded && performSubjectCopyController.grainCopyList.length === 0">
-        <subject-perform-copy-preview-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"
-                                             data-subject-copy="performSubjectCopyController.subjectCopy"
-                                             data-grain-scheduled-list="performSubjectCopyController.grainScheduledList"
-                                             data-grain-copy-list="performSubjectCopyController.grainCopyList">
-        </subject-perform-copy-preview-header>
+        <!-- PREVIEW HEADER -->
+        <div data-ng-if="performSubjectCopyController.previewing">
+            <subject-perform-copy-preview-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"
+                                                 data-subject-copy="performSubjectCopyController.subjectCopy"
+                                                 data-grain-scheduled-list="performSubjectCopyController.grainScheduledList"
+                                                 data-grain-copy-list="performSubjectCopyController.grainCopyList">
+            </subject-perform-copy-preview-header>
+        </div>
+
+        <!-- HEADER -->
+        <div data-ng-if="!performSubjectCopyController.previewing">
+            <subject-perform-copy-student-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"
+                                                 data-subject-copy="performSubjectCopyController.subjectCopy">
+            </subject-perform-copy-student-header>
+        </div>
         <div class="warning">La copie ne contient pas d'éléments.</div>
     </div>
 </div>

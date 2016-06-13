@@ -143,9 +143,14 @@ class PerformSubjectCopyController {
         self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
             if (!self._subjectCopy.has_been_started) {
                 self._subjectCopy.has_been_started = true;
+                // TODO update subject copy
             }
             self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
         });
+
+        // TODO E_UPDATE_SUBJECT_COPY
+        // TODO update subject copy calculated score
+        // TODO update subject copy submitted date
         
         // init
         self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', undefined);
