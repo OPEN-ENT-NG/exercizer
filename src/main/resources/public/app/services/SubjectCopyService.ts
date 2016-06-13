@@ -50,6 +50,9 @@ class SubjectCopyService implements ISubjectCopyService {
         this._$http(request).then(
             function(response) {
                 var subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(response.data)) as any;
+                if(angular.isUndefined(self._listMappedById)){
+                    self._listMappedById= {};
+                }
                 self._listMappedById[subjectCopy.id] = subjectCopy;
                 deferred.resolve(subjectCopy);
             },
