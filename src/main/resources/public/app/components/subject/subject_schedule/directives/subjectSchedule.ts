@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'subjectSchedule',
-        injections: ['GroupService', '$q','SubjectScheduledService','GrainScheduledService','SubjectCopyService','GrainCopyService', 'GrainService',  (GroupService, $q, SubjectScheduledService, GrainScheduledService,SubjectCopyService,GrainCopyService, GrainService) => {
+        injections: ['GroupService', '$q','SubjectScheduledService','GrainScheduledService','SubjectCopyService','GrainCopyService', 'GrainService','DateService',  (GroupService, $q, SubjectScheduledService, GrainScheduledService,SubjectCopyService,GrainCopyService, GrainService,DateService) => {
             return {
                 restrict: 'E',
                 scope: {},
@@ -24,7 +24,10 @@ directives.push(
                         scope.data = {};
                         scope.data.groupList = [];
                         scope.data.userList = [];
-                        scope.option = {};
+                        scope.option = {
+                            begin_date : new Date(),
+                            due_date : DateService.addDays(new Date, 7)
+                        };
                     }
 
                     /**
@@ -48,24 +51,45 @@ directives.push(
                     };
 
                     scope.scheduleSubject = function(){
-                        createIdList(scope.data.userList,scope.data.groupList).then(
-                            function(users){
-                                console.log('users', users);
-                                createSubjectScheduled(scope.subject, scope.option).then(
-                                    function(subjectScheduled){
-                                        console.log('subjectScheduled',subjectScheduled);
-                                        angular.forEach(users, function(user){
-                                            createSubjectCopy(subjectScheduled, user).then(
-                                                function(subjectCopy){
-                                                    console.log('subjectCopy',subjectCopy);
-                                                }
-                                            )
-                                        });
+                        if(canSchedule(scope.option)){
+                            createIdList(scope.data.userList,scope.data.groupList).then(
+                                function(users){
+                                    console.log('users', users);
+                                    if(users.length !== 0){
+                                        createSubjectScheduled(scope.subject, scope.option).then(
+                                            function(subjectScheduled){
+                                                console.log('subjectScheduled',subjectScheduled);
+                                                angular.forEach(users, function(user){
+                                                    createSubjectCopy(subjectScheduled, user).then(
+                                                        function(subjectCopy){
+                                                            console.log('subjectCopy',subjectCopy);
+                                                            scope.isDisplayed = false;
+                                                        }
+                                                    )
+                                                });
+                                            }
+                                        )
+                                    } else {
+                                        notify.error("Aucun utilisateur ou groupe selectionné");
+
                                     }
-                                )
-                            }
-                        );
+                                }
+                            );
+                        } else {
+                            notify.error("Toutes les option de programmation de sont pas remplies");
+                        }
+
                     };
+
+
+                    function canSchedule(option){
+                        if(option.begin_date && option.due_date){
+                            return true;
+                        } else {
+                            return false;
+                        }
+
+                    }
 
                     function createIdList(userList, groupList){
                         // get user target by the subject scheduled
