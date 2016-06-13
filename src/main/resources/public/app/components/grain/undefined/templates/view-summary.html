@@ -1,3 +1,16 @@
 <article id="summary">
     <h2 class="row">Résumé</h2>
+
+    <h4 class="row">Note automatique :&nbsp;[[ subjectCopy.calculated_score ]]&nbsp;/&nbsp;[[ subjectScheduled.max_score ]]</h4>
+
+    <h4 class="row">Note finale : &nbsp;[[ subjectCopy.final_score ]]&nbsp;/&nbsp;[[ subjectScheduled.max_score ]]</h4>
+    <h2 class="row">
+        Commentaire général :
+    </h2>
+    <div class="row" data-ng-if="isTeacher">
+        <textarea data-ng-model="subjectCopy.comment" complete-change="updateSubjectCopy()" style="height: 80px;" placeholder="Indiquez un commentaire"></textarea>
+    </div>
+    <div class="row" data-ng-if="!isTeacher">
+        <textarea data-ng-model="subjectCopy.comment" style="height: 80px;" placeholder="Pas de commentaire" disabled></textarea>
+    </div>
 </article>

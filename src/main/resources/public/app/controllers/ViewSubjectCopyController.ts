@@ -179,8 +179,8 @@ class ViewSubjectCopyController {
                 finalScore:number = 0;
             
             angular.forEach(self._grainCopyList, function(grainCopy:IGrainCopy) {
-                calculatedScore += grainCopy.calculated_score;
-                finalScore += grainCopy.final_score;
+                calculatedScore += parseFloat(grainCopy.calculated_score.toString());
+                finalScore += parseFloat(grainCopy.final_score.toString());
             });
             
             return {
@@ -214,6 +214,11 @@ class ViewSubjectCopyController {
                 _handleUpdateGrainCopy(grainCopy);
             } else {
                 _updateLocalGrainCopyList(grainCopy);
+
+                var scores = _calculateScores();
+
+                self._subjectCopy.calculated_score = scores.calculatedScore;
+                self._subjectCopy.final_score = scores.finalScore;
             }
         });
 
@@ -230,6 +235,11 @@ class ViewSubjectCopyController {
                     }
                 );
             } else {
+                var scores = _calculateScores();
+
+                self._subjectCopy.calculated_score = scores.calculatedScore;
+                self._subjectCopy.final_score = scores.finalScore;
+                
                 self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
             }
         });
@@ -256,6 +266,12 @@ class ViewSubjectCopyController {
                 _handleUpdateSubjectCopy(subjectCopy, redirect);
             } else if (self._previewing && self._isTeacher) {
                 self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
+
+                var scores = _calculateScores();
+
+                self._subjectCopy.calculated_score = scores.calculatedScore;
+                self._subjectCopy.final_score = scores.finalScore;
+                
                 self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
             }
         });
