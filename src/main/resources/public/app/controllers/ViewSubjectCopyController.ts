@@ -174,11 +174,11 @@ class ViewSubjectCopyController {
             }
         }
 
-        function _handleUpdateSubjectCopy(subjectCopy:ISubjectCopy) {
+        function _handleUpdateSubjectCopy(subjectCopy:ISubjectCopy, redirect:boolean) {
             self._subjectCopyService.update(subjectCopy).then(
                 function(subjectCopy:ISubjectCopy) {
                     self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
-                    self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED');
+                    self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
                 },
                 function(err) {
                     notify.info(err);
@@ -223,9 +223,9 @@ class ViewSubjectCopyController {
             }
         });
 
-        self._$scope.$on('E_UPDATE_SUBJECT_COPY', function(event, subjectCopy:ISubjectCopy) {
+        self._$scope.$on('E_UPDATE_SUBJECT_COPY', function(event, subjectCopy:ISubjectCopy, redirect:boolean) {
             if (!self._previewing  && self._isTeacher) {
-                _handleUpdateSubjectCopy(subjectCopy);
+                _handleUpdateSubjectCopy(subjectCopy, redirect);
             }
         });
 
