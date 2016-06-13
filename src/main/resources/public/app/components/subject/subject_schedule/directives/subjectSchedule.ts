@@ -94,7 +94,6 @@ directives.push(
                                     });
                                 });
                                 deferred.resolve(users);
-
                             }
                         );
                         return deferred.promise;
@@ -114,9 +113,13 @@ directives.push(
                         SubjectScheduledService.persist(subjectScheduled).then(
                             function(subjectScheduled){
                                 // create grainScheduled
-                                createGrainListScheduled(subjectScheduled, subject);
-                                // resolve
-                                deferred.resolve(subjectScheduled);
+                                createGrainListScheduled(subjectScheduled, subject).then(
+                                    function(data){
+                                        // resolve
+                                        deferred.resolve(subjectScheduled);
+                                    }
+                                );
+
                             },
                             function(err){
                                 deferred.reject(err);
@@ -155,12 +158,12 @@ directives.push(
                         var subjectCopy = SubjectCopyService.createFromSubjectScheduled(subjectScheduled);
                         // add attributes from option
                         subjectCopy.owner = user.id;
-                        subjectCopy.owner_userName = user.name;
+                        subjectCopy.owner_username = user.name;
                         // persist subjectCopy
                         SubjectCopyService.persist(subjectCopy).then(
                             function(subjectCopy){
                                 // create grainScheduled
-                                // no callback grain
+                                // no callback for the create of grain copy
                                 createGrainListCopy(subjectCopy, subjectScheduled);
                                 // resolve
                                 deferred.resolve(subjectCopy);
@@ -176,7 +179,7 @@ directives.push(
                     function createGrainListCopy(subjectCopy, subjectScheduled){
                         var deferred = $q.defer();
                         // get list grain from subject
-                        GrainScheduledService.getListBySubjectScheduledId(subjectScheduled.id).then(
+                        GrainScheduledService.getListBySubjectScheduled(subjectScheduled).then(
                             function(grainScheduledList){
                                 // create grain list scheduled
                                 var grainListCopy = GrainCopyService.createGrainCopyList(grainScheduledList);
