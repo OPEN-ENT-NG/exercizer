@@ -138,6 +138,20 @@ class GrainCopyService implements IGrainCopyService {
             grainCopy.grain_copy_data.custom_copy_data = new StatementCustomCopyData();
             grainCopy.grain_copy_data.custom_copy_data.statement = grainScheduled.grain_data.custom_data.statement;
         }
+        switch (grainScheduled.grain_type_id){
+            case 4:
+                grainCopy.grain_copy_data.custom_copy_data = new SimpleAnswerCustomCopyData();
+                break;
+            case 6:
+                grainCopy.grain_copy_data.custom_copy_data = new MultipleAnswerCustomCopyData();
+                angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer){
+                    grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({text : ""})
+                });
+                break;
+            default:
+                console.error('specific part of grain copy is not defined when creating from grain scheduled', grainScheduled);
+
+        }
 
         return grainCopy;
     };
