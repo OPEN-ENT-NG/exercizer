@@ -107,13 +107,13 @@ class SubjectScheduledService implements ISubjectScheduledService {
         this._currentSubjectScheduledId = value;
     }
 
-    public loadSubjectScheduled(){
+    public loadSubjectScheduled_student(){
         console.log('loadSubjectScheduled');
         var self = this,
             deferred = this._$q.defer(),
             request = {
                 method: 'GET',
-                url: 'subjects-scheduled'
+                url: 'subjects-scheduled-by-subjects-copy'
             };
         if (!angular.isUndefined(this._listMappedById)) {
             deferred.resolve(true);

@@ -16,7 +16,7 @@ directives.push(
                                 scope.subjectCopyList = SubjectCopyService.getList();
                             }
                         );
-                        SubjectScheduledService.loadSubjectScheduled().then(
+                        SubjectScheduledService.loadSubjectScheduled_student().then(
                             function(){
                                 //scope.$apply();
                             }
