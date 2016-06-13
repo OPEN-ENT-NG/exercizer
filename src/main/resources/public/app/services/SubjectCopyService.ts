@@ -64,25 +64,11 @@ class SubjectCopyService implements ISubjectCopyService {
     };
 
     public update = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
-        var self = this,
-            deferred = this._$q.defer();
-
-        //TODO remove when using real API
-        setTimeout(function(self, subjectCopy) {
-            self._listMappedById[subjectCopy.id] = subjectCopy;
-            deferred.resolve(subjectCopy);
-        }, 100, self, subjectCopy);
-
-        return deferred.promise;
+        throw "update subject copy not implemented";
     };
 
     public remove = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
-        var self = this,
-            deferred = this._$q.defer();
-
-        //TODO
-
-        return deferred.promise;
+        throw "remove subject copy not implemented";
     };
 
     public createFromSubjectScheduled = function(subjectScheduled:ISubjectScheduled):ISubjectCopy {
@@ -103,13 +89,18 @@ class SubjectCopyService implements ISubjectCopyService {
     public getById = function(id:number):ng.IPromise<ISubjectCopy> {
         var self = this,
             deferred = this._$q.defer();
-
-        //TODO
-        deferred.resolve(this._listMappedById(id));
-
+        if(this._listMappedById[id]){
+            deferred.resolve(this._listMappedById[id]);
+        } else{
+            this.loadSubjectCopy().then(
+                function(){
+                    return self._listMappedById[id];
+                }
+            );
+        }
         return deferred.promise;
     };
-    
+
     get tmpPreviewData():{subjectScheduled:ISubjectScheduled; subjectCopy:ISubjectCopy; grainScheduledList:IGrainScheduled[]; grainCopyList:IGrainCopy[]} {
         return this._tmpPreviewData;
     }
@@ -119,63 +110,27 @@ class SubjectCopyService implements ISubjectCopyService {
     }
 
     public loadSubjectCopy(){
-        var deferred = this._$q.defer();
-        var self = this;
-        var dataSubjectCopy = [
-            {
-                "id": "57516cf3747c0beeb0e4935f",
-                "subject_scheduled_id": "1",
-                "owner": "Margery",
-                "created": "1464968639",
-                "modified": "1464968639",
-                "final_score": null,
-                "calculated_score": null,
-                "comment": null,
-                "has_been_started": false,
-                "submitted_date": "1464968639",
-                "is_correction_on_going": false,
-                "is_corrected": false,
-                "is_deleted": false
-            },
-            {
-                "id": "57516cf30e4c380f559f236e",
-                "subject_scheduled_id": "2",
-                "owner": "Buckner",
-                "created": "1464968639",
-                "modified": "1464968639",
-                "final_score": null,
-                "calculated_score": null,
-                "comment": null,
-                "has_been_started": false,
-                "submitted_date": "1464968639",
-                "is_correction_on_going": false,
-                "is_corrected": false,
-                "is_deleted": false
-            },
-            {
-                "id": "57516cf319b958f7292ff510",
-                "subject_scheduled_id": "3",
-                "owner": "Kidd",
-                "created": "1464968639",
-                "modified": "1464968639",
-                "final_score": null,
-                "calculated_score": null,
-                "comment": null,
-                "has_been_started": true,
-                "submitted_date": "1464968639",
-                "is_correction_on_going": false,
-                "is_corrected": false,
-                "is_deleted": false
-            }
-        ];
-        setTimeout(function(){
-            angular.forEach(dataSubjectCopy, function(subjectCopy){
-                self._listMappedById[subjectCopy.id] = subjectCopy;
-            });
-            deferred.resolve(dataSubjectCopy);
-
-        }, 1000);
-
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: 'subjects-copy'
+            };
+        if (!angular.isUndefined(this._listMappedById)) {
+            deferred.resolve(true);
+        } else {
+            this._$http(request).then(
+                function(response) {
+                    angular.forEach(response, function(subjectCopy){
+                        self._listMappedById[subjectCopy.id] = subjectCopy;
+                    });
+                    deferred.resolve(response);
+                },
+                function() {
+                    deferred.reject('Une erreur est survenue lors de la récupération de vos sujets.');
+                }
+            );
+        }
         return deferred.promise;
     }
 }
