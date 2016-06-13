@@ -99,7 +99,7 @@ public class SubjectCopyController extends ControllerHelper {
 
     @Get("/subjects-copy-by-subjects-scheduled")
     @ApiDoc("Gets subject copy list by subject scheduled list.")
-    @SecuredAction("exercizer.subject.copy.list")
+    @SecuredAction("exercizer.subject.copy.list.by.subject.scheduled.list")
     public void listBySubjectSheduledList(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
