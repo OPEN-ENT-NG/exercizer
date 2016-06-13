@@ -235,11 +235,6 @@ class ViewSubjectCopyController {
                     }
                 );
             } else {
-                var scores = _calculateScores();
-
-                self._subjectCopy.calculated_score = scores.calculatedScore;
-                self._subjectCopy.final_score = scores.finalScore;
-                
                 self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
             }
         });
