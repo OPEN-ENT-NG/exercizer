@@ -2,6 +2,7 @@ interface ISubjectCopy {
     id:number;
     subject_scheduled_id:number;
     owner:string;
+    owner_username:string;
     created:string;
     modified:string;
     final_score:number;
@@ -19,6 +20,7 @@ class SubjectCopy implements  ISubjectCopy {
     id:number;
     subject_scheduled_id:number;
     owner:string;
+    owner_username:string;
     created:string;
     modified:string;
     final_score:number;
@@ -35,6 +37,7 @@ class SubjectCopy implements  ISubjectCopy {
         id?:number,
         subject_scheduled_id?:number,
         owner?:string,
+        owner_username:string,
         created?:string,
         modified?:string,
         final_score?:number,
@@ -50,6 +53,7 @@ class SubjectCopy implements  ISubjectCopy {
         this.id = id;
         this.subject_scheduled_id = subject_scheduled_id;
         this.owner = owner;
+        this.owner_username = owner_username;
         this.created = created;
         this.modified = modified;
         this.final_score = final_score;

@@ -21,6 +21,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
     	JsonObject subjectScheduled = ResourceParser.beforeAny(resource);
     	subjectScheduled.putString("owner", user.getUserId());
+    	subjectScheduled.putString("owner_username", user.getUsername());
         super.persist(subjectScheduled, user, handler);
     }
 

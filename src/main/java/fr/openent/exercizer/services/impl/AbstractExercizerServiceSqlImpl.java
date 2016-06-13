@@ -55,10 +55,9 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         
         String anotherOwnerQuery = "SELECT " + schema + "merge_users(?,?)";
         s.prepared(anotherOwnerQuery, new JsonArray().add(resource.getString("owner")).add(resource.getString("owner_username")));
-        resource.removeField("owner_username");
         
         s.insert(resourceTable, resource, "*");
-        sql.transaction(s.build(), SqlResult.validUniqueResultHandler(1, handler));
+        sql.transaction(s.build(), SqlResult.validUniqueResultHandler(handler));
     }
 
     /**

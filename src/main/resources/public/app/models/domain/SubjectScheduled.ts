@@ -2,6 +2,7 @@ interface ISubjectScheduled {
     id:number;
     subject_id:number;
     owner:string;
+    owner_username:string;
     created:string;
     title:string;
     description:string;
@@ -11,8 +12,8 @@ interface ISubjectScheduled {
     due_date:string;
     estimated_duration:string;
     is_over:boolean;
-    has_automatic_display: boolean;
     is_one_shot_submit:boolean;
+    has_automatic_display: boolean;
     is_deleted:boolean;
 }
 
@@ -21,6 +22,7 @@ class SubjectScheduled implements ISubjectScheduled {
     id:number;
     subject_id:number;
     owner:string;
+    owner_username:string;
     created:string;
     title:string;
     description:string;
@@ -39,6 +41,7 @@ class SubjectScheduled implements ISubjectScheduled {
         id?:number,
         subject_id?:number,
         owner?:string,
+        owner_username:string,
         created?:string,
         title?:string,
         description?:string,
@@ -56,6 +59,7 @@ class SubjectScheduled implements ISubjectScheduled {
         this.id = id;
         this.subject_id = subject_id;
         this.owner = owner;
+        this.owner_username = owner_username;
         this.created = created;
         this.title = title;
         this.description = description;
