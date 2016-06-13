@@ -5,6 +5,7 @@ interface ISubjectCopyService {
     createFromSubjectScheduled(subjectScheduled:ISubjectScheduled):ISubjectCopy;
     getList():ISubjectCopy[];
     getById(id:number):ng.IPromise<ISubjectCopy>;
+    loadSubjectCopy();
 }
 
 class SubjectCopyService implements ISubjectCopyService {
@@ -31,10 +32,6 @@ class SubjectCopyService implements ISubjectCopyService {
         this._$http = _$http;
         this._grainScheduledService = _grainScheduledService;
         this._grainCopyService = _grainCopyService;
-
-        // TODO remove
-        this._listMappedById = {};
-        // feed
     }
 
 
@@ -110,6 +107,7 @@ class SubjectCopyService implements ISubjectCopyService {
     }
 
     public loadSubjectCopy(){
+        console.log('loadSubjectCopy');
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -121,12 +119,14 @@ class SubjectCopyService implements ISubjectCopyService {
         } else {
             this._$http(request).then(
                 function(response) {
+                    console.log('response', response);
                     angular.forEach(response, function(subjectCopy){
                         self._listMappedById[subjectCopy.id] = subjectCopy;
                     });
                     deferred.resolve(response);
                 },
-                function() {
+                function(err) {
+                    console.error(err);
                     deferred.reject('Une erreur est survenue lors de la récupération de vos sujets.');
                 }
             );
