@@ -86,6 +86,7 @@ CREATE TABLE exercizer.subject_scheduled(
     owner VARCHAR(36) NOT NULL,
     owner_username VARCHAR(255) NOT NULL,
 	created TIMESTAMP DEFAULT NOW(),
+	modified TIMESTAMP DEFAULT NOW(),
 	title VARCHAR(255) NOT NULL,
 	description TEXT NULL,
 	picture VARCHAR(255) NULL,
