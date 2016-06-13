@@ -37,7 +37,7 @@ class SubjectCopy implements  ISubjectCopy {
         id?:number,
         subject_scheduled_id?:number,
         owner?:string,
-        owner_username:string,
+        owner_username?:string,
         created?:string,
         modified?:string,
         final_score?:number,
