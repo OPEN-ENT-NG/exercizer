@@ -50,6 +50,9 @@ class SubjectScheduledService implements ISubjectScheduledService {
         this._$http(request).then(
             function(response) {
                 var subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(response.data)) as any;
+                if(angular.isUndefined(self._listMappedById)){
+                    self._listMappedById= {};
+                }
                 self._listMappedById[subjectScheduled.id] = subjectScheduled;
                 deferred.resolve(subjectScheduled);
             },
