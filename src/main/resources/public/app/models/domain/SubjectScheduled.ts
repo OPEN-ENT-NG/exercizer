@@ -4,6 +4,7 @@ interface ISubjectScheduled {
     owner:string;
     owner_username:string;
     created:string;
+    modified: string;
     title:string;
     description:string;
     picture:string;
@@ -24,6 +25,7 @@ class SubjectScheduled implements ISubjectScheduled {
     owner:string;
     owner_username:string;
     created:string;
+    modified: string;
     title:string;
     description:string;
     picture:string;
@@ -43,6 +45,7 @@ class SubjectScheduled implements ISubjectScheduled {
         owner?:string,
         owner_username?:string,
         created?:string,
+        modified?: string,
         title?:string,
         description?:string,
         picture?:string,
@@ -61,6 +64,7 @@ class SubjectScheduled implements ISubjectScheduled {
         this.owner = owner;
         this.owner_username = owner_username;
         this.created = created;
+        this.modified = modified;
         this.title = title;
         this.description = description;
         this.picture = picture;
