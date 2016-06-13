@@ -26,13 +26,15 @@ class MultipleAnswerService implements IAutomaticCorrection {
                 isCorrectReturnArray[key] = true;
                 if(grainScheduled.grain_data.custom_data.no_error_allowed && atLeastOneError){
                     // do not incremented
-                    numberGoodAnswer = 0;
                 } else{
                     numberGoodAnswer++
                 }
             } else {
                 isCorrectReturnArray[key] = false;
                 atLeastOneError = true;
+                if(grainScheduled.grain_data.custom_data.no_error_allowed){
+                    numberGoodAnswer = 0;
+                }
             }
         });
         // computation score
