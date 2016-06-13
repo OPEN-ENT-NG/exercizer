@@ -54,8 +54,6 @@ class SubjectService implements ISubjectService {
                         self._afterPullBack(subject);
                         self._listMappedById[subject.id] = subject;
                     });
-                    console.log('self._listMappedById', self._listMappedById);
-
                     deferred.resolve(true);
                 },
                 function() {

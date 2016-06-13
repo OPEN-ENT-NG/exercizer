@@ -32,7 +32,9 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 
     const teacherProfile = 'Teacher';
     const studentProfile = 'Student';
+    
     var _userProfile;
+    // FIXME try to use profiles
     if(model.me.type === 'ENSEIGNANT'){
         _userProfile = teacherProfile;
     } else  {

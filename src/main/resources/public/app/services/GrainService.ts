@@ -194,7 +194,7 @@ class GrainService implements IGrainService {
             deferred = this._$q.defer(),
             request = {
                 method: 'POST',
-                url: 'exercizer/grains/'+subject.id,
+                url: 'exercizer/grains/' + subject.id,
                 data: subject
             };
 
@@ -210,7 +210,7 @@ class GrainService implements IGrainService {
                     deferred.resolve(self._listMappedBySubjectId[subject.id]);
                 },
                 function () {
-                    deferred.reject('Une erreur est survenue lors de la récupération de vos grain.');
+                    deferred.reject('Une erreur est survenue lors de la récupération des éléments du sujet.');
                 }
             );
         }

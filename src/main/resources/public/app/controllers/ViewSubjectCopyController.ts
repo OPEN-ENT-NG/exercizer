@@ -52,7 +52,7 @@ class ViewSubjectCopyController {
                 if (!angular.isUndefined(subject)) {
                     self._isTeacher = true;
                     if (!angular.isUndefined(subjectCopyId)) {
-                        self._view();
+                        self._view(subjectCopyId);
                     } else {
                         self._preview(subject.id);
                     }
@@ -65,8 +65,11 @@ class ViewSubjectCopyController {
             });
 
         } else {
-            // TODO  _$routeParams['subjectCopyId']
-            this._view();
+            if (!angular.isUndefined(subjectCopyId)) {
+                this._view(subjectCopyId);
+            } else {
+                this._$location.path('/dashboard');
+            }
         }
 
     }
@@ -93,14 +96,72 @@ class ViewSubjectCopyController {
         }
     }
 
-    private _view() {
-        // TODO
-
+    private _view(subjectCopyId:number) {
+        var self = this;
         this._previewing = false;
 
-        var self = this;
-        this._eventsHandler(self);
-        this._hasDataLoaded = true;
+        this._subjectScheduledService.resolve(self._isTeacher).then(
+            function() {
+                self._subjectCopyService.resolve(self._isTeacher).then(
+                    function() {
+                        self._subjectCopy = self._subjectCopyService.getById(subjectCopyId);
+
+                        if (!angular.isUndefined(self._subjectCopy)) {
+
+                            self._subjectScheduled = self._subjectScheduledService.getById(self._subjectCopy.subject_scheduled_id);
+
+                            if (!angular.isUndefined(self._subjectScheduled)) {
+
+                                self._grainCopyService.getListBySubjectCopy(self._subjectCopy).then(
+                                    function(grainCopyList:IGrainCopy[]) {
+
+                                        if (!angular.isUndefined(grainCopyList)) {
+                                            self._grainCopyList = grainCopyList;
+
+                                            self._grainScheduledService.getListBySubjectScheduled(self._subjectScheduled).then(
+                                                function(grainScheduledList:IGrainScheduled[]) {
+                                                    
+                                                    if (!angular.isUndefined(grainScheduledList)) {
+                                                        self._grainScheduledList = grainScheduledList;
+                                                        self._eventsHandler(self);
+                                                        self._hasDataLoaded = true;
+                                                    } else {
+                                                        self._$location.path('/dashboard');
+                                                    }
+                                                    
+                                                },
+                                                function(err) {
+                                                    notify.error(err);
+                                                }
+                                            );
+                                        } else {
+                                            self._$location.path('/dashboard');
+                                        }
+
+                                    },
+                                    function(err) {
+                                        notify.error(err);
+                                    }
+                                )
+
+                            } else {
+                                self._$location.path('/dashboard');
+                            }
+
+                        } else {
+                            self._$location.path('/dashboard');
+                        }
+
+                    },
+                    function(err) {
+                        notify.error(err);
+                    }
+                )
+            },
+            function(err) {
+                notify.error(err);
+            }
+        );
     }
 
     private _eventsHandler = function(self) {
