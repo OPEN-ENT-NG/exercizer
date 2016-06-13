@@ -6,7 +6,7 @@ class MultipleAnswerService implements IAutomaticCorrection {
         var numberGoodAnswer : number = 0,
             atLeastOneError =  false,
             answerCorrect,
-            isCorrectReturnArray = {};
+            isCorrectReturnArray = {},
             grainScheduled_correct_answer_list = angular.copy(grainScheduled.grain_data.custom_data.correct_answer_list);
         angular.forEach(grainCopy.grain_copy_data.custom_copy_data.filled_answer_list, function(filled_answer, key){
             answerCorrect = false;

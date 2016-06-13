@@ -35,6 +35,10 @@ directives.push(
                             scope.$emit('E_UPDATE_GRAIN', scope.grain);
                         }
                     };
+
+                    scope.formatNumber = function(i) {
+                        return Math.round(i * 100)/100;
+                    }
                 }
             };
         }]
