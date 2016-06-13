@@ -11,12 +11,12 @@ directives.push(
 
                         // subject data
                         scope.subjectCopyList = [];
-                        SubjectCopyService.loadSubjectCopy().then(
-                            function (data) {
+                        SubjectCopyService.resolve(false).then(
+                            function () {
                                 scope.subjectCopyList = SubjectCopyService.getList();
                             }
                         );
-                        SubjectScheduledService.loadSubjectScheduled_student().then(
+                        SubjectScheduledService.resolve(false).then(
                             function(){
                                 //scope.$apply();
                             }

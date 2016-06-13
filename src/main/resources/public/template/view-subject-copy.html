@@ -15,12 +15,16 @@
 
         <!-- TEACHER HEADER -->
         <div data-ng-if="!viewSubjectCopyController.previewing && viewSubjectCopyController.isTeacher">
-           <!-- TODO -->
+           <subject-view-copy-teacher-header data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
+                                             data-subject-copy="viewSubjectCopyController.subjectCopy">
+           </subject-view-copy-teacher-header>
         </div>
 
         <!-- STUDENT HEADER -->
         <div data-ng-if="!viewSubjectCopyController.previewing && !viewSubjectCopyController.isTeacher">
-            <!-- TODO -->
+            <subject-view-copy-student-header data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
+                                              data-subject-copy="viewSubjectCopyController.subjectCopy">
+            </subject-view-copy-student-header>
         </div>
 
         <div class="row">
@@ -46,7 +50,26 @@
 
     <!-- NO DATA -->
     <div class="row" data-ng-if="viewSubjectCopyController.hasDataLoaded && viewSubjectCopyController.grainCopyList.length === 0">
-        <!-- TODO HEADER -->
+        <!-- PREVIEW HEADER -->
+        <div data-ng-if="viewSubjectCopyController.previewing">
+            <subject-view-copy-preview-header data-subject-scheduled="viewSubjectCopyController.subjectScheduled">
+            </subject-view-copy-preview-header>
+        </div>
+
+        <!-- TEACHER HEADER -->
+        <div data-ng-if="!viewSubjectCopyController.previewing && viewSubjectCopyController.isTeacher">
+            <subject-view-copy-teacher-header data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
+                                              data-subject-copy="viewSubjectCopyController.subjectCopy">
+            </subject-view-copy-teacher-header>
+        </div>
+
+        <!-- STUDENT HEADER -->
+        <div data-ng-if="!viewSubjectCopyController.previewing && !viewSubjectCopyController.isTeacher">
+            <subject-view-copy-student-header data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
+                                              data-subject-copy="viewSubjectCopyController.subjectCopy">
+            </subject-view-copy-student-header>
+        </div>
+
         <div class="warning">La copie ne contient pas d'éléments.</div>
     </div>
 </div>

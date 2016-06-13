@@ -1,9 +1,9 @@
 interface IGrainCopyService {
     persist(grainCopy:IGrainCopy, subjectScheduled):ng.IPromise<IGrainCopy>;
     update(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy>;
-    remove(grainCopy:IGrainCopy):ng.IPromise<boolean>;
+    getListBySubjectCopy(subjectCopy:ISubjectCopy):ng.IPromise<IGrainCopy[]>;
+    instantiateGrainCopy(grainCopyObject:any): IGrainCopy;
     createGrainCopyList(grainScheduledList:IGrainScheduled[]):IGrainCopy[];
-    getListBySubjectCopyId(subjectCopyId:number):ng.IPromise<IGrainCopy[]>;
 }
 
 class GrainCopyService implements IGrainCopyService {
@@ -32,7 +32,7 @@ class GrainCopyService implements IGrainCopyService {
 
         var request = {
             method: 'POST',
-            url: 'exercizer/grain-copy/'+ subjectScheduled.id,
+            url: 'exercizer/grain-copy/' + subjectScheduled.id,
             data: grainCopy
         };
 
@@ -46,7 +46,7 @@ class GrainCopyService implements IGrainCopyService {
                 deferred.resolve(grainCopy);
             },
             function () {
-                deferred.reject('Une erreur est survenue lors d un grain copy.')
+                deferred.reject('Une erreur est survenue lors de la création d\'un élément d\'une copie.')
             }
         );
         return deferred.promise;
@@ -56,42 +56,69 @@ class GrainCopyService implements IGrainCopyService {
         var self = this,
             deferred = this._$q.defer();
 
-        //TODO remove when using real API
-        setTimeout(function(self, grainCopy) {
-            if (angular.isUndefined(self._listMappedBySubjectCopyId[grainCopy.subject_copy_id])) {
-                self._listMappedBySubjectCopyId[grainCopy.subject_copy_id] = [];
+        var grainCopyObject = angular.copy(grainCopy);
+        grainCopyObject.grain_copy_data = JSON.stringify(grainCopyObject.grain_data);
+
+        var request = {
+            method: 'PUT',
+            url: 'exercizer/grain-copy',
+            data: grainCopyObject
+        };
+
+        this._$http(request).then(
+            function (response) {
+                var grainCopy = self.instantiateGrainCopy(response.data);
+
+                if (angular.isUndefined(self._listMappedBySubjectCopyId[grainCopy.subject_copy_id])) {
+                    self._listMappedBySubjectCopyId[grainCopy.subject_copy_id] = [];
+                }
+
+                var index = self._listMappedBySubjectCopyId[grainCopy.subject_copy_id].indexOf(grainCopy);
+                self._listMappedBySubjectCopyId[grainCopy.subject_copy_id][index] = grainCopy;
+
+                deferred.resolve(grainCopy);
+            },
+            function () {
+                deferred.reject('Une erreur est survenue lors de la mise à jour de l\'élément de la copie.')
             }
-
-            var index = self._listMappedBySubjectCopyId[grainCopy.subject_copy_id].indexOf(grainCopy);
-            self._listMappedBySubjectCopyId[grainCopy.subject_copy_id][index] = grainCopy;
-
-            deferred.resolve(grainCopy);
-        }, 100, self, grainCopy);
+        );
 
         return deferred.promise;
     };
 
-    public remove = function(grainCopy:IGrainCopy):ng.IPromise<boolean> {
+    public getListBySubjectCopy = function(subjectCopy:ISubjectCopy):ng.IPromise<IGrainCopy[]> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: 'exercizer/grains-copy',
+                data: subjectCopy
+            };
 
-        //TODO remove when using real API
-        setTimeout(function(self, grainCopy) {
-            if (angular.isUndefined(self._listMappedBySubjectCopyId[grainCopy.subject_copy_id])) {
-                self._listMappedBySubjectCopyId[grainCopy.subject_copy_id] = [];
-            }
-
-            var grainCopyIndex = self._listMappedBySubjectCopyId[grainCopy.subject_copy_id].indexOf(grainCopy);
-
-            if (grainCopyIndex !== -1) {
-                self._listMappedBySubjectCopyId[grainCopy.subject_copy_id].splice(grainCopyIndex, 1);
-                deferred.resolve(true);
-            }
-
-            deferred.resolve(false);
-        }, 100, self, grainCopy);
-
+        if (!angular.isUndefined(this._listMappedBySubjectCopyId[subjectCopy.id])) {
+            deferred.resolve(this._listMappedBySubjectCopyId[subjectCopy.id]);
+        } else {
+            this._listMappedBySubjectCopyId[subjectCopy.id] = [];
+            this._$http(request).then(
+                function (response) {
+                    angular.forEach(response.data, function (grainCopyObject) {
+                        self._listMappedBySubjectCopyId[subjectCopy.id].push(self.instantiateGrainCopy(grainCopyObject));
+                    });
+                    deferred.resolve(self._listMappedBySubjectCopyId[subjectCopy.id]);
+                },
+                function () {
+                    deferred.reject('Une erreur est survenue lors de la récupération des éléments de la copie.');
+                }
+            );
+        }
+        
         return deferred.promise;
+    };
+    
+    public instantiateGrainCopy = function (grainCopyObject:any):IGrainCopy {
+        var grainCopy = SerializationHelper.toInstance(new GrainCopy(), JSON.stringify(grainCopyObject));
+        grainCopy.grain_copy_data = SerializationHelper.toInstance(new GrainCopyData(), grainCopyObject.grain_copy_data);
+        return grainCopy;
     };
 
     public createGrainCopyList = function(grainScheduledList:IGrainScheduled[]):IGrainCopy[] {
@@ -102,22 +129,6 @@ class GrainCopyService implements IGrainCopyService {
         }, this);
 
         return grainCopyList;
-    };
-
-    public getListBySubjectCopyId = function(subjectCopyId:number):ng.IPromise<IGrainCopy[]> {
-        var self = this,
-            deferred = this._$q.defer();
-
-        //TODO remove when using real API
-        setTimeout(function(self, subjectCopyId) {
-            if (angular.isUndefined(self._listMappedBySubjectCopyId[subjectCopyId])) {
-                self._listMappedBySubjectCopyId[subjectCopyId] = [];
-            }
-            deferred.resolve(self._listMappedBySubjectCopyId[subjectCopyId]);
-        }, 100, self, subjectCopyId);
-
-
-        return deferred.promise;
     };
 
     private _createFromGrainScheduled = function(grainScheduled:IGrainScheduled):IGrainCopy {

@@ -54,8 +54,6 @@ class SubjectService implements ISubjectService {
                         self._afterPullBack(subject);
                         self._listMappedById[subject.id] = subject;
                     });
-                    console.log('self._listMappedById', self._listMappedById);
-
                     deferred.resolve(true);
                 },
                 function() {
@@ -86,7 +84,7 @@ class SubjectService implements ISubjectService {
                 deferred.resolve(subject);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
+                deferred.reject('Une erreur est survenue lors de la création du sujet.');
             }
         );
         return deferred.promise;

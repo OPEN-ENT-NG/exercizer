@@ -52,7 +52,7 @@ class ViewSubjectCopyController {
                 if (!angular.isUndefined(subject)) {
                     self._isTeacher = true;
                     if (!angular.isUndefined(subjectCopyId)) {
-                        self._view();
+                        self._view(subjectCopyId);
                     } else {
                         self._preview(subject.id);
                     }
@@ -65,8 +65,11 @@ class ViewSubjectCopyController {
             });
 
         } else {
-            // TODO  _$routeParams['subjectCopyId']
-            this._view();
+            if (!angular.isUndefined(subjectCopyId)) {
+                this._view(subjectCopyId);
+            } else {
+                this._$location.path('/dashboard');
+            }
         }
 
     }
@@ -93,14 +96,72 @@ class ViewSubjectCopyController {
         }
     }
 
-    private _view() {
-        // TODO
-
+    private _view(subjectCopyId:number) {
+        var self = this;
         this._previewing = false;
 
-        var self = this;
-        this._eventsHandler(self);
-        this._hasDataLoaded = true;
+        this._subjectScheduledService.resolve(self._isTeacher).then(
+            function() {
+                self._subjectCopyService.resolve(self._isTeacher).then(
+                    function() {
+                        self._subjectCopy = self._subjectCopyService.getById(subjectCopyId);
+
+                        if (!angular.isUndefined(self._subjectCopy)) {
+
+                            self._subjectScheduled = self._subjectScheduledService.getById(self._subjectCopy.subject_scheduled_id);
+
+                            if (!angular.isUndefined(self._subjectScheduled)) {
+
+                                self._grainCopyService.getListBySubjectCopy(self._subjectCopy).then(
+                                    function(grainCopyList:IGrainCopy[]) {
+
+                                        if (!angular.isUndefined(grainCopyList)) {
+                                            self._grainCopyList = grainCopyList;
+
+                                            self._grainScheduledService.getListBySubjectScheduled(self._subjectScheduled).then(
+                                                function(grainScheduledList:IGrainScheduled[]) {
+                                                    
+                                                    if (!angular.isUndefined(grainScheduledList)) {
+                                                        self._grainScheduledList = grainScheduledList;
+                                                        self._eventsHandler(self);
+                                                        self._hasDataLoaded = true;
+                                                    } else {
+                                                        self._$location.path('/dashboard');
+                                                    }
+                                                    
+                                                },
+                                                function(err) {
+                                                    notify.error(err);
+                                                }
+                                            );
+                                        } else {
+                                            self._$location.path('/dashboard');
+                                        }
+
+                                    },
+                                    function(err) {
+                                        notify.error(err);
+                                    }
+                                )
+
+                            } else {
+                                self._$location.path('/dashboard');
+                            }
+
+                        } else {
+                            self._$location.path('/dashboard');
+                        }
+
+                    },
+                    function(err) {
+                        notify.error(err);
+                    }
+                )
+            },
+            function(err) {
+                notify.error(err);
+            }
+        );
     }
 
     private _eventsHandler = function(self) {
@@ -112,11 +173,35 @@ class ViewSubjectCopyController {
                 self._grainCopyList[grainCopyIndex] = grainCopy;
             }
         }
+        
+        function _calculateScores():{calculatedScore:number, finalScore:number} {
+            var calculatedScore:number = 0,
+                finalScore:number = 0;
+            
+            angular.forEach(self._grainCopyList, function(grainCopy:IGrainCopy) {
+                calculatedScore += parseFloat(grainCopy.calculated_score.toString());
+                finalScore += parseFloat(grainCopy.final_score.toString());
+            });
+            
+            return {
+                calculatedScore: calculatedScore,
+                finalScore: finalScore
+            };
+        }
 
         function _handleUpdateGrainCopy(grainCopy:IGrainCopy) {
             self._grainCopyService.update(grainCopy).then(
                 function() {
                     _updateLocalGrainCopyList(grainCopy);
+                    
+                    var scores = _calculateScores();
+
+                    self._subjectCopy.calculated_score = scores.calculatedScore;
+                    self._subjectCopy.final_score = scores.finalScore;
+
+                    if (!self._previewing  && self._isTeacher) {
+                        _handleUpdateSubjectCopy(self._subjectCopy, false);
+                    }
                 },
                 function(err) {
                     notify.error(err);
@@ -129,11 +214,61 @@ class ViewSubjectCopyController {
                 _handleUpdateGrainCopy(grainCopy);
             } else {
                 _updateLocalGrainCopyList(grainCopy);
+
+                var scores = _calculateScores();
+
+                self._subjectCopy.calculated_score = scores.calculatedScore;
+                self._subjectCopy.final_score = scores.finalScore;
             }
         });
 
         self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
-            self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
+            if (!self._subjectCopy.is_corrected && !self._subjectCopy.is_correction_on_going && !self._previewing  && self._isTeacher) {
+                self._subjectCopy.is_correction_on_going = true;
+                self._subjectCopyService.update(self._subjectCopy).then(
+                    function(subjectCopy:ISubjectCopy) {
+                        self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
+                        self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
+                    },
+                    function(err) {
+                        notify.error(err);
+                    }
+                );
+            } else {
+                self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
+            }
+        });
+
+        function _handleUpdateSubjectCopy(subjectCopy:ISubjectCopy, redirect:boolean) {
+            self._subjectCopyService.update(subjectCopy).then(
+                function(subjectCopy:ISubjectCopy) {
+                    self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
+                    self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
+                },
+                function(err) {
+                    notify.info(err);
+                }
+            )
+        }
+
+        self._$scope.$on('E_UPDATE_SUBJECT_COPY', function(event, subjectCopy:ISubjectCopy, redirect:boolean) {
+            var scores = _calculateScores();
+            
+            subjectCopy.calculated_score = scores.calculatedScore;
+            subjectCopy.final_score = scores.finalScore;
+            
+            if (!self._previewing  && self._isTeacher) {
+                _handleUpdateSubjectCopy(subjectCopy, redirect);
+            } else if (self._previewing && self._isTeacher) {
+                self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
+
+                var scores = _calculateScores();
+
+                self._subjectCopy.calculated_score = scores.calculatedScore;
+                self._subjectCopy.final_score = scores.finalScore;
+                
+                self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
+            }
         });
 
         // init
