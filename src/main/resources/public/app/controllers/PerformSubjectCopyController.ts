@@ -206,7 +206,7 @@ class PerformSubjectCopyController {
         });
 
         self._$scope.$on('E_SUBJECT_COPY_SUBMITTED', function(event, subjectCopy:ISubjectCopy) {
-            subjectCopy.submitted_date = new Date().getTime().toString(); // FIXME might not work
+            subjectCopy.submitted_date = new Date().toISOString(); // FIXME might not work
             self._subjectCopyService.update(subjectCopy).then(
                 function(subjectCopy:ISubjectCopy) {
                     self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
