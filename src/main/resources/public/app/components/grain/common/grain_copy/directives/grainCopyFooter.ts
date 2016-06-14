@@ -32,13 +32,9 @@ directives.push(
                         }
                     };
 
-                    scope.formatNumber = function(i): any {
-                        if(!angular.isUndefined(i)) {
-                            return Math.round(i * 100)/100;
-                        } else {
-                            return 0;
-                        }
-                    }
+                    scope.formatNumber = function(score:number): any {
+                        return ScoreHelper.format(score)
+                    };
                 }
             };
         }]
