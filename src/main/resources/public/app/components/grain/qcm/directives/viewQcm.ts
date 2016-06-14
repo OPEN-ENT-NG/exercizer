@@ -12,7 +12,7 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/qcm/templates/view-qcm.html',
                 link:(scope:any) => {
 
-                    if (angular.isUndefined(scope.grainCopy.grain_copy_data.calculated_score)) {
+                    if (angular.isUndefined(scope.grainCopy.calculated_score)) {
                         var result = QcmService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
                         scope.grainCopy.calculated_score = result.calculated_score;
                         scope.isCorrect = result.answers_result;
