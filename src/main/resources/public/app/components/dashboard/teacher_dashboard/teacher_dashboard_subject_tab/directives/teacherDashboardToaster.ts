@@ -70,7 +70,18 @@ directives.push(
                                         }
                                     },
                                     display : function(){
-                                        return scope.folderList.length + scope.subjectList.length == 1 && ( scope.lowerRight == 'owner' || scope.lowerRight == 'manager');
+                                        if(scope.folderList.length + scope.subjectList.length == 1){
+                                            // only one item
+                                            if(scope.subjectList.length == 1){
+                                                // is subject
+                                                return scope.lowerRight == 'owner' || scope.lowerRight == 'manager';
+                                            } else {
+                                                //is folder
+                                                return true;
+                                            }
+                                        } else{
+                                            return false;
+                                        }
                                     }
                                 },
                                 {
