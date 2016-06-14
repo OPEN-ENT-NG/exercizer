@@ -14,6 +14,8 @@ directives.push(
                         scope.grain.grain_data.custom_data = new StatementCustomData();
                         scope.grain.grain_data.custom_data.statement = '';
                         scope.statementHtml = $sce.trustAsHtml(scope.grain.grain_data.custom_data.statement);
+                        scope.grain.grain_data.custom_data.statement = StringISOHelper.toISO(scope.grain.grain_data.statement);
+                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
                     }
 
                     scope.isFolded = false;
@@ -42,8 +44,8 @@ directives.push(
                     /**
                      * Event JQuery because no ng-blur on editor
                      */
-                    element.find('editor').on('editor-blur', function(){
-                        if(isEditorFocus){
+                    element.find('editor').on('editor-blur', function() {
+                        if (isEditorFocus) {
                             isEditorFocus = false;
                             scope.grain.grain_data.custom_data.statement = StringISOHelper.toISO(scope.grain.grain_data.custom_data.statement);
                             scope.$emit('E_UPDATE_GRAIN', scope.grain);

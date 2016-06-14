@@ -30,7 +30,7 @@ directives.push(
 
                         if (scope.anchorBehaviour) {
                             // FIXME
-                            jQuery("html, body").animate({ scrollTop: jQuery(angular.isUndefined(grainCopy) ? '#summary' : '#' + grainCopy.id).height() }, 500);}
+                            jQuery('html, body').animate({ scrollTop: jQuery(angular.isUndefined(grainCopy) ? '#summary' : '#' + grainCopy.id).offset().top - 100}, 500);}
                     });
                 }
             };
