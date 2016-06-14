@@ -118,7 +118,12 @@ directives.push(
                                         hide();
                                     },
                                     display : function(){
-                                        return scope.lowerRight == 'contrib' || scope.lowerRight == 'manager' ||scope.lowerRight == 'owner';
+                                        if(scope.subjectList.length == 0){
+                                            // is only folder
+                                            return true;
+                                        } else {
+                                            return scope.lowerRight == 'contrib' || scope.lowerRight == 'manager' || scope.lowerRight == 'owner';
+                                        }
                                     }
                                 }
                             ];
