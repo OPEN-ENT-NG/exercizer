@@ -34,7 +34,8 @@
                 <tbody>
                 <tr data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
                     <td>
-                        <input type="checkbox" data-ng-model="answer.isChecked" complete-change="updateGrain()" />
+                        <!-- do not change data-ng-change to complete-change -->
+                        <input type="checkbox" data-ng-model="answer.isChecked" data-ng-change="updateGrain()" />
                     </td>
                     <td>
                         <input type="text" style="width: 100%;" data-ng-model="answer.text" complete-change="updateGrain()" value="[[ answer.text ]]" placeholder="Indiquez une proposition" />
