@@ -20,13 +20,15 @@ directives.push(
                     // confirm delete
                     scope.deleteSelection = function () {
                         scope.$emit('E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT');
-                        scope.hide();
+                        scope.isDisplayed = false;
+                        scope.list = null;
                     };
 
                     // hide model
                     scope.hide = function () {
                         scope.isDisplayed = false;
                         scope.list = null;
+                        scope.$emit('E_RESET_SELECTED_LIST');
                     };
 
                     // get label of folder

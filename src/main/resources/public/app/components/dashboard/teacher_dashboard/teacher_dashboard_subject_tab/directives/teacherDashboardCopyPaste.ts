@@ -28,13 +28,15 @@ directives.push(
                             folder = FolderService.folderById(scope.data.selectedFolder);
                         }
                         scope.$emit("E_CONFIRM_COPY_PASTE", folder);
-                        scope.hide();
+                        scope.isDisplayed = false;
+                        scope.list = null;
                     };
 
                     // hide model
                     scope.hide = function () {
                         scope.isDisplayed = false;
                         scope.list = null;
+                        scope.$emit('E_RESET_SELECTED_LIST');
                     };
 
                     // get label of folder

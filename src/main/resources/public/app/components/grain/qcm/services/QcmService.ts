@@ -8,6 +8,12 @@ class QcmService implements IAutomaticCorrection {
             atLeastOneError =  false,
             isCorrectReturnArray = {};
         angular.forEach(grainCopy.grain_copy_data.custom_copy_data.filled_answer_list, function(filled_answer, key){
+            if(angular.isUndefined(filled_answer.isChecked)){
+                filled_answer.isChecked = false;
+            }
+            if(angular.isUndefined(grainScheduled.grain_data.custom_data.correct_answer_list[key].isChecked)){
+                grainScheduled.grain_data.custom_data.correct_answer_list[key].isChecked = false;
+            }
             if(filled_answer.isChecked === grainScheduled.grain_data.custom_data.correct_answer_list[key].isChecked){
                 isCorrectReturnArray[key] = true;
                 if(grainScheduled.grain_data.custom_data.no_error_allowed && atLeastOneError){
