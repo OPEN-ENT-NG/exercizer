@@ -1,9 +1,7 @@
 directives.push(
     {
         name: 'grainEditTextHeader',
-        injections: [ 
-            (
-            ) => {
+        injections: [() => {
             return {
                 restrict: 'E',
                 scope: {
@@ -13,7 +11,7 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/common/grain_edit/templates/grain-edit-text-header.html',
                 link: (scope:any) => {
                     scope.removeGrain = function() {
-                        scope.$emit("E_REMOVE_GRAIN", scope.grain);
+                        scope.$emit('E_REMOVE_GRAIN', scope.grain);
                     };
                 }
             };

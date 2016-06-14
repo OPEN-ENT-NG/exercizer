@@ -1,3 +1,4 @@
+import IWindowService = ng.IWindowService;
 class EditSubjectController {
 
     static $inject = [
@@ -26,7 +27,7 @@ class EditSubjectController {
         private _grainService:IGrainService,
         private _grainTypeService:IGrainTypeService
     ) {
-        
+
         this._$scope = _$scope;
         this._$location = _$location;
         this._subjectService = _subjectService;
@@ -35,7 +36,7 @@ class EditSubjectController {
         this._grainService = _grainService;
         this._grainTypeService = _grainTypeService;
         this._hasDataLoaded = false;
-        
+
         var self = this,
             subjectId = _$routeParams['subjectId'];
 
@@ -48,7 +49,7 @@ class EditSubjectController {
                 self._selectedGrainList = [];
                 self._eventsHandler(self);
             }
-            
+
         }, function(err) {
             notify.error(err);
         });
@@ -70,6 +71,8 @@ class EditSubjectController {
                                 grain.grain_data.max_score = parseFloat(grain.grain_data.max_score.toString());
                             }
                             maxScore += grain.grain_data.max_score
+                        } else if (grain.grain_type_id === 3) {
+                            
                         }
                     });
 
@@ -260,7 +263,7 @@ class EditSubjectController {
     get subject():ISubject {
         return this._subject;
     }
-    
+
     get hasDataLoaded():boolean {
         return this._hasDataLoaded;
     }
