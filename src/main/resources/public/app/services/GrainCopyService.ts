@@ -145,11 +145,13 @@ class GrainCopyService implements IGrainCopyService {
         grainCopy.grain_copy_data.answer_hint = grainScheduled.grain_data.answer_hint;
         grainCopy.grain_copy_data.document_list = grainScheduled.grain_data.document_list;
         
-        if (grainCopy.grain_type_id === 3) { // special case for statement
-            grainCopy.grain_copy_data.custom_copy_data = new StatementCustomCopyData();
-            grainCopy.grain_copy_data.custom_copy_data.statement = grainScheduled.grain_data.custom_data.statement;
-        }
-        switch (grainScheduled.grain_type_id){
+      
+        switch (grainScheduled.grain_type_id) {
+            case 3:
+                grainCopy.grain_copy_data.custom_copy_data = new StatementCustomCopyData();
+                grainCopy.grain_copy_data.custom_copy_data.statement = grainScheduled.grain_data.custom_data.statement;
+
+                break;
             case 4:
                 grainCopy.grain_copy_data.custom_copy_data = new SimpleAnswerCustomCopyData();
                 break;

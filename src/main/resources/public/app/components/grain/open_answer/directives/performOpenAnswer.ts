@@ -8,7 +8,7 @@ directives.push(
                     grainCopy: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/open_answer/templates/perform-open-answer.html',
-                link:(scope:any, element : any, attrs) => {
+                link:(scope:any, element:any) => {
 
                     var isEditorFocus = false;
 

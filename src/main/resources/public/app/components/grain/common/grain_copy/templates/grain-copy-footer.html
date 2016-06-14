@@ -53,7 +53,7 @@
                 <strong>Score calculé :</strong>&nbsp;[[ formatNumber(grainCopy.calculated_score) ]]&nbsp;/&nbsp;[[ grainScheduled.grain_data.max_score ]]
             </div>
             <div class="row vertical-spacing" data-ng-if="isTeacher">
-                <strong>Score final :</strong>&nbsp;<input type="text" data-digits-input-restrict data-ng-model="grainCopy.final_score" value="[[ grainCopy.final_score ]]" complete-change="updateGrain()" style="width:50px;" />&nbsp;/&nbsp;[[ grainScheduled.grain_data.max_score ]]
+                <strong>Score final :</strong>&nbsp;<input type="text" data-digits-input-restrict data-ng-model="grainCopy.final_score" value="[[ grainCopy.final_score ]]" complete-change="updateGrainCopy()" style="width:50px;" />&nbsp;/&nbsp;[[ grainScheduled.grain_data.max_score ]]
             </div>
             <div class="row vertical-spacing" data-ng-if="!isTeacher">
                 <strong>Score final :</strong>&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;/&nbsp;[[ grainScheduled.grain_data.max_score ]]
