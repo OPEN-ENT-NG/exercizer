@@ -1,8 +1,14 @@
 <article>
     <grain-copy-header data-grain-copy="grainCopy"></grain-copy-header>
     <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
-
     <div class="row vertical-spacing">
-        <input type="text" class="twelve cell" data-ng-model="grainCopy.grain_copy_data.custom_copy_data.filled_answer" data-ng-blur="updateGrainCopy()" placeholder="Indiquez la réponse" />
+        <div class="row" data-ng-repeat="filled_answer in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list track by $index">
+            <div class="cell one">
+                <input type="checkbox" data-ng-model="filled_answer.isChecked" data-ng-change="updateGrainCopy()" />
+            </div>
+            <div class="cell eleven">
+                <input type="text" style="width: 100%;" data-ng-model="filled_answer.text"  value="[[ filled_answer.text ]]" placeholder="Indiquez une proposition" disabled/>
+            </div>
+        </div>
     </div>
 </article>
