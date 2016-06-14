@@ -15,22 +15,20 @@
 </nav>
 
 <nav data-stick-to-top class="hash-magnet floating-navigation" data-ng-if="anchorBehaviour">
-    <article>
-        <h2 class="row">Navigation</h2>
-        <div class="row" style="overflow-y:scroll; max-height: 300px; border:1px dotted lightgrey;">
-            <ul style="padding: 0 5px;">
-                <li>
-                    <a data-ng-class="{ selected: !currentGrainCopy }" data-ng-click="navigateTo()">
-                        Résumé
-                    </a>
-                </li>
-                <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false">
-                    <a data-ng-class="{ selected: currentGrainCopy.id === grainCopy.id }"
-                       data-ng-click="navigateTo(grainCopy)">
-                        [[ getGrainCopyName(grainCopy) ]]
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </article>
+    <h4 class="row">Navigation</h4>
+    <div class="row" style="overflow-y:scroll; max-height: 300px; border:1px dotted lightgrey;">
+        <ul style="padding: 0 5px;">
+            <li data-ng-click="navigateTo()">
+                <a data-ng-class="{ selected: !currentGrainCopy }">
+                    Résumé
+                </a>
+            </li>
+            <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false"
+                data-ng-click="navigateTo(grainCopy)">
+                <a data-ng-class="{ selected: currentGrainCopy.id === grainCopy.id }">
+                    [[ getGrainCopyName(grainCopy) ]]
+                </a>
+            </li>
+        </ul>
+    </div>
 </nav>
