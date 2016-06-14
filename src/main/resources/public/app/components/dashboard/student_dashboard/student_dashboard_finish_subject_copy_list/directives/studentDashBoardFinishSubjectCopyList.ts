@@ -62,7 +62,7 @@ directives.push(
                         scope.filterOnSubjectScheduledDueDate = function(begin, end){
                             return function (subjectCopy){
                                 var subjectScheduled = scope.getSubjectScheduledById(subjectCopy.subject_scheduled_id);
-                                var dueDate = DateService.timestampToDate(subjectScheduled.due_date);
+                                var dueDate = DateService.isoToDate(subjectScheduled.due_date);
                                 if(!end){
                                     end = scope.yesterday;
                                 }
@@ -80,7 +80,9 @@ directives.push(
 
 
                         scope.getSubjectScheduledById = function(id : number){
-                            return SubjectScheduledService.listMappedById[id];
+                            if (!angular.isUndefined(SubjectScheduledService.listMappedById)) {
+                                return SubjectScheduledService.listMappedById[id];
+                            }
                         };
 
 

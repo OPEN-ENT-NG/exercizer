@@ -9,6 +9,9 @@ directives.push(
                     templateUrl: 'exercizer/public/app/components/dashboard/student_dashboard/student_dashboard_subject_copy_list/templates/student-dashboard-subject-copy-list.html',
                     link: (scope:any) => {
 
+                        // date data
+                        scope.today = new Date();
+                        scope.dateInAWeek = DateService.addDays(scope.today, 7);
                         // subject data
                         scope.subjectCopyList = [];
                         SubjectCopyService.resolve(false).then(
@@ -18,13 +21,18 @@ directives.push(
                         );
                         SubjectScheduledService.resolve(false).then(
                             function(){
-                                //scope.$apply();
-                            }
+                                //process on subject Scheduled
+                                angular.forEach(SubjectScheduledService.getList(), function(subjectScheduled){
+                                    if(DateService.compare_after(scope.today, DateService.isoToDate(subjectScheduled.due_date))){
+                                        if(subjectScheduled.is_over !== true){
+                                            subjectScheduled.is_over = true;
+                                        }
+                                    }
+                                })
+                           }
                         );
 
-                        // date data
-                        scope.today = new Date();
-                        scope.dateInAWeek = DateService.addDays(scope.today, 7);
+
                         // search
                         if (!scope.search) {
                             scope.search = {};
@@ -58,7 +66,7 @@ directives.push(
                             return function (subjectCopy) {
                                 var subjectScheduled = scope.getSubjectScheduledById(subjectCopy.subject_scheduled_id);
                                 if (subjectScheduled) {
-                                    var dueDate = DateService.timestampToDate(subjectScheduled.due_date);
+                                    var dueDate = DateService.isoToDate(subjectScheduled.due_date);
                                     if (!begin) {
                                         begin = scope.dateInAWeek;
                                     }
@@ -82,8 +90,10 @@ directives.push(
                             }
                         };
 
-                        scope.getSubjectScheduledById = function (id:number) {
-                            return SubjectScheduledService.listMappedById[id];
+                        scope.getSubjectScheduledById = function(id : number){
+                            if (!angular.isUndefined(SubjectScheduledService.listMappedById)) {
+                                return SubjectScheduledService.listMappedById[id];
+                            }
                         };
                     }
                 }

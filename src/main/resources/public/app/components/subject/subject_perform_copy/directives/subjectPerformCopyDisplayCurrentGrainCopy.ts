@@ -4,6 +4,9 @@ directives.push(
         injections: [() => {
             return {
                 restrict: 'E',
+                scope : {
+                    subjectScheduled : "="
+                },
                 templateUrl: 'exercizer/public/app/components/subject/subject_perform_copy/templates/subject-perform-copy-display-current-grain-copy.html',
                 link:(scope:any) => {
                     scope.currentGrainCopy = undefined;

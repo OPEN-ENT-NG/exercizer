@@ -108,7 +108,9 @@ class SubjectScheduledService implements ISubjectScheduledService {
     };
 
     public getById = function(id:number):ISubjectScheduled {
-        return this._listMappedById[id];
+        if (!angular.isUndefined(this._listMappedById)) {
+            return this._listMappedById[id];
+        }
     };
 
     get currentSubjectScheduledId():number {

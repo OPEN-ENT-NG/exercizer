@@ -7,7 +7,9 @@ directives.push(
                 scope: {
                     subjectScheduled: '='
                 },
-                templateUrl: 'exercizer/public/app/components/grain/undefined/templates/perform-summary.html'
+                templateUrl: 'exercizer/public/app/components/grain/undefined/templates/perform-summary.html',
+                link(scope: any){
+                }
             };
         }
         ]
