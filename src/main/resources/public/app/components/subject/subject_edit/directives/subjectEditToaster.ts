@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'subjectEditToaster',
-        injections: ['$rootScope', 'GrainService', ($rootScope, GrainService:IGrainService) => {
+        injections: ['GrainService', (GrainService:IGrainService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -9,19 +9,28 @@ directives.push(
                 },
                 templateUrl: 'exercizer/public/app/components/subject/subject_edit/templates/subject-edit-toaster.html',
                 link:(scope:any) => {
-
-                    scope.isDisplayed = false;
-                    scope.isRemoveSelectedGrainModalDisplayed = false;
-                    scope.selectedGrainList = [];
+                    scope.isModalDisplayed = false;
                     
-                    // TODO display toaster method
+                    scope.isDisplayed = function() {
+                        return GrainService.getSelectedListBySubject(scope.subject).length > 0;
+                    };
+                    
+                    scope.isRemoveSelectedGrainListModalDisplayed = function() {
+                        return scope.isModalDisplayed;
+                    };
+                    
+                    scope.displayRemoveSelectedGrainListModal = function() {
+                        scope.isModalDisplayed = true;
+                    };
+                    
+                    scope.closeRemoveSelectedGrainListModal = function() {
+                        scope.isModalDisplayed = false;
+                    };
 
                     scope.duplicateSelectedGrainList = function() {
-                        GrainService.duplicateList(scope.selectedGrainList, scope.subject).then(
+                        GrainService.duplicateList(GrainService.getSelectedListBySubject(scope.subject), scope.subject).then(
                             function() {
-                                scope.isDisplayed = false;
-                                scope.selectedGrainList = [];
-                                $rootScope.$broadcast('E_GRAIN_DESELECT_ALL');
+                                scope.resetSelection();
                             },
                             function(err) {
                                 notify.error(err);
@@ -30,31 +39,20 @@ directives.push(
                     };
 
                     scope.confirmRemoveSelectedGrainList = function() {
-                        GrainService.removeList(scope.selectedGrainList, scope.subject).then(
+                        GrainService.removeList(GrainService.getSelectedListBySubject(scope.subject), scope.subject).then(
                             function() {
-                                scope.isDisplayed = false;
-                                scope.isRemoveSelectedGrainModalDisplayed = false;
-                                scope.selectedGrainList = [];
+                                scope.resetSelection();
+                                scope.closeRemoveSelectedGrainListModal();
                             },
                             function(err) {
                                 notify.error(err);
                             }
                         );
                     };
-
-                    scope.$on('E_GRAIN_TOGGLED', function(event, grain:IGrain) {
-                        var grainIndex = scope.selectedGrainList.indexOf(grain);
-                        if (grainIndex !== -1) {
-                            scope.selectedGrainList.splice(grainIndex, 1);
-                        } else {
-                            scope.selectedGrainList.push(grain);
-                            scope.selectedGrainList.sort(function(grainA:IGrain, grainB:IGrain) {
-                                return grainA.order_by - grainB.order_by;
-                            });
-                        }
-
-                        scope.isDisplayed = scope.selectedGrainList.length > 0;
-                    });
+                    
+                    scope.resetSelection = function() {
+                        GrainService.resetSelectedListBySubject(scope.subject);
+                    };
                 }
             };
         }]

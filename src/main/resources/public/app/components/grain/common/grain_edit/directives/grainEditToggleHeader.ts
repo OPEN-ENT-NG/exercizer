@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'grainEditToggleHeader',
-        injections: ['$rootScope', 'GrainTypeService', ($rootScope, GrainTypeService:IGrainTypeService) => {
+        injections: ['GrainTypeService', (GrainTypeService:IGrainTypeService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -22,7 +22,7 @@ directives.push(
                     };
 
                     scope.removeGrain = function() {
-                        $rootScope.$broadcast('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN', scope.grain);
+                        scope.$emit('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN', scope.grain);
                     };
 
                     scope.$on('E_FORCE_FOLDING_GRAIN', function() {

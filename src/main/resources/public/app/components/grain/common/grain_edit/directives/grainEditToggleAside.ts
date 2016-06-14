@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'grainEditToggleAside',
-        injections: ['$rootScope', ($rootScope) => {
+        injections: ['SubjectService', 'GrainService', (SubjectService:ISubjectService, GrainService:IGrainService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -10,16 +10,15 @@ directives.push(
                 },
                 templateUrl: 'exercizer/public/app/components/grain/common/grain_edit/templates/grain-edit-toggle-aside.html',
                 link: (scope:any) => {
-                    scope.isGrainSelected = false;
+                    
+                    scope.isGrainSelected = function() {
+                        var subject = SubjectService.getById(scope.grain.subject_id);
+                        return GrainService.getSelectedListBySubject(subject).indexOf(scope.grain) !== -1;
+                    };
 
                     scope.toggleGrainSelection = function() {
-                        scope.isGrainSelected = !scope.isGrainSelected;
-                        $rootScope.$broadcast('E_GRAIN_TOGGLED', scope.grain);
+                        GrainService.select(scope.grain);
                     };
-                    
-                    scope.$on('E_GRAIN_DESELECT_ALL', function() {
-                        scope.isGrainSelected = false;
-                    })
                 }
             };
         }]

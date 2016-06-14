@@ -66,9 +66,14 @@ class EditSubjectController {
         this._$location.path('/dashboard');
     }
 
-    private _eventsHandler = function (self) {
+    private _eventsDispatcher = function(self) {
+        
+        
 
-        function _handleGrainListUpdated() {
+        
+        
+
+        /*function _handleGrainListUpdated() {
             self._grainService.getListBySubject(self._subject).then(
                 function (grainList) {
                     var maxScore = 0;
@@ -262,7 +267,7 @@ class EditSubjectController {
             _handleGrainListUpdated();
             self._$scope.$broadcast('E_DISPLAY_MODAL_PREVIEW_PERFORM_SUBJECT_COPY');
 
-        });
+        });*/
 
         // init
         //_handleGrainListUpdated();

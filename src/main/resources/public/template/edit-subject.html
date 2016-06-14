@@ -1,11 +1,11 @@
 <div data-ng-controller="EditSubjectController as editSubjectController">
 
     <!-- LOADER -->
-    <div class="row" data-ng-hide="editSubjectController.hasDataLoaded">
+    <div class="row" data-ng-if="!editSubjectController.hasDataLoaded">
         <div class="info">Chargement des données...</div>
     </div>
 
-    <div data-ng-show="editSubjectController.hasDataLoaded">
+    <div data-ng-if="editSubjectController.hasDataLoaded">
 
         <!-- TOP HEADER -->
         <div class="row">

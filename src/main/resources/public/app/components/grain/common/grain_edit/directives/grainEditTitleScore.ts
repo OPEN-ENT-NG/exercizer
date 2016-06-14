@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'grainEditTitleScore',
-        injections: ['GrainService', (GrainService:IGrainService) => {
+        injections: ['GrainService', 'GrainTypeService', (GrainService:IGrainService, GrainTypeService:IGrainTypeService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -12,7 +12,11 @@ directives.push(
                     scope.updateGrain = function() {
                         scope.grain.grain_data.title = StringISOHelper.toISO(scope.grain.grain_data.title);
 
-                        if (angular.isUndefined(scope.grain.grain_data.max_score) || !scope.grain.grain_data.max_score) {
+                        if (angular.isUndefined(scope.grain.grain_data.title)) {
+                            scope.grain.grain_data.title = GrainTypeService.getById(scope.grain.grain_type_id).public_name;
+                        }
+
+                        if (angular.isUndefined(scope.grain.grain_data.max_score)) {
                             scope.grain.grain_data.max_score = 0;
                         }
 

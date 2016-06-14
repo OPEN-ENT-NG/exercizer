@@ -1,21 +1,22 @@
 <!-- TOASTER -->
-<section class="toggle-buttons" data-ng-show="isDisplayed">
+<section class="toggle-buttons" data-ng-show="isDisplayed()">
     <div class="toggle">
         <div class="row">
             <div class="cell">
                 <button data-ng-click="duplicateSelectedGrainList()">Dupliquer</button>
-                <button data-ng-click="isRemoveSelectedGrainModalDisplayed = true">Supprimer</button>
+                <button data-ng-click="displayRemoveSelectedGrainListModal()">Supprimer</button>
+                <button data-ng-click="resetSelection()">Annuler</button>
             </div>
         </div>
     </div>
 </section>
 
 <!-- REMOVE SELECTED GRAIN LIST MODAL -->
-<lightbox data-show="isRemoveSelectedGrainListModalDisplayed" data-on-close="isRemoveSelectedGrainModalDisplayed = false">
+<lightbox data-show="isRemoveSelectedGrainListModalDisplayed()" data-on-close="closeRemoveSelectedGrainListModal()">
     <h2>Supprimer la sélection</h2>
     <p>Confirmez-vous la suppression de la sélection ?</p>
     <div class="row">
         <button data-ng-click="confirmRemoveSelectedGrainList()" class="cell right-magnet">Supprimer la sélection</button>
-        <button data-ng-click="isRemoveSelectedGrainModalDisplayed = false" class="cell right-magnet cancel">Annuler</button>
+        <button data-ng-click="closeRemoveSelectedGrainListModal()" class="cell right-magnet cancel">Annuler</button>
     </div>
 </lightbox>
