@@ -152,6 +152,11 @@ class GrainService implements IGrainService {
     public duplicate = function (grain:IGrain, subject:ISubject, rename: boolean = true):ng.IPromise<IGrain> {
 
         var duplicatedGrain = CloneObjectHelper.clone(grain, true);
+        
+        if (angular.isUndefined(grain.grain_data)) {
+            duplicatedGrain.grain_data = CloneObjectHelper.clone(grain.grain_data, true);
+        }
+        
         duplicatedGrain.id = undefined;
         duplicatedGrain.subject_id = subject.id;
 

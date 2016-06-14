@@ -150,7 +150,6 @@ class GrainCopyService implements IGrainCopyService {
             case 3:
                 grainCopy.grain_copy_data.custom_copy_data = new StatementCustomCopyData();
                 grainCopy.grain_copy_data.custom_copy_data.statement = grainScheduled.grain_data.custom_data.statement;
-
                 break;
             case 4:
                 grainCopy.grain_copy_data.custom_copy_data = new SimpleAnswerCustomCopyData();
