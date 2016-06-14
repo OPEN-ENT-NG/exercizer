@@ -13,7 +13,19 @@ directives.push(
                     link: (scope:any) => {
 
                         scope.canAccessPerform = function(){
-                            return true;
+                            // a student can not access to a copy if
+                            // the subject is over
+                            // OR
+                            // the subject have been submitted AND the subject have option one_shot == true;
+                            if(scope.subjectScheduled.is_over === true){
+                                return false;
+                            } else {
+                                if(scope.subjectScheduled.is_one_shot_submit && scope.subjectCopy.submitted_date){
+                                    return false;
+                                } else{
+                                    return true;
+                                }
+                            }
                         };
 
                         scope.performSubjectCopy = function(subjectCopyId){
