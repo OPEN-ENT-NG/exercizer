@@ -158,7 +158,11 @@ class GrainService implements IGrainService {
         if (rename) { // duplicate action in edit subject page
             
             if (duplicatedGrain.grain_type_id > 3) {
-                duplicatedGrain.grain_data.title += '_copie';
+                if (angular.isUndefined(duplicatedGrain.grain_data.title)) {
+                    duplicatedGrain.grain_data.title = this._grainTypeService.getById(duplicatedGrain.grain_type_id).public_name + '_copie';
+                } else {
+                    duplicatedGrain.grain_data.title += '_copie';
+                }
             }
             
             duplicatedGrain.order_by = undefined;

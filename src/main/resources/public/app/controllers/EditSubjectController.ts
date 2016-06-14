@@ -179,6 +179,7 @@ class EditSubjectController {
                 })
             }
 
+            self._$scope.$broadcast('E_SELECT_GRAIN', grain);
             self._$scope.$broadcast('E_TOGGLE_SUBJECT_EDIT_TOASTER', self._selectedGrainList.length);
         }
 

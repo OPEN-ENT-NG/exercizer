@@ -1,3 +1,5 @@
 <div class="vertical-spacing cell" data-ng-class="cellCount">
-    <input type="checkbox" data-ng-model="isGrainSelected" complete-change="toggleGrainSelection()" />
+    <input type="checkbox"
+           data-ng-checked="isGrainSelected"
+           data-ng-click="toggleGrainSelection()" />
 </div>
