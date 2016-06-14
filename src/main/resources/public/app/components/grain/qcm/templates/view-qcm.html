@@ -4,7 +4,7 @@
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     <div class="row vertical-spacing" data-ng-repeat="(key,filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list track by $index">
         <div class="cell one">
-            <input type="checkbox" data-ng-model="filled_answer.isChecked" data-ng-checked="filled_answer.isChecked" />
+            <input type="checkbox" data-ng-model="filled_answer.isChecked" data-ng-checked="filled_answer.isChecked" disabled />
         </div>
         <div class="cell eleven">
             <input type="text" class="twelve cell"

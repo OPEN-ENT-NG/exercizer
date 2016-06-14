@@ -25,20 +25,16 @@ directives.push(
                         scope.isFolded = !scope.isFolded;
                     };
 
-                    scope.updateGrain = function() {
+                    scope.updateGrainCopy = function() {
                         if (scope.isTeacher) {
                             scope.grainCopy.comment = StringISOHelper.toISO(scope.grainCopy.comment);
                             scope.$emit('E_UPDATE_GRAIN', scope.grain);
                         }
                     };
 
-                    scope.formatNumber = function(i): any {
-                        if(i){
-                            return Math.round(i * 100)/100;
-                        } else{
-                            return "";
-                        }
-                    }
+                    scope.formatNumber = function(score:number): any {
+                        return ScoreHelper.format(score)
+                    };
                 }
             };
         }]

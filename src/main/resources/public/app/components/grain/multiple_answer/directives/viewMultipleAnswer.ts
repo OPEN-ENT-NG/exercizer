@@ -12,11 +12,7 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/multiple_answer/templates/view-multiple-answer.html',
                 link:(scope:any) => {
 
-                    if (angular.isUndefined(scope.grainCopy.grain_copy_data.custom_copy_data)) {
-                       throw "not possible";
-                    }
-
-                    if (angular.isUndefined(scope.grainCopy.grain_copy_data.calculated_score)) {
+                    if (angular.isUndefined(scope.grainCopy.calculated_score)) {
                         var result = MultipleAnswerService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
                         scope.grainCopy.calculated_score = result.calculated_score;
                         scope.isCorrect = result.answers_result;
