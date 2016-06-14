@@ -166,6 +166,19 @@ class ViewSubjectCopyController {
 
     private _eventsHandler = function(self) {
 
+        function _calculateScores() {
+            var calculatedScore:number = 0,
+                finalScore:number = 0;
+
+            angular.forEach(self._grainCopyList, function(grainCopy:IGrainCopy) {
+                calculatedScore += parseFloat(grainCopy.calculated_score.toString());
+                finalScore += parseFloat(grainCopy.final_score.toString());
+            });
+
+            self._subjectCopy.calculated_score = calculatedScore;
+            self._subjectCopy.final_score = finalScore;
+        }
+
         function _updateLocalGrainCopyList(grainCopy:IGrainCopy) {
             var grainCopyIndex = self._grainCopyList.indexOf(grainCopy);
 
@@ -173,20 +186,18 @@ class ViewSubjectCopyController {
                 self._grainCopyList[grainCopyIndex] = grainCopy;
             }
         }
-        
-        function _calculateScores():{calculatedScore:number, finalScore:number} {
-            var calculatedScore:number = 0,
-                finalScore:number = 0;
-            
-            angular.forEach(self._grainCopyList, function(grainCopy:IGrainCopy) {
-                calculatedScore += parseFloat(grainCopy.calculated_score.toString());
-                finalScore += parseFloat(grainCopy.final_score.toString());
-            });
-            
-            return {
-                calculatedScore: calculatedScore,
-                finalScore: finalScore
-            };
+
+        function _handleUpdateSubjectCopy(subjectCopy:ISubjectCopy, redirect:boolean) {
+            _calculateScores();
+            self._subjectCopyService.update(subjectCopy).then(
+                function(subjectCopy:ISubjectCopy) {
+                    self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
+                    self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
+                },
+                function(err) {
+                    notify.info(err);
+                }
+            )
         }
 
         function _handleUpdateGrainCopy(grainCopy:IGrainCopy) {
@@ -194,14 +205,11 @@ class ViewSubjectCopyController {
                 function() {
                     _updateLocalGrainCopyList(grainCopy);
                     
-                    var scores = _calculateScores();
-
-                    self._subjectCopy.calculated_score = scores.calculatedScore;
-                    self._subjectCopy.final_score = scores.finalScore;
-
                     if (!self._previewing  && self._isTeacher) {
                         _handleUpdateSubjectCopy(self._subjectCopy, false);
                     }
+                    
+                    _calculateScores();
                 },
                 function(err) {
                     notify.error(err);
@@ -214,17 +222,14 @@ class ViewSubjectCopyController {
                 _handleUpdateGrainCopy(grainCopy);
             } else {
                 _updateLocalGrainCopyList(grainCopy);
-
-                var scores = _calculateScores();
-
-                self._subjectCopy.calculated_score = scores.calculatedScore;
-                self._subjectCopy.final_score = scores.finalScore;
+                _calculateScores();
             }
         });
 
         self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
             if (!self._subjectCopy.is_corrected && !self._subjectCopy.is_correction_on_going && !self._previewing  && self._isTeacher) {
                 self._subjectCopy.is_correction_on_going = true;
+                _calculateScores();
                 self._subjectCopyService.update(self._subjectCopy).then(
                     function(subjectCopy:ISubjectCopy) {
                         self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
@@ -235,38 +240,16 @@ class ViewSubjectCopyController {
                     }
                 );
             } else {
+                _calculateScores();
                 self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
             }
         });
 
-        function _handleUpdateSubjectCopy(subjectCopy:ISubjectCopy, redirect:boolean) {
-            self._subjectCopyService.update(subjectCopy).then(
-                function(subjectCopy:ISubjectCopy) {
-                    self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
-                    self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
-                },
-                function(err) {
-                    notify.info(err);
-                }
-            )
-        }
-
         self._$scope.$on('E_UPDATE_SUBJECT_COPY', function(event, subjectCopy:ISubjectCopy, redirect:boolean) {
-            var scores = _calculateScores();
-            
-            subjectCopy.calculated_score = scores.calculatedScore;
-            subjectCopy.final_score = scores.finalScore;
-            
             if (!self._previewing  && self._isTeacher) {
                 _handleUpdateSubjectCopy(subjectCopy, redirect);
             } else if (self._previewing && self._isTeacher) {
-                self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
-
-                var scores = _calculateScores();
-
-                self._subjectCopy.calculated_score = scores.calculatedScore;
-                self._subjectCopy.final_score = scores.finalScore;
-                
+               _calculateScores();
                 self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
             }
         });

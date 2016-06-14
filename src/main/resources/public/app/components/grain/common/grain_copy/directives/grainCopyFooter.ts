@@ -12,12 +12,6 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/common/grain_copy/templates/grain-copy-footer.html',
                 link:(scope:any) => {
                     scope.isFolded = true;
-                    
-                    scope.$watch(scope.grainCopy.calculated_score, function() {
-                        if (angular.isUndefined(scope.grainCopy.final_score)) {
-                            scope.grainCopy.final_score = angular.isUndefined(scope.grainCopy.calculated_score) ? 0 : angular.copy(scope.grainCopy.calculated_score);
-                        }
-                    });
 
                     scope.hasAnswerExplanation = function() {
                         return !angular.isUndefined(scope.grainScheduled.grain_data.answer_explanation);
