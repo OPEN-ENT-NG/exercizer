@@ -38,7 +38,6 @@ directives.push(
                      * Event JQuery because no ng-blur on editor
                      */
                     element.find('editor').on('editor-focus', function(){
-                        console.log('first call');
                         isEditorFocus = true;
                     });
 
@@ -46,7 +45,6 @@ directives.push(
                      * Event JQuery because no ng-blur on editor
                      */
                     element.find('editor').on('editor-blur', function() {
-                        console.log('second call');
                         if (isEditorFocus) {
                             isEditorFocus = false;
                             scope.grain.grain_data.custom_data.statement = StringISOHelper.toISO(scope.grain.grain_data.custom_data.statement);

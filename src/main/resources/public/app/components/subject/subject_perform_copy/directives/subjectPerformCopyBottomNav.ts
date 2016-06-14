@@ -11,13 +11,18 @@ directives.push(
                 link:(scope:any) => {
                     scope.currentGrainCopy = undefined;
                     scope.currentGrainCopyIndex = undefined;
+                    
+                    scope.grainCopyList = scope.grainCopyList.sort(function (grainCopyA:IGrainCopy, grainCopyB:IGrainCopy) {
+                        return (grainCopyA.order_by > grainCopyB.order_by ? 1 : -1);
+                    });
 
                     scope.hasPrevious = function() {
                         return !angular.isUndefined(scope.currentGrainCopy);
                     };
                     
                     scope.hasNext = function() {
-                        return angular.isUndefined(scope.currentGrainCopy) || scope.currentGrainCopyIndex < scope.grainCopyList.length - 1;
+                        return (angular.isUndefined(scope.currentGrainCopy) && (!angular.isUndefined(scope.grainCopyList) && scope.grainCopyList.length > 0))
+                            || scope.currentGrainCopyIndex < scope.grainCopyList.length - 1;
                     };
                     
                     scope.navigateToPrevious = function() {
