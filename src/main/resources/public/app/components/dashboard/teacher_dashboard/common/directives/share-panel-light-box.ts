@@ -13,10 +13,10 @@ directives.push(
 
                     // event to display model
                     scope.$on("E_DISPLAY_DASHBOARD_MODAL_SHARE", function(event, subject) {
-                        console.log('E_DISPLAY_DASHBOARD_MODAL_SHARE');
                         scope.isDisplayed = true;
-                        subject._id = subject.id;
-                        scope.subject = [subject];
+                        var subjectSharePanel = angular.copy(subject);
+                        subjectSharePanel._id = subjectSharePanel.id;
+                        scope.subject = [subjectSharePanel];
                     });
 
                     // hide model

@@ -242,7 +242,8 @@ directives.push(
                         $('[data-drop-down]').height("");
                         $('[data-drop-down]').addClass('hidden');
                         scope.isDisplayed = false;
-                    };
+                        scope.$emit('E_RESET_SELECTED_LIST');
+                        };
 
                     /**
                      * FUNCTION PRIVATE
