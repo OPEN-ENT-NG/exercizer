@@ -17,7 +17,7 @@ directives.push(
                         };
                         scope.getSubjectCopyDueDate = function(){
                             if(scope.subjectScheduled.due_date){
-                                return DateService.timestampToDate(scope.subjectScheduled.due_date);
+                                return DateService.isoToDate(scope.subjectScheduled.due_date);
                             } else{
                                 return '';
                             }
@@ -26,7 +26,7 @@ directives.push(
                             return scope.subjectScheduled.title || 'Titre';
                         };
                         scope.getSubjectScheduledOwner = function(){
-                            return scope.subjectScheduled.owner || '';
+                            return scope.subjectScheduled.owner_username || '';
 
                         };
                         scope.getSubjectScheduledMaxScore = function(){

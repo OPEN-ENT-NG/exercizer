@@ -18,8 +18,12 @@ directives.push(
                         );
                         SubjectScheduledService.resolve(false).then(
                             function(){
-                                //scope.$apply();
-                            }
+                                //process on subject Scheduled
+                                console.log('then promise');
+                                angular.forEach(SubjectScheduledService.getList(), function(subjectScheduled){
+                                    console.log(subjectScheduled, subjectScheduled.due_date);
+                                })
+                           }
                         );
 
                         // date data
@@ -58,7 +62,7 @@ directives.push(
                             return function (subjectCopy) {
                                 var subjectScheduled = scope.getSubjectScheduledById(subjectCopy.subject_scheduled_id);
                                 if (subjectScheduled) {
-                                    var dueDate = DateService.timestampToDate(subjectScheduled.due_date);
+                                    var dueDate = DateService.isoToDate(subjectScheduled.due_date);
                                     if (!begin) {
                                         begin = scope.dateInAWeek;
                                     }
@@ -82,8 +86,10 @@ directives.push(
                             }
                         };
 
-                        scope.getSubjectScheduledById = function (id:number) {
-                            return SubjectScheduledService.listMappedById[id];
+                        scope.getSubjectScheduledById = function(id : number){
+                            if (!angular.isUndefined(SubjectScheduledService.listMappedById)) {
+                                return SubjectScheduledService.listMappedById[id];
+                            }
                         };
                     }
                 }

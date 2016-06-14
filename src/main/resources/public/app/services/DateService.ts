@@ -2,17 +2,14 @@ interface IDateService {
     addDays(date, days);
     compare_after(date_a, date_b);
     timestampToDate(timestamp);
+    isoToDate(iso);
 }
 
 class DateService implements IDateService {
 
-    static $inject = [
+    static $inject = [];
 
-    ];
-
-    constructor(
-
-    ) {
+    constructor() {
 
     }
 
@@ -22,7 +19,7 @@ class DateService implements IDateService {
         return result;
     }
 
-    public compare_after(date_a, date_b){
+    public compare_after(date_a, date_b) {
         if (date_a > date_b) {
             return true;
         } else {
@@ -30,7 +27,11 @@ class DateService implements IDateService {
         }
     }
 
-    public timestampToDate(timestamp){
+    public timestampToDate(timestamp) {
         return new Date(parseInt(timestamp) * 1000);
+    }
+
+    public isoToDate(iso) {
+        return new Date(iso);
     }
 }
