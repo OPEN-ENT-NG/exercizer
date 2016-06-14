@@ -1,8 +1,8 @@
 directives.push(
     {
         name: 'subjectCopyDomino',
-        injections: ['DateService',
-            (DateService) => {
+        injections: ['DateService','$location',
+            (DateService, $location) => {
                 return {
                     restrict: 'E',
                     scope: {
@@ -11,6 +11,14 @@ directives.push(
                     },
                     templateUrl: 'exercizer/public/app/components/dashboard/student_dashboard/common/templates/subject-copy-domino.html',
                     link: (scope:any) => {
+
+                        scope.canAccessPerform = function(){
+                            return true;
+                        };
+
+                        scope.performSubjectCopy = function(subjectCopyId){
+                            $location.path('/subject/copy/view/'+subjectCopyId);
+                        };
 
                         scope.getSubjectCopyPicture = function(){
                             return scope.subjectScheduled.picture || '/assets/themes/leo/img/illustrations/poll-default.png';

@@ -90,7 +90,7 @@ class GrainCopyService implements IGrainCopyService {
         var self = this,
             deferred = this._$q.defer(),
             request = {
-                method: 'GET',
+                method: 'POST',
                 url: 'exercizer/grains-copy',
                 data: subjectCopy
             };

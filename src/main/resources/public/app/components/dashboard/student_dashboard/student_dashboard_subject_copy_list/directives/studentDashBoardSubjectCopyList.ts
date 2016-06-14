@@ -9,6 +9,9 @@ directives.push(
                     templateUrl: 'exercizer/public/app/components/dashboard/student_dashboard/student_dashboard_subject_copy_list/templates/student-dashboard-subject-copy-list.html',
                     link: (scope:any) => {
 
+                        // date data
+                        scope.today = new Date();
+                        scope.dateInAWeek = DateService.addDays(scope.today, 7);
                         // subject data
                         scope.subjectCopyList = [];
                         SubjectCopyService.resolve(false).then(
@@ -19,16 +22,17 @@ directives.push(
                         SubjectScheduledService.resolve(false).then(
                             function(){
                                 //process on subject Scheduled
-                                console.log('then promise');
                                 angular.forEach(SubjectScheduledService.getList(), function(subjectScheduled){
-                                    console.log(subjectScheduled, subjectScheduled.due_date);
+                                    if(DateService.compare_after(scope.today, DateService.isoToDate(subjectScheduled.due_date))){
+                                        if(subjectScheduled.is_over !== true){
+                                            subjectScheduled.is_over = true;
+                                        }
+                                    }
                                 })
                            }
                         );
 
-                        // date data
-                        scope.today = new Date();
-                        scope.dateInAWeek = DateService.addDays(scope.today, 7);
+
                         // search
                         if (!scope.search) {
                             scope.search = {};
