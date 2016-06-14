@@ -1,4 +1,3 @@
-import IWindowService = ng.IWindowService;
 class EditSubjectController {
 
     static $inject = [
@@ -13,7 +12,7 @@ class EditSubjectController {
     ];
 
     private _subject:ISubject;
-    private _selectedGrainList:IGrain[];
+    private _grainList:IGrain[];
     private _hasDataLoaded: boolean;
 
     constructor
@@ -46,8 +45,16 @@ class EditSubjectController {
             if (angular.isUndefined(self._subject)) {
                 self.redirectToDashboard();
             } else {
-                self._selectedGrainList = [];
-                self._eventsHandler(self);
+                self._grainService.getListBySubject(self._subject).then(
+                    function (grainList) {
+                        self._grainList = grainList;
+                        self._hasDataLoaded = true;
+                    },
+                    
+                    function (err) {
+                        notify.error(err);
+                    }
+                );
             }
 
         }, function(err) {
@@ -258,13 +265,17 @@ class EditSubjectController {
         });
 
         // init
-        _handleGrainListUpdated();
+        //_handleGrainListUpdated();
     };
 
     get subject():ISubject {
         return this._subject;
     }
-
+    
+    get grainList():IGrain[] {
+        return this._grainList;
+    }
+    
     get hasDataLoaded():boolean {
         return this._hasDataLoaded;
     }

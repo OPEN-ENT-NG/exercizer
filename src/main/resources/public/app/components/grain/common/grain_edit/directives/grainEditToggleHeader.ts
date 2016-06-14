@@ -1,35 +1,29 @@
 directives.push(
     {
         name: 'grainEditToggleHeader',
-        injections: ['GrainTypeService', (GrainTypeService) => {
+        injections: ['$rootScope', 'GrainTypeService', ($rootScope, GrainTypeService:IGrainTypeService) => {
             return {
                 restrict: 'E',
                 scope: {
-                    grain: '='
+                    grain: '=',
+                    isFolded: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/common/grain_edit/templates/grain-edit-toggle-header.html',
                 link:(scope:any) => {
 
                     scope.grainType = GrainTypeService.getById(scope.grain.grain_type_id);
-                    scope.isFolded = false;
 
                     scope.toggleGrain = function() {
-                        scope.$emit('E_GRAIN_TOGGLED', scope.grain);
-                    };
-
-                    scope.removeGrain = function() {
-                        scope.$emit('E_REMOVE_GRAIN', scope.grain);
+                        scope.isFolded = !scope.isFolded;
                     };
 
                     scope.getGrainIllustrationURL = function(grainIllustration:string) {
                         return '/exercizer/public/assets/illustrations/' + grainIllustration + '.html';
                     };
 
-                    scope.$on('E_TOGGLE_GRAIN', function(event, grain) {
-                        if (grain.id === scope.grain.id) {
-                            scope.isFolded = !scope.isFolded;
-                        }
-                    });
+                    scope.removeGrain = function() {
+                        $rootScope.$broadcast('E_DISPLAY_SUBJECT_EDIT_MODAL_REMOVE_GRAIN', scope.grain);
+                    };
 
                     scope.$on('E_FORCE_FOLDING_GRAIN', function() {
                         scope.isFolded = true;

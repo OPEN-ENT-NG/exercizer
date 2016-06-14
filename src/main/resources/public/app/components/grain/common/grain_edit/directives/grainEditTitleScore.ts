@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'grainEditTitleScore',
-        injections: [() => {
+        injections: ['GrainService', (GrainService:IGrainService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -16,7 +16,14 @@ directives.push(
                             scope.grain.grain_data.max_score = 0;
                         }
 
-                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                        GrainService.update(scope.grain).then(
+                            function(grain:IGrain) {
+                                scope.grain = grain;
+                            },
+                            function(err) {
+                                notify.error(err);
+                            }
+                        );
                     };
                 }
             };

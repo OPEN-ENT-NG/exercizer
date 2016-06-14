@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'grainEditToggleAside',
-        injections: [() => {
+        injections: ['$rootScope', ($rootScope) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -13,14 +13,13 @@ directives.push(
                     scope.isGrainSelected = false;
 
                     scope.toggleGrainSelection = function() {
-                        scope.$emit('E_GRAIN_SELECTED', scope.grain);
+                        scope.isGrainSelected = !scope.isGrainSelected;
+                        $rootScope.$broadcast('E_GRAIN_TOGGLED', scope.grain);
                     };
-
-                    scope.$on('E_SELECT_GRAIN', function(event, grain:IGrain) {
-                        if (grain.id === scope.grain.id) {
-                            scope.isGrainSelected = !scope.isGrainSelected;
-                        }
-                    });
+                    
+                    scope.$on('E_GRAIN_DESELECT_ALL', function() {
+                        scope.isGrainSelected = false;
+                    })
                 }
             };
         }]

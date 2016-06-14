@@ -1,11 +1,11 @@
 directives.push(
     {
         name: 'editStatement',
-        injections: ['$sce', ($sce) => {
+        injections: ['$sce', 'GrainService', ($sce, GrainService:IGrainService) => {
             return {
                 restrict: 'E',
                 scope : {
-                    grain : '='
+                    grain: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/statement/templates/edit-statement.html',
                 link:(scope:any, element:any) => {
@@ -15,20 +15,16 @@ directives.push(
                         scope.grain.grain_data.custom_data.statement = '';
                         scope.statementHtml = $sce.trustAsHtml(scope.grain.grain_data.custom_data.statement);
                         scope.grain.grain_data.custom_data.statement = StringISOHelper.toISO(scope.grain.grain_data.statement);
-                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
                     }
 
                     scope.isFolded = false;
 
-                    scope.$on('E_TOGGLE_GRAIN', function(event, grain:IGrain) {
-                        if (grain.id === scope.grain.id) {
-                            scope.statementHtml = $sce.trustAsHtml(scope.grain.grain_data.custom_data.statement);
-                            scope.isFolded = !scope.isFolded;
-                        }
+                    scope.$watch(scope.isFolded, function(isFolded:boolean) {
+                        scope.isFolded = isFolded;
+                        scope.statementHtml = $sce.trustAsHtml(scope.grain.grain_data.custom_data.statement);
                     });
 
                     scope.$on('E_FORCE_FOLDING_GRAIN', function() {
-                        scope.statementHtml = $sce.trustAsHtml(scope.grain.grain_data.custom_data.statement);
                         scope.isFolded = true;
                     });
 
@@ -48,13 +44,20 @@ directives.push(
                         if (isEditorFocus) {
                             isEditorFocus = false;
                             scope.grain.grain_data.custom_data.statement = StringISOHelper.toISO(scope.grain.grain_data.custom_data.statement);
-                            scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                            GrainService.update(scope.grain).then(
+                                function(grain:IGrain) {
+                                    scope.grain = grain;
+                                    scope.statementHtml = $sce.trustAsHtml(scope.grain.grain_data.custom_data.statement);
+                                },
+                                function(err) {
+                                    notify.error(err);
+                                }
+                            );
                         }
                     });
                 }
             };
-        }
-        ]
+        }]
     }
 );
 

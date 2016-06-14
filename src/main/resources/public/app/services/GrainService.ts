@@ -135,17 +135,19 @@ class GrainService implements IGrainService {
         var self = this,
             deferred = this._$q.defer(),
             promises = [];
+        
         angular.forEach(grainList, function(grain) {
             promises.push(self.remove(grain));
         });
+        
         this._$q.all(promises).then(
             function(data) {
                 deferred.resolve(data);
             }, function(err) {
-                console.error(err);
                 deferred.reject(err);
             }
         );
+        
         return deferred.promise;
     };
 
@@ -177,7 +179,7 @@ class GrainService implements IGrainService {
         return this.persist(duplicatedGrain);
     };
 
-    public duplicateList = function(grainList:IGrain[],subject:ISubject, rename: boolean = true):ng.IPromise<boolean>{
+    public duplicateList = function(grainList:IGrain[], subject:ISubject, rename: boolean = true):ng.IPromise<boolean>{
         var self = this,
             deferred = this._$q.defer(),
             promises = [];

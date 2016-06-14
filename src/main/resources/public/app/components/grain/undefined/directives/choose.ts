@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'choose',
-        injections: [() => {
+        injections: ['GrainService', (GrainService:IGrainService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -10,10 +10,15 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/undefined/templates/choose.html',
                 link:(scope:any) => {
                     scope.displayNextStep = function(grainTypeId) {
-
                         scope.grain.grain_type_id = grainTypeId;
-
-                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                        GrainService.update(scope.grain).then(
+                            function(grain:IGrain) {
+                                scope.grain = grain;
+                            },
+                            function(err) {
+                                notify.error(err);
+                            }
+                        );
                     }
                 }
             };

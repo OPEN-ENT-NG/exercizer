@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'chooseAnswer',
-        injections: ['GrainTypeService', (GrainTypeService) => {
+        injections: ['GrainService', 'GrainTypeService', (GrainService:IGrainService, GrainTypeService:IGrainTypeService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -18,7 +18,14 @@ directives.push(
 
                     scope.displayNextStep = function(grainTypeId:number) {
                         scope.grain.grain_type_id = grainTypeId;
-                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                        GrainService.update(scope.grain).then(
+                            function(grain:IGrain) {
+                                scope.grain = grain;
+                            },
+                            function(err) {
+                                notify.error(err);
+                            }
+                        );
                     }
                 }
             };

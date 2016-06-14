@@ -35,7 +35,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
     
     var _userProfile;
     // FIXME try to use profiles
-    if(model.me.type === 'ENSEIGNANT'){
+    if(model.me.type === 'ENSEIGNANT') {
         _userProfile = teacherProfile;
     } else  {
         _userProfile = studentProfile;
@@ -116,7 +116,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Filters
          */
-
         module.filter('orderObjectBy', function() {
             return function(items, field, reverse) {
                 var filtered = [];
@@ -148,7 +147,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Services
          */
-
         module.service('SubjectService', SubjectService);
         module.service('SubjectScheduledService', SubjectScheduledService);
         module.service('SubjectCopyService', SubjectCopyService);
