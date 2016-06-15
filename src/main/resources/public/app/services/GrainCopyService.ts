@@ -203,12 +203,10 @@ class GrainCopyService implements IGrainCopyService {
                             }
                         }
                     });
-                    console.log('show_left_column == true', grainCopy.grain_copy_data.custom_copy_data);
                 } else{
                     angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer){
                         grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({text_left : "", text_right : correct_answer.text_right})
                     });
-                    console.log('show_left_column == false', grainCopy.grain_copy_data.custom_copy_data);
 
                 }
 

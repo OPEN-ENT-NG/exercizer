@@ -165,6 +165,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('GrainTypeService', GrainTypeService);
         module.service('SimpleAnswerService', SimpleAnswerService);
         module.service('MultipleAnswerService', MultipleAnswerService);
+        module.service('AssociationService', AssociationService);
         module.service('QcmService', QcmService);
         module.service('OpenAnswerService', OpenAnswerService);
         module.service('OrderService', OrderService);
