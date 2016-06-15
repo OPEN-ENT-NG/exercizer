@@ -3,6 +3,9 @@ routes.define(function($routeProvider){
         .when('/dashboard', {
             action: 'dashboard'
         })
+        .when('/dashboard/student', {
+            action: 'dashboardStudent'
+        })
         .when('/subject/edit/:subjectId/', {
             action: 'editSubject'
         })
@@ -32,12 +35,12 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 
     const teacherProfile = 'Teacher';
     const studentProfile = 'Student';
-    
+    const canAccessTeacherProfile = model.me.workflow.exercizer.create || false;
+
     var _userProfile;
-    // FIXME try to use profiles
-    if(model.me.type === 'ENSEIGNANT'){
+    if(canAccessTeacherProfile){
         _userProfile = teacherProfile;
-    } else  {
+    } else {
         _userProfile = studentProfile;
     }
 
@@ -50,6 +53,10 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
             } else {
                 template.open('main', '401-exercizer');
             }
+        },
+        dashboardStudent: function () {
+            _userProfile = studentProfile;
+            template.open('main', 'student-dashboard');
         },
         editSubject: function () {
             if (_userProfile === teacherProfile) {

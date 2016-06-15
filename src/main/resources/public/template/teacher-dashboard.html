@@ -1,9 +1,15 @@
 <div data-ng-controller="TeacherDashboardController as teacherDashboardController" data-ng-init="teacherDashboardController.currentTab = 1">
     <!-- TABS -->
     <div class="row">
-        <h1>
+        <h1 class="cell">
             Exercizer
         </h1>
+        <div class="cell right-magnet">
+            <div class="label-badge" data-ng-click="teacherDashboardController.switchToStudentView()">
+                <span class="cell">Passer en vue élève</span>
+                <i role="close" class="right-magnet"></i>
+            </div>
+        </div>
     </div>
     <div class="row twelve cell tabs" style="margin-bottom: 30px;">
         <div class="cell">
