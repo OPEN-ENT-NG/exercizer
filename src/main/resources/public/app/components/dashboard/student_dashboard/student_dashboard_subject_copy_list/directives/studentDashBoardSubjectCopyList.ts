@@ -21,14 +21,6 @@ directives.push(
                         );
                         SubjectScheduledService.resolve(false).then(
                             function(){
-                                //process on subject Scheduled
-                                angular.forEach(SubjectScheduledService.getList(), function(subjectScheduled){
-                                    if(DateService.compare_after(scope.today, DateService.isoToDate(subjectScheduled.due_date))){
-                                        if(subjectScheduled.is_over !== true){
-                                            subjectScheduled.is_over = true;
-                                        }
-                                    }
-                                })
                            }
                         );
 

@@ -1,8 +1,8 @@
 directives.push(
     {
         name: 'subjectCopyDomino',
-        injections: ['DateService','$location',
-            (DateService, $location) => {
+        injections: ['DateService','$location','SubjectScheduledService',
+            (DateService, $location, SubjectScheduledService) => {
                 return {
                     restrict: 'E',
                     scope: {
@@ -17,7 +17,7 @@ directives.push(
                             // the subject is over
                             // OR
                             // the subject have been submitted AND the subject have option one_shot == true;
-                            if(scope.subjectScheduled.is_over === true){
+                            if(SubjectScheduledService.is_over(scope.subjectScheduled) === true){
                                 return false;
                             } else {
                                 if(scope.subjectScheduled.is_one_shot_submit && scope.subjectCopy.submitted_date){

@@ -13,24 +13,29 @@ class SubjectScheduledService implements ISubjectScheduledService {
         '$q',
         '$http',
         'GrainService',
-        'GrainScheduledService'
+        'GrainScheduledService',
+        'DateService'
     ];
 
     private _listMappedById:{[id:number]:ISubjectScheduled;};
     private _currentSubjectScheduledId:number;
+    private _today;
 
     constructor
     (
         private _$q:ng.IQService,
         private _$http:ng.IHttpService,
         private _grainService:IGrainService,
-        private _grainScheduledService:IGrainScheduledService
+        private _grainScheduledService:IGrainScheduledService,
+        private _dateService : IDateService
     )
     {
         this._$q = _$q;
         this._$http = _$http;
         this._grainService = _grainService;
         this._grainScheduledService = _grainScheduledService;
+        this._dateService = DateService;
+        this._today = new Date()
     }
 
     public resolve = function(isTeacher:boolean):ng.IPromise<boolean> {
@@ -123,5 +128,9 @@ class SubjectScheduledService implements ISubjectScheduledService {
 
     get listMappedById():{} {
         return this._listMappedById;
+    }
+
+    public static is_over(subjectScheduled : ISubjectScheduled) : boolean {
+        return this._dateService.compare_after(this._today, DateService.isoToDate(subjectScheduled.due_date))
     }
 }
