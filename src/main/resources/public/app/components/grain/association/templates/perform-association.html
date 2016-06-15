@@ -1,8 +1,36 @@
 <article>
     <grain-copy-header data-grain-copy="grainCopy"></grain-copy-header>
     <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
+                                                                                                                                                                                                                                                                                                                           <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
+    <div data-ng-show="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
+        <div data-ng-repeat="filled_answer in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list" class="row vertical-spacing">
+            <input type="text" class="five cell" data-ng-model="filled_answer.text_left" disabled/>
+            <div class="one cell">&nbsp;</div>
+            <input
+                    type="text"
+                    class="five cell"
+                    data-ng-model="filled_answer.text_right"
+                    disabled
+                    dragdrop="dropTo(filled_answer, $originalEvent)"
 
-    <div class="row vertical-spacing">
-        <input type="text" class="twelve cell" data-ng-model="grainCopy.grain_copy_data.custom_copy_data.filled_answer" data-ng-blur="updateGrainCopy()" placeholder="Indiquez la réponse" />
+            />
+        </div>
+        <div class="row vertical-spacing">
+            <div data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.possible_answer_list"
+                 class="cell"
+                style="    border: 1px solid black;    padding: 5px;    margin-left: 10px;    margin-right: 10px;    border-radius: 5px;    background-color: lightgray;"
+                 dragstart="drag(possible_answer, $originalEvent)"
+            >
+                [[possible_answer.text_right]]
+            </div>
+        </div>
+
+    </div>
+    <div data-ng-hide="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
+        <div data-ng-repeat="filled_answer in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list" class="row vertical-spacing">
+            <input type="text" class="five cell" data-ng-model="filled_answer.text_left" data-ng-blur="updateGrainCopy()" placeholder="Indiquez la réponse"/>
+            <div class="one cell">&nbsp;</div>
+            <input type="text" class="five cell" data-ng-model="filled_answer.text_right" disabled/>
+        </div>
     </div>
 </article>
