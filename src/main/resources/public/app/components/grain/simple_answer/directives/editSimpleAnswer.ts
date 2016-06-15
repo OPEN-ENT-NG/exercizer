@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'editSimpleAnswer',
-        injections: [() => {
+        injections: ['GrainService', 'SubjectEditService', (GrainService:IGrainService, SubjectEditService:ISubjectEditService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -14,21 +14,20 @@ directives.push(
                         scope.grain.grain_data.custom_data = new SimpleAnswerCustomData();
                     }
 
-                    scope.isFolded = false;
-
-                    scope.updateGrain = function() {
-                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                    scope.isGrainFolded = function() {
+                        return SubjectEditService.isGrainFolded(scope.grain);
                     };
-
-                    scope.$on('E_TOGGLE_GRAIN', function(event, grain:IGrain) {
-                        if (grain.id === scope.grain.id) {
-                            scope.isFolded = !scope.isFolded;
-                        }
-                    });
-
-                    scope.$on('E_FORCE_FOLDING_GRAIN', function() {
-                        scope.isFolded = true;
-                    });
+                    
+                    scope.updateGrain = function() {
+                        GrainService.update(scope.grain).then(
+                            function(grain:IGrain) {
+                                scope.grain = grain;
+                            },
+                            function(err) {
+                                notify.error(err);
+                            }
+                        );
+                    };
                 }
             };
         }

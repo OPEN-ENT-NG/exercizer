@@ -1,0 +1,107 @@
+<!-- GRAIN HEADER -->
+<div class="row">
+
+    <!-- GRAIN TYPE ICON -->
+    <div class="two cell">
+        <i data-ng-class="grainTypeIconName"
+           data-tooltip="[[ grainTypePublicName ]]"
+           data-ng-if="grain.grain_type_id === 3">
+        </i>
+        <div data-tooltip="[[ grainTypePublicName ]]"
+             data-ng-if="grain.grain_type_id > 3">
+            <div style="width: 20px; height:20px;" data-ng-include="grainTypeIllustrationUrl"></div>
+        </div>
+    </div>
+
+    <!-- GRAIN FOLD -->
+    <div class="cell right-magnet" data-ng-click="foldGrain()">
+        <i data-ng-show="isGrainFolded()" data-tooltip="Déplier" class="down-open"></i>
+        <i data-ng-hide="isGrainFolded()" data-tooltip="Plier" class="up-open"></i>
+    </div>
+
+    <!-- GRAIN TRASH ICON -->
+    <div class="cell right-magnet horizontal-spacing" data-tooltip="Supprimer" data-ng-click="displayModalRemoveGrain()">
+        <i class="trash"></i>
+    </div>
+
+</div>
+
+<!-- REMOVE GRAIN MODAL -->
+<div data-ng-if="isModalRemoveGrainDisplayed()">
+    <lightbox data-show="isModalRemoveGrainDisplayed()" data-on-close="closeModalRemoveGrain()">
+        <h2>Supprimer un élément</h2>
+        <p>Confirmez-vous la suppression de l'élément ?</p>
+        <div class="row">
+            <button data-ng-click="removeGrain()" class="cell right-magnet">Supprimer l'élement</button>
+            <button data-ng-click="closeModalRemoveGrain()" class="cell right-magnet cancel">Annuler</button>
+        </div>
+    </lightbox>
+</div>
+
+<div data-ng-if="!isGrainFolded()">
+
+    <!-- TITLE & SCORE -->
+    <div class="row vertical-spacing" data-ng-if="grain.grain_type_id > 3">
+        <input type="text" class="six cell" data-ng-model="grain.grain_data.title" complete-change="updateGrainTitle()" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question" />
+        <input type="text" class="cell right-magnet" data-ng-model="grain.grain_data.max_score" complete-change="updateGrainScore()" data-digits-input-restrict placeholder="Pondération" />
+        <em class="high-importance cell right-magnet">Question sur /</em>
+    </div>
+
+    <!-- GRAIN STATEMENT -->
+    <div class="row" data-ng-if="grain.grain_type_id > 3">
+        <editor data-ng-model="grain.grain_data.statement"></editor>
+    </div>
+
+    <!-- GRAIN DOCUMENT LIST -->
+    <div class="row" data-ng-show="grain.grain_data.document_list.length > 0" data-ng-if="grain.grain_type_id > 3 && !isGrainFolded()">
+        <table class="twelve">
+            <thead>
+            <tr>
+                <th>
+                    Documents
+                </th>
+                <th style="text-align: right">
+                    Action
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-ng-repeat="grainDocument in grain.grain_data.document_list">
+                <td>
+                    <a href="[[ grainDocument.path ]]" target="_blank">[[ grainDocument.name ]]</a>
+                </td>
+                <td style="text-align: right">
+                    <i class="close" data-ng-click="displayModalRemoveGrainDocument(grainDocument)"></i>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ADD GRAIN DOCUMENT BUTTON -->
+    <div class="row" data-ng-if="grain.grain_type_id > 3">
+        <button data-ng-click="displayModalAddGrainDocument()" class="twelve cell flat-button">
+            Ajouter un document
+        </button>
+    </div>
+
+    <!-- ADD GRAIN DOCUMENT MODAL -->
+    <div data-ng-if="isModalAddGrainDocumentDisplayed() && grain.grain_type_id > 3">
+        <lightbox data-show="isModalAddGrainDocumentDisplayed()" data-on-close="closeModalAddGrainDocument()">
+            <media-library data-ng-model="mediaLibraryItem" visibility="'protected'" file-format="'any'" data-ng-change="addGrainDocument(mediaLibraryItem)"></media-library>
+        </lightbox>
+    </div>
+
+    <!-- REMOVE GRAIN DOCUMENT MODAL -->
+    <div data-ng-if="isModalRemoveGrainDocumentDisplayed() && grain.grain_type_id > 3">
+        <lightbox data-show="isModalRemoveGrainDocumentDisplayed()" data-on-close="closeModalRemoverainDocument()">
+            <h2>Retirer un document</h2>
+            <p>Voulez-vous retirer ce document ?</p>
+            <div class="row">
+                <button data-ng-click="removeGrainDocument()" class="cell right-magnet">Retirer le document</button>
+                <button data-ng-click="closeModalRemoverainDocument()" class="cell right-magnet cancel">Annuler</button>
+            </div>
+        </lightbox>
+    </div>
+
+</div>

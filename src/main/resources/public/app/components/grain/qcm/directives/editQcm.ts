@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'editQcm',
-        injections: [() => {
+        injections: ['GrainService', 'SubjectEditService', (GrainService:IGrainService, SubjectEditService:ISubjectEditService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -10,13 +10,31 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/qcm/templates/edit-qcm.html',
                 link:(scope:any) => {
 
-                    scope.addAnswer = function(){
+                    if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
+                        console.log('coucou');
+                        scope.grain.grain_data.custom_data = new QcmCustomData();
+                    }
+
+                    function _updateGrain() {
+                        console.log(scope.grain);
+                        GrainService.update(scope.grain).then(
+                            function(grain:IGrain) {
+                                scope.grain = grain;
+                            },
+                            function(err) {
+                                notify.error(err);
+                            }
+                        );
+                    }
+
+                    scope.addAnswer = function() {
                         var newAnswer = {
                             isChecked : false,
                             text : ''
                         };
                         scope.grain.grain_data.custom_data.correct_answer_list.push(newAnswer);
-                        scope.updateGrain();
+                        
+                        _updateGrain();
                     };
 
                     scope.deleteAnswer = function(answer){
@@ -24,28 +42,17 @@ directives.push(
                         if(index !== -1){
                             scope.grain.grain_data.custom_data.correct_answer_list.splice(index, 1);
                         }
-                        scope.updateGrain();
+                       
+                        _updateGrain();
                     };
 
-                    if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
-                        scope.grain.grain_data.custom_data = new QcmCustomData();
-                    }
-
-                    scope.isFolded = false;
+                    scope.isGrainFolded = function() {
+                        return SubjectEditService.isGrainFolded(scope.grain);
+                    };
 
                     scope.updateGrain = function() {
-                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                        _updateGrain();
                     };
-
-                    scope.$on('E_TOGGLE_GRAIN', function(event, grain:IGrain) {
-                        if (grain.id === scope.grain.id) {
-                            scope.isFolded = !scope.isFolded;
-                        }
-                    });
-
-                    scope.$on('E_FORCE_FOLDING_GRAIN', function() {
-                        scope.isFolded = true;
-                    });
                 }
             };
         }]

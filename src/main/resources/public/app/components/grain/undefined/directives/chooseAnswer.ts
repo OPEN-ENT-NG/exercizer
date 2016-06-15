@@ -10,6 +10,8 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/undefined/templates/choose-answer.html',
                 link:(scope:any) => {
 
+                    console.log('coucou2');
+
                     scope.grainTypeList = GrainTypeService.getList();
 
                     scope.getGrainIllustrationURL = function(grainIllustration:string) {
@@ -18,10 +20,9 @@ directives.push(
 
                     scope.displayNextStep = function(grainTypeId:number) {
                         scope.grain.grain_type_id = grainTypeId;
+                        scope.grain.grain_data.title = '';
                         GrainService.update(scope.grain).then(
-                            function(grain:IGrain) {
-                                scope.grain = grain;
-                            },
+                            function() {},
                             function(err) {
                                 notify.error(err);
                             }

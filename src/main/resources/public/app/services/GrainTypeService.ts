@@ -1,6 +1,9 @@
 interface IGrainTypeService {
     getList():IGrainType[];
     getById(id:number):IGrainType;
+    getPublicName(id:number):string;
+    getIllustrationIconName(id:number):string;
+    getIllustrationUrl(id:number):string;
     instantiateCustomData(grainObject:any, grainTypeId:number):any;
     instantiateCustomCopyData(grainCopyObject:any, grainTypeId:number):any;
 }
@@ -31,6 +34,35 @@ class GrainTypeService implements IGrainTypeService {
     
     public getById = function(id:number):IGrainType {
         return this._listMappedById[id];
+    };
+
+    public getPublicName = function(id:number):string {
+        var grainType = this.getById(id);
+        
+        return grainType.public_name;
+    };
+
+    public getIllustrationIconName = function(id:number):string {
+        var illustrationIconName = '';
+
+        switch (id) {
+            case 3:
+                illustrationIconName = 'doc-text';
+                break;
+        }
+        
+        return illustrationIconName
+    };
+
+    public getIllustrationUrl = function(id:number):string {
+        var illustrationUrl = '',
+            grainType = this.getById(id);
+
+        if (id > 3) {
+            return '/exercizer/public/assets/illustrations/' + grainType.illustration + '.html';
+        }
+
+        return illustrationUrl;
     };
     
     public instantiateCustomData = function(grainObject:any, grainTypeId:number):any {

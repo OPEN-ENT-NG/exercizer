@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'editOrder',
-        injections: [() => {
+        injections: ['GrainService', 'SubjectEditService', (GrainService:IGrainService, SubjectEditService:ISubjectEditService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -10,7 +10,21 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/order/templates/edit-order.html',
                 link:(scope:any) => {
 
+                    if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
+                        scope.grain.grain_data.custom_data = new OrderCustomData();
+                    }
 
+                    function _updateGrain() {
+                        GrainService.update(scope.grain).then(
+                            function(grain:IGrain) {
+                                scope.grain = grain;
+                            },
+                            function(err) {
+                                notify.error(err);
+                            }
+                        );
+                    }
+                    
                     scope.addAnswer = function(){
                         var newOrder = parseFloat(getLastOrder()) + 1;
                         var newAnswer = {
@@ -19,7 +33,7 @@ directives.push(
                             text : ''
                         };
                         scope.grain.grain_data.custom_data.correct_answer_list.push(newAnswer);
-                        scope.updateGrain();
+                        _updateGrain();
                     };
 
                     scope.deleteAnswer = function(answer){
@@ -28,7 +42,7 @@ directives.push(
                         if(index !== -1){
                             scope.grain.grain_data.custom_data.correct_answer_list.splice(index, 1);
                         }
-                        angular.forEach(scope.grain.grain_data.custom_data.correct_answer_list, function(value, key){
+                        angular.forEach(scope.grain.grain_data.custom_data.correct_answer_list, function(value){
                             if(value.index > indexDeleted){
                                 value.index = parseFloat(value.index) - 1;
                             }
@@ -38,7 +52,7 @@ directives.push(
 
                     function getLastOrder(){
                         var maxOrder = null;
-                        angular.forEach(scope.grain.grain_data.custom_data.correct_answer_list, function(value, key){
+                        angular.forEach(scope.grain.grain_data.custom_data.correct_answer_list, function(value){
                             if(maxOrder === null || value.order_by > maxOrder){
                                 maxOrder = value.order_by;
                             }
@@ -51,33 +65,21 @@ directives.push(
                     }
 
                     scope.reOrder = function(){
-                        angular.forEach(scope.grain.grain_data.custom_data.correct_answer_list, function(value, key){
+                        angular.forEach(scope.grain.grain_data.custom_data.correct_answer_list, function(value){
                             if(value.order_by != parseFloat(value.index) + 1){
                                 value.order_by = parseFloat(value.index) + 1;
                             }
                         });
-                        scope.$emit('E_UPDATE_GRAIN',scope.grain);
+                        _updateGrain();
                     };
 
-                    if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
-                        scope.grain.grain_data.custom_data = new OrderCustomData();
-                    }
-
-                    scope.isFolded = false;
+                    scope.isGrainFolded = function() {
+                        return SubjectEditService.isGrainFolded(scope.grain);
+                    };
 
                     scope.updateGrain = function() {
-                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                        _updateGrain();
                     };
-
-                    scope.$on('E_TOGGLE_GRAIN', function(event, grain:IGrain) {
-                        if (grain.id === scope.grain.id) {
-                            scope.isFolded = !scope.isFolded;
-                        }
-                    });
-
-                    scope.$on('E_FORCE_FOLDING_GRAIN', function() {
-                        scope.isFolded = true;
-                    });
                 }
             };
         }

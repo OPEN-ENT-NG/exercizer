@@ -26,38 +26,18 @@
             <!-- LEFT STICKY NAV -->
             <section class="four cell vertical" >
                 <nav data-stick-to-top class="hash-magnet floating-navigation">
-                    <subject-edit-organizer
-                            data-subject="editSubjectController.subject"
-                            data-grain-list="editSubjectController.grainList">
-                    </subject-edit-organizer>
+                    <subject-edit-organizer data-subject="editSubjectController.subject"></subject-edit-organizer>
                     <subject-edit-subject-list></subject-edit-subject-list>
                 </nav>
             </section>
 
             <!-- GRAIN LIST -->
             <section class="eight cell">
-                <subject-edit-grain-list data-subject="editSubjectController.subject"
-                                         data-grain-list="editSubjectController.grainList">
-                </subject-edit-grain-list>
-
-                <!-- BUTTON ADD NEW GRAIN -->
-                <subject-edit-button-add-new-grain data-subject="editSubjectController.subject">
-                </subject-edit-button-add-new-grain>
+                <subject-edit-grain-list data-subject="editSubjectController.subject"></subject-edit-grain-list>
             </section>
         </div>
 
         <!-- TOASTER -->
-        <subject-edit-toaster data-subject="editSubjectController.subject">
-        </subject-edit-toaster>
-
-        <!-- LIGHT BOXES -->
-        <subject-edit-modal-remove-grain data-subject="editSubjectController.subject"
-                                         data-grain-list="editSubjectController.grainList">
-        </subject-edit-modal-remove-grain>
-
-        <subject-edit-modal-grain-document data-subject="editSubjectController.subject"></subject-edit-modal-grain-document>
-
-        <subject-edit-modal-remove-grain-document data-subject="editSubjectController.subject"></subject-edit-modal-remove-grain-document>
-
+        <subject-edit-toaster data-subject="editSubjectController.subject"></subject-edit-toaster>
     </div>
 </div>

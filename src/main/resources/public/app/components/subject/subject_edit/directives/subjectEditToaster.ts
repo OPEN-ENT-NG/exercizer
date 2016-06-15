@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'subjectEditToaster',
-        injections: ['GrainService', (GrainService:IGrainService) => {
+        injections: ['GrainService', 'SubjectService', 'SubjectEditService', (GrainService:IGrainService, SubjectService:ISubjectService, SubjectEditService:ISubjectEditService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -9,28 +9,36 @@ directives.push(
                 },
                 templateUrl: 'exercizer/public/app/components/subject/subject_edit/templates/subject-edit-toaster.html',
                 link:(scope:any) => {
-                    scope.isModalDisplayed = false;
                     
-                    scope.isDisplayed = function() {
-                        return GrainService.getSelectedListBySubject(scope.subject).length > 0;
+                    var isModalRemoveSelectedGrainListDisplayed = false;
+                    
+                    scope.isToasterDisplayed = function() {
+                        return SubjectEditService.getGrainSelectedListBySubjectId(scope.subject.id).length > 0;
                     };
                     
-                    scope.isRemoveSelectedGrainListModalDisplayed = function() {
-                        return scope.isModalDisplayed;
+                    scope.isModalRemoveSelectedGrainListDisplayed = function() {
+                        return isModalRemoveSelectedGrainListDisplayed;
                     };
                     
-                    scope.displayRemoveSelectedGrainListModal = function() {
-                        scope.isModalDisplayed = true;
+                    scope.displayModalRemoveSelectedGrainList = function() {
+                        isModalRemoveSelectedGrainListDisplayed = true;
                     };
                     
-                    scope.closeRemoveSelectedGrainListModal = function() {
-                        scope.isModalDisplayed = false;
+                    scope.closeModalRemoveSelectedGrainList = function() {
+                        isModalRemoveSelectedGrainListDisplayed = false;
                     };
 
                     scope.duplicateSelectedGrainList = function() {
-                        GrainService.duplicateList(GrainService.getSelectedListBySubject(scope.subject), scope.subject).then(
+                        GrainService.duplicateList(SubjectEditService.getGrainSelectedListBySubjectId(scope.subject.id), scope.subject).then(
                             function() {
-                                scope.resetSelection();
+                                SubjectService.update(scope.subject, true).then(
+                                    function() {
+                                        SubjectEditService.deselectGrainListBySubjectId(scope.subject.id);
+                                    },
+                                    function(err) {
+                                        notify.error(err);
+                                    }
+                                );
                             },
                             function(err) {
                                 notify.error(err);
@@ -38,11 +46,18 @@ directives.push(
                         );
                     };
 
-                    scope.confirmRemoveSelectedGrainList = function() {
-                        GrainService.removeList(GrainService.getSelectedListBySubject(scope.subject), scope.subject).then(
+                    scope.removeSelectedGrainList = function() {
+                        GrainService.removeList(SubjectEditService.getGrainSelectedListBySubjectId(scope.subject.id), scope.subject).then(
                             function() {
-                                scope.resetSelection();
-                                scope.closeRemoveSelectedGrainListModal();
+                                SubjectService.update(scope.subject, true).then(
+                                    function() {
+                                        SubjectEditService.deselectGrainListBySubjectId(scope.subject.id);
+                                        isModalRemoveSelectedGrainListDisplayed = false;
+                                    },
+                                    function(err) {
+                                        notify.error(err);
+                                    }
+                                );
                             },
                             function(err) {
                                 notify.error(err);
@@ -51,7 +66,7 @@ directives.push(
                     };
                     
                     scope.resetSelection = function() {
-                        GrainService.resetSelectedListBySubject(scope.subject);
+                        SubjectEditService.deselectGrainListBySubjectId(scope.subject.id);
                     };
                 }
             };

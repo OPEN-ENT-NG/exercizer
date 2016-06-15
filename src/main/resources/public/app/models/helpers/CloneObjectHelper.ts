@@ -1,5 +1,5 @@
 class CloneObjectHelper {
-    static clone( originalObject , circular ) {
+    static clone( originalObject , circular, withAshKey = false) {
         // First persist an empty object with
         // same prototype of our original source
 
@@ -20,7 +20,7 @@ class CloneObjectHelper {
                 descriptor = Object.getOwnPropertyDescriptor(current.source, keys[propertyIndex]);
 
                 // angular hack
-                if (keys[propertyIndex] === '$$hashKey') {
+                if (keys[propertyIndex] === '$$hashKey' && !withAshKey) {
                     continue;
                 }
 

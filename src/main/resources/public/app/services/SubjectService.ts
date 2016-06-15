@@ -1,7 +1,7 @@
 interface ISubjectService {
     resolve(): ng.IPromise<boolean>;
     persist(subject: ISubject): ng.IPromise<ISubject>;
-    update(subject: ISubject): ng.IPromise<ISubject>;
+    update(subject: ISubject, updateMaxScore:boolean): ng.IPromise<ISubject>;
     remove(subject: ISubject): ng.IPromise<boolean>;
     removeList(subjectList: ISubject[]):ng.IPromise<boolean>
     duplicate(subject: ISubject): ng.IPromise<ISubject>;
@@ -90,14 +90,26 @@ class SubjectService implements ISubjectService {
         return deferred.promise;
     };
 
-    public update = function(subject: ISubject): ng.IPromise<ISubject> {
-        var deferred = this._$q.defer(),
+    public update = function(subject: ISubject, updateMaxScore:boolean = false): ng.IPromise<ISubject> {
+        var self = this,
+            deferred = this._$q.defer(),
             request = {
                 method: 'PUT',
-                url: 'exercizer/subject/'+ subject.id,
+                url: 'exercizer/subject/' + subject.id,
                 data: subject
-            },
-            self = this;
+            };
+        
+        if (updateMaxScore) {
+            var grainList = this._grainService.getListBySubject(subject);
+
+            subject.max_score = 0;
+            angular.forEach(grainList, function(grain:IGrain) {
+                if (grain.grain_type_id > 3) {
+                    subject.max_score += grain.grain_data.max_score;
+                }
+            })
+        }
+        
         if(this._beforePushBack(subject)){
 
             this._$http(request).then(
@@ -119,7 +131,7 @@ class SubjectService implements ISubjectService {
             deferred = this._$q.defer(),
             request = {
                 method: 'DELETE',
-                url: 'exercizer/subject/'+subject.id,
+                url: 'exercizer/subject/' + subject.id,
                 data: subject
             };
        self. _beforePushBack(subject);

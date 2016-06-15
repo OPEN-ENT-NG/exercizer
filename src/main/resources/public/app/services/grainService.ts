@@ -1,14 +1,12 @@
 interface IGrainService {
     persist(grain:IGrain): ng.IPromise<IGrain>;
     update(grain:IGrain): ng.IPromise<IGrain>;
+    updateList(grainList:IGrain[]): ng.IPromise<boolean>;
     remove(grain:IGrain): ng.IPromise<boolean>;
     removeList(grain:IGrain[], subject:ISubject): ng.IPromise<boolean>;
     duplicate(grain:IGrain, subject:ISubject): ng.IPromise<IGrain>;
     duplicateList(grainList:IGrain[], subject:ISubject): ng.IPromise<boolean>;
-    select(grain:IGrain): boolean;
-    resetSelectedListBySubject(subject:ISubject): IGrain[];
     getListBySubject(subject:ISubject): ng.IPromise<IGrain[]>;
-    getSelectedListBySubject(subject:ISubject): IGrain[];
     instantiateGrain(grainObject:any): IGrain;
 }
 
@@ -21,7 +19,6 @@ class GrainService implements IGrainService {
     ];
 
     private _listMappedBySubjectId:{ [subjectId: number]: IGrain[] };
-    private _selectedListMappedBySubjectId:{ [subjectId: number]: IGrain[] };
 
     constructor
     (
@@ -33,7 +30,6 @@ class GrainService implements IGrainService {
         this._$http = _$http;
         this._grainTypeService = _grainTypeService;
         this._listMappedBySubjectId = {};
-        this._selectedListMappedBySubjectId = {};
     }
 
     public persist = function (grain:IGrain):ng.IPromise<IGrain> {
@@ -59,7 +55,6 @@ class GrainService implements IGrainService {
 
                 if (angular.isUndefined(self._listMappedBySubjectId[grain.subject_id])) {
                     self._listMappedBySubjectId[grain.subject_id] = [];
-                    self._selectedListMappedBySubjectId[grain.subject_id] = [];
                 }
 
                 self._listMappedBySubjectId[grain.subject_id].push(grain);
@@ -76,7 +71,8 @@ class GrainService implements IGrainService {
 
     public update = function (grain:IGrain):ng.IPromise<IGrain> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            grainIndex = self._listMappedBySubjectId[grain.subject_id].indexOf(grain);
 
         var grainObject = angular.copy(grain);
         grainObject.grain_data = JSON.stringify(grainObject.grain_data);
@@ -90,15 +86,13 @@ class GrainService implements IGrainService {
         this._$http(request).then(
             function (response) {
                 var grain = self.instantiateGrain(response.data);
-
-                var index = self._listMappedBySubjectId[grain.subject_id].indexOf(grain);
                 
-                if (index !== -1) {
-                    self._listMappedBySubjectId[grain.subject_id][index] = grain;
+                if (grainIndex !== -1) {
+                    self._listMappedBySubjectId[grain.subject_id][grainIndex] = grain;
                 } else {
                     self._listMappedBySubjectId[grain.subject_id].push(grain);
                 }
-
+                
                 deferred.resolve(grain);
             },
             function () {
@@ -109,9 +103,30 @@ class GrainService implements IGrainService {
         return deferred.promise;
     };
 
+    public updateList = function(grainList:IGrain[]):ng.IPromise<boolean>{
+        var self = this,
+            deferred = this._$q.defer(),
+            promises = [];
+
+        angular.forEach(grainList, function(grain) {
+            promises.push(self.update(grain));
+        });
+
+        this._$q.all(promises).then(
+            function(data) {
+                deferred.resolve(data);
+            }, function(err) {
+                deferred.reject(err);
+            }
+        );
+
+        return deferred.promise;
+    };
+
     public remove = function (grain:IGrain):ng.IPromise<boolean> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            grainIndex = self._listMappedBySubjectId[grain.subject_id].indexOf(grain);
        
         var grainObject = angular.copy(grain);
         grainObject.grain_data = JSON.stringify(grainObject.grain_data);
@@ -124,9 +139,6 @@ class GrainService implements IGrainService {
 
         this._$http(request).then(
             function () {
-                // delete grain from list
-                var grainIndex = self._listMappedBySubjectId[grain.subject_id].indexOf(grain);
-                
                 if (grainIndex !== -1) {
                     self._listMappedBySubjectId[grain.subject_id].splice(grainIndex, 1);
                 }
@@ -208,27 +220,6 @@ class GrainService implements IGrainService {
         
         return deferred.promise;
     };
-    
-    public select = function(grain:IGrain):boolean {
-        var grainInSelectionIndex = this._selectedListMappedBySubjectId[grain.subject_id].indexOf(grain);
-
-        if (grainInSelectionIndex !== -1) {
-            this._selectedListMappedBySubjectId[grain.subject_id].splice(grainInSelectionIndex, 1);
-            return false;
-        }
-        
-        this._selectedListMappedBySubjectId[grain.subject_id].push(grain);
-        this._selectedListMappedBySubjectId[grain.subject_id].sort(function(grainA:IGrain, grainB:IGrain) {
-            return grainA.order_by - grainB.order_by;
-        });
-        
-        return true;
-    };
-
-    public resetSelectedListBySubject = function(subject:ISubject):IGrain[] {
-        this._selectedListMappedBySubjectId[subject.id] = [];
-        return this._selectedListMappedBySubjectId[subject.id];
-    };
 
     public getListBySubject = function(subject:ISubject):ng.IPromise<IGrain[]> {
         var self = this,
@@ -243,12 +234,13 @@ class GrainService implements IGrainService {
             deferred.resolve(this._listMappedBySubjectId[subject.id]);
         } else {
             this._listMappedBySubjectId[subject.id] = [];
-            this._selectedListMappedBySubjectId[subject.id] = [];
+            
             this._$http(request).then(
                 function (response) {
                     angular.forEach(response.data, function (grainObject) {
                         self._listMappedBySubjectId[subject.id].push(self.instantiateGrain(grainObject));
                     });
+                    
                     deferred.resolve(self._listMappedBySubjectId[subject.id]);
                 },
                 function () {
@@ -257,10 +249,6 @@ class GrainService implements IGrainService {
             );
         }
         return deferred.promise;
-    };
-
-    public getSelectedListBySubject = function(subject:ISubject): IGrain[] {
-        return this._selectedListMappedBySubjectId[subject.id];
     };
 
     public instantiateGrain = function (grainObject:any):IGrain {

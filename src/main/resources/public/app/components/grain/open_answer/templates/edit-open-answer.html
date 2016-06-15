@@ -1,26 +1,17 @@
 <article>
-    <grain-edit-toggle-header data-grain="grain"></grain-edit-toggle-header>
+    <grain-edit-header data-grain="grain"></grain-edit-header>
 
-    <div data-ng-if="!isFolded" >
-        <grain-edit-title-score data-grain="grain"></grain-edit-title-score>
-
-        <grain-edit-statement data-grain="grain"></grain-edit-statement>
-
-        <grain-edit-grain-document-list data-grain="grain"></grain-edit-grain-document-list>
-
-        <grain-edit-button-add-new-grain-document data-grain="grain"></grain-edit-button-add-new-grain-document>
+    <div data-ng-if="!isGrainFolded()">
 
         <div class="row vertical-spacing">
             <textarea class="twelve cell" placeholder="Réponse - champ réservé à l'élève" disabled></textarea>
         </div>
 
-        <grain-edit-answer-hint data-grain="grain"></grain-edit-answer-hint>
-
-        <grain-edit-answer-explanation data-grain="grain"></grain-edit-answer-explanation>
+        <grain-edit-footer data-grain="grain"></grain-edit-footer>
     </div>
 
-    <div class="row" data-ng-if="isFolded">
-        <grain-edit-toggle-aside data-grain="grain" data-cell-count="one"></grain-edit-toggle-aside>
+    <div class="row" data-ng-if="isGrainFolded()">
+        <grain-edit-aside data-grain="grain" data-cell-count="one"></grain-edit-aside>
         <div class="eleven cell vertical-spacing">
             <h2>[[ grain.grain_data.title ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
         </div>

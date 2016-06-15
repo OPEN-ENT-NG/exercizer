@@ -148,6 +148,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
          * Services
          */
         module.service('SubjectService', SubjectService);
+        module.service('SubjectEditService', SubjectEditService);
         module.service('SubjectScheduledService', SubjectScheduledService);
         module.service('SubjectCopyService', SubjectCopyService);
         module.service('GrainService', GrainService);
