@@ -34,7 +34,7 @@ class SubjectScheduledService implements ISubjectScheduledService {
         this._$http = _$http;
         this._grainService = _grainService;
         this._grainScheduledService = _grainScheduledService;
-        this._dateService = DateService;
+        this._dateService = _dateService;
         this._today = new Date()
     }
 
@@ -130,7 +130,7 @@ class SubjectScheduledService implements ISubjectScheduledService {
         return this._listMappedById;
     }
 
-    public static is_over(subjectScheduled : ISubjectScheduled) : boolean {
-        return this._dateService.compare_after(this._today, DateService.isoToDate(subjectScheduled.due_date))
+    public is_over(subjectScheduled : ISubjectScheduled) : boolean {
+        return this._dateService.compare_after(this._today, this._dateService.isoToDate(subjectScheduled.due_date))
     }
 }

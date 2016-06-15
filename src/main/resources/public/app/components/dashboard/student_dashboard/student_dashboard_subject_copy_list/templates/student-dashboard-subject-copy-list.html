@@ -7,9 +7,9 @@
                 <div class="row vertical-spacing">
                     <input type="text" data-ng-model="search.text_1" placeholder="Rechercher">
                 </div>
-                <div class="row vertical-spacing">
-                    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: filterOnSubjectScheduledTitle(search.text_1) | filter: filterOnSubjectScheduledDueDate(today, dateInAWeek) | orderBy:orderBySubjectScheduledDueDate)">
-                        <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
+                <div class="row vertical-spacing" data-ng-controller="SubjectCopyListController as subjectCopyListController">
+                    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_1) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(today, dateInAWeek) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
+                        <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
                     </div>
                     <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
                         <img src="exercizer/public/assets/img/smiley.PNG"/>
@@ -32,9 +32,9 @@
                         <date-picker data-ng-model="search.endDate"  class="four cell"></date-picker>
                     </div>
                 </div>
-                <div class="row vertical-spacing">
-                    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: filterOnSubjectScheduledTitle(search.text_2) | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | orderBy:orderBySubjectScheduledDueDate)">
-                        <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
+                <div class="row vertical-spacing" data-ng-controller="SubjectCopyListController as subjectCopyListController">
+                    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_2) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
+                        <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
                     </div>
                     <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
                         <img src="exercizer/public/assets/img/smiley.PNG"/>

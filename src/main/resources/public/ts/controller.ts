@@ -182,6 +182,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.controller('EditSubjectController', EditSubjectController);
         module.controller('PerformSubjectCopyController', PerformSubjectCopyController);
         module.controller('ViewSubjectCopyController', ViewSubjectCopyController);
+        module.controller('SubjectCopyListController', SubjectCopyListController);
 
         /**
          * Directives
