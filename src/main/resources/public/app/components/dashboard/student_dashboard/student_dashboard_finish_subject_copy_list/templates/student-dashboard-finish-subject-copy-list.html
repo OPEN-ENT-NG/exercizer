@@ -2,19 +2,19 @@
     <!--  filter corrigés/rendu/En cours-->
     <div class="row">
         <div class="cell"
-             data-ng-click="search.filter = 'corrected'"
+             data-ng-click="clickFilter('corrected')"
              data-ng-style="search.filter == 'corrected' && {'background-color': 'lightblue'} || search.filter != 'corrected'  && {'background-color': 'lightgray'}"
              style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
             <span>Corrigés</span>
         </div>
         <div class="cell"
-             data-ng-click="search.filter = 'givenBack'"
+             data-ng-click="clickFilter('givenBack')"
              data-ng-style="search.filter == 'givenBack' && {'background-color': 'lightblue'} || search.filter != 'givenBack' && {'background-color': 'lightgray'}"
              style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
             <span>Rendu</span>
         </div>
         <div class="cell"
-             data-ng-click="search.filter = 'pending'"
+             data-ng-click="clickFilter('pending')"
              data-ng-style="search.filter == 'pending' && {'background-color': 'lightblue'} || search.filter != 'pending' && {'background-color': 'lightgray'}"
              style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
             <span>En Cours</span>

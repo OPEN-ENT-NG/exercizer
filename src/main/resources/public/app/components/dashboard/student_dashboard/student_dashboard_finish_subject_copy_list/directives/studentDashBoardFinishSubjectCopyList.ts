@@ -25,6 +25,14 @@ directives.push(
                                 filter : null
                             };
                         }
+
+                        scope.clickFilter = function(filter){
+                            if(scope.search.filter == filter){
+                                scope.search.filter = null
+                            } else{
+                                scope.search.filter = filter
+                            }
+                        }
                     }
                 }
             }
