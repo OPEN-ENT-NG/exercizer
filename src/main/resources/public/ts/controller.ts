@@ -147,12 +147,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         });
 
         /**
-         * Constants
-         */
-        // TODO remove
-        module.constant("serverUrl", "http://foo.com");
-
-        /**
          * Services
          */
 
@@ -179,6 +173,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
          */
         module.controller('TeacherDashboardController', TeacherDashboardController);
         module.controller('TeacherDashboardSubjectTabController', TeacherDashboardSubjectTabController);
+        module.controller('TeacherDashboardCorrectionTabController', TeacherDashboardCorrectionTabController);
         module.controller('EditSubjectController', EditSubjectController);
         module.controller('PerformSubjectCopyController', PerformSubjectCopyController);
         module.controller('ViewSubjectCopyController', ViewSubjectCopyController);

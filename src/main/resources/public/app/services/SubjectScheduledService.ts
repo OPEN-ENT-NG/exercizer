@@ -55,6 +55,7 @@ class SubjectScheduledService implements ISubjectScheduledService {
                     var subjectScheduled;
                     angular.forEach(response.data, function(subjectScheduledObject) {
                         subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(subjectScheduledObject)) as any;
+                        subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
                         self._listMappedById[subjectScheduled.id] = subjectScheduled;
                     });
                     deferred.resolve(true);
@@ -79,6 +80,7 @@ class SubjectScheduledService implements ISubjectScheduledService {
         this._$http(request).then(
             function(response) {
                 var subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(response.data)) as any;
+                subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
                 if(angular.isUndefined(self._listMappedById)){
                     self._listMappedById= {};
                 }

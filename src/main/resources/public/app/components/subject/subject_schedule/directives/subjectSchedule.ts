@@ -158,11 +158,11 @@ directives.push(
                             throw "data missing";
                         }
                         var res = {
-                            groupsList : [],
+                            groupList : [],
                             userList : []
                         };
                         angular.forEach(data.groupList, function(group) {
-                            res.groupsList.push({
+                            res.groupList.push({
                                 _id : group._id,
                                 name : group.title
                             })
