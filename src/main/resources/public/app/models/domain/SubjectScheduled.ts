@@ -16,6 +16,7 @@ interface ISubjectScheduled {
     is_one_shot_submit:boolean;
     has_automatic_display: boolean;
     is_deleted:boolean;
+    scheduled_at : string[];
 }
 
 class SubjectScheduled implements ISubjectScheduled {
@@ -37,6 +38,7 @@ class SubjectScheduled implements ISubjectScheduled {
     has_automatic_display: boolean;
     is_one_shot_submit:boolean;
     is_deleted:boolean;
+    scheduled_at: string[];
     
     constructor
     (
@@ -56,7 +58,8 @@ class SubjectScheduled implements ISubjectScheduled {
         is_over?:boolean,
         has_automatic_display?:boolean,
         is_one_shot_submit?:boolean,
-        is_deleted?:boolean
+        is_deleted?:boolean,
+        scheduled_at? : string[]
     )
     {
         this.id = id;
@@ -76,5 +79,6 @@ class SubjectScheduled implements ISubjectScheduled {
         this.has_automatic_display = has_automatic_display;
         this.is_one_shot_submit = is_one_shot_submit;
         this.is_deleted = is_deleted;
+        this.scheduled_at = scheduled_at || [];
     }
 }
