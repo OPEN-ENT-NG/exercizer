@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'teacherDashboardCorrectionCopyList',
-        injections: ['SubjectCopyService', 'SubjectService', 'GroupService','DateService', (SubjectCopyService, SubjectService, GroupService, DateService) => {
+        injections: ['SubjectCopyService', '$location', 'GroupService','DateService', (SubjectCopyService, $location, GroupService, DateService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -22,22 +22,7 @@ directives.push(
                     scope.toasterDisplayed = false;
 
                     function init(subjectScheduled){
-                        // TODO : set to true;
-                        SubjectCopyService.resolve(false).then(
-                            function () {
-                                scope.subjectCopyList = [];
-                                angular.forEach(SubjectCopyService.listMappedById, function(copy){
-                                    if(copy.subject_scheduled_id == subjectScheduled.id){
-                                        scope.subjectCopyList.push(copy);
-                                    } else {
-                                        // TODO remove
-                                        scope.subjectCopyList.push(copy);
-
-                                    }
-                                });
-                                console.log('subjectCopyList', scope.subjectCopyList);
-                            }
-                        );
+                        scope.subjectCopyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
                     }
 
                     /**
@@ -59,6 +44,11 @@ directives.push(
                             copy.selected = selectAll
                         });
                         scope.toasterDisplayed =  selectAll;
+                        scope.toasterDisplayed =  selectAll;
+                    };
+
+                    scope.clickOnCopy = function(copy){
+                        $location.path('/subject/copy/view/'+scope.selectedSubjectScheduled.subject_id +'/'+ copy.id+'/');
                     };
 
 

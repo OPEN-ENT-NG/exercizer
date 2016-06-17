@@ -1,4 +1,13 @@
-<h2> [[selectedSubjectScheduled.title]]</h2>
+<div class="row">
+     <div class="cell">
+          <h2> [[selectedSubjectScheduled.title]]</h2>
+     </div>
+     <div class="cell right-magnet">
+          <button data-ng-click="selectedSubjectScheduled = null" class="right-magnet cancel">
+               Retour
+          </button>
+     </div>
+</div>
 <div class="row vertical-spacing">
      <div class="cell">
           <span data-ng-repeat="user in selectedSubjectScheduled.scheduled_at.userList"
@@ -39,7 +48,7 @@
                     <input type="checkbox" data-ng-model = "copy.selected" data-ng-click="selectCopy()"/>
                </td>
                <td>
-                    <span>[[copy.owner_username]]</span>
+                    <span data-ng-click="clickOnCopy(copy)">[[copy.owner_username]]</span>
                </td>
                <td>
                     <div

@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'teacherDashboardCorrectionSubjectScheduledList',
-        injections: ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService', (SubjectScheduledService, SubjectService, GroupService, DateService) => {
+        injections: ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService','SubjectCopyService', (SubjectScheduledService, SubjectService, GroupService, DateService,SubjectCopyService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -30,6 +30,7 @@ directives.push(
                         function () {
                             scope.subjectScheduledList = SubjectScheduledService.getList();
                             if (scope.subjectScheduledList.length !== 0) {
+                                // get auto complete
                                 var subjectId = scope.subjectScheduledList[0].subject_id;
                                 var subject = SubjectService.getById(subjectId);
                                 if (subject instanceof Subject) {
@@ -44,6 +45,11 @@ directives.push(
                                     console.error(subject, 'is not an instance of Subject');
                                     throw "";
                                 }
+                                // load subject copy
+                                SubjectCopyService.resolve(true).then(
+                                    function () {
+                                    }
+                                );
                             }
                         }
                     );
@@ -70,10 +76,59 @@ directives.push(
                         return subjectScheduled.picture || '/assets/themes/leo/img/illustrations/poll-default.png';
                     };
 
+                    scope.numberOfCopySubmitted = function (subjectScheduled){
+                        var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled),
+                            res = 0;
+                        angular.forEach(list, function(copy){
+                           if(copy.submitted_date){
+                               res++
+                           }
+                        });
+                        return res;
+                    };
+
+                    scope.numberOfCopy = function (subjectScheduled){
+                        var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                        return list.length;
+                    };
+
+                    function isListCopyCorrected(list){
+                        if(list){
+                            var res = true;
+                            angular.forEach(list, function(copy){
+                                if(!copy.is_corrected){
+                                    res = false
+                                }
+                            });
+                            return res;
+                        } else{
+                            return false;
+                        }
+                    }
+
+                    scope.stateTextSubjectScheduled = function(subjectScheduled){
+                        var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                        if(isListCopyCorrected(list)){
+                            return "Corrigé";
+                        } else{
+                            return "Non corrigé";
+                        }
+                    };
+
+                    scope.stateSubjectScheduled = function(subjectScheduled){
+                        var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                        if(isListCopyCorrected(list)){
+                            return "is_corrected";
+                        } else{
+                            return "is_not_corrected";
+                        }
+                    };
+
                     /**
                      * EVENT
                      */
 
+                    // autocomplete
                     scope.clickOnItem = function (selectedItem) {
                         scope.search.groupSelected = selectedItem;
                     };

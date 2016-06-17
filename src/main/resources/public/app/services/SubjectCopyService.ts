@@ -17,6 +17,7 @@ class SubjectCopyService implements ISubjectCopyService {
     ];
 
     private _listMappedById:{[id:number]:ISubjectCopy;};
+    private _listBySubjectScheduled:ISubjectCopy[];
     private _tmpPreviewData:{subjectScheduled:ISubjectScheduled, subjectCopy:ISubjectCopy, grainScheduledList:IGrainScheduled[], grainCopyList:IGrainCopy[]};
 
     constructor
@@ -47,9 +48,14 @@ class SubjectCopyService implements ISubjectCopyService {
             this._$http(request).then(
                 function(response) {
                     self._listMappedById = {};
+                    self._listBySubjectScheduled = [];
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
+                        if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
+                            self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
+                        }
+                        self._listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy);
                         self._listMappedById[subjectCopy.id] = subjectCopy;
                     });
                     deferred.resolve(true);
@@ -118,6 +124,14 @@ class SubjectCopyService implements ISubjectCopyService {
         if (!angular.isUndefined(this._listMappedById)) {
             return MapToListHelper.toList(this._listMappedById);
         } else {
+            return [];
+        }
+    };
+
+    public getListBySubjectScheduled = function(subjectScheduled : ISubjectScheduled){
+        if(this._listBySubjectScheduled && this._listBySubjectScheduled[subjectScheduled.id]){
+            return this._listBySubjectScheduled[subjectScheduled.id]
+        } else{
             return [];
         }
     };

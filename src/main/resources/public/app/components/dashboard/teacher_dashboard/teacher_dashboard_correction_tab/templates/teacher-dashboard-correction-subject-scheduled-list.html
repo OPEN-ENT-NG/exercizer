@@ -75,8 +75,10 @@
                                     <div class="content">
                                         <div class="eight cell">
                                             <h4 data-ng-click="clickOnSubjectScheduled(subjectScheduled)">[[subjectScheduled.title]]</h4>
-                                            <div> Modifié le  {{subjectScheduled.modified | date:'dd/MM/yyyy'}}</div>
-                                            <div>- nombre de personnes ayant rendu leurs copy -</div>
+                                            <div> Modifié le  [[subjectScheduled.modified | date:'dd/MM/yyyy']]</div>
+                                            <div>[[numberOfCopySubmitted(subjectScheduled)]] sur [[numberOfCopy(subjectScheduled)]] ont rendu la copie</div>
+                                            <div data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}"
+                                            >[[stateTextSubjectScheduled(subjectScheduled)]]</div>
                                         </div>
                                         <div class="four cell">
                                             <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
