@@ -4,7 +4,9 @@ directives.push(
         injections: ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService', (SubjectScheduledService, SubjectService, GroupService, DateService) => {
             return {
                 restrict: 'E',
-                scope: {},
+                scope: {
+                    selectedSubjectScheduled : "="
+                },
                 templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_correction_tab/templates/teacher-dashboard-correction-subject-scheduled-list.html',
                 link: (scope:any) => {
                     console.log('teacherDashboardCorrection');
@@ -82,6 +84,10 @@ directives.push(
 
                     scope.clickFilter = function (filter) {
                         scope.search.filter = scope.search.filter == filter ? null : filter;
+                    };
+
+                    scope.clickOnSubjectScheduled = function(subjectScheduled){
+                        scope.selectedSubjectScheduled = subjectScheduled;
                     };
 
                     /**

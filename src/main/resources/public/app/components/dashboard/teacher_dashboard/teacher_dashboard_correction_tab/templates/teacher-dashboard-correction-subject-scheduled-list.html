@@ -49,7 +49,6 @@
                     <h4 class="cell"><i style="margin-right: 10px;" data-ng-click="resetGroupSelected()" class="close"></i> [[search.groupSelected.name]]</h4>
                 </div>
             </article>
-
         </div>
         <div class="cell one">
             &nbsp;
@@ -75,9 +74,9 @@
                                 <div class="bottom">
                                     <div class="content">
                                         <div class="eight cell">
-                                            <h4>[[subjectScheduled.title]]</h4>
+                                            <h4 data-ng-click="clickOnSubjectScheduled(subjectScheduled)">[[subjectScheduled.title]]</h4>
                                             <div> Modifié le  {{subjectScheduled.modified | date:'dd/MM/yyyy'}}</div>
-                                            <div>-- nombre de personnes ayant rendu leurs copy - </div>
+                                            <div>- nombre de personnes ayant rendu leurs copy -</div>
                                         </div>
                                         <div class="four cell">
                                             <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
