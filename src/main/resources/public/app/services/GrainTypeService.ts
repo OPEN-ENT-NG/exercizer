@@ -3,7 +3,7 @@ interface IGrainTypeService {
     getById(id:number):IGrainType;
     getPublicName(id:number):string;
     getIllustrationIconName(id:number):string;
-    getIllustrationUrl(id:number):string;
+    getIllustrationURL(id:number):string;
     instantiateCustomData(grainObject:any, grainTypeId:number):any;
     instantiateCustomCopyData(grainCopyObject:any, grainTypeId:number):any;
 }
@@ -54,7 +54,7 @@ class GrainTypeService implements IGrainTypeService {
         return illustrationIconName
     };
 
-    public getIllustrationUrl = function(id:number):string {
+    public getIllustrationURL = function(id:number):string {
         var illustrationUrl = '',
             grainType = this.getById(id);
 

@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'editOrder',
-        injections: ['GrainService', 'SubjectEditService', (GrainService:IGrainService, SubjectEditService:ISubjectEditService) => {
+        injections: [() => {
             return {
                 restrict: 'E',
                 scope: {
@@ -14,17 +14,6 @@ directives.push(
                         scope.grain.grain_data.custom_data = new OrderCustomData();
                     }
 
-                    function _updateGrain() {
-                        GrainService.update(scope.grain).then(
-                            function(grain:IGrain) {
-                                scope.grain = grain;
-                            },
-                            function(err) {
-                                notify.error(err);
-                            }
-                        );
-                    }
-                    
                     scope.addAnswer = function(){
                         var newOrder = parseFloat(getLastOrder()) + 1;
                         var newAnswer = {
@@ -33,7 +22,7 @@ directives.push(
                             text : ''
                         };
                         scope.grain.grain_data.custom_data.correct_answer_list.push(newAnswer);
-                        _updateGrain();
+                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
                     };
 
                     scope.deleteAnswer = function(answer){
@@ -70,20 +59,15 @@ directives.push(
                                 value.order_by = parseFloat(value.index) + 1;
                             }
                         });
-                        _updateGrain();
-                    };
-
-                    scope.isGrainFolded = function() {
-                        return SubjectEditService.isGrainFolded(scope.grain);
+                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
                     };
 
                     scope.updateGrain = function() {
-                        _updateGrain();
+                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
                     };
                 }
             };
-        }
-        ]
+        }]
     }
 );
 

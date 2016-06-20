@@ -1,13 +1,13 @@
 interface ISubjectEditService {
     reset():void;
+    resetSelectedGrainListBySubjectId(id:number):void;
+    resetFoldedGrainListBySubjectId(id:number):void;
     selectGrain(grain:IGrain):boolean;
-    deselectGrainListBySubjectId(id:number):void;
     isGrainSelected(grain:IGrain):boolean;
     foldGrain(grain:IGrain):boolean;
-    foldGrainListBySubjectId(id:number):void;
     isGrainFolded(grain:IGrain):boolean;
-    getGrainSelectedListBySubjectId(id:number):IGrain[];
-    getGrainFoldedListBySubjectId(id:number):IGrain[];
+    getSelectedGrainListBySubjectId(id:number):IGrain[];
+    getFoldedGrainListBySubjectId(id:number):IGrain[];
 }
 
 class SubjectEditService implements ISubjectEditService {
@@ -37,6 +37,14 @@ class SubjectEditService implements ISubjectEditService {
         this._foldedListMappedBySubjectId = {};
     };
 
+    public resetSelectedGrainListBySubjectId = function(id:number):void {
+        this._selectedListMappedBySubjectId[id] = [];
+    };
+
+    public resetFoldedGrainListBySubjectId = function(id:number):void {
+        this._foldedListMappedBySubjectId[id] = [];
+    };
+
     public selectGrain = function(grain:IGrain):boolean {
         if (angular.isUndefined(this._selectedListMappedBySubjectId[grain.subject_id])) {
             this._selectedListMappedBySubjectId[grain.subject_id] = [];
@@ -54,11 +62,7 @@ class SubjectEditService implements ISubjectEditService {
             return grainA.order_by > grainB.order_by;
         });
 
-        return grainIndex !== -1;
-    };
-
-    public deselectGrainListBySubjectId = function(id:number):void {
-        this._selectedListMappedBySubjectId[id] = [];
+        return grainIndex === -1;
     };
     
     public isGrainSelected = function(grain:IGrain):boolean {
@@ -82,27 +86,7 @@ class SubjectEditService implements ISubjectEditService {
             this._foldedListMappedBySubjectId[grain.subject_id].push(grain);
         }
 
-        return grainIndex !== -1;
-    };
-
-    public foldGrainListBySubjectId = function(id:number):void {
-        if (angular.isUndefined(this._foldedListMappedBySubjectId[id])) {
-            this._foldedListMappedBySubjectId[id] = [];
-        }
-        
-        var self = this;
-        this._grainService.getListBySubject(this._subjectService.getById(id)).then(
-            function(grainList:IGrain[]) {
-                angular.forEach(grainList, function(grain:IGrain)  {
-                    if (!self.isGrainFolded(grain)) {
-                        self._foldedListMappedBySubjectId[grain.subject_id].push(grain);
-                    }
-                });
-            },
-            function(err) {
-                notify.error(err);
-            }
-        );
+        return grainIndex === -1;
     };
 
     public isGrainFolded = function(grain:IGrain):boolean {
@@ -113,7 +97,7 @@ class SubjectEditService implements ISubjectEditService {
         return this._foldedListMappedBySubjectId[grain.subject_id].indexOf(grain) !== -1;
     };
 
-    public getGrainSelectedListBySubjectId = function(id:number):IGrain[] {
+    public getSelectedGrainListBySubjectId = function(id:number):IGrain[] {
         if (angular.isUndefined(this._selectedListMappedBySubjectId[id])) {
             this._selectedListMappedBySubjectId[id] = [];
         }
@@ -121,7 +105,7 @@ class SubjectEditService implements ISubjectEditService {
         return this._selectedListMappedBySubjectId[id];
     };
     
-    public getGrainFoldedListBySubjectId = function(id:number):IGrain[] {
+    public getFoldedGrainListBySubjectId = function(id:number):IGrain[] {
         if (angular.isUndefined(this._foldedListMappedBySubjectId[id])) {
             this._foldedListMappedBySubjectId[id] = [];
         }

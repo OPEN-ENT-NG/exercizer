@@ -2,8 +2,8 @@
     <div class="row">
         <h2 class="cell">Organiser</h2>
 
-        <!-- FOLD -->
-        <div class="cell right-magnet" data-ng-click="fold()">
+        <!-- grain toggle icon -->
+        <div class="cell right-magnet" data-ng-click="toggle()">
             <i data-ng-show="isFolded" data-tooltip="Déplier" class="down-open"></i>
             <i data-ng-hide="isFolded" data-tooltip="Plier" class="up-open"></i>
         </div>
@@ -26,27 +26,28 @@
                     sortable-element
                     data-ng-change="reOrder()"
                     data-ng-model="grain.index">
-                        <div class="one cell">
-                            <div data-ng-switch="grain.grain_type_id">
-                                <div data-ng-switch-when="1">
-                                    <i class="info-pic"></i>
-                                </div>
-                                <div data-ng-switch-when="2">
-                                    <i class="help"></i>
-                                </div>
-                                <div data-ng-switch-when="3">
-                                    <i class="doc-text"></i>
-                                </div>
-                                <div data-ng-switch-default style="width:15px; height:15px;">
-                                    <div data-ng-include="getGrainIllustrationURL(grain.grain_type_id)"></div>
-                                </div>
-                            </div>
 
+                    <div class="one cell">
+                        <div data-ng-switch="grain.grain_type_id">
+                            <div data-ng-switch-when="1">
+                                <i class="info-pic"></i>
+                            </div>
+                            <div data-ng-switch-when="2">
+                                <i class="help"></i>
+                            </div>
+                            <div data-ng-switch-when="3">
+                                <i class="doc-text"></i>
+                            </div>
+                            <div data-ng-switch-default style="width:15px; height:15px;">
+                                <div data-ng-include="getGrainIllustrationURL(grain.grain_type_id)"></div>
+                            </div>
                         </div>
-                        <div class="eight cell">[[ getGrainName(grain) ]]</div>
-                        <div class="cell right-magnet">
-                            <i class="drag-anchor"></i>
-                        </div>
+
+                    </div>
+                    <div class="eight cell">[[ grain.grain_data.title ]]</div>
+                    <div class="cell right-magnet">
+                        <i class="drag-anchor"></i>
+                    </div>
                 </li>
             </ul>
         </div>

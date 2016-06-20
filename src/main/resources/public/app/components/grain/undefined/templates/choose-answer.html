@@ -1,15 +1,9 @@
-<article>
-    <grain-edit-text-header data-text="Choisir un type de question..." data-grain="grain"></grain-edit-text-header>
+<div class="eleven cell">
     <div class="row">
-        <grain-edit-aside data-grain="grain" data-cell-count="one"></grain-edit-aside>
-        <div class="eleven cell">
-            <div class="row">
-                <div data-ng-repeat="grainType in grainTypeList | filter:{'is_in_list':true}">
-                    <div class="two cell vertical-spacing" style="width:75px; height:75px;" data-tooltip="[[ grainType.public_name ]]" data-ng-click="displayNextStep(grainType.id)">
-                        <div data-ng-include="getGrainIllustrationURL(grainType.illustration)"></div>
-                    </div>
-                </div>
+        <div data-ng-repeat="grainType in grainTypeList | filter:{'is_in_list':true}">
+            <div class="two cell vertical-spacing" style="width:75px; height:75px;" data-tooltip="[[ grainType.public_name ]]" data-ng-click="displayNextStep(grainType.id)">
+                <div data-ng-include="getGrainIllustrationURL(grainType.id)"></div>
             </div>
         </div>
     </div>
-</article>
+</div>

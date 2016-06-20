@@ -23,21 +23,246 @@
         </div>
 
         <div class="row">
+
             <!-- LEFT STICKY NAV -->
             <section class="four cell vertical" >
                 <nav data-stick-to-top class="hash-magnet floating-navigation">
+
+                    <!-- ORGANIZER -->
                     <subject-edit-organizer data-subject="editSubjectController.subject"></subject-edit-organizer>
+
+                    <!-- SUBJECT LIST -->
                     <subject-edit-subject-list></subject-edit-subject-list>
                 </nav>
             </section>
 
             <!-- GRAIN LIST -->
             <section class="eight cell">
-                <subject-edit-grain-list data-subject="editSubjectController.subject"></subject-edit-grain-list>
+
+                <div class="row" dragdrop="editSubjectController.dropTo($originalEvent)">
+
+                    <article data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false">
+
+                        <!-- GRAIN HEADER -->
+                        <div class="row">
+
+                            <!-- TEXT HEADER -->
+                            <div class="cell" data-ng-if="grain.grain_type_id < 3">
+                                <em class="high-importance">[[ grain.grain_data.title ]]</em>
+                            </div>
+
+                            <div data-ng-if="grain.grain_type_id > 2">
+
+                                <!-- GRAIN TYPE ICON -->
+                                <div class="two cell">
+                                    <i class="doc-text"
+                                       data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
+                                       data-ng-if="grain.grain_type_id === 3">
+                                    </i>
+                                    <div data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
+                                         data-ng-if="grain.grain_type_id > 3">
+                                        <div style="width: 20px; height:20px;" data-ng-include="editSubjectController.getGrainIllustrationURL(grain.grain_type_id)"></div>
+                                    </div>
+                                </div>
+
+                                <!-- GRAIN FOLD -->
+                                <div class="cell right-magnet" data-ng-click="editSubjectController.foldGrain(grain)">
+                                    <i data-ng-show="editSubjectController.isGrainFolded(grain)" data-tooltip="Déplier" class="down-open"></i>
+                                    <i data-ng-hide="editSubjectController.isGrainFolded(grain)" data-tooltip="Plier" class="up-open"></i>
+                                </div>
+                            </div>
+
+                            <!-- GRAIN TRASH ICON -->
+                            <div class="cell right-magnet" data-ng-class="(grain.grain_type_id > 2) ? 'horizontal-spacing' : ''" data-tooltip="Supprimer" data-ng-click="editSubjectController.displayModalRemoveGrain(grain)">
+                                <i class="trash"></i>
+                            </div>
+
+                        </div>
+
+                        <!-- GRAIN SPECIFIC CONTENT FOR EXERCISE GRAIN TYPE (not folded) -->
+                        <div class="row" data-ng-if="(grain.grain_type_id > 2 && !editSubjectController.isGrainFolded(grain))">
+
+                            <!-- TITLE & SCORE -->
+                            <div class="row vertical-spacing" data-ng-if="grain.grain_type_id > 3">
+                                <input type="text" class="six cell" data-ng-model="grain.grain_data.title" complete-change="editSubjectController.updateGrain(grain)" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question" />
+                                <input type="text" class="cell right-magnet" data-ng-model="grain.grain_data.max_score" complete-change="editSubjectController.updateGrain(grain)" data-digits-input-restrict placeholder="Pondération" />
+                                <em class="high-importance cell right-magnet">Question sur /</em>
+                            </div>
+
+                            <!-- GRAIN STATEMENT -->
+                            <div class="row" data-ng-if="grain.grain_type_id > 3">
+                                <editor data-ng-model="grain.grain_data.statement"></editor>
+                            </div>
+
+                            <!-- GRAIN DOCUMENT LIST -->
+                            <div class="row" data-ng-show="grain.grain_data.document_list.length > 0" data-ng-if="grain.grain_type_id > 3">
+                                <table class="twelve">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            Documents
+                                        </th>
+                                        <th style="text-align: right">
+                                            Action
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr data-ng-repeat="grainDocument in grain.grain_data.document_list">
+                                        <td>
+                                            <a href="[[ grainDocument.path ]]" target="_blank">[[ grainDocument.name ]]</a>
+                                        </td>
+                                        <td style="text-align: right">
+                                            <i class="close" data-ng-click="editSubjectController.displayModalRemoveGrainDocument(grain, grainDocument)"></i>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- ADD GRAIN DOCUMENT BUTTON -->
+                            <div class="row" data-ng-if="grain.grain_type_id > 3">
+                                <button data-ng-click="editSubjectController.displayModalAddGrainDocument(grain)" class="twelve cell flat-button">
+                                    Ajouter un document
+                                </button>
+                            </div>
+
+                            <div data-ng-switch="grain.grain_type_id">
+                                <div data-ng-switch-when="3">
+                                    <edit-statement data-grain="grain"></edit-statement>
+                                </div>
+                                <div data-ng-switch-when="4">
+                                    <edit-simple-answer data-grain="grain"></edit-simple-answer>
+                                </div>
+                                <div data-ng-switch-when="5">
+                                    <edit-open-answer data-grain="grain"></edit-open-answer>
+                                </div>
+                                <div data-ng-switch-when="6">
+                                    <edit-multiple-answer data-grain="grain"></edit-multiple-answer>
+                                </div>
+                                <div data-ng-switch-when="7">
+                                    <edit-qcm data-grain="grain"></edit-qcm>
+                                </div>
+                                <div data-ng-switch-when="8">
+                                    <edit-association data-grain="grain"></edit-association>
+                                </div>
+                                <div data-ng-switch-when="9">
+                                    <edit-order data-grain="grain"></edit-order>
+                                </div>
+
+                            </div>
+
+                            <!-- GRAIN FOOTER -->
+
+                            <!-- GRAIN ANSWER EXPLANATION -->
+                            <div class="row" data-ng-if="grain.grain_type_id > 3">
+                                <div class="one cell vertical-spacing horizontal-spacing">
+                                    <i class="info-pic"></i>
+                                </div>
+                                <div class="eleven cell">
+                                    <textarea data-ng-model="grain.grain_data.answer_explanation" complete-change="editSubjectController.updateGrain(grain)" style="height: 80px;" placeholder="Explication de la réponse"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- GRAIN ANSWER HINT -->
+                            <div class="row" data-ng-if="grain.grain_type_id > 3">
+                                <div class="one cell vertical-spacing horizontal-spacing">
+                                    <i class="help"></i>
+                                </div>
+                                <div class="eleven cell">
+                                    <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="editSubjectController.updateGrain(grain)" style="height: 80px;" placeholder="Aide à la réponse"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- GRAIN SPECIFIC CONTENT FOR ALL GRAIN TYPE (folded) -->
+                        <div class="row" data-ng-if="(grain.grain_type_id < 3 || (grain.grain_type_id > 2 && editSubjectController.isGrainFolded(grain)))">
+
+                            <!-- GRAIN SELECTION -->
+                            <div class="vertical-spacing" data-ng-class="(grain.grain_type_id > 1) ? 'one cell' : 'four cell'">
+                                <input type="checkbox"
+                                       data-ng-checked="editSubjectController.isGrainSelected(grain)"
+                                       data-ng-click="editSubjectController.selectGrain(grain)" />
+                            </div>
+
+                            <!-- GRAIN CONTENT (folded) -->
+                            <div data-ng-switch="grain.grain_type_id">
+                                <div data-ng-switch-when="1">
+                                    <choose data-grain="grain"></choose>
+                                </div>
+                                <div data-ng-switch-when="2">
+                                    <choose-answer data-grain="grain"></choose-answer>
+                                </div>
+                                <div data-ng-switch-when="3">
+                                    <div class="eleven cell vertical-spacing" style="word-wrap: break-word;" data-ng-bind-html="grain.grain_data.custom_data.statement"></div>
+                                </div>
+                                <div data-ng-switch-default>
+                                    <div class="eleven cell vertical-spacing">
+                                        <h2>[[ grain.grain_data.title ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </article>
+                </div>
+
+                <!-- ADD GRAIN -->
+                <div class="editor drawing-grid">
+                    <button class="grid-add-row" data-ng-click="editSubjectController.addGrain()">Ajouter un élément</button>
+                </div>
+
             </section>
         </div>
 
+        <!-- REMVOVE GRAIN MODAL -->
+        <lightbox data-show="editSubjectController.isModalRemoveGrainDisplayed" data-on-close="editSubjectController.closeModalRemoveGrain()">
+            <h2>Supprimer un élément</h2>
+            <p>Confirmez-vous la suppression de l'élément ?</p>
+            <div class="row">
+                <button data-ng-click="editSubjectController.removeGrain()" class="cell right-magnet">Supprimer l'élement</button>
+                <button data-ng-click="editSubjectController.closeModalRemoveGrain()" class="cell right-magnet cancel">Annuler</button>
+            </div>
+        </lightbox>
+
+        <!-- ADD GRAIN DOCUMENT MODAL -->
+        <lightbox data-show="editSubjectController.isModalAddGrainDocumentDisplayed" data-on-close="editSubjectController.closeModalAddGrainDocument()">
+            <media-library data-ng-model="mediaLibraryItem" visibility="'protected'" file-format="'any'" data-ng-change="editSubjectController.addGrainDocument(mediaLibraryItem)"></media-library>
+        </lightbox>
+
+        <!-- REMOVE GRAIN DOCUMENT MODAL -->
+        <lightbox data-show="editSubjectController.isModalRemoveGrainDocumentDisplayed" data-on-close="editSubjectController.closeModalRemoveGrainDocument()">
+            <h2>Retirer un document</h2>
+            <p>Voulez-vous retirer ce document ?</p>
+            <div class="row">
+                <button data-ng-click="editSubjectController.removeGrainDocument()" class="cell right-magnet">Retirer le document</button>
+                <button data-ng-click="editSubjectController.closeModalRemoveGrainDocument()" class="cell right-magnet cancel">Annuler</button>
+            </div>
+        </lightbox>
+
         <!-- TOASTER -->
-        <subject-edit-toaster data-subject="editSubjectController.subject"></subject-edit-toaster>
+        <section class="toggle-buttons" data-ng-show="editSubjectController.isToasterDisplayed()">
+            <div class="toggle">
+                <div class="row">
+                    <div class="cell">
+                        <button data-ng-click="editSubjectController.duplicateSelectedGrainList()">Dupliquer</button>
+                        <button data-ng-click="editSubjectController.displayModalRemoveSelectedGrainList()">Supprimer</button>
+                        <button data-ng-click="editSubjectController.resetSelection()">Annuler</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REMOVE SELECTED GRAIN LIST MODAL -->
+        <lightbox data-show="editSubjectController.isModalRemoveSelectedGrainListDisplayed" data-on-close="editSubjectController.closeModalRemoveSelectedGrainList()">
+            <h2>Supprimer la sélection</h2>
+            <p>Confirmez-vous la suppression de la sélection ?</p>
+            <div class="row">
+                <button data-ng-click="editSubjectController.removeSelectedGrainList()" class="cell right-magnet">Supprimer la sélection</button>
+                <button data-ng-click="editSubjectController.closeModalRemoveSelectedGrainList()" class="cell right-magnet cancel">Annuler</button>
+            </div>
+        </lightbox>
     </div>
 </div>

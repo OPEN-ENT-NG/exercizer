@@ -1,14 +1,1 @@
-<article>
-    <grain-edit-header data-grain="grain"></grain-edit-header>
-
-    <div class="row" data-ng-if="!isGrainFolded()" >
-        <editor data-ng-model="grain.grain_data.custom_data.statement"></editor>
-    </div>
-
-    <div class="row" data-ng-if="isGrainFolded()">
-        <grain-edit-aside data-grain="grain" data-cell-count="one"></grain-edit-aside>
-        <div class="eleven cell">
-            <div class="vertical-spacing" style="word-wrap: break-word;" data-ng-bind-html="statementHtml"></div>
-        </div>
-    </div>
-</article>
+<editor data-ng-model="grain.grain_data.custom_data.statement"></editor>

@@ -1,20 +1,3 @@
-<article>
-    <grain-edit-header data-grain="grain"></grain-edit-header>
-
-    <div data-ng-if="!isGrainFolded()">
-
-        <div class="row vertical-spacing">
-            <textarea class="twelve cell" placeholder="Réponse - champ réservé à l'élève" disabled></textarea>
-        </div>
-
-        <grain-edit-footer data-grain="grain"></grain-edit-footer>
-    </div>
-
-    <div class="row" data-ng-if="isGrainFolded()">
-        <grain-edit-aside data-grain="grain" data-cell-count="one"></grain-edit-aside>
-        <div class="eleven cell vertical-spacing">
-            <h2>[[ grain.grain_data.title ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
-        </div>
-    </div>
-</article>
-
+<div class="row vertical-spacing">
+    <textarea class="twelve cell" placeholder="Réponse - champ réservé à l'élève" disabled></textarea>
+</div>

@@ -7,6 +7,7 @@ interface IDragService {
     canDropOnSubjectInPage(targetItem): boolean;
     canDragFolderInNav(targetItem): boolean;
     canDropOnFolderInNav(targetItem): boolean;
+    dropConditionFunction(targetItem, event): any;
 
 }
 
@@ -75,7 +76,7 @@ class DragService implements IDragService {
      * DROP CONDITION
      */
 
-    private dropConditionFunction(targetItem, event) {
+    public dropConditionFunction(targetItem, event) {
         var dataField = event.dataTransfer.types.indexOf && event.dataTransfer.types.indexOf("application/json") > -1 ? "application/json" : //Chrome & Safari
             event.dataTransfer.types.contains && event.dataTransfer.types.contains("application/json") ? "application/json" : //Firefox
                 event.dataTransfer.types.contains && event.dataTransfer.types.contains("Text") ? "Text" : //IE

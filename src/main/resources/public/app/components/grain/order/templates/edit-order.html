@@ -1,42 +1,25 @@
-<article>
-    <grain-edit-header data-grain="grain"></grain-edit-header>
+<div class="row vertical-spacing">
+    <span>Mode de correction :&nbsp;</span>
+    <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
+    <span>erreur non autorisée</span>
+</div>
 
-    <div data-ng-if="!isGrainFolded()">
+<div class="row vertical-spacing">
+    <ul sortable-list class="thought-out-actions">
+        <li data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list | orderObjectBy:'order_by':false"
+            sortable-element
+            data-ng-change="reOrder()"
+            data-ng-model="answer.index">
+            <div class="one cell" style="text-align: center; border:1px solid black; border-radius: 5px;">[[ answer.order_by ]]</div>
+            <div class="one cell">&nbsp;</div>
+            <input type="text" class="nine cell" data-ng-model="answer.text" complete-change="updateGrain()" value="[[ answer.text ]]" placeholder="Indiquez une réponse" />
+            <div class="cell right-magnet" data-ng-click="deleteAnswer(answer)"><i class="close"></i></div>
+        </li>
+    </ul>
 
-        <div class=" row vertical-spacing">
-            <span>Mode de correction :&nbsp;</span>
-            <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
-            <span>erreur non autorisée</span>
-        </div>
-
-        <div class="row vertical-spacing">
-            <ul sortable-list class="thought-out-actions">
-                <li data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list | orderObjectBy:'order_by':false"
-                    sortable-element
-                    data-ng-change="reOrder()"
-                    data-ng-model="answer.index">
-                    <div class="one cell" style="text-align: center; border:1px solid black; border-radius: 5px;">[[ answer.order_by ]]</div>
-                    <div class="one cell">&nbsp;</div>
-                    <input type="text" class="nine cell" data-ng-model="answer.text" complete-change="updateGrain()" value="[[ answer.text ]]" placeholder="Indiquez une réponse" />
-                    <div class="cell right-magnet" data-ng-click="deleteAnswer(answer)"><i class="close"></i></div>
-                </li>
-            </ul>
-
-            <div class="row vertical-spacing">
-                <a data-ng-click="addAnswer()" class="twelve cell comment" style="text-align: center">
-                    Ajouter une réponse
-                </a>
-            </div>
-        </div>
-
-        <grain-edit-footer data-grain="grain"></grain-edit-footer>
+    <div class="row vertical-spacing">
+        <a data-ng-click="addAnswer()" class="twelve cell comment" style="text-align: center">
+            Ajouter une réponse
+        </a>
     </div>
-
-    <div class="row" data-ng-if="isGrainFolded()">
-        <grain-edit-aside data-grain="grain" data-cell-count="one"></grain-edit-aside>
-        <div class="eleven cell vertical-spacing">
-            <h2>[[ grain.grain_data.title ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
-        </div>
-    </div>
-</article>
-
+</div>
