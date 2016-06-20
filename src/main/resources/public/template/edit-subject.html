@@ -13,7 +13,7 @@
                 Exercizer - [[ editSubjectController.subject.title ]]
             </h1>
 
-            <button class="right-magnet cell">
+            <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
                 Programmer
             </button>
 
@@ -48,6 +48,6 @@
         <subject-edit-modal-remove-selected-grain-list data-subject="editSubjectController.subject"></subject-edit-modal-remove-selected-grain-list>
         <subject-edit-modal-grain-document data-subject="editSubjectController.subject"></subject-edit-modal-grain-document>
         <subject-edit-modal-remove-grain-document data-subject="editSubjectController.subject"></subject-edit-modal-remove-grain-document>
-
+        <subject-schedule></subject-schedule>
     </div>
 </div>

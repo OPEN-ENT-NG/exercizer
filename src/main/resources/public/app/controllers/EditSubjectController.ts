@@ -59,6 +59,10 @@ class EditSubjectController {
         this._$location.path('/dashboard');
     }
 
+    public scheduleSubject(){
+        this._$scope.$broadcast('E_DISPLAY_MODAL_SCHEDULE_SUBJECT', this._subject);
+    }
+
     private _eventsHandler = function (self) {
 
         function _handleGrainListUpdated() {
