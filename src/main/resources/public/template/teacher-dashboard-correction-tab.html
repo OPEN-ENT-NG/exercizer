@@ -1,4 +1,12 @@
-<div data-ng-controller="TeacherDashboardCorrectionTabController as teacherDashboardCorrectionTabController" data-ng-init="selectedSubjectScheduled = null">
-        <teacher-dashboard-correction-subject-scheduled-list data-ng-hide="selectedSubjectScheduled" selected-subject-scheduled="selectedSubjectScheduled"></teacher-dashboard-correction-subject-scheduled-list>
-        <teacher-dashboard-correction-copy-list data-ng-show="selectedSubjectScheduled" selected-subject-scheduled="selectedSubjectScheduled"></teacher-dashboard-correction-copy-list>
+<dashboard-teacher-tab current-tab="'correction'"></dashboard-teacher-tab>
+<div data-ng-controller="TeacherDashboardCorrectionTabController as teacherDashboardCorrectionTabController">
+        <teacher-dashboard-correction-subject-scheduled-list
+                data-ng-hide="selectedSubjectScheduled"
+                selected-subject-scheduled="selectedSubjectScheduled"
+
+        ></teacher-dashboard-correction-subject-scheduled-list>
+        <teacher-dashboard-correction-copy-list
+                data-ng-show="selectedSubjectScheduled"
+                selected-subject-scheduled="selectedSubjectScheduled"
+        ></teacher-dashboard-correction-copy-list>
 </div>

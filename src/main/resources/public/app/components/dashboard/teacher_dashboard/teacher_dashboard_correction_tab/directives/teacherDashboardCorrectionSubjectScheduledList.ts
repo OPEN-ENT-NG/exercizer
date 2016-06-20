@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'teacherDashboardCorrectionSubjectScheduledList',
-        injections: ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService','SubjectCopyService', (SubjectScheduledService, SubjectService, GroupService, DateService,SubjectCopyService) => {
+        injections: ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService','SubjectCopyService','$location','$route', (SubjectScheduledService, SubjectService, GroupService, DateService,SubjectCopyService, $location, $route) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -9,7 +9,7 @@ directives.push(
                 },
                 templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_correction_tab/templates/teacher-dashboard-correction-subject-scheduled-list.html',
                 link: (scope:any) => {
-                    console.log('teacherDashboardCorrection');
+
                     /**
                      * INIT
                      */
@@ -20,34 +20,35 @@ directives.push(
                     scope.dateInAMonth = DateService.addDays(scope.today, 30);
                     scope.search = {
                         beginDate : scope.dateAMonthAgo,
-                        endDate : scope.dateInAMonth,
+                        endDate : scope.dateInAMonth
                     };
 
                     /**
                      * LOAD
                      */
+                    // load subject scheduled
+                    // revolve true means teacher
                     SubjectScheduledService.resolve(true).then(
                         function () {
                             scope.subjectScheduledList = SubjectScheduledService.getList();
                             if (scope.subjectScheduledList.length !== 0) {
                                 // get auto complete
                                 var subjectId = scope.subjectScheduledList[0].subject_id;
-                                var subject = SubjectService.getById(subjectId);
-                                if (subject instanceof Subject) {
-                                    GroupService.getList(subject).then(
-                                        function (data) {
-                                            scope.autocomplete = {
-                                                groupList: createListAutoComplete(data.groups.visibles)
-                                            }
+                                SubjectService.resolve().then(
+                                    function(){
+                                        var subject = SubjectService.getById(subjectId);
+                                        if (subject instanceof Subject) {
+                                            GroupService.getList(subject).then(
+                                                function (data) {
+                                                    scope.autocomplete = {
+                                                        groupList: createListAutoComplete(data.groups.visibles)
+                                                    }
+                                                }
+                                            )
+                                        } else {
+                                            console.error(subject, 'is not an instance of Subject');
+                                            throw "";
                                         }
-                                    )
-                                } else {
-                                    console.error(subject, 'is not an instance of Subject');
-                                    throw "";
-                                }
-                                // load subject copy
-                                SubjectCopyService.resolve(true).then(
-                                    function () {
                                     }
                                 );
                             }
@@ -143,6 +144,7 @@ directives.push(
 
                     scope.clickOnSubjectScheduled = function(subjectScheduled){
                         scope.selectedSubjectScheduled = subjectScheduled;
+                        $location.path('/dashboard/teacher/correction/'+subjectScheduled.id);
                     };
 
                     /**

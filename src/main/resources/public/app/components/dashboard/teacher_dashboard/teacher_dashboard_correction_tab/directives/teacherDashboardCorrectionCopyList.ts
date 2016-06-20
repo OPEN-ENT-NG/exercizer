@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'teacherDashboardCorrectionCopyList',
-        injections: ['SubjectCopyService', '$location', 'GroupService','DateService', (SubjectCopyService, $location, GroupService, DateService) => {
+        injections: ['SubjectCopyService', '$location', 'GroupService','DateService','$route', (SubjectCopyService, $location, GroupService, DateService, $route) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -22,7 +22,11 @@ directives.push(
                     scope.toasterDisplayed = false;
 
                     function init(subjectScheduled){
-                        scope.subjectCopyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                        SubjectCopyService.resolve(true).then(
+                            function () {
+                                scope.subjectCopyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                            }
+                        );
                     }
 
                     /**
@@ -44,14 +48,16 @@ directives.push(
                             copy.selected = selectAll
                         });
                         scope.toasterDisplayed =  selectAll;
-                        scope.toasterDisplayed =  selectAll;
                     };
 
                     scope.clickOnCopy = function(copy){
                         $location.path('/subject/copy/view/'+scope.selectedSubjectScheduled.subject_id +'/'+ copy.id+'/');
                     };
 
-
+                    scope.clickReturnSubjectScheduledList = function(){
+                        scope.selectedSubjectScheduled = null;
+                        $location.path('/dashboard/teacher/correction');
+                    };
 
                     /**
                      * DISPLAY

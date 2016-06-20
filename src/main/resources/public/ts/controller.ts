@@ -6,6 +6,9 @@ routes.define(function($routeProvider){
         .when('/dashboard/student', {
             action: 'dashboardStudent'
         })
+        .when('/dashboard/teacher/correction/:subjectScheduledId?', {
+            action: 'dashboardTeacherCorrection'
+        })
         .when('/subject/edit/:subjectId/', {
             action: 'editSubject'
         })
@@ -47,7 +50,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
     route({
         dashboard: function () {
             if (_userProfile === teacherProfile) {
-                template.open('main', 'teacher-dashboard');
+                template.open('main', 'teacher-dashboard-subject-tab');
             } else if (_userProfile === studentProfile) {
                 template.open('main', 'student-dashboard');
             } else {
@@ -57,6 +60,13 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         dashboardStudent: function () {
             _userProfile = studentProfile;
             template.open('main', 'student-dashboard');
+        },
+        dashboardTeacherCorrection: function () {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'teacher-dashboard-correction-tab');
+            } else {
+                template.open('main', '401-exercizer');
+            }
         },
         editSubject: function () {
             if (_userProfile === teacherProfile) {
@@ -171,7 +181,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Controllers
          */
-        module.controller('TeacherDashboardController', TeacherDashboardController);
         module.controller('TeacherDashboardSubjectTabController', TeacherDashboardSubjectTabController);
         module.controller('TeacherDashboardCorrectionTabController', TeacherDashboardCorrectionTabController);
         module.controller('EditSubjectController', EditSubjectController);
