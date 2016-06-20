@@ -65,7 +65,7 @@
                 <div class="row vertical-spacing">
                     <!-- list subject scheduled -->
                     <div class="fallen dominos">
-                        <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : modified)"
+                        <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : 'modified' : true)"
                              class="item" style="width: 100%;max-width: none">
                             <section class="domino">
                                 <div class="top">
