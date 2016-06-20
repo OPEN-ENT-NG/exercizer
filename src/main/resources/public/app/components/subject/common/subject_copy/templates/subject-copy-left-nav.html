@@ -1,31 +1,25 @@
-<nav class="vertical" data-ng-if="!anchorBehaviour">
-    <ul>
-        <li>
-            <a data-ng-class="{ selected: !currentGrainCopy }" data-ng-click="navigateTo()">
-                Résumé
-            </a>
-        </li>
-        <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false">
-            <a data-ng-class="{ selected: currentGrainCopy.id === grainCopy.id }"
-               data-ng-click="navigateTo(grainCopy)">
-                [[ getGrainCopyName(grainCopy) ]]
-            </a>
-        </li>
-    </ul>
-</nav>
+<style>
+    .floating-navigation li.selected {
+        background: #FF8500;
+        box-shadow: none;
+    }
+    .floating-navigation li.selected a {
+        color: white;
+    }
+</style>
 
-<nav data-stick-to-top class="hash-magnet floating-navigation" data-ng-if="anchorBehaviour">
+<nav data-stick-to-top class="hash-magnet floating-navigation">
     <h4 class="row">Navigation</h4>
     <div class="row" style="overflow-y:scroll; max-height: 300px; border:1px dotted lightgrey;">
         <ul style="padding: 0 5px;">
-            <li data-ng-click="navigateTo()">
-                <a data-ng-class="{ selected: !currentGrainCopy }">
+            <li data-ng-click="navigateTo()" data-ng-class="(!currentGrainCopy) ? 'selected' : ''">
+                <a>
                     Résumé
                 </a>
             </li>
             <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false"
-                data-ng-click="navigateTo(grainCopy)">
-                <a data-ng-class="{ selected: currentGrainCopy.id === grainCopy.id }">
+                data-ng-click="navigateTo(grainCopy)" data-ng-class="(currentGrainCopy.id === grainCopy.id) ? 'selected' : ''">
+                <a>
                     [[ getGrainCopyName(grainCopy) ]]
                 </a>
             </li>
