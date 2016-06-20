@@ -22,8 +22,7 @@ directives.push(
                         };
 
                         scope.getGrainIllustrationURL = function(grainTypeId:number) {
-                            var grainType = GrainTypeService.getById(grainTypeId);
-                            return '/exercizer/public/assets/illustrations/' + grainType.illustration + '.html';
+                            return GrainTypeService.getIllustrationURL(grainTypeId);
                         };
                         
                         scope.getGrainName = function (grain:IGrain) {

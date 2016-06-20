@@ -25,6 +25,10 @@ class EditSubjectController {
     private _currentGrainForAction:IGrain;
     private _currentGrainDocumentToRemove:IGrainDocument;
 
+    // organizer
+    private _isOrganizerFolded:boolean;
+    private _reOrderIterationCount:number;
+
     constructor
     (
         private _$routeParams,
@@ -52,6 +56,10 @@ class EditSubjectController {
         this._currentGrainForAction = undefined;
         this._currentGrainDocumentToRemove = undefined;
 
+        // organizer
+        this._isOrganizerFolded = false;
+        this._reOrderIterationCount = 0;
+
         var self = this,
             subjectId = _$routeParams['subjectId'];
 
@@ -72,36 +80,7 @@ class EditSubjectController {
                             self.updateGrain(grain);
                         });
 
-                        self._$scope.$on('E_FOLD_GRAIN_LIST', function() {
-                            self.foldAllGrain();
-                        });
-
-                        self._$scope.$on('E_UPDATE_GRAIN_LIST', function(event, grainList:IGrain[]) {
-                            self._grainService.updateList(grainList).then(
-                                function() {
-                                    self._grainService.getListBySubject(self._subject).then(
-                                        function(grainList) {
-                                            self._grainList = grainList;
-                                            self.foldAllGrain();
-                                            self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', self._grainList);
-                                        },
-                                        function(err) {
-                                            notify.error(err);
-                                        }
-                                    );
-                                },
-                                function(err) {
-                                    notify.error(err);
-                                }
-                            )
-                        });
-
                         self._hasDataLoaded = true;
-
-                        setTimeout(function() {
-                            self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', self._grainList);
-                        }, 1000);
-                        
                     },
                     function (err) {
                         notify.error(err);
@@ -120,6 +99,21 @@ class EditSubjectController {
     public redirectToDashboard() {
         this._$location.path('/dashboard');
     };
+    
+    public getGrainDisplayedName = function(grain) {
+        var displayedName = '';
+        
+        if (grain.grain_type_id > 3) {
+
+            grain.grain_data.title = StringISOHelper.toISO(grain.grain_data.title);
+            displayedName = angular.isUndefined(grain.grain_data.title) ? this.getGrainPublicName(grain.grain_type_id) : grain.grain_data.title;
+            
+        } else {
+            displayedName = this.getGrainPublicName(grain.grain_type_id);
+        }
+        
+        return displayedName;
+    };
 
     public getGrainIllustrationURL = function(grainTypeId) {
         return this._grainTypeService.getIllustrationURL(grainTypeId);
@@ -131,13 +125,10 @@ class EditSubjectController {
 
     public dropTo = function($originalEvent) {
         var dataField = this._dragService.dropConditionFunction(this._subject, $originalEvent),
-            originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField)),
-            self = this;
+            originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
 
         this._grainService.duplicate(originalItem, this._subject).then(
-            function() {
-                self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', self._grainList);
-            },
+            function() {},
             function(err) {
                 notify.error(err);
             }
@@ -172,7 +163,6 @@ class EditSubjectController {
 
         this._grainService.persist(newGrain).then(
             function () {
-                self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', self._grainList);
                 self._updateSubject();
             },
             function (err) {
@@ -187,19 +177,14 @@ class EditSubjectController {
         if (grain.grain_type_id > 3) {
 
             grain.grain_data.title = StringISOHelper.toISO(grain.grain_data.title);
-
-            if (angular.isUndefined(grain.grain_data.title)) {
-                grain.grain_data.title = this._grainTypeService.getPublicName(grain.grain_type_id);
-            }
-
             grain.grain_data.statement = StringISOHelper.toISO(grain.grain_data.statement);
             grain.grain_data.answer_explanation = StringISOHelper.toISO(grain.grain_data.answer_explanation);
             grain.grain_data.answer_hint = StringISOHelper.toISO(grain.grain_data.answer_hint);
+            grain.grain_data.max_score = angular.isUndefined(grain.grain_data.max_score) ? 0 : parseFloat(grain.grain_data.max_score as any);
         }
 
         this._grainService.update(grain).then(
             function() {
-                self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', self._grainList);
                 self._updateSubject(grain.grain_type_id > 3)
             },
             function(err) {
@@ -224,8 +209,7 @@ class EditSubjectController {
 
         this._grainService.remove(this._currentGrainForAction).then(
             function() {
-                self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', self._grainList);
-                self._updateSubject(self._currentGrainForAction.grain_type_id > 3)
+                self._updateSubject(self._currentGrainForAction.grain_type_id > 3);
                 self._currentGrainForAction = undefined;
                 self._isModalRemoveGrainDisplayed = false;
             },
@@ -258,14 +242,13 @@ class EditSubjectController {
         grainDocument.path = '/workspace/document/' + grainDocument.id;
 
         if (angular.isUndefined(this._currentGrainForAction.grain_data.document_list)) {
-            this._currentGrainForAction.grain.grain_data.document_list = [];
+            this._currentGrainForAction.grain_data.document_list = [];
         }
 
-        this._currentGrainForAction.grain.grain_data.document_list.push(grainDocument);
+        this._currentGrainForAction.grain_data.document_list.push(grainDocument);
 
         this._grainService.update(this._currentGrainForAction).then(
             function() {
-                self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', self._grainList);
                 self._currentGrainForAction = undefined;
                 self._isModalAddGrainDocumentDisplayed = false;
             },
@@ -286,14 +269,13 @@ class EditSubjectController {
     };
 
     public removeGrainDocument = function() {
-        var grainDocumentIndex = this._currentGrainForAction.grain.grain_data.document_list.indexOf(this._currentGrainDocumentToRemove),
+        var grainDocumentIndex = this._currentGrainForAction.grain_data.document_list.indexOf(this._currentGrainDocumentToRemove),
             self = this;
 
         if (grainDocumentIndex !== -1) {
             this._currentGrainForAction.grain_data.document_list.splice(grainDocumentIndex, 1);
             this._grainService.update(this._currentGrainForAction).then(
                 function() {
-                    self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', self._grainList);
                     self._currentGrainForAction = undefined;
                     self._currentGrainDocumentToRemove = undefined;
                     self._isModalRemoveGrainDocumentDisplayed = false;
@@ -342,12 +324,56 @@ class EditSubjectController {
         return this._foldedGrainList.indexOf(grain) !== -1;
     };
 
+    /**
+     * ORGANIZER
+     */
+
     public foldAllGrain = function() {
         angular.forEach(this._grainList, function(grain:IGrain) {
             if (!this.isGrainFolded(grain)) {
                 this.foldGrain(grain);
             }
         }, this);
+    };
+
+    public previewPerformSubjectCopy = function() {
+        this._$location.path('/subject/copy/preview/perform/' + this._subject.id + '/');
+    };
+
+    public reOrder = function() {
+        if (this._reOrderIterationCount < this._grainList.length) {
+
+            angular.forEach(this._grainList, function (grainItem) {
+                if (grainItem.order_by != parseFloat(grainItem.index) + 1) {
+                    grainItem.order_by = parseFloat(grainItem.index) + 1;
+                }
+            });
+
+            this._reOrderIterationCount += 1;
+        }
+
+        if (this._reOrderIterationCount === this._grainList.length) {
+            this._reOrderIterationCount = 0;
+
+            var self = this;
+
+            angular.forEach(this._grainList, function (grain:IGrain) {
+               self.updateGrain(grain).then(
+                   function() {
+                       if (!self.isGrainFolded(grain)) {
+                           self.foldGrain(grain);
+                       }
+                   },
+                   function(err) {
+                       notify.error(err);
+                   }
+               );
+            });
+        }
+    };
+
+    public foldOrganizer = function() {
+        this._isOrganizerFolded = !this._isOrganizerFolded;
     };
 
     /**
@@ -379,7 +405,6 @@ class EditSubjectController {
 
         this._grainService.duplicateList(this._selectedGrainList, this._subject).then(
             function() {
-                self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', self._grainList);
                 self._selectedGrainList = [];
                 self.foldAllGrain();
                 self._updateSubject(true);
@@ -395,7 +420,6 @@ class EditSubjectController {
 
         this._grainService.removeList(this._selectedGrainList, this._subject).then(
             function() {
-                self._$scope.$broadcast('E_REFRESH_GRAIN_LIST', self._grainList);
                 self._selectedGrainList = [];
                 self._updateSubject(true);
                 self._isModalRemoveSelectedGrainListDisplayed = false;
@@ -448,6 +472,10 @@ class EditSubjectController {
 
     get isModalRemoveGrainDocumentDisplayed():boolean {
         return this._isModalRemoveGrainDocumentDisplayed;
+    }
+
+    get isOrganizerFolded():boolean {
+        return this._isOrganizerFolded;
     }
 
     get isModalRemoveSelectedGrainListDisplayed():boolean {
