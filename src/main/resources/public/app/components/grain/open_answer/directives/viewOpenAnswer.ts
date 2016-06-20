@@ -12,8 +12,8 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/open_answer/templates/view-open-answer.html',
                 link: (scope:any) => {
 
+                    var result = OpenAnswerService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
                     if (angular.isUndefined(scope.grainCopy.calculated_score) || scope.grainCopy.calculated_score === null) {
-                        var result = OpenAnswerService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
                         scope.grainCopy.calculated_score = result.calculated_score;
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     }
