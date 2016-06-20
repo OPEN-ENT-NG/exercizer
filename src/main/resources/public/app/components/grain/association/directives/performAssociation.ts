@@ -1,21 +1,21 @@
 directives.push(
     {
         name: 'performAssociation',
-        injections: ['DragService',(DragService) => {
+        injections: ['DragService', (DragService) => {
             return {
                 restrict: 'E',
                 scope: {
                     grainCopy: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/association/templates/perform-association.html',
-                link:(scope:any) => {
+                link: (scope:any) => {
 
-                    scope.updateGrainCopy = function() {
+                    scope.updateGrainCopy = function () {
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     };
 
 
-                    scope.drag = function(possible_answer, $originalEvent){
+                    scope.drag = function (possible_answer, $originalEvent) {
                         try {
                             $originalEvent.dataTransfer.setData('application/json', JSON.stringify(possible_answer));
                         } catch (e) {
@@ -30,6 +30,10 @@ directives.push(
                         scope.$apply();
                         scope.updateGrainCopy();
 
+                    };
+
+                    scope.dropConditionFunction = function (targetItem, $originalEvent) {
+                        return DragService.dropConditionFunction(targetItem, $originalEvent);
                     }
                 }
             };

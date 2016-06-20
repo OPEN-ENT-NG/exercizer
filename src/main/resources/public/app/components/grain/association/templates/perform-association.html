@@ -6,14 +6,19 @@
         <div data-ng-repeat="filled_answer in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list" class="row vertical-spacing">
             <input type="text" class="five cell" data-ng-model="filled_answer.text_left" disabled/>
             <div class="one cell">&nbsp;</div>
-            <input
-                    type="text"
-                    class="five cell"
-                    data-ng-model="filled_answer.text_right"
-                    disabled
-                    dragdrop="dropTo(filled_answer, $originalEvent)"
+            <div dragdrop="dropTo(filled_answer, $originalEvent)"
+                 class="five cell"
+                 dropcondition="dropConditionFunction(filled_answer, $originalEvent)"
 
-            />
+            >
+                <input
+                        type="text"
+                        class="twelve cell"
+                        data-ng-model="filled_answer.text_right"
+                        disabled
+                />
+            </div>
+
         </div>
         <div class="row vertical-spacing">
             <div data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.possible_answer_list"
