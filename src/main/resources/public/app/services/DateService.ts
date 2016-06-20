@@ -20,6 +20,7 @@ class DateService implements IDateService {
     }
 
     public compare_after(date_a, date_b) {
+        console.log(date_a,date_b);
         if (date_a > date_b) {
             return true;
         } else {

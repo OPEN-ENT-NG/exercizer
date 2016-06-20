@@ -48,7 +48,8 @@
                     <input type="checkbox" data-ng-model = "copy.selected" data-ng-click="selectCopy()"/>
                </td>
                <td>
-                    <span data-ng-click="clickOnCopy(copy)">[[copy.owner_username]]</span>
+                    <span data-ng-hide="canStartCorrect(copy)">[[copy.owner_username]]</span>
+                    <span data-ng-show="canStartCorrect(copy)" data-ng-click="clickOnCopy(copy)">[[copy.owner_username]]</span>
                </td>
                <td>
                     <div
