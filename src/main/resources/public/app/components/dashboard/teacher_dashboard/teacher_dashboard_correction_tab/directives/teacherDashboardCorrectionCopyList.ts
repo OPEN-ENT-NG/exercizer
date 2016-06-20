@@ -64,7 +64,8 @@ directives.push(
                      */
 
                     scope.canStartCorrect = function(copy){
-                        return DateService.compare_after(new Date, DateService.isoToDate(scope.selectedSubjectScheduled.due_date));
+                        return copy.submitted_date;
+                        //return DateService.compare_after(new Date, DateService.isoToDate(scope.selectedSubjectScheduled.due_date));
                     };
 
                     scope.correctionStateText = function(copy){
