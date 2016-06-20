@@ -57,7 +57,7 @@ class GrainCopyService implements IGrainCopyService {
             deferred = this._$q.defer();
 
         var grainCopyObject = angular.copy(grainCopy);
-        grainCopyObject.grain_copy_data = JSON.stringify(grainCopyObject.grain_data);
+        grainCopyObject.grain_copy_data = JSON.stringify(grainCopyObject.grain_copy_data);
 
         var request = {
             method: 'PUT',
