@@ -1,35 +1,43 @@
 <div class="fallen dominos">
-    <div class="item" style="width: 100%;max-width: none">
+    <div class="item" style="width: 100%; max-width: none;">
         <section class="domino">
             <div class="top">
-                <img data-ng-src="[[getSubjectCopyPicture()]]" class="fixed twelve cell" />
+                <img data-ng-src="[[getSubjectCopyPicture()]]" class="absolute" />
             </div>
             <div class="bottom">
                 <div class="content">
-                    <div class="cell"
+                    <div class="eleven cell">
+                        <div class="row">
+                            <div class="cell">
+                                <strong data-ng-show="canAccessPerform()" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-style="{'color': getColorColumn()}">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong data-ng-hide="canAccessPerform()"><span class="token" data-ng-style="{'color': getColorColumn()}">[ [textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                            </div>
+                            <div class="cell right-magnet">
+                                <strong>/ [[getSubjectScheduledMaxScore()]]</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div data-ng-show="isDueDateDisplayed()">Pour le <span  data-ng-bind="getSubjectCopyDueDate() | date:'dd/MM/yyyy'"></span></div>
+                            <div data-ng-show="isSubmittedDateDisplayed()">Rendu le <span  data-ng-bind="getSubjectCopySubmittedDate() | date:'dd/MM/yyyy'"></span></div>
+                        </div>
+                        <div class="row">
+                            <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em>
+                        </div>
+                        <div class="row">
+                            <a data-ng-click="viewSubjectCopy(subjectCopy.id)">test view</a>
+                        </div>
+                    </div>
+                    <div class="cell right-magnet"
                          data-ng-show="isColorColumnDisplay()"
                          data-ng-style="{'background-color': getColorColumn()}"
-                        style="height: 100%; width: 20px; margin-right: 20px"
-                    >
+                         style="height: 100%; width: 20px;">
                         &nbsp;
                     </div>
-                    <div class="cell"
+                    <div class="cell right-magnet"
                          data-ng-hide="isColorColumnDisplay()"
-                         style="height: 100%; width: 20px; margin-right: 20px"                    >
+                         style="height: 100%; width: 20px;">
                         &nbsp;
                     </div>
-                    <div class="nine cell">
-                        <h4 data-ng-show="canAccessPerform()" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-style="{'color': getColorColumn()}">[[textBeforeTitle()]]</span>[[getSubjectScheduledTitle()]]</h4>
-                        <h4 data-ng-hide="canAccessPerform()"><span class="token" data-ng-style="{'color': getColorColumn()}">[[textBeforeTitle()]]</span>[[getSubjectScheduledTitle()]]</h4>
-                        <h4 data-ng-click="viewSubjectCopy(subjectCopy.id)">view</h4>
-                        <div data-ng-show="isDueDateDisplayed()">Pour le <span  data-ng-bind="getSubjectCopyDueDate() |  date:'dd/MM/yyyy'"></span></div>
-                        <div data-ng-show="isSubmittedDateDisplayed()">Rendu le <span  data-ng-bind="getSubjectCopySubmittedDate() |  date:'dd/MM/yyyy'"></span></div>
-                        <div>[[getSubjectScheduledOwner()]]</div>
-                    </div>
-                    <div class="two cell">
-                        <h4>/ [[getSubjectScheduledMaxScore()]]</h4>
-                    </div>
-
                 </div>
             </div>
         </section>
