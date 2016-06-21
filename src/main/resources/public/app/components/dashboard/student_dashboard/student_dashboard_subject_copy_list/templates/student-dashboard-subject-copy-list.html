@@ -1,48 +1,54 @@
-<div>
-    <div class="row vertical-spacing">
-        <article class="five cell">
-                <div class="row vertical-spacing">
-                    <h2>Cette semaine</h2>
-                </div>
-                <div class="row vertical-spacing">
-                    <input type="text" data-ng-model="search.text_1" placeholder="Rechercher">
-                </div>
-                <div class="row vertical-spacing" data-ng-controller="SubjectCopyListController as subjectCopyListController">
-                    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_1) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(today, dateInAWeek) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
-                        <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
-                    </div>
-                    <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
-                        <img src="exercizer/public/assets/img/smiley.PNG"/>
-                        <h4>Vous n'avez aucun sujet à faire cette semaine</h4>
-                    </div>
-                </div>
-        </article>
-        <div class="one cell">&nbsp;</div>
-        <article class="five cell">
-            <div class="row vertical-spacing">
-                <h2>Plus tard</h2>
-                <div class="row vertical-spacing">
-                    <div class="five cell">
-                        <input type="text" data-ng-model="search.text_2" placeholder="Rechercher">
-                    </div>
-                    <div class="five cell">
-                        <div class="two cell" style="text-align: center">Du</div>
-                        <date-picker data-ng-model="search.beginDate"  class="four cell"></date-picker>
-                        <div class="two cell" style="text-align: center">Au</div>
-                        <date-picker data-ng-model="search.endDate"  class="four cell"></date-picker>
-                    </div>
-                </div>
-                <div class="row vertical-spacing" data-ng-controller="SubjectCopyListController as subjectCopyListController">
-                    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_2) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
-                        <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
-                    </div>
-                    <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
-                        <img src="exercizer/public/assets/img/smiley.PNG"/>
-                        <h4>Vous n'avez aucun sujet à faire plus tard</h4>
-                    </div>
-                </div>
+<div class="row">
+
+    <article class="cell" style="width: 49%;">
+        <h2 class="row" style="color: firebrick;">Cette semaine</h2>
+
+        <div class="row">
+            <input type="text" data-ng-model="search.text_1" placeholder="Rechercher" class="twelve cell">
+        </div>
+
+        <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
+            <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_1) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(today, dateInAWeek) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
+                <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
             </div>
-        </article>
-    </div>
-  </article>
+
+            <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
+                <img src="exercizer/public/assets/img/smiley.PNG"/>
+                <h4>Vous n'avez aucun sujet à faire cette semaine</h4>
+            </div>
+        </div>
+    </article>
+
+    <article class="cell right-magnet" style="width: 49%;">
+        <h2 class="row">Plus tard</h2>
+
+        <div class="row">
+            <input type="text" data-ng-model="search.text_2" placeholder="Rechercher" class="four cell">
+
+            <div class="cell right-magnet">
+                <label class="two cell">
+                    Au
+                </label>
+                <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
+            </div>
+
+            <div class="cell right-magnet">
+                <label class="two cell">
+                    Du
+                </label>
+                <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
+            </div>
+        </div>
+
+        <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
+            <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_2) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
+                <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
+            </div>
+
+            <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
+                <img src="exercizer/public/assets/img/smiley.PNG"/>
+                <h4>Vous n'avez aucun sujet à faire plus tard</h4>
+            </div>
+        </div>
+    </article>
 </div>
