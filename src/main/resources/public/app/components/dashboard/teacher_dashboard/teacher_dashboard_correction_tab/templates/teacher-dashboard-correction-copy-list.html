@@ -34,18 +34,18 @@
      <table class="list-view">
           <thead>
           <tr>
-               <th><input type="checkbox" data-ng-model = "selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
-               <th><span>Copie de </span></th>
-               <th><span>Etat </span></th>
-               <th><span>Date de rendu </span></th>
-               <th><span>Auto Correction </span></th>
-               <th><span>Note final </span></th>
+               <th><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
+               <th>Copie de</th>
+               <th>État</span></th>
+               <th>Date de rendu</th>
+               <th>Auto-correction</th>
+               <th>Note finale</th>
           </tr>
           </thead>
           <tbody>
           <tr data-ng-repeat="copy in subjectCopyList">
                <td>
-                    <input type="checkbox" data-ng-model = "copy.selected" data-ng-click="selectCopy()"/>
+                    <input type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                </td>
                <td>
                     <span data-ng-hide="canStartCorrect(copy)">[[copy.owner_username]]</span>
@@ -77,7 +77,7 @@
      <div class="toggle">
           <div class="row">
                <div class="cell">
-                    <button data-ng-click="applyAutomaticMark()">Note final automatique</button>
+                    <button data-ng-click="applyAutomaticMark()">Note finale automatique</button>
                </div>
           </div>
      </div>
