@@ -15,6 +15,7 @@ routes.define(function($routeProvider){
         .when('/subject/copy/preview/perform/:subjectId/', {
             action: 'previewPerformSubjectCopy'
         })
+        // perform as student
         .when('/subject/copy/perform/:subjectCopyId/', {
             action: 'performSubjectCopy'
         })
@@ -24,6 +25,7 @@ routes.define(function($routeProvider){
         .when('/subject/copy/view/:subjectId/:subjectCopyId/', {
             action: 'viewSubjectCopyAsTeacher'
         })
+        // view as student
         .when('/subject/copy/view/:subjectCopyId/', {
             action: 'viewSubjectCopy'
         })
@@ -115,7 +117,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         },
         viewSubjectCopy: function () {
             if (_userProfile === studentProfile) {
-                template.open('main', 'perform-subject-copy');
+                template.open('main', 'view-subject-copy');
             } else if (_userProfile === teacherProfile) {
                 template.open('main', 'teacher-dashboard');
             } else {

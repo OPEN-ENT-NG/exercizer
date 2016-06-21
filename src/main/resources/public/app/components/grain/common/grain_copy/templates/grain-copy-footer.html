@@ -36,7 +36,7 @@
                 Commentaire :
             </h2>
             <div class="row" data-ng-if="isTeacher">
-                <textarea data-ng-model="grainCopy.comment" complete-change="updateGrain()" style="height: 80px;" placeholder="Indiquez un commentaire"></textarea>
+                <textarea data-ng-model="grainCopy.comment" complete-change="updateGrainCopy()" style="height: 80px;" placeholder="Indiquez un commentaire"></textarea>
             </div>
             <div class="row" data-ng-if="!isTeacher">
                 <textarea data-ng-model="grainCopy.comment" style="height: 80px;" placeholder="Pas de commentaire" disabled></textarea>

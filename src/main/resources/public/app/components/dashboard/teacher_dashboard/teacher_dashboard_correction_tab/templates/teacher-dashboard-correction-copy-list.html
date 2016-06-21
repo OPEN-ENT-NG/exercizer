@@ -53,6 +53,7 @@
                </td>
                <td>
                     <div
+                            data-ng-show="canStartCorrect(copy)"
                     style="border: 1px solid black;border-radius: 2px;color: white;text-align: center"
                     data-ng-style="copy.is_corrected && copy.is_correction_on_going && {'background-color': '#72BB53'} || !copy.is_corrected &&  copy.is_correction_on_going && {'background-color': '#FF8351'} ||  !copy.is_corrected &&  !copy.is_correction_on_going && {'background-color': '#00A4D3'}"
                     >
