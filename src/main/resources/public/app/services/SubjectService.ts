@@ -99,31 +99,33 @@ class SubjectService implements ISubjectService {
                 data: subject
             };
         
-        if (updateMaxScore) {
-            var grainList = this._grainService.getListBySubject(subject);
-
-            subject.max_score = 0;
-            angular.forEach(grainList, function(grain:IGrain) {
-                if (grain.grain_type_id > 3) {
-                    subject.max_score += grain.grain_data.max_score;
+        this._grainService.getListBySubject(subject).then(
+            function(grainList){
+                if (updateMaxScore) {
+                    subject.max_score = 0;
+                    angular.forEach(grainList, function (grain:IGrain) {
+                        if (grain.grain_type_id > 3) {
+                            subject.max_score += grain.grain_data.max_score;
+                        }
+                    })
                 }
-            })
-        }
-        
-        if(this._beforePushBack(subject)){
+                if(this._beforePushBack(subject)){
 
-            this._$http(request).then(
-                function(response) {
-                    //var newSubject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
-                    self._afterPullBack(subject);
-                    deferred.resolve(subject);
-                },
-                function() {
-                    deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
+                    this._$http(request).then(
+                        function(response) {
+                            //var newSubject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                            self._afterPullBack(subject);
+                            deferred.resolve(subject);
+                        },
+                        function() {
+                            deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
+                        }
+                    );
                 }
-            );
-        }
+            }
+        );
         return deferred.promise;
+
     };
 
     public remove = function(subject: ISubject): ng.IPromise<boolean> {
