@@ -1,41 +1,27 @@
-<div>
-    <!-- filter -->
-    <div class="row vertical-spacing">
-        <div class="cell one"
-             data-ng-click="clickFilter('corrected')"
-             data-ng-style="search.filter == 'corrected' && {'background-color': 'lightblue'} || search.filter != 'corrected' && {'background-color': 'lightgray'}"
-             style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
-            <span>Corrigés</span>
+<!-- page -->
+<div class="row vertical-spacing">
+
+    <section class="four cell">
+
+        <div class="row">
+            <div class="cell"
+                 data-ng-click="clickFilter('corrected')"
+                 data-ng-style="search.filter == 'corrected' && {'background-color': 'lightblue'} || search.filter != 'corrected' && {'background-color': 'lightgray'}"
+                 style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
+                <span>Corrigés</span>
+            </div>
+            <div class="cell horizontal-spacing"
+                 data-ng-click="clickFilter('notCorrected')"
+                 data-ng-style="search.filter == 'notCorrected' && {'background-color': 'lightblue'} || search.filter != 'notCorrected' && {'background-color': 'lightgray'}"
+                 style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
+                <span>Non corrigés</span>
+            </div>
         </div>
-        <div class="cell one"
-             data-ng-click="clickFilter('notCorrected')"
-             data-ng-style="search.filter == 'notCorrected' && {'background-color': 'lightblue'} || search.filter != 'notCorrected' && {'background-color': 'lightgray'}"
-             style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
-            <span>Non corrigés</span>
-        </div>
-        <div class="cell one">
-            &nbsp;
-        </div>
-        <div class="cell two">
-            <div class="cell two" style="text-align: center">Du</div>
-            <date-picker data-ng-model="search.beginDate"  class="cell four"></date-picker>
-        </div>
-        <div class="cell two">
-            <div class="cell two" style="text-align: center">Au</div>
-            <date-picker data-ng-model="search.endDate"  class="four"></date-picker>
-        </div>
-        <div class="cell right-magnet">
-            <i data-ng-click="displayList = 'array'" class="show-list" data-ng-class="{selected: displayList == 'array'}"></i>
-            <i data-ng-click="displayList = 'domino'" class="show-icons selected" data-ng-class="{selected: displayList == 'domino'}"></i>
-        </div>
-    </div>
-    <!-- page -->
-    <div class="row vertical-spacing">
-        <div class="cell three">
+
+        <nav class="row vertical vertical-spacing">
             <article>
-                <div>
-                    <h2>Classes - groupes</h2>
-                </div>
+                <h2 class="row">Classes - groupes</h2>
+
                 <div class="row">
                     <div class="twelve cell" data-ng-click="clickOnAutoComplete()">
                         <autocomplete
@@ -45,56 +31,87 @@
                         </autocomplete>
                     </div>
                 </div>
+
                 <div class="row" data-ng-if="search.groupSelected">
                     <h4 class="cell"><i style="margin-right: 10px;" data-ng-click="resetGroupSelected()" class="close"></i> [[search.groupSelected.name]]</h4>
                 </div>
             </article>
+        </nav>
+    </section>
+
+    <section class="cell eight">
+
+        <div class="row">
+            <div class="cell">
+                <label class="two cell">
+                    Du
+                </label>
+                <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
+            </div>
+
+            <div class="cell">
+                <label class="two cell">
+                    Au
+                </label>
+                <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
+            </div>
+
+
+            <div class="cell right-magnet">
+                <i data-ng-click="displayList = 'array'" class="show-list" data-ng-class="{selected: displayList == 'array'}"></i>
+                <i data-ng-click="displayList = 'domino'" class="show-icons selected" data-ng-class="{selected: displayList == 'domino'}"></i>
+            </div>
         </div>
-        <div class="cell one">
-            &nbsp;
-        </div>
-        <div class="cell eight">
-            <article>
-                <div class="row vertical-spacing">
-                    <h1>Derniers sujets programmés</h1>
-                </div>
-                <div class="row vertical-spacing">
-                    <div class="five cell">
-                        <input type="text" data-ng-model="search.text.title" placeholder="Rechercher">
-                    </div>                </div>
-                <div class="row vertical-spacing">
-                    <!-- list subject scheduled -->
-                    <div class="fallen dominos">
-                        <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : 'modified' : true)"
-                             class="item" style="width: 100%;max-width: none">
-                            <section class="domino">
-                                <div class="top">
-                                    <img data-ng-src="[[getSubjectScheduledPicture(subjectScheduled)]]" class="fixed twelve cell" />
-                                </div>
-                                <div class="bottom">
-                                    <div class="content">
-                                        <div class="eight cell">
-                                            <h4 data-ng-click="clickOnSubjectScheduled(subjectScheduled)">[[subjectScheduled.title]]</h4>
-                                            <div> Modifié le  [[subjectScheduled.modified | date:'dd/MM/yyyy']]</div>
-                                            <div>[[numberOfCopySubmitted(subjectScheduled)]] sur [[numberOfCopy(subjectScheduled)]] ont rendu la copie</div>
-                                            <div data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}"
-                                            >[[stateTextSubjectScheduled(subjectScheduled)]]</div>
+
+        <article class="row vertical-spacing">
+            <h2 class="row">Derniers sujets programmés</h2>
+
+            <div class="row">
+                <input type="text" class="twelve cell" data-ng-model="search.text.title" placeholder="Rechercher">
+            </div>
+
+            <div class="row vertical-spacing">
+                <!-- list subject scheduled -->
+                <div class="fallen dominos">
+                    <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : 'modified' : true)"
+                         class="item" style="width: 100%; max-width: none;">
+
+                        <section class="domino">
+                            <div class="top">
+                                <img data-ng-src="[[getSubjectScheduledPicture(subjectScheduled)]]" class="absolute" />
+                            </div>
+                            <div class="bottom">
+                                <div class="content">
+                                    <div class="eight cell">
+                                        <div class="row">
+                                            <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">[[ subjectScheduled.title ]]</strong>
                                         </div>
-                                        <div class="four cell">
-                                            <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
-                                                <h3>[[group.name]]</h3>
-                                            </div>
-                                            <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList">
-                                                <h3>[[user.name]]</h3>
-                                            </div>
+                                        <div class="row">
+                                            Modifié le  [[ subjectScheduled.modified | date:'dd/MM/yyyy' ]]
+                                        </div>
+                                        <div class="row">
+                                            [[ numberOfCopySubmitted(subjectScheduled) ]] sur [[ numberOfCopy(subjectScheduled) ]] ont rendu leur copie
+                                        </div>
+                                        <div class="row" data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}">
+                                            [[ stateTextSubjectScheduled(subjectScheduled) ]]
+                                        </div>
+                                    </div>
+                                    <div class="four cell">
+                                        <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
+                                            <h3>[[group.name]]</h3>
+                                        </div>
+                                        <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList">
+                                            <h3>[[user.name]]</h3>
                                         </div>
                                     </div>
                                 </div>
-                            </section>
-                        </div>
+                            </div>
+                        </section>
+
                     </div>
                 </div>
-            </article>
-        </div>
-    </div>
+            </div>
+        </article>
+
+    </section>
 </div>

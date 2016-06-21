@@ -30,7 +30,6 @@ directives.push(
                         $location.path('/dashboard/student');
                         $window.location.reload();
                     }
-
                 }
             };
         }]
