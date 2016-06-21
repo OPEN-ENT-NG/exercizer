@@ -5,6 +5,8 @@ class EditSubjectController {
         '$scope',
         '$location',
         'SubjectService',
+        'SubjectScheduledService',
+        'SubjectCopyService',
         'GrainService',
         'GrainTypeService',
         'DragService'
@@ -35,6 +37,8 @@ class EditSubjectController {
         private _$scope:ng.IScope,
         private _$location:ng.ILocationService,
         private _subjectService:ISubjectService,
+        private _subjectScheduledService:ISubjectScheduledService,
+        private _subjectCopyService:ISubjectCopyService,
         private _grainService:IGrainService,
         private _grainTypeService:IGrainTypeService,
         private _dragService:IDragService
@@ -43,6 +47,8 @@ class EditSubjectController {
         this._$scope = _$scope;
         this._$location = _$location;
         this._subjectService = _subjectService;
+        this._subjectScheduledService = _subjectScheduledService;
+        this._subjectCopyService = _subjectCopyService;
         this._grainService = _grainService;
         this._grainTypeService = _grainTypeService;
         this._dragService = _dragService;
@@ -99,6 +105,10 @@ class EditSubjectController {
     public redirectToDashboard() {
         this._$location.path('/dashboard');
     };
+
+    public scheduleSubject() {
+        this._$scope.$broadcast('E_DISPLAY_MODAL_SCHEDULE_SUBJECT', this._subject);
+    }
     
     public getGrainDisplayedName = function(grain) {
         var displayedName = '';

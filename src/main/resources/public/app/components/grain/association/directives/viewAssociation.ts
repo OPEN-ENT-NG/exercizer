@@ -1,7 +1,7 @@
 directives.push(
     {
-        name: 'viewQcm',
-        injections: ['QcmService', (QcmService) => {
+        name: 'viewAssociation',
+        injections: ['AssociationService', (AssociationService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -9,10 +9,10 @@ directives.push(
                     grainCopy: '=',
                     isTeacher: '='
                 },
-                templateUrl: 'exercizer/public/app/components/grain/qcm/templates/view-qcm.html',
+                templateUrl: 'exercizer/public/app/components/grain/association/templates/view-association.html',
                 link: (scope:any) => {
 
-                    var result = QcmService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
+                    var result = AssociationService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
                     scope.isCorrect = result.answers_result;
                     if (angular.isUndefined(scope.grainCopy.calculated_score) || scope.grainCopy.calculated_score === null) {
                         scope.grainCopy.calculated_score = result.calculated_score;

@@ -6,12 +6,24 @@
             </div>
             <div class="bottom">
                 <div class="content">
-                    <div class="ten cell">
-                        <h4 data-ng-show="canAccessPerform()" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token important">[[textIfSubjectCopyStartPerforming()]]</span>[[getSubjectScheduledTitle()]]</h4>
-                        <h4 data-ng-hide="canAccessPerform()"><span class="token important">[[textIfSubjectCopyStartPerforming()]]</span>[[getSubjectScheduledTitle()]]</h4>
-                        <span data-ng-bind="getSubjectCopyDueDate() |  date:'dd/MM/yyyy'"></span>
-                        <br/>
-                        [[getSubjectScheduledOwner()]]
+                    <div class="cell"
+                         data-ng-show="isColorColumnDisplay()"
+                         data-ng-style="{'background-color': getColorColumn()}"
+                        style="height: 100%; width: 20px; margin-right: 20px"
+                    >
+                        &nbsp;
+                    </div>
+                    <div class="cell"
+                         data-ng-hide="isColorColumnDisplay()"
+                         style="height: 100%; width: 20px; margin-right: 20px"                    >
+                        &nbsp;
+                    </div>
+                    <div class="nine cell">
+                        <h4 data-ng-show="canAccessPerform()" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-style="{'color': getColorColumn()}">[[textBeforeTitle()]]</span>[[getSubjectScheduledTitle()]]</h4>
+                        <h4 data-ng-hide="canAccessPerform()"><span class="token" data-ng-style="{'color': getColorColumn()}">[[textBeforeTitle()]]</span>[[getSubjectScheduledTitle()]]</h4>
+                        <div data-ng-show="isDueDateDisplayed()">Pour le <span  data-ng-bind="getSubjectCopyDueDate() |  date:'dd/MM/yyyy'"></span></div>
+                        <div data-ng-show="isSubmittedDateDisplayed()">Rendu le <span  data-ng-bind="getSubjectCopySubmittedDate() |  date:'dd/MM/yyyy'"></span></div>
+                        <div>[[getSubjectScheduledOwner()]]</div>
                     </div>
                     <div class="two cell">
                         <h4>/ [[getSubjectScheduledMaxScore()]]</h4>

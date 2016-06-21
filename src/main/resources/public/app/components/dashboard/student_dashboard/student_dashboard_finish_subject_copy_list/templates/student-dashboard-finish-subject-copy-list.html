@@ -2,43 +2,46 @@
     <!--  filter corrigés/rendu/En cours-->
     <div class="row">
         <div class="cell"
-             data-ng-click="search.corrected = !search.corrected"
-             data-ng-style="search.corrected && {'background-color': 'lightblue'} || !search.corrected && {'background-color': 'lightgray'}"
+             data-ng-click="clickFilter('corrected')"
+             data-ng-style="search.filter == 'corrected' && {'background-color': 'lightblue'} || search.filter != 'corrected'  && {'background-color': 'lightgray'}"
              style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
             <span>Corrigés</span>
         </div>
         <div class="cell"
-             data-ng-click="search.givenBack = !search.givenBack"
-             data-ng-style="search.givenBack && {'background-color': 'lightblue'} || !search.givenBack && {'background-color': 'lightgray'}"
+             data-ng-click="clickFilter('givenBack')"
+             data-ng-style="search.filter == 'givenBack' && {'background-color': 'lightblue'} || search.filter != 'givenBack' && {'background-color': 'lightgray'}"
              style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
             <span>Rendu</span>
         </div>
         <div class="cell"
-             data-ng-click="search.pending = !search.pending"
-             data-ng-style="search.pending && {'background-color': 'lightblue'} || !search.pending && {'background-color': 'lightgray'}"
+             data-ng-click="clickFilter('pending')"
+             data-ng-style="search.filter == 'pending' && {'background-color': 'lightblue'} || search.filter != 'pending' && {'background-color': 'lightgray'}"
              style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
             <span>En Cours</span>
         </div>
     </div>
     <!-- filter name date -->
-    <div class="row vertical-spacing">
-        <div class="five cell">
-            <input type="text" data-ng-model="search.text" placeholder="Rechercher">
+    <div data-ng-controller="SubjectCopyListController as subjectCopyListController">
+        <div class="row vertical-spacing" >
+            <div class="five cell">
+                <input type="text" data-ng-model="search.text" placeholder="Rechercher">
+            </div>
+            <div class="five cell">
+                <div class="two cell" style="text-align: center">Du</div>
+                <date-picker data-ng-model="search.beginDate"  class="four cell"></date-picker>
+                <div class="two cell" style="text-align: center">Au</div>
+                <date-picker data-ng-model="search.endDate"  class="four cell"></date-picker>
+            </div>
         </div>
-        <div class="five cell">
-            <div class="two cell" style="text-align: center">Du</div>
-            <date-picker data-ng-model="search.beginDate"  class="four cell"></date-picker>
-            <div class="two cell" style="text-align: center">Au</div>
-            <date-picker data-ng-model="search.endDate"  class="four cell"></date-picker>
+        <!-- list -->
+        <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: subjectCopyListController.filterOnSubjectScheduledState(search.filter)| orderBy:subjectCopyListController.orderBySubjectScheduledDueDate)">
+            <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
+        </div>
+        <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
+            <img src="exercizer/public/assets/img/smiley.PNG"/>
+            <h4>Pas de sujet</h4>
         </div>
     </div>
-    <!-- list -->
-    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: filterOnSubjectScheduledTitle(search.text) | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnSubjectScheduledState(search.corrected, search.givenBack, search.pending)| orderBy:orderBySubjectScheduledDueDate)">
-        <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
-    </div>
-    <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
-        <img src="exercizer/public/assets/img/smiley.PNG"/>
-        <h4>Vous n'avez aucun sujet à faire cette semaine</h4>
-    </div>
+
 </div>
 

@@ -54,9 +54,8 @@ directives.push(
                         if(canSchedule(scope.option)){
                             createIdList(scope.data.userList,scope.data.groupList).then(
                                 function(users){
-                                    console.log('users', users);
                                     if(users.length !== 0){
-                                        createSubjectScheduled(scope.subject, scope.option).then(
+                                        createSubjectScheduled(scope.subject, scope.option, scope.data).then(
                                             function(subjectScheduled){
                                                 console.log('subjectScheduled',subjectScheduled);
                                                 angular.forEach(users, function(user){
@@ -123,7 +122,7 @@ directives.push(
                         return deferred.promise;
                     }
 
-                    function createSubjectScheduled(subject, option){
+                    function createSubjectScheduled(subject, option, data){
                         var deferred = $q.defer();
                         // create scheduled subject from subject
                         var subjectScheduled = SubjectScheduledService.createFromSubject(subject);
@@ -134,6 +133,7 @@ directives.push(
                         subjectScheduled.is_one_shot_submit = option.is_one_shot_submit;
                         //subjectScheduled.has_automatic_display = option.has_automatic_display;
                         // persist scheduled subject
+                        subjectScheduled.scheduled_at = createSubjectScheduledAt(data);
                         SubjectScheduledService.persist(subjectScheduled).then(
                             function(subjectScheduled){
                                 // create grainScheduled
@@ -152,6 +152,30 @@ directives.push(
 
                         return deferred.promise;
                     }
+
+                    function createSubjectScheduledAt(data){
+                        if (!data){
+                            throw "data missing";
+                        }
+                        var res = {
+                            groupList : [],
+                            userList : []
+                        };
+                        angular.forEach(data.groupList, function(group) {
+                            res.groupList.push({
+                                _id : group._id,
+                                name : group.title
+                            })
+                        });
+                        angular.forEach(data.userList, function(user) {
+                            res.userList.push({
+                                _id : user._id,
+                                name : user.title
+                            })
+                        });
+                        return JSON.stringify(res);
+                    }
+
 
                     function createGrainListScheduled(subjectScheduled, subject){
                         var deferred = $q.defer();

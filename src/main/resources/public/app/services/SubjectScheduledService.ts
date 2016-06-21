@@ -13,24 +13,29 @@ class SubjectScheduledService implements ISubjectScheduledService {
         '$q',
         '$http',
         'GrainService',
-        'GrainScheduledService'
+        'GrainScheduledService',
+        'DateService'
     ];
 
     private _listMappedById:{[id:number]:ISubjectScheduled;};
     private _currentSubjectScheduledId:number;
+    private _today;
 
     constructor
     (
         private _$q:ng.IQService,
         private _$http:ng.IHttpService,
         private _grainService:IGrainService,
-        private _grainScheduledService:IGrainScheduledService
+        private _grainScheduledService:IGrainScheduledService,
+        private _dateService : IDateService
     )
     {
         this._$q = _$q;
         this._$http = _$http;
         this._grainService = _grainService;
         this._grainScheduledService = _grainScheduledService;
+        this._dateService = _dateService;
+        this._today = new Date()
     }
 
     public resolve = function(isTeacher:boolean):ng.IPromise<boolean> {
@@ -50,6 +55,7 @@ class SubjectScheduledService implements ISubjectScheduledService {
                     var subjectScheduled;
                     angular.forEach(response.data, function(subjectScheduledObject) {
                         subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(subjectScheduledObject)) as any;
+                        subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
                         self._listMappedById[subjectScheduled.id] = subjectScheduled;
                     });
                     deferred.resolve(true);
@@ -74,6 +80,7 @@ class SubjectScheduledService implements ISubjectScheduledService {
         this._$http(request).then(
             function(response) {
                 var subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(response.data)) as any;
+                subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
                 if(angular.isUndefined(self._listMappedById)){
                     self._listMappedById= {};
                 }
@@ -123,5 +130,9 @@ class SubjectScheduledService implements ISubjectScheduledService {
 
     get listMappedById():{} {
         return this._listMappedById;
+    }
+
+    public is_over(subjectScheduled : ISubjectScheduled) : boolean {
+        return this._dateService.compare_after(this._today, this._dateService.isoToDate(subjectScheduled.due_date))
     }
 }

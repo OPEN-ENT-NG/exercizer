@@ -1,9 +1,15 @@
 <div data-ng-controller="StudentDashboardController as studentDashboardController">
     <!-- PAGE -->
     <div class="row">
-        <h1>
+        <h1 class="cell">
             Exercizer
         </h1>
+        <div class="cell right-magnet"  workflow="exercizer.create">
+            <div class="label-badge" data-ng-click="studentDashboardController.switchToTeacherView()">
+                <span class="cell">Passer en vue enseignant</span>
+                <i role="close" class="right-magnet"></i>
+            </div>
+        </div>
     </div>
     <div class="row twelve cell tabs" data-ng-init="data.tabSelected = 'subjectCopyList'">
         <div class="cell">

@@ -35,14 +35,16 @@ class GrainScheduledService implements IGrainScheduledService {
             };
         this._$http(request).then(
             function(response) {
-                var subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(response.data)) as any;
-                if (angular.isUndefined(self._listMappedBySubjectScheduledId[subjectScheduled.id])) {
-                    self._listMappedBySubjectScheduledId[subjectScheduled.id] = [];
+                var grainScheduled = self.instantiateGrainScheduled(response.data);
+                if(!grainScheduled.subject_scheduled_id){
+                    throw "subject_scheduled_id missing in grain scheduled";
                 }
+                if (angular.isUndefined(self._listMappedBySubjectScheduledId[grainScheduled.subject_scheduled_id])) {
+                    self._listMappedBySubjectScheduledId[grainScheduled.subject_scheduled_id] = [];
+                }
+                self._listMappedBySubjectScheduledId[grainScheduled.subject_scheduled_id].push(grainScheduled);
 
-                self._listMappedBySubjectScheduledId[subjectScheduled.id].push(subjectScheduled);
-
-                deferred.resolve(subjectScheduled);
+                deferred.resolve(grainScheduled);
             },
             function() {
                 deferred.reject('Une erreur est survenue lors de la création d\'un élément du sujet programmé.');

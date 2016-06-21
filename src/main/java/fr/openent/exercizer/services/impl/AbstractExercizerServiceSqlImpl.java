@@ -195,7 +195,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(" = r.")
                 .append(invert ? "id" : resourceIdentifierName)
                 .append(" WHERE")
-                .append(invert ? " o.owner = ?" : " r.owner = ?");
+                .append(" r.owner = ?");
 
         sql.prepared(query.toString(), new JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
     }

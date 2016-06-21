@@ -172,10 +172,10 @@ class ViewSubjectCopyController {
 
             angular.forEach(self._grainCopyList, function(grainCopy:IGrainCopy) {
                 
-                if(!angular.isUndefined(grainCopy.calculated_score)) {
+                if(!angular.isUndefined(grainCopy.calculated_score) && grainCopy.calculated_score !== null) {
                     calculatedScore += parseFloat(grainCopy.calculated_score.toString());
 
-                    if (angular.isUndefined(grainCopy.final_score)) {
+                    if (angular.isUndefined(grainCopy.final_score) || grainCopy.final_score === null) {
                         finalScore += parseFloat(grainCopy.calculated_score.toString());
                         grainCopy.final_score = grainCopy.calculated_score;
                     } else {

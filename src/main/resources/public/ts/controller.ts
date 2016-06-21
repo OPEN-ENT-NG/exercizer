@@ -3,6 +3,12 @@ routes.define(function($routeProvider){
         .when('/dashboard', {
             action: 'dashboard'
         })
+        .when('/dashboard/student', {
+            action: 'dashboardStudent'
+        })
+        .when('/dashboard/teacher/correction/:subjectScheduledId?', {
+            action: 'dashboardTeacherCorrection'
+        })
         .when('/subject/edit/:subjectId/', {
             action: 'editSubject'
         })
@@ -32,21 +38,32 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 
     const teacherProfile = 'Teacher';
     const studentProfile = 'Student';
-    
+    const canAccessTeacherProfile = model.me.workflow.exercizer.create || false;
+
     var _userProfile;
-    // FIXME try to use profiles
-    if(model.me.type === 'ENSEIGNANT') {
+    if(canAccessTeacherProfile){
         _userProfile = teacherProfile;
-    } else  {
+    } else {
         _userProfile = studentProfile;
     }
 
     route({
         dashboard: function () {
             if (_userProfile === teacherProfile) {
-                template.open('main', 'teacher-dashboard');
+                template.open('main', 'teacher-dashboard-subject-tab');
             } else if (_userProfile === studentProfile) {
                 template.open('main', 'student-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        dashboardStudent: function () {
+            _userProfile = studentProfile;
+            template.open('main', 'student-dashboard');
+        },
+        dashboardTeacherCorrection: function () {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'teacher-dashboard-correction-tab');
             } else {
                 template.open('main', '401-exercizer');
             }
@@ -116,6 +133,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Filters
          */
+
         module.filter('orderObjectBy', function() {
             return function(items, field, reverse) {
                 var filtered = [];
@@ -139,16 +157,10 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         });
 
         /**
-         * Constants
-         */
-        // TODO remove
-        module.constant("serverUrl", "http://foo.com");
-
-        /**
          * Services
          */
+
         module.service('SubjectService', SubjectService);
-        module.service('SubjectEditService', SubjectEditService);
         module.service('SubjectScheduledService', SubjectScheduledService);
         module.service('SubjectCopyService', SubjectCopyService);
         module.service('GrainService', GrainService);
@@ -157,6 +169,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('GrainTypeService', GrainTypeService);
         module.service('SimpleAnswerService', SimpleAnswerService);
         module.service('MultipleAnswerService', MultipleAnswerService);
+        module.service('AssociationService', AssociationService);
         module.service('QcmService', QcmService);
         module.service('OpenAnswerService', OpenAnswerService);
         module.service('OrderService', OrderService);
@@ -170,9 +183,11 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
          */
         module.controller('TeacherDashboardController', TeacherDashboardController);
         module.controller('TeacherDashboardSubjectTabController', TeacherDashboardSubjectTabController);
+        module.controller('TeacherDashboardCorrectionTabController', TeacherDashboardCorrectionTabController);
         module.controller('EditSubjectController', EditSubjectController);
         module.controller('PerformSubjectCopyController', PerformSubjectCopyController);
         module.controller('ViewSubjectCopyController', ViewSubjectCopyController);
+        module.controller('SubjectCopyListController', SubjectCopyListController);
 
         /**
          * Directives

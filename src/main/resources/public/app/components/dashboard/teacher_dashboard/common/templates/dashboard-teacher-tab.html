@@ -1,0 +1,33 @@
+<div class="row">
+    <h1 class="cell">
+        Exercizer
+    </h1>
+    <div class="cell right-magnet">
+        <div class="label-badge" data-ng-click="switchToStudentView()">
+            <span class="cell">Passer en vue apprenant</span>
+            <i role="close" class="right-magnet"></i>
+        </div>
+    </div>
+</div>
+<div class="row twelve cell tabs" style="min-height: 60px;">
+    <div class="cell">
+        <header class="horizontal-spacing"
+                data-ng-click="switchTab('mySubjects')"
+                data-ng-class="{ selected: currentTab === 'mySubjects' }"
+        >
+            Mes sujets
+        </header>
+        <header class="horizontal-spacing"
+                data-ng-click="switchTab('correction')"
+                data-ng-class="{ selected: currentTab === 'correction' }"
+        >
+            Corrections
+        </header>
+        <header class="horizontal-spacing"
+                data-ng-click="switchTab('library')"
+                data-ng-class="{ selected: currentTab === 'library' }"
+        >
+            Bibliothèque
+        </header>
+    </div>
+</div>
