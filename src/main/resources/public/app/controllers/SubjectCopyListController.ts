@@ -76,10 +76,10 @@ class SubjectCopyListController {
                 res =  subjectCopy.is_corrected;
                 break;
             case 'givenBack':
-                res =  subjectCopy.submitted_date;
+                res =  subjectCopy.submitted_date && !subjectCopy.is_corrected;
                 break;
             case 'pending':
-                res =  subjectCopy.is_correction_on_going;
+                res =  subjectCopy.is_correction_on_going && !subjectCopy.submitted_date && !subjectCopy.is_corrected;
                 break;
             default:
                 res =  true;
