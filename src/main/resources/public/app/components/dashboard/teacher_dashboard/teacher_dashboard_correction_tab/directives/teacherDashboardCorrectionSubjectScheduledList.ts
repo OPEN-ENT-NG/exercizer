@@ -182,10 +182,11 @@ directives.push(
                             if(!filter){
                                 return true;
                             } else{
+                                var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
                                 if(filter == 'corrected'){
-                                    return subjectScheduled.is_corrected;
+                                    return isListCopyCorrected(list);
                                 } else if(filter == 'notCorrected'){
-                                    return !subjectScheduled.is_corrected;
+                                    return !isListCopyCorrected(list);
                                 } else{
                                     throw "filter unknown"
                                 }
