@@ -7,14 +7,14 @@
                     <li>
                         <a  data-ng-class="{'selected' : state == 'assignSubject'}"
                             data-ng-click="state='assignSubject'">
-                            Attribuer le sujet
+                            Attribuer
                         </a>
 
                     </li>
                     <li>
                         <a  data-ng-class="{'selected' : state == 'option'}"
                             data-ng-click="state='option'">
-                            Option de programmation
+                            Options
                         </a>
 
                     </li>
@@ -30,31 +30,37 @@
         </div>
         <div class="nine cell">
             <div data-ng-show="state == 'assignSubject'">
-                <div class="row vertical-spacing">
-                    <h3>Rechercher un utilisateur ou un groupe</h3>
+                <div class="row">
+                    <h4>Rechercher un utilisateur ou un groupe</h4>
                     <autocomplete
                             options="data.lists"
                             ng-change="clickOnItem(selectedItem)"
                             ng-model="selectedItem">
                     </autocomplete>
                 </div>
-                <div class="row vertical-spacing">
+                <div class="row">
                     <div class="six cell">
-                        <h3>Groupes ajoutés</h3>
-                        <div class="row vertical-spacing" data-ng-repeat="group in data.groupList">
+                        <h4>Groupes ajoutés</h4>
+                        <div class="row" data-ng-repeat="group in data.groupList">
                             <div class="one cell">&nbsp;</div>
                             <div class="one cell" data-ng-click="removeItem(group)"><i class="close"></i></div>
                             <div class="one cell">&nbsp;</div>
                             <div class="nine cell">[[group.toString()]]</div>
                         </div>
+                        <div class="row" data-ng-if="data.groupList.length === 0">
+                            Aucun groupe ajouté.
+                        </div>
                     </div>
                     <div class="six cell">
-                        <h3>Utilisateurs ajoutés</h3>
-                        <div class="row vertical-spacing" data-ng-repeat="user in data.userList">
+                        <h4>Utilisateurs ajoutés</h4>
+                        <div class="row" data-ng-repeat="user in data.userList">
                             <div class="one cell">&nbsp;</div>
                             <div class="one cell" data-ng-click="removeItem(user)"><i class="close"></i></div>
                             <div class="one cell">&nbsp;</div>
                             <div class="nine cell">[[user.toString()]]</div>
+                        </div>
+                        <div class="row" data-ng-if="data.userList.length === 0">
+                            Aucun utilisateur ajouté.
                         </div>
                     </div>
                 </div>
@@ -69,8 +75,8 @@
             </div>
 
             <div data-ng-show="state == 'option'">
-                <div class="row  vertical-spacing">
-                    <h3>Options</h3>
+                <div class="row">
+                    <h4>Options</h4>
                 </div>
                 <div class="row">
                     <div class="six cell"><span> Date de début :&nbsp;</span></div>
@@ -88,7 +94,7 @@
                     <input type="checkbox" data-ng-model="option.has_automatic_display"/>
                     <span>Affichage du résultat automatique pour les élèves</span>
                 </div>
-                <div class="row vertical-spacing">
+                <div class="row">
                     <span>Temps de réalisation estimé du devoir </span>
                     <input type="text" data-ng-model="option.estimated_duration"/>
                     <span>minute(s)</span>
@@ -104,8 +110,8 @@
             </div>
 
             <div data-ng-show="state == 'schedule'">
-                <div class="row">
-                    <h3>Confirmez-vous la programmation du sujet ?</h3>
+                <div class="row vertical-spacing">
+                    <div class="warning">Confirmez-vous la programmation du sujet ?</div>
                 </div>
                 <div class="row vertical-spacing">
                     <button class="right-magnet cell" data-ng-click="scheduleSubject()">
