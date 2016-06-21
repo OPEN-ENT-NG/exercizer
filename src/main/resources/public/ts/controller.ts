@@ -181,7 +181,6 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         /**
          * Controllers
          */
-        module.controller('TeacherDashboardController', TeacherDashboardController);
         module.controller('TeacherDashboardSubjectTabController', TeacherDashboardSubjectTabController);
         module.controller('TeacherDashboardCorrectionTabController', TeacherDashboardCorrectionTabController);
         module.controller('EditSubjectController', EditSubjectController);

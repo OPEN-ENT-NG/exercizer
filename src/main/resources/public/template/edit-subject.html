@@ -13,7 +13,7 @@
                 Exercizer - [[ editSubjectController.subject.title ]]
             </h1>
 
-            <button class="right-magnet cell">
+            <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
                 Programmer
             </button>
 
@@ -317,5 +317,8 @@
                 <button data-ng-click="editSubjectController.closeModalRemoveSelectedGrainList()" class="cell right-magnet cancel">Annuler</button>
             </div>
         </lightbox>
+
+        <!-- SCHEDULE SUBJECT MODAL -->
+        <subject-schedule></subject-schedule>
     </div>
 </div>
