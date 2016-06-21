@@ -102,6 +102,14 @@ directives.push(
                             scope.setCurrentFolder(folder);
                         };
 
+                        scope.canAccessSubject = function(subject){
+                            if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager) || model.me.hasRight(subject, 'owner')){
+                                return true;
+                            } else{
+                                return false;
+                            }
+                        };
+
                         scope.setCurrentFolder = function (folder) {
                             scope.$emit('E_RESET_SELECTED_LIST');
                             scope.display.tab = 'mySubject';
