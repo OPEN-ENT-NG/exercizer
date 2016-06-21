@@ -2,6 +2,7 @@ class EditSubjectController {
 
     static $inject = [
         '$routeParams',
+        '$sce',
         '$scope',
         '$location',
         'SubjectService',
@@ -19,6 +20,9 @@ class EditSubjectController {
     private _foldedGrainList:IGrain[];
     private _hasDataLoaded:boolean;
 
+    // statement trusted html
+    private _trustedHtmlStatementMap:{[grainId:number]:string};
+
     // modal
     private _isModalRemoveGrainDisplayed:boolean;
     private _isModalAddGrainDocumentDisplayed:boolean;
@@ -34,6 +38,7 @@ class EditSubjectController {
     constructor
     (
         private _$routeParams,
+        private _$sce,
         private _$scope:ng.IScope,
         private _$location:ng.ILocationService,
         private _subjectService:ISubjectService,
@@ -45,6 +50,7 @@ class EditSubjectController {
     ) {
 
         this._$scope = _$scope;
+        this._$sce = _$sce;
         this._$location = _$location;
         this._subjectService = _subjectService;
         this._subjectScheduledService = _subjectScheduledService;
@@ -54,6 +60,9 @@ class EditSubjectController {
         this._dragService = _dragService;
 
         this._hasDataLoaded = false;
+        
+        // statement trusted html
+        this._trustedHtmlStatementMap = {};
 
         // modal
         this._isModalRemoveSelectedGrainListDisplayed = false;
@@ -133,6 +142,14 @@ class EditSubjectController {
         return this._grainTypeService.getPublicName(grainTypeId);
     };
 
+    public getStatementTrustedHtml = function(grain:IGrain) {
+        if (angular.isUndefined(this._trustedHtmlStatementMap[grain.id])) {
+            this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
+        }
+        
+        return this._trustedHtmlStatementMap[grain.id];
+    };
+
     public dropTo = function($originalEvent) {
         var dataField = this._dragService.dropConditionFunction(this._subject, $originalEvent),
             originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
@@ -185,12 +202,20 @@ class EditSubjectController {
         var self = this;
 
         if (grain.grain_type_id > 3) {
-
+            
             grain.grain_data.title = StringISOHelper.toISO(grain.grain_data.title);
             grain.grain_data.statement = StringISOHelper.toISO(grain.grain_data.statement);
             grain.grain_data.answer_explanation = StringISOHelper.toISO(grain.grain_data.answer_explanation);
             grain.grain_data.answer_hint = StringISOHelper.toISO(grain.grain_data.answer_hint);
             grain.grain_data.max_score = angular.isUndefined(grain.grain_data.max_score) ? 0 : parseFloat(grain.grain_data.max_score as any);
+            
+        } else if (grain.grain_type_id === 3) {
+
+            if (angular.isUndefined(this._trustedHtmlStatementMap[grain.id])) {
+                this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
+            }
+            
+            this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
         }
 
         this._grainService.update(grain).then(
