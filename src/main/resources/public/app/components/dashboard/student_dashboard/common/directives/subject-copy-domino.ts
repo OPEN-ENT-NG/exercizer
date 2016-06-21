@@ -35,6 +35,21 @@ directives.push(
                                 }
                             }
                         };
+                        scope.canAccessView = function () {
+                            if(SubjectScheduledService.is_over(scope.subjectScheduled) === true){
+                                if(scope.subjectScheduled.has_automatic_display){
+                                    return true;
+                                } else{
+                                    if(is_corrected()){
+                                        return true;
+                                    } else{
+                                        return false;
+                                    }
+                                }
+                            } else{
+                                return false
+                            }
+                        };
 
                         scope.performSubjectCopy = function (subjectCopyId) {
                             $location.path('/subject/copy/perform/' + subjectCopyId);

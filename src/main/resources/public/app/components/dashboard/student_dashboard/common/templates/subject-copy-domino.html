@@ -10,7 +10,8 @@
                         <div class="row">
                             <div class="cell">
                                 <strong data-ng-show="canAccessPerform()" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-style="{'color': getColorColumn()}">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
-                                <strong data-ng-hide="canAccessPerform()"><span class="token" data-ng-style="{'color': getColorColumn()}">[ [textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong data-ng-show="canAccessView()" data-ng-click="viewSubjectCopy(subjectCopy.id)"><span class="token" data-ng-style="{'color': getColorColumn()}">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong data-ng-show="!canAccessPerform() && !canAccessView()"><span class="token" data-ng-style="{'color': getColorColumn()}">[ [textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                             </div>
                             <div class="cell right-magnet">
                                 <strong>/ [[getSubjectScheduledMaxScore()]]</strong>
