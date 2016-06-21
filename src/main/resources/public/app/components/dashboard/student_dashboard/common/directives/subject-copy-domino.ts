@@ -37,6 +37,10 @@ directives.push(
                         };
 
                         scope.performSubjectCopy = function (subjectCopyId) {
+                            $location.path('/subject/copy/perform/' + subjectCopyId);
+                        };
+
+                        scope.viewSubjectCopy = function (subjectCopyId) {
                             $location.path('/subject/copy/view/' + subjectCopyId);
                         };
 

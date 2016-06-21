@@ -109,9 +109,9 @@ class SubjectService implements ISubjectService {
                         }
                     })
                 }
-                if(this._beforePushBack(subject)){
+                if(self._beforePushBack(subject)){
 
-                    this._$http(request).then(
+                    self._$http(request).then(
                         function(response) {
                             //var newSubject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
                             self._afterPullBack(subject);

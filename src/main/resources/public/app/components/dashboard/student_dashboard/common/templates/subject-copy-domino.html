@@ -21,6 +21,7 @@
                     <div class="nine cell">
                         <h4 data-ng-show="canAccessPerform()" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-style="{'color': getColorColumn()}">[[textBeforeTitle()]]</span>[[getSubjectScheduledTitle()]]</h4>
                         <h4 data-ng-hide="canAccessPerform()"><span class="token" data-ng-style="{'color': getColorColumn()}">[[textBeforeTitle()]]</span>[[getSubjectScheduledTitle()]]</h4>
+                        <h4 data-ng-click="viewSubjectCopy(subjectCopy.id)">view</h4>
                         <div data-ng-show="isDueDateDisplayed()">Pour le <span  data-ng-bind="getSubjectCopyDueDate() |  date:'dd/MM/yyyy'"></span></div>
                         <div data-ng-show="isSubmittedDateDisplayed()">Rendu le <span  data-ng-bind="getSubjectCopySubmittedDate() |  date:'dd/MM/yyyy'"></span></div>
                         <div>[[getSubjectScheduledOwner()]]</div>
