@@ -157,7 +157,7 @@ directives.push(
                             if (!begin || !end) {
                                 throw "begin or end date in params missing"
                             }
-                            return DateService.compare_after(dueDate, begin) && DateService.compare_after(end, dueDate);
+                            return DateService.compare_after(dueDate, begin, true) && DateService.compare_after(end, dueDate, true);
                         }
                     };
                     scope.filterOnGroupSelected = function (groupSelected) {

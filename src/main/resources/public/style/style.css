@@ -1,0 +1,24 @@
+.background-color-corrected{
+    background-color: #72BB53;
+}
+.color-corrected{
+    color: #72BB53;
+}
+.background-color-is-correction-on-going{
+    background-color: #FF8351;
+}
+.color-is-correction-on-going{
+    color: #FF8351;
+}
+.background-color-is-submitted{
+    background-color: #00A4D3;
+}
+.color-is-submitted{
+    color: #00A4D3;
+}
+.background-color-has-been-started{
+    background-color: #FF8351;
+}
+.color-has-been-started{
+    color: #FF8351;
+}

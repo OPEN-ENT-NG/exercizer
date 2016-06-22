@@ -8,7 +8,7 @@
         </div>
 
         <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
-            <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_1) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(today, dateInAWeek) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
+            <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_1) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(yesterday, dateInAWeek) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
                 <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
             </div>
 

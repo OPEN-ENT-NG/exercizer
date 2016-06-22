@@ -15,6 +15,7 @@ directives.push(
                             init(scope.selectedSubjectScheduled);
                         }
                     });
+
                     /**
                      * INIT
                      */
@@ -59,25 +60,33 @@ directives.push(
                         $location.path('/dashboard/teacher/correction');
                     };
 
+                    scope.applyAutomaticMark = function(){
+                        angular.forEach(scope.subjectCopyList, function(copy){
+                            if(SubjectCopyService.canCorrectACopyAsTeacher(scope.selectedSubjectScheduled, copy)){
+                                copy.is_corrected = true;
+                                SubjectCopyService.update(copy);
+                            }
+                        });
+                    };
+
                     /**
                      * DISPLAY
                      */
 
-                    scope.canStartCorrect = function(copy){
-                        if(scope.selectedSubjectScheduled){
-                            return copy.submitted_date || DateService.compare_after(new Date, DateService.isoToDate(scope.selectedSubjectScheduled.due_date));
+                    scope.selectTitle = function (copy){
+                        if(SubjectCopyService.canCorrectACopyAsTeacher(scope.selectedSubjectScheduled, copy)){
+                            return 'correction'
+                        } else{
+                            return 'text'
                         }
-
                     };
 
-                    scope.correctionStateText = function(copy){
-                        if(copy.is_corrected){
-                            return 'Corrigé';
-                        } else if(copy.is_correction_on_going){
-                            return 'Correction en cours';
-                        } else {
-                            return 'A corriger';
-                        }
+                    scope.copyStateText = function(copy){
+                        return SubjectCopyService.copyStateText(copy);
+                    };
+
+                    scope.copyStateBackGroundColorClass = function(copy){
+                        return SubjectCopyService.copyStateBackGroundColorClass(copy);
                     };
 
                     scope.numberCopyNotCorrected = function(){

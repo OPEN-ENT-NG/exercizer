@@ -49,7 +49,7 @@ class SubjectCopyListController {
                 if (!begin || !end) {
                     throw "begin or end date in params missing"
                 }
-                return self._dateService.compare_after(dueDate, begin) && self._dateService.compare_after(end, dueDate);
+                return self._dateService.compare_after(dueDate, begin, true) && self._dateService.compare_after(end, dueDate, true);
             } else {
                 return false;
             }
