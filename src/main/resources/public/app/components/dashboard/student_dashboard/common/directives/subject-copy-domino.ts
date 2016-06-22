@@ -19,7 +19,7 @@ directives.push(
                         scope.selectTitle = function(){
                             if(SubjectCopyService.canPerformACopyAsStudent(scope.subjectScheduled, scope.subjectCopy)){
                                 return 'perform'
-                            } else if(SubjectCopyService.canAccessView(scope.subjectScheduled, scope.subjectCopy)){
+                            } else if(SubjectCopyService.canAccessViewAsStudent(scope.subjectScheduled, scope.subjectCopy)){
                                 return 'view'
                             } else{
                                 return 'text'

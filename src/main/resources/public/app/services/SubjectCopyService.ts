@@ -233,7 +233,7 @@ class SubjectCopyService implements ISubjectCopyService {
         }
     };
 
-    public canAccessView = function (subjectScheduled, copy) {
+    public canAccessViewAsStudent = function (subjectScheduled, copy) {
         // a student can access to the view of a copy if
         // quelque soit le statut, si la date de rendu est passée et que l'option "Affichage du résultat automatique pour les élèves" a été cochée
         // OR
