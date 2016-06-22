@@ -95,7 +95,7 @@ directives.push(
                         };
 
                         scope.textBeforeTitle = function(){
-                            return SubjectCopyService.copyStateText(scope.subjectCopy) + " - ";
+                            return SubjectCopyService.copyStateText(scope.subjectCopy)?  SubjectCopyService.copyStateText(scope.subjectCopy) + " - " : "";
                         };
 
                         scope.isDueDateDisplayed = function(){

@@ -208,7 +208,11 @@ class SubjectCopyService implements ISubjectCopyService {
         // OR
         // due date is past
         // if today = dur_date, the teacher can not correct
-        return copy.submitted_date || this._dateService.compare_after(new Date, this._dateService.isoToDate(subjectScheduled.due_date), false);
+        if(subjectScheduled && copy){
+            return copy.submitted_date || this._dateService.compare_after(new Date, this._dateService.isoToDate(subjectScheduled.due_date), false);
+        } else {
+            return false;
+        }
     };
 
     public canPerformACopyAsStudent = function(subjectScheduled, copy){
