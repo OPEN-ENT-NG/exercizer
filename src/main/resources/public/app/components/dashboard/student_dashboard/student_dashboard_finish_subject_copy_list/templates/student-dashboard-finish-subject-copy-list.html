@@ -3,20 +3,20 @@
 
     <div class="row">
         <div class="cell"
-             data-ng-click="clickFilter('givenBack')"
-             data-ng-style="search.filter == 'givenBack' && {'background-color': 'lightblue'} || search.filter != 'givenBack' && {'background-color': 'lightgray'}"
+             data-ng-click="clickFilter('is_submitted')"
+             data-ng-style="search.filter == 'is_submitted' && {'background-color': 'lightblue'} || search.filter != 'is_submitted' && {'background-color': 'lightgray'}"
              style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
             <span>Rendus</span>
         </div>
         <div class="cell"
-             data-ng-click="clickFilter('pending')"
-             data-ng-style="search.filter == 'pending' && {'background-color': 'lightblue'} || search.filter != 'pending' && {'background-color': 'lightgray'}"
+             data-ng-click="clickFilter('is_correction_on_going')"
+             data-ng-style="search.filter == 'is_correction_on_going' && {'background-color': 'lightblue'} || search.filter != 'is_correction_on_going' && {'background-color': 'lightgray'}"
              style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
             <span>En cours de correction</span>
         </div>
         <div class="cell"
-             data-ng-click="clickFilter('corrected')"
-             data-ng-style="search.filter == 'corrected' && {'background-color': 'lightblue'} || search.filter != 'corrected'  && {'background-color': 'lightgray'}"
+             data-ng-click="clickFilter('is_corrected')"
+             data-ng-style="search.filter == 'is_corrected' && {'background-color': 'lightblue'} || search.filter != 'is_corrected'  && {'background-color': 'lightgray'}"
              style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
             <span>Corrigés</span>
         </div>
@@ -41,7 +41,7 @@
     </div>
 
     <!-- list -->
-    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: subjectCopyListController.filterOnSubjectScheduledState(search.filter)| orderBy:subjectCopyListController.orderBySubjectScheduledDueDate)">
+    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopySubmittedOrCorrectionOnGoingOrCorrected() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: subjectCopyListController.filterOnSubjectCopyState(search.filter)| orderBy:subjectCopyListController.orderBySubjectScheduledDueDate)">
         <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
     </div>
     <article data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">

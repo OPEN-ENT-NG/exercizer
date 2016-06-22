@@ -26,7 +26,7 @@ class DateService implements IDateService {
         b.setHours(0, 0, 0, 0);
         if (a > b) {
             return true;
-        } else if (a > b) {
+        } else if (a < b) {
 
             return false;
         } else {

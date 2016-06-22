@@ -8,7 +8,7 @@
         </div>
 
         <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
-            <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_1) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(yesterday, dateInAWeek) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
+            <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_1) | filter: subjectCopyListController.filterOnSubjectCopyNotStartedOrStarted() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(today, dateInAWeek) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
                 <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
             </div>
 
@@ -39,9 +39,8 @@
                 <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
             </div>
         </div>
-
         <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
-            <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_2) | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
+            <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_2) | filter: subjectCopyListController.filterOnSubjectCopyNotStartedOrStarted() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
                 <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
             </div>
 
