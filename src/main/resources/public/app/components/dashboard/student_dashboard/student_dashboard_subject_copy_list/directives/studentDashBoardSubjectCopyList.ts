@@ -23,7 +23,7 @@ directives.push(
 
                         // Date
                         scope.today = new Date();
-                        scope.dateInAWeek = DateService.addDays(scope.today, 7);
+                        scope.dateInAWeek = DateService.addDays(scope.today, 8);
                         scope.dateInAYears = DateService.addDays(scope.today, 354);
 
                         // Search

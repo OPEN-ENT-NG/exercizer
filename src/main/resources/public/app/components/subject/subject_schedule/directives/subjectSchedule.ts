@@ -74,7 +74,7 @@ directives.push(
                                                     function(results) {
                                                         scope.isDisplayed = false;
                                                         scope.scheduleSubjectInProgress = false;
-                                                        notify.info("Le sujet à bien été programmé");
+                                                        notify.info("Le sujet a bien été programmé");
                                                     }
                                                 );
 
@@ -82,7 +82,7 @@ directives.push(
                                         )
                                     } else {
                                         scope.scheduleSubjectInProgress = false;
-                                        notify.error("Aucun utilisateur ou groupe selectionné");
+                                        notify.error("Aucun utilisateur ou groupe sélectionné");
                                     }
                                 }
                             );
@@ -97,12 +97,12 @@ directives.push(
                                 return true
                             } else{
                                 scope.scheduleSubjectInProgress = false;
-                                notify.error("Les dates de programmation se sont pas cohérentes");
+                                notify.error("Les dates de programmation ne sont pas cohérentes");
                                 return false;
                             }
                         } else {
                             scope.scheduleSubjectInProgress = false;
-                            notify.error("Toutes les option de programmation de sont pas remplies");
+                            notify.error("Toutes les options de programmation ne sont pas remplies");
                             return false;
                         }
 

@@ -114,10 +114,10 @@
                         <thead>
                         <tr>
                             <th>Titre du sujet</th>
-                            <th>Etat</th>
+                            <th>État</th>
                             <th>Date de modification</th>
                             <th>Groupe</th>
-                            <th>Nombre d'eleve ayant randu la copie</th>
+                            <th>Élèves ayant rendu le devoir</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -136,10 +136,10 @@
                             </td>
                             <td class="four cell">
                                 <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
-                                    <h3>[[group.name]]</h3>
+                                    <span>[[group.name]]</span>
                                 </div>
                                 <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList">
-                                    <h3>[[user.name]]</h3>
+                                    <span>[[user.name]]</span>
                                 </div>
                             </td>
                             <td>
