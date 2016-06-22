@@ -226,6 +226,10 @@ class ViewSubjectCopyController {
             );
         }
 
+        /**
+         * this event is call when a grain copy is updated
+         * - from grainCopyFooter.ts
+         */
         self._$scope.$on('E_UPDATE_GRAIN_COPY', function(event, grainCopy:IGrainCopy) {
             if (!self._previewing && self._isTeacher) {
                 _handleUpdateGrainCopy(grainCopy);
@@ -255,6 +259,10 @@ class ViewSubjectCopyController {
             }
         });
 
+        /**
+         * this event is call when a subject copy is updated
+         * - viewSummery.ts
+         */
         self._$scope.$on('E_UPDATE_SUBJECT_COPY', function(event, subjectCopy:ISubjectCopy, redirect:boolean) {
             if (!self._previewing  && self._isTeacher) {
                 _handleUpdateSubjectCopy(subjectCopy, redirect);
