@@ -27,6 +27,11 @@ public interface ISubjectCopyService {
     /**
      *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
+    void listBySubjectScheduled(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
+    
+    /**
+     *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
     void listBySubjectScheduledList(final UserInfos user, final Handler<Either<String, JsonArray>> handler);
 
 }

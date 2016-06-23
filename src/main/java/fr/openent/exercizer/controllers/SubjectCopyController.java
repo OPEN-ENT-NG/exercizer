@@ -96,6 +96,30 @@ public class SubjectCopyController extends ControllerHelper {
             }
         });
     }
+	
+	@Get("/subjects-copy-by-subject-scheduled")
+    @ApiDoc("Gets subject copy list by subject scheduled.")
+	@ResourceFilter(OwnerOnly.class)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
+    public void listBySubjectSheduled(final HttpServerRequest request) {
+        UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+            @Override
+            public void handle(final UserInfos user) {
+                if (user != null) {
+                	RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject resource) {
+							subjectCopyService.listBySubjectScheduled(resource, arrayResponseHandler(request));
+						}
+					});
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
+            }
+        });
+    }
 
     @Get("/subjects-copy-by-subjects-scheduled")
     @ApiDoc("Gets subject copy list by subject scheduled list.")
