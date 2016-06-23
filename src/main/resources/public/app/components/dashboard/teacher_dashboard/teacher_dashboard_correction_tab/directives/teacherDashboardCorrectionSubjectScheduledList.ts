@@ -16,11 +16,11 @@ directives.push(
                     scope.subjectScheduledList = [];
                     // Date data
                     scope.today = new Date();
-                    scope.dateAMonthAgo = DateService.addDays(scope.today, -30);
-                    scope.dateInAMonth = DateService.addDays(scope.today, 30);
+                    scope.dateAYearshAgo = DateService.addDays(scope.today, -365);
+                    scope.dateInAYears = DateService.addDays(scope.today, 365);
                     scope.search = {
-                        beginDate : scope.dateAMonthAgo,
-                        endDate : scope.dateInAMonth
+                        beginDate : scope.dateAYearshAgo,
+                        endDate : scope.dateInAYears
                     };
 
                     /**
