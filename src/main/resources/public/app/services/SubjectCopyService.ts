@@ -103,12 +103,13 @@ class SubjectCopyService implements ISubjectCopyService {
         return deferred.promise;
     };
 
-    public resolveBySubjectScheduled_force = function(isTeacher:boolean, subjectScheduled: ISubjectScheduled):ng.IPromise<boolean> {
+    public resolveBySubjectScheduled_force = function(subjectScheduled: ISubjectScheduled):ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
-                method: 'GET',
-                url: isTeacher ? 'exercizer/subjects-copy-by-subject-scheduled' : 'exercizer/subjects-copy'
+                method: 'POST',
+                url: 'exercizer/subjects-copy-by-subject-scheduled' + subjectScheduled.id,
+                data : subjectScheduled
             };
             this._$http(request).then(
                 function(response) {
