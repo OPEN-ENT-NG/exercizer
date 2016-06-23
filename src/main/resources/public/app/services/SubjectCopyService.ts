@@ -108,7 +108,7 @@ class SubjectCopyService implements ISubjectCopyService {
             deferred = this._$q.defer(),
             request = {
                 method: 'POST',
-                url: 'exercizer/subjects-copy-by-subject-scheduled' + subjectScheduled.id,
+                url: 'exercizer/subjects-copy-by-subject-scheduled/' + subjectScheduled.id,
                 data : subjectScheduled
             };
             this._$http(request).then(
@@ -120,6 +120,8 @@ class SubjectCopyService implements ISubjectCopyService {
                         if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
                             self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
                         }
+                        self._listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy);
+
                     });
                     deferred.resolve(true);
                 },
