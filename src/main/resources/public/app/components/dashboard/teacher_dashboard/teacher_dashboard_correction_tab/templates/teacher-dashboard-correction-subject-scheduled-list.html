@@ -40,7 +40,6 @@
     </section>
 
     <section class="cell eight">
-
         <div class="row">
             <div class="cell">
                 <label class="two cell">
@@ -57,9 +56,9 @@
             </div>
 
 
-            <div class="cell right-magnet">
+            <div class="cell right-magnet" data-ng-init="displayList = 'domino'">
                 <i data-ng-click="displayList = 'array'" class="show-list" data-ng-class="{selected: displayList == 'array'}"></i>
-                <i data-ng-click="displayList = 'domino'" class="show-icons selected" data-ng-class="{selected: displayList == 'domino'}"></i>
+                <i data-ng-click="displayList = 'domino'" class="show-icons" data-ng-class="{selected: displayList == 'domino'}"></i>
             </div>
         </div>
 
@@ -72,7 +71,7 @@
 
             <div class="row vertical-spacing">
                 <!-- list subject scheduled -->
-                <div class="fallen dominos">
+                <div class="fallen dominos" data-ng-show="displayList == 'domino'">
                     <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : 'modified' : true)"
                          class="item" style="width: 100%; max-width: none;">
 
@@ -110,8 +109,47 @@
 
                     </div>
                 </div>
+                <div data-ng-show="displayList == 'array'">
+                    <table class="list-view">
+                        <thead>
+                        <tr>
+                            <th>Titre du sujet</th>
+                            <th>État</th>
+                            <th>Date de modification</th>
+                            <th>Groupe</th>
+                            <th>Élèves ayant rendu le devoir</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr     data-ng-click="clickOnSubjectScheduled(subjectScheduled)"
+                                data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : 'modified' : true)">
+                            <td>
+                                <strong>[[ subjectScheduled.title ]]</strong>
+                            </td>
+                            <td>
+                                <span data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}">
+                                    [[ stateTextSubjectScheduled(subjectScheduled) ]]
+                                </span>
+                            </td>
+                            <td>
+                                <span>[[ subjectScheduled.modified | date:'dd/MM/yyyy' ]]</span>
+                            </td>
+                            <td class="four cell">
+                                <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
+                                    <span>[[group.name]]</span>
+                                </div>
+                                <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList">
+                                    <span>[[user.name]]</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span>[[ numberOfCopySubmitted(subjectScheduled) ]]</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </article>
-
     </section>
 </div>

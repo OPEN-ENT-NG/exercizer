@@ -6,14 +6,13 @@
             </div>
             <div class="bottom">
                 <div class="content">
-                    <div class="eleven cell">
+                    <div class="cell">
                         <div class="row">
-                            <div class="cell">
-                                <strong data-ng-show="canAccessPerform()" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-style="{'color': getColorColumn()}">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
-                                <strong data-ng-hide="canAccessPerform()"><span class="token" data-ng-style="{'color': getColorColumn()}">[ [textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
-                            </div>
-                            <div class="cell right-magnet">
-                                <strong>/ [[getSubjectScheduledMaxScore()]]</strong>
+                            <div data-ng-switch="selectTitle()">
+                                <strong data-ng-switch-when="perform" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong data-ng-switch-when="view" data-ng-click="viewSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong data-ng-switch-when="text" ><span class="token" data-ng-class="copyStateColorClass()">[[textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong data-ng-switch-default >default</strong>
                             </div>
                         </div>
                         <div class="row">
@@ -29,14 +28,12 @@
                     </div>
                     <div class="cell right-magnet"
                          data-ng-show="isColorColumnDisplay()"
-                         data-ng-style="{'background-color': getColorColumn()}"
-                         style="height: 100%; width: 20px;">
+                         data-ng-class="copyStateBackGroundColorClass();"
+                         style="height: 100%; width: 20px;margin-left: 20px;">
                         &nbsp;
                     </div>
-                    <div class="cell right-magnet"
-                         data-ng-hide="isColorColumnDisplay()"
-                         style="height: 100%; width: 20px;">
-                        &nbsp;
+                    <div class="cell right-magnet">
+                        <strong>[[subjectCopy.final_score]] / [[getSubjectScheduledMaxScore()]]</strong>
                     </div>
                 </div>
             </div>

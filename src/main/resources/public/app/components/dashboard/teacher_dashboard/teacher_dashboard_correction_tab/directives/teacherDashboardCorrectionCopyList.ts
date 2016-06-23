@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'teacherDashboardCorrectionCopyList',
-        injections: ['SubjectCopyService', '$location', 'GroupService','DateService','$route', (SubjectCopyService, $location, GroupService, DateService, $route) => {
+        injections: ['SubjectCopyService', '$location', 'GroupService','DateService','$q', (SubjectCopyService, $location, GroupService, DateService, $q) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -15,6 +15,7 @@ directives.push(
                             init(scope.selectedSubjectScheduled);
                         }
                     });
+
                     /**
                      * INIT
                      */
@@ -59,25 +60,40 @@ directives.push(
                         $location.path('/dashboard/teacher/correction');
                     };
 
+                    scope.applyAutomaticMark = function(){
+                        var promises = [];
+                        angular.forEach(scope.subjectCopyList, function(copy){
+                            if(SubjectCopyService.canCorrectACopyAsTeacher(scope.selectedSubjectScheduled, copy) && copy.selected){
+                                copy.is_corrected = true;
+                                promises.push(SubjectCopyService.update(copy));
+                            }
+                        });
+                        scope.selectAll = false;
+                        $q.all(promises).then(
+                            function(data){
+                                scope.clickSelectAll(scope.selectAll);
+                            }
+                        );
+                    };
+
                     /**
                      * DISPLAY
                      */
 
-                    scope.canStartCorrect = function(copy){
-                        if(scope.selectedSubjectScheduled){
-                            return copy.submitted_date || DateService.compare_after(new Date, DateService.isoToDate(scope.selectedSubjectScheduled.due_date));
+                    scope.selectTitle = function (copy){
+                        if(SubjectCopyService.canCorrectACopyAsTeacher(scope.selectedSubjectScheduled, copy)){
+                            return 'correction'
+                        } else{
+                            return 'text'
                         }
-
                     };
 
-                    scope.correctionStateText = function(copy){
-                        if(copy.is_corrected){
-                            return 'Corrigé';
-                        } else if(copy.is_correction_on_going){
-                            return 'Correction en cours';
-                        } else {
-                            return 'A corriger';
-                        }
+                    scope.copyStateText = function(copy){
+                        return SubjectCopyService.copyStateText(copy);
+                    };
+
+                    scope.copyStateBackGroundColorClass = function(copy){
+                        return SubjectCopyService.copyStateBackGroundColorClass(copy);
                     };
 
                     scope.numberCopyNotCorrected = function(){

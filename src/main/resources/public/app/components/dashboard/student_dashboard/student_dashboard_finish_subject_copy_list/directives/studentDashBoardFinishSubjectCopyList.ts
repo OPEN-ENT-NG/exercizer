@@ -14,13 +14,13 @@ directives.push(
                         scope.subjectCopyList = SubjectCopyService.getList();
 
                         // Date data
-                        scope.today = new Date();
-                        scope.yesterday = DateService.addDays(scope.today, -1);
-                        scope.dateAYearsAgo = DateService.addDays(scope.today, -354);
+                        var today = new Date();
+                        scope.dateInAYears = DateService.addDays(today, 354);
+                        scope.dateAYearsAgo = DateService.addDays(today, -354);
                         //search
                         if(!scope.search){
                             scope.search = {
-                                endDate : scope.yesterday,
+                                endDate : scope.dateInAYears,
                                 beginDate : scope.dateAYearsAgo,
                                 filter : null
                             };

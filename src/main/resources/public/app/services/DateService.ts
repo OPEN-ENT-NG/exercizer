@@ -1,6 +1,6 @@
 interface IDateService {
     addDays(date, days);
-    compare_after(date_a, date_b);
+    compare_after(date_a, date_b, value_equal):boolean;
     timestampToDate(timestamp);
     isoToDate(iso);
 }
@@ -19,13 +19,21 @@ class DateService implements IDateService {
         return result;
     }
 
-    public compare_after(date_a, date_b) {
-        if (date_a > date_b) {
+    public compare_after(date_a, date_b, value_equal) {
+        var a = angular.copy(date_a);
+        var b = angular.copy(date_b);
+        a.setHours(0, 0, 0, 0);
+        b.setHours(0, 0, 0, 0);
+        if (a > b) {
             return true;
-        } else {
+        } else if (a < b) {
+
             return false;
+        } else {
+            return value_equal;
         }
     }
+
 
     public timestampToDate(timestamp) {
         return new Date(parseInt(timestamp) * 1000);

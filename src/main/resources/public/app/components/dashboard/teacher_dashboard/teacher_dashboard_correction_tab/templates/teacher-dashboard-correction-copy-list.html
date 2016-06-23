@@ -47,17 +47,17 @@
                <td>
                     <input type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                </td>
-               <td>
-                    <span data-ng-hide="canStartCorrect(copy)">[[copy.owner_username]]</span>
-                    <span data-ng-show="canStartCorrect(copy)" data-ng-click="clickOnCopy(copy)">[[copy.owner_username]]</span>
+               <td data-ng-switch="selectTitle(copy)">
+                    <span data-ng-switch-when="text">[[copy.owner_username]]</span>
+                    <span data-ng-switch-when="correction" data-ng-click="clickOnCopy(copy)">[[copy.owner_username]]</span>
+                    <span data-ng-switch-default>Default</span>
                </td>
                <td>
-                    <div
-                            data-ng-show="canStartCorrect(copy)"
-                    style="border: 1px solid black;border-radius: 2px;color: white;text-align: center"
-                    data-ng-style="copy.is_corrected && copy.is_correction_on_going && {'background-color': '#72BB53'} || !copy.is_corrected &&  copy.is_correction_on_going && {'background-color': '#FF8351'} ||  !copy.is_corrected &&  !copy.is_correction_on_going && {'background-color': '#00A4D3'}"
+                    <div data-ng-show="copyStateBackGroundColorClass(copy)"
+                         style="border: 1px solid black;border-radius: 2px;color: white;text-align: center"
+                         data-ng-class="copyStateBackGroundColorClass(copy)"
                     >
-                         [[correctionStateText(copy)]]
+                         [[copyStateText(copy)]]
                     </div>
                </td>
                <td>
@@ -78,7 +78,7 @@
      <div class="toggle">
           <div class="row">
                <div class="cell">
-                    <button data-ng-click="applyAutomaticMark()">Note finale automatique</button>
+                    <button data-ng-click="applyAutomaticMark()">Passer le statut de la sélection à "Corrigé"</button>
                </div>
           </div>
      </div>

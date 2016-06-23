@@ -13,6 +13,7 @@ directives.push(
                      */
                     scope.isDisplayed = false;
                     scope.subject = null;
+                    scope.scheduleSubjectInProgress = false;
 
                     /**
                      * RESET
@@ -51,31 +52,40 @@ directives.push(
                     };
 
                     scope.scheduleSubject = function(){
+                        scope.scheduleSubjectInProgress = true;
                         if(canSchedule(scope.option)){
                             createIdList(scope.data.userList,scope.data.groupList).then(
                                 function(users){
                                     if(users.length !== 0){
                                         createSubjectScheduled(scope.subject, scope.option, scope.data).then(
                                             function(subjectScheduled){
-                                                console.log('subjectScheduled',subjectScheduled);
+                                                //console.info('subjectScheduled',subjectScheduled);
+                                                var promises = [];
                                                 angular.forEach(users, function(user){
-                                                    createSubjectCopy(subjectScheduled, user).then(
+                                                    promises.push(createSubjectCopy(subjectScheduled, user).then(
                                                         function(subjectCopy){
-                                                            console.log('subjectCopy',subjectCopy);
-                                                            scope.isDisplayed = false;
+                                                            //console.info('subjectCopy',subjectCopy);
                                                         }
-                                                    )
+                                                    ));
                                                 });
+                                                $q.all(promises).then(
+                                                    // success
+                                                    // results: an array of data objects from each deferred.resolve(data) call
+                                                    function(results) {
+                                                        scope.isDisplayed = false;
+                                                        scope.scheduleSubjectInProgress = false;
+                                                        notify.info("Le sujet a bien été programmé");
+                                                    }
+                                                );
+
                                             }
                                         )
                                     } else {
-                                        notify.error("Aucun utilisateur ou groupe selectionné");
-
+                                        scope.scheduleSubjectInProgress = false;
+                                        notify.error("Aucun utilisateur ou groupe sélectionné");
                                     }
                                 }
                             );
-                        } else {
-                            notify.error("Toutes les option de programmation de sont pas remplies");
                         }
 
                     };
@@ -83,8 +93,16 @@ directives.push(
 
                     function canSchedule(option){
                         if(option.begin_date && option.due_date){
-                            return true;
+                            if(DateService.compare_after(option.due_date, option.begin_date, true)){
+                                return true
+                            } else{
+                                scope.scheduleSubjectInProgress = false;
+                                notify.error("Les dates de programmation ne sont pas cohérentes");
+                                return false;
+                            }
                         } else {
+                            scope.scheduleSubjectInProgress = false;
+                            notify.error("Toutes les options de programmation ne sont pas remplies");
                             return false;
                         }
 

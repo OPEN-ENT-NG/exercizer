@@ -2,18 +2,21 @@ class SubjectCopyListController {
 
     static $inject = [
         'SubjectScheduledService',
-        'DateService'
+        'DateService',
+        'SubjectCopyService',
     ];
     private _subjectScheduledService;
+    private _subjectCopyService;
     private _dateService;
 
-    constructor(SubjectScheduledService, DateService) {
+    constructor(SubjectScheduledService, DateService, SubjectCopyService) {
         this._subjectScheduledService = SubjectScheduledService;
+        this._subjectCopyService = SubjectCopyService;
         this._dateService = DateService;
 
     }
 
-    public getSubjectScheduledById(id : number){
+    public getSubjectScheduledById(id:number) {
         if (!angular.isUndefined(this._subjectScheduledService.listMappedById)) {
             return this._subjectScheduledService.listMappedById[id];
         }
@@ -49,7 +52,7 @@ class SubjectCopyListController {
                 if (!begin || !end) {
                     throw "begin or end date in params missing"
                 }
-                return self._dateService.compare_after(dueDate, begin) && self._dateService.compare_after(end, dueDate);
+                return self._dateService.compare_after(dueDate, begin, true) && self._dateService.compare_after(end, dueDate, true);
             } else {
                 return false;
             }
@@ -58,7 +61,7 @@ class SubjectCopyListController {
 
     public orderBySubjectScheduledDueDate(subjectCopy) {
         var self = this;
-        return function (){
+        return function () {
             var subjectScheduled = self.getSubjectScheduledById(subjectCopy.subject_scheduled_id);
             if (subjectScheduled) {
                 return subjectScheduled.due_date;
@@ -68,23 +71,28 @@ class SubjectCopyListController {
         }
     };
 
-    public filterOnSubjectScheduledState (filter){
-    return function(subjectCopy){
-        var res = null;
-        switch(filter) {
-            case 'corrected':
-                res =  subjectCopy.is_corrected;
-                break;
-            case 'givenBack':
-                res =  subjectCopy.submitted_date && !subjectCopy.is_corrected;
-                break;
-            case 'pending':
-                res =  subjectCopy.is_correction_on_going && !subjectCopy.submitted_date && !subjectCopy.is_corrected;
-                break;
-            default:
-                res =  true;
+    public filterOnSubjectCopyState(filter) {
+        var self = this;
+        return function (subjectCopy) {
+            if (filter) {
+                return self._subjectCopyService.copyState(subjectCopy) == filter;
+            } else {
+                return true;
+            }
         }
-        return res;
-    }
-};
+    };
+
+    public filterOnSubjectCopyNotStartedOrStarted() {
+        var self = this;
+        return function (subjectCopy) {
+            return self._subjectCopyService.copyState(subjectCopy) === 'has_been_started' || self._subjectCopyService.copyState(subjectCopy) === null;
+        }
+    };
+    public filterOnSubjectCopySubmittedOrCorrectionOnGoingOrCorrected() {
+        var self = this;
+        return function (subjectCopy) {
+            return self._subjectCopyService.copyState(subjectCopy) === 'is_submitted' || self._subjectCopyService.copyState(subjectCopy) === 'is_correction_on_going' || self._subjectCopyService.copyState(subjectCopy) === 'is_corrected';
+        }
+    };
+
 }

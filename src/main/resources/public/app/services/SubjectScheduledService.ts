@@ -133,6 +133,7 @@ class SubjectScheduledService implements ISubjectScheduledService {
     }
 
     public is_over(subjectScheduled : ISubjectScheduled) : boolean {
-        return this._dateService.compare_after(this._today, this._dateService.isoToDate(subjectScheduled.due_date))
+        // false (3) means if the date is equal, the subject is not over
+        return this._dateService.compare_after(this._today, this._dateService.isoToDate(subjectScheduled.due_date), false)
     }
 }

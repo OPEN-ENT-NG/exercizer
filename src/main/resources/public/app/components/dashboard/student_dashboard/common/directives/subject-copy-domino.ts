@@ -1,8 +1,8 @@
 directives.push(
     {
         name: 'subjectCopyDomino',
-        injections: ['DateService', '$location', 'SubjectScheduledService',
-            (DateService, $location, SubjectScheduledService) => {
+        injections: ['DateService', '$location', 'SubjectScheduledService','SubjectCopyService',
+            (DateService, $location, SubjectScheduledService, SubjectCopyService) => {
                 return {
                     restrict: 'E',
                     scope: {
@@ -13,26 +13,16 @@ directives.push(
                     link: (scope:any) => {
 
                         /**
-                         * ACCESS perform
+                         * ACCESS Perform, view
                          */
 
-                        scope.canAccessPerform = function () {
-                            // a student can not access to a copy if
-                            // the subject is over
-                            // OR
-                            // the subject have been submitted AND the subject have option one_shot == true;
-                            if (SubjectScheduledService.is_over(scope.subjectScheduled) === true) {
-                                return false;
-                            } else {
-                                if (scope.subjectScheduled.is_one_shot_submit && scope.subjectCopy.submitted_date) {
-                                    return false;
-                                } else {
-                                    if(isCorrectionOnGoing() || is_corrected()){
-                                        return false
-                                    } else{
-                                        return true;
-                                    }
-                                }
+                        scope.selectTitle = function(){
+                            if(SubjectCopyService.canPerformACopyAsStudent(scope.subjectScheduled, scope.subjectCopy)){
+                                return 'perform'
+                            } else if(SubjectCopyService.canAccessViewAsStudent(scope.subjectScheduled, scope.subjectCopy)){
+                                return 'view'
+                            } else{
+                                return 'text'
                             }
                         };
 
@@ -66,7 +56,7 @@ directives.push(
                             return scope.subjectScheduled.owner_username || '';
                         };
                         scope.getSubjectScheduledMaxScore = function () {
-                            return scope.subjectScheduled.max_score || '';
+                            return scope.subjectScheduled.max_score || '0';
                         };
 
                         /**
@@ -82,69 +72,40 @@ directives.push(
                         };
 
                         /**
-                         * Specific
+                         * DISPLAY
                          */
 
                         scope.isColorColumnDisplay = function () {
-                            if (isSubmitted() || isCorrectionOnGoing() || is_corrected()){
+                            if (scope.subjectCopy.submitted_date
+                                || scope.subjectCopy.is_correction_on_going
+                                || scope.subjectCopy.is_corrected
+                            ){
                                 return true;
                             } else {
                                 return false;
                             }
                         };
 
-                        scope.getColorColumn = function () {
-                            if (is_corrected()) {
-                                return "#72BB53";
-                            } else if (isCorrectionOnGoing()) {
-                                return "#FF8351";
-                            } else if (isSubmitted()) {
-                                return "#00A4D3";
-                            } else if (hasBeenStarted()) {
-                                return "#FF8351";
-                            }
+                        scope.copyStateColorClass = function(){
+                            return SubjectCopyService.copyStateColorClass(scope.subjectCopy);
                         };
 
-                        scope.textBeforeTitle = function () {
-                            if (is_corrected()) {
-                                return "Corrigé - ";
-                            } else if (isCorrectionOnGoing()) {
-                                return "En cours de correction - ";
-                            } else if (isSubmitted()) {
-                                return "Rendu - ";
-                            } else if (hasBeenStarted()) {
-                                return "Commencé - ";
-                            } else {
-                                return "";
-                            }
+                        scope.copyStateBackGroundColorClass = function(){
+                            return SubjectCopyService.copyStateBackGroundColorClass(scope.subjectCopy);
+                        };
+
+                        scope.textBeforeTitle = function(){
+                            return SubjectCopyService.copyStateText(scope.subjectCopy)?  SubjectCopyService.copyStateText(scope.subjectCopy) + " - " : "";
                         };
 
                         scope.isDueDateDisplayed = function(){
-                          return !isSubmitted();
+                          return !scope.subjectCopy.submitted_date;
                         };
+
                         scope.isSubmittedDateDisplayed = function(){
-                          return isSubmitted();
+                          return scope.subjectCopy.submitted_date;
                         };
 
-                        /**
-                         * private function
-                         */
-
-                        function hasBeenStarted() {
-                            return scope.subjectCopy.has_been_started;
-                        }
-
-                        function isSubmitted() {
-                            return scope.subjectCopy.submitted_date;
-                        }
-
-                        function isCorrectionOnGoing() {
-                            return scope.subjectCopy.is_correction_on_going;
-                        }
-
-                        function is_corrected() {
-                            return scope.subjectCopy.is_corrected;
-                        }
                     }
                 }
             }
