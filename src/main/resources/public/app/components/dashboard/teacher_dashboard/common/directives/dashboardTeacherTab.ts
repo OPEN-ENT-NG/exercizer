@@ -28,7 +28,11 @@ directives.push(
 
                     scope.switchToStudentView = function () {
                         $location.path('/dashboard/student');
-                        $window.location.reload();
+                        setTimeout(
+                            function(){
+                                $window.location.reload();
+                            },
+                        1);
                     }
                 }
             };
