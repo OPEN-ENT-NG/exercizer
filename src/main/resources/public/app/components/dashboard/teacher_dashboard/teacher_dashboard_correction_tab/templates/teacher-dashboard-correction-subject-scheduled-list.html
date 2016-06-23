@@ -72,7 +72,7 @@
             <div class="row vertical-spacing">
                 <!-- list subject scheduled -->
                 <div class="fallen dominos" data-ng-show="displayList == 'domino'">
-                    <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : 'modified' : true)"
+                    <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)"
                          class="item" style="width: 100%; max-width: none;">
 
                         <section class="domino">
@@ -86,7 +86,7 @@
                                             <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">[[ subjectScheduled.title ]]</strong>
                                         </div>
                                         <div class="row">
-                                            Modifié le  [[ subjectScheduled.modified | date:'dd/MM/yyyy' ]]
+                                            Modifié le  [[ orderByCopyListModificationDate(subjectScheduled) | date:'dd/MM/yyyy' ]]
                                         </div>
                                         <div class="row">
                                             [[ numberOfCopySubmitted(subjectScheduled) ]] élèves sur [[ numberOfCopy(subjectScheduled) ]] ont rendu le devoir
@@ -122,7 +122,7 @@
                         </thead>
                         <tbody>
                         <tr     data-ng-click="clickOnSubjectScheduled(subjectScheduled)"
-                                data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : 'modified' : true)">
+                                data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)">
                             <td>
                                 <strong>[[ subjectScheduled.title ]]</strong>
                             </td>

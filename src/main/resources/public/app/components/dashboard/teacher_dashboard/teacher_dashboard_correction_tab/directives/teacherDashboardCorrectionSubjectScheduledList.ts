@@ -192,6 +192,23 @@ directives.push(
                                 }
                             }
                         }
+                    };
+
+                    scope.orderByCopyListModificationDate = function(subjectScheduled){
+                        var copyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                        var lastUpdateCopy = null;
+                        angular.forEach(copyList, function(copy){
+                            if(lastUpdateCopy){
+                                if(DateService.compare_after(DateService.isoToDate(copy.modified), DateService.isoToDate(lastUpdateCopy))){
+                                    lastUpdateCopy = copy;
+                                }
+                            } else{
+                                lastUpdateCopy = copy;
+                            }
+                        });
+                        if(lastUpdateCopy !== null){
+                            return lastUpdateCopy.modified;
+                        }
                     }
                 }
             };
