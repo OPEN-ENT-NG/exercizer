@@ -9,6 +9,9 @@ routes.define(function($routeProvider){
         .when('/dashboard/teacher/correction/:subjectScheduledId?', {
             action: 'dashboardTeacherCorrection'
         })
+        .when('/dashboard/teacher/library', {
+            action: 'dashboardTeacherLibrary'
+        })
         .when('/subject/edit/:subjectId/', {
             action: 'editSubject'
         })
@@ -43,7 +46,8 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
     const canAccessTeacherProfile = model.me.workflow.exercizer.create || false;
 
     var _userProfile;
-    if(canAccessTeacherProfile){
+
+    if (canAccessTeacherProfile){
         _userProfile = teacherProfile;
     } else {
         _userProfile = studentProfile;
@@ -66,6 +70,13 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         dashboardTeacherCorrection: function () {
             if (_userProfile === teacherProfile) {
                 template.open('main', 'teacher-dashboard-correction-tab');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        dashboardTeacherLibrary: function () {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'teacher-dashboard-library-tab');
             } else {
                 template.open('main', '401-exercizer');
             }
@@ -185,6 +196,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
          */
         module.controller('TeacherDashboardSubjectTabController', TeacherDashboardSubjectTabController);
         module.controller('TeacherDashboardCorrectionTabController', TeacherDashboardCorrectionTabController);
+        module.controller('TeacherDashboardLibraryTabController', TeacherDashboardLibraryTabController);
         module.controller('EditSubjectController', EditSubjectController);
         module.controller('PerformSubjectCopyController', PerformSubjectCopyController);
         module.controller('ViewSubjectCopyController', ViewSubjectCopyController);

@@ -91,6 +91,28 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     	String query = "DELETE FROM " + resourceTable + " WHERE id = ? RETURNING *";
 		sql.prepared(query, new JsonArray().add(resource.getInteger("id")), SqlResult.validUniqueResultHandler(handler));
     }
+    
+    /**
+     * Returns the list of resources.
+     *
+     * @param filters some custom filters
+     * @param handler the handler
+     */
+    protected void list(final JsonArray filters, final Handler<Either<String, JsonArray>> handler) {
+    	StringBuilder query = new StringBuilder();
+    	
+    	query.append("SELECT * FROM ").append(resourceTable);
+    	
+    	if (filters.size() > 0 ) {
+    		query.append(" WHERE true");
+            for (Object filter : filters) {
+                query.append(" AND ").append(filter.toString());
+            }
+        }
+    	
+    	query.append(" ORDER BY created DESC");
+    	sql.prepared(query.toString(), new JsonArray(), SqlResult.validResultHandler(handler));
+    }
 
     /**
      * Returns the list of resources which have the current user as owner.

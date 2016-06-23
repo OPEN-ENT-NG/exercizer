@@ -45,6 +45,18 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
         subject.putBoolean("is_deleted", Boolean.TRUE);
         update(subject, user, handler);
     }
+    
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
+    @Override
+    public void list(final Handler<Either<String, JsonArray>> handler) {
+    	JsonArray filters = new JsonArray();
+    	filters.addString("is_library_subject = true");
+        filters.addString("is_deleted = false");
+        
+    	super.list(filters, handler);
+    }
 
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl

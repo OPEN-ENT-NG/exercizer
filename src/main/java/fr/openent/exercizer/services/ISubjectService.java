@@ -24,6 +24,11 @@ public interface ISubjectService {
      *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     void remove(final JsonObject resource, final UserInfos user, Handler<Either<String, JsonObject>> handler);
+    
+    /**
+     *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
+    void list(final Handler<Either<String, JsonArray>> handler);
 
     /**
      *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl

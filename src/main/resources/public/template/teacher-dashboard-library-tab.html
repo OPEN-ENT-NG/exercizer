@@ -1,0 +1,117 @@
+<dashboard-teacher-tab current-tab="'library'"></dashboard-teacher-tab>
+
+<div data-ng-controller="TeacherDashboardLibraryTabController as teacherDashboardLibraryTabController">
+
+    <!-- LOADER -->
+    <div class="row" data-ng-if="!teacherDashboardLibraryTabController.hasDataLoaded">
+        <div class="info">Chargement des données...</div>
+    </div>
+
+    <div data-ng-if="teacherDashboardLibraryTabController.hasDataLoaded">
+
+        <div class="row">
+
+            <!-- LEFT STICKY NAV -->
+            <section class="four cell vertical" >
+                <nav data-stick-to-top class="hash-magnet floating-navigation">
+
+                    <!-- FILTERS -->
+                    <article>
+                        <div class="row">
+                            <h2 class="cell">Filtrer</h2>
+
+                            <!-- toggle icon -->
+                            <div class="cell right-magnet" data-ng-click="teacherDashboardLibraryTabController.foldFilters()">
+                                <i data-ng-show="teacherDashboardLibraryTabController.areFiltersFolded" data-tooltip="Déplier" class="down-open"></i>
+                                <i data-ng-hide="teacherDashboardLibraryTabController.areFiltersFolded" data-tooltip="Plier" class="up-open"></i>
+                            </div>
+                        </div>
+
+                        <div class="row" data-ng-hide="teacherDashboardLibraryTabController.areFiltersFolded">
+                            <!-- TODO filters -->
+                            <div class="tabs">
+                                <header>
+                                    Matières
+                                </header>
+                                <header>
+                                    Niveaux
+                                </header>
+                            </div>
+                        </div>
+
+                        <div class="row" style="overflow-y:scroll; max-height: 300px; border:1px dotted lightgrey;" data-ng-hide="teacherDashboardLibraryTabController.areFiltersFolded">
+                            <!-- TODO filters -->
+                        </div>
+
+                    </article>
+                </nav>
+            </section>
+
+            <!-- SUBJECT LIST -->
+            <section class="eight cell">
+
+                <!-- FILTERS -->
+                <div class="row">
+                    <input type="text" class="twelve cell" placeholder="Rechercher" />
+                </div>
+
+                <div class="row">
+                    <!-- TODO tags -->
+                </div>
+
+                <h3 class="row"><em>Derniers sujets ajoutés...</em></h3>
+
+                <div class="fallen dominos">
+                    <div>  <!-- TODO ng-repeat dominos -->
+                        <div  class="item" >
+                            <section class="domino">
+                                <div class="top">
+                                    <img class="absolute" data-ng-src="[[ getSubjectPicture(subject) ]]" />
+                                </div>
+                                <div class="bottom">
+                                    <div class="content">
+                                        <div class="cell">
+                                            <div class="row">
+                                                <strong>[[subject.title]]</strong>
+                                            </div>
+                                            <div class="row">
+
+                                            </div>
+                                            <div class="row">
+                                                Ajouté par [[ subject.owner_username ]] le [[subject.created | date: 'dd/MM/yyyy']]</span>
+                                            </div>
+                                        </div>
+                                        <div data-ng-show="canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
+                                            <input type="checkbox" data-ng-model="subject.selected" class="right-magnet cell" data-ng-change="selectSubject(subject)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+
+            </section>
+
+        </div>
+
+        <!-- TOASTER -->
+        <section class="toggle-buttons" data-ng-show="teacherDashboardLibraryTabController.isToasterDisplayed()">
+            <div class="toggle">
+                <div class="row">
+                    <div class="cell">
+                        <button data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubjectList()">Aperçu</button>
+                        <button data-ng-click="teacherDashboardLibraryTabController.displayModalCopyPaste()">Copier dans mes sujets</button>
+                        <button data-ng-click="teacherDashboardLibraryTabController.resetSelection()">Annuler</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL COPY PAST -->
+        <teacher-dashboard-copy-paste></teacher-dashboard-copy-paste>
+
+    </div>
+
+</div>

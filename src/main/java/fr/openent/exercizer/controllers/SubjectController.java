@@ -127,6 +127,25 @@ public class SubjectController extends ControllerHelper {
 			}
 		});
 	}
+	
+	@Get("/subjects-for-library")
+	@ApiDoc("Gets subject list for library.")
+	@SecuredAction("exercizer.subject.list.for.library")
+	public void listLibrarySubject(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					subjectService.list(arrayResponseHandler(request));
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+
+			}
+		});
+	}
 
 	@Get("/subject/share/json/:id")
 	@ApiDoc("Lists rights for a given subject.")

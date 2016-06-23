@@ -1,14 +1,15 @@
 interface ISubjectService {
     resolve(): ng.IPromise<boolean>;
+    resolveForLibrary(): ng.IPromise<boolean>;
     persist(subject: ISubject): ng.IPromise<ISubject>;
     update(subject: ISubject, updateMaxScore:boolean): ng.IPromise<ISubject>;
     remove(subject: ISubject): ng.IPromise<boolean>;
     removeList(subjectList: ISubject[]):ng.IPromise<boolean>
     duplicate(subject: ISubject): ng.IPromise<ISubject>;
-    getList(): ISubject[];
     getById(id: number): ISubject;
     deleteSubjectChildrenOfFolder(folder: IFolder);
     getList(): ISubject[];
+    getListForLibrary(): ISubject[];
     getListByFolderId(folderId);
     getById(id: number): ISubject;
 }
@@ -22,6 +23,7 @@ class SubjectService implements ISubjectService {
     ];
 
     private _listMappedById: { [id: number]: ISubject; };
+    private _listForLibrary:ISubject[];
 
     constructor
     (
@@ -65,6 +67,37 @@ class SubjectService implements ISubjectService {
         return deferred.promise;
     };
 
+    public resolveForLibrary = function(): ng.IPromise<boolean> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: 'exercizer/subjects-for-library'
+            };
+
+        if (!angular.isUndefined(this._listForLibrary)) {
+            deferred.resolve(true);
+        } else {
+            this._$http(request).then(
+                function(response) {
+                    self._listForLibrary = [];
+                    var subject;
+                    angular.forEach(response.data, function(subjectObject) {
+                        subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject)) as any;
+                        self._afterPullBack(subject);
+                        self._listForLibrary.push(subject);
+                    });
+                    deferred.resolve(true);
+                },
+                function() {
+                    deferred.reject('Une erreur est survenue lors de la récupération des sujets de la bibliothèque.');
+                }
+            );
+        }
+
+        return deferred.promise;
+    };
+
     public persist = function(subject: ISubject): ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer(),
@@ -98,7 +131,7 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject/' + subject.id,
                 data: subject
             };
-        
+
         this._grainService.getListBySubject(subject).then(
             function(grainList){
                 if (updateMaxScore) {
@@ -136,7 +169,7 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject/' + subject.id,
                 data: subject
             };
-       self. _beforePushBack(subject);
+        self. _beforePushBack(subject);
         this._grainService.getListBySubject(subject).then(
             function(grainList) {
                 var grainListCopy = angular.copy(grainList);
@@ -187,7 +220,7 @@ class SubjectService implements ISubjectService {
         }
         return deferred.promise;
     };
-    
+
     public duplicate = function(subject: ISubject, folder: IFolder = undefined): ng.IPromise<ISubject> {
         var self = this,
             deferred = this._$q.defer();
@@ -253,6 +286,10 @@ class SubjectService implements ISubjectService {
         } else {
             return [];
         }
+    };
+
+    public getListForLibrary = function(): ISubject[] {
+        return angular.isUndefined(this._listForLibrary) ? [] : this._listForLibrary;
     };
 
     public getListByFolderId(folderId:number): { [id: number]: ISubject; } {

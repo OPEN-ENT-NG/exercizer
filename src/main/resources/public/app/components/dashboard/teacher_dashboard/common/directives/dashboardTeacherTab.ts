@@ -5,10 +5,10 @@ directives.push(
             return {
                 restrict: 'E',
                 scope: {
-                    currentTab: "="
+                    currentTab: '='
                 },
                 templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/common/templates/dashboard-teacher-tab.html',
-                link: (scope:any, element, attrs) => {
+                link: (scope:any) => {
 
                     scope.switchTab = function (newTab) {
                         switch (newTab){
@@ -19,10 +19,10 @@ directives.push(
                                 $location.path('/dashboard/teacher/correction/');
                                 break;
                             case 'library':
-                                $location.path('/dashboard');
+                                $location.path('/dashboard/teacher/library');
                                 break;
-                            default :
-                                throw "tab "+newTab+"  missing"
+                            default:
+                                throw 'tab ' + newTab + ' missing'
                         }
                     };
 

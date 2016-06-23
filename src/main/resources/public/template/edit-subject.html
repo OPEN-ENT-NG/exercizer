@@ -28,61 +28,62 @@
             <section class="four cell vertical" >
                 <nav data-stick-to-top class="hash-magnet floating-navigation">
 
-                    <!-- ORGANIZER --><article>
-                    <div class="row">
-                        <h2 class="cell">Organiser</h2>
-
-                        <!-- grain toggle icon -->
-                        <div class="cell right-magnet" data-ng-click="editSubjectController.foldOrganizer()">
-                            <i data-ng-show="editSubjectController.isOrganizerFolded" data-tooltip="Déplier" class="down-open"></i>
-                            <i data-ng-hide="editSubjectController.isOrganizerFolded" data-tooltip="Plier" class="up-open"></i>
-                        </div>
-                    </div>
-
-                    <div data-ng-hide="editSubjectController.isOrganizerFolded">
+                    <!-- ORGANIZER -->
+                    <article>
                         <div class="row">
-                            <a class="comment right-magnet cell" data-ng-click="editSubjectController.previewPerformSubjectCopy()">
-                                Aperçu&nbsp;&nbsp;<i class="eye"></i>
-                            </a>
-                            <a class="comment right-magnet cell" style="margin-right:10px;" data-ng-click="editSubjectController.foldAllGrain()">
-                                Tout plier&nbsp;&nbsp;<i class="up-open"></i>
-                            </a>
+                            <h2 class="cell">Organiser</h2>
+
+                            <!-- grain toggle icon -->
+                            <div class="cell right-magnet" data-ng-click="editSubjectController.foldOrganizer()">
+                                <i data-ng-show="editSubjectController.isOrganizerFolded" data-tooltip="Déplier" class="down-open"></i>
+                                <i data-ng-hide="editSubjectController.isOrganizerFolded" data-tooltip="Plier" class="up-open"></i>
+                            </div>
                         </div>
 
-                        <div class="row" style="overflow-y:scroll; max-height: 150px; border:1px dotted lightgrey;" data-ng-show="editSubjectController.grainList.length > 0">
-                            <!-- do not add data- before sortable-list and sortable element -->
-                            <ul sortable-list class="thought-out-actions">
-                                <li data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false"
-                                    sortable-element
-                                    data-ng-change="editSubjectController.reOrder()"
-                                    data-ng-model="grain.index">
+                        <div data-ng-hide="editSubjectController.isOrganizerFolded">
+                            <div class="row">
+                                <a class="comment right-magnet cell" data-ng-click="editSubjectController.previewPerformSubjectCopy()">
+                                    Aperçu&nbsp;&nbsp;<i class="eye"></i>
+                                </a>
+                                <a class="comment right-magnet cell" style="margin-right:10px;" data-ng-click="editSubjectController.foldAllGrain()">
+                                    Tout plier&nbsp;&nbsp;<i class="up-open"></i>
+                                </a>
+                            </div>
 
-                                    <div class="one cell">
-                                        <div data-ng-switch="grain.grain_type_id">
-                                            <div data-ng-switch-when="1">
-                                                <i class="info-pic"></i>
+                            <div class="row" style="overflow-y:scroll; max-height: 150px; border:1px dotted lightgrey;" data-ng-show="editSubjectController.grainList.length > 0">
+                                <!-- do not add data- before sortable-list and sortable element -->
+                                <ul sortable-list class="thought-out-actions">
+                                    <li data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false"
+                                        sortable-element
+                                        data-ng-change="editSubjectController.reOrder()"
+                                        data-ng-model="grain.index">
+
+                                        <div class="one cell">
+                                            <div data-ng-switch="grain.grain_type_id">
+                                                <div data-ng-switch-when="1">
+                                                    <i class="info-pic"></i>
+                                                </div>
+                                                <div data-ng-switch-when="2">
+                                                    <i class="help"></i>
+                                                </div>
+                                                <div data-ng-switch-when="3">
+                                                    <i class="doc-text"></i>
+                                                </div>
+                                                <div data-ng-switch-default style="width:15px; height:15px;">
+                                                    <div data-ng-include="editSubjectController.getGrainIllustrationURL(grain.grain_type_id)"></div>
+                                                </div>
                                             </div>
-                                            <div data-ng-switch-when="2">
-                                                <i class="help"></i>
-                                            </div>
-                                            <div data-ng-switch-when="3">
-                                                <i class="doc-text"></i>
-                                            </div>
-                                            <div data-ng-switch-default style="width:15px; height:15px;">
-                                                <div data-ng-include="editSubjectController.getGrainIllustrationURL(grain.grain_type_id)"></div>
-                                            </div>
+
                                         </div>
-
-                                    </div>
-                                    <div class="eight cell">[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
-                                    <div class="cell right-magnet">
-                                        <i class="drag-anchor"></i>
-                                    </div>
-                                </li>
-                            </ul>
+                                        <div class="eight cell">[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
+                                        <div class="cell right-magnet">
+                                            <i class="drag-anchor"></i>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                </article>
+                    </article>
 
                     <!-- SUBJECT LIST -->
                     <subject-edit-subject-list></subject-edit-subject-list>
