@@ -74,6 +74,61 @@ class SubjectCopyService implements ISubjectCopyService {
         return deferred.promise;
     };
 
+    public resolve_force = function(isTeacher:boolean):ng.IPromise<boolean> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: isTeacher ? 'exercizer/subjects-copy-by-subjects-scheduled' : 'exercizer/subjects-copy'
+            };
+            this._$http(request).then(
+                function(response) {
+                    self._listMappedById = {};
+                    self._listBySubjectScheduled = [];
+                    var subjectCopy;
+                    angular.forEach(response.data, function(subjectCopyObject) {
+                        subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
+                        if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
+                            self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
+                        }
+                        self._listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy);
+                        self._listMappedById[subjectCopy.id] = subjectCopy;
+                    });
+                    deferred.resolve(true);
+                },
+                function() {
+                    deferred.reject('Une erreur est survenue lors de la récupération des copies.');
+                }
+            );
+        return deferred.promise;
+    };
+
+    public resolveBySubjectScheduled_force = function(isTeacher:boolean, subjectScheduled: ISubjectScheduled):ng.IPromise<boolean> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: isTeacher ? 'exercizer/subjects-copy-by-subject-scheduled' : 'exercizer/subjects-copy'
+            };
+            this._$http(request).then(
+                function(response) {
+                    self._listBySubjectScheduled = [];
+                    var subjectCopy;
+                    angular.forEach(response.data, function(subjectCopyObject) {
+                        subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
+                        if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
+                            self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
+                        }
+                    });
+                    deferred.resolve(true);
+                },
+                function() {
+                    deferred.reject('Une erreur est survenue lors de la récupération des copies.');
+                }
+            );
+        return deferred.promise;
+    };
+
     public persist = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
         var self = this,
             deferred = this._$q.defer(),
