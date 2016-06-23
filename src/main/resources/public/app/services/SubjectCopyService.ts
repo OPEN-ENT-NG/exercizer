@@ -113,13 +113,10 @@ class SubjectCopyService implements ISubjectCopyService {
             };
             this._$http(request).then(
                 function(response) {
-                    self._listBySubjectScheduled = [];
+                    self._listBySubjectScheduled[subjectScheduled.id] = [];
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
-                        if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
-                            self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
-                        }
                         self._listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy);
 
                     });
@@ -158,6 +155,7 @@ class SubjectCopyService implements ISubjectCopyService {
 
     public update = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
         var deferred = this._$q.defer(),
+            self = this,
             request = {
                 method: 'PUT',
                 url: 'exercizer/subject-copy',
@@ -167,6 +165,7 @@ class SubjectCopyService implements ISubjectCopyService {
             this._$http(request).then(
                 function(response) {
                     subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(response.data));
+                    self.replaceInList(subjectCopy, self._listMappedById, self._listBySubjectScheduled);
                     deferred.resolve(subjectCopy);
                 },
                 function() {
@@ -176,6 +175,16 @@ class SubjectCopyService implements ISubjectCopyService {
         
         return deferred.promise;
     };
+
+    private replaceInList(subjectCopy : ISubjectCopy, listMappedById, listBySubjectScheduled){
+        listMappedById[subjectCopy.id] = subjectCopy;
+        angular.forEach(listBySubjectScheduled[subjectCopy.subject_scheduled_id], function(copy, key){
+            if(copy.id == subjectCopy.id) {
+                listBySubjectScheduled[subjectCopy.subject_scheduled_id].splice(key, 1);
+            }
+        });
+        listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy);
+    }
 
     public createFromSubjectScheduled = function(subjectScheduled:ISubjectScheduled):ISubjectCopy {
         var subjectCopy = new SubjectCopy();
