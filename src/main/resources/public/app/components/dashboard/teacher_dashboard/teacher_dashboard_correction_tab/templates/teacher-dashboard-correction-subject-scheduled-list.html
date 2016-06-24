@@ -3,22 +3,11 @@
 
     <section class="four cell">
 
-        <div class="row">
-            <div class="cell"
-                 data-ng-click="clickFilter('corrected')"
-                 data-ng-style="search.filter == 'corrected' && {'background-color': '#FF8500'} || search.filter != 'corrected' && {'background-color': 'lightgray'}"
-                 style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
-                <span>Corrigés</span>
-            </div>
-            <div class="cell horizontal-spacing"
-                 data-ng-click="clickFilter('notCorrected')"
-                 data-ng-style="search.filter == 'notCorrected' && {'background-color': '#FF8500'} || search.filter != 'notCorrected' && {'background-color': 'lightgray'}"
-                 style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
-                <span>Non corrigés</span>
-            </div>
-        </div>
+        <!--<div class="row">
 
-        <nav class="row vertical vertical-spacing">
+        </div>-->
+
+        <nav class="row vertical vertical-spacing" style="margin-top: 0px !important">
             <article>
                 <h2 class="row">Filtrer sur les groupes</h2>
 
@@ -41,14 +30,26 @@
 
     <section class="cell eight">
         <div class="row">
-            <div class="cell">
+            <div class="cell"
+                 data-ng-click="clickFilter('corrected')"
+                 data-ng-style="search.filter == 'corrected' && {'background-color': '#FF8500'} || search.filter != 'corrected' && {'background-color': 'lightgray'}"
+                 style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
+                <span>Corrigés</span>
+            </div>
+            <div class="cell horizontal-spacing"
+                 data-ng-click="clickFilter('notCorrected')"
+                 data-ng-style="search.filter == 'notCorrected' && {'background-color': '#FF8500'} || search.filter != 'notCorrected' && {'background-color': 'lightgray'}"
+                 style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
+                <span>Non corrigés</span>
+            </div>
+            <div class="cell" style="margin-top: 10px;">
                 <label class="two cell">
                     Du
                 </label>
                 <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
             </div>
 
-            <div class="cell">
+            <div class="cell" style="margin-top: 10px;">
                 <label class="two cell">
                     Au
                 </label>
