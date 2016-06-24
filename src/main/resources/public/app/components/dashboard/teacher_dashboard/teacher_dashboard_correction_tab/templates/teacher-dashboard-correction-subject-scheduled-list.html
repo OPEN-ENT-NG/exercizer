@@ -6,13 +6,13 @@
         <div class="row">
             <div class="cell"
                  data-ng-click="clickFilter('corrected')"
-                 data-ng-style="search.filter == 'corrected' && {'background-color': 'lightblue'} || search.filter != 'corrected' && {'background-color': 'lightgray'}"
+                 data-ng-style="search.filter == 'corrected' && {'background-color': '#FF8500'} || search.filter != 'corrected' && {'background-color': 'lightgray'}"
                  style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
                 <span>Corrigés</span>
             </div>
             <div class="cell horizontal-spacing"
                  data-ng-click="clickFilter('notCorrected')"
-                 data-ng-style="search.filter == 'notCorrected' && {'background-color': 'lightblue'} || search.filter != 'notCorrected' && {'background-color': 'lightgray'}"
+                 data-ng-style="search.filter == 'notCorrected' && {'background-color': '#FF8500'} || search.filter != 'notCorrected' && {'background-color': 'lightgray'}"
                  style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
                 <span>Non corrigés</span>
             </div>
@@ -20,7 +20,7 @@
 
         <nav class="row vertical vertical-spacing">
             <article>
-                <h2 class="row">Classes - groupes</h2>
+                <h2 class="row">Filtrer sur les groupes</h2>
 
                 <div class="row">
                     <div class="twelve cell" data-ng-click="clickOnAutoComplete()">
