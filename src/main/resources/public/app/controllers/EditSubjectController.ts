@@ -152,10 +152,16 @@ class EditSubjectController {
 
     public dropTo = function($originalEvent) {
         var dataField = this._dragService.dropConditionFunction(this._subject, $originalEvent),
-            originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
+            originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField)),
+            self = this;
 
         this._grainService.duplicate(originalItem, this._subject).then(
-            function() {},
+            function(grainDuplicated) {
+                self._$scope.$$postDigest(function() {
+                    jQuery('html, body').animate({ scrollTop: jQuery('#grain-edit-' + grainDuplicated.id).offset().top - 100}, 500);
+                });
+
+            },
             function(err) {
                 notify.error(err);
             }

@@ -94,7 +94,7 @@
 
                 <div class="row" dragdrop="editSubjectController.dropTo($originalEvent)">
 
-                    <article data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false">
+                    <article data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false" id="grain-edit-[[grain.id]]">
 
                         <!-- GRAIN HEADER -->
                         <div class="row">
