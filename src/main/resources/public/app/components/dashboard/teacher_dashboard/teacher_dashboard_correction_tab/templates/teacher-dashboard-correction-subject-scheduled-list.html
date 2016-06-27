@@ -30,16 +30,16 @@
 
     <section class="cell eight">
         <div class="row">
-            <div class="cell"
+            <div class="cell custom-filter-button"
                  data-ng-click="clickFilter('corrected')"
-                 data-ng-style="search.filter == 'corrected' && {'background-color': '#FF8500'} || search.filter != 'corrected' && {'background-color': 'lightgray'}"
-                 style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
+                 data-ng-class="filerIsSelected(search.filter, 'corrected')"
+            >
                 <span>Corrigés</span>
             </div>
-            <div class="cell horizontal-spacing"
+            <div class="cell horizontal-spacing custom-filter-button"
                  data-ng-click="clickFilter('notCorrected')"
-                 data-ng-style="search.filter == 'notCorrected' && {'background-color': '#FF8500'} || search.filter != 'notCorrected' && {'background-color': 'lightgray'}"
-                 style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
+                 data-ng-class="filerIsSelected(search.filter, 'notCorrected')"
+             >
                 <span>Non corrigés</span>
             </div>
             <div class="cell" style="margin-top: 10px;">
