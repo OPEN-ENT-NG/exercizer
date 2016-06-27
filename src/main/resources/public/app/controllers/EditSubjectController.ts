@@ -393,16 +393,10 @@ class EditSubjectController {
             var self = this;
 
             angular.forEach(this._grainList, function (grain:IGrain) {
-               self.updateGrain(grain).then(
-                   function() {
-                       if (!self.isGrainFolded(grain)) {
-                           self.foldGrain(grain);
-                       }
-                   },
-                   function(err) {
-                       notify.error(err);
-                   }
-               );
+                if (!self.isGrainFolded(grain)) {
+                    self.foldGrain(grain);
+                }
+               self.updateGrain(grain);
             });
         }
     };
