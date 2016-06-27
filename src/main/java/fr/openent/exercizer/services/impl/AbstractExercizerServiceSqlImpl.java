@@ -93,10 +93,83 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     }
     
     /**
+     * List resources according to parameters.
+     * 
+     * @param resourceIdentifier the resource alias
+     * @param joins the joins
+     * @param filters the filters
+     * @param orderBy the orders by
+     * @param limit the limit
+     * @param offset the offset
+     * @param handler the handler
+     */
+    protected void list(final String resourceAlias, final JsonArray joins, final JsonArray filters, final JsonArray orderBy, final String limit, final String offset, final Handler<Either<String, JsonArray>> handler) {
+    	StringBuilder query = new StringBuilder();
+    	
+    	query.append("SELECT ").append(resourceAlias).append(".* FROM ").append(resourceTable).append(" AS ").append(resourceAlias);
+    	
+    	if (joins != null && joins.size() > 0) {
+    		for (Object join : joins) {
+                query.append(" ").append(join);
+            }
+    	}
+    	
+    	if (filters != null && filters.size() > 0) {
+    		query.append(" WHERE true");
+            for (Object filter : filters) {
+                query.append(" AND ").append(filter);
+            }
+    	}
+    	
+    	if (orderBy != null && orderBy.size() > 0) {
+    		query.append(" ORDER BY 1 ");
+    		for (Object currentOrderBy : orderBy) {
+                query.append(", ").append(currentOrderBy);
+            }
+    		
+    		if (limit != null && offset != null && limit.length() > 0 && offset.length() > 0) {
+    			query.append(" LIMIT ").append(limit).append(" OFFSET ").append(offset);
+    		}
+    	}
+    	
+    	sql.prepared(query.toString(), new JsonArray(), SqlResult.validResultHandler(handler)); 
+    }
+    
+    /**
+     * Count resources according to parameters.
+     * 
+     * @param resourceIdentifier the resource alias
+     * @param joins the joins
+     * @param filters the filters
+     * @param handler the handler
+     */
+    protected void count(final String resourceAlias, final JsonArray joins, final JsonArray filters, final Handler<Either<String, JsonObject>> handler) {
+    	StringBuilder query = new StringBuilder();
+    	
+    	query.append("SELECT COUNT(").append(resourceAlias).append(".*) FROM ").append(resourceTable).append(" AS ").append(resourceAlias);
+    	
+    	if (joins != null && joins.size() > 0) {
+    		for (Object join : joins) {
+                query.append(" ").append(join);
+            }
+    	}
+    	
+    	if (filters != null && filters.size() > 0) {
+    		query.append(" WHERE true");
+            for (Object filter : filters) {
+                query.append(" AND ").append(filter);
+            }
+    	}
+    	
+    	sql.prepared(query.toString(), new JsonArray(), SqlResult.validUniqueResultHandler(handler)); 
+    }
+    
+    /**
      * Returns the list of resources.
      *
      * @param filters some custom filters
      * @param handler the handler
+     * @deprecated
      */
     protected void list(final JsonArray filters, final Handler<Either<String, JsonArray>> handler) {
     	StringBuilder query = new StringBuilder();
@@ -177,6 +250,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      * @param resourceIdentifierName the other resource identifier in the resource table
      * @param resourceTable the other resource table (with schema)
      * @param handler the handler
+     * @deprecated
      */
     protected void list(final JsonObject resource, final String resourceIdentifierName, final String resourceTable, final Handler<Either<String, JsonArray>> handler) {
         StringBuilder query = new StringBuilder();
@@ -202,6 +276,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      * @param invert useful for some case
      * @param user the current user
      * @param handler the handler
+     * @deprecated
      */
     protected void list(final String resourceIdentifierName, final String resourceTable, final Boolean invert, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
         StringBuilder query = new StringBuilder();

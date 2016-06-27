@@ -128,7 +128,7 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 	
-	@Get("/subjects-for-library")
+	@Post("/subjects-for-library")
 	@ApiDoc("Gets subject list for library.")
 	@SecuredAction("exercizer.subject.list.for.library")
 	public void listLibrarySubject(final HttpServerRequest request) {
@@ -136,7 +136,36 @@ public class SubjectController extends ControllerHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					subjectService.list(arrayResponseHandler(request));
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject searchData) {
+							subjectService.listLibrarySubject(searchData, arrayResponseHandler(request));
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+
+			}
+		});
+	}
+	
+	@Post("/count-subjects-for-library")
+	@ApiDoc("Counts subject list for library.")
+	@SecuredAction("exercizer.subject.count.for.library")
+	public void countLibrarySubject(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject searchData) {
+							subjectService.countLibrarySubject(searchData, notEmptyResponseHandler(request));
+						}
+					});
 				}
 				else {
 					log.debug("User not found in session.");
