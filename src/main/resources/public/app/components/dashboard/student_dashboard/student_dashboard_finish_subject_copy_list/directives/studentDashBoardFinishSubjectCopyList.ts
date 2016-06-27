@@ -32,7 +32,13 @@ directives.push(
                             } else{
                                 scope.search.filter = filter
                             }
-                        }
+                        };
+
+                        scope.filerIsSelected = function(filter_a, filter_b){
+                            if(filter_a === filter_b){
+                                return 'custom-selected'
+                            }
+                        };
                     }
                 }
             }

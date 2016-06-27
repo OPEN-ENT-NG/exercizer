@@ -16,11 +16,11 @@ directives.push(
                     scope.subjectScheduledList = [];
                     // Date data
                     scope.today = new Date();
-                    scope.dateAMonthAgo = DateService.addDays(scope.today, -30);
-                    scope.dateInAMonth = DateService.addDays(scope.today, 30);
+                    scope.dateAYearshAgo = DateService.addDays(scope.today, -365);
+                    scope.dateInAYears = DateService.addDays(scope.today, 365);
                     scope.search = {
-                        beginDate : scope.dateAMonthAgo,
-                        endDate : scope.dateInAMonth
+                        beginDate : scope.dateAYearshAgo,
+                        endDate : scope.dateInAYears
                     };
 
                     /**
@@ -148,6 +148,16 @@ directives.push(
                     };
 
                     /**
+                     * DISPLAY
+                     */
+
+                    scope.filerIsSelected = function(filter_a, filter_b){
+                        if(filter_a === filter_b){
+                            return 'custom-selected'
+                        }
+                    };
+
+                    /**
                      * FILTER ANGULAR
                      */
 
@@ -191,6 +201,23 @@ directives.push(
                                     throw "filter unknown"
                                 }
                             }
+                        }
+                    };
+
+                    scope.orderByCopyListModificationDate = function(subjectScheduled){
+                        var copyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                        var lastUpdateCopy = null;
+                        angular.forEach(copyList, function(copy){
+                            if(lastUpdateCopy){
+                                if(DateService.compare_after(DateService.isoToDate(copy.modified), DateService.isoToDate(lastUpdateCopy))){
+                                    lastUpdateCopy = copy;
+                                }
+                            } else{
+                                lastUpdateCopy = copy;
+                            }
+                        });
+                        if(lastUpdateCopy !== null){
+                            return lastUpdateCopy.modified;
                         }
                     }
                 }

@@ -1,5 +1,8 @@
-<dashboard-teacher-tab current-tab="'correction'"></dashboard-teacher-tab>
 <div data-ng-controller="TeacherDashboardCorrectionTabController as teacherDashboardCorrectionTabController">
+        <dashboard-teacher-tab
+                current-tab="'correction'"
+                selected-subject-scheduled="selectedSubjectScheduled"
+        ></dashboard-teacher-tab>
         <teacher-dashboard-correction-subject-scheduled-list
                 data-ng-hide="selectedSubjectScheduled"
                 selected-subject-scheduled="selectedSubjectScheduled">

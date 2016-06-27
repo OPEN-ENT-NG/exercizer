@@ -10,7 +10,7 @@
         <!-- TOP HEADER -->
         <div class="row">
             <h1 class="cell">
-                Exercizer - [[ editSubjectController.subject.title ]]
+                <span data-ng-click="editSubjectController.redirectToDashboard()">Exercizer</span> - <span data-ng-click="">[[ editSubjectController.subject.title ]]</span>
             </h1>
 
             <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
@@ -18,7 +18,7 @@
             </button>
 
             <button class="right-magnet cell flat-button" data-ng-click="editSubjectController.redirectToDashboard()">
-                Terminer
+                Retour à mes sujets
             </button>
         </div>
 
@@ -50,13 +50,13 @@
                                 </a>
                             </div>
 
-                            <div class="row" style="overflow-y:scroll; max-height: 150px; border:1px dotted lightgrey;" data-ng-show="editSubjectController.grainList.length > 0">
-                                <!-- do not add data- before sortable-list and sortable element -->
-                                <ul sortable-list class="thought-out-actions">
-                                    <li data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false"
-                                        sortable-element
-                                        data-ng-change="editSubjectController.reOrder()"
-                                        data-ng-model="grain.index">
+                        <div class="row" style="overflow-y:scroll; max-height: 50vh; border:1px dotted lightgrey;" data-ng-show="editSubjectController.grainList.length > 0">
+                            <!-- do not add data- before sortable-list and sortable element -->
+                            <ul sortable-list class="thought-out-actions">
+                                <li data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false"
+                                    sortable-element
+                                    data-ng-change="editSubjectController.reOrder()"
+                                    data-ng-model="grain.index">
 
                                         <div class="one cell">
                                             <div data-ng-switch="grain.grain_type_id">
@@ -74,16 +74,16 @@
                                                 </div>
                                             </div>
 
-                                        </div>
-                                        <div class="eight cell">[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
-                                        <div class="cell right-magnet">
-                                            <i class="drag-anchor"></i>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+                                    </div>
+                                    <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
+                                    <div class="cell right-magnet">
+                                        <i class="drag-anchor"></i>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
-                    </article>
+                    </div>
+                </article>
 
                     <!-- SUBJECT LIST -->
                     <subject-edit-subject-list></subject-edit-subject-list>
@@ -95,7 +95,7 @@
 
                 <div class="row" dragdrop="editSubjectController.dropTo($originalEvent)">
 
-                    <article data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false">
+                    <article data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false" id="grain-edit-[[grain.id]]">
 
                         <!-- GRAIN HEADER -->
                         <div class="row">
@@ -138,14 +138,15 @@
 
                             <!-- TITLE & SCORE -->
                             <div class="row vertical-spacing" data-ng-if="grain.grain_type_id > 3">
-                                <input type="text" class="six cell" data-ng-model="grain.grain_data.title" complete-change="editSubjectController.updateGrain(grain)" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question" />
+                                <textarea class="six cell" data-ng-model="grain.grain_data.title" complete-change="editSubjectController.updateGrain(grain)" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question"style="height: 60px;" maxlength="255"></textarea>
+                                <!--<input type="text" class="six cell" data-ng-model="grain.grain_data.title" complete-change="editSubjectController.updateGrain(grain)" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question" />-->
                                 <input type="text" class="cell right-magnet" data-ng-model="grain.grain_data.max_score" complete-change="editSubjectController.updateGrain(grain)" data-digits-input-restrict placeholder="Pondération" />
                                 <em class="high-importance cell right-magnet">Question sur /</em>
                             </div>
 
                             <!-- GRAIN STATEMENT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                <editor data-ng-model="grain.grain_data.statement"></editor>
+                                <editor data-ng-model="grain.grain_data.statement" inline placeholder="Énoncé"></editor>
                             </div>
 
                             <!-- GRAIN DOCUMENT LIST -->
@@ -175,10 +176,10 @@
                             </div>
 
                             <!-- ADD GRAIN DOCUMENT BUTTON -->
-                            <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                <button data-ng-click="editSubjectController.displayModalAddGrainDocument(grain)" class="twelve cell flat-button">
+                            <div class="row" data-ng-if="grain.grain_type_id > 3" style="text-align: center">
+                                <a class="classic-link" data-ng-click="editSubjectController.displayModalAddGrainDocument(grain)">
                                     Ajouter un document
-                                </button>
+                                </a>
                             </div>
 
                             <div data-ng-switch="grain.grain_type_id">
@@ -249,11 +250,12 @@
                                     <choose-answer data-grain="grain"></choose-answer>
                                 </div>
                                 <div data-ng-switch-when="3">
+                                    <h2>[[grain.order_by]]&nbsp;)&nbsp;</h2>
                                     <div class="eleven cell vertical-spacing" style="word-wrap: break-word;" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
                                 </div>
                                 <div data-ng-switch-default>
                                     <div class="eleven cell vertical-spacing">
-                                        <h2>[[ editSubjectController.getGrainDisplayedName(grain) ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
+                                        <h2>[[grain.order_by]]&nbsp;)&nbsp;[[ editSubjectController.getGrainDisplayedName(grain) ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
                                     </div>
                                 </div>
                             </div>
@@ -265,7 +267,9 @@
 
                 <!-- ADD GRAIN -->
                 <div class="editor drawing-grid">
-                    <button class="grid-add-row" data-ng-click="editSubjectController.addGrain()">Ajouter un élément</button>
+                    <button data-ng-click="editSubjectController.addGrain()" class="twelve cell flat-button">
+                        Ajouter un élément
+                    </button>
                 </div>
 
             </section>

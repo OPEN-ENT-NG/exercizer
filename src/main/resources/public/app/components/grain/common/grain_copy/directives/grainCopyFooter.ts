@@ -14,11 +14,11 @@ directives.push(
                     scope.isFolded = true;
 
                     scope.hasAnswerExplanation = function() {
-                        return !angular.isUndefined(scope.grainScheduled.grain_data.answer_explanation);
+                        return !angular.isUndefined(scope.grainScheduled.grain_data.answer_explanation) && scope.grainScheduled.grain_data.answer_explanation !== null;
                     };
                     
                     scope.hasComment = function() {
-                        return !angular.isUndefined(scope.grainCopy.comment);
+                        return !angular.isUndefined(scope.grainCopy.comment)  && scope.grainCopy.comment !== null;
                     };
 
                     scope.toggle = function() {

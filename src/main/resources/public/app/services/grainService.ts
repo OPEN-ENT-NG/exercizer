@@ -86,13 +86,6 @@ class GrainService implements IGrainService {
         this._$http(request).then(
             function (response) {
                 var grain = self.instantiateGrain(response.data);
-
-                if (grainIndex !== -1) {
-                    self._listMappedBySubjectId[grain.subject_id][grainIndex] = grain;
-                } else {
-                    self._listMappedBySubjectId[grain.subject_id].push(grain);
-                }
-
                 deferred.resolve(grain);
             },
             function () {

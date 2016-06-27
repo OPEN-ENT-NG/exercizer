@@ -14,7 +14,7 @@ class TeacherDashboardCorrectionTabController {
     constructor($routeParams, $scope, $q, SubjectScheduledService,SubjectCopyService) {
         $q.all([
                 SubjectScheduledService.resolve(true),
-                SubjectCopyService.resolve(true),
+                SubjectCopyService.resolve_force(true),
             ])
             .then(function() {
                 if (angular.isUndefined($routeParams['subjectScheduledId'])) {

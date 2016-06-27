@@ -27,7 +27,12 @@ class StudentDashboardController {
 
     public switchToTeacherView(){
         this._$location.path('/dashboard');
-        this._$window.location.reload();
+        var self = this;
+        setTimeout(
+            function(){
+                self._$window.location.reload();
+            },
+            1);
     }
 
 

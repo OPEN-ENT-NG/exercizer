@@ -13,7 +13,7 @@ directives.push(
                     scope.isAnswerHintFolded = true;
                     
                     scope.hasAnswerHint = function() {
-                        return !angular.isUndefined(scope.grainCopy.grain_copy_data.answer_hint);
+                        return !angular.isUndefined(scope.grainCopy.grain_copy_data.answer_hint) && scope.grainCopy.grain_copy_data.answer_hint  !== null;
                     };
                     
                     scope.toggleGrainCopyHint = function() {

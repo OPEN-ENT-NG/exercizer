@@ -23,7 +23,7 @@ directives.push(
                     scope.toasterDisplayed = false;
 
                     function init(subjectScheduled){
-                        SubjectCopyService.resolve(true).then(
+                        SubjectCopyService.resolveBySubjectScheduled_force(subjectScheduled).then(
                             function () {
                                 scope.subjectCopyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
                             }

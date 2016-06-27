@@ -97,7 +97,7 @@ public class SubjectCopyController extends ControllerHelper {
         });
     }
 	
-	@Post("/subjects-copy-by-subject-scheduled")
+	@Post("/subjects-copy-by-subject-scheduled/:id")
     @ApiDoc("Gets subject copy list by subject scheduled.")
 	@ResourceFilter(OwnerOnly.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)

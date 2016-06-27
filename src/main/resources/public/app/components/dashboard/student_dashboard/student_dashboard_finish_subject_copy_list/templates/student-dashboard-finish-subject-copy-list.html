@@ -2,22 +2,23 @@
 <div data-ng-controller="SubjectCopyListController as subjectCopyListController">
 
     <div class="row">
-        <div class="cell"
+        <div class="cell custom-filter-button"
              data-ng-click="clickFilter('is_submitted')"
-             data-ng-style="search.filter == 'is_submitted' && {'background-color': 'lightblue'} || search.filter != 'is_submitted' && {'background-color': 'lightgray'}"
-             style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
+             data-ng-class="filerIsSelected(search.filter, 'is_submitted')"
+        >
             <span>Rendus</span>
         </div>
-        <div class="cell"
+        <div class="cell custom-filter-button"
              data-ng-click="clickFilter('is_correction_on_going')"
-             data-ng-style="search.filter == 'is_correction_on_going' && {'background-color': 'lightblue'} || search.filter != 'is_correction_on_going' && {'background-color': 'lightgray'}"
-             style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
+             data-ng-class="filerIsSelected(search.filter, 'is_correction_on_going')"
+         >
             <span>En cours de correction</span>
         </div>
-        <div class="cell"
+        <div class="cell custom-filter-button"
              data-ng-click="clickFilter('is_corrected')"
-             data-ng-style="search.filter == 'is_corrected' && {'background-color': 'lightblue'} || search.filter != 'is_corrected'  && {'background-color': 'lightgray'}"
-             style="margin-right: 20px;border: 1px solid lightgray;padding: 10px;background-color: lightgray;border-radius: 2px;min-width: 150px;text-align: center;">
+             data-ng-class="filerIsSelected(search.filter, 'is_corrected')"
+
+        >
             <span>Corrigés</span>
         </div>
 
@@ -37,7 +38,7 @@
     </div>
 
     <div class="row vertical-spacing">
-        <input type="text" data-ng-model="search.text" placeholder="Rechercher" class="twelve cell">
+        <input type="text" data-ng-model="search.text" placeholder="Rechercher" class="cell">
     </div>
 
     <!-- list -->

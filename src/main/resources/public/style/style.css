@@ -1,3 +1,7 @@
+/*
+*   COLOR CORRECTED / CORRECTION ON GOING / HAS BEEN START / IS SUBMITTED
+*/
+
 .background-color-corrected{
     background-color: #72BB53;
 }
@@ -21,4 +25,21 @@
 }
 .color-has-been-started{
     color: #FF8351;
+}
+
+/**
+*   FILTER STYLE
+*/
+.custom-filter-button {
+    margin-right: 20px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    background-color: lightgray;
+    border-radius: 2px;
+    min-width: 150px;
+    text-align: center;
+}
+
+.custom-filter-button.custom-selected {
+    background-color  : #FF8500;
 }
