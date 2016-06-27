@@ -49,12 +49,15 @@ public class SubjectCopyController extends ControllerHelper {
                         @Override
                         public void handle(final JsonObject resource) {
                             subjectCopyService.persist(resource, user, notEmptyResponseHandler(request));
+                            /**
+                            *   need subjectcopy id
+                            */
                             JsonObject subjectCopy = ResourceParser.beforeAny(resource);
                             final List<String> recipientSet = new ArrayList<String>();
                             recipientSet.add(subjectCopy.getString("owner"));
                             String relativeUri = "/subject/copy/perform/"+subjectCopy.getString("id");
-                            String message = "vous a attribué une copie.";
-                            sendNotification(request, "assignCopy", user, recipientSet, relativeUri, message, subjectCopy.getString("id"));
+                            String message = "";
+                            sendNotification(request, "assigncopy", user, recipientSet, relativeUri, message, subjectCopy.getString("id"));
                         }
                     });
                 } else {
