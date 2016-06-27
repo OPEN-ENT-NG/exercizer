@@ -44,6 +44,10 @@ public class SubjectCopyController extends ControllerHelper {
                         @Override
                         public void handle(final JsonObject resource) {
                             subjectCopyService.persist(resource, user, notEmptyResponseHandler(request));
+                            /*
+                            List<String> studentIdList = Arrays.asList(resource.owner);
+                            this.notification.notifyTimeline(HttpServerRequest, "exercizer.assignCopy", user, studentIdList)
+                             */
                         }
                     });
                 } else {
