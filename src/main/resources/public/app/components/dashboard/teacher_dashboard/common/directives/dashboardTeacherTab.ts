@@ -37,8 +37,21 @@ directives.push(
                     };
 
                     scope.clickReturnExercizer = function(){
-                        scope.selectedSubjectScheduled = null;
-                        $location.path('/dashboard');
+                        switch (scope.currentTab){
+                            case 'mySubjects':
+                                break;
+                            case 'correction':
+                                scope.selectedSubjectScheduled = null;
+                                $location.path('/dashboard');
+                                break;
+                            case 'library':
+                                scope.selectedSubjectScheduled = null;
+                                $location.path('/dashboard');
+                                break;
+                            default :
+                                throw "tab "+scope.currentTab+"  missing"
+                        }
+
                     };
 
                     scope.clickReturnExercizerTab = function(){
