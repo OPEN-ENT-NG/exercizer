@@ -1,4 +1,8 @@
 package fr.openent.exercizer.controllers;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
@@ -14,6 +18,7 @@ import org.vertx.java.core.json.JsonObject;
 
 import fr.openent.exercizer.filters.TypeSubjectScheduledOwnerOrSubjectCopyOwner;
 import fr.openent.exercizer.services.ISubjectCopyService;
+import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.impl.SubjectCopyServiceSqlImpl;
 import fr.wseduc.rs.ApiDoc;
 import fr.wseduc.rs.Get;
@@ -44,10 +49,12 @@ public class SubjectCopyController extends ControllerHelper {
                         @Override
                         public void handle(final JsonObject resource) {
                             subjectCopyService.persist(resource, user, notEmptyResponseHandler(request));
-                            /*
-                            List<String> studentIdList = Arrays.asList(resource.owner);
-                            this.notification.notifyTimeline(HttpServerRequest, "exercizer.assignCopy", user, studentIdList)
-                             */
+                            JsonObject subjectCopy = ResourceParser.beforeAny(resource);
+                            final List<String> recipientSet = new ArrayList<String>();
+                            recipientSet.add(subjectCopy.getString("owner"));
+                            String relativeUri = "/subject/copy/perform/"+subjectCopy.getString("id");
+                            String message = "vous a attribué une copie.";
+                            sendNotification(request, "assignCopy", user, recipientSet, relativeUri, message, subjectCopy.getString("id"));
                         }
                     });
                 } else {
@@ -58,6 +65,34 @@ public class SubjectCopyController extends ControllerHelper {
             }
         });
     }
+
+    /**
+    *   Send a notification in copy controller
+    *   @param request : HttpServerRequest client
+    *   @param notificationName : name of the notification
+    *   @param user : user who send the notification
+    *   @param recipientSet : list of student
+    *   @param relativeUri: relative url exemple: /subject/copy/perform/9/
+    *   @param message : message of the notification
+    *   @param idResource : id of the resource
+    **/
+	private void sendNotification(
+	    final HttpServerRequest request,
+	    final String notificationName,
+	    final UserInfos user,
+	    final List<String> recipientSet,
+        final String relativeUri,
+        final String message,
+        final String idResource
+        ) {
+        JsonObject params = new JsonObject();
+        params.putString("uri", container.config().getString("host", "http://localhost:8090") +
+                "/exercizer/#" + relativeUri);
+        params.putString("username", user.getUsername());
+        params.putString("message", message);
+        params.putString("resourceUri", params.getString("uri"));
+        this.notification.notifyTimeline(request,"exercizer." + notificationName, user, recipientSet, idResource, params);
+	}
 	
 	@Put("/subject-copy")
 	@ApiDoc("Updates a subject copy.")
