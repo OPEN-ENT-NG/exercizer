@@ -1,11 +1,15 @@
 package fr.openent.exercizer.controllers;
+
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
+
 
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
@@ -27,6 +31,7 @@ import fr.wseduc.rs.Put;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.request.RequestUtils;
+import fr.wseduc.webutils.Either;
 
 public class SubjectCopyController extends ControllerHelper {
 	
@@ -48,16 +53,25 @@ public class SubjectCopyController extends ControllerHelper {
                     RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
                         @Override
                         public void handle(final JsonObject resource) {
-                            subjectCopyService.persist(resource, user, notEmptyResponseHandler(request));
-                            /**
-                            *   need subjectcopy id
-                            */
-                            JsonObject subjectCopy = ResourceParser.beforeAny(resource);
-                            final List<String> recipientSet = new ArrayList<String>();
-                            recipientSet.add(subjectCopy.getString("owner"));
-                            String relativeUri = "/subject/copy/perform/"+subjectCopy.getString("id");
-                            String message = "";
-                            sendNotification(request, "assigncopy", user, recipientSet, relativeUri, message, subjectCopy.getString("id"));
+                            subjectCopyService.persist(resource, user, new Handler<Either<String,JsonObject>>() {
+                                    @Override
+                                    public void handle(Either<String, JsonObject> r) {
+                                        if (r.isRight()) {
+                                            JsonObject subjectCopy = ResourceParser.beforeAny(r.right().getValue());
+                                            Long subjectCopyId = subjectCopy.getLong("id");
+                                            String subjectCopyId_string = Long.toString(subjectCopyId);
+                                            final List<String> recipientSet = new ArrayList<String>();
+                                            recipientSet.add(subjectCopy.getString("owner"));
+                                            String relativeUri = "/subject/copy/perform/"+subjectCopyId_string;
+                                            String message = "";
+                                            sendNotification(request, "assigncopy", user, recipientSet, relativeUri, message, subjectCopyId_string);
+                                            renderJson(request, r.right().getValue());
+                                        } else {
+
+                                        }
+                                    }
+                                }
+                            );
                         }
                     });
                 } else {
@@ -90,7 +104,7 @@ public class SubjectCopyController extends ControllerHelper {
         ) {
         JsonObject params = new JsonObject();
         params.putString("uri", container.config().getString("host", "http://localhost:8090") +
-                "/exercizer/#" + relativeUri);
+                "/exercizer#" + relativeUri);
         params.putString("username", user.getUsername());
         params.putString("message", message);
         params.putString("resourceUri", params.getString("uri"));
