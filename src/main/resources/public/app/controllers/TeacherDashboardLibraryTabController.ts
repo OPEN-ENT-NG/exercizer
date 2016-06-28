@@ -37,19 +37,6 @@ class TeacherDashboardLibraryTabController {
         this._selectedSubjectList = [];
 
         var self = this;
-
-        this._subjectService.resolveForLibrary().then(function() {
-            self._subjectForLibraryList = self._subjectService.getListForLibrary();
-
-            self._$scope.$on('E_CONFIRM_COPY_PASTE', function (event, parentFolder) {
-                self._copyPastSelectedSubjectList(parentFolder);
-            });
-
-            self._hasDataLoaded = true;
-
-        }, function(err) {
-            notify.error(err);
-        });
     }
 
     /**

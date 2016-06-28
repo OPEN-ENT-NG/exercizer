@@ -74,6 +74,11 @@ class TeacherDashboardSubjectTabController {
             self._resetSelectedSubjectList();
         });
 
+        self._$scope.$on('E_PUBLISH_SUBJECT', function (event, subject) {
+            self._$scope.$broadcast('E_DISPLAY_MODAL_PUBLISH_TO_LIBRARY', subject);
+            self._resetSelectedSubjectList();
+        });
+
         self._$scope.$on('E_EDIT_FOLDER', function (event, folder) {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER', folder);
             self._resetSelectedFolderList();

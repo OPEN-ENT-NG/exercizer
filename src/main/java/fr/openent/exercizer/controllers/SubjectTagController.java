@@ -66,5 +66,28 @@ public class SubjectTagController extends ControllerHelper {
             }
         });
     }
+    
+    @Post("/subject-tags-by-subject-id")
+    @ApiDoc("Gets subject tag list by subject id.")
+    @SecuredAction("exercizer.subject.tag.list.by.subject.id")
+    public void listBySubjectId(final HttpServerRequest request) {
+        UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+            @Override
+            public void handle(final UserInfos user) {
+                if (user != null) {
+                	RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            subjectTagService.listBySubjectId(resource, arrayResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
+            }
+        });
+    }
 
 }

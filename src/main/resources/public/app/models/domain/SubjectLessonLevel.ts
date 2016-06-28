@@ -1,9 +1,9 @@
-interface ILessonLevel {
+interface ISubjectLessonLevel {
     id: number;
     label: string;
 }
 
-class LessonLevel implements ILessonLevel {
+class SubjectLessonLevel implements ISubjectLessonLevel {
 
     id: number;
     label: string;

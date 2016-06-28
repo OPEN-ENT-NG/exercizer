@@ -1,9 +1,7 @@
 interface ISubjectTagService {
-    resolve(): ng.IPromise<boolean>;
+    resolve(): ng.IPromise<ISubjectTag[]>;
     persist(subjectTag:ISubjectTag): ng.IPromise<ISubjectTag>;
-    getById(id:number): ISubjectTag;
-    getLabel(id:number): ISubjectTag;
-    getList(): ISubjectTag[];
+    getListBySubjectId(subjectId:number): ng.IPromise<ISubjectTag[]>;
 }
 
 class SubjectTagService implements ISubjectTagService {
@@ -14,6 +12,7 @@ class SubjectTagService implements ISubjectTagService {
     ];
 
     private _listMappedById: {[id:number]:ISubjectTag};
+    private _listMappedBySubjectId: {[subjectId:number]:ISubjectTag[]};
 
     constructor
     (
@@ -25,24 +24,104 @@ class SubjectTagService implements ISubjectTagService {
         this._$http = _$http;
     }
 
-    public resolve = function():ng.IPromise<boolean> {
-        // TODO
+    public resolve = function():ng.IPromise<ISubjectTag[]> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: 'exercizer/subject-tags'
+            };
+
+        if (!angular.isUndefined(this._listMappedById)) {
+            deferred.resolve(MapToListHelper.toList(this._listMappedById));
+        } else {
+            this._$http(request).then(
+                function(response) {
+                    self._listMappedById = {};
+
+                    angular.forEach(response.data, function (subjectTagObject) {
+                        var subjectTag = SerializationHelper.toInstance(new SubjectTag(), JSON.stringify(subjectTagObject));
+                        self._listMappedById[subjectTag.id] = subjectTag;
+                    });
+
+                    deferred.resolve(true);
+                },
+                function() {
+                    deferred.reject('Une erreur est survenue lors de la récupération des tags des sujets de la bibliothèque.');
+                }
+            );
+        }
+        return deferred.promise;
     };
 
-    public persist = function():ng.IPromise<ISubjectTag> {
-        // TODO
-    };
+    public persist = function(subjectTag:ISubjectTag):ng.IPromise<ISubjectTag> {
+        var self = this,
+            deferred = this._$q.defer();
 
-    public getById = function(id:number):ISubjectTag {
-        return this._listMappedById[id];
-    };
+        var subjectTagObject = angular.copy(subjectTag);
 
-    public getLabel = function(id:number):string {
-        return this._listMappedById[id].label;
-    };
+        var request = {
+            method: 'POST',
+            url: 'exercizer/subject-tag',
+            data: subjectTagObject
+        };
 
-    public getList = function():ISubjectTag[] {
-        return MapToListHelper.toList(this._listMappedById);
+        this._$http(request).then(
+            function (response) {
+                var subjectTag = self.instantiateGrain(response.data);
+
+                if (angular.isUndefined(self._listMappedById[subjectTag.id])) {
+                    self._listMappedById[subjectTag.id] = [];
+                }
+
+                self._listMappedById[subjectTag.id].push(subjectTag);
+
+                deferred.resolve(subjectTag);
+            },
+            function () {
+                deferred.reject('Une erreur est survenue lors de la création du tag.')
+            }
+        );
+
+        return deferred.promise;
+    };
+    
+    public getListBySubjectId(subjectId:number):ng.IPromise<ISubjectTag[]> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject-tags-by-subject-id',
+                data: {
+                    subjectId: subjectId
+                }
+            };
+
+        if (angular.isUndefined(this._listMappedBySubjectId)) {
+            this._listMappedBySubjectId = {};
+        }
+
+        if (!angular.isUndefined(this._listMappedBySubjectId[subjectId])) {
+            deferred.resolve(this._listMappedBySubjectId[subjectId]);
+        } else {
+            this._$http(request).then(
+                function(response) {
+
+                    self._listMappedBySubjectId[subjectId] = [];
+
+                    angular.forEach(response.data, function (subjectTagObject) {
+                        var subjectTag = SerializationHelper.toInstance(new SubjectTag(), JSON.stringify(subjectTagObject));
+                        self._listMappedBySubjectId[subjectId].push(subjectTag);
+                    });
+
+                    deferred.resolve(self._listMappedBySubjectId[subjectId]);
+                },
+                function() {
+                    deferred.reject('Une erreur est survenue lors de la récupération des tags des sujets de la bibliothèque.');
+                }
+            );
+        }
+        return deferred.promise;
     };
 }
 

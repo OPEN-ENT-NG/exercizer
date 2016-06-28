@@ -95,7 +95,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     /**
      * List resources according to parameters.
      * 
-     * @param resourceIdentifier the resource alias
+     * @param resourceAlias the resource alias
      * @param joins the joins
      * @param filters the filters
      * @param orderBy the orders by
@@ -115,16 +115,14 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     	}
     	
     	if (filters != null && filters.size() > 0) {
-    		query.append(" WHERE true");
             for (Object filter : filters) {
-                query.append(" AND ").append(filter);
+                query.append(" ").append(filter);
             }
     	}
     	
     	if (orderBy != null && orderBy.size() > 0) {
-    		query.append(" ORDER BY 1 ");
     		for (Object currentOrderBy : orderBy) {
-                query.append(", ").append(currentOrderBy);
+                query.append(" ").append(currentOrderBy);
             }
     		
     		if (limit != null && offset != null && limit.length() > 0 && offset.length() > 0) {
@@ -138,7 +136,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     /**
      * Count resources according to parameters.
      * 
-     * @param resourceIdentifier the resource alias
+     * @param resourceAlias the resource alias
      * @param joins the joins
      * @param filters the filters
      * @param handler the handler

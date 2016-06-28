@@ -52,6 +52,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	@Override
 	public void list(final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
 		JsonArray filters = new JsonArray();
+		filters.addString("is_library_subject = false");
 		filters.addString("is_deleted = false");
 		super.list(filters, groupsAndUserIds, user, handler);
 	}
@@ -87,15 +88,16 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		}
 
 		JsonArray filters = new JsonArray();
+		filters.addString("WHERE");
 		filters.addString("r.is_library_subject = true");
-		filters.addString("r.is_deleted = false");
+		filters.addString("AND r.is_deleted = false");
 		
 		if (searchData.containsField("subject_title")) {
-			filters.addString("r.title ~* '.*" + searchData.getString("subject_title") + ".*'");
+			filters.addString("AND r.title ~* '.*" + searchData.getString("subject_title") + ".*'");
 		}
 
 		JsonArray orderBy = new JsonArray();
-		orderBy.addString("r.created DESC");
+		orderBy.addString("ORDER BY r.created DESC");
 		
 		String limit = null;
 		String offset = null;
@@ -139,11 +141,12 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		}
 
 		JsonArray filters = new JsonArray();
+		filters.addString("WHERE");
 		filters.addString("r.is_library_subject = true");
-		filters.addString("r.is_deleted = false");
+		filters.addString("AND r.is_deleted = false");
 		
 		if (searchData.containsField("subject_title")) {
-			filters.addString("r.title ~* '.*" + searchData.getString("subject_title") + ".*'");
+			filters.addString("AND r.title ~* '.*" + searchData.getString("subject_title") + ".*'");
 		}
 		
 		super.count("r", joins, filters, handler);

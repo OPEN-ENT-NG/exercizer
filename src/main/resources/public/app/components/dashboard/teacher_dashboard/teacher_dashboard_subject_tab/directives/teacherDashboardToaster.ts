@@ -107,7 +107,8 @@ directives.push(
                                 {
                                     publicName : 'Publier dans la bibliothèque',
                                     actionOnClick : function(){
-                                        notify.error('Not implemented yet');
+                                        var subject = SubjectService.getById(scope.subjectList[0]);
+                                        scope.$emit('E_PUBLISH_SUBJECT', subject);
                                     },
                                     display : function(){
                                         return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner' || scope.lowerRight == 'manager');

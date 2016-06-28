@@ -28,7 +28,7 @@ INSERT INTO exercizer.subject_lesson_type VALUES
 (13, 'Mathématiques'),
 (14, 'Philospohie'),
 (15, 'Physique'),
-(16, 'Sciences de l\'ingénieur'),
+(16, 'Sciences de l''ingénieur'),
 (17, 'Sciences de la vie et de la terre'),
 (18, 'Technologie');
 
