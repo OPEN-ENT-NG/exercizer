@@ -27,7 +27,7 @@ public class SubjectLibraryTagController extends ControllerHelper {
 		this.subjectLibraryTagService = new SubjectLibraryTagServiceSqlImpl();
 	}
 
-	@Post("/subject-libray-tag/:id")
+	@Post("/subject-library-tag/:id")
 	@ApiDoc("Persists a subject library tag.")
 	@ResourceFilter(OwnerOnly.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)

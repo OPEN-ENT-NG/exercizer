@@ -32,7 +32,7 @@ class SubjectLessonLevelService implements ISubjectLessonLevelService {
                 method: 'GET',
                 url: 'exercizer/subject-lesson-levels'
             };
-
+        
         if (!angular.isUndefined(this._listMappedById)) {
             deferred.resolve(true);
         } else {

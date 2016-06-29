@@ -1,14 +1,14 @@
 <lightbox show="isDisplayed" on-close="hide()">
-    <h2 class="row">Publier dans la bibliothèque</h2>
+    <h1 class="row">Publier dans la bibliothèque</h1>
 
-    <div class="row">
+    <div class="row vertical-spacing">
         <input type="checkbox"
                data-ng-checked="hasAgreedToPublish"
                data-ng-click="toggleHasAgreedToPublish()" />
         &nbsp;Je suis d'accord pour publier ce sujet en licence libre
     </div>
 
-    <div class="row">
+    <div class="row vertical-spacing">
         <div class="four cell">
             Renseignez la matière du sujet :
         </div>
@@ -18,7 +18,7 @@
         </select>
     </div>
 
-    <div class="row">
+    <div class="row vertical-spacing">
         <div class="four cell">
             Renseignez le niveau du sujet :
         </div>
@@ -28,39 +28,45 @@
         </select>
     </div>
 
-    <div class="row">
-        Rechercher et ajoutez des tags au sujet * :
+    <div class="row vertical-spacing">
+        Rechercher et ajoutez des tags au sujet :
+
     </div>
 
-    <div class="row">
-        *&nbsp;<em class="low-importance">3 maximum</em>
-    </div>
-
-    <div class="row">
+    <div class="row vertical-spacing">
         <autocomplete
-                class="eight cell"
-                options="subjectTagList"
-                ng-change="selectSubjectTag(selectedSubjectTag)"
-                ng-model="selectedSubjectTag"
-                ng-disabled="selectedSubjectTagList.length === 3">
+                class="twelve cell"
+                options="autocompleteSubjectTagList"
+                ng-change="selectSubjectTag(selectedSubjectTagObject)"
+                ng-model="selectedSubjectTagObject">
         </autocomplete>
-
-        <!--<button class="cell right-magnet" data-ng-hide="isSubjectTagExisting()" data-ng-click="addNewSubjectTag()">
-            Créer et ajouter le tag
-        </button>-->
     </div>
 
-    <h3 class="row">Tags associés au sujets :</h3>
+    <div class="row vertical-spacing">
 
-    <div class="row">
-        <div class="label-badge" style="padding: 5px 10px 5px 10px;" data-ng-repeat="subjectTag in selectedSubjectTagList">
+        <p>Le tag n'apparaît pas ? Créez-le :</p>
+
+        <input type="text" class="eight cell" maxlength="255" data-ng-model="newCustomTagLabel" placeholder="Libellé du nouveau tag">
+
+        <button class="cell right-magnet" data-ng-click="addNewSubjectTag(newCustomTagLabel); newCustomTagLabel = undefined;" data-ng-disabled="!newCustomTagLabel && !isPublicationOnGoing">
+            Créer et ajouter le tag
+        </button>
+    </div>
+
+    <h2 class="row">Tags associés au sujets* :</h2>
+    *&nbsp;<em class="low-importance">3 maximum</em>
+
+    <div class="row vertical-spacing">
+        <div class="label-badge" data-ng-repeat="subjectTag in selectedSubjectTagList">
             <span class="cell">[[ subjectTag.label ]]</span>
-            <i class="close cell right-magnet" data-ng-click="removeFromSelectedSubjectTagList(subjectTag)"></i>
+            <span class="cell right-magnet" data-ng-click="removeFromSelectedSubjectTagList(subjectTag)">
+                <i class="close"></i>
+            </span>
         </div>
     </div>
 
     <div class="row">
-        <!--<button data-ng-click="publish()" class="right-magnet">Publier</button>-->
-        <button data-ng-click="hide()" class="cancel right-magnet">Annuler</button>
+        <button data-ng-click="publish()" class="right-magnet" data-ng-disabled="isPublicationOnGoing">Publier</button>
+        <button data-ng-click="hide()" class="cancel right-magnet"  data-ng-disabled="isPublicationOnGoing">Annuler</button>
     </div>
 </lightbox>

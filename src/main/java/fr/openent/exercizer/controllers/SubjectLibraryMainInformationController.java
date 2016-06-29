@@ -27,7 +27,7 @@ public class SubjectLibraryMainInformationController extends ControllerHelper {
 		this.subjectLibraryMainInformationService = new SubjectLibraryMainInformationServiceSqlImpl();
 	}
 
-	@Post("/subject-libray-main-information/:id")
+	@Post("/subject-library-main-information/:id")
 	@ApiDoc("Persists the subject library main information.")
 	@ResourceFilter(OwnerOnly.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)

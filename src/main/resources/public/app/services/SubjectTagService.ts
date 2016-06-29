@@ -44,7 +44,7 @@ class SubjectTagService implements ISubjectTagService {
                         self._listMappedById[subjectTag.id] = subjectTag;
                     });
 
-                    deferred.resolve(true);
+                    deferred.resolve(MapToListHelper.toList(self._listMappedById));
                 },
                 function() {
                     deferred.reject('Une erreur est survenue lors de la récupération des tags des sujets de la bibliothèque.');
@@ -68,7 +68,7 @@ class SubjectTagService implements ISubjectTagService {
 
         this._$http(request).then(
             function (response) {
-                var subjectTag = self.instantiateGrain(response.data);
+                var subjectTag = SerializationHelper.toInstance(new SubjectTag(), JSON.stringify(response.data));
 
                 if (angular.isUndefined(self._listMappedById[subjectTag.id])) {
                     self._listMappedById[subjectTag.id] = [];
