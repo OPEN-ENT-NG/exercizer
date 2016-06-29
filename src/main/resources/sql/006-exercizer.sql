@@ -32,10 +32,10 @@ INSERT INTO exercizer.subject_lesson_type VALUES
 (17, 'Sciences de la vie et de la terre'),
 (18, 'Technologie');
 
-INSERT INTO exercizer.subject_tag VALUES
-(1, 'Facile'),
-(2, 'Intermédiaire'),
-(3, 'Difficile'),
-(4, 'Entrainement'),
-(5, 'Devoir maison'),
-(6, 'Contrôle');
+INSERT INTO exercizer.subject_tag (label) VALUES
+('Facile'),
+('Intermédiaire'),
+('Difficile'),
+('Entrainement'),
+('Devoir maison'),
+('Contrôle');

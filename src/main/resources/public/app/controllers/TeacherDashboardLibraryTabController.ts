@@ -1,43 +1,167 @@
 class TeacherDashboardLibraryTabController {
 
     static $inject = [
+        '$q',
         '$location',
         '$scope',
-        'SubjectService'
+        'SubjectLibraryService',
+        'SubjectLessonTypeService',
+        'SubjectLessonLevelService',
+        'SubjectTagService'
     ];
 
     // common
-    private _subjectForLibraryList:ISubject[];
+    private _subjectList:ISubject[];
     private _hasDataLoaded:boolean;
+    private _isLanding:boolean;
 
     // filters
-    private _filters:{title:string, tags:string[], lesson_type:string, lesson_level:string}; // TODO tags as model ?
-    private _tmpSubjectListByFilters:ISubject[];
+    private _filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]};
+
+    private _subjectLessonTypeList:ISubjectLessonType[];
+    private _subjectLessonLevelList:ISubjectLessonLevel[];
+
+    private _subjectTagList:ISubjectTag[];
+    private _autocompleteSubjectTagList:any[];
+
     private _areFiltersFolded:boolean;
-    
+    private _isFilterSubjectLessonTypeDisplayed:boolean;
+    private _isFilterSubjectLessonLevelDisplayed:boolean;
+
     // toaster
     private _selectedSubjectList:ISubject[];
 
     constructor
     (
+        private _$q:ng.IQService,
         private _$location:ng.ILocationService,
         private _$scope:ng.IScope,
-        private _subjectService:ISubjectService
+        private _subjectLibraryService:ISubjectLibraryService,
+        private _subjectLessonTypeService:ISubjectLessonTypeService,
+        private _subjectLessonLevelService:ISubjectLessonLevelService,
+        private _subjectTagService:ISubjectTagService
     ) {
+        this._$q = _$q;
         this._$location = _$location;
         this._$scope = _$scope;
-        this._subjectService = _subjectService;
+        this._subjectLibraryService = _subjectLibraryService;
+        this._subjectLessonTypeService = _subjectLessonTypeService;
+        this._subjectLessonLevelService = _subjectLessonLevelService;
+        this._subjectTagService = _subjectTagService;
 
+        // common
         this._hasDataLoaded = false;
+        this._isLanding = true;
 
         // organizer
+        this._filters = {
+            title: undefined,
+            subjectLessonType: undefined,
+            subjectLessonLevel: undefined,
+            subjectTagList: []
+        };
         this._areFiltersFolded = false;
-        
+        this._isFilterSubjectLessonTypeDisplayed = true;
+        this._isFilterSubjectLessonLevelDisplayed = false;
+
         // toaster
         this._selectedSubjectList = [];
 
         var self = this;
+        this._subjectLibraryService.search(this._filters).then(
+            function(subjectList:ISubject[]) {
+                self._subjectList = subjectList;
+
+                self._subjectLessonTypeService.resolve().then(
+                    function() {
+                        self._subjectLessonTypeList = self._subjectLessonTypeService.getList();
+
+                        self._subjectLessonLevelService.resolve().then(
+                            function() {
+                                self._subjectLessonLevelList = self._subjectLessonLevelService.getList();
+
+                                self._subjectTagService.resolve().then(
+                                    function(subjectTagList:ISubjectTag[]) {
+                                        self._subjectTagList = subjectTagList;
+                                        self._autocompleteSubjectTagList = []; 
+                                        
+                                        angular.forEach(self._subjectTagList, function(value) {
+                                            var obj = {
+                                                id: value.id,
+                                                label: value.label,
+                                                toString: function () {
+                                                    return this.label;
+                                                }
+                                            };
+                                            self._autocompleteSubjectTagList.push(obj);
+                                        });
+
+                                        var promises = [],
+                                            subjectIdList = self._subjectList.map(function(subject:ISubject) {
+                                                return subject.id;
+                                            });
+                                        
+                                        angular.forEach(subjectIdList, function(subjectId:number) {
+                                            promises.push(self._subjectTagService.resolveBySubjectId(subjectId));
+                                        });
+
+                                        promises.push(self._subjectLessonTypeService.resolveBySubjectIdList(angular.copy(subjectIdList)));
+                                        promises.push(self._subjectLessonLevelService.resolveBySubjectIdList(angular.copy(subjectIdList)));
+
+                                        self._$q.all(promises).then(
+                                            function() {
+                                                
+                                                self._$scope.$on('E_CONFIRM_COPY_PASTE', function(event, folder:IFolder) {
+                                                    self._copyPastSelectedSubjectList(folder);
+                                                });
+
+                                                self._hasDataLoaded = true;
+                                            },
+                                            function(err) {
+                                                notify.error(err);
+                                            }
+                                        );
+                                    },
+                                    function(err) {
+                                        notify.error(err);
+                                    }
+                                );
+                            },
+                            function(err) {
+                                notify.error(err);
+                            }
+                        );
+                    },
+                    function(err) {
+                        notify.error(err);
+                    }
+                );
+            },
+            function(err) {
+                notify.error(err);
+            }
+        );
     }
+
+    /**
+     * COMMON
+     */
+
+    public getSubjectPicture = function(subject:ISubject) {
+        return subject.picture || '/assets/themes/leo/img/illustrations/poll-default.png';
+    };
+
+    public getSubjectLessonType = function(subject:ISubject) {
+        return this._subjectLessonTypeService.getBySubjectId(subject.id);
+    };
+
+    public getSubjectLessonLevel = function(subject:ISubject) {
+        return this._subjectLessonLevelService.getBySubjectId(subject.id);
+    };
+
+    public getSubjectTags = function(subject:ISubject) {
+        return this._subjectTagService.getListBySubjectId(subject.id);
+    };
 
     /**
      * FILTERS
@@ -45,6 +169,65 @@ class TeacherDashboardLibraryTabController {
 
     public foldFilters = function() {
         this._areFiltersFolded = !this._areFiltersFolded;
+    };
+
+    public displayFilterSubjectLessonType = function() {
+        this._isFilterSubjectLessonLevelDisplayed = false;
+        this._isFilterSubjectLessonTypeDisplayed = true;
+    };
+
+    public displayFilterSubjectLessonLevel = function() {
+        this._isFilterSubjectLessonLevelDisplayed = true;
+        this._isFilterSubjectLessonTypeDisplayed = false;
+    };
+
+    public selectFilterSubjectLessonType = function(subjectLessonType:ISubjectLessonType) {
+        if (!angular.isUndefined(this._filters.subjectLessonType) && this._filters.subjectLessonType.id === subjectLessonType.id) {
+            this._filters.subjectLessonType = undefined;
+        } else {
+            this._filters.subjectLessonType = subjectLessonType;
+        }
+    };
+
+    public isFilterSubjectLessonTypeSelected = function(subjectLessonType:ISubjectLessonType) {
+        return !angular.isUndefined(this._filters.subjectLessonType) && this._filters.subjectLessonType.id === subjectLessonType.id;
+    };
+
+    public selectFilterSubjectLessonLevel = function(subjectLessonLevel:ISubjectLessonLevel) {
+        if (!angular.isUndefined(this._filters.subjectLessonLevel) &&  this._filters.subjectLessonLevel.id === subjectLessonLevel.id) {
+            this._filters.subjectLessonLevel = undefined;
+        } else {
+            this._filters.subjectLessonLevel = subjectLessonLevel;
+        }
+    };
+
+    public isFilterSubjectLessonLevelSelected = function(subjectLessonLevel:ISubjectLessonLevel) {
+        return !angular.isUndefined(this._filters.subjectLessonLevel) && this._filters.subjectLessonLevel.id === subjectLessonLevel.id;
+    };
+
+    public selectSubjectTag = function(selectedSubjectTagObject) {
+        if (this._filters.subjectTagList.length === 3) {
+            notify.info('Vous ne pouvez pas ajouter plus de trois tags à la recherche.')
+        } else {
+            for (var i = 0; i < this._subjectTagList.length; ++i) {
+
+                if (this._subjectTagList[i].id === parseInt(selectedSubjectTagObject.id)) {
+
+                    if (this._filters.subjectTagList.indexOf(this._subjectTagList[i]) === -1) {
+                        this._filters.subjectTagList.push(this._subjectTagList[i]);
+                    } else {
+                        notify.info('Ce tag est déjà dans la associé à la recherche.')
+                    }
+
+                    i =  this._subjectTagList.length;
+                }
+            }
+        }
+    };
+
+    public removeFromSelectedSubjectTagList = function(subjectTag:ISubjectTag) {
+        var subjectTagIndex = this._filters.subjectTagList.indexOf(subjectTag);
+        this._filters.subjectTagList.splice(subjectTagIndex, 1);
     };
 
     /**
@@ -65,8 +248,9 @@ class TeacherDashboardLibraryTabController {
         return this._selectedSubjectList.indexOf(subject) !== -1;
     };
 
-    public previewSelectedSubjectList = function() {
-        // TODO
+    public previewSelectedSubject = function() {
+        this._subjectLibraryService.tmpSubjectForPreview = this._selectedSubjectList[0];
+        this._$location.path('/subject/copy/preview/perform/' + this._selectedSubjectList[0].id + '/');
     };
 
     public displayModalCopyPaste = function() {
@@ -76,9 +260,10 @@ class TeacherDashboardLibraryTabController {
     private _copyPastSelectedSubjectList = function(parentFolder) {
         var self = this;
 
-        this._subjectService.duplicateList(this._selectedSubject, parentFolder).then(
+        this._subjectService.duplicateList(this._selectedSubjectList, parentFolder).then(
             function() {
                 self._selectedSubjectList = [];
+                notify.info('Les sujets ont bien été ajoutés dans votre liste des sujets.')
             },
             function(err) {
                 notify.error(err);
@@ -90,6 +275,10 @@ class TeacherDashboardLibraryTabController {
         this._selectedSubjectList = [];
     };
 
+    public onlyOneSubjectIsSelected = function() {
+        return this._selectedSubjectList.length === 1;
+    };
+
     public isToasterDisplayed = function() {
         return this._selectedSubjectList.length > 0;
     };
@@ -98,12 +287,44 @@ class TeacherDashboardLibraryTabController {
      * GETTER
      */
 
+    get subjectList():ISubject[] {
+        return this._subjectList;
+    }
+
     get hasDataLoaded():boolean {
         return this._hasDataLoaded;
     }
 
+    get isLanding():boolean {
+        return this._isLanding;
+    }
+
+    get filters():{title:string; subjectLessonType:ISubjectLessonType; subjectLessonLevel:ISubjectLessonLevel; subjectTagList:ISubjectTag[]} {
+        return this._filters;
+    }
+
+    get subjectLessonTypeList():ISubjectLessonType[] {
+        return this._subjectLessonTypeList;
+    }
+
+    get subjectLessonLevelList():ISubjectLessonLevel[] {
+        return this._subjectLessonLevelList;
+    }
+
+    get autocompleteSubjectTagList():any[] {
+        return this._autocompleteSubjectTagList;
+    }
+
     get areFiltersFolded():boolean {
         return this._areFiltersFolded;
+    }
+
+    get isFilterSubjectLessonTypeDisplayed():boolean {
+        return this._isFilterSubjectLessonTypeDisplayed;
+    }
+
+    get isFilterSubjectLessonLevelDisplayed():boolean {
+        return this._isFilterSubjectLessonLevelDisplayed;
     }
 }
 

@@ -3,6 +3,7 @@ interface ISubject {
     folder_id:number;
     original_subject_id:number;
     owner:string;
+    owner_username:string;
     created:string;
     modified:string;
     title:string;
@@ -19,6 +20,7 @@ class Subject implements ISubject {
     folder_id:number;
     original_subject_id:number;
     owner:string;
+    owner_username:string;
     created:string;
     modified:string;
     title:string;
@@ -34,6 +36,7 @@ class Subject implements ISubject {
         folder_id?:number,
         original_subject_id?:number,
         owner?:string,
+        owner_username?:string,
         created?:string,
         modified?:string,
         title?:string,
@@ -48,6 +51,7 @@ class Subject implements ISubject {
         this.folder_id = folder_id;
         this.original_subject_id = original_subject_id;
         this.owner = owner;
+        this.owner_username = owner_username;
         this.created = created;
         this.modified = modified;
         this.title = title;

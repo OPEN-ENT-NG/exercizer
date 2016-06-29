@@ -12,7 +12,7 @@
         <div class="four cell">
             Renseignez la matière du sujet :
         </div>
-        <select data-ng-model="selectedSubjectLessonType" class="seven cell margin-one">
+        <select data-ng-model="selection.selectedSubjectLessonTypeId" class="seven cell margin-one">
             <option value="null"></option>
             <option data-ng-repeat="subjectLessonType in subjectLessonTypeList" value="[[ subjectLessonType.id ]]">[[ subjectLessonType.label ]]</option>
         </select>
@@ -22,7 +22,7 @@
         <div class="four cell">
             Renseignez le niveau du sujet :
         </div>
-        <select data-ng-model="selectedSubjectLessonLevel" class="seven cell margin-one">
+        <select data-ng-model="selection.selectedSubjectLessonLevelId" class="seven cell margin-one">
             <option value="null"></option>
             <option data-ng-repeat="subjectLessonLevel in subjectLessonLevelList" value="[[ subjectLessonLevel.id ]]">[[ subjectLessonLevel.label ]]</option>
         </select>
@@ -30,7 +30,6 @@
 
     <div class="row vertical-spacing">
         Rechercher et ajoutez des tags au sujet :
-
     </div>
 
     <div class="row vertical-spacing">
@@ -67,6 +66,6 @@
 
     <div class="row">
         <button data-ng-click="publish()" class="right-magnet" data-ng-disabled="isPublicationOnGoing">Publier</button>
-        <button data-ng-click="hide()" class="cancel right-magnet"  data-ng-disabled="isPublicationOnGoing">Annuler</button>
+        <button data-ng-click="hide()" class="cancel right-magnet" data-ng-disabled="isPublicationOnGoing">Annuler</button>
     </div>
 </lightbox>

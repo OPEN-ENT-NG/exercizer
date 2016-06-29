@@ -33,6 +33,7 @@ CREATE TABLE exercizer.subject(
     folder_id BIGINT NULL,
     original_subject_id BIGINT NULL,
     owner VARCHAR(36) NOT NULL,
+    owner_username VARCHAR(255) NOT NULL,
 	created TIMESTAMP DEFAULT NOW(),
 	modified TIMESTAMP DEFAULT NOW(),
 	title VARCHAR(255) NOT NULL,

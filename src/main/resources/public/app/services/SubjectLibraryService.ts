@@ -1,7 +1,8 @@
 interface ISubjectLibraryService {
-    publish(subject:ISubject, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]): ng.IPromise<boolean>;
-    search(searchData:any): ng.IPromise<ISubject[]>;
-    count(searchData:any): ng.IPromise<Number>;
+    publish(subject:ISubject, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[]): ng.IPromise<boolean>;
+    search(filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}): ng.IPromise<ISubject[]>;
+    count(filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}): ng.IPromise<Number>;
+    tmpSubjectForPreview:ISubject;
 }
 
 class SubjectLibraryService implements ISubjectLibraryService {
@@ -12,6 +13,8 @@ class SubjectLibraryService implements ISubjectLibraryService {
         'GrainService',
         'SubjectTagService'
     ];
+    
+    private _tmpSubjectForPreview:ISubject;
 
     constructor
     (
@@ -26,7 +29,7 @@ class SubjectLibraryService implements ISubjectLibraryService {
         this._subjectTagService = _subjectTagService;
     }
     
-    public publish = function(subject:ISubject, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]): ng.IPromise<boolean> {
+    public publish = function(subject:ISubject, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[]): ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer();
 
@@ -38,7 +41,7 @@ class SubjectLibraryService implements ISubjectLibraryService {
         var subjectRequest = {
             method: 'POST',
             url: 'exercizer/subject',
-            data: subject
+            data: publishedSubject
         };
 
         this._$http(subjectRequest).then(
@@ -55,9 +58,9 @@ class SubjectLibraryService implements ISubjectLibraryService {
                                     method: 'POST',
                                     url: 'exercizer/subject-library-main-information/' + publishedSubject.id,
                                     data : {
-                                        'subject_id': publishedSubject.id,
-                                        'subject_lesson_type_id': subjectLessonType.id,
-                                        'subject_lesson_level_id': subjectLessonLevel.id
+                                        subject_id: publishedSubject.id,
+                                        subject_lesson_type_id: subjectLessonTypeId,
+                                        subject_lesson_level_id: subjectLessonLevelId
                                     }
                                 };
 
@@ -71,7 +74,8 @@ class SubjectLibraryService implements ISubjectLibraryService {
                                                     method: 'POST',
                                                     url: 'exercizer/subject-library-tag/' + publishedSubject.id,
                                                     data: {
-                                                        'subject_id': publishedSubject.id
+                                                        subject_id: publishedSubject.id,
+                                                        subject_tag_id: undefined
                                                     }
                                                 };
 
@@ -167,12 +171,12 @@ class SubjectLibraryService implements ISubjectLibraryService {
         return deferred.promise;
     };
 
-    public search = function(searchData:any): ng.IPromise<ISubject[]> {
+    public search = function(filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}): ng.IPromise<ISubject[]> {
         var deferred = this._$q.defer(),
             request = {
                 method: 'POST',
-                url: 'exercizer/subjects-for-library',
-                data: searchData
+                url: 'exercizer/subjects-for-library', 
+                data: this._buildRequestData(filters)
             };
 
         this._$http(request).then(
@@ -191,12 +195,12 @@ class SubjectLibraryService implements ISubjectLibraryService {
         return deferred.promise;
     };
 
-    public count = function(searchData:any): ng.IPromise<Number> {
+    public count = function(filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}): ng.IPromise<Number> {
         var deferred = this._$q.defer(),
             request = {
                 method: 'POST',
                 url: 'exercizer/count-subjects-for-library',
-                data: searchData
+                data: this._buildRequestData(filters)
             };
 
         this._$http(request).then(
@@ -211,4 +215,40 @@ class SubjectLibraryService implements ISubjectLibraryService {
         return deferred.promise;
     };
 
+    private _buildRequestData(filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}) {
+        var requestData = {};
+        
+        if (!angular.isUndefined(filters)) {
+
+            if (!angular.isUndefined(filters.title)) {
+                requestData['subject_title'] = filters.title;
+            }
+
+            if (!angular.isUndefined(filters.subjectLessonType)) {
+                requestData['subject_lesson_type_id'] = filters.subjectLessonType.id;
+            }
+
+            if (!angular.isUndefined(filters.subjectLessonLevel)) {
+                requestData['subject_lesson_level_id'] = filters.subjectLessonLevel.id;
+            }
+
+            if (!angular.isUndefined(filters.subjectTagList) && filters.subjectTagList.length > 0) {
+                requestData['subject_tags'] = [];
+
+                angular.forEach(filters.subjectTagList, function (subjectTag:ISubjectTag) {
+                    requestData['subject_tags'].push(subjectTag.id)
+                });
+            }
+        }
+
+        return requestData;
+    };
+    
+    get tmpSubjectForPreview():ISubject {
+        return this._tmpSubjectForPreview;
+    }
+
+    set tmpSubjectForPreview(value:ISubject) {
+        this._tmpSubjectForPreview = value;
+    }
 }

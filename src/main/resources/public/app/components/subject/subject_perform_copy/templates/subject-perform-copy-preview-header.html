@@ -7,7 +7,11 @@
         Aperçu de la correction
     </button>
 
-    <button class="cell right-magnet flat-button" data-ng-click="redirectToSubjectEdit()">
+    <button class="cell right-magnet flat-button" data-ng-click="redirectToSubjectEdit()" data-ng-if="!previewingFromLibrary">
         Retour à l'édition
+    </button>
+
+    <button class="cell right-magnet flat-button" data-ng-click="redirectToTeacherDashboardLibraryTab()" data-ng-if="previewingFromLibrary">
+        Retour à la bibliothèque
     </button>
 </div>

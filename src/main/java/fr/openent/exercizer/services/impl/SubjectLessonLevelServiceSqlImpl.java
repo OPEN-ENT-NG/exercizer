@@ -14,7 +14,7 @@ public class SubjectLessonLevelServiceSqlImpl extends AbstractExercizerServiceSq
     }
 
     /**
-     *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     public void list(final Handler<Either<String, JsonArray>> handler) {
     	JsonArray orderBy = new JsonArray();

@@ -12,8 +12,12 @@ directives.push(
                         scope.hasAgreedToPublish = false;
                         scope.isPublicationOnGoing = false;
                         scope.subject = null;
-                        scope.selectedSubjectLessonType = null;
-                        scope.selectedSubjectLessonLevel = null;
+                        scope.selection = {
+                            selectedSubjectLessonTypeId: null,
+                            selectedSubjectLessonLevelId: null
+                        };
+                        scope.selectedSubjectLessonTypeId = null;
+                        scope.selectedSubjectLessonLevelId = null;
                         scope.subjectLessonTypeList = [];
                         scope.subjectLessonLevelList = [];
                         scope.subjectTagList = [];
@@ -70,6 +74,11 @@ directives.push(
 
                         scope.toggleHasAgreedToPublish = function() {
                             scope.hasAgreedToPublish = !scope.hasAgreedToPublish;
+                        };
+
+                        scope.selectSubjectLessonLevel = function(selectedSubjectLessonLevel) {
+                            console.log(selectedSubjectLessonLevel);
+                            scope.selectedSubjectLessonLevelId = selectedSubjectLessonLevel;
                         };
 
                         scope.selectSubjectTag = function(selectedSubjectTagObject) {
@@ -143,11 +152,11 @@ directives.push(
                         scope.publish = function() {
                             if (!scope.hasAgreedToPublish) {
                                 notify.error('Vous devez acceptez de publier votre sujet sous licence libre.')
-                            } else if (scope.selectedSubjectLessonType === null || scope.selectedSubjectLessonLevel === null) {
+                            } else if (scope.selection.selectedSubjectLessonTypeId === null || scope.selection.selectedSubjectLessonTypeId === 'null' || scope.selection.selectedSubjectLessonLevelId === null || scope.selection.selectedSubjectLessonLevelId === 'null') {
                                 notify.error('Vous devez sélectionner une matière et un niveau.')
                             } else {
                                 scope.isPublicationOnGoing = true;
-                                SubjectLibraryService.publish(scope.subject, scope.selectedSubjectLessonType, scope.selectedSubjectLessonLevel, scope.selectedSubjectTagList).then(
+                                SubjectLibraryService.publish(scope.subject, scope.selection.selectedSubjectLessonTypeId, scope.selection.selectedSubjectLessonLevelId, scope.selectedSubjectTagList).then(
                                     function() {
                                         scope.isPublicationOnGoing = false;
                                         notify.info('Votre sujet a bien été publié dans la bibliothèque.');
@@ -167,8 +176,10 @@ directives.push(
                                 scope.hasAgreedToPublish = false;
                                 scope.isPublicationOnGoing = false;
                                 scope.subject = null;
-                                scope.selectedSubjectLessonType = null;
-                                scope.selectedSubjectLessonLevel = null;
+                                scope.selection = {
+                                    selectedSubjectLessonTypeId: null,
+                                    selectedSubjectLessonLevelId: null
+                                };
                                 scope.subjectLessonTypeList = [];
                                 scope.subjectLessonLevelList = [];
                                 scope.subjectTagList = [];

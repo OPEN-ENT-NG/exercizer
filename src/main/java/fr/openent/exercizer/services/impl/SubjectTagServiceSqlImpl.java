@@ -39,7 +39,7 @@ public class SubjectTagServiceSqlImpl extends AbstractExercizerServiceSqlImpl im
 
 		JsonArray filters = new JsonArray();
 		filters.addString("WHERE");
-		filters.addString("slt.subject_id = " + resource.getString("subjectId"));
+		filters.addString("slt.subject_id = " + resource.getInteger("subject_id"));
 
 		super.list("r", joins, filters, null, null, null, handler);
 	}

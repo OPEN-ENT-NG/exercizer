@@ -61,8 +61,18 @@ class SubjectLessonTypeService implements ISubjectLessonTypeService {
 
     public resolveBySubjectIdList = function(subjectIds:number[]):ng.IPromise<boolean> {
         var self = this,
-            deferred = this._$q.defer(),
-            request = {
+            deferred = this._$q.defer();
+
+        if (subjectIds.length === 0) {
+            deferred.resolve(true);
+        } else {
+
+            // the resulting ajax result is sorted by subject id
+            subjectIds = subjectIds.sort(function (id1:number, id2:number) {
+                return id1 - id2;
+            });
+
+            var request = {
                 method: 'POST',
                 url: 'exercizer/subject-lesson-types-by-subject-ids',
                 data: {
@@ -70,41 +80,37 @@ class SubjectLessonTypeService implements ISubjectLessonTypeService {
                 }
             };
 
-        // the resulting ajax result is sorted by subject id
-        subjectIds = subjectIds.sort(function(id1: number, id2: number) {
-            return id1 - id2;
-        });
+            var callBackend = false;
 
-        var callBackend = false;
-
-        if (angular.isUndefined(this._listMappedBySubjectId)) {
-            this._listMappedBySubjectId = {};
-            callBackend = true;
-        } else {
-            angular.forEach(subjectIds, function(subjectId:number) {
-                if (!callBackend && angular.isUndefined(this._listMappedBySubjectId[subjectId])) {
-                    callBackend = true;
-                }
-            }, this);
-        }
-
-        if (!callBackend) {
-            deferred.resolve(true);
-        } else {
-            this._$http(request).then(
-                function(response) {
-
-                    for (var i = 0 ; i < subjectIds.length ; +i) {
-                        var subjectLessonTypeObject = response.data[i];
-                        self._listMappedBySubjectId[subjectIds[i]] = SerializationHelper.toInstance(new SubjectLessonType(), JSON.stringify(subjectLessonTypeObject));
+            if (angular.isUndefined(this._listMappedBySubjectId)) {
+                this._listMappedBySubjectId = {};
+                callBackend = true;
+            } else {
+                angular.forEach(subjectIds, function (subjectId:number) {
+                    if (!callBackend && angular.isUndefined(this._listMappedBySubjectId[subjectId])) {
+                        callBackend = true;
                     }
+                }, this);
+            }
 
-                    deferred.resolve(true);
-                },
-                function() {
-                    deferred.reject('Une erreur est survenue lors de la récupération des niveaux des sujets de la bibliothèque.');
-                }
-            );
+            if (!callBackend) {
+                deferred.resolve(true);
+            } else {
+                this._$http(request).then(
+                    function (response) {
+
+                        for (var i = 0; i < subjectIds.length; ++i) {
+                            var subjectLessonTypeObject = response.data[i];
+                            self._listMappedBySubjectId[subjectIds[i]] = SerializationHelper.toInstance(new SubjectLessonType(), JSON.stringify(subjectLessonTypeObject));
+                        }
+
+                        deferred.resolve(true);
+                    },
+                    function () {
+                        deferred.reject('Une erreur est survenue lors de la récupération des niveaux des sujets de la bibliothèque.');
+                    }
+                );
+            }
         }
         return deferred.promise;
     };

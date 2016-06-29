@@ -3,7 +3,11 @@
         [[ subjectScheduled.title ]]<span style="font-size: large;">&nbsp;-&nbsp;NOM prénom</span>
     </h1>
 
-    <button class="cell right-magnet" data-ng-click="redirectToSubjectEdit()">
+    <button class="cell right-magnet" data-ng-click="redirectToTeacherDashboardLibraryTab()" data-ng-if="previewingFromLibrary">
+        Retour à la bibliothèque
+    </button>
+
+    <button class="cell right-magnet" data-ng-click="redirectToSubjectEdit()" data-ng-if="!previewingFromLibrary">
         Retour à l'édition
     </button>
 

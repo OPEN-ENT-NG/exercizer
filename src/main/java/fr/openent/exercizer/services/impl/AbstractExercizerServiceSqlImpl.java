@@ -153,9 +153,8 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     	}
     	
     	if (filters != null && filters.size() > 0) {
-    		query.append(" WHERE true");
             for (Object filter : filters) {
-                query.append(" AND ").append(filter);
+                query.append(" ").append(filter);
             }
     	}
     	

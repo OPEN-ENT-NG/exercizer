@@ -43,7 +43,7 @@ public class SubjectLessonTypeController extends ControllerHelper {
         });
     }
     
-    @Post("/subject-lesson-types-by-suject-ids")
+    @Post("/subject-lesson-types-by-subject-ids")
     @ApiDoc("Gets subject lesson type list by subject id list.")
     @SecuredAction("exercizer.subject.lesson.type.list.by.subject.id.list")
     public void listBySubjectId(final HttpServerRequest request) {

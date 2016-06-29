@@ -22,7 +22,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	@Override
 	public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		JsonObject subject = ResourceParser.beforeAny(resource);
-		subject.putString("owner", user.getUserId());
+		subject.putString("owner", user.getUserId()); 
+		subject.putString("owner_username", user.getUsername());
 		super.persist(subject, user, handler);
 	}
 

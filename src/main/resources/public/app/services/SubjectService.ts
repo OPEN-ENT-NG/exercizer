@@ -195,6 +195,7 @@ class SubjectService implements ISubjectService {
         //clean subject
         duplicatedSubject.id = undefined;
         duplicatedSubject.owner = undefined;
+        duplicatedSubject.owner_username = undefined;
         if(folder){
             duplicatedSubject.folder_id = folder.id;
         } else{

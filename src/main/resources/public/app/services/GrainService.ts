@@ -218,7 +218,7 @@ class GrainService implements IGrainService {
             deferred = this._$q.defer(),
             request = {
                 method: 'POST',
-                url: 'exercizer/grains/' + subject.id,
+                url: !subject.is_library_subject ? 'exercizer/grains/' + subject.id : 'exercizer/subject-library-grains',
                 data: subject
             };
 

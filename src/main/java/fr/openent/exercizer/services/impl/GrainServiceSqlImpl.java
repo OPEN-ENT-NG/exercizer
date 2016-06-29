@@ -47,4 +47,15 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
     public void list(final JsonObject resource, final Handler<Either<String, JsonArray>> handler) {
         super.list(resource, "subject_id", "exercizer.subject", handler);
     }
+    
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
+    @Override
+    public void listBySubjectForLibrary(final JsonObject resource, final Handler<Either<String, JsonArray>> handler) {
+    	JsonArray joins = new JsonArray();
+    	joins.addString("JOIN exercizer.subject s ON r.subject_id = s.id AND s.is_library_subject = true");
+    	
+    	super.list("r", joins, null, null, null, null, handler);
+    }
 }

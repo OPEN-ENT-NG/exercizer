@@ -5,6 +5,7 @@ class ViewSubjectCopyController {
         '$scope',
         '$location',
         'SubjectService',
+        'SubjectLibraryService',
         'SubjectScheduledService',
         'SubjectCopyService',
         'GrainScheduledService',
@@ -18,6 +19,7 @@ class ViewSubjectCopyController {
     private _grainCopyList:IGrainCopy[];
     private _isTeacher:boolean;
     private _previewing:boolean;
+    private _previewingFromLibrary:boolean;
     private _hasDataLoaded:boolean;
 
     constructor
@@ -26,6 +28,7 @@ class ViewSubjectCopyController {
         private _$scope:ng.IScope,
         private _$location:ng.ILocationService,
         private _subjectService:ISubjectService,
+        private _subjectLibraryService:ISubjectLibraryService,
         private _subjectScheduledService:ISubjectScheduledService,
         private _subjectCopyService:ISubjectCopyService,
         private _grainScheduledService:IGrainScheduledService,
@@ -35,6 +38,7 @@ class ViewSubjectCopyController {
         this._$scope = _$scope;
         this._$location = _$location;
         this._subjectService = _subjectService;
+        this._subjectLibraryService = _subjectLibraryService;
         this._subjectScheduledService = _subjectScheduledService;
         this._subjectCopyService =_subjectCopyService;
         this._grainScheduledService = _grainScheduledService;
@@ -49,6 +53,12 @@ class ViewSubjectCopyController {
         if (!angular.isUndefined(subjectId)) {
             this._subjectService.resolve().then(function() {
                 var subject = self._subjectService.getById(subjectId);
+                
+                if (angular.isUndefined(subject)) {
+                    subject = self._subjectLibraryService.tmpSubjectForPreview;
+                    self._previewingFromLibrary = !angular.isUndefined(subject);
+                }
+                
                 if (!angular.isUndefined(subject)) {
                     self._isTeacher = true;
                     if (!angular.isUndefined(subjectCopyId)) {
@@ -298,6 +308,10 @@ class ViewSubjectCopyController {
 
     get previewing():boolean {
         return this._previewing;
+    }
+
+    get previewingFromLibrary():boolean {
+        return this._previewingFromLibrary;
     }
 
     get hasDataLoaded():boolean {

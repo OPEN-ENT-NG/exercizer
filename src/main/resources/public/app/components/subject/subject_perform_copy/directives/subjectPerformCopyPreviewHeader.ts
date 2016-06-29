@@ -8,13 +8,22 @@ directives.push(
                     subjectScheduled: '=',
                     subjectCopy: '=',
                     grainScheduledList: '=',
-                    grainCopyList: '='
+                    grainCopyList: '=',
+                    previewingFromLibrary: '='
                 },
                 templateUrl: 'exercizer/public/app/components/subject/subject_perform_copy/templates/subject-perform-copy-preview-header.html',
                 link:(scope:any) => {
 
+                    scope.redirectToTeacherDashboardLibraryTab = function() {
+                        if (scope.previewingFromLibrary) {
+                            $location.path('/dashboard/teacher/library');
+                        }
+                    };
+
                     scope.redirectToSubjectEdit = function() {
-                        $location.path('/subject/edit/' + scope.subjectScheduled.subject_id + '/');
+                        if (!scope.previewingFromLibrary) {
+                            $location.path('/subject/edit/' + scope.subjectScheduled.subject_id + '/');
+                        }
                     };
                     
                     scope.redirectToSubjectPreviewViewCopy = function() {

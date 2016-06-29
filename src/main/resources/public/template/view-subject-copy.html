@@ -9,7 +9,8 @@
 
         <!-- PREVIEW HEADER -->
         <div data-ng-if="viewSubjectCopyController.previewing">
-            <subject-view-copy-preview-header data-subject-scheduled="viewSubjectCopyController.subjectScheduled">
+            <subject-view-copy-preview-header data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
+                                              data-previewing-from-library="viewSubjectCopyController.previewingFromLibrary">
             </subject-view-copy-preview-header>
         </div>
 
@@ -52,7 +53,8 @@
     <div class="row" data-ng-if="viewSubjectCopyController.hasDataLoaded && viewSubjectCopyController.grainCopyList.length === 0">
         <!-- PREVIEW HEADER -->
         <div data-ng-if="viewSubjectCopyController.previewing">
-            <subject-view-copy-preview-header data-subject-scheduled="viewSubjectCopyController.subjectScheduled">
+            <subject-view-copy-preview-header data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
+                                              data-previewing-from-library="viewSubjectCopyController.previewingFromLibrary">
             </subject-view-copy-preview-header>
         </div>
 

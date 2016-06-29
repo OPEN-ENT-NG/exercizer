@@ -1,7 +1,8 @@
 interface ISubjectTagService {
     resolve(): ng.IPromise<ISubjectTag[]>;
     persist(subjectTag:ISubjectTag): ng.IPromise<ISubjectTag>;
-    getListBySubjectId(subjectId:number): ng.IPromise<ISubjectTag[]>;
+    resolveBySubjectId(subjectId:number): ng.IPromise<ISubjectTag[]>;
+    getListBySubjectId(subjectId:number): ISubjectTag[];
 }
 
 class SubjectTagService implements ISubjectTagService {
@@ -86,14 +87,14 @@ class SubjectTagService implements ISubjectTagService {
         return deferred.promise;
     };
     
-    public getListBySubjectId(subjectId:number):ng.IPromise<ISubjectTag[]> {
+    public resolveBySubjectId(subjectId:number):ng.IPromise<ISubjectTag[]> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
                 method: 'POST',
                 url: 'exercizer/subject-tags-by-subject-id',
                 data: {
-                    subjectId: subjectId
+                    subject_id: subjectId
                 }
             };
 
@@ -122,6 +123,10 @@ class SubjectTagService implements ISubjectTagService {
             );
         }
         return deferred.promise;
+    };
+
+    public getListBySubjectId = function(subjectId:number):ISubjectTag[] {
+        return this._listMappedBySubjectId[subjectId];
     };
 }
 

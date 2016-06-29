@@ -27,4 +27,9 @@ public interface IGrainService {
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     void list(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
+    
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
+    void listBySubjectForLibrary(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
 }

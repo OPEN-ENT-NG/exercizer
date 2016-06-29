@@ -121,4 +121,27 @@ public class GrainController extends ControllerHelper {
             }
         });
     }
+    
+    @Post("/subject-library-grains")
+    @ApiDoc("Gets subject library grain list.")
+    @SecuredAction("exercizer.subject.library.grain.list")
+    public void listBySubjectForLibrary(final HttpServerRequest request) {
+        UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+            @Override
+            public void handle(final UserInfos user) {
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject resource) {
+                            grainService.listBySubjectForLibrary(resource, arrayResponseHandler(request));
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
+            }
+        });
+    }
 }

@@ -28,7 +28,7 @@ public class SubjectTagController extends ControllerHelper {
     
     @Post("/subject-tag")
     @ApiDoc("Persists a subject tag.")
-    @SecuredAction("exercizer.tag.persist")
+    @SecuredAction("exercizer.subject.tag.persist")
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override

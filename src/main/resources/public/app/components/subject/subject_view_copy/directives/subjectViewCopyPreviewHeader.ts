@@ -5,13 +5,22 @@ directives.push(
             return {
                 restrict: 'E',
                 scope: {
-                    subjectScheduled: '='
+                    subjectScheduled: '=',
+                    previewingFromLibrary: '='
                 },
                 templateUrl: 'exercizer/public/app/components/subject/subject_view_copy/templates/subject-view-copy-preview-header.html',
                 link:(scope:any) => {
 
+                    scope.redirectToTeacherDashboardLibraryTab = function() {
+                        if (scope.previewingFromLibrary) {
+                            $location.path('/dashboard/teacher/library');
+                        }
+                    };
+
                     scope.redirectToSubjectEdit = function() {
-                        $location.path('/subject/edit/' + scope.subjectScheduled.subject_id + '/');
+                        if (!scope.previewingFromLibrary) {
+                            $location.path('/subject/edit/' + scope.subjectScheduled.subject_id + '/');
+                        }
                     };
 
                     scope.redirectToSubjectPreviewPerformCopy = function() {

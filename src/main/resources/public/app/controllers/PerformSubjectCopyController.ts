@@ -5,6 +5,7 @@ class PerformSubjectCopyController {
         '$scope',
         '$location',
         'SubjectService',
+        'SubjectLibraryService',
         'SubjectScheduledService',
         'SubjectCopyService',
         'GrainService',
@@ -18,6 +19,7 @@ class PerformSubjectCopyController {
     private _grainCopyList:IGrainCopy[];
     private _grainScheduledList:IGrainScheduled[];
     private _previewing:boolean;
+    private _previewingFromLibrary:boolean;
     private _hasDataLoaded:boolean;
 
     constructor
@@ -26,6 +28,7 @@ class PerformSubjectCopyController {
         private _$scope:ng.IScope,
         private _$location:ng.ILocationService,
         private _subjectService:ISubjectService,
+        private _subjectLibraryService:ISubjectLibraryService,
         private _subjectScheduledService:ISubjectScheduledService,
         private _subjectCopyService:ISubjectCopyService,
         private _grainService:IGrainService,
@@ -36,6 +39,7 @@ class PerformSubjectCopyController {
         this._$scope = _$scope;
         this._$location = _$location;
         this._subjectService = _subjectService;
+        this._subjectLibraryService = _subjectLibraryService;
         this._subjectScheduledService = _subjectScheduledService;
         this._subjectCopyService =_subjectCopyService;
         this._grainScheduledService = _grainScheduledService;
@@ -53,6 +57,9 @@ class PerformSubjectCopyController {
 
                 if (!angular.isUndefined(subject)) {
                     self._preview(subject);
+                } else if (!angular.isUndefined(self._subjectLibraryService.tmpSubjectForPreview)) {
+                    this._previewingFromLibrary = true;
+                    self._preview(self._subjectLibraryService.tmpSubjectForPreview);
                 } else {
                     self._$location.path('/dashboard');
                 }
@@ -108,6 +115,7 @@ class PerformSubjectCopyController {
     private _perform(subjectCopyId:number) {
         var self = this;
         this._previewing = false;
+        this._previewingFromLibrary = false;
 
         this._subjectScheduledService.resolve(false).then(
             function() {
@@ -243,6 +251,10 @@ class PerformSubjectCopyController {
 
     get previewing():boolean {
         return this._previewing;
+    }
+
+    get previewingFromLibrary():boolean {
+        return this._previewingFromLibrary;
     }
 
     get hasDataLoaded():boolean {

@@ -28,21 +28,36 @@
                         </div>
 
                         <div class="row" data-ng-hide="teacherDashboardLibraryTabController.areFiltersFolded">
-                            <!-- TODO filters -->
                             <div class="tabs">
-                                <header>
+                                <header data-ng-class="teacherDashboardLibraryTabController.isFilterSubjectLessonTypeDisplayed ? 'selected' : ''"
+                                        data-ng-click="teacherDashboardLibraryTabController.displayFilterSubjectLessonType()">
                                     Matières
                                 </header>
-                                <header>
+                                <header data-ng-class="teacherDashboardLibraryTabController.isFilterSubjectLessonLevelDisplayed ? 'selected' : ''"
+                                        data-ng-click="teacherDashboardLibraryTabController.displayFilterSubjectLessonLevel()">
                                     Niveaux
                                 </header>
                             </div>
                         </div>
 
-                        <div class="row" style="overflow-y:scroll; max-height: 300px; border:1px dotted lightgrey;" data-ng-hide="teacherDashboardLibraryTabController.areFiltersFolded">
-                            <!-- TODO filters -->
+                        <div class="row vertical-spacing" style="overflow-y:scroll; max-height: 300px; border:1px dotted lightgrey;" data-ng-hide="teacherDashboardLibraryTabController.areFiltersFolded">
+                            <div data-ng-show="teacherDashboardLibraryTabController.isFilterSubjectLessonTypeDisplayed">
+                                <div class="cell custom-filter-button-library"
+                                     data-ng-repeat="subjectLessonType in teacherDashboardLibraryTabController.subjectLessonTypeList"
+                                     data-ng-click="teacherDashboardLibraryTabController.selectFilterSubjectLessonType(subjectLessonType)"
+                                     data-ng-class="teacherDashboardLibraryTabController.isFilterSubjectLessonTypeSelected(subjectLessonType) ? 'custom-selected' : ''">
+                                    [[ subjectLessonType.label ]]
+                                </div>
+                            </div>
+                            <div data-ng-show="teacherDashboardLibraryTabController.isFilterSubjectLessonLevelDisplayed">
+                                <div class="cell custom-filter-button-library"
+                                     data-ng-repeat="subjectLessonLevel in teacherDashboardLibraryTabController.subjectLessonLevelList"
+                                     data-ng-click="teacherDashboardLibraryTabController.selectFilterSubjectLessonLevel(subjectLessonLevel)"
+                                     data-ng-class="teacherDashboardLibraryTabController.isFilterSubjectLessonLevelSelected(subjectLessonLevel) ? 'custom-selected' : ''">
+                                    [[ subjectLessonLevel.label ]]
+                                </div>
+                            </div>
                         </div>
-
                     </article>
                 </nav>
             </section>
@@ -52,21 +67,36 @@
 
                 <!-- FILTERS -->
                 <div class="row">
-                    <input type="text" class="twelve cell" placeholder="Rechercher" />
+                    <input type="text" class="twelve cell" placeholder="Rechercher un titre" /><!-- TODO -->
                 </div>
 
-                <div class="row">
-                    <!-- TODO tags -->
+                <div class="row vertical-spacing">
+                    <autocomplete
+                            class="twelve cell"
+                            placeholder="Rechercher des tags"
+                            options="teacherDashboardLibraryTabController.autocompleteSubjectTagList"
+                            ng-change="teacherDashboardLibraryTabController.selectSubjectTag(selectedSubjectTagObject)"
+                            ng-model="selectedSubjectTagObject">
+                    </autocomplete>
                 </div>
 
-                <h3 class="row"><em>Derniers sujets ajoutés...</em></h3>
+                <div class="row vertical-spacing">
+                    <div class="label-badge" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.filters.subjectTagList">
+                        <span class="cell">[[ subjectTag.label ]]</span>
+                        <span class="cell right-magnet" data-ng-click="teacherDashboardLibraryTabController.removeFromSelectedSubjectTagList(subjectTag)">
+                            <i class="close"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <h3 class="row"><em>[[ teacherDashboardLibraryTabController.isLanding ? 'Derniers sujets ajoutés...' : 'Résultats de la recherche...' ]]</em></h3>
 
                 <div class="fallen dominos">
-                    <div>  <!-- TODO ng-repeat dominos -->
-                        <div  class="item" >
+                    <div data-ng-repeat="subject in teacherDashboardLibraryTabController.subjectList">
+                        <div class="item" style="width: 100%; max-width: none;">
                             <section class="domino">
                                 <div class="top">
-                                    <img class="absolute" data-ng-src="[[ getSubjectPicture(subject) ]]" />
+                                    <img class="absolute" data-ng-src="[[ teacherDashboardLibraryTabController.getSubjectPicture(subject) ]]" />
                                 </div>
                                 <div class="bottom">
                                     <div class="content">
@@ -75,14 +105,23 @@
                                                 <strong>[[ subject.title ]]</strong>
                                             </div>
                                             <div class="row">
-
+                                                [[ teacherDashboardLibraryTabController.getSubjectLessonType(subject).label ]]&nbsp;/&nbsp;<em>Niveau [[ teacherDashboardLibraryTabController.getSubjectLessonLevel(subject).label ]]</em>
                                             </div>
                                             <div class="row">
-                                                Ajouté par [[ subject.owner_username ]] le [[ subject.created | date: 'dd/MM/yyyy' ]]
+                                                <div class="label-badge" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.getSubjectTags(subject)">
+                                                    [[ subjectTag.label ]]
+                                                </div>
                                             </div>
                                         </div>
-                                        <div data-ng-show="canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
-                                            <input type="checkbox" data-ng-model="subject.selected" class="right-magnet cell" data-ng-change="selectSubject(subject)"/>
+                                        <div class="bottom-locked eleven vertical-spacing-twice">
+                                            <div class="cell">
+                                                Ajouté par [[ subject.owner_username ]] le [[ subject.created | date: 'dd/MM/yyyy' ]]
+                                            </div>
+                                            <div class="cell right-magnet">
+                                                <input type="checkbox"
+                                                       data-ng-checked="teacherDashboardLibraryTabController.isSubjectSelected(subject)"
+                                                       data-ng-click="teacherDashboardLibraryTabController.selectSubject(subject)" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -90,7 +129,6 @@
                         </div>
                     </div>
                 </div>
-
 
             </section>
 
@@ -101,7 +139,7 @@
             <div class="toggle">
                 <div class="row">
                     <div class="cell">
-                        <button data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubjectList()">Aperçu</button>
+                        <button data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject()" data-ng-show="teacherDashboardLibraryTabController.onlyOneSubjectIsSelected()">Aperçu</button>
                         <button data-ng-click="teacherDashboardLibraryTabController.displayModalCopyPaste()">Copier dans mes sujets</button>
                         <button data-ng-click="teacherDashboardLibraryTabController.resetSelection()">Annuler</button>
                     </div>
