@@ -58,7 +58,7 @@ class PerformSubjectCopyController {
                 if (!angular.isUndefined(subject)) {
                     self._preview(subject);
                 } else if (!angular.isUndefined(self._subjectLibraryService.tmpSubjectForPreview)) {
-                    this._previewingFromLibrary = true;
+                    self._previewingFromLibrary = true;
                     self._preview(self._subjectLibraryService.tmpSubjectForPreview);
                 } else {
                     self._$location.path('/dashboard');
