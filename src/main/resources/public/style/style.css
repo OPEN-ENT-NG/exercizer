@@ -52,6 +52,7 @@
 
 .custom-filter-button.custom-selected, .custom-filter-button-library.custom-selected {
     background-color  : #FF8500;
+    color: white;
 }
 
 /**
@@ -63,4 +64,12 @@
 }
 .floating-navigation li.selected a {
     color: white;
+}
+
+/**
+*   OVERWRITE THEME
+*/
+
+.tabs header.selected{
+    background-color: transparent !important;
 }

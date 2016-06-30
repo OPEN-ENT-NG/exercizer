@@ -177,9 +177,11 @@
 
                             <!-- ADD GRAIN DOCUMENT BUTTON -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3" style="text-align: center">
-                                <a class="classic-link" data-ng-click="editSubjectController.displayModalAddGrainDocument(grain)">
-                                    Ajouter un document
-                                </a>
+                                <nav class="vertical" style="padding: 0px !important;">
+                                    <a class="classic-link" data-ng-click="editSubjectController.displayModalAddGrainDocument(grain)">
+                                        Ajouter un document
+                                    </a>
+                                </nav>
                             </div>
 
                             <!-- SWITCH GRAIN -->
@@ -213,20 +215,20 @@
                             <!-- GRAIN ANSWER EXPLANATION -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
                                 <div class="one cell vertical-spacing horizontal-spacing">
-                                    <i class="info-pic"></i>
+                                    <i class="info-pic" tooltip="Explication de la réponse"></i>
                                 </div>
                                 <div class="eleven cell">
-                                    <textarea data-ng-model="grain.grain_data.answer_explanation" complete-change="editSubjectController.updateGrain(grain)" style="height: 80px;" placeholder="Explication de la réponse"></textarea>
+                                    <textarea data-ng-model="grain.grain_data.answer_explanation" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;" placeholder="Explication de la réponse"></textarea>
                                 </div>
                             </div>
 
                             <!-- GRAIN ANSWER HINT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
                                 <div class="one cell vertical-spacing horizontal-spacing">
-                                    <i class="help"></i>
+                                    <i class="help" tooltip="Aide à la réponse"></i>
                                 </div>
                                 <div class="eleven cell">
-                                    <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="editSubjectController.updateGrain(grain)" style="height: 80px;" placeholder="Aide à la réponse"></textarea>
+                                    <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;" placeholder="Aide à la réponse"></textarea>
                                 </div>
                             </div>
 
@@ -268,9 +270,7 @@
 
                 <!-- ADD GRAIN -->
                 <div class="editor drawing-grid">
-                    <button data-ng-click="editSubjectController.addGrain()" class="twelve cell flat-button">
-                        Ajouter un élément
-                    </button>
+                    <button class="grid-add-row" data-ng-click="editSubjectController.addGrain()">Ajouter un élément</button>
                 </div>
 
             </section>
