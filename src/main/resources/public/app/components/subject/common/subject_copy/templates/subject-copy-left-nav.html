@@ -1,6 +1,6 @@
 <nav data-stick-to-top class="hash-magnet floating-navigation">
     <h4 class="row">Navigation</h4>
-    <div class="row" style="overflow-y:scroll; max-height: 300px; border:1px dotted lightgrey;">
+    <div class="row" style="overflow-y:auto; max-height: 50vh; border:1px dotted lightgrey;">
         <ul style="padding: 0 5px;">
             <li data-ng-click="navigateTo()" data-ng-class="(!currentGrainCopy) ? 'selected' : ''">
                 <a>
@@ -8,6 +8,7 @@
                 </a>
             </li>
             <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false"
+                style="overflow-x: hidden"
                 data-ng-click="navigateTo(grainCopy)" data-ng-class="(currentGrainCopy.id === grainCopy.id) ? 'selected' : ''">
                 <a>
                     [[grainCopy.order_by]]&nbsp;)&nbsp;[[ getGrainCopyName(grainCopy) ]]

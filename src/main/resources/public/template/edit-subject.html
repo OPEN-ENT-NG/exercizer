@@ -75,7 +75,7 @@
                                             </div>
 
                                     </div>
-                                    <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
+                                    <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[grain.order_by]]&nbsp;)&nbsp;[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
                                     <div class="cell right-magnet">
                                         <i class="drag-anchor"></i>
                                     </div>
@@ -127,9 +127,9 @@
                             </div>
 
                             <!-- GRAIN TRASH ICON -->
-                            <div class="cell right-magnet" data-ng-class="(grain.grain_type_id > 2) ? 'horizontal-spacing' : ''" data-tooltip="Supprimer" data-ng-click="editSubjectController.displayModalRemoveGrain(grain)">
+                            <!--<div class="cell right-magnet" data-ng-class="(grain.grain_type_id > 2) ? 'horizontal-spacing' : ''" data-tooltip="Supprimer" data-ng-click="editSubjectController.displayModalRemoveGrain(grain)">
                                 <i class="trash"></i>
-                            </div>
+                            </div>-->
 
                         </div>
 
@@ -258,7 +258,7 @@
                                 </div>
                                 <div data-ng-switch-default>
                                     <div class="eleven cell vertical-spacing">
-                                        <h2>[[grain.order_by]]&nbsp;)&nbsp;[[ editSubjectController.getGrainDisplayedName(grain) ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
+                                        <h2>[[grain.order_by]]&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-ng-click="editSubjectController.foldGrain(grain)">[[ editSubjectController.getGrainDisplayedName(grain) ]]</span>&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
                                     </div>
                                 </div>
                             </div>

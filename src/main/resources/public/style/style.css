@@ -73,3 +73,7 @@
 .tabs header.selected{
     background-color: transparent !important;
 }
+
+.down-open:hover{
+    color: #FF8351;
+}
