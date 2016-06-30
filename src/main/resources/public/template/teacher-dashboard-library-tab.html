@@ -31,11 +31,11 @@
                             <div class="tabs">
                                 <header data-ng-class="teacherDashboardLibraryTabController.isFilterSubjectLessonTypeDisplayed ? 'selected' : ''"
                                         data-ng-click="teacherDashboardLibraryTabController.displayFilterSubjectLessonType()">
-                                    Matières
+                                    Matières&nbsp;<span data-ng-show="teacherDashboardLibraryTabController.filters.subjectLessonType">*</span>
                                 </header>
                                 <header data-ng-class="teacherDashboardLibraryTabController.isFilterSubjectLessonLevelDisplayed ? 'selected' : ''"
                                         data-ng-click="teacherDashboardLibraryTabController.displayFilterSubjectLessonLevel()">
-                                    Niveaux
+                                    Niveaux&nbsp;<span data-ng-show="teacherDashboardLibraryTabController.filters.subjectLessonLevel">*</span>
                                 </header>
                             </div>
                         </div>
@@ -66,19 +66,24 @@
             <section class="eight cell">
 
                 <!-- FILTERS -->
+
                 <div class="row">
-                    <input type="text" class="twelve cell" placeholder="Rechercher un titre" /><!-- TODO -->
+                    <h4 class="five cell">Recherche par tags :</h4>
+                    <div class="one cell">&nbsp;</div>
+                    <h4 class="five cell">Recherche par titre :</h4>
                 </div>
 
-                <div class="row vertical-spacing">
+                <div class="row">
                     <autocomplete
-                            class="twelve cell"
-                            placeholder="Rechercher des tags"
+                            class="five cell"
                             options="teacherDashboardLibraryTabController.autocompleteSubjectTagList"
                             ng-change="teacherDashboardLibraryTabController.selectSubjectTag(selectedSubjectTagObject)"
                             ng-model="selectedSubjectTagObject">
                     </autocomplete>
+                    <div class="one cell">&nbsp;</div>
+                    <input type="text" class="five cell" placeholder="Rechercher" data-ng-model="teacherDashboardLibraryTabController.filters.title" />
                 </div>
+
 
                 <div class="row vertical-spacing">
                     <div class="label-badge" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.filters.subjectTagList">
@@ -92,7 +97,7 @@
                 <h3 class="row"><em>[[ teacherDashboardLibraryTabController.isLanding ? 'Derniers sujets ajoutés...' : 'Résultats de la recherche...' ]]</em></h3>
 
                 <div class="fallen dominos">
-                    <div data-ng-repeat="subject in teacherDashboardLibraryTabController.subjectList">
+                    <div data-ng-repeat="subject in filteredSubjectList = (teacherDashboardLibraryTabController.subjectList | filter: teacherDashboardLibraryTabController.searchByFilters())">
                         <div class="item" style="width: 100%; max-width: none;">
                             <section class="domino">
                                 <div class="top">

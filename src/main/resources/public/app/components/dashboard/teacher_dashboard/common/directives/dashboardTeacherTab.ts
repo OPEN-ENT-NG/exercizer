@@ -1,7 +1,7 @@
 directives.push(
     {
         name: 'dashboardTeacherTab',
-        injections: [ '$location', '$window', ($location, $window) => {
+        injections: [ '$location', '$window', 'SubjectService', ($location, $window, SubjectService:ISubjectService) => {
             return {
                 restrict: 'E',
                 scope: {
@@ -14,7 +14,15 @@ directives.push(
                     scope.switchTab = function (newTab) {
                         switch (newTab){
                             case 'mySubjects':
-                                $location.path('/dashboard');
+                                SubjectService.resolve(true).then(
+                                    function(){
+                                        $location.path('/dashboard');
+                                    },
+                                    function(err) {
+                                        notify.error(err);
+                                    }
+                                );
+
                                 break;
                             case 'correction':
                                 $location.path('/dashboard/teacher/correction/');
@@ -33,7 +41,7 @@ directives.push(
                             function(){
                                 $window.location.reload();
                             },
-                        1);
+                            1);
                     };
 
                     scope.clickReturnExercizer = function(){
@@ -55,18 +63,18 @@ directives.push(
                     };
 
                     scope.clickReturnExercizerTab = function(){
-                            switch (scope.currentTab){
-                                case 'mySubjects':
-                                    break;
-                                case 'correction':
-                                    scope.selectedSubjectScheduled = null;
-                                    $location.path('/dashboard/teacher/correction');
-                                    break;
-                                case 'library':
-                                    break;
-                                default :
-                                    throw "tab "+scope.currentTab+"  missing"
-                            }
+                        switch (scope.currentTab){
+                            case 'mySubjects':
+                                break;
+                            case 'correction':
+                                scope.selectedSubjectScheduled = null;
+                                $location.path('/dashboard/teacher/correction');
+                                break;
+                            case 'library':
+                                break;
+                            default :
+                                throw "tab "+scope.currentTab+"  missing"
+                        }
 
                     };
 

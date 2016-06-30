@@ -15,8 +15,9 @@ directives.push(
                     scope.allFolderList = FolderService.folderList;
 
                     // event to display model
-                    scope.$on("E_DISPLAY_DASHBOARD_MODAL_COPY_PASTE", function(event, selectedSubjectList, selectedFolderList) {
+                    scope.$on("E_DISPLAY_DASHBOARD_MODAL_COPY_PASTE", function(event, selectedSubjectList, selectedFolderList, fromLibrary = false) {
                         scope.isDisplayed = true;
+                        scope.fromLibrary = fromLibrary;
                         scope.subjectList = selectedSubjectList;
                         scope.folderList = selectedFolderList;
                     });

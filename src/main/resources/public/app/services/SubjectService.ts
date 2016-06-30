@@ -1,5 +1,5 @@
 interface ISubjectService {
-    resolve(): ng.IPromise<boolean>;
+    resolve(force?:boolean): ng.IPromise<boolean>;
     persist(subject: ISubject): ng.IPromise<ISubject>;
     update(subject: ISubject, updateMaxScore:boolean): ng.IPromise<ISubject>;
     remove(subject: ISubject): ng.IPromise<boolean>;
@@ -33,7 +33,7 @@ class SubjectService implements ISubjectService {
         this._grainService = _grainService;
     }
 
-    public resolve = function(): ng.IPromise<boolean> {
+    public resolve = function(force:boolean = false): ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -41,7 +41,7 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subjects'
             };
 
-        if (!angular.isUndefined(this._listMappedById)) {
+        if (!angular.isUndefined(this._listMappedById) && !force) {
             deferred.resolve(true);
         } else {
             this._$http(request).then(
@@ -72,6 +72,11 @@ class SubjectService implements ISubjectService {
                 url: 'exercizer/subject',
                 data: subject
             };
+
+        if (angular.isUndefined(this._listMappedById)) {
+            this._listMappedById = {};
+        }
+
         if(subject.id){
             self._beforePushBack(subject);
         }
@@ -79,6 +84,7 @@ class SubjectService implements ISubjectService {
             function(response) {
                 var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data)) as any;
                 self._afterPullBack(subject);
+
                 self._listMappedById[subject.id] = subject;
                 deferred.resolve(subject);
             },

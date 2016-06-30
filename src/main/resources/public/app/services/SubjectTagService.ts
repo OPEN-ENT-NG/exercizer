@@ -126,7 +126,7 @@ class SubjectTagService implements ISubjectTagService {
     };
 
     public getListBySubjectId = function(subjectId:number):ISubjectTag[] {
-        return this._listMappedBySubjectId[subjectId];
+        return this._listMappedBySubjectId[subjectId] ? this._listMappedBySubjectId[subjectId] : [];
     };
 }
 

@@ -1,18 +1,27 @@
 <lightbox show="isDisplayed" on-close="hide()">
     <h2>Copier la sélection</h2>
     <p>Confirmez-vous la copie de la sélection ?</p>
-    <ul data-ng-show="folderList.length !=0">
+    <div data-ng-if="!fromLibrary">
+        <ul data-ng-show="folderList.length !=0">
             <li data-ng-repeat="folderId in folderList">
                 [[getFolderLabelById(folderId)]]
             </li>
-    </ul>
-    <ul data-ng-show="subjectList.length !=0">
+        </ul>
+        <ul data-ng-show="subjectList.length !=0">
             <li data-ng-repeat="subjectId in subjectList">
                 [[getSubjectTitleById(subjectId)]]
             </li>
-    </ul>
+        </ul>
+    </div>
+    <div data-ng-if="fromLibrary">
+        <ul data-ng-show="subjectList.length !=0">
+            <li data-ng-repeat="subject in subjectList">
+                [[ subject.title ]]
+            </li>
+        </ul>
+    </div>
     <div class="row">
-        <label class="four cell margin-one"> Sélection du dossier cible&nbsp;* :</label>
+        <label class="four cell margin-one">Sélection du dossier cible&nbsp;* :</label>
         <select data-ng-model="data.selectedFolder" class="four cell">
             <option value="null">Racine</option>
             <option data-ng-repeat="folder in allFolderList" value="[[folder.id]]">[[folder.label]]</option>

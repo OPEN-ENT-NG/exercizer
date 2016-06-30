@@ -99,7 +99,6 @@ class SubjectLessonLevelService implements ISubjectLessonLevelService {
             } else {
                 this._$http(request).then(
                     function (response) {
-
                         for (var i = 0; i < subjectIds.length; ++i) {
                             var subjectLessonLevelObject = response.data[i];
                             self._listMappedBySubjectId[subjectIds[i]] = SerializationHelper.toInstance(new SubjectLessonLevel(), JSON.stringify(subjectLessonLevelObject));

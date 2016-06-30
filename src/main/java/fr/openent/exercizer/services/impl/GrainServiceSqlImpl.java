@@ -54,7 +54,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
     @Override
     public void listBySubjectForLibrary(final JsonObject resource, final Handler<Either<String, JsonArray>> handler) {
     	JsonArray joins = new JsonArray();
-    	joins.addString("JOIN exercizer.subject s ON r.subject_id = s.id AND s.is_library_subject = true");
+    	joins.addString("JOIN exercizer.subject s ON r.subject_id = s.id AND s.is_library_subject = true AND s.id = " + resource.getField("id"));
     	
     	super.list("r", joins, null, null, null, null, handler);
     }

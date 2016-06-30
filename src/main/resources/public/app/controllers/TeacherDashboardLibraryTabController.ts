@@ -4,6 +4,7 @@ class TeacherDashboardLibraryTabController {
         '$q',
         '$location',
         '$scope',
+        'SubjectService',
         'SubjectLibraryService',
         'SubjectLessonTypeService',
         'SubjectLessonLevelService',
@@ -36,6 +37,7 @@ class TeacherDashboardLibraryTabController {
         private _$q:ng.IQService,
         private _$location:ng.ILocationService,
         private _$scope:ng.IScope,
+        private _subjectService:ISubjectService,
         private _subjectLibraryService:ISubjectLibraryService,
         private _subjectLessonTypeService:ISubjectLessonTypeService,
         private _subjectLessonLevelService:ISubjectLessonLevelService,
@@ -44,6 +46,7 @@ class TeacherDashboardLibraryTabController {
         this._$q = _$q;
         this._$location = _$location;
         this._$scope = _$scope;
+        this._subjectService = _subjectService;
         this._subjectLibraryService = _subjectLibraryService;
         this._subjectLessonTypeService = _subjectLessonTypeService;
         this._subjectLessonLevelService = _subjectLessonLevelService;
@@ -53,7 +56,7 @@ class TeacherDashboardLibraryTabController {
         this._hasDataLoaded = false;
         this._isLanding = true;
 
-        // organizer
+        // filters
         this._filters = {
             title: undefined,
             subjectLessonType: undefined,
@@ -83,8 +86,8 @@ class TeacherDashboardLibraryTabController {
                                 self._subjectTagService.resolve().then(
                                     function(subjectTagList:ISubjectTag[]) {
                                         self._subjectTagList = subjectTagList;
-                                        self._autocompleteSubjectTagList = []; 
-                                        
+                                        self._autocompleteSubjectTagList = [];
+
                                         angular.forEach(self._subjectTagList, function(value) {
                                             var obj = {
                                                 id: value.id,
@@ -100,7 +103,7 @@ class TeacherDashboardLibraryTabController {
                                             subjectIdList = self._subjectList.map(function(subject:ISubject) {
                                                 return subject.id;
                                             });
-                                        
+
                                         angular.forEach(subjectIdList, function(subjectId:number) {
                                             promises.push(self._subjectTagService.resolveBySubjectId(subjectId));
                                         });
@@ -110,7 +113,7 @@ class TeacherDashboardLibraryTabController {
 
                                         self._$q.all(promises).then(
                                             function() {
-                                                
+
                                                 self._$scope.$on('E_CONFIRM_COPY_PASTE', function(event, folder:IFolder) {
                                                     self._copyPastSelectedSubjectList(folder);
                                                 });
@@ -166,6 +169,65 @@ class TeacherDashboardLibraryTabController {
     /**
      * FILTERS
      */
+
+    public searchByFilters = function() {
+        var self = this;
+        return function (subject:ISubject) {
+
+            if (angular.isUndefined(subject)) {
+                return false;
+            }
+
+            this._filters = {
+                title: undefined,
+                subjectLessonType: undefined,
+                subjectLessonLevel: undefined,
+                subjectTagList: []
+            };
+
+            var titleFound = true,
+                subjectLessonTypeFound = true,
+                subjectLessonLevelFound = true,
+                subjectTagListFound = true;
+
+            if (!angular.isUndefined(self._filters.title) && self._filters.title.length > 0) {
+                self._isLanding = false;
+                titleFound = subject.title.toLowerCase().search(self._filters.title.toLowerCase()) !== -1;
+            }
+
+            var currentSubjectLessonType = self._subjectLessonTypeService.getBySubjectId(subject.id);
+            if (!angular.isUndefined(self._filters.subjectLessonType) && !angular.isUndefined(currentSubjectLessonType)) {
+                self._isLanding = false;
+                subjectLessonTypeFound = self._filters.subjectLessonType.id === currentSubjectLessonType.id;
+            }
+
+            var currentSubjectLessonLevel = self._subjectLessonLevelService.getBySubjectId(subject.id);
+            if (!angular.isUndefined(self._filters.subjectLessonLevel) && !angular.isUndefined(currentSubjectLessonLevel)) {
+                self._isLanding = false;
+                subjectLessonLevelFound = self._filters.subjectLessonLevel.id === currentSubjectLessonLevel.id;
+            }
+
+            if (self._filters.subjectTagList.length > 0) {
+                var currentSubjectTagList = self._subjectTagService.getListBySubjectId(subject.id);
+
+                if (currentSubjectTagList.length == 0) {
+                    subjectTagListFound = false;
+                } else {
+                    self._isLanding = false;
+                    angular.forEach(self._filters.subjectTagList, function(subjectTag:ISubjectTag) {
+                        if (subjectTagListFound) {
+                            subjectTagListFound = currentSubjectTagList[0].id === subjectTag.id;
+                            for (var i = 1; i < currentSubjectTagList.length && !subjectTagListFound; ++i) {
+                                subjectTagListFound = currentSubjectTagList[i].id === subjectTag.id;
+                            }
+                        }
+                    });
+                }
+            }
+
+            return titleFound && subjectLessonTypeFound && subjectLessonLevelFound && subjectTagListFound;
+        };
+    };
 
     public foldFilters = function() {
         this._areFiltersFolded = !this._areFiltersFolded;
@@ -254,11 +316,15 @@ class TeacherDashboardLibraryTabController {
     };
 
     public displayModalCopyPaste = function() {
-        this._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_COPY_PASTE', this._selectedSubjectList, []);
+        this._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_COPY_PASTE', this._selectedSubjectList, [], true);
     };
 
     private _copyPastSelectedSubjectList = function(parentFolder) {
         var self = this;
+
+        angular.forEach(this._selectedSubjectList, function(subject:ISubject) {
+            subject.is_library_subject = false;
+        });
 
         this._subjectService.duplicateList(this._selectedSubjectList, parentFolder).then(
             function() {
