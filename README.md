@@ -115,6 +115,36 @@ Modification html
 </div>
 ```
 
+## Rights
+
+#### Enseignant
+
+* exercizer.view
+* exercizer.folder.list
+* exercizer.folder.persist
+* exercizer.grain.copy.list
+* exercizer.grain.scheduled.list
+* exercizer.grain.type.list
+* exercizer.subject.list
+* exercizer.subject.persist
+* exercizer.subject.copy.list
+* exercizer.subject.copy.list.by.subject.scheduled.list
+* exercizer.subject.scheduled.list
+* exercizer.subject.scheduled.list.by.subject.copy.list
+
+#### Enseignant
+
+* exercizer.view
+* exercizer.grain.copy.list
+* exercizer.grain.scheduled.list
+* exercizer.grain.type.list
+* exercizer.subject.copy.list
+* exercizer.subject.scheduled.list
+* exercizer.subject.scheduled.list.by.subject.copy.list
+
+
+
+
 
 
 
