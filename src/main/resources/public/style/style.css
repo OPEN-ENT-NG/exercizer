@@ -89,3 +89,7 @@
 .hover-orange:hover{
     color: #FF8351;
 }
+
+#surcharge-force-cursor-default:before{
+    cursor: default !important;
+}

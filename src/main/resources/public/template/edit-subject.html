@@ -225,7 +225,7 @@
                             <!-- GRAIN ANSWER HINT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
                                 <div class="one cell vertical-spacing horizontal-spacing">
-                                    <i class="help" tooltip="Aide à la réponse"></i>
+                                    <i class="help" tooltip="Aide à la réponse" id="surcharge-force-cursor-default"></i>
                                 </div>
                                 <div class="eleven cell">
                                     <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;" placeholder="Aide à la réponse"></textarea>
