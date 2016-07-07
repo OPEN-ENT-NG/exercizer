@@ -26,6 +26,10 @@ directives.push(
                             $location.path('/dashboard/teacher/correction/'+scope.subjectScheduled.id);
                         }
                     });
+
+                    scope.copyIsCorrected = function(){
+                        return scope.subjectCopy.is_corrected;
+                    }
                 }
             };
         }]
