@@ -20,9 +20,15 @@
                         </autocomplete>
                     </div>
                 </div>
-
                 <div class="row" data-ng-if="search.groupSelected">
                     <h4 class="cell"><i style="margin-right: 10px;" data-ng-click="resetGroupSelected()" class="close"></i> [[search.groupSelected.name]]</h4>
+                </div>
+                <div class="row" style="max-height: 25vh;overflow-y: scroll">
+                    <div class="twelve cell">
+                        <div data-ng-repeat="item in autocomplete.groupList" data-ng-click="clickOnItem(item)" style="margin-left: 10px;font-style: italic;">
+                            {{item.name}}
+                        </div>
+                    </div>
                 </div>
             </article>
         </nav>
