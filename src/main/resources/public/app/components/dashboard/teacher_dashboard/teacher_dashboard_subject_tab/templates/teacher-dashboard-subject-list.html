@@ -119,7 +119,12 @@
                                         </div>
                                     </div>
                                     <div data-ng-show="canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
-                                        <input type="checkbox" data-ng-model="subject.selected" class="right-magnet cell" data-ng-change="selectSubject(subject)"/>
+                                        <div class="right-magnet cell">
+                                            <input type="checkbox" data-ng-model="subject.selected" data-ng-change="selectSubject(subject)"/>
+                                        </div>
+                                        <div class="right-magnet cell" data-ng-show="subject.shared.length > 0"
+                                        ><i class="shared" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
