@@ -254,7 +254,7 @@
                                 </div>
                                 <div data-ng-switch-when="3">
                                     <h2>[[grain.order_by]]&nbsp;)&nbsp;</h2>
-                                    <div class="eleven cell vertical-spacing" style="word-wrap: break-word;" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
+                                    <div data-ng-click="editSubjectController.foldGrain(grain)" class="eleven cell vertical-spacing" style="max-height : 100px;word-wrap: break-word; overflow: hidden; text-overflow: ellipsis;" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
                                 </div>
                                 <div data-ng-switch-default>
                                     <div class="eleven cell vertical-spacing">
