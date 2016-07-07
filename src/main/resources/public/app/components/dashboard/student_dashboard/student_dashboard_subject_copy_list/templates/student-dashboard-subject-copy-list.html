@@ -23,20 +23,23 @@
         <h2 class="row">Plus tard</h2>
 
         <div class="row">
-            <input type="text" data-ng-model="search.text_2" placeholder="Rechercher" class="four cell">
-
-            <div class="cell right-magnet">
-                <label class="two cell">
-                    Au
-                </label>
-                <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
+            <div class="cell">
+                <input type="text" data-ng-model="search.text_2" placeholder="Rechercher">
             </div>
-
+            <div class="cell">&nbsp;</div>
             <div class="cell right-magnet">
-                <label class="two cell">
-                    Du
-                </label>
-                <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
+                <div class="cell">
+                    <label class="two cell">
+                        Du
+                    </label>
+                    <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
+                </div>
+                <div class="cell">
+                    <label class="two cell">
+                        Au
+                    </label>
+                    <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
+                </div>
             </div>
         </div>
         <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
