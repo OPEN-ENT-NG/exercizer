@@ -49,6 +49,14 @@
     text-align: center;
     width: 100%;
 }
+.custom-filter-button-correction {
+    border: 1px solid lightgray;
+    padding: 5px;
+    margin: 5px;
+    background-color: lightgray;
+    border-radius: 2px;
+    text-align: center;
+}
 
 .custom-filter-button.custom-selected, .custom-filter-button-library.custom-selected {
     background-color  : #FF8500;
