@@ -2,15 +2,8 @@
     <h1 class="row">Publier dans la bibliothèque</h1>
 
     <div class="row vertical-spacing">
-        <input type="checkbox"
-               data-ng-checked="hasAgreedToPublish"
-               data-ng-click="toggleHasAgreedToPublish()" />
-        &nbsp;Je suis d'accord pour publier ce sujet en licence libre
-    </div>
-
-    <div class="row vertical-spacing">
         <div class="four cell">
-            Renseignez la matière du sujet :
+            Matière * :
         </div>
         <select data-ng-model="selection.selectedSubjectLessonTypeId" class="seven cell margin-one">
             <option value="null"></option>
@@ -20,7 +13,7 @@
 
     <div class="row vertical-spacing">
         <div class="four cell">
-            Renseignez le niveau du sujet :
+            Niveau * :
         </div>
         <select data-ng-model="selection.selectedSubjectLessonLevelId" class="seven cell margin-one">
             <option value="null"></option>
@@ -52,8 +45,7 @@
         </button>
     </div>
 
-    <h2 class="row">Tags associés au sujets* :</h2>
-    *&nbsp;<em class="low-importance">3 maximum</em>
+    <h2 class="row">Tags associés au sujets :</h2>
 
     <div class="row vertical-spacing">
         <div class="label-badge" data-ng-repeat="subjectTag in selectedSubjectTagList">
@@ -62,6 +54,13 @@
                 <i class="close"></i>
             </span>
         </div>
+    </div>
+
+    <div class="row vertical-spacing">
+        <input type="checkbox"
+               data-ng-checked="hasAgreedToPublish"
+               data-ng-click="toggleHasAgreedToPublish()" />
+        &nbsp;Je suis d'accord pour publier le sujet en Creative Commons
     </div>
 
     <div class="row">

@@ -9,7 +9,7 @@ directives.push(
                     link: (scope:any) => {
 
                         scope.isDisplayed = false;
-                        scope.hasAgreedToPublish = false;
+                        scope.hasAgreedToPublish = true;
                         scope.isPublicationOnGoing = false;
                         scope.subject = null;
                         scope.selection = {
@@ -82,63 +82,52 @@ directives.push(
                         };
 
                         scope.selectSubjectTag = function(selectedSubjectTagObject) {
+                            for (var i = 0; i < scope.subjectTagList.length; ++i) {
 
-                            if (scope.selectedSubjectTagList.length === 3) {
-                                notify.info('Vous ne pouvez pas ajouter plus de trois tags.')
-                            } else {
-                                for (var i = 0; i < scope.subjectTagList.length; ++i) {
+                                if (scope.subjectTagList[i].id === parseInt(selectedSubjectTagObject.id)) {
 
-                                    if (scope.subjectTagList[i].id === parseInt(selectedSubjectTagObject.id)) {
-
-                                        if (scope.selectedSubjectTagList.indexOf(scope.subjectTagList[i]) === -1) {
-                                            scope.selectedSubjectTagList.push(scope.subjectTagList[i]);
-                                        } else {
-                                            notify.info('Ce tag est déjà associé.')
-                                        }
-
-                                        i = scope.subjectTagList.length;
+                                    if (scope.selectedSubjectTagList.indexOf(scope.subjectTagList[i]) === -1) {
+                                        scope.selectedSubjectTagList.push(scope.subjectTagList[i]);
+                                    } else {
+                                        notify.info('Ce tag est déjà associé.')
                                     }
+
+                                    i = scope.subjectTagList.length;
                                 }
                             }
                         };
 
                         scope.addNewSubjectTag = function(newCustomTagLabel:string) {
+                            newCustomTagLabel = StringISOHelper.toISO(newCustomTagLabel);
 
-                            if (scope.selectedSubjectTagList.length === 3) {
-                                notify.info('Vous ne pouvez pas ajouter plus de trois tags.')
-                            } else {
+                            if (!angular.isUndefined(newCustomTagLabel)) {
 
-                                newCustomTagLabel = StringISOHelper.toISO(newCustomTagLabel);
+                                var isExisting = false;
 
-                                if (!angular.isUndefined(newCustomTagLabel)) {
+                                for (let i = 0; i < scope.subjectTagList.length; ++i) {
+                                    if (CompareStringHelper.compare(StringISOHelper.toISO(scope.subjectTagList[i].label), newCustomTagLabel)) {
+                                        notify.info('Ce tag existe déjà.');
+                                        i = scope.subjectTagList.length;
+                                        isExisting = true;
+                                    }
+                                }
 
-                                    var isExisting = false;
+                                if (!isExisting) {
 
-                                    for (let i = 0; i < scope.subjectTagList.length; ++i) {
-                                        if (CompareStringHelper.compare(StringISOHelper.toISO(scope.subjectTagList[i].label), newCustomTagLabel)) {
-                                            notify.info('Ce tag existe déjà.');
-                                            i = scope.subjectTagList.length;
+                                    var newSubjectTag = new SubjectTag(undefined, newCustomTagLabel);
+
+                                    isExisting = false;
+
+                                    for (let i = 0; i < scope.selectedSubjectTagList.length; ++i) {
+                                        if (CompareStringHelper.compare(StringISOHelper.toISO(scope.selectedSubjectTagList[i].label), newCustomTagLabel)) {
+                                            notify.info('Ce tag est déjà associé.');
+                                            i = scope.selectedSubjectTagList.length;
                                             isExisting = true;
                                         }
                                     }
 
                                     if (!isExisting) {
-
-                                        var newSubjectTag = new SubjectTag(undefined, newCustomTagLabel);
-
-                                        isExisting = false;
-
-                                        for (let i = 0; i < scope.selectedSubjectTagList.length; ++i) {
-                                            if (CompareStringHelper.compare(StringISOHelper.toISO(scope.selectedSubjectTagList[i].label), newCustomTagLabel)) {
-                                                notify.info('Ce tag est déjà associé.');
-                                                i = scope.selectedSubjectTagList.length;
-                                                isExisting = true;
-                                            }
-                                        }
-
-                                        if (!isExisting) {
-                                            scope.selectedSubjectTagList.push(newSubjectTag);
-                                        }
+                                        scope.selectedSubjectTagList.push(newSubjectTag);
                                     }
                                 }
                             }
@@ -151,7 +140,7 @@ directives.push(
 
                         scope.publish = function() {
                             if (!scope.hasAgreedToPublish) {
-                                notify.error('Vous devez acceptez de publier votre sujet sous licence libre.')
+                                notify.error('Vous devez acceptez de publier votre sujet en Creative Commons.')
                             } else if (scope.selection.selectedSubjectLessonTypeId === null || scope.selection.selectedSubjectLessonTypeId === 'null' || scope.selection.selectedSubjectLessonLevelId === null || scope.selection.selectedSubjectLessonLevelId === 'null') {
                                 notify.error('Vous devez sélectionner une matière et un niveau.')
                             } else {
@@ -173,7 +162,7 @@ directives.push(
                         scope.hide = function () {
                             if (!scope.isPublicationOnGoing) {
                                 scope.isDisplayed = false;
-                                scope.hasAgreedToPublish = false;
+                                scope.hasAgreedToPublish = true;
                                 scope.isPublicationOnGoing = false;
                                 scope.subject = null;
                                 scope.selection = {
