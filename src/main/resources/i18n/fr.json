@@ -1,4 +1,6 @@
 {
 	"exercizer.title" : "Exercizer",
-	"exercizer.contrib": "Contribution"
+	"exercizer.read": "Lecture",
+	"exercizer.contrib": "Contribution",
+	"exercizer.manager": "Gestion"
 }
