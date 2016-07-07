@@ -142,7 +142,7 @@ Modification html
 * exercizer.subject.tag.list.by.subject.id
 * exercizer.subject.tag.persist
 
-#### Enseignant
+#### Eleve
 
 * exercizer.view
 * exercizer.grain.copy.list
