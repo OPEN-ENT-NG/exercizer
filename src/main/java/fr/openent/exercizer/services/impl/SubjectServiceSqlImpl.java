@@ -62,6 +62,16 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
 	 */
 	@Override
+	public void listAll(final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
+		JsonArray filters = new JsonArray();
+		filters.addString("is_library_subject = false");
+		super.list(filters, groupsAndUserIds, user, handler);
+	}
+	
+	/**
+	 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+	 */
+	@Override
 	public void listLibrarySubject(final JsonObject searchData, final Handler<Either<String, JsonArray>> handler) {
 		JsonArray joins = new JsonArray();
 

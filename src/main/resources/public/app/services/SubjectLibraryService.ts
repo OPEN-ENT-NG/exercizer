@@ -1,7 +1,7 @@
 interface ISubjectLibraryService {
     publish(subject:ISubject, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[]): ng.IPromise<boolean>;
-    search(filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}): ng.IPromise<ISubject[]>;
-    count(filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}): ng.IPromise<Number>;
+    search(/*filters:{title:string/*, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): ng.IPromise<ISubject[]>;
+    count(/*filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): ng.IPromise<Number>;
     tmpSubjectForPreview:ISubject;
 }
 
@@ -171,12 +171,12 @@ class SubjectLibraryService implements ISubjectLibraryService {
         return deferred.promise;
     };
 
-    public search = function(filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}): ng.IPromise<ISubject[]> {
+    public search = function(/*filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): ng.IPromise<ISubject[]> {
         var deferred = this._$q.defer(),
             request = {
                 method: 'POST',
                 url: 'exercizer/subjects-for-library', 
-                data: this._buildRequestData(filters)
+                //data: this._buildRequestData(filters)
             };
 
         this._$http(request).then(
@@ -195,12 +195,12 @@ class SubjectLibraryService implements ISubjectLibraryService {
         return deferred.promise;
     };
 
-    public count = function(filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}): ng.IPromise<Number> {
+    public count = function(/*filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): ng.IPromise<Number> {
         var deferred = this._$q.defer(),
             request = {
                 method: 'POST',
                 url: 'exercizer/count-subjects-for-library',
-                data: this._buildRequestData(filters)
+                //data: this._buildRequestData(filters)
             };
 
         this._$http(request).then(

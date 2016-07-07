@@ -104,7 +104,7 @@ public class SubjectController extends ControllerHelper {
 	}
 
 	@Get("/subjects")
-	@ApiDoc("Gets subject list.")
+	@ApiDoc("Gets subject list which are not deleted.")
 	@SecuredAction("exercizer.subject.list")
 	public void list(final HttpServerRequest request) {
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
@@ -118,6 +118,31 @@ public class SubjectController extends ControllerHelper {
 					}
 
 					subjectService.list(groupsAndUserIds, user, arrayResponseHandler(request));
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+
+			}
+		});
+	}
+	
+	@Get("/subjects-all")
+	@ApiDoc("Gets all subject list.")
+	@SecuredAction("exercizer.subject.list.all")
+	public void listAll(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					final List<String> groupsAndUserIds = new ArrayList<>();
+					groupsAndUserIds.add(user.getUserId());
+					if (user.getGroupsIds() != null) {
+						groupsAndUserIds.addAll(user.getGroupsIds());
+					}
+
+					subjectService.listAll(groupsAndUserIds, user, arrayResponseHandler(request));
 				}
 				else {
 					log.debug("User not found in session.");

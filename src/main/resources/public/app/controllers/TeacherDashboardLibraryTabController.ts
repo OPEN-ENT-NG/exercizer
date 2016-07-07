@@ -17,7 +17,7 @@ class TeacherDashboardLibraryTabController {
     private _isLanding:boolean;
 
     // filters
-    private _filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]};
+    private _filters:{title:string, subjectLessonTypeList:ISubjectLessonType[], subjectLessonLevelList:ISubjectLessonLevel[], subjectTagList:ISubjectTag[]};
 
     private _subjectLessonTypeList:ISubjectLessonType[];
     private _subjectLessonLevelList:ISubjectLessonLevel[];
@@ -59,8 +59,8 @@ class TeacherDashboardLibraryTabController {
         // filters
         this._filters = {
             title: undefined,
-            subjectLessonType: undefined,
-            subjectLessonLevel: undefined,
+            subjectLessonTypeList: [],
+            subjectLessonLevelList: [],
             subjectTagList: []
         };
         this._areFiltersFolded = false;
@@ -71,7 +71,7 @@ class TeacherDashboardLibraryTabController {
         this._selectedSubjectList = [];
 
         var self = this;
-        this._subjectLibraryService.search(this._filters).then(
+        this._subjectLibraryService.search(/*this._filters*/).then(
             function(subjectList:ISubject[]) {
                 self._subjectList = subjectList;
 
@@ -180,8 +180,8 @@ class TeacherDashboardLibraryTabController {
 
             this._filters = {
                 title: undefined,
-                subjectLessonType: undefined,
-                subjectLessonLevel: undefined,
+                subjectLessonTypeList: [],
+                subjectLessonLevelList: [],
                 subjectTagList: []
             };
 
@@ -195,19 +195,30 @@ class TeacherDashboardLibraryTabController {
                 titleFound = subject.title.toLowerCase().search(self._filters.title.toLowerCase()) !== -1;
             }
 
-            var currentSubjectLessonType = self._subjectLessonTypeService.getBySubjectId(subject.id);
-            if (!angular.isUndefined(self._filters.subjectLessonType) && !angular.isUndefined(currentSubjectLessonType)) {
+            if (self._filters.subjectLessonTypeList.length > 0) {
+
+                var currentSubjectLessonType = self._subjectLessonTypeService.getBySubjectId(subject.id);
+                subjectLessonTypeFound = false;
                 self._isLanding = false;
-                subjectLessonTypeFound = self._filters.subjectLessonType.id === currentSubjectLessonType.id;
+
+                for (let i = 0; i < self._filters.subjectLessonTypeList.length && !subjectLessonTypeFound; ++i) {
+                    subjectLessonTypeFound = currentSubjectLessonType.id === self._filters.subjectLessonTypeList[i];
+                }
             }
 
-            var currentSubjectLessonLevel = self._subjectLessonLevelService.getBySubjectId(subject.id);
-            if (!angular.isUndefined(self._filters.subjectLessonLevel) && !angular.isUndefined(currentSubjectLessonLevel)) {
+            if (self._filters.subjectLessonLevelList.length > 0) {
+
+                var currentSubjectLessonLevel = self._subjectLessonLevelService.getBySubjectId(subject.id);
+                subjectLessonLevelFound = false;
                 self._isLanding = false;
-                subjectLessonLevelFound = self._filters.subjectLessonLevel.id === currentSubjectLessonLevel.id;
+
+                for (let i = 0; i < self._filters.subjectLessonLevelList.length && !subjectLessonLevelFound; ++i) {
+                    subjectLessonLevelFound = currentSubjectLessonLevel.id === self._filters.subjectLessonLevelList[i];
+                }
             }
 
             if (self._filters.subjectTagList.length > 0) {
+
                 var currentSubjectTagList = self._subjectTagService.getListBySubjectId(subject.id);
 
                 if (currentSubjectTagList.length == 0) {
@@ -268,21 +279,17 @@ class TeacherDashboardLibraryTabController {
     };
 
     public selectSubjectTag = function(selectedSubjectTagObject) {
-        if (this._filters.subjectTagList.length === 3) {
-            notify.info('Vous ne pouvez pas ajouter plus de trois tags à la recherche.')
-        } else {
-            for (var i = 0; i < this._subjectTagList.length; ++i) {
+        for (var i = 0; i < this._subjectTagList.length; ++i) {
 
-                if (this._subjectTagList[i].id === parseInt(selectedSubjectTagObject.id)) {
+            if (this._subjectTagList[i].id === parseInt(selectedSubjectTagObject.id)) {
 
-                    if (this._filters.subjectTagList.indexOf(this._subjectTagList[i]) === -1) {
-                        this._filters.subjectTagList.push(this._subjectTagList[i]);
-                    } else {
-                        notify.info('Ce tag est déjà dans la associé à la recherche.')
-                    }
-
-                    i =  this._subjectTagList.length;
+                if (this._filters.subjectTagList.indexOf(this._subjectTagList[i]) === -1) {
+                    this._filters.subjectTagList.push(this._subjectTagList[i]);
+                } else {
+                    notify.info('Ce tag est déjà dans la associé à la recherche.')
                 }
+
+                i = this._subjectTagList.length;
             }
         }
     };
