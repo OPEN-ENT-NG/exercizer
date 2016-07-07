@@ -126,6 +126,7 @@ Modification html
 * exercizer.grain.scheduled.list
 * exercizer.grain.type.list
 * exercizer.subject.list
+* exercizer.subject.list.all
 * exercizer.subject.persist
 * exercizer.subject.copy.list
 * exercizer.subject.copy.list.by.subject.scheduled.list
