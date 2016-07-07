@@ -138,8 +138,7 @@
 
                             <!-- TITLE & SCORE -->
                             <div class="row vertical-spacing" data-ng-if="grain.grain_type_id > 3">
-                                <textarea class="six cell" data-ng-model="grain.grain_data.title" complete-change="editSubjectController.updateGrain(grain)" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question"style="height: 60px;" maxlength="255"></textarea>
-                                <!--<input type="text" class="six cell" data-ng-model="grain.grain_data.title" complete-change="editSubjectController.updateGrain(grain)" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question" />-->
+                                <input type="text" class="six cell" data-ng-model="grain.grain_data.title" complete-change="editSubjectController.updateGrain(grain)" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question" maxlength="255"/>
                                 <input type="text" class="cell right-magnet" data-ng-model="grain.grain_data.max_score" complete-change="editSubjectController.updateGrain(grain)" data-digits-input-restrict placeholder="Pondération" />
                                 <em class="high-importance cell right-magnet">Question sur /</em>
                             </div>
