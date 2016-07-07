@@ -131,6 +131,16 @@ Modification html
 * exercizer.subject.copy.list.by.subject.scheduled.list
 * exercizer.subject.scheduled.list
 * exercizer.subject.scheduled.list.by.subject.copy.list
+* exercizer.subject.count.for.library
+* exercizer.subject.list.for.library
+* exercizer.subject.lesson.level.list
+* exercizer.subject.lesson.level.list.by.subject.id.list
+* exercizer.subject.library.grain.list
+* exercizer.subject.lesson.type.list
+* exercizer.subject.lesson.type.list.by.subject.id.list
+* exercizer.subject.tag.list
+* exercizer.subject.tag.list.by.subject.id
+* exercizer.subject.tag.persist
 
 #### Enseignant
 
