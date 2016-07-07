@@ -91,9 +91,9 @@
             </section>
 
             <!-- GRAIN LIST -->
-            <section class="eight cell">
+            <section class="eight cell" dragdrop="editSubjectController.dropTo($originalEvent)">
 
-                <div class="row" dragdrop="editSubjectController.dropTo($originalEvent)">
+                <div class="row">
 
                     <article data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false" id="grain-edit-[[grain.id]]">
 
