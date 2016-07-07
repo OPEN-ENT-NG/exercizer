@@ -178,13 +178,6 @@ class TeacherDashboardLibraryTabController {
                 return false;
             }
 
-            this._filters = {
-                title: undefined,
-                subjectLessonTypeList: [],
-                subjectLessonLevelList: [],
-                subjectTagList: []
-            };
-
             var titleFound = true,
                 subjectLessonTypeFound = true,
                 subjectLessonLevelFound = true,
@@ -202,7 +195,7 @@ class TeacherDashboardLibraryTabController {
                 self._isLanding = false;
 
                 for (let i = 0; i < self._filters.subjectLessonTypeList.length && !subjectLessonTypeFound; ++i) {
-                    subjectLessonTypeFound = currentSubjectLessonType.id === self._filters.subjectLessonTypeList[i];
+                    subjectLessonTypeFound = currentSubjectLessonType.id === self._filters.subjectLessonTypeList[i].id;
                 }
             }
 
@@ -213,26 +206,23 @@ class TeacherDashboardLibraryTabController {
                 self._isLanding = false;
 
                 for (let i = 0; i < self._filters.subjectLessonLevelList.length && !subjectLessonLevelFound; ++i) {
-                    subjectLessonLevelFound = currentSubjectLessonLevel.id === self._filters.subjectLessonLevelList[i];
+                    subjectLessonLevelFound = currentSubjectLessonLevel.id === self._filters.subjectLessonLevelList[i].id;
                 }
             }
 
             if (self._filters.subjectTagList.length > 0) {
 
                 var currentSubjectTagList = self._subjectTagService.getListBySubjectId(subject.id);
+                subjectTagListFound = false;
+                self._isLanding = false;
 
-                if (currentSubjectTagList.length == 0) {
-                    subjectTagListFound = false;
-                } else {
-                    self._isLanding = false;
-                    angular.forEach(self._filters.subjectTagList, function(subjectTag:ISubjectTag) {
-                        if (subjectTagListFound) {
-                            subjectTagListFound = currentSubjectTagList[0].id === subjectTag.id;
-                            for (var i = 1; i < currentSubjectTagList.length && !subjectTagListFound; ++i) {
-                                subjectTagListFound = currentSubjectTagList[i].id === subjectTag.id;
-                            }
+                if (currentSubjectTagList.length > 0) {
+
+                    for (let i = 0; i < currentSubjectTagList.length && !subjectTagListFound; ++i) {
+                        for (let j = 0; j < self._filters.subjectTagList.length && !subjectTagListFound; ++j) {
+                            subjectTagListFound = currentSubjectTagList[i].id === self._filters.subjectTagList[j].id;
                         }
-                    });
+                    }
                 }
             }
 
@@ -255,27 +245,29 @@ class TeacherDashboardLibraryTabController {
     };
 
     public selectFilterSubjectLessonType = function(subjectLessonType:ISubjectLessonType) {
-        if (!angular.isUndefined(this._filters.subjectLessonType) && this._filters.subjectLessonType.id === subjectLessonType.id) {
-            this._filters.subjectLessonType = undefined;
+        var subectLessonTypeIndex = this._filters.subjectLessonTypeList.indexOf(subjectLessonType);
+        if (subectLessonTypeIndex === -1) {
+            this._filters.subjectLessonTypeList.push(subjectLessonType);
         } else {
-            this._filters.subjectLessonType = subjectLessonType;
+            this._filters.subjectLessonTypeList.splice(subectLessonTypeIndex, 1);
         }
     };
 
     public isFilterSubjectLessonTypeSelected = function(subjectLessonType:ISubjectLessonType) {
-        return !angular.isUndefined(this._filters.subjectLessonType) && this._filters.subjectLessonType.id === subjectLessonType.id;
+        return this._filters.subjectLessonTypeList.indexOf(subjectLessonType) !== -1;
     };
 
     public selectFilterSubjectLessonLevel = function(subjectLessonLevel:ISubjectLessonLevel) {
-        if (!angular.isUndefined(this._filters.subjectLessonLevel) &&  this._filters.subjectLessonLevel.id === subjectLessonLevel.id) {
-            this._filters.subjectLessonLevel = undefined;
+        var subectLessonLevelIndex = this._filters.subjectLessonLevelList.indexOf(subjectLessonLevel);
+        if (subectLessonLevelIndex === -1) {
+            this._filters.subjectLessonLevelList.push(subjectLessonLevel);
         } else {
-            this._filters.subjectLessonLevel = subjectLessonLevel;
+            this._filters.subjectLessonLevelList.splice(subectLessonLevelIndex, 1);
         }
     };
 
     public isFilterSubjectLessonLevelSelected = function(subjectLessonLevel:ISubjectLessonLevel) {
-        return !angular.isUndefined(this._filters.subjectLessonLevel) && this._filters.subjectLessonLevel.id === subjectLessonLevel.id;
+        return this._filters.subjectLessonLevelList.indexOf(subjectLessonLevel) !== -1;
     };
 
     public selectSubjectTag = function(selectedSubjectTagObject) {
@@ -317,9 +309,13 @@ class TeacherDashboardLibraryTabController {
         return this._selectedSubjectList.indexOf(subject) !== -1;
     };
 
-    public previewSelectedSubject = function() {
-        this._subjectLibraryService.tmpSubjectForPreview = this._selectedSubjectList[0];
-        this._$location.path('/subject/copy/preview/perform/' + this._selectedSubjectList[0].id + '/');
+    public previewSelectedSubject = function(subject:ISubject = undefined) {
+        if (angular.isUndefined(subject)) {
+            subject = this._selectedSubjectList[0];
+        }
+        this._subjectLibraryService.tmpSubjectForPreview = subject;
+        this._$location.path('/subject/copy/preview/perform/' + subject.id + '/');
+            
     };
 
     public displayModalCopyPaste = function() {
@@ -372,7 +368,7 @@ class TeacherDashboardLibraryTabController {
         return this._isLanding;
     }
 
-    get filters():{title:string; subjectLessonType:ISubjectLessonType; subjectLessonLevel:ISubjectLessonLevel; subjectTagList:ISubjectTag[]} {
+    get filters():{title:string, subjectLessonTypeList:ISubjectLessonType[], subjectLessonLevelList:ISubjectLessonLevel[], subjectTagList:ISubjectTag[]} {
         return this._filters;
     }
 

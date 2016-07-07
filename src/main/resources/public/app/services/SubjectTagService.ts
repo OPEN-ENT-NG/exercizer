@@ -33,9 +33,10 @@ class SubjectTagService implements ISubjectTagService {
                 url: 'exercizer/subject-tags'
             };
 
-        if (!angular.isUndefined(this._listMappedById)) {
+        // force the reloads of subjects tags (cause of weid issue when persisting a tag -> the local list is not updated, even if the code tell so).
+        /*if (!angular.isUndefined(this._listMappedById)) {
             deferred.resolve(MapToListHelper.toList(this._listMappedById));
-        } else {
+        } else {*/
             this._$http(request).then(
                 function(response) {
                     self._listMappedById = {};
@@ -51,7 +52,7 @@ class SubjectTagService implements ISubjectTagService {
                     deferred.reject('Une erreur est survenue lors de la récupération des tags des sujets de la bibliothèque.');
                 }
             );
-        }
+        //}
         return deferred.promise;
     };
 

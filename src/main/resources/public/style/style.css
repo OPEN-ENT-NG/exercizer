@@ -43,7 +43,7 @@
 .custom-filter-button-library {
     border: 1px solid lightgray;
     padding: 5px;
-    margin: 5px;
+    margin: 5px 0 5px 0;
     background-color: lightgray;
     border-radius: 2px;
     text-align: center;
@@ -72,6 +72,20 @@
 }
 .floating-navigation li.selected a {
     color: white;
+}
+
+/**
+ * Custom tags for subject library list
+ */
+
+.subject-library-tag {
+    font-size: 12px;
+    color: white;
+    background-color: #FF8500;
+    border-radius: 2px;
+    padding: 1px 3px 1px 2px;
+    margin: 5px 5px 0 0;
+    display: inline-block;
 }
 
 /**

@@ -176,7 +176,7 @@ class SubjectLibraryService implements ISubjectLibraryService {
             request = {
                 method: 'POST',
                 url: 'exercizer/subjects-for-library', 
-                //data: this._buildRequestData(filters)
+                data: /*this._buildRequestData(filters)*/ {}
             };
 
         this._$http(request).then(
@@ -200,7 +200,7 @@ class SubjectLibraryService implements ISubjectLibraryService {
             request = {
                 method: 'POST',
                 url: 'exercizer/count-subjects-for-library',
-                //data: this._buildRequestData(filters)
+                data: /*this._buildRequestData(filters)*/ {}
             };
 
         this._$http(request).then(

@@ -31,16 +31,16 @@
                             <div class="tabs">
                                 <header data-ng-class="teacherDashboardLibraryTabController.isFilterSubjectLessonTypeDisplayed ? 'selected' : ''"
                                         data-ng-click="teacherDashboardLibraryTabController.displayFilterSubjectLessonType()">
-                                    Matières&nbsp;<span data-ng-show="teacherDashboardLibraryTabController.filters.subjectLessonType">*</span>
+                                    Matières&nbsp;<span data-ng-show="teacherDashboardLibraryTabController.filters.subjectLessonTypeList.length > 0">*</span>
                                 </header>
                                 <header data-ng-class="teacherDashboardLibraryTabController.isFilterSubjectLessonLevelDisplayed ? 'selected' : ''"
                                         data-ng-click="teacherDashboardLibraryTabController.displayFilterSubjectLessonLevel()">
-                                    Niveaux&nbsp;<span data-ng-show="teacherDashboardLibraryTabController.filters.subjectLessonLevel">*</span>
+                                    Niveaux&nbsp;<span data-ng-show="teacherDashboardLibraryTabController.filters.subjectLessonLevelList.length > 0">*</span>
                                 </header>
                             </div>
                         </div>
 
-                        <div class="row vertical-spacing" style="overflow-y:scroll; max-height: 400px; border:1px dotted lightgrey;" data-ng-hide="teacherDashboardLibraryTabController.areFiltersFolded">
+                        <div class="row vertical-spacing" style="overflow-y:scroll; max-height: 350px; border:1px dotted lightgrey;" data-ng-hide="teacherDashboardLibraryTabController.areFiltersFolded">
                             <div data-ng-show="teacherDashboardLibraryTabController.isFilterSubjectLessonTypeDisplayed">
                                 <div class="cell custom-filter-button-library"
                                      data-ng-repeat="subjectLessonType in teacherDashboardLibraryTabController.subjectLessonTypeList"
@@ -101,19 +101,19 @@
                         <div class="item" style="width: 100%; max-width: none;">
                             <section class="domino">
                                 <div class="top">
-                                    <img class="absolute" data-ng-src="[[ teacherDashboardLibraryTabController.getSubjectPicture(subject) ]]" />
+                                    <img class="absolute" data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)" data-ng-src="[[ teacherDashboardLibraryTabController.getSubjectPicture(subject) ]]" />
                                 </div>
                                 <div class="bottom">
                                     <div class="content">
                                         <div class="cell">
                                             <div class="row">
-                                                <strong>[[ subject.title ]]</strong>
+                                                <strong data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)">[[ subject.title ]]</strong>
                                             </div>
                                             <div class="row">
                                                 [[ teacherDashboardLibraryTabController.getSubjectLessonType(subject).label ]]&nbsp;/&nbsp;<em>Niveau [[ teacherDashboardLibraryTabController.getSubjectLessonLevel(subject).label ]]</em>
                                             </div>
                                             <div class="row">
-                                                <div class="label-badge" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.getSubjectTags(subject)">
+                                                <div class="subject-library-tag" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.getSubjectTags(subject)" data-ng-click="teacherDashboardLibraryTabController.selectSubjectTag(subjectTag)">
                                                     [[ subjectTag.label ]]
                                                 </div>
                                             </div>
