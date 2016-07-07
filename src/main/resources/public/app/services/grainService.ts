@@ -195,21 +195,22 @@ class GrainService implements IGrainService {
 
     public duplicateList = function(grainList:IGrain[], subject:ISubject, rename: boolean = true):ng.IPromise<boolean>{
         var self = this,
-            deferred = this._$q.defer(),
-            promises = [];
+            deferred = this._$q.defer();
 
-        angular.forEach(grainList, function(grain) {
-            promises.push(self.duplicate(grain, subject, rename));
-        });
-
-        this._$q.all(promises).then(
-            function(data) {
-                deferred.resolve(data);
-            }, function(err) {
-                deferred.reject(err);
-            }
-        );
-
+        if(grainList.length > 0){
+            self.duplicate(grainList[0], subject, rename).then(
+                function(){
+                    grainList.shift();
+                    return self.duplicateList(grainList, subject, rename).then(
+                        function(){
+                            deferred.resolve();
+                        }
+                    );
+                }
+            );
+        } else{
+            deferred.resolve();
+        }
         return deferred.promise;
     };
 
