@@ -1,4 +1,4 @@
-<div data-ng-controller="EditSubjectController as editSubjectController">
+<div data-ng-controller="EditSubjectController as editSubjectController" id="edit-subject">
 
     <!-- LOADER -->
     <div class="row" data-ng-if="!editSubjectController.hasDataLoaded">
@@ -238,7 +238,7 @@
                         <div class="row" data-ng-if="(grain.grain_type_id < 3 || (grain.grain_type_id > 2 && editSubjectController.isGrainFolded(grain)))">
 
                             <!-- GRAIN SELECTION -->
-                            <div class="vertical-spacing" data-ng-class="(grain.grain_type_id > 1) ? 'one cell' : 'four cell'">
+                            <div class="vertical-spacing surcharge-force-margin-zero" data-ng-class="(grain.grain_type_id > 1) ? 'one cell' : 'four cell'">
                                 <input type="checkbox"
                                        data-ng-checked="editSubjectController.isGrainSelected(grain)"
                                        data-ng-click="editSubjectController.selectGrain(grain)" />
@@ -257,7 +257,7 @@
                                     <div data-ng-click="editSubjectController.foldGrain(grain)" class="eleven cell vertical-spacing" style="max-height : 100px;word-wrap: break-word; overflow: hidden; text-overflow: ellipsis;" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
                                 </div>
                                 <div data-ng-switch-default>
-                                    <div class="eleven cell vertical-spacing">
+                                    <div class="eleven cell vertical-spacing surcharge-force-margin-zero">
                                         <h2>[[grain.order_by]]&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-ng-click="editSubjectController.foldGrain(grain)">[[ editSubjectController.getGrainDisplayedName(grain) ]]</span>&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
                                     </div>
                                 </div>

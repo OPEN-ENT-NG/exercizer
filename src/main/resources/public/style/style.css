@@ -93,3 +93,7 @@
 #surcharge-force-cursor-default:before{
     cursor: default !important;
 }
+#edit-subject .surcharge-force-margin-zero{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
