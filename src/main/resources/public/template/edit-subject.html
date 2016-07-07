@@ -10,7 +10,7 @@
         <!-- TOP HEADER -->
         <div class="row">
             <h1 class="cell">
-                <span data-ng-click="editSubjectController.redirectToDashboard()">Exercizer</span> - <span data-ng-click="">[[ editSubjectController.subject.title ]]</span>
+                <span data-ng-click="editSubjectController.redirectToDashboard()">Exercizer</span> / <span data-ng-click="">[[ editSubjectController.subject.title ]]</span>
             </h1>
 
             <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
@@ -75,7 +75,7 @@
                                             </div>
 
                                     </div>
-                                    <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
+                                    <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[grain.order_by]]&nbsp;)&nbsp;[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
                                     <div class="cell right-magnet">
                                         <i class="drag-anchor"></i>
                                     </div>
@@ -91,9 +91,9 @@
             </section>
 
             <!-- GRAIN LIST -->
-            <section class="eight cell">
+            <section class="eight cell" dragdrop="editSubjectController.dropTo($originalEvent)">
 
-                <div class="row" dragdrop="editSubjectController.dropTo($originalEvent)">
+                <div class="row">
 
                     <article data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false" id="grain-edit-[[grain.id]]">
 
@@ -127,9 +127,9 @@
                             </div>
 
                             <!-- GRAIN TRASH ICON -->
-                            <div class="cell right-magnet" data-ng-class="(grain.grain_type_id > 2) ? 'horizontal-spacing' : ''" data-tooltip="Supprimer" data-ng-click="editSubjectController.displayModalRemoveGrain(grain)">
+                            <!--<div class="cell right-magnet" data-ng-class="(grain.grain_type_id > 2) ? 'horizontal-spacing' : ''" data-tooltip="Supprimer" data-ng-click="editSubjectController.displayModalRemoveGrain(grain)">
                                 <i class="trash"></i>
-                            </div>
+                            </div>-->
 
                         </div>
 
@@ -177,9 +177,11 @@
 
                             <!-- ADD GRAIN DOCUMENT BUTTON -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3" style="text-align: center">
-                                <a class="classic-link" data-ng-click="editSubjectController.displayModalAddGrainDocument(grain)">
-                                    Ajouter un document
-                                </a>
+                                <nav class="vertical" style="padding: 0px !important;">
+                                    <a class="classic-link" data-ng-click="editSubjectController.displayModalAddGrainDocument(grain)">
+                                        Ajouter un document
+                                    </a>
+                                </nav>
                             </div>
 
                             <!-- SWITCH GRAIN -->
@@ -213,20 +215,20 @@
                             <!-- GRAIN ANSWER EXPLANATION -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
                                 <div class="one cell vertical-spacing horizontal-spacing">
-                                    <i class="info-pic"></i>
+                                    <i class="info-pic" tooltip="Explication de la réponse"></i>
                                 </div>
                                 <div class="eleven cell">
-                                    <textarea data-ng-model="grain.grain_data.answer_explanation" complete-change="editSubjectController.updateGrain(grain)" style="height: 80px;" placeholder="Explication de la réponse"></textarea>
+                                    <textarea data-ng-model="grain.grain_data.answer_explanation" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;" placeholder="Explication de la réponse"></textarea>
                                 </div>
                             </div>
 
                             <!-- GRAIN ANSWER HINT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
                                 <div class="one cell vertical-spacing horizontal-spacing">
-                                    <i class="help"></i>
+                                    <i class="help" tooltip="Aide à la réponse" id="surcharge-force-cursor-default"></i>
                                 </div>
                                 <div class="eleven cell">
-                                    <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="editSubjectController.updateGrain(grain)" style="height: 80px;" placeholder="Aide à la réponse"></textarea>
+                                    <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;" placeholder="Aide à la réponse"></textarea>
                                 </div>
                             </div>
 
@@ -252,11 +254,11 @@
                                 </div>
                                 <div data-ng-switch-when="3">
                                     <h2>[[grain.order_by]]&nbsp;)&nbsp;</h2>
-                                    <div class="eleven cell vertical-spacing" style="word-wrap: break-word;" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
+                                    <div data-ng-click="editSubjectController.foldGrain(grain)" class="eleven cell vertical-spacing" style="max-height : 100px;word-wrap: break-word; overflow: hidden; text-overflow: ellipsis;" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
                                 </div>
                                 <div data-ng-switch-default>
                                     <div class="eleven cell vertical-spacing">
-                                        <h2>[[grain.order_by]]&nbsp;)&nbsp;[[ editSubjectController.getGrainDisplayedName(grain) ]]&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
+                                        <h2>[[grain.order_by]]&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-ng-click="editSubjectController.foldGrain(grain)">[[ editSubjectController.getGrainDisplayedName(grain) ]]</span>&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
                                     </div>
                                 </div>
                             </div>
@@ -268,9 +270,7 @@
 
                 <!-- ADD GRAIN -->
                 <div class="editor drawing-grid">
-                    <button data-ng-click="editSubjectController.addGrain()" class="twelve cell flat-button">
-                        Ajouter un élément
-                    </button>
+                    <button class="grid-add-row" data-ng-click="editSubjectController.addGrain()">Ajouter un élément</button>
                 </div>
 
             </section>

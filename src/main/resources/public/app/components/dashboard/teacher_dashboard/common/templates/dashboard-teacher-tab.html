@@ -1,8 +1,8 @@
 <div class="row">
     <h1 class="cell">
-        <span data-ng-click="clickReturnExercizer()">Exercizer</span>
-        <span data-ng-click="clickReturnExercizerTab()"> - [[ getTab()]]</span>
-        <span data-ng-click="" data-ng-if="selectedSubjectScheduled"> - [[ getSubjectSelectedTitle()]]</span>
+        <span class="hover-orange" data-ng-click="clickReturnExercizer()"><span class="hover-orange">Exercizer</span></span>
+        <span data-ng-click="clickReturnExercizerTab()"> / <span class="hover-orange">[[ getTab()]]</span></span>
+        <span data-ng-click="" data-ng-if="selectedSubjectScheduled"> / <span class="hover-orange">[[ getSubjectSelectedTitle()]]</span></span>
     </h1>
     <div class="cell right-magnet">
         <div class="label-badge" style="padding: 5px 10px 5px 10px;" data-ng-click="switchToStudentView()">

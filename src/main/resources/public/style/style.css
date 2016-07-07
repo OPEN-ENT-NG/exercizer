@@ -49,9 +49,18 @@
     text-align: center;
     width: 100%;
 }
+.custom-filter-button-correction {
+    border: 1px solid lightgray;
+    padding: 5px;
+    margin: 5px;
+    background-color: lightgray;
+    border-radius: 2px;
+    text-align: center;
+}
 
 .custom-filter-button.custom-selected, .custom-filter-button-library.custom-selected {
     background-color  : #FF8500;
+    color: white;
 }
 
 /**
@@ -63,4 +72,24 @@
 }
 .floating-navigation li.selected a {
     color: white;
+}
+
+/**
+*   OVERWRITE THEME
+*/
+
+.tabs header.selected{
+    background-color: transparent !important;
+}
+
+.down-open:hover{
+    color: #FF8351;
+}
+
+.hover-orange:hover{
+    color: #FF8351;
+}
+
+#surcharge-force-cursor-default:before{
+    cursor: default !important;
 }
