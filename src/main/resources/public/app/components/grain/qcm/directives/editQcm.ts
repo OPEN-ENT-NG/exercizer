@@ -10,18 +10,20 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/qcm/templates/edit-qcm.html',
                 link:(scope:any) => {
 
-                    if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
-                        scope.grain.grain_data.custom_data = new QcmCustomData();
-                    }
-
-                    scope.addAnswer = function() {
+                    scope.addAnswer = function(isChecked = false, text = '') {
                         var newAnswer = {
-                            isChecked : false,
-                            text : ''
+                            isChecked : isChecked,
+                            text : text
                         };
                         scope.grain.grain_data.custom_data.correct_answer_list.push(newAnswer);
                         scope.$emit('E_UPDATE_GRAIN', scope.grain);
                     };
+
+                    if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
+                        scope.grain.grain_data.custom_data = new QcmCustomData();
+                        scope.addAnswer(true, 'Réponse 1');
+                        scope.addAnswer(false, 'Réponse 2');
+                    }
 
                     scope.deleteAnswer = function(answer){
                         var index = scope.grain.grain_data.custom_data.correct_answer_list.indexOf(answer);

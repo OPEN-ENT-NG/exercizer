@@ -10,20 +10,22 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/order/templates/edit-order.html',
                 link:(scope:any) => {
 
-                    if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
-                        scope.grain.grain_data.custom_data = new OrderCustomData();
-                    }
-
-                    scope.addAnswer = function(){
+                    scope.addAnswer = function(text = ''){
                         var newOrder = parseFloat(getLastOrder()) + 1;
                         var newAnswer = {
                             order_by : newOrder,
                             index : newOrder - 1,
-                            text : ''
+                            text : text
                         };
                         scope.grain.grain_data.custom_data.correct_answer_list.push(newAnswer);
                         scope.$emit('E_UPDATE_GRAIN', scope.grain);
                     };
+
+                    if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
+                        scope.grain.grain_data.custom_data = new OrderCustomData();
+                        scope.addAnswer( 'Réponse 1');
+                        scope.addAnswer( 'Réponse 2');
+                    }
 
                     scope.deleteAnswer = function(answer){
                         var indexDeleted = answer.index;
