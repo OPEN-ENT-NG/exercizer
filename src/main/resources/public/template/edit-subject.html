@@ -252,7 +252,7 @@
                                     <choose-answer data-grain="grain"></choose-answer>
                                 </div>
                                 <div data-ng-switch-when="3">
-                                    <h2>[[grain.order_by]]&nbsp;)&nbsp;</h2>
+                                    <h2>[[grain.order_by]]&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-ng-click="editSubjectController.foldGrain(grain)">Énoncé</span></h2>
                                     <div data-ng-click="editSubjectController.foldGrain(grain)" class="eleven cell vertical-spacing" style="max-height : 100px;word-wrap: break-word; overflow: hidden; text-overflow: ellipsis;" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
                                 </div>
                                 <div data-ng-switch-default>
