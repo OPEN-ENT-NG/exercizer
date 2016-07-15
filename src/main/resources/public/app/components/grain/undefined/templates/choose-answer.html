@@ -2,7 +2,7 @@
     <div class="row">
         <div data-ng-repeat="grainType in grainTypeList | filter:{'is_in_list':true}">
             <div class="two cell vertical-spacing" style="width:75px; height:75px;" data-tooltip="[[ grainType.public_name ]]" data-ng-click="displayNextStep(grainType.id)">
-                <div data-ng-include="getGrainIllustrationURL(grainType.id)"></div>
+                <div data-ng-include="getGrainIllustrationURL(grainType.id)" style="height: 100%"></div>
             </div>
         </div>
     </div>
