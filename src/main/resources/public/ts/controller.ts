@@ -168,7 +168,23 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
                 }
             };
         });
-        
+
+
+        function floorFigure(figure : number, decimals : number){
+            if (!decimals) decimals = 2;
+            var d = Math.pow(10,decimals);
+            return (parseInt(figure*d)/d).toFixed(decimals);
+        }
+
+        module.filter('truncateNumber', function () {
+            return function (item) {
+                if(parseFloat(item) == parseInt(item)){
+                    return item;
+                }
+                return floorFigure(parseFloat(item), 2);
+            };
+        });
+
         /**
          * Services
          */

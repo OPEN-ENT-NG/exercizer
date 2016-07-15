@@ -64,10 +64,10 @@
                     <span>[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
                </td>
                <td>
-                    <span>[[copy.calculated_score]] / [[selectedSubjectScheduled.max_score]]</span>
+                    <span>[[copy.calculated_score | truncateNumber ]] / [[selectedSubjectScheduled.max_score]]</span>
                </td>
                <td>
-                    <span>[[copy.final_score]] / [[selectedSubjectScheduled.max_score]]</span>
+                    <span>[[copy.final_score  | truncateNumber]] / [[selectedSubjectScheduled.max_score]]</span>
                </td>
           </tr>
           </tbody>
