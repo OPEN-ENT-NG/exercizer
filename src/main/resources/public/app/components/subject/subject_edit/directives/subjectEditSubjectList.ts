@@ -15,7 +15,7 @@ directives.push(
                         };
 
                         scope.grainList = [];
-                        scope.isFolded = true;
+                        scope.isFolded = false;
                         
                         scope.subjectList = function () {
                             return SubjectService.getList();
