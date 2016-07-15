@@ -4,7 +4,7 @@
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     <div class="row vertical-spacing">
         <input type="text" class="twelve cell"
-               style="[[ isCorrect ? 'color: green; border: 1px solid green;' : 'color: red; border: 1px solid red;' ]]"
+               data-ng-class="{'input-response-correct' : isCorrect, 'input-response-incorrect' : !isCorrect}"
                data-ng-model="grainCopy.grain_copy_data.custom_copy_data.filled_answer"
                placeholder="Aucune réponse renseignée" disabled />
     </div>

@@ -27,6 +27,15 @@
     color: #FF8351;
 }
 
+.input-response-correct{
+    color: green !important;
+    border: 1px solid green !important;
+}
+.input-response-incorrect{
+    color: red !important;
+    border: 1px solid red !important;
+}
+
 /**
 *   FILTER STYLE
 */

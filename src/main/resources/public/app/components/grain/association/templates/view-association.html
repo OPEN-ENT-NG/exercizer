@@ -5,7 +5,7 @@
     <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list" class="row vertical-spacing">
         <input type="text" class="five cell"
                data-ng-model="filled_answer.text_left"
-               style="[[ isCorrect[key] ? 'color: green; border: 1px solid green;' : 'color: red; border: 1px solid red;' ]]"
+               data-ng-class="{'input-response-correct' : isCorrect[key], 'input-response-incorrect' : !isCorrect[key]}"
                placeholder="Aucune réponse renseignée"
                disabled/>
         <div class="one cell">&nbsp;</div>
