@@ -5,7 +5,8 @@ directives.push(
             return {
                 restrict: 'E',
                 scope: {
-                    subjectScheduled: '='
+                    subjectScheduled: '=',
+                    previewing: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/undefined/templates/perform-summary.html',
                 link(scope: any){

@@ -9,7 +9,7 @@
 
 <div data-ng-show="isFolded" data-ng-click="toggle()">
     <div class="row">
-        <div class="eight cell">
+        <div class="seven cell">
             <h2 class="row">
                 Commentaire [[ hasComment() ? '(1)' : '(0)' ]]
             </h2>
@@ -17,9 +17,9 @@
         <div class="one cell">
             &nbsp;
         </div>
-        <div class="three cell">
+        <div class="four cell">
             <h2 class="row">
-                Résultat :&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;/&nbsp;[[ grainScheduled.grain_data.max_score]]
+                Résultat :&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score]] point(s)
             </h2>
         </div>
     </div>
@@ -50,13 +50,13 @@
                 Résultats :
             </h2>
             <div class="row vertical-spacing">
-                <strong>Score calculé :</strong>&nbsp;[[ formatNumber(grainCopy.calculated_score) ]]&nbsp;/&nbsp;[[ grainScheduled.grain_data.max_score ]]
+                <strong>Score calculé :</strong>&nbsp;[[ formatNumber(grainCopy.calculated_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
             </div>
             <div class="row vertical-spacing" data-ng-if="isTeacher">
-                <strong>Score final :</strong>&nbsp;<input type="text" data-digits-input-restrict data-ng-model="grainCopy.final_score" value="[[ grainCopy.final_score ]]" complete-change="updateGrainCopy()" style="width:50px;" />&nbsp;/&nbsp;[[ grainScheduled.grain_data.max_score ]]
+                <strong>Score final :</strong>&nbsp;<input type="text" data-digits-input-restrict data-ng-model="grainCopy.final_score" value="[[ grainCopy.final_score ]]" complete-change="updateGrainCopy()" style="width:50px;" />&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
             </div>
             <div class="row vertical-spacing" data-ng-if="!isTeacher">
-                <strong>Score final :</strong>&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;/&nbsp;[[ grainScheduled.grain_data.max_score ]]
+                <strong>Score final :</strong>&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
             </div>
         </div>
     </div>

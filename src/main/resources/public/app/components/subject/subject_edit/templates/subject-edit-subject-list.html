@@ -1,11 +1,11 @@
 <article>
     <div class="row">
-        <h2 class="cell">Rechercher des questions</h2>
+        <h2 class="cell hover-orange" data-ng-click="toggle()">Rechercher des questions</h2>
 
         <!-- grain toggle icon -->
-        <div class="cell right-magnet" data-ng-click="toggle()">
-            <i data-ng-show="isFolded" data-tooltip="Déplier" class="down-open"></i>
-            <i data-ng-hide="isFolded" data-tooltip="Plier" class="up-open"></i>
+        <div class="cell right-magnet">
+            <i data-ng-show="isFolded" data-ng-click="toggle()" data-tooltip="Déplier" class="down-open hover-orange"></i>
+            <i data-ng-hide="isFolded" data-ng-click="toggle()" data-tooltip="Plier" class="up-open hover-orange"></i>
         </div>
     </div>
     <div>

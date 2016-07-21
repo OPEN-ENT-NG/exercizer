@@ -9,12 +9,18 @@
 
         <!-- TOP HEADER -->
         <div class="row">
-            <h1 class="cell">
+            <h1>
                 <span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()">Exercizer</span> / <span class="hover-orange" data-ng-click="">[[ editSubjectController.subject.title ]]</span>
             </h1>
+        </div>
 
+        <div class="row">
             <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
                 Programmer
+            </button>
+
+            <button class="flat-button right-magnet cell" data-ng-click="editSubjectController.previewPerformSubjectCopy()">
+                Aperçu&nbsp;&nbsp;<i class="eye"></i>
             </button>
 
             <button class="right-magnet cell flat-button" data-ng-click="editSubjectController.redirectToDashboard()">
@@ -30,33 +36,30 @@
 
                     <!-- ORGANIZER -->
                     <article>
-                        <div class="row">
-                            <h2 class="cell">Organiser</h2>
+                        <div class="row" >
+                            <h2 class="cell hover-orange" data-ng-click="editSubjectController.foldOrganizer()">Organiser</h2>
 
                             <!-- grain toggle icon -->
-                            <div class="cell right-magnet" data-ng-click="editSubjectController.foldOrganizer()">
-                                <i data-ng-show="editSubjectController.isOrganizerFolded" data-tooltip="Déplier" class="down-open"></i>
-                                <i data-ng-hide="editSubjectController.isOrganizerFolded" data-tooltip="Plier" class="up-open"></i>
+                            <div class="cell right-magnet">
+                                <i data-ng-show="editSubjectController.isOrganizerFolded" data-ng-click="editSubjectController.foldOrganizer()" data-tooltip="Déplier" class="down-open hover-orange"></i>
+                                <i data-ng-hide="editSubjectController.isOrganizerFolded" data-ng-click="editSubjectController.foldOrganizer()" data-tooltip="Plier" class="up-open hover-orange"></i>
                             </div>
                         </div>
 
                         <div data-ng-hide="editSubjectController.isOrganizerFolded">
                             <div class="row">
-                                <a class="comment right-magnet cell" data-ng-click="editSubjectController.previewPerformSubjectCopy()">
-                                    Aperçu&nbsp;&nbsp;<i class="eye"></i>
-                                </a>
                                 <a class="comment right-magnet cell" style="margin-right:10px;" data-ng-click="editSubjectController.foldAllGrain()">
                                     Tout plier&nbsp;&nbsp;<i class="up-open"></i>
                                 </a>
                             </div>
 
-                        <div class="row" style="overflow-y:scroll; max-height: 50vh; border:1px dotted lightgrey;" data-ng-show="editSubjectController.grainList.length > 0">
-                            <!-- do not add data- before sortable-list and sortable element -->
-                            <ul sortable-list class="thought-out-actions">
-                                <li data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false"
-                                    sortable-element
-                                    data-ng-change="editSubjectController.reOrder()"
-                                    data-ng-model="grain.index">
+                            <div class="row" style="overflow-y:scroll; max-height: 50vh; border:1px dotted lightgrey;" data-ng-show="editSubjectController.grainList.length > 0">
+                                <!-- do not add data- before sortable-list and sortable element -->
+                                <ul sortable-list class="thought-out-actions">
+                                    <li data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false"
+                                        sortable-element
+                                        data-ng-change="editSubjectController.reOrder()"
+                                        data-ng-model="grain.index">
 
                                         <div class="one cell">
                                             <div data-ng-switch="grain.grain_type_id">
@@ -74,16 +77,16 @@
                                                 </div>
                                             </div>
 
-                                    </div>
-                                    <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[grain.order_by]]&nbsp;)&nbsp;[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
-                                    <div class="cell right-magnet">
-                                        <i class="drag-anchor"></i>
-                                    </div>
-                                </li>
-                            </ul>
+                                        </div>
+                                        <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[grain.order_by]])&nbsp;[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
+                                        <div class="cell right-magnet">
+                                            <i class="drag-anchor"></i>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                </article>
+                    </article>
 
                     <!-- SUBJECT LIST -->
                     <subject-edit-subject-list></subject-edit-subject-list>
@@ -138,14 +141,15 @@
 
                             <!-- TITLE & SCORE -->
                             <div class="row vertical-spacing" data-ng-if="grain.grain_type_id > 3">
-                                <input type="text" class="six cell" data-ng-model="grain.grain_data.title" complete-change="editSubjectController.updateGrain(grain)" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question" maxlength="255"/>
-                                <input type="text" class="cell right-magnet" data-ng-model="grain.grain_data.max_score" complete-change="editSubjectController.updateGrain(grain)" data-digits-input-restrict placeholder="Pondération" />
-                                <em class="high-importance cell right-magnet">Question sur /</em>
+                                <input type="text" class="eight cell" data-ng-model="grain.grain_data.title" complete-change="editSubjectController.updateGrain(grain)" value="[[ grain.grain_data.title ]]" placeholder="Titre de la question" maxlength="255"/>
+                                <em class="high-importance cell right-magnet">&nbsp;point(s)</em>
+                                <input type="text" class="cell right-magnet" style="width: 100px;" data-ng-model="grain.grain_data.max_score" complete-change="editSubjectController.updateGrain(grain)" data-digits-input-restrict placeholder="Pondération" />
                             </div>
 
                             <!-- GRAIN STATEMENT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                <editor data-ng-model="grain.grain_data.statement" inline placeholder="Énoncé"></editor>
+                                <label>Énoncé de la question :</label>
+                                <editor data-ng-model="grain.grain_data.statement" inline class="small-editor"></editor>
                             </div>
 
                             <!-- GRAIN DOCUMENT LIST -->
@@ -237,7 +241,7 @@
                         <div class="row" data-ng-if="(grain.grain_type_id < 3 || (grain.grain_type_id > 2 && editSubjectController.isGrainFolded(grain)))">
 
                             <!-- GRAIN SELECTION -->
-                            <div class="vertical-spacing surcharge-force-margin-zero" data-ng-class="(grain.grain_type_id > 1) ? 'one cell' : 'four cell'">
+                            <div class="vertical-spacing" data-ng-class="(grain.grain_type_id > 1) ? 'one cell' : 'four cell'">
                                 <input type="checkbox"
                                        data-ng-checked="editSubjectController.isGrainSelected(grain)"
                                        data-ng-click="editSubjectController.selectGrain(grain)" />
@@ -252,13 +256,15 @@
                                     <choose-answer data-grain="grain"></choose-answer>
                                 </div>
                                 <div data-ng-switch-when="3">
-                                    <h2>[[grain.order_by]]&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-ng-click="editSubjectController.foldGrain(grain)">Énoncé</span></h2>
-                                    <div data-ng-click="editSubjectController.foldGrain(grain)" class="eleven cell vertical-spacing" style="max-height : 100px;word-wrap: break-word; overflow: hidden; text-overflow: ellipsis;" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
+                                    <h2 data-ng-click="editSubjectController.foldGrain(grain)" class="hover-orange">[[grain.order_by]])&nbsp;Énoncé</h2>
+                                    <div style="max-height : 100px; word-wrap: break-word; overflow: hidden; text-overflow: ellipsis;">
+                                        <div data-ng-click="editSubjectController.foldGrain(grain)" class="eleven cell vertical-spacing" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
+                                    </div>
                                 </div>
                                 <div data-ng-switch-default>
-                                    <div class="eleven cell vertical-spacing surcharge-force-margin-zero">
-                                        <h2>[[grain.order_by]]&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-ng-click="editSubjectController.foldGrain(grain)">[[ editSubjectController.getGrainDisplayedName(grain) ]]</span>&nbsp;&nbsp;&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]</h2>
-                                    </div>
+                                    <h2 class="eleven cell vertical-spacing hover-orange" data-ng-click="editSubjectController.foldGrain(grain)">
+                                        [[grain.order_by]])&nbsp;[[ editSubjectController.getGrainDisplayedName(grain) ]]&nbsp;/&nbsp;[[ grain.grain_data.max_score ]]
+                                    </h2>
                                 </div>
                             </div>
 
