@@ -162,4 +162,15 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		
 		super.count("r", joins, filters, handler);
 	}
+	
+	/**
+	 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+	 */
+	
+    @Override
+    public void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+        super.getById(id, user, handler);
+    }
+	
+	
 }

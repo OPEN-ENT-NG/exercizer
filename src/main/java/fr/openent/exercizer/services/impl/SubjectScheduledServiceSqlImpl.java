@@ -41,4 +41,12 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
         super.list("subject_scheduled_id", "exercizer.subject_copy", Boolean.FALSE, user, handler);
     }
 
+    /**
+     *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
+    @Override
+    public void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+        super.getById(id, user, handler);
+    }
+
 }

@@ -44,5 +44,11 @@ public interface ISubjectService {
 	 *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
 	 */
 	void countLibrarySubject(final JsonObject searchData, final Handler<Either<String, JsonObject>> handler);
+	
+	/**
+	 *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+	 */
+    void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
+
 
 }

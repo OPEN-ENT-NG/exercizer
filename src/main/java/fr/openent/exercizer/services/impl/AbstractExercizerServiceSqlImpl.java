@@ -41,6 +41,21 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     }
     
     /**
+     * get a ressource by id.
+     *
+     * @param id
+     * @param user the current user
+     * @param handler the handler
+     */
+    protected void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+        JsonArray values = new JsonArray();
+        String getQuery = "SELECT * FROM " + resourceTable  + " WHERE id = ?";
+        Integer id_interger = Integer.parseInt(id);
+
+        sql.prepared(getQuery, values.add(id_interger), SqlResult.validUniqueResultHandler(handler));    
+    }
+    
+    /**
      * Persists a resource which contains another owner as the current user.
      *
      * @param resource the resource
