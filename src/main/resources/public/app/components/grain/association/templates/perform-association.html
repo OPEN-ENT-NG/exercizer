@@ -4,26 +4,28 @@
                                                                                                                                                                                                                                                                                                                            <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     <div data-ng-show="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
         <div data-ng-repeat="filled_answer in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list" class="row vertical-spacing">
-            <input type="text" class="five cell" data-ng-model="filled_answer.text_left" disabled/>
+            <input type="text" class="four cell" data-ng-model="filled_answer.text_left" disabled/>
             <div class="one cell">&nbsp;</div>
-            <div dragdrop="dropTo(filled_answer, $originalEvent)"
-                 class="five cell"
+                <div dragdrop="dropTo(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent)"
-
-            >
+                 class="five cell"
+                style="    border: 1px dashed;  border-radius: 10px; text-align: center"
+                >
                 <input
-                        type="text"
-                        class="twelve cell"
-                        data-ng-model="filled_answer.text_right"
-                        disabled
+                    type="text"
+                    data-ng-model="filled_answer.text_right"
+                    style="width: 80%"
+                    disabled
                 />
             </div>
+            <div class="one cell">&nbsp;</div>
+            <div class="one cell" data-ng-click="deleteFilledAnswer(filled_answer)"><i class="close"></i></div>
 
         </div>
         <div class="row vertical-spacing">
-            <div data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.possible_answer_list"
+            <div data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.possible_answer_list | filter: isAlreadySet()"
                  class="cell"
-                style="    border: 1px solid black;    padding: 5px;    margin-left: 10px;    margin-right: 10px;    border-radius: 5px;    background-color: lightgray;"
+                style="    border: 1px dashed black;    padding: 10px;    margin-left: 10px;    margin-right: 10px;    border-radius: 10px;    background-color: lightgray;"
                  dragstart="drag(possible_answer, $originalEvent)"
             >
                 [[possible_answer.text_right]]
