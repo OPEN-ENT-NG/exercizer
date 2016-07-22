@@ -32,6 +32,11 @@ public class SubjectController extends ControllerHelper {
 		this.subjectService = new SubjectServiceSqlImpl();
 	}
 
+    @Post("/canSchedule")
+    @SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
+    public void canSchedule(final HttpServerRequest request) {
+    }
+
 	@Post("/subject")
 	@ApiDoc("Persists a subject.")
 	@SecuredAction("exercizer.subject.persist")

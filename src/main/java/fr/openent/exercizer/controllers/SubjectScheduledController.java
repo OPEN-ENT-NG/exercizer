@@ -31,7 +31,7 @@ public class SubjectScheduledController extends ControllerHelper {
     @Post("/subject-scheduled/:id")
     @ApiDoc("Persists a subject scheduled.")
     @ResourceFilter(ShareAndOwner.class)
-	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override

@@ -45,7 +45,7 @@ directives.push(
                                         scope.lowerRight = 'manager';
                                     }
                                     else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)){
-                                        //scope.lowerRight = 'contrib';
+                                        scope.lowerRight = 'contrib';
                                     }
                                     else{
                                         scope.lowerRight = 'read';
@@ -101,7 +101,7 @@ directives.push(
                                         scope.$emit('E_SCHEDULE_SUBJECT', subject);
                                     },
                                     display : function(){
-                                        return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner' || scope.lowerRight == 'manager');
+                                        return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner' || scope.lowerRight == 'contrib' || scope.lowerRight == 'manager');
                                     }
                                 },
                                 {
@@ -134,7 +134,7 @@ directives.push(
                                             // is only folder
                                             return true;
                                         } else {
-                                            return scope.lowerRight == 'contrib' || scope.lowerRight == 'manager' || scope.lowerRight == 'owner';
+                                            return scope.lowerRight == 'manager' || scope.lowerRight == 'owner';
                                         }
                                     }
                                 }
