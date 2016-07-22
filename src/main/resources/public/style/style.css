@@ -120,3 +120,17 @@
     margin-top: 0px !important;
     margin-bottom: 0px !important;
 }
+
+body editor.small-editor.edit [contenteditable] {
+    width: 100%;
+    max-height: 100px!important;
+    min-height: 100px!important;
+    overflow-y: scroll;
+}
+
+body editor.small-editor.edit [contenteditable]:focus {
+    width: 100%;
+    max-height: none!important;
+    min-height: 250px!important;
+    overflow: visible;
+}

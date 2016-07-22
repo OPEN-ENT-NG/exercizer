@@ -272,10 +272,21 @@ directives.push(
 
                     // event to display model
                     scope.$on("E_DISPLAY_MODAL_SCHEDULE_SUBJECT", function(event, subject) {
-                        scope.subject = subject;
-                        scope.isDisplayed = true;
-                        reset();
-                        scope.data.lists = createLists(subject);
+                        GrainService.getListBySubject(subject).then(
+                            function(grainList:IGrain[]) {
+                                if (grainList.length > 0) {
+                                    scope.subject = subject;
+                                    scope.isDisplayed = true;
+                                    reset();
+                                    scope.data.lists = createLists(subject);
+                                } else {
+                                    notify.info('Vous ne pouvez pas programmer un sujet vide.');
+                                }
+                            },
+                            function(err) {
+                                notify.error(err);
+                            }
+                        );
 
                     });
 
