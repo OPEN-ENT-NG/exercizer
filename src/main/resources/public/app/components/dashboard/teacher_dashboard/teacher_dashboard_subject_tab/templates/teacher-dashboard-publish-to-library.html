@@ -45,7 +45,7 @@
         </button>
     </div>
 
-    <h2 class="row">Tags associés au sujets :</h2>
+    <h2 class="row" data-ng-show="selectedSubjectTagList.length > 0">Tags associés au sujets :</h2>
 
     <div class="row vertical-spacing">
         <div class="label-badge" data-ng-repeat="subjectTag in selectedSubjectTagList">
@@ -57,10 +57,18 @@
     </div>
 
     <div class="row vertical-spacing">
-        <input type="checkbox"
+        Citez l'auteur original et/ou les contributeurs du sujet * :
+    </div>
+
+    <div class="row vertical-spacing">
+        <input type="text" class="twelve cell" maxlength="255" data-ng-model="cc.authorsContributors" placeholder="Ex : Auteur, Olivier Ortant. Contributeurs, Auriane Dunile et Raphaël Dujardin">
+    </div>
+
+    <div class="row vertical-spacing">
+        <input type="checkbox" class="cell"
                data-ng-checked="hasAgreedToPublish"
                data-ng-click="toggleHasAgreedToPublish()" />
-        &nbsp;Je suis d'accord pour publier le sujet en Creative Commons
+        <span class="cell">Je suis d'accord pour publier le sujet en Creative Commons&nbsp;&nbsp;&nbsp;</span><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr" target="_blank" class="cell"><img src="exercizer/public/assets/img/creative_commons.png" alt="Creative Commons" /></a>
     </div>
 
     <div class="row">

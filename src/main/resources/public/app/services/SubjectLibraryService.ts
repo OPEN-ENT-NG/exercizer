@@ -1,5 +1,5 @@
 interface ISubjectLibraryService {
-    publish(subject:ISubject, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[]): ng.IPromise<boolean>;
+    publish(subject:ISubject, authorsContributors:string, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[]): ng.IPromise<boolean>;
     search(/*filters:{title:string/*, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): ng.IPromise<ISubject[]>;
     count(/*filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): ng.IPromise<Number>;
     tmpSubjectForPreview:ISubject;
@@ -29,13 +29,14 @@ class SubjectLibraryService implements ISubjectLibraryService {
         this._subjectTagService = _subjectTagService;
     }
     
-    public publish = function(subject:ISubject, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[]): ng.IPromise<boolean> {
+    public publish = function(subject:ISubject, authorsContributors:string, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[]): ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer();
 
         var publishedSubject = CloneObjectHelper.clone(subject, true);
         publishedSubject.id = undefined;
         publishedSubject.owner = undefined;
+        publishedSubject.authors_contributors = authorsContributors;
         publishedSubject.is_library_subject = true;
 
         var subjectRequest = {

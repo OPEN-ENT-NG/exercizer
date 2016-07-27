@@ -9,6 +9,9 @@ directives.push(
                     link: (scope:any) => {
 
                         scope.isDisplayed = false;
+                        scope.cc = {
+                            authorsContributors: undefined
+                        };
                         scope.hasAgreedToPublish = true;
                         scope.isPublicationOnGoing = false;
                         scope.subject = null;
@@ -141,11 +144,13 @@ directives.push(
                         scope.publish = function() {
                             if (!scope.hasAgreedToPublish) {
                                 notify.error('Vous devez acceptez de publier votre sujet en Creative Commons.')
+                            } else if (angular.isUndefined(StringISOHelper.toISO(scope.cc.authorsContributors))) {
+                                notify.error('Vous devez citez l\'auteur original et/ou les contributeurs du sujet.')
                             } else if (scope.selection.selectedSubjectLessonTypeId === null || scope.selection.selectedSubjectLessonTypeId === 'null' || scope.selection.selectedSubjectLessonLevelId === null || scope.selection.selectedSubjectLessonLevelId === 'null') {
                                 notify.error('Vous devez sélectionner une matière et un niveau.')
                             } else {
                                 scope.isPublicationOnGoing = true;
-                                SubjectLibraryService.publish(scope.subject, scope.selection.selectedSubjectLessonTypeId, scope.selection.selectedSubjectLessonLevelId, scope.selectedSubjectTagList).then(
+                                SubjectLibraryService.publish(scope.subject, StringISOHelper.toISO(scope.cc.authorsContributors), scope.selection.selectedSubjectLessonTypeId, scope.selection.selectedSubjectLessonLevelId, scope.selectedSubjectTagList).then(
                                     function() {
                                         scope.isPublicationOnGoing = false;
                                         notify.info('Votre sujet a bien été publié dans la bibliothèque.');
@@ -163,6 +168,9 @@ directives.push(
                             if (!scope.isPublicationOnGoing) {
                                 scope.isDisplayed = false;
                                 scope.hasAgreedToPublish = true;
+                                scope.cc = {
+                                    authorsContributors: undefined
+                                };
                                 scope.isPublicationOnGoing = false;
                                 scope.subject = null;
                                 scope.selection = {
