@@ -194,7 +194,7 @@ class TeacherDashboardLibraryTabController {
                 subjectLessonTypeFound = false;
                 self._isLanding = false;
 
-                for (let i = 0; i < self._filters.subjectLessonTypeList.length && !subjectLessonTypeFound; ++i) {
+                for (var i = 0; i < self._filters.subjectLessonTypeList.length && !subjectLessonTypeFound; ++i) {
                     subjectLessonTypeFound = currentSubjectLessonType.id === self._filters.subjectLessonTypeList[i].id;
                 }
             }
@@ -205,7 +205,7 @@ class TeacherDashboardLibraryTabController {
                 subjectLessonLevelFound = false;
                 self._isLanding = false;
 
-                for (let i = 0; i < self._filters.subjectLessonLevelList.length && !subjectLessonLevelFound; ++i) {
+                for (var i = 0; i < self._filters.subjectLessonLevelList.length && !subjectLessonLevelFound; ++i) {
                     subjectLessonLevelFound = currentSubjectLessonLevel.id === self._filters.subjectLessonLevelList[i].id;
                 }
             }
@@ -218,8 +218,8 @@ class TeacherDashboardLibraryTabController {
 
                 if (currentSubjectTagList.length > 0) {
 
-                    for (let i = 0; i < currentSubjectTagList.length && !subjectTagListFound; ++i) {
-                        for (let j = 0; j < self._filters.subjectTagList.length && !subjectTagListFound; ++j) {
+                    for (var i = 0; i < currentSubjectTagList.length && !subjectTagListFound; ++i) {
+                        for (var j = 0; j < self._filters.subjectTagList.length && !subjectTagListFound; ++j) {
                             subjectTagListFound = currentSubjectTagList[i].id === self._filters.subjectTagList[j].id;
                         }
                     }
