@@ -4,7 +4,7 @@
     </h1>
 </div>
 <div class="row">
-    <button class="cell right-magnet" data-ng-click="redirectToSubjectPreviewViewCopy()">
+    <button class="cell right-magnet" data-ng-click="redirectToSubjectPreviewViewCopy()" data-ng-if="!previewingFromLibrary">
         Aperçu de la correction
     </button>
 
@@ -12,7 +12,14 @@
         Retour à l'édition
     </button>
 
+    <button class="cell right-magnet" data-ng-click="displayModalCopyPaste()" data-ng-if="previewingFromLibrary">
+        Copier dans mes sujets
+    </button>
+
     <button class="cell right-magnet flat-button" data-ng-click="redirectToTeacherDashboardLibraryTab()" data-ng-if="previewingFromLibrary">
         Retour à la bibliothèque
     </button>
 </div>
+
+<!-- MODAL COPY PAST -->
+<teacher-dashboard-copy-paste></teacher-dashboard-copy-paste>
