@@ -72,6 +72,7 @@ directives.push(
                                                     // success
                                                     // results: an array of data objects from each deferred.resolve(data) call
                                                     function(results) {
+                                                        reset();
                                                         scope.isDisplayed = false;
                                                         scope.scheduleSubjectInProgress = false;
                                                         notify.info("Le sujet a bien été programmé");
@@ -148,7 +149,7 @@ directives.push(
                         subjectScheduled.begin_date = option.begin_date;
                         subjectScheduled.due_date = option.due_date;
                         subjectScheduled.estimated_duration = option.estimated_duration;
-                        subjectScheduled.is_one_shot_submit = option.is_one_shot_submit;
+                        subjectScheduled.is_one_shot_submit = !option.allow_students_to_update_copy;
                         //subjectScheduled.has_automatic_display = option.has_automatic_display;
                         // persist scheduled subject
                         subjectScheduled.scheduled_at = createSubjectScheduledAt(data);
