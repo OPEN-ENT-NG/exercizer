@@ -42,6 +42,29 @@ class TeacherDashboardSubjectTabController {
 
     private _eventsHandler = function (self) {
 
+        self._$scope.$root.$on('share-updated', function(event, data){
+            if(self._selectedSubjectList[0]){
+                var subject = self._subjectService.getById(self._selectedSubjectList[0]);
+                if(data.added){
+                    if(subject.shared.length > 0){
+                     // already shared
+                    } else{
+                        subject.shared.push({userId : data.added.userId})
+                    }
+                } else {
+                    if(subject.shared.length > 0){
+                        subject.shared = [];
+                    } else{
+                        // subject not shared
+                    }
+                }
+            } else{
+                console.error('Subject is not defined');
+            }
+            self._resetSelectedSubjectList();
+
+        });
+
         self._$scope.$on('E_RESET_SELECTED_LIST', function() {
             self._resetSelectedList();
         });
@@ -71,7 +94,6 @@ class TeacherDashboardSubjectTabController {
 
         self._$scope.$on('E_SHARE_SUBJECT', function (event, subject) {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_SHARE', subject);
-            self._resetSelectedSubjectList();
         });
 
         self._$scope.$on('E_PUBLISH_SUBJECT', function (event, subject) {
