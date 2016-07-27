@@ -42,11 +42,14 @@
 .custom-filter-button {
     margin-right: 20px;
     border: 1px solid lightgray;
-    padding: 10px;
     background-color: lightgray;
     border-radius: 2px;
     min-width: 150px;
     text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 7px;
+    padding-top: 7px;
 }
 
 .custom-filter-button-library {
