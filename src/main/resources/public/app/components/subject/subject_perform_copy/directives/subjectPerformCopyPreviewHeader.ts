@@ -35,10 +35,6 @@ directives.push(
                             );
                         }
                     });
-                    
-                    scope.copySubject = function() {
-                        
-                    };
 
                     scope.redirectToTeacherDashboardLibraryTab = function() {
                         if (scope.previewingFromLibrary) {
