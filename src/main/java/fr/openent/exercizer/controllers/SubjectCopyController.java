@@ -60,7 +60,7 @@ public class SubjectCopyController extends ControllerHelper {
                             subjectCopyService.persist(resource, user, new Handler<Either<String,JsonObject>>() {
                                     @Override
                                     public void handle(Either<String, JsonObject> r) {
-                                        if (r.isRight()) {                                        	
+                                        if (r.isRight()) {
                                             final JsonObject subjectCopy  = ResourceParser.beforeAny(r.right().getValue());
                                             Long subjectCopyId = subjectCopy.getLong("id");
                                             final String subjectCopyId_string = Long.toString(subjectCopyId);
@@ -87,7 +87,7 @@ public class SubjectCopyController extends ControllerHelper {
                                                             String relativeUri = "/subject/copy/perform/"+subjectCopyId_string;
                                                             String message = "";
                                                             sendNotification(request, "assigncopy", user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, subjectCopyId_string);
-                                                            renderJson(request, r.right().getValue());                                                        
+                                                            renderJson(request, subjectCopy);
                                                         
                                                         }
                                                     });
