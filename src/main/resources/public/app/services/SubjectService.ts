@@ -10,6 +10,7 @@ interface ISubjectService {
     getList(): ISubject[];
     getListByFolderId(folderId);
     getById(id: number): ISubject;
+    getByIdEvenDeleted (id:number) : ng.IPromise<any>
 }
 
 class SubjectService implements ISubjectService {
@@ -276,6 +277,42 @@ class SubjectService implements ISubjectService {
 
     public getById = function(id:number):ISubject {
         return this._listMappedById[id];
+    };
+
+    public getByIdEvenDeleted = function(id:number) : ng.IPromise<any> {
+        var deferred = this._$q.defer(), res;
+        this.getSubjectListEvenDeleted().then(function(subjectList){
+            angular.forEach(subjectList, function(subjectObject){
+                if(id == subjectObject.id){
+                    res = SerializationHelper.toInstance(new Subject(), JSON.stringify(subjectObject)) as any;
+                }
+            });
+            if(res){
+                deferred.resolve(res);
+            } else{
+                deferred.reject("subject non trouvé");
+            }
+
+        }.bind(this));
+        return deferred.promise;
+
+    };
+
+    private getSubjectListEvenDeleted = function() : ng.IPromise<any> {
+        var deferred = this._$q.defer(),
+        request = {
+            method: 'GET',
+            url: 'exercizer/subjects-all'
+        };
+        this._$http(request).then(
+            function(data) {
+                deferred.resolve(data.data);
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors de la reciperation de tous les sujets.');
+            }
+        );
+        return deferred.promise;
     };
 
     /**
