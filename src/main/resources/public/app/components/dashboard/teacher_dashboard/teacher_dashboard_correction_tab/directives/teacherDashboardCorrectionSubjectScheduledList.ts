@@ -38,6 +38,11 @@ directives.push(
                                     function(){
                                         var subject = SubjectService.getById(subjectId);
                                         if (subject instanceof Subject) {
+                                            GroupService.getClassFromStructures(model.me.structures).then(
+                                                function(data){
+                                                    console.log(data);
+                                                }
+                                            );
                                             GroupService.getList(subject).then(
                                                 function (data) {
                                                     scope.autocomplete = {
