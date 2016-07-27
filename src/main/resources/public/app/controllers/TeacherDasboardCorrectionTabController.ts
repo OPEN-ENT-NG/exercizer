@@ -21,7 +21,7 @@ class TeacherDashboardCorrectionTabController {
                     // display list of subject scheduled
                 } else {
                     // display list of copy link to this subject scheduled
-                    var subjectScheduled = SubjectScheduledService.getById($routeParams['subjectScheduledId']);
+                    var subjectScheduled = SubjectScheduledService.getByIdEvenDeleted($routeParams['subjectScheduledId']);
                     if (subjectScheduled) {
                         $scope.selectedSubjectScheduled = subjectScheduled;
                     } else {

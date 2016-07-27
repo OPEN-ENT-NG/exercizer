@@ -34,13 +34,13 @@ directives.push(
                             if (scope.subjectScheduledList.length !== 0) {
                                 // get auto complete
                                 var subjectId = scope.subjectScheduledList[0].subject_id;
-                                SubjectService.resolve().then(
-                                    function(){
-                                        var subject = SubjectService.getById(subjectId);
+                                SubjectService.getByIdEvenDeleted(subjectId).then(
+                                    function(data){
+                                        var subject = data;
                                         if (subject instanceof Subject) {
                                             GroupService.getClassFromStructures(model.me.structures).then(
                                                 function(data){
-                                                    console.log(data);
+                                                    //console.log(data);
                                                 }
                                             );
                                             GroupService.getList(subject).then(

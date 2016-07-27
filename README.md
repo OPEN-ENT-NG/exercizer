@@ -142,6 +142,7 @@ Modification html
 * exercizer.subject.tag.list
 * exercizer.subject.tag.list.by.subject.id
 * exercizer.subject.tag.persist
+* exercizer.subject.list.all
 
 #### Eleve
 
@@ -152,6 +153,8 @@ Modification html
 * exercizer.subject.copy.list
 * exercizer.subject.scheduled.list
 * exercizer.subject.scheduled.list.by.subject.copy.list
+* exercizer.subject.list.all
+
 
 
 

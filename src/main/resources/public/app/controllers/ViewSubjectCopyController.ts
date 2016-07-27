@@ -51,9 +51,7 @@ class ViewSubjectCopyController {
             subjectCopyId = _$routeParams['subjectCopyId'];
 
         if (!angular.isUndefined(subjectId)) {
-            this._subjectService.resolve().then(function() {
-                var subject = self._subjectService.getById(subjectId);
-                
+            this._subjectService.getByIdEvenDeleted(subjectId).then(function(subject) {
                 if (angular.isUndefined(subject)) {
                     subject = self._subjectLibraryService.tmpSubjectForPreview;
                     self._previewingFromLibrary = !angular.isUndefined(subject);
