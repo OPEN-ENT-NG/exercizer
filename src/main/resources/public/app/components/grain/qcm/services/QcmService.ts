@@ -4,6 +4,7 @@ class QcmService implements IAutomaticCorrection {
 
     public automaticCorrection(grainScheduled:IGrainScheduled, grainCopy:IGrainCopy):{calculated_score:number, answers_result:{}} {
 
+        console.log('debug');
         var numberGoodAnswer : number = 0,
             numberRecognizedAnswer : number = 0,
             atLeastOneError =  false,
