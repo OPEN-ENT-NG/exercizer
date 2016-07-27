@@ -203,6 +203,8 @@ class SubjectService implements ISubjectService {
         duplicatedSubject.id = undefined;
         duplicatedSubject.owner = undefined;
         duplicatedSubject.owner_username = undefined;
+        duplicatedSubject.authors_contributors = undefined;
+        duplicatedSubject.is_library_subject = false;
         if(folder){
             duplicatedSubject.folder_id = folder.id;
         } else{
