@@ -23,24 +23,17 @@
         <h2 class="row">Plus tard</h2>
 
         <div class="row">
-            <div class="cell">
-                <input type="text" data-ng-model="search.text_2" placeholder="Rechercher">
-            </div>
-            <div class="cell">&nbsp;</div>
-            <div class="cell right-magnet">
-                <div class="cell">
-                    <label class="two cell">
-                        Du
-                    </label>
-                    <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
-                </div>
-                <div class="cell">
-                    <label class="two cell">
-                        Au
-                    </label>
-                    <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
-                </div>
-            </div>
+            <input type="text" data-ng-model="search.text_2" placeholder="Rechercher" class="four cell">
+
+            <date-picker data-ng-model="search.endDate" class="three cell right-magnet"></date-picker>
+            <label class="cell right-magnet">
+                &nbsp;&nbsp;&nbsp;Au
+            </label>
+
+            <date-picker data-ng-model="search.beginDate" class="three cell right-magnet"></date-picker>
+            <label class="cell right-magnet">
+                Du
+            </label>
         </div>
         <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
             <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_2) | filter: subjectCopyListController.filterOnSubjectCopyNotStartedOrStarted() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | orderBy: subjectCopyListController.orderBySubjectScheduledDueDate)">
