@@ -159,55 +159,68 @@ class GrainCopyService implements IGrainCopyService {
                 break;
             case 6:
                 grainCopy.grain_copy_data.custom_copy_data = new MultipleAnswerCustomCopyData();
-                angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer){
-                    grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({text : ""})
-                });
+                if(grainScheduled.grain_data && grainScheduled.grain_data.custom_data){
+                    angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer){
+                        grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({text : ""})
+                    });
+                }
+
                 break;
             case 7:
                 // QCM
                 grainCopy.grain_copy_data.custom_copy_data = new QcmCustomCopyData();
-                angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer){
-                    grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({text : correct_answer.text})
-                });
+                if(grainScheduled.grain_data && grainScheduled.grain_data.custom_data) {
+                    angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function (correct_answer) {
+                        grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({text: correct_answer.text})
+                    });
+                }
                 break;
             case 8:
                 // Association
                 grainCopy.grain_copy_data.custom_copy_data = new AssociationCustomCopyData();
                 grainCopy.grain_copy_data.custom_copy_data.show_left_column = grainScheduled.grain_data.custom_data.show_left_column;
-                if(grainScheduled.grain_data.custom_data.show_left_column){
-                    angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer){
-                        grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({text_left : correct_answer.text_left, text_right : null})
-                    });
-                    var rand,
-                        notSet,
-                        self = this,
-                        protectionCompteur;
-                    angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer){
-                        notSet = true;
-                        protectionCompteur = 0;
-                        while (notSet){
-                            rand = self._getRandomIntInclusive(0, grainScheduled.grain_data.custom_data.correct_answer_list.length-1);
-                            if(grainCopy.grain_copy_data.custom_copy_data.possible_answer_list[rand]){
-                                // one more loop
-                            } else {
-                                grainCopy.grain_copy_data.custom_copy_data.possible_answer_list[rand] = {
-                                    text_right : correct_answer.text_right
-                                };
-                                notSet = false;
+                if(grainScheduled.grain_data && grainScheduled.grain_data.custom_data) {
+                    if (grainScheduled.grain_data.custom_data.show_left_column) {
+                        angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function (correct_answer) {
+                            grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({
+                                text_left: correct_answer.text_left,
+                                text_right: null
+                            })
+                        });
+                        var rand,
+                            notSet,
+                            self = this,
+                            protectionCompteur;
+                        angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function (correct_answer) {
+                            notSet = true;
+                            protectionCompteur = 0;
+                            while (notSet) {
+                                rand = self._getRandomIntInclusive(0, grainScheduled.grain_data.custom_data.correct_answer_list.length - 1);
+                                if (grainCopy.grain_copy_data.custom_copy_data.possible_answer_list[rand]) {
+                                    // one more loop
+                                } else {
+                                    grainCopy.grain_copy_data.custom_copy_data.possible_answer_list[rand] = {
+                                        text_right: correct_answer.text_right
+                                    };
+                                    notSet = false;
+                                }
+                                if (protectionCompteur > 100) {
+                                    console.error(grainCopy.grain_copy_data.custom_copy_data);
+                                    throw "infiny loop"
+                                } else {
+                                    protectionCompteur++;
+                                }
                             }
-                            if(protectionCompteur > 100){
-                                console.error(grainCopy.grain_copy_data.custom_copy_data);
-                                throw "infiny loop"
-                            } else {
-                                protectionCompteur++;
-                            }
-                        }
-                    });
-                } else{
-                    angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer){
-                        grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({text_left : "", text_right : correct_answer.text_right})
-                    });
+                        });
+                    } else {
+                        angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function (correct_answer) {
+                            grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({
+                                text_left: "",
+                                text_right: correct_answer.text_right
+                            })
+                        });
 
+                    }
                 }
 
                 break;
@@ -219,30 +232,33 @@ class GrainCopyService implements IGrainCopyService {
                     notSet,
                     alreadySet,
                     self = this;
-                angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer, key){
-                    notSet = true;
-                    while (notSet){
-                        rand = self._getRandomIntInclusive(1, grainScheduled.grain_data.custom_data.correct_answer_list.length);
-                        alreadySet = false;
-                        angular.forEach(newOrder, function(value){
-                            if(value == rand){
-                                alreadySet =  true;
-                            }
-                        });
-                        if(!alreadySet){
-                            newOrder[key] = rand;
-                            notSet = false;
-                        }
-                    }
-                });
-                angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer, key){
-                    grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({
-                        text : correct_answer.text,
-                        order_by : newOrder[key],
-                        index : newOrder[key] - 1,
+                if(grainScheduled.grain_data && grainScheduled.grain_data.custom_data) {
 
-                    })
-                });
+                    angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function (correct_answer, key) {
+                        notSet = true;
+                        while (notSet) {
+                            rand = self._getRandomIntInclusive(1, grainScheduled.grain_data.custom_data.correct_answer_list.length);
+                            alreadySet = false;
+                            angular.forEach(newOrder, function (value) {
+                                if (value == rand) {
+                                    alreadySet = true;
+                                }
+                            });
+                            if (!alreadySet) {
+                                newOrder[key] = rand;
+                                notSet = false;
+                            }
+                        }
+                    });
+                    angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function (correct_answer, key) {
+                        grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({
+                            text: correct_answer.text,
+                            order_by: newOrder[key],
+                            index: newOrder[key] - 1,
+
+                        })
+                    });
+                }
                 break;
             default:
                 console.error('specific part of grain copy is not defined when creating from grain scheduled', grainScheduled);
