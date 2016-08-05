@@ -178,10 +178,16 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 
         module.filter('truncateNumber', function () {
             return function (item) {
-                if(parseFloat(item) == parseInt(item)){
-                    return item;
+                if(!item){
+                    // if item is not a number return an empty string
+                    return ""
+                } else {
+                    if(parseFloat(item) == parseInt(item)){
+                        return item;
+                    }
+                    return floorFigure(parseFloat(item), 2);
                 }
-                return floorFigure(parseFloat(item), 2);
+
             };
         });
 
