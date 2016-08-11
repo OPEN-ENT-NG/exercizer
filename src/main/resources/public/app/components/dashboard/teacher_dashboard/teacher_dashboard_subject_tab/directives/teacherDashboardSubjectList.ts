@@ -121,6 +121,11 @@ directives.push(
                                 $location.path('/subject/edit/' + subject.id);
                             }
                         };
+                        scope.viewPreview = function (subject) {
+                            if (subject.id) {
+                                $location.path('/subject/copy/preview/perform/' + subject.id);
+                            }
+                        };
 
                         scope.selectFolder = function (folder) {
                             folder.selected = folder.selected ? true : false;

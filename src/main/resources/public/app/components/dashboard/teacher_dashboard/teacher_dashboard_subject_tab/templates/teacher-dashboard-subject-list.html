@@ -112,7 +112,7 @@
                                     <div class="cell">
                                         <div class="row">
                                             <strong data-ng-show="canAccessSubject(subject)" data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</strong>
-                                            <strong data-ng-hide="canAccessSubject(subject)">[[subject.title]]</strong>
+                                            <strong data-ng-hide="canAccessSubject(subject)" data-ng-click="viewPreview(subject)">[[subject.title]]</strong>
                                         </div>
                                         <div class="row">
                                             <span data-ng-if="subject.modified">Modifié le [[subject.modified | date: 'dd/MM/yyyy']]</span>
@@ -181,7 +181,7 @@
                     </td>
                     <td>
                         <a data-ng-show="canAccessSubject(subject)" data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</a>
-                        <a data-ng-hide="canAccessSubject(subject)">[[subject.title]]</a>
+                        <a data-ng-hide="canAccessSubject(subject)" data-ng-click="viewPreview(subject)">[[subject.title]]</a>
                     </td>
                 </tr>
                 </tbody>
