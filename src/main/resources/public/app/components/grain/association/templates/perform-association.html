@@ -9,14 +9,16 @@
                 <div dragdrop="dropTo(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent)"
                  class="five cell"
-                style="    border: 1px dashed;  border-radius: 10px; text-align: center"
+                    style="  border: 1px dashed;
+                             border-radius: 10px;
+                             text-align: center;
+                             min-height: 50px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                    "
                 >
-                <input
-                    type="text"
-                    data-ng-model="filled_answer.text_right"
-                    style="width: 80%"
-                    disabled
-                />
+                    <span style="width: 80%">{{filled_answer.text_right}}</span>
             </div>
             <div class="one cell">&nbsp;</div>
             <div class="one cell" data-ng-click="deleteFilledAnswer(filled_answer)"><i class="close"></i></div>
