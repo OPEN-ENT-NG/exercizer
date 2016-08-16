@@ -1,0 +1,118 @@
+<div class="row vertical-spacing">
+    <div class="row">
+        <h3>Types de réponses</h3>
+        <div class="row">
+            <input type="radio" name="answerType" 
+                   ng-model="grain.grain_data.custom_data.answersType"
+                   ng-change="switchTo('text')" value="text" /> 
+            Saisie libre
+            <input type="radio" name="answerType" 
+                   ng-model="grain.grain_data.custom_data.answersType"
+                   ng-change="switchTo('list')" value="list" /> 
+            Liste déroulante
+            <input type="radio" name="answerType" 
+                   ng-model="grain.grain_data.custom_data.answersType"
+                   ng-change="switchTo('drag')" value="drag" /> 
+            Glisser-déposer
+        </div>
+    </div>
+    <div class="row">
+        <div class="drawing-zone base-image">
+            <div class="image-container">
+                <img ng-src="[[grain.grain_data.custom_data.guideImage]]" />
+            </div>
+            <placed-block ng-repeat="textZone in grain.grain_data.custom_data.textZones"
+                            draggable x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
+                <text-zone>
+                    <i class="edit" ng-click="editZone(textZone)"></i>
+                    [[textZone.answer]]
+                </text-zone>
+
+            </placed-block>
+        </div>
+    </div>
+    <lightbox show="displayState.changeBackground" on-close="displayState.changeBackground = false">
+        <media-library ng-model="grain.grain_data.custom_data.guideImageFile" ng-change="displayState.changeBackground = false; updateGrain();" file-format="'img'"></media-library>
+    </lightbox>
+    <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'list'" on-close="displayState.editZone = false">
+        <h2>Valeurs proposées</h2>
+
+        <div class="options">
+            <ul>
+                <li ng-repeat="option in displayState.editedTextZone.options">
+                    [[option]]
+                    <i class="close" ng-click="removeOption(displayState.editedTextZone, option)"></i>
+                </li>
+            </ul>
+            <div class="row add-option">
+                <input type="text" ng-model="displayState.newOption" />
+                <button ng-click="addOption(displayState.editedTextZone)">+</button>
+            </div>
+        </div>
+        
+        <div class="row">
+            <button class="right-magnet" ng-if="!displayState.editedTextZone.position" ng-click="addZone()">
+                <i18n>add</i18n>
+            </button>
+            <button class="right-magnet" ng-if="displayState.editedTextZone.position" ng-click="displayState.editZone = false">
+                <i18n>edit</i18n>
+            </button>
+            <button class="cancel right-magnet" ng-click="displayState.editZone = false" type="button">
+                <i18n>cancel</i18n>
+            </button>
+        </div>
+    </lightbox>
+    <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'drag'" on-close="displayState.editZone = false">
+        <h2>Valeurs proposées</h2>
+
+        <div class="options">
+            <ul>
+                <li ng-repeat="option in grain.grain_data.custom_data.options"
+                    ng-class="{ selected: option === displayState.editedTextZone.answer }"
+                    ng-click="displayState.editedTextZone.answer = option;">
+                    [[option]]
+                    <i class="remove" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                </li>
+            </ul>
+            <div class="row add-option">
+                <input type="text" ng-model="displayState.newOption" />
+                <button ng-click="addOption(grain.grain_data.custom_data)">+</button>
+            </div>
+        </div>
+        
+        <div class="row">
+            <button class="right-magnet" ng-if="!displayState.editedTextZone.position" ng-click="addZone()">
+                <i18n>add</i18n>
+            </button>
+            <button class="right-magnet" ng-if="displayState.editedTextZone.position" ng-click="displayState.editZone = false">
+                <i18n>edit</i18n>
+            </button>
+            <button class="cancel right-magnet" ng-click="displayState.editZone = false" type="button">
+                <i18n>cancel</i18n>
+            </button>
+        </div>
+    </lightbox>
+    <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'text'" on-close="displayState.editZone = false">
+        <h2>Zone à compléter</h2>
+        <form>
+            <div class="row">
+                <input type="text" ng-model="displayState.editedTextZone.answer" required class="twelve cell" i18n-placeholder="Réponse" />
+            </div>
+            <div class="row">
+                <button class="right-magnet" ng-if="!displayState.editedTextZone.position" ng-click="addZone()">
+                    <i18n>add</i18n>
+                </button>
+                <button class="right-magnet" ng-if="displayState.editedTextZone.position" ng-click="displayState.editZone = false">
+                    <i18n>edit</i18n>
+                </button>
+                <button class="cancel right-magnet" ng-click="displayState.editZone = false" type="button">
+                    <i18n>cancel</i18n>
+                </button>
+            </div>
+        </form>
+    </lightbox>
+    <div class="row">
+        <button class="cancel" ng-click="displayState.changeBackground = true">Modifier le fond</button>
+        <button ng-click="editZone()">Ajouter une zone à compléter</button>
+    </div>
+</div>

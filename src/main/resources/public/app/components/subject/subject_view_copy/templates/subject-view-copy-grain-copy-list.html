@@ -54,6 +54,18 @@
                             data-is-teacher="isTeacher">
                 </view-order>
             </div>
+            <div data-ng-switch-when="11">
+                <view-zone-text data-grain-scheduled="getGrainScheduled(grainCopy)"
+                            data-grain-copy="grainCopy"
+                            data-is-teacher="isTeacher">
+                </view-zone-text>
+            </div>
+            <div data-ng-switch-when="12">
+                <view-zone-image data-grain-scheduled="getGrainScheduled(grainCopy)"
+                                data-grain-copy="grainCopy"
+                                data-is-teacher="isTeacher">
+                </view-zone-image>
+            </div>
             <div data-ng-switch-default>
                 <h1>NOT IMPLEMENTED YET.</h1>
             </div>

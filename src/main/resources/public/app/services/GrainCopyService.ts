@@ -284,6 +284,14 @@ class GrainCopyService implements IGrainCopyService {
                     });
                 }
                 break;
+                case 11:
+                // zoneText
+                grainCopy.grain_copy_data.custom_copy_data = zonetext.makeCopy(grainScheduled.grain_data.custom_data);
+                break;
+                case 12:
+                // zoneImage
+                grainCopy.grain_copy_data.custom_copy_data = zoneimage.makeCopy(grainScheduled.grain_data.custom_data);
+                break;
             default:
                 console.error('specific part of grain copy is not defined when creating from grain scheduled', grainScheduled);
 

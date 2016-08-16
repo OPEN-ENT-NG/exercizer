@@ -1,0 +1,21 @@
+<article id="[[grainCopy.id]]">
+    <grain-copy-header data-grain-copy="grainCopy"></grain-copy-header>
+    <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
+    <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
+
+    <div class="row">
+        <div class="drawing-zone base-image">
+            <div class="image-container">
+                <img ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
+            </div>
+            <placed-block ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.textZones"
+                            x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
+                <text-zone ng-class="{ success: correction[$index], error: !correction[$index] }">
+                    [[textZone.answer]]
+                </text-zone>
+
+            </placed-block>
+        </div>
+    </div>
+
+</article>

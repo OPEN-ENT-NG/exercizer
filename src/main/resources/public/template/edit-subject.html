@@ -9,12 +9,10 @@
 
         <!-- TOP HEADER -->
         <div class="row">
-            <h1>
+            <h1 class="cell">
                 <span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()">Exercices et évaluations</span> / <span class="hover-orange" data-ng-click="">[[ editSubjectController.subject.title ]]</span>
             </h1>
-        </div>
 
-        <div class="row">
             <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
                 Distribuer
             </button>
@@ -214,6 +212,12 @@
                                 </div>
                                 <div data-ng-switch-when="9">
                                     <edit-order data-grain="grain"></edit-order>
+                                </div>
+                                <div data-ng-switch-when="11">
+                                    <edit-zone-text data-grain="grain"></edit-zone-text>
+                                </div>
+                                <div data-ng-switch-when="12">
+                                    <edit-zone-image data-grain="grain"></edit-zone-image>
                                 </div>
 
                             </div>
