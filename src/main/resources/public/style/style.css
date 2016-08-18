@@ -137,3 +137,22 @@ body editor.small-editor.edit [contenteditable]:focus {
     min-height: 250px!important;
     overflow: visible;
 }
+
+.association-possible-answer-left{
+    border: 1px dashed black;
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    background-color: lightgray;
+}
+
+.association-possible-answer-left:hover{
+    border: 1px dashed #FF8500;
+    background-color: white;
+}
+
+.association-drop-hover{
+    border: 1px dashed #FF8500!important;
+    background-color: white;
+}

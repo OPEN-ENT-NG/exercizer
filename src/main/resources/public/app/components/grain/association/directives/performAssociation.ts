@@ -10,6 +10,20 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/association/templates/perform-association.html',
                 link: (scope:any) => {
 
+                    scope.data = {
+                        hover : []
+
+                    };
+
+                    scope.setHover = function(index){
+                        angular.forEach(scope.data.hover, function(current_hover, key){
+                            current_hover.bool = (key == index);
+                        });
+                        scope.$apply();
+
+                    };
+
+
                     scope.updateGrainCopy = function () {
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     };
@@ -24,6 +38,7 @@ directives.push(
                     };
 
                     scope.dropTo = function (targetItem, $originalEvent) {
+                        scope.setHover(null);
                         var dataField = DragService.dropConditionFunction(targetItem, $originalEvent);
                         var originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
                         targetItem.text_right = angular.copy(originalItem.text_right);
@@ -33,7 +48,8 @@ directives.push(
 
                     };
 
-                    scope.dropConditionFunction = function (targetItem, $originalEvent) {
+                    scope.dropConditionFunction = function (targetItem, $originalEvent, index) {
+                        scope.setHover(index);
                         return DragService.dropConditionFunction(targetItem, $originalEvent);
                     };
 
