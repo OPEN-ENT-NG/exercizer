@@ -27,6 +27,7 @@ directives.push(
                         var dataField = DragService.dropConditionFunction(targetItem, $originalEvent);
                         var originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
                         targetItem.text_right = angular.copy(originalItem.text_right);
+                        scope.resetPossibleAnswerLeftList();
                         scope.$apply();
                         scope.updateGrainCopy();
 
@@ -38,10 +39,31 @@ directives.push(
 
                     scope.deleteFilledAnswer = function(filled_answer){
                         filled_answer.text_right = null;
+                        scope.resetPossibleAnswerLeftList();
                     };
 
+                    scope.resetPossibleAnswerLeftList = function(){
+                        scope.possible_answer_left_list = angular.copy(scope.grainCopy.grain_copy_data.custom_copy_data.possible_answer_list);
+                        var indexToRemove;
+                        angular.forEach(scope.grainCopy.grain_copy_data.custom_copy_data.filled_answer_list, function(current_filled_answer){
+                            if(current_filled_answer.text_right){
+                                indexToRemove = null;
+                                angular.forEach(scope.possible_answer_left_list, function(current_possible_left_answer, index){
+                                    if(current_filled_answer.text_right == current_possible_left_answer.text_right){
+                                        indexToRemove = index;
+                                    }
+                                });
+                                if(indexToRemove !== null){
+                                    scope.possible_answer_left_list.splice(indexToRemove, 1);
+                                }
+                            }
+                        });
+                    };
 
-                    scope.isAlreadySet = function() {
+                    scope.resetPossibleAnswerLeftList();
+
+
+                    /*scope.isAlreadySet = function(array_filtered) {
                         return function (possible_answer) {
                             var number_possible = 0;
                             angular.forEach(scope.grainCopy.grain_copy_data.custom_copy_data.possible_answer_list, function(current_possisble_answer){
@@ -57,27 +79,25 @@ directives.push(
                                 }
                             });
 
+                            var number_filtered = null;
+                            if(array_filtered !== 'undefined'){
+                                number_filtered = 0;
+                                angular.forEach(array_filtered, function(current_filtered_answer){
+                                    if(possible_answer.text_right == current_filtered_answer.text_right){
+                                        number_filtered ++;
+                                    }
+                                });
+                            }
+
                             if(number_filled >= number_possible){
                                 return false;
                             } else{
-                                return true
+                                if(number_filtered !== null){
+
+                                }
                             }
                         };
-                    };
-                    /*
-                    scope.isAlreadySet = function() {
-                        return function (possible_answer) {
-                            var bool = true;
-                            angular.forEach(scope.grainCopy.grain_copy_data.custom_copy_data.filled_answer_list, function(filled_answer_list){
-                               if(filled_answer_list.text_right == possible_answer.text_right){
-                                   bool =  false;
-                               }
-                            });
-                                return bool;
-                        };
                     };*/
-
-
                 }
             };
         }]

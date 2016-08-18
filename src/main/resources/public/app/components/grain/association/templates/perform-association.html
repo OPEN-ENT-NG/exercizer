@@ -25,7 +25,7 @@
 
         </div>
         <div class="row vertical-spacing">
-            <div data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.possible_answer_list | filter: isAlreadySet()"
+            <div data-ng-repeat="possible_answer in possible_answer_left_list"
                  class="cell"
                 style="    border: 1px dashed black;    padding: 10px;    margin-left: 10px;    margin-right: 10px;    border-radius: 10px;    background-color: lightgray;"
                  dragstart="drag(possible_answer, $originalEvent)"
