@@ -53,7 +53,7 @@ directives.push(
 
                     scope.scheduleSubject = function () {
                         scope.scheduleSubjectInProgress = true;
-                        if (canSchedule(scope.option)) {
+                        canSchedule(scope.option, scope.subject).then(function(data){
                             createIdList(scope.data.userList, scope.data.groupList).then(
                                 function (users) {
                                     if (users.length !== 0) {
@@ -87,27 +87,105 @@ directives.push(
                                     }
                                 }
                             );
-                        }
-
+                        }, function(err){
+                            scope.scheduleSubjectInProgress = false;
+                            console.error(err);
+                            notify.error(err);
+                        });
                     };
 
 
-                    function canSchedule(option) {
+                    function canSchedule(option, subject) {
+                        var deferred = $q.defer();
                         if (option.begin_date && option.due_date) {
                             if (DateService.compare_after(option.due_date, option.begin_date, true)) {
-                                return true
+                                // shchedule options is correct , now check subject itself
+                                GrainService.getListBySubject(subject).then(
+                                    function (data) {
+                                        // create grain list scheduled
+                                        console.log('grain list');
+                                        if(data.length == 0 ){
+                                            deferred.reject("Il est impossible de programmer un sujet vide");
+                                        } else {
+                                            // question : all grain exept statement
+                                            var validationGrain = true;
+                                            var numberQuestion  = 0;
+                                            angular.forEach(data, function(grain){
+                                                    switch (grain.grain_type_id){
+                                                        case 1 :
+                                                            break;
+                                                        case 2 :
+                                                            break;
+                                                        case 3 :
+                                                            break;
+                                                        case 4 :
+                                                            numberQuestion++;
+                                                            break;
+                                                        case 5 :
+                                                            numberQuestion++;
+                                                            break;
+                                                        case 6 :
+                                                            if(!grain.grain_data.custom_data.correct_answer_list || grain.grain_data.custom_data.correct_answer_list.length === 0){
+                                                                validationGrain =  false;
+                                                            }
+                                                            numberQuestion++;
+                                                            break;
+                                                        case 7 :
+                                                            numberQuestion++;
+                                                            if(!grain.grain_data.custom_data.correct_answer_list || grain.grain_data.custom_data.correct_answer_list.length === 0){
+                                                                validationGrain =  false;
+                                                            }
+                                                            break;
+                                                        case 8 :
+                                                            numberQuestion++;
+                                                            if(!grain.grain_data.custom_data.correct_answer_list || grain.grain_data.custom_data.correct_answer_list.length === 0){
+                                                                validationGrain =  false;
+                                                            }
+                                                            break;
+                                                        case 9 :
+                                                            numberQuestion++;
+                                                            if(!grain.grain_data.custom_data.correct_answer_list || grain.grain_data.custom_data.correct_answer_list.length === 0){
+                                                                validationGrain =  false;
+                                                            }
+                                                            break;
+                                                        case 10 :
+                                                            numberQuestion++;
+                                                            // TODO
+                                                            break;
+                                                        case 11 :
+                                                            numberQuestion++;
+                                                            // TODO
+                                                            break;
+                                                        default :
+                                                            console.error("switch default for grain_type_id = ", grain.grain_type_id);
+                                                    }
+
+                                            });
+                                            if(numberQuestion === 0){
+                                                deferred.reject("Il est impossible de programmer un sujet vide");
+                                            } else {
+                                                if(validationGrain === true){
+                                                    deferred.resolve();
+                                                } else{
+                                                    deferred.reject("Le sujet ne peut pas être programmé car des questions sans réponses renseignées subsistent");
+                                                }
+                                            }
+                                        }
+                                    },
+                                    function (err){
+                                        deferred.reject(err);
+                                    }
+                                );
                             } else {
-                                scope.scheduleSubjectInProgress = false;
-                                notify.error("Les dates de programmation ne sont pas cohérentes");
-                                return false;
+                                deferred.reject("Les dates de programmation ne sont pas cohérentes")
                             }
                         } else {
                             scope.scheduleSubjectInProgress = false;
-                            notify.error("Toutes les options de programmation ne sont pas remplies");
-                            return false;
+                            deferred.reject("Toutes les options de programmation ne sont pas remplies")
                         }
-
+                        return deferred.promise;
                     }
+
 
                     function createIdList(userList, groupList) {
                         // get user target by the subject scheduled
