@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
+var sourcemaps = require('gulp-sourcemaps');
 var privateConfig = "";
 
 try {
@@ -10,11 +11,14 @@ console.log(privateConfig);
 var tsProject = ts.createProject('./tsconfig.json');
 var springboardModsPath = privateConfig.springboardModsPath;
 
-gulp.task('compile', function() {
+gulp.task('build', function() {
     var tsResult = tsProject.src()
+        .pipe(sourcemaps.init())
         .pipe(ts(tsProject));
 
-    return tsResult.js.pipe(gulp.dest('./src/main/resources/public/js'));
+    return tsResult.js
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('./src/main/resources/public/js'));
 });
 
 gulp.task('copy-resources', ['compile'], function() {
