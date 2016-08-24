@@ -1,19 +1,19 @@
-<nav data-stick-to-top class="hash-magnet floating-navigation">
-    <h4 class="row">Navigation</h4>
-    <div class="row" style="overflow-y:auto; max-height: 50vh; border:1px dotted lightgrey;">
-        <ul style="padding: 0 5px;">
-            <li data-ng-click="navigateTo()" data-ng-class="(!currentGrainCopy) ? 'selected' : ''">
-                <a>
-                    Résumé
-                </a>
-            </li>
-            <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false"
-                style="overflow-x: hidden"
-                data-ng-click="navigateTo(grainCopy)" data-ng-class="(currentGrainCopy.id === grainCopy.id) ? 'selected' : ''">
-                <a>
-                    [[ grainCopy.grain_type_id > 3 ? getCorrectOrder(grainCopy) + ') ' : '' ]] [[ getGrainCopyName(grainCopy) ]]
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<h2 class="float-title zero-mobile">
+    <i18n>exercizer.preview.navigation</i18n>
+</h2>
+<floating-navigation class="zero-mobile">
+    <ul>
+        <li data-ng-click="navigateTo()" data-ng-class="(!currentGrainCopy) ? 'selected' : ''">
+            <a>
+                <i18n>exercizer.preview.summary</i18n>
+            </a>
+        </li>
+        <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false"
+        data-ng-click="navigateTo(grainCopy)"
+        data-ng-class="(currentGrainCopy.id === grainCopy.id) ? 'selected' : ''">
+            <a>
+                [[ grainCopy.grain_type_id > 3 ? getCorrectOrder(grainCopy) + ') ' : '' ]] [[ getGrainCopyName(grainCopy) ]]
+            </a>
+        </li>
+    </ul>
+</floating-navigation>
