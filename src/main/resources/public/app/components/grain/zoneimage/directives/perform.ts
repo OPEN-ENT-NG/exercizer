@@ -9,7 +9,7 @@ directives.push(
                 },
                 templateUrl: 'exercizer/public/app/components/grain/zoneimage/templates/perform.html',
                 link: (scope: any) => {
-                    scope.grainCopy.grain_copy_data.custom_copy_data = new zonetext.CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
+                    scope.grainCopy.grain_copy_data.custom_copy_data = new zoneimage.CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
 
                     scope.usedAnswers = [];
 
@@ -17,18 +17,19 @@ directives.push(
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     };
 
-                    scope.answer = (textZone, $item: string) => {
-                        scope.removeAnswer(textZone);
-                        textZone.answer = $item;
+                    scope.answer = (iconZone: zoneimage.IconZone, $item: string) => {
+                        scope.removeAnswer(iconZone);
+                        iconZone.answer = $item;
                         scope.usedAnswers.push($item);
                     };
 
-                    scope.removeAnswer = ($item: zonetext.TextZone) => {
+                    scope.removeAnswer = ($item: zoneimage.IconZone) => {
                         if (!$item.answer) {
                             return;
                         }
                         var i = scope.usedAnswers.indexOf($item.answer);
                         scope.usedAnswers.splice(i, 1);
+                        $item.answer = '';
                     };
 
                     scope.availableOption = (option) => scope.usedAnswers.indexOf(option) === -1;

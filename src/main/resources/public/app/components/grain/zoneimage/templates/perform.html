@@ -4,39 +4,25 @@
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
 
     <div class="row">
-        <div class="drawing-zone base-image">
+        <div class="base-image">
             <div class="image-container">
                 <img ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
             </div>
-            
-            <placed-block 
-                ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.textZones"
-                x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
-            >
-                <text-zone>
-                    <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'text'">
-                        <input type="text" ng-model="textZone.answer" />
-                    </div>
-                    <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'list'">
-                        <select ng-options="option in textZone.options" ng-model="textZone.answer"></select>
-                    </div>
-                    <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
-                        <div class="drop-zone" drop-item="answer(textZone, $item);" drag-item="textZone">
-                            [[textZone.answer]]
-                        </div>
-                    </div>
-                </text-zone>
+            <placed-block ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.iconZones"
+                x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z">
+                <image-zone class="drop-zone" drop-item="answer(iconZone, $item);">
+                    <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" drag-item="iconZone" />
+                </image-zone>
+
             </placed-block>
         </div>
 
-        <div class="options" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
-            <ul>
-                <li 
-                    drag-item="option"
-                    ng-repeat="option in grainCopy.grain_copy_data.custom_copy_data.options | filter:availableOption">
-                    [[option]]
-                </li>
-            </ul>
+        <div class="row options" drop-item="removeAnswer($item);">
+            <image-zone 
+                ng-repeat="option in grainCopy.grain_copy_data.custom_copy_data.options | filter:availableOption track by $index"
+                drag-item="option">
+                <img ng-src="[[option]]?thumbnail=120x120" />
+            </image-zone>
         </div>
     </div>
 

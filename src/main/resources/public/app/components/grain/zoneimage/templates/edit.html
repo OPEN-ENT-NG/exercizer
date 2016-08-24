@@ -5,9 +5,9 @@
                 <img ng-src="[[grain.grain_data.custom_data.guideImage]]" />
             </div>
             <placed-block ng-repeat="iconZone in grain.grain_data.custom_data.iconZones"
-                            draggable x="textZone.position.x" y="textZone.position.y" z="iconZone.position.z">
+                            draggable x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z">
                 <image-zone>
-                    <i class="close" ng-click="removeOption(grain.grain_data.custom_data, iconZone.answer)"></i>
+                    <i class="close" ng-click="removeZone(iconZone)"></i>
                     <img ng-src="[[iconZone.answer]]?thumbnail=120x120" />
                     <div class="actions" ng-click="editZone(iconZone)">
                         <i class="edit"></i> Modifier
@@ -25,7 +25,10 @@
         <h2>Valeurs proposées</h2>
 
         <div class="row options">
-            <image-zone ng-click="displayState.editedIcon.answer = option; displayState.editZone = false;" ng-repeat="option in grain.grain_data.custom_data.options track by $index">
+            <image-zone 
+                ng-click="displayState.editedIcon.answer = option; displayState.editZone = false;" 
+                ng-repeat="option in grain.grain_data.custom_data.options track by $index"
+                ng-click="addZone(option);">
                 <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
                 <img ng-src="[[option]]?thumbnail=120x120" />
             </image-zone>
