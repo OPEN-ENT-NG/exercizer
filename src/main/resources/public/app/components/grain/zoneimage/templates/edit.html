@@ -6,10 +6,13 @@
             </div>
             <placed-block ng-repeat="iconZone in grain.grain_data.custom_data.iconZones"
                             draggable x="textZone.position.x" y="textZone.position.y" z="iconZone.position.z">
-                <text-zone>
-                    <i class="edit" ng-click="editZone(iconZone)"></i>
-                    <img ng-src="[[iconZone.answer]]" />
-                </text-zone>
+                <image-zone>
+                    <i class="close" ng-click="removeOption(grain.grain_data.custom_data, iconZone.answer)"></i>
+                    <img ng-src="[[iconZone.answer]]?thumbnail=120x120" />
+                    <div class="actions" ng-click="editZone(iconZone)">
+                        <i class="edit"></i> Modifier
+                    </div>
+                </image-zone>
 
             </placed-block>
         </div>
@@ -22,44 +25,28 @@
         <h2>Valeurs proposées</h2>
 
         <div class="row options">
-            <div class="option" ng-click="displayState.editedTextZone.answer = option" ng-repeat="option in grain.grain_data.custom_data.options track by $index">
-                <img ng-src="[[option]]" />
-                <div class="remove" ng-click="removeOption(grain.grain_data.custom_data, option)">
-                    <i class="close"></i> Supprimer
-                </div>
-            </div>
-            <div class="option">
+            <image-zone ng-click="displayState.editedIcon.answer = option; displayState.editZone = false;" ng-repeat="option in grain.grain_data.custom_data.options track by $index">
+                <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                <img ng-src="[[option]]?thumbnail=120x120" />
+            </image-zone>
+            <image-zone>
                 <img skin-src="/img/illustrations/image-default.svg" ng-click="displayState.pickOption = true" />
-            </div>
-        </div>
-        
-        <div class="row">
-            <button class="right-magnet" ng-if="!displayState.editedTextZone.position" ng-click="addZone()">
-                <i18n>add</i18n>
-            </button>
-            <button class="right-magnet" ng-if="displayState.editedTextZone.position" ng-click="displayState.editZone = false">
-                <i18n>edit</i18n>
-            </button>
-            <button class="cancel right-magnet" ng-click="displayState.editZone = false" type="button">
-                <i18n>cancel</i18n>
-            </button>
+            </image-zone>
         </div>
     </lightbox>
     <lightbox show="displayState.pickOption" on-close="displayState.pickOption = false">
-        <media-library ng-model="displayState.newOption" file-format="'img'" ng-change="addOption(grain.grain_data.custom_data)"></media-library>
+        <media-library ng-model="displayState.newOption" file-format="'img'" ng-change="addOption(grain.grain_data.custom_data); displayState.pickOption = false"></media-library>
     </lightbox>
     <div class="row">
         <button class="cancel" ng-click="displayState.changeBackground = true">Modifier le fond</button>
     </div>
     <div class="row options">
-        <div class="option" ng-repeat="option in grain.grain_data.custom_data.options track by $index">
-            <img ng-src="[[option]]" />
-            <div class="remove" ng-click="removeOption(grain.grain_data.custom_data, option)">
-                <i class="close"></i> Supprimer
-            </div>
-        </div>
-        <div class="option">
+        <image-zone ng-repeat="option in grain.grain_data.custom_data.options track by $index">
+            <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+            <img ng-src="[[option]]?thumbnail=120x120" />
+        </image-zone>
+        <image-zone>
             <img skin-src="/img/illustrations/image-default.svg" ng-click="displayState.pickOption = true" />
-        </div>
+        </image-zone>
     </div>
 </div>

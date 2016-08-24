@@ -11,9 +11,7 @@ directives.push(
                 link:(scope:any) => {
 
                     scope.displayState = {
-                        editedTextZone: {
-                            options: []
-                        } as zoneimage.IconZone
+                        editedIcon: {} as zoneimage.IconZone
                     };
 
                     if (!scope.grain.grain_data.custom_data) {
@@ -30,17 +28,17 @@ directives.push(
                     scope.editZone = (zone: zoneimage.IconZone) => {
                         scope.displayState.editZone = true;
                         if(zone){
-                            scope.displayState.editedTextZone = zone;
+                            scope.displayState.editedIcon = zone;
                         }
                         else{
-                            scope.displayState.editedTextZone = {
+                            scope.displayState.editedIcon = {
                                 answer: ''
                             };
                         }
                     };
 
                     scope.addZone = () => {
-                        scope.grain.grain_data.custom_data.addZone(scope.displayState.editedTextZone);
+                        scope.grain.grain_data.custom_data.addZone(scope.displayState.editedIcon);
                         scope.displayState.editZone = false;
                         scope.updateGrain();
                     };
@@ -49,13 +47,16 @@ directives.push(
                         var option = '/workspace/document/' + scope.displayState.newOption._id;
                         container.addZone({ answer: option });
                         container.options.push(option);
-                        scope.displayState.editedTextZone.answer = scope.displayState.newOption;
+                        scope.displayState.editedIcon.answer = scope.displayState.newOption;
                         scope.updateGrain();
                     };
 
                     scope.removeOption = (container: zoneimage.CustomData, option: string) => {
                         var i = container.options.indexOf(option);
                         container.options.splice(i, 1);
+                        var iconZone = _.findWhere(container.iconZones, { answer: option });
+                        var j = container.iconZones.indexOf(iconZone);
+                        container.iconZones.splice(j, 1);
                     };
 
                     scope.switchTo = (newType: string) => {

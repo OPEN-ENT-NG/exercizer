@@ -9,4 +9,4 @@ INSERT INTO exercizer.grain_type VALUES
 (8, 'association', 'Association', 'association', true),
 (9, 'order_by', 'Mise en ordre', 'ordre', true),
 (10, 'text_to_fill', 'Texte à trous', 'textetrous', true),
-(11, 'area_select', 'Zone à remplir (texte)', 'zoneselect', true);
+(11, 'area_select', 'Zone à remplir', 'zoneselect', true);
