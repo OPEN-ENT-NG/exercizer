@@ -1,0 +1,20 @@
+<article>
+    <grain-copy-header data-grain-copy="grainCopy"></grain-copy-header>
+    <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
+    <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
+
+    <div class="row">
+        <div bind-html="grainCopy.grain_copy_data.custom_copy_data.htmlContent"></div>
+
+        <div class="options" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
+            <ul>
+                <li 
+                    drag-item="option"
+                    ng-repeat="option in grainCopy.grain_copy_data.custom_copy_data.options | filter:availableOption">
+                    <text-zone>[[option]]</text-zone>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</article>

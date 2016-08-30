@@ -1,0 +1,23 @@
+﻿<h2>Valeurs proposées</h2>
+
+<div class="options">
+    <ul>
+        <li ng-repeat="option in grain.grain_data.custom_data.options"
+            ng-click="displayState.editedTextZone.answer = option;">
+            <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
+                <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                [[option]]
+            </text-zone>
+        </li>
+    </ul>
+    <div class="row add-option">
+        <input type="text" ng-model="displayState.newOption" />
+        <button ng-click="addOption(grain.grain_data.custom_data)">+</button>
+    </div>
+</div>
+
+<div class="row" ng-if="!displayState.editedTextZone.id">
+    <button class="right-magnet" ng-click="addElement(addZone());">
+        <i18n>add</i18n>
+    </button>
+</div>

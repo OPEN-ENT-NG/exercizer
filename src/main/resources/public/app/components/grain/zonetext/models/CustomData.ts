@@ -1,29 +1,29 @@
 declare var _: any;
 
 module zonetext {
-    export interface TextZone {
+    export interface TextZone extends zonegrain.Zone {
         position: {
             x: number,
             y: number,
             z: number
         };
-        answer: string;
         options: string[];
     }
 
-    export class CustomData {
-        textZones: TextZone[];
+    export class CustomData implements zonegrain.CustomData {
+        zones: TextZone[];
         _guideImage: string;
         answersType: string;
         options: string[];
 
         constructor(copyFrom?: CustomData) {
             if(!copyFrom){
-                this.textZones = [];
+                this.zones = [];
                 this.options = [];
+                this.answersType = 'text';
             }
             else{
-                this.textZones = JSON.parse(JSON.stringify(copyFrom.textZones));
+                this.zones = JSON.parse(JSON.stringify(copyFrom.zones));
                 this.options = JSON.parse(JSON.stringify(copyFrom.options));
                 this._guideImage = copyFrom._guideImage;
                 this.answersType = copyFrom.answersType;
@@ -35,11 +35,16 @@ module zonetext {
                 zone.position = {
                     x: 0,
                     y: 0,
-                    z: this.textZones.length
+                    z: this.zones.length
                 };
             }
             
-            this.textZones.push(zone);
+            this.zones.push(zone);
+        }
+
+        removeZone(zone: zonetext.TextZone) {
+            let i = this.zones.indexOf(zone);
+            this.zones.splice(i, 1);
         }
 
         set guideImageFile(file: { _id: string }){
@@ -53,13 +58,5 @@ module zonetext {
         set guideImage(value: string) {
             this._guideImage = value;
         }
-    }
-
-    export function makeCopy(customData: CustomData) {
-        var copy = new CustomData(customData);
-        copy.textZones.forEach((textZone) => {
-            textZone.answer = '';
-        });
-        return copy;
     }
 }

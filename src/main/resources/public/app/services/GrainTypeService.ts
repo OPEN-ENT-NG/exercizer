@@ -87,8 +87,14 @@ class GrainTypeService implements IGrainTypeService {
             case 9:
                 customData = SerializationHelper.toInstance(new OrderCustomData(), grainObject.grain_data.custom_data);
                 break;
+            case 10:
+                customData = new filltext.CustomData(grainObject.grain_data.custom_data);
+                break;
             case 11:
                 customData = new zonetext.CustomData(grainObject.grain_data.custom_data);
+                break;
+            case 12:
+                customData = new zoneimage.CustomData(grainObject.grain_data.custom_data);
                 break;
         }
         

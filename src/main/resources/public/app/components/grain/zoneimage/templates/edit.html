@@ -4,7 +4,7 @@
             <div class="image-container">
                 <img ng-src="[[grain.grain_data.custom_data.guideImage]]" />
             </div>
-            <placed-block ng-repeat="iconZone in grain.grain_data.custom_data.iconZones"
+            <placed-block ng-repeat="iconZone in grain.grain_data.custom_data.zones"
                             draggable x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z">
                 <image-zone>
                     <i class="close" ng-click="removeZone(iconZone)"></i>

@@ -8,7 +8,10 @@ directives.push(
                     grain: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/zonetext/templates/edit.html',
-                link:(scope:any) => {
+                link:(scope:any, element: any) => {
+                    element.on('stopDrag', '[draggable]', () => {
+                        scope.updateGrain();
+                    });
 
                     scope.displayState = {
                         editedTextZone: {
@@ -34,7 +37,8 @@ directives.push(
                         }
                         else{
                             scope.displayState.editedTextZone = {
-                                answer: ''
+                                answer: '',
+                                options: []
                             };
                         }
                     };
@@ -45,27 +49,46 @@ directives.push(
                         scope.updateGrain();
                     };
 
+                    scope.removeZone = (zone: zonetext.TextZone) => {
+                        let container = scope.grain.grain_data.custom_data as zonetext.CustomData;
+                        let i = container.zones.indexOf(zone);
+                        container.zones.splice(i, 1);
+
+                        scope.updateGrain();
+                    };
+
                     scope.addOption = (container: zonetext.CustomData | zonetext.TextZone) => {
                         container.options.push(scope.displayState.newOption);
                         scope.displayState.editedTextZone.answer = scope.displayState.newOption;
                         scope.updateGrain();
+                        scope.displayState.newOption = '';
                     };
 
                     scope.removeOption = (container: zonetext.CustomData | zonetext.TextZone, option: string) => {
-                        var i = container.options.indexOf(option);
+                        let i = container.options.indexOf(option);
                         container.options.splice(i, 1);
+
+                        if (container instanceof zonetext.CustomData) {
+                            let zones = _.filter(container.zones, { answer: option });
+                            zones.forEach((zone) => {
+                                let j = container.zones.indexOf(zone);
+                                container.zones.splice(j, 1);
+                            });
+                        }
+
+                        scope.updateGrain();
                     };
 
                     scope.switchTo = (newType: string) => {
-                        var customData = scope.grain.grain_data.custom_data as zonetext.CustomData;
+                        let customData = scope.grain.grain_data.custom_data as zonetext.CustomData;
                         if (newType === 'drag') {
                             customData.options = [];
-                            customData.textZones.forEach((zone) => {
+                            customData.zones.forEach((zone) => {
                                 customData.options.push(zone.answer);
                             });
                         }
                         if (newType === 'list') {
-                            customData.textZones.forEach((zone) => {
+                            customData.zones.forEach((zone) => {
                                 zone.options = JSON.parse(JSON.stringify(customData.options));
                             });
                         }

@@ -8,7 +8,11 @@ directives.push(
                     grain: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/zoneimage/templates/edit.html',
-                link:(scope:any) => {
+                link:(scope:any, element) => {
+
+                    element.on('stopDrag', '[draggable]', () => {
+                        scope.updateGrain();
+                    });
 
                     scope.displayState = {
                         editedIcon: {} as zoneimage.IconZone
@@ -66,10 +70,10 @@ directives.push(
                     scope.removeOption = (container: zoneimage.CustomData, option: string) => {
                         let i = container.options.indexOf(option);
                         container.options.splice(i, 1);
-                        let iconsZone = _.filter(container.iconZones, { answer: option });
+                        let iconsZone = _.filter(container.zones, { answer: option });
                         iconsZone.forEach((icon) => {
-                            let j = container.iconZones.indexOf(icon);
-                            container.iconZones.splice(j, 1);
+                            let j = container.zones.indexOf(icon);
+                            container.zones.splice(j, 1);
                         });
                         
                         scope.updateGrain();
@@ -77,25 +81,9 @@ directives.push(
 
                     scope.removeZone = (zone: zoneimage.IconZone) => {
                         let container = scope.grain.grain_data.custom_data as zoneimage.CustomData;
-                        let i = container.iconZones.indexOf(zone);
-                        container.iconZones.splice(i, 1);
+                        let i = container.zones.indexOf(zone);
+                        container.zones.splice(i, 1);
                         
-                        scope.updateGrain();
-                    };
-
-                    scope.switchTo = (newType: string) => {
-                        var customData = scope.grain.grain_data.custom_data as zonetext.CustomData;
-                        if (newType === 'drag') {
-                            customData.options = [];
-                            customData.textZones.forEach((zone) => {
-                                customData.options.push(zone.answer);
-                            });
-                        }
-                        if (newType === 'list') {
-                            customData.textZones.forEach((zone) => {
-                                zone.options = JSON.parse(JSON.stringify(customData.options));
-                            });
-                        }
                         scope.updateGrain();
                     };
                 }

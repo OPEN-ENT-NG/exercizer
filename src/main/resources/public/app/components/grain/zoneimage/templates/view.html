@@ -8,14 +8,8 @@
             <div class="image-container">
                 <img ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
             </div>
-            <placed-block ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.textZones"
-                            x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
-                <text-zone ng-class="{ success: correction[$index], error: !correction[$index] }">
-                    [[textZone.answer]]
-                </text-zone>
 
-            </placed-block>
-            <placed-block ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.iconZones"
+            <placed-block ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.zones"
                 x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z">
                 <image-zone ng-class="{ success: correction[$index], error: !correction[$index] }">
                     <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" drag-item="iconZone" />

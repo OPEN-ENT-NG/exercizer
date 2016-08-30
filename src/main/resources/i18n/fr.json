@@ -23,5 +23,6 @@
 	"group.school.Teacher": "Tous les enseignants de l'{0}.",
 	"group.school.Guest": "Tous les invités de l'{0}.",
 	"exercizer.preview.navigation": "Navigation",
-	"exercizer.preview.summary": "Résumé"
+  "exercizer.preview.summary": "Résumé",
+  "editor.option.filltext":  "Ajouter une zone à compléter"
 }

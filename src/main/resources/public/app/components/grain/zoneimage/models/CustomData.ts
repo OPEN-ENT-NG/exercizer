@@ -1,27 +1,26 @@
 declare var _: any;
 
 module zoneimage {
-    export interface IconZone {
+    export interface IconZone extends zonegrain.Zone {
         position?: {
             x: number,
             y: number,
             z: number
         };
-        answer: string;
     }
 
-    export class CustomData {
-        iconZones: IconZone[];
+    export class CustomData implements zonegrain.CustomData {
+        zones: IconZone[];
         _guideImage: string;
         options: string[];
 
         constructor(copyFrom?: CustomData) {
             if(!copyFrom){
-                this.iconZones = [];
+                this.zones = [];
                 this.options = [];
             }
             else{
-                this.iconZones = JSON.parse(JSON.stringify(copyFrom.iconZones));
+                this.zones = JSON.parse(JSON.stringify(copyFrom.zones));
                 this.options = JSON.parse(JSON.stringify(copyFrom.options));
                 this._guideImage = copyFrom._guideImage;
             }
@@ -32,11 +31,11 @@ module zoneimage {
                 zone.position = {
                     x: 0,
                     y: 0,
-                    z: this.iconZones.length
+                    z: this.zones.length
                 };
             }
             
-            this.iconZones.push(zone);
+            this.zones.push(zone);
         }
 
         set guideImageFile(file: { _id: string }){
@@ -50,13 +49,5 @@ module zoneimage {
         set guideImage(value: string) {
             this._guideImage = value;
         }
-    }
-
-    export function makeCopy(customData: CustomData) {
-        var copy = new CustomData(customData);
-        copy.iconZones.forEach((iconZone) => {
-            iconZone.answer = '';
-        });
-        return copy;
     }
 }

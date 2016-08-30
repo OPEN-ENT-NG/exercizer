@@ -10,7 +10,7 @@
             </div>
             
             <placed-block 
-                ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.textZones"
+                ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones"
                 x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
             >
                 <text-zone>
@@ -18,7 +18,7 @@
                         <input type="text" ng-model="textZone.answer" />
                     </div>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'list'">
-                        <select ng-options="option in textZone.options" ng-model="textZone.answer"></select>
+                        <select ng-options="o as o for o in textZone.options" ng-model="textZone.answer"></select>
                     </div>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
                         <div class="drop-zone" drop-item="answer(textZone, $item);" drag-item="textZone">
@@ -34,7 +34,7 @@
                 <li 
                     drag-item="option"
                     ng-repeat="option in grainCopy.grain_copy_data.custom_copy_data.options | filter:availableOption">
-                    [[option]]
+                    <text-zone>[[option]]</text-zone>
                 </li>
             </ul>
         </div>

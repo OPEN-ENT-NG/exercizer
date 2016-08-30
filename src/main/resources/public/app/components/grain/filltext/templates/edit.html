@@ -1,0 +1,34 @@
+<div class="row vertical-spacing">
+    <div class="row">
+        <h3>Types de réponses</h3>
+        <div class="row">
+            <form>
+                <input type="radio" name="answerType"
+                       ng-model="grain.grain_data.custom_data.answersType"
+                       ng-change="switchTo('text')" value="text" />
+                Saisie libre
+                <input type="radio" name="answerType"
+                       ng-model="grain.grain_data.custom_data.answersType"
+                       ng-change="switchTo('list')" value="list" />
+                Liste déroulante
+                <input type="radio" name="answerType"
+                       ng-model="grain.grain_data.custom_data.answersType"
+                       ng-change="switchTo('drag')" value="drag" />
+                Glisser-déposer
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <editor class="fill-text" ng-model="grain.grain_data.custom_data.htmlContent" inline></editor>
+    </div>
+    <div class="options" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
+        <ul>
+            <li ng-repeat="option in grain.grain_data.custom_data.options">
+                <text-zone>
+                    <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                    [[option]]
+                </text-zone>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -2,18 +2,21 @@
     <div class="row">
         <h3>Types de réponses</h3>
         <div class="row">
-            <input type="radio" name="answerType" 
-                   ng-model="grain.grain_data.custom_data.answersType"
-                   ng-change="switchTo('text')" value="text" /> 
-            Saisie libre
-            <input type="radio" name="answerType" 
-                   ng-model="grain.grain_data.custom_data.answersType"
-                   ng-change="switchTo('list')" value="list" /> 
-            Liste déroulante
-            <input type="radio" name="answerType" 
-                   ng-model="grain.grain_data.custom_data.answersType"
-                   ng-change="switchTo('drag')" value="drag" /> 
-            Glisser-déposer
+            <form>
+                <input type="radio" name="answerType"
+                       ng-model="grain.grain_data.custom_data.answersType"
+                       ng-change="switchTo('text')" value="text" />
+                Saisie libre
+                <input type="radio" name="answerType"
+                       ng-model="grain.grain_data.custom_data.answersType"
+                       ng-change="switchTo('list')" value="list" />
+                Liste déroulante
+                <input type="radio" name="answerType"
+                       ng-model="grain.grain_data.custom_data.answersType"
+                       ng-change="switchTo('drag')" value="drag" />
+                Glisser-déposer
+            </form>
+            
         </div>
     </div>
     <div class="row">
@@ -21,9 +24,10 @@
             <div class="image-container">
                 <img ng-src="[[grain.grain_data.custom_data.guideImage]]" />
             </div>
-            <placed-block ng-repeat="textZone in grain.grain_data.custom_data.textZones"
+            <placed-block ng-repeat="textZone in grain.grain_data.custom_data.zones"
                             draggable x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
                 <text-zone>
+                    <i class="close" ng-click="removeZone(textZone)"></i>
                     <i class="edit" ng-click="editZone(textZone)"></i>
                     [[textZone.answer]]
                 </text-zone>
@@ -39,9 +43,13 @@
 
         <div class="options">
             <ul>
-                <li ng-repeat="option in displayState.editedTextZone.options">
-                    [[option]]
-                    <i class="close" ng-click="removeOption(displayState.editedTextZone, option)"></i>
+                <li ng-repeat="option in displayState.editedTextZone.options"
+                ng-click="displayState.editedTextZone.answer = option;">
+                    <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
+                        <i class="close" ng-click="removeOption(displayState.editedTextZone, option)"></i>
+                        [[option]]
+                    </text-zone>
+                    
                 </li>
             </ul>
             <div class="row add-option">
@@ -68,10 +76,11 @@
         <div class="options">
             <ul>
                 <li ng-repeat="option in grain.grain_data.custom_data.options"
-                    ng-class="{ selected: option === displayState.editedTextZone.answer }"
                     ng-click="displayState.editedTextZone.answer = option;">
-                    [[option]]
-                    <i class="remove" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                    <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
+                        <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                        [[option]]
+                    </text-zone>
                 </li>
             </ul>
             <div class="row add-option">
@@ -114,5 +123,16 @@
     <div class="row">
         <button class="cancel" ng-click="displayState.changeBackground = true">Modifier le fond</button>
         <button ng-click="editZone()">Ajouter une zone à compléter</button>
+    </div>
+    <div class="options" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
+        <ul>
+            <li 
+                ng-repeat="option in grain.grain_data.custom_data.options">
+                <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
+                    <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                    [[option]]
+                </text-zone>
+            </li>
+        </ul>
     </div>
 </div>
