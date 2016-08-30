@@ -50,6 +50,12 @@ directives.push(
 
                     scope.dropToLeft = function (targetItem, $originalEvent) {
                         scope.setHover(null);
+                        if(targetItem.text_left){
+                            scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
+                                item : angular.copy(targetItem.text_left),
+                                rank : 0.5 - Math.random()
+                            });
+                        }
                         var dataField = DragService.dropConditionFunction(targetItem, $originalEvent);
                         var originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
                         targetItem.text_left = angular.copy(originalItem.item);
@@ -61,6 +67,12 @@ directives.push(
 
                     scope.dropToRight = function (targetItem, $originalEvent) {
                         scope.setHover(null);
+                        if(targetItem.text_right){
+                            scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
+                                item : angular.copy(targetItem.text_right),
+                                rank : 0.5 - Math.random()
+                            });
+                        }
                         var dataField = DragService.dropConditionFunction(targetItem, $originalEvent);
                         var originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
                         targetItem.text_right = angular.copy(originalItem.item);
