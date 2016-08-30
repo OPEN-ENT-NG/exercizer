@@ -152,7 +152,8 @@
                             <!-- GRAIN STATEMENT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
                                 <label>Énoncé de la question :</label>
-                                <editor data-ng-model="grain.grain_data.statement" inline class="small-editor"></editor>
+                                <!--<editor data-ng-model="grain.grain_data.statement" inline class="small-editor"></editor>-->
+                                <custom-editor text="grain.grain_data.statement" grain="grain"></custom-editor>
                             </div>
 
                             <!-- GRAIN DOCUMENT LIST -->
