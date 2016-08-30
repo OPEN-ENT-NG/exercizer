@@ -213,13 +213,21 @@ class GrainCopyService implements IGrainCopyService {
                             }
                         });
                     } else {
+                        grainCopy.grain_copy_data.custom_copy_data.all_possible_answer = [];
                         angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function (correct_answer) {
                             grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.push({
-                                text_left: "",
-                                text_right: correct_answer.text_right
-                            })
+                                text_left: null,
+                                text_right: null
+                            });
+                            grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
+                                item: correct_answer.text_left,
+                                rank: 0.5 - Math.random()
+                            });
+                            grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
+                                item: correct_answer.text_right,
+                                rank: 0.5 - Math.random()
+                            });
                         });
-
                     }
                 }
 

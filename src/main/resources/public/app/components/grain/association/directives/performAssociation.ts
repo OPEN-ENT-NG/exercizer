@@ -12,12 +12,13 @@ directives.push(
 
                     scope.data = {
                         hover : []
-
                     };
 
-                    scope.setHover = function(index){
+                    scope.setHover = function(index , right = false, left = false){
                         angular.forEach(scope.data.hover, function(current_hover, key){
                             current_hover.bool = (key == index);
+                            current_hover.left = left && (key == index);
+                            current_hover.right = right && (key == index);
                         });
                         scope.$apply();
 
@@ -45,17 +46,71 @@ directives.push(
                         scope.resetPossibleAnswerLeftList();
                         scope.$apply();
                         scope.updateGrainCopy();
-
                     };
 
-                    scope.dropConditionFunction = function (targetItem, $originalEvent, index) {
-                        scope.setHover(index);
+                    scope.dropToLeft = function (targetItem, $originalEvent) {
+                        scope.setHover(null);
+                        var dataField = DragService.dropConditionFunction(targetItem, $originalEvent);
+                        var originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
+                        targetItem.text_left = angular.copy(originalItem.item);
+                        //scope.resetPossibleAnswerLeftList();
+                        scope.$apply();
+                        scope.all_possible_answer_pop(targetItem.text_left);
+                        scope.updateGrainCopy();
+                    };
+
+                    scope.dropToRight = function (targetItem, $originalEvent) {
+                        scope.setHover(null);
+                        var dataField = DragService.dropConditionFunction(targetItem, $originalEvent);
+                        var originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
+                        targetItem.text_right = angular.copy(originalItem.item);
+                        //scope.resetPossibleAnswerLeftList();
+                        scope.$apply();
+                        scope.all_possible_answer_pop(targetItem.text_right);
+                        scope.updateGrainCopy();
+                    };
+
+                    scope.all_possible_answer_pop = function(item, left, right){
+                        var index = null;
+                        angular.forEach(scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer, function(current, key){
+                            if(item == current.item){
+                                index = key;
+                            }
+                        });
+                        if(index !== null){
+                            scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.splice(index, 1);
+                            scope.$apply();
+                        } else{
+                            console.error('not found');
+                        }
+                    };
+
+                    scope.dropConditionFunction = function (targetItem, $originalEvent, index, right , left ) {
+                        scope.setHover(index, right, left);
                         return DragService.dropConditionFunction(targetItem, $originalEvent);
                     };
 
                     scope.deleteFilledAnswer = function(filled_answer){
                         filled_answer.text_right = null;
                         scope.resetPossibleAnswerLeftList();
+                    };
+
+                    scope.deleteFilledAnswerLeft = function(filled_answer){
+                        scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
+                            item : angular.copy(filled_answer.text_left),
+                            rank : 0.5 - Math.random()
+                        });
+                        filled_answer.text_left= null;
+
+                    };
+
+                    scope.deleteFilledAnswerRight = function(filled_answer){
+                        scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
+                            item : angular.copy(filled_answer.text_right),
+                            rank : 0.5 - Math.random()
+                        });
+                        filled_answer.text_right = null;
+
                     };
 
                     scope.resetPossibleAnswerLeftList = function(){
@@ -75,45 +130,8 @@ directives.push(
                             }
                         });
                     };
-
                     scope.resetPossibleAnswerLeftList();
 
-
-                    /*scope.isAlreadySet = function(array_filtered) {
-                        return function (possible_answer) {
-                            var number_possible = 0;
-                            angular.forEach(scope.grainCopy.grain_copy_data.custom_copy_data.possible_answer_list, function(current_possisble_answer){
-                                if(possible_answer.text_right == current_possisble_answer.text_right){
-                                    number_possible ++;
-                                }
-                            });
-
-                            var number_filled = 0;
-                            angular.forEach(scope.grainCopy.grain_copy_data.custom_copy_data.filled_answer_list, function(current_filled_answer){
-                                if(possible_answer.text_right == current_filled_answer.text_right){
-                                    number_filled ++;
-                                }
-                            });
-
-                            var number_filtered = null;
-                            if(array_filtered !== 'undefined'){
-                                number_filtered = 0;
-                                angular.forEach(array_filtered, function(current_filtered_answer){
-                                    if(possible_answer.text_right == current_filtered_answer.text_right){
-                                        number_filtered ++;
-                                    }
-                                });
-                            }
-
-                            if(number_filled >= number_possible){
-                                return false;
-                            } else{
-                                if(number_filtered !== null){
-
-                                }
-                            }
-                        };
-                    };*/
                 }
             };
         }]
