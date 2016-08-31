@@ -29,7 +29,7 @@ class QcmService implements IAutomaticCorrection {
                 } else {
                     // response is not check and good
                     // in this case the answer is not good
-                    isCorrectReturnArray[key] = false;
+                    isCorrectReturnArray[key] = undefined;
 
                 }
 

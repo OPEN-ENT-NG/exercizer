@@ -20,8 +20,10 @@
             );
         });
 
+        var nbPoints = (_.filter(textZonesCorrection).length / textZonesCorrection.length) * grainScheduled.grain_data.max_score;
+
         return {
-            calculated_score: textZonesCorrection.indexOf(false) === -1 ? grainScheduled.grain_data.max_score : 0,
+            calculated_score: nbPoints,
             answers_result: {
                 correction: textZonesCorrection
             }
