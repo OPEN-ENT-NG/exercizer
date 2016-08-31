@@ -103,7 +103,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
             if (_userProfile === studentProfile) {
                 template.open('main', 'perform-subject-copy');
             } else if (_userProfile === teacherProfile) {
-                template.open('main', 'teacher-dashboard');
+                template.open('main', 'perform-subject-copy');
             } else {
                 template.open('main', '401-exercizer');
             }
