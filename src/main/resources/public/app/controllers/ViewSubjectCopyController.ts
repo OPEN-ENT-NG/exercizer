@@ -11,7 +11,7 @@ class ViewSubjectCopyController {
         'GrainScheduledService',
         'GrainCopyService',
         'GrainTypeService',
-        'UtilsService'
+        'AccessService'
     ];
 
     private _subjectScheduled:ISubjectScheduled;
