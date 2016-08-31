@@ -233,6 +233,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('FolderService', FolderService );
         module.service('DateService', DateService );
         module.service('GroupService', GroupService );
+        module.service('AccessService', AccessService );
 
         /**
          * Controllers

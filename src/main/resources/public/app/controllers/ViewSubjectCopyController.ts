@@ -11,6 +11,7 @@ class ViewSubjectCopyController {
         'GrainScheduledService',
         'GrainCopyService',
         'GrainTypeService',
+        'UtilsService'
     ];
 
     private _subjectScheduled:ISubjectScheduled;
@@ -33,7 +34,8 @@ class ViewSubjectCopyController {
         private _subjectCopyService:ISubjectCopyService,
         private _grainScheduledService:IGrainScheduledService,
         private _grainCopyService:IGrainCopyService,
-        private _grainTypeService:IGrainTypeService
+        private _grainTypeService:IGrainTypeService,
+        private _accessService:IAccessService
     ) {
         this._$scope = _$scope;
         this._$location = _$location;

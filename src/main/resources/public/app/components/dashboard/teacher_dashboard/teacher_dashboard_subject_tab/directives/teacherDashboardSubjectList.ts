@@ -1,8 +1,8 @@
 directives.push(
     {
         name: 'teacherDashboardSubjectList',
-        injections: ['SubjectService', 'FolderService', 'DragService', '$location',
-            (SubjectService, FolderService, DragService, $location) => {
+        injections: ['SubjectService', 'FolderService', 'DragService', '$location','AccessService',
+            (SubjectService, FolderService, DragService, $location, AccessService) => {
                 return {
                     restrict: 'E',
                     scope: {
@@ -118,7 +118,20 @@ directives.push(
 
                         scope.clickOnSubjectTitle = function (subject) {
                             if (subject.id) {
-                                $location.path('/subject/edit/' + subject.id);
+                                if(model.me.hasRight(subject, 'owner')){
+                                    //console.log('owner')
+                                    $location.path('/subject/edit/' + subject.id);
+                                } else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager)){
+                                    //console.log('manager');
+                                    $location.path('/subject/edit/' + subject.id);
+                                } else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)){
+                                    //console.log('contrib');
+                                    $location.path('/subject/edit/' + subject.id);
+                                } else{
+                                    //console.log('read');
+                                    AccessService.reader = true;
+                                    $location.path('/subject/copy/preview/perform/' + subject.id);
+                                }
                             }
                         };
                         scope.viewPreview = function (subject) {
