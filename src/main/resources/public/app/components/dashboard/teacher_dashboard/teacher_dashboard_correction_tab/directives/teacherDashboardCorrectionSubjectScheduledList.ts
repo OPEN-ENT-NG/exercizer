@@ -19,6 +19,7 @@ directives.push(
                     scope.dateAYearshAgo = DateService.addDays(scope.today, -365);
                     scope.dateInAYears = DateService.addDays(scope.today, 365);
                     scope.search = {
+                        groupList: [],
                         beginDate : scope.dateAYearshAgo,
                         endDate : scope.dateInAYears
                     };
@@ -33,23 +34,21 @@ directives.push(
                             scope.subjectScheduledList = SubjectScheduledService.getList();
                             if (scope.subjectScheduledList.length !== 0) {
                                 // get auto complete
+                                scope.autocomplete = {
+                                    groupList: createListAutoComplete(scope.subjectScheduledList)
+                                };
                                 var subjectId = scope.subjectScheduledList[0].subject_id;
                                 SubjectService.getByIdEvenDeleted(subjectId).then(
                                     function(data){
                                         var subject = data;
                                         if (subject instanceof Subject) {
-                                            GroupService.getClassFromStructures(model.me.structures).then(
-                                                function(data){
-                                                    //console.log(data);
-                                                }
-                                            );
-                                            GroupService.getList(subject).then(
+                                            /*GroupService.getList(subject).then(
                                                 function (data) {
                                                     scope.autocomplete = {
                                                         groupList: createListAutoComplete(data.groups.visibles)
                                                     }
                                                 }
-                                            )
+                                            )*/
                                         } else {
                                             console.error(subject, 'is not an instance of Subject');
                                             throw "";
@@ -60,17 +59,28 @@ directives.push(
                         }
                     );
 
-                    function createListAutoComplete(list) {
+                    function createListAutoComplete(subjectScheduledList) {
                         var array = [];
-                        angular.forEach(list, function (value) {
-                            var obj = {
-                                name: value.name,
-                                id: value.id,
-                                toString: function () {
-                                    return this.name;
+                        angular.forEach(subjectScheduledList, function (subjectScheduled) {
+                            angular.forEach(subjectScheduled.scheduled_at.groupList, function(group){
+                                var obj = {
+                                    name: group.name,
+                                    id: group._id,
+                                    toString: function () {
+                                        return this.name;
+                                    }
+                                };
+                                var isSet = false;
+                                angular.forEach(array, function(alreadySet){
+                                    if(obj.id == alreadySet.id){
+                                        isSet = true;
+                                    }
+                                });
+                                if(isSet === false){
+                                    array.push(obj);
                                 }
-                            };
-                            array.push(obj);
+                            })
+
                         });
                         return array;
                     }
@@ -136,11 +146,17 @@ directives.push(
 
                     // autocomplete
                     scope.clickOnItem = function (selectedItem) {
-                        scope.search.groupSelected = selectedItem;
+                        if(scope.search.groupList.indexOf(selectedItem) != -1){
+                            scope.search.groupList.splice(scope.search.groupList.indexOf(selectedItem), 1);
+                        } else{
+                            scope.search.groupList.push(selectedItem);
+                        }
                     };
 
-                    scope.resetGroupSelected = function () {
-                        scope.search.groupSelected = null;
+                    scope.isGroupSelected = function(item){
+                        if(scope.search.groupList.indexOf(item) != -1){
+                            return 'custom-selected'
+                        }
                     };
 
                     scope.clickFilter = function (filter) {
@@ -175,16 +191,20 @@ directives.push(
                             return DateService.compare_after(dueDate, begin, true) && DateService.compare_after(end, dueDate, true);
                         }
                     };
-                    scope.filterOnGroupSelected = function (groupSelected) {
+                    scope.filterOnGroupSelected = function (groupSelectedList) {
                         return function (subjectScheduled) {
-                            if (!groupSelected) {
+                            if (!groupSelectedList || groupSelectedList.length == 0) {
+
                                 return true;
                             } else {
                                 var res = false;
                                 angular.forEach(subjectScheduled.scheduled_at.groupList, function (group) {
-                                    if (group._id == groupSelected.id) {
-                                        res = true
-                                    }
+                                    angular.forEach(groupSelectedList, function(groupSelected){
+                                        if (group._id == groupSelected.id) {
+                                            res = true
+                                        }
+                                    });
+
                                 });
                                 return res;
 

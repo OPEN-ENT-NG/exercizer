@@ -70,7 +70,7 @@
     text-align: center;
 }
 
-.custom-filter-button.custom-selected, .custom-filter-button-library.custom-selected {
+.custom-filter-button.custom-selected, .custom-filter-button-library.custom-selected, .custom-filter-button-correction.custom-selected {
     background-color  : #FF8500;
     color: white;
 }
