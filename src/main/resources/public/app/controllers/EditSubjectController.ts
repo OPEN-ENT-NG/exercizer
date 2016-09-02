@@ -143,12 +143,10 @@ class EditSubjectController {
     };
 
     public getStatementTrustedHtml = function(grain:IGrain) {
-        if (angular.isUndefined(this._trustedHtmlStatementMap[grain.id])  && grain.grain_data.custom_data && grain.grain_data.custom_data.statement) {
+        if (angular.isUndefined(this._trustedHtmlStatementMap[grain.id]) && grain.grain_data.custom_data) {
             this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
-            return this._trustedHtmlStatementMap[grain.id];
-        } else{
-            return "";
         }
+        return this._trustedHtmlStatementMap[grain.id];
     };
 
     public dropTo = function($originalEvent) {
@@ -218,10 +216,10 @@ class EditSubjectController {
             
         } else if (grain.grain_type_id === 3) {
 
-            if (angular.isUndefined(this._trustedHtmlStatementMap[grain.id]) && grain.grain_data.custom_data && grain.grain_data.custom_data.statement) {
+            if (angular.isUndefined(this._trustedHtmlStatementMap[grain.id]) && grain.grain_data.custom_data) {
                 this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
             } else{
-                this._trustedHtmlStatementMap[grain.id] = ""
+                this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml("")
             }
             //this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
         }
