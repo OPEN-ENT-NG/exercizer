@@ -101,7 +101,7 @@ directives.push(
 
                     scope.editZone = (zone: number) => {
                         scope.displayState.editZone = true;
-                        if(zone){
+                        if(zone !== undefined){
                             scope.displayState.editedTextZone = _.findWhere(scope.customData.zones, { id: zone });
                         }
                         else{
