@@ -30,5 +30,9 @@ class TeacherDashboardCorrectionTabController {
                 }
             });
 
+        $scope.$on('E_SEE_SUBJECT_SCHEDULED_ASSIGN_AT', function(event, data) {
+            $scope.$broadcast('SEE_SUBJECT_SCHEDULED_ASSIGN_AT', data);
+        });
+
     }
 }

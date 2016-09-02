@@ -18,7 +18,8 @@
                 </div>
                 <div class="row" style="max-height: 25vh;overflow-y: scroll">
                     <div class="twelve cell">
-                        <div data-ng-repeat="item in autocomplete.groupList" data-ng-click="clickOnItem(item)" class="custom-filter-button-correction" data-ng-class="isGroupSelected(item)">
+                        <div data-ng-repeat="item in autocomplete.groupList" data-ng-click="clickOnItem(item)"
+                             class="custom-filter-button-correction" data-ng-class="isGroupSelected(item)">
                             {{item.name}}
                         </div>
                     </div>
@@ -38,7 +39,7 @@
             <div class="cell horizontal-spacing custom-filter-button"
                  data-ng-click="clickFilter('notCorrected')"
                  data-ng-class="filerIsSelected(search.filter, 'notCorrected')"
-             >
+            >
                 <span>Non corrigés</span>
             </div>
             <div class="cell" style="margin-top: 10px;">
@@ -57,8 +58,10 @@
 
 
             <div class="cell right-magnet" data-ng-init="displayList = 'domino'">
-                <i data-ng-click="displayList = 'array'" class="show-list" data-ng-class="{selected: displayList == 'array'}"></i>
-                <i data-ng-click="displayList = 'domino'" class="show-icons" data-ng-class="{selected: displayList == 'domino'}"></i>
+                <i data-ng-click="displayList = 'array'" class="show-list"
+                   data-ng-class="{selected: displayList == 'array'}"></i>
+                <i data-ng-click="displayList = 'domino'" class="show-icons"
+                   data-ng-class="{selected: displayList == 'domino'}"></i>
             </div>
         </div>
 
@@ -77,34 +80,53 @@
 
                         <section class="domino">
                             <div class="top">
-                                <img data-ng-src="[[getSubjectScheduledPicture(subjectScheduled)]]" class="absolute" />
+                                <img data-ng-src="[[getSubjectScheduledPicture(subjectScheduled)]]" class="absolute"/>
                             </div>
                             <div class="bottom">
                                 <div class="content">
                                     <div class="eight cell">
                                         <div class="row">
-                                            <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">[[ subjectScheduled.title ]]</strong>
+                                            <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">[[
+                                                subjectScheduled.title ]]</strong>
                                         </div>
                                         <div class="row">
-                                            Modifié le  [[ orderByCopyListModificationDate(subjectScheduled) | date:'dd/MM/yyyy' ]]
+                                            Modifié le [[ orderByCopyListModificationDate(subjectScheduled) |
+                                            date:'dd/MM/yyyy' ]]
                                         </div>
                                         <div class="row">
-                                            Pour le  [[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]
+                                            Pour le [[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]
                                         </div>
                                         <div class="row">
-                                            [[ numberOfCopySubmitted(subjectScheduled) ]] élève(s) sur [[ numberOfCopy(subjectScheduled) ]] ont rendu le devoir
+                                            [[ numberOfCopySubmitted(subjectScheduled) ]] élève(s) sur [[
+                                            numberOfCopy(subjectScheduled) ]] ont rendu le devoir
                                         </div>
-                                        <div class="row" data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}">
+                                        <div class="row"
+                                             data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}">
                                             [[ stateTextSubjectScheduled(subjectScheduled) ]]
                                         </div>
                                     </div>
                                     <div class="four cell">
-                                        <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
-                                            <h3>[[group.name]]</h3>
+                                        <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList |limitTo : 1">
+                                            <h3
+                                                    style="margin:0px;"
+                                                    data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                                    class="hover-orange"
+                                            >[[group.name]]</h3>
                                         </div>
-                                        <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList">
-                                            <h3>[[user.name]]</h3>
+                                        <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList |limitTo : 1">
+                                            <h3
+                                                    style="margin:0px;"
+                                                    data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                                    class="hover-orange"
+                                            >[[user.name]]</h3>
                                         </div>
+                                        <h3
+                                                style="margin:0px;"
+                                                data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                            class="hover-orange"
+                                            data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">
+                                            ...</h3>
+
                                     </div>
                                 </div>
                             </div>
@@ -125,10 +147,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr     data-ng-click="clickOnSubjectScheduled(subjectScheduled)"
+                        <tr
                                 data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)">
                             <td>
-                                <strong>[[ subjectScheduled.title ]]</strong>
+                                <strong
+                                        class="hover-orange"
+                                        data-ng-click="clickOnSubjectScheduled(subjectScheduled)"
+                                >[[ subjectScheduled.title ]]</strong>
                             </td>
                             <td>
                                 <span data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}">
@@ -142,12 +167,22 @@
                                 <span>[[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]</span>
                             </td>
                             <td class="four cell">
-                                <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
-                                    <span>[[group.name]]</span>
+                                <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList|limitTo : 1">
+                                    <span
+                                            data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                            class="hover-orange">[[group.name]]</span>
                                 </div>
-                                <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList">
-                                    <span>[[user.name]]</span>
+                                <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList|limitTo : 1">
+                                    <span
+                                            data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                            class="hover-orange">[[user.name]]</span>
                                 </div>
+                                <div>
+                                    <span data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                         class="hover-orange"
+                                         data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</span>
+                                </div>
+
                             </td>
                             <td>
                                 <span>[[ numberOfCopySubmitted(subjectScheduled) ]]</span>
@@ -158,5 +193,8 @@
                 </div>
             </div>
         </article>
+
     </section>
+    <subject-scheduled-assign-at></subject-scheduled-assign-at>
+
 </div>

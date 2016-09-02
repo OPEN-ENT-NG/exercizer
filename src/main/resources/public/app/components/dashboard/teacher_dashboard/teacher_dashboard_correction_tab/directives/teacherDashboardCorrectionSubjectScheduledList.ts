@@ -212,6 +212,10 @@ directives.push(
                         }
                     };
 
+                    scope.seeAllAssignAtList = function(subjectScheduled){
+                        scope.$emit('E_SEE_SUBJECT_SCHEDULED_ASSIGN_AT', {subjectScheduled : subjectScheduled});
+                    };
+
                     scope.filterOnGroupSelectedState = function(filter){
                         return function (subjectScheduled){
                             if(!filter){
