@@ -122,8 +122,8 @@
                                             </div>
                                         </div>
                                         <div class="bottom-locked eleven vertical-spacing-tripple">
-                                            <div class="cell">
-                                                <em class="high-importance">[[ subject.authors_contributors ]]</em>
+                                            <div class="cell" data-ng-if="subject.authors_contributors">
+                                                <em class="high-importance">Auteur et/ou contributeurs au sujet : [[ subject.authors_contributors ]]</em>
                                             </div>
                                             <div class="cell right-magnet">
                                                 <input type="checkbox"
