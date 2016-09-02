@@ -6,7 +6,7 @@
             ng-click="displayState.editedTextZone.answer = option;">
             <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
                 <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
-                [[option]]
+                <span>[[option]]</span>
             </text-zone>
         </li>
     </ul>

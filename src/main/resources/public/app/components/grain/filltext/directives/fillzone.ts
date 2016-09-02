@@ -7,11 +7,11 @@
                     zoneId: '@'
                 },
                 template: '<text-zone ng-class="{ success: optionData.correction && optionData.isCorrect, error: optionData.correction && !optionData.isCorrect }">' +
-                '<div ng-class="{ success: optionData.correction[$index], error: !optionData.correction[$index] }" ng-if="optionData.mode === \'view\'">[[optionData.zone.answer]]</div>' +
+                '<div ng-class="{ success: optionData.correction[$index], error: !optionData.correction[$index] }" ng-if="optionData.mode === \'view\'"><span>[[optionData.zone.answer]]</span></div>' +
                 '<input type="text" disabled placeholder="[[optionData.zone.answer]]" ng-if="optionData.mode === \'edit\'" />' +
                 '<input type="text" ng-if="optionData.mode === \'perform-text\'" ng-model="optionData.zone.answer" />' +
                 '<select ng-if="optionData.mode === \'perform-list\'" ng-options="o as o for o in optionData.zone.options" ng-model="optionData.zone.answer"></select>' +
-                '<div drag-item="optionData.zone" drop-item="answer($item)" ng-if="optionData.mode === \'perform-drag\'">[[optionData.zone.answer]]</div>' +
+                '<div drag-item="optionData.zone" drop-item="answer($item)" ng-if="optionData.mode === \'perform-drag\'"><span>[[optionData.zone.answer]]</span></div>' +
                 '</text-zone>',
                 link: function (scope, element, attributes) {
                     scope.optionData = {

@@ -11,7 +11,7 @@
             <placed-block ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones"
                             x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
                 <text-zone ng-class="{ success: correction[$index], error: !correction[$index] }">
-                    [[textZone.answer]]
+                    <span>[[textZone.answer]]</span>
                 </text-zone>
 
             </placed-block>

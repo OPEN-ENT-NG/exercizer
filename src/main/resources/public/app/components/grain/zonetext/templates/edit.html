@@ -29,7 +29,7 @@
                 <text-zone>
                     <i class="close" ng-click="removeZone(textZone)"></i>
                     <i class="edit" ng-click="editZone(textZone)"></i>
-                    [[textZone.answer]]
+                    <span>[[textZone.answer]]</span>
                 </text-zone>
 
             </placed-block>
@@ -47,7 +47,7 @@
                 ng-click="displayState.editedTextZone.answer = option;">
                     <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
                         <i class="close" ng-click="removeOption(displayState.editedTextZone, option)"></i>
-                        [[option]]
+                        <span>[[option]]</span>
                     </text-zone>
                     
                 </li>
@@ -79,7 +79,7 @@
                     ng-click="displayState.editedTextZone.answer = option;">
                     <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
                         <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
-                        [[option]]
+                        <span>[[option]]</span>
                     </text-zone>
                 </li>
             </ul>
@@ -130,7 +130,7 @@
                 ng-repeat="option in grain.grain_data.custom_data.options">
                 <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
                     <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
-                    [[option]]
+                    <span>[[option]]</span>
                 </text-zone>
             </li>
         </ul>
