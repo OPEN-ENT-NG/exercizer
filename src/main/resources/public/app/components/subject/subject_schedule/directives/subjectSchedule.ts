@@ -134,6 +134,16 @@ directives.push(
                                                             numberQuestion++;
                                                             if(!grain.grain_data.custom_data.correct_answer_list || grain.grain_data.custom_data.correct_answer_list.length === 0){
                                                                 validationGrain =  false;
+                                                            } else{
+                                                                var allFalse = true;
+                                                                angular.forEach(grain.grain_data.custom_data.correct_answer_list, function(current){
+                                                                    if(current.isChecked){
+                                                                        allFalse = false;
+                                                                    }
+                                                                });
+                                                                if(allFalse){
+                                                                    validationGrain = false;
+                                                                }
                                                             }
                                                             break;
                                                         case 8 :
