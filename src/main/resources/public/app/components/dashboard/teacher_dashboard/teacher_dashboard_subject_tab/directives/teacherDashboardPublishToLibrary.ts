@@ -144,8 +144,6 @@ directives.push(
                         scope.publish = function() {
                             if (!scope.hasAgreedToPublish) {
                                 notify.error('Vous devez acceptez de publier votre sujet en Creative Commons.')
-                            } else if (angular.isUndefined(StringISOHelper.toISO(scope.cc.authorsContributors))) {
-                                notify.error('Vous devez citez l\'auteur original et/ou les contributeurs du sujet.')
                             } else if (scope.selection.selectedSubjectLessonTypeId === null || scope.selection.selectedSubjectLessonTypeId === 'null' || scope.selection.selectedSubjectLessonLevelId === null || scope.selection.selectedSubjectLessonLevelId === 'null') {
                                 notify.error('Vous devez sélectionner une matière et un niveau.')
                             } else {
