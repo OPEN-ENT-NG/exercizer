@@ -31,13 +31,8 @@
         <div class="row options">
             <image-zone 
                 ng-click="displayState.editedIcon.answer = option; displayState.editZone = false;" 
-                ng-repeat="option in grain.grain_data.custom_data.options track by $index"
-                ng-click="addZone(option);">
-                <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                ng-repeat="option in grain.grain_data.custom_data.options track by $index">
                 <img ng-src="[[option]]?thumbnail=120x120" />
-            </image-zone>
-            <image-zone>
-                <button class="add-answer" ng-click="displayState.pickOption = true" >Ajouter une réponse</button>
             </image-zone>
         </div>
     </lightbox>
