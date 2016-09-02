@@ -41,6 +41,10 @@
     <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'list'" on-close="displayState.editZone = false">
         <h2>Réponses possibles</h2>
 
+        <div class="info row">
+            Cliquez sur une réponse pour définir la réponse valide
+        </div>
+
         <div class="options">
             <ul>
                 <li ng-repeat="option in displayState.editedTextZone.options"
@@ -72,6 +76,10 @@
     </lightbox>
     <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'drag'" on-close="displayState.editZone = false">
         <h2>Réponses possibles</h2>
+
+        <div class="info row">
+            Cliquez sur une réponse pour définir la réponse valide
+        </div>
 
         <div class="options">
             <ul>

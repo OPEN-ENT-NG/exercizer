@@ -1,5 +1,9 @@
 ﻿<h2>Réponses possibles</h2>
 
+<div class="info row">
+    Cliquez sur une réponse pour définir la réponse valide
+</div>
+
 <div class="options">
     <ul>
         <li ng-repeat="option in displayState.editedTextZone.options"
@@ -17,10 +21,10 @@
 </div>
 
 <div class="row">
-    <button class="right-magnet" ng-click="addElement(addZone());" ng-if="!displayState.editedTextZone.id">
+    <button class="right-magnet" ng-click="addElement(addZone());" ng-if="displayState.editedTextZone.id === undefined">
         <i18n>add</i18n>
     </button>
-    <button class="right-magnet" ng-if="displayState.editedTextZone.id" ng-click="displayState.editZone = false">
+    <button class="right-magnet" ng-if="displayState.editedTextZone.id !== undefined" ng-click="displayState.editZone = false; updateGrain()">
         <i18n>edit</i18n>
     </button>
 </div>
