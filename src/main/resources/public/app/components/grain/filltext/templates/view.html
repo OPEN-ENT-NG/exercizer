@@ -6,5 +6,9 @@
     <div class="row">
         <div bind-html="grainCopy.grain_copy_data.custom_copy_data.htmlContent"></div>
     </div>
-
+    
+    <grain-copy-footer data-grain-scheduled="grainScheduled"
+                       data-grain-copy="grainCopy"
+                       data-is-teacher="isTeacher">
+    </grain-copy-footer>
 </article>
