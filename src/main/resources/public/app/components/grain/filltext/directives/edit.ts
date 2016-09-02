@@ -32,6 +32,7 @@ let addEditorOption = () => {
                     }
 
                     instance.trigger('contentupdated');
+                    setTimeout(() => $('editor').trigger('save'), 500);
                 };
             }
         }
@@ -58,7 +59,7 @@ directives.push(
                         } as filltext.TextZone
                     };
 
-                    element.on('editor-blur', 'editor', () => {
+                    element.on('editor-blur, save', 'editor', () => {
                         var dropZones = [];
 
                         element.find('[contenteditable] fill-zone').each((i, zoneEl) => {
@@ -139,9 +140,16 @@ directives.push(
                             });
                         }
                         if (newType === 'list') {
-                            customData.zones.forEach((zone) => {
-                                zone.options = JSON.parse(JSON.stringify(customData.options));
-                            });
+                            if(customData.options.length > 0){
+                                customData.zones.forEach((zone) => {
+                                    zone.options = JSON.parse(JSON.stringify(customData.options));
+                                });
+                            }
+                            else{
+                                customData.zones.forEach((zone) => {
+                                    zone.options = [zone.answer];
+                                });
+                            }
                         }
                         scope.updateGrain();
                     };

@@ -7,7 +7,7 @@
         <button class="right-magnet" ng-if="!displayState.editedTextZone.id" ng-click="addElement(addZone());">
             <i18n>add</i18n>
         </button>
-        <button class="right-magnet" ng-if="displayState.editedTextZone.id" ng-click="displayState.editZone = false">
+        <button class="right-magnet" ng-if="displayState.editedTextZone.id" ng-click="displayState.editZone = false; updateGrain()">
             <i18n>edit</i18n>
         </button>
         <button class="cancel right-magnet" ng-click="displayState.editZone = false" type="button">

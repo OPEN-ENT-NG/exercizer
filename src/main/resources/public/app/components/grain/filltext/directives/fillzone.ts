@@ -6,41 +6,43 @@
                 scope: {
                     zoneId: '@'
                 },
-                template: '<text-zone ng-class="{ success: correction && isCorrect, error: correction && !isCorrect }">' +
-                '<div ng-class="{ success: correction[$index], error: !correction[$index] }" ng-if="mode === \'view\'">[[zone.answer]]</div>' +
-                '<input type="text" disabled placeholder= "[[zone.answer]]" ng-if="mode === \'edit\'" />' +
-                '<input type="text" ng-if="mode === \'perform-text\'" ng-model="zone.answer" />' +
-                '<select ng-if="mode === \'perform-list\'" ng-options="o as o for o in zone.options" ng-model="zone.answer"></select>' +
-                '<div drag-item="zone" drop-item="answer($item)" ng-if="mode === \'perform-drag\'">[[zone.answer]]</div>' +
+                template: '<text-zone ng-class="{ success: optionData.correction && optionData.isCorrect, error: optionData.correction && !optionData.isCorrect }">' +
+                '<div ng-class="{ success: optionData.correction[$index], error: !optionData.correction[$index] }" ng-if="optionData.mode === \'view\'">[[optionData.zone.answer]]</div>' +
+                '<input type="text" disabled placeholder="[[optionData.zone.answer]]" ng-if="optionData.mode === \'edit\'" />' +
+                '<input type="text" ng-if="optionData.mode === \'perform-text\'" ng-model="optionData.zone.answer" />' +
+                '<select ng-if="optionData.mode === \'perform-list\'" ng-options="o as o for o in optionData.zone.options" ng-model="optionData.zone.answer"></select>' +
+                '<div drag-item="optionData.zone" drop-item="answer($item)" ng-if="optionData.mode === \'perform-drag\'">[[optionData.zone.answer]]</div>' +
                 '</text-zone>',
                 link: function (scope, element, attributes) {
+                    scope.optionData = {
+                        zoneId: parseInt(scope.zoneId),
+                        zone: _.findWhere(scope.$parent.$eval('customData.zones'), { id: parseInt(scope.zoneId) }),
+                        correction: scope.$parent.$eval('correction')
+                    }
                     setTimeout(() => {
-                        scope.mode = 'view';
+                        scope.optionData.mode = 'view';
                         if (element.parents('edit-fill-text').length > 0) {
-                            scope.mode = 'edit';
+                            scope.optionData.mode = 'edit';
                         }
                         if (element.parents('perform-fill-text').length > 0) {
-                            scope.mode = 'perform-' + scope.$parent.$eval('customData.answersType');
+                            scope.optionData.mode = 'perform-' + scope.$parent.$eval('customData.answersType');
                         }
                         scope.$apply();
                     }, 50);
                     
                     element.on('click', (e) => {
-                        scope.$parent.$eval('editZone(' + scope.zoneId + ')');
+                        scope.$parent.$eval('editZone(' + scope.optionData.zoneId + ')');
                         e.preventDefault();
-                        scope.$parent.$apply();
+                        scope.$apply();
                     });
-                    scope.zoneId = parseInt(scope.zoneId);
-                    scope.zone = _.findWhere(scope.$parent.$eval('customData.zones'), { id: scope.zoneId });
-                    scope.correction = scope.$parent.$eval('correction');
                     if (scope.correction) {
                         let index = scope.$parent.$eval('customData.zones').indexOf(scope.zone);
-                        scope.isCorrect = scope.correction[index];
+                        scope.optionData.isCorrect = scope.correction[index];
                     }
 
                     scope.answer = ($item) => {
                         scope.$parent.removeAnswer(scope.zone);
-                        scope.zone.answer = $item;
+                        scope.optionData.zone.answer = $item;
                         scope.$parent.usedAnswers.push($item);
                     };
                 }
