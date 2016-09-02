@@ -29,8 +29,8 @@ module zoneimage {
         addZone(zone: IconZone){
             if(!zone.position){
                 zone.position = {
-                    x: 0,
-                    y: 0,
+                    x: this.zones.length * 15,
+                    y: this.zones.length * 15,
                     z: this.zones.length
                 };
             }
