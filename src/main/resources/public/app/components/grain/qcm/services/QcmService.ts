@@ -4,6 +4,7 @@ class QcmService implements IAutomaticCorrection {
 
     public automaticCorrection(grainScheduled:IGrainScheduled, grainCopy:IGrainCopy):{calculated_score:number, answers_result:{}} {
 
+        console.log('debug');
         var numberGoodAnswer : number = 0,
             numberRecognizedAnswer : number = 0,
             atLeastOneError =  false,
@@ -30,6 +31,7 @@ class QcmService implements IAutomaticCorrection {
                 } else {
                     // response is not check and good
                     // in this case the answer is not good
+                    isCorrectReturnArray[key] = false;
 
                 }
 
@@ -44,8 +46,10 @@ class QcmService implements IAutomaticCorrection {
 
                 if(grainScheduled.grain_data.custom_data.correct_answer_list[key].isChecked){
                     // response is check and not good
+                    isCorrectReturnArray[key] = true;
                 } else {
                     // response is not check and not good
+                    isCorrectReturnArray[key] = false;
 
                 }
             }

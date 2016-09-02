@@ -103,7 +103,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
             if (_userProfile === studentProfile) {
                 template.open('main', 'perform-subject-copy');
             } else if (_userProfile === teacherProfile) {
-                template.open('main', 'teacher-dashboard');
+                template.open('main', 'perform-subject-copy');
             } else {
                 template.open('main', '401-exercizer');
             }
@@ -143,6 +143,23 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 (window as any).AngularExtensions = {
     init: function(module){
 
+        module.config(['$httpProvider', function($httpProvider) {
+            //initialize get if not there
+            if (!$httpProvider.defaults.headers.get) {
+                $httpProvider.defaults.headers.get = {};
+            }
+
+            // Answer edited to include suggestions from comments
+            // because previous version of code introduced browser-related errors
+
+            //disable IE ajax request caching
+            $httpProvider.defaults.headers.get['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+            // extra
+            $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
+            $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
+        }]);
+
+
         /**
          * Filters
          */
@@ -178,10 +195,16 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
 
         module.filter('truncateNumber', function () {
             return function (item) {
-                if(parseFloat(item) == parseInt(item)){
-                    return item;
+                if(!item){
+                    // if item is not a number return an empty string
+                    return ""
+                } else {
+                    if(parseFloat(item) == parseInt(item)){
+                        return item;
+                    }
+                    return floorFigure(parseFloat(item), 2);
                 }
-                return floorFigure(parseFloat(item), 2);
+
             };
         });
 
@@ -210,6 +233,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('FolderService', FolderService );
         module.service('DateService', DateService );
         module.service('GroupService', GroupService );
+        module.service('AccessService', AccessService );
 
         /**
          * Controllers

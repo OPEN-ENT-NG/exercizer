@@ -12,6 +12,7 @@ class PerformSubjectCopyController {
         'GrainScheduledService',
         'GrainCopyService',
         'GrainTypeService',
+        'AccessService'
     ];
 
     private _subjectScheduled:ISubjectScheduled;
@@ -20,6 +21,7 @@ class PerformSubjectCopyController {
     private _grainScheduledList:IGrainScheduled[];
     private _previewing:boolean;
     private _previewingFromLibrary:boolean;
+    private _previewFromReader:boolean;
     private _hasDataLoaded:boolean;
 
     constructor
@@ -34,7 +36,8 @@ class PerformSubjectCopyController {
         private _grainService:IGrainService,
         private _grainScheduledService:IGrainScheduledService,
         private _grainCopyService:IGrainCopyService,
-        private _grainTypeService:IGrainTypeService
+        private _grainTypeService:IGrainTypeService,
+        private _accessService:IAccessService
     ) {
         this._$scope = _$scope;
         this._$location = _$location;
@@ -44,7 +47,7 @@ class PerformSubjectCopyController {
         this._subjectCopyService =_subjectCopyService;
         this._grainScheduledService = _grainScheduledService;
         this._grainCopyService = _grainCopyService;
-        this._grainTypeService = _grainTypeService;
+        this._accessService = _accessService;
         this._hasDataLoaded = false;
 
         var self = this,
@@ -55,6 +58,7 @@ class PerformSubjectCopyController {
             this._subjectService.resolve().then(function() {
                 var subject = self._subjectService.getById(subjectId);
 
+                self._previewFromReader = !!self._accessService.reader;
                 if (!angular.isUndefined(subject)) {
                     self._preview(subject);
                 } else if (!angular.isUndefined(self._subjectLibraryService.tmpSubjectForPreview)) {
@@ -255,6 +259,10 @@ class PerformSubjectCopyController {
 
     get previewingFromLibrary():boolean {
         return this._previewingFromLibrary;
+    }
+
+    get previewFromReader():boolean {
+        return this._previewFromReader;
     }
 
     get hasDataLoaded():boolean {

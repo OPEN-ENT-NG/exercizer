@@ -88,6 +88,10 @@ directives.push(
                         }
                     };
 
+                    scope.canCorrectACopyAsTeacher = function(copy){
+                        return SubjectCopyService.canCorrectACopyAsTeacher(scope.selectedSubjectScheduled, copy);
+                    };
+
                     scope.copyStateText = function(copy){
                         return SubjectCopyService.copyStateText(copy);
                     };

@@ -38,11 +38,11 @@ class GroupService implements IGroupService {
             } else {
                 var request = {
                     method: 'GET',
-                    url: '/directory/structure/'+structureId
+                    url: '/userbook/structure/'+structureId
                 };
                 promises.push(this._$http(request).then(
-                    function(res) {
-                        self._groupByStructureId[structureId] = res.data;
+                    function(http_response) {
+                        self._groupByStructureId[structureId] = http_response.data;
                         angular.forEach(this._groupByStructureId[structureId], function(resItem){
                             res.push(resItem);
                         })

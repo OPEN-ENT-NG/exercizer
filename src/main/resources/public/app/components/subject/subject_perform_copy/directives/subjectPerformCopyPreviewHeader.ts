@@ -9,7 +9,8 @@ directives.push(
                     subjectCopy: '=',
                     grainScheduledList: '=',
                     grainCopyList: '=',
-                    previewingFromLibrary: '='
+                    previewingFromLibrary: '=',
+                    previewingReader: '='
                 },
                 templateUrl: 'exercizer/public/app/components/subject/subject_perform_copy/templates/subject-perform-copy-preview-header.html',
                 link:(scope:any) => {
@@ -35,6 +36,10 @@ directives.push(
                             );
                         }
                     });
+
+                    scope.redirectToDashBoard = function() {
+                        $location.path('/dashboard');
+                    };
 
                     scope.redirectToTeacherDashboardLibraryTab = function() {
                         if (scope.previewingFromLibrary) {

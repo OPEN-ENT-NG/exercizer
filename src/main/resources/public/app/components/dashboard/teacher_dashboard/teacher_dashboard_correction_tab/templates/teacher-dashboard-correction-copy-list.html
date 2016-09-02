@@ -2,6 +2,12 @@
      <div class="cell">
           <h2> [[selectedSubjectScheduled.title]]</h2>
      </div>
+     <div class="cell">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     </div>
+     <div class="cell">
+          <h4> Pour le [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]</h4>
+     </div>
      <div class="cell right-magnet">
           <button data-ng-click="clickReturnSubjectScheduledList()" class="right-magnet cancel">
                Retour
@@ -23,10 +29,10 @@
           &nbsp;
      </div>
      <div class="cell">
-          Il reste [[numberCopyNotCorrected()]] copies à corriger
+          Il reste [[numberCopyNotCorrected()]] copie(s) à corriger
      </div>
      <div class="cell right-magnet">
-          [[numberCopySubmitted()]] élèves sur [[subjectCopyList.length]] ont rendu le devoir
+          [[numberCopySubmitted()]] élève(s) sur [[subjectCopyList.length]] ont rendu le devoir
      </div>
 
 </div>
@@ -39,13 +45,13 @@
                <th>État</span></th>
                <th>Date de rendu</th>
                <th>Auto-correction</th>
-               <th>Score finale</th>
+               <th>Score final</th>
           </tr>
           </thead>
           <tbody>
-          <tr data-ng-repeat="copy in subjectCopyList">
+          <tr data-ng-repeat="copy in subjectCopyList | orderBy: 'owner_username'">
                <td>
-                    <input type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
+                    <input data-ng-show="canCorrectACopyAsTeacher(copy)" type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                </td>
                <td data-ng-switch="selectTitle(copy)">
                     <span data-ng-switch-when="text">[[copy.owner_username]]</span>

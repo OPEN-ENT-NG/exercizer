@@ -16,12 +16,9 @@
                         </autocomplete>
                     </div>
                 </div>
-                <div class="row" data-ng-if="search.groupSelected">
-                    <h4 class="cell"><i style="margin-right: 10px;" data-ng-click="resetGroupSelected()" class="close"></i> [[search.groupSelected.name]]</h4>
-                </div>
                 <div class="row" style="max-height: 25vh;overflow-y: scroll">
                     <div class="twelve cell">
-                        <div data-ng-repeat="item in autocomplete.groupList" data-ng-click="clickOnItem(item)" class="custom-filter-button-correction">
+                        <div data-ng-repeat="item in autocomplete.groupList" data-ng-click="clickOnItem(item)" class="custom-filter-button-correction" data-ng-class="isGroupSelected(item)">
                             {{item.name}}
                         </div>
                     </div>
@@ -75,7 +72,7 @@
             <div class="row vertical-spacing">
                 <!-- list subject scheduled -->
                 <div class="fallen dominos" data-ng-show="displayList == 'domino'">
-                    <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)"
+                    <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)"
                          class="item" style="width: 100%; max-width: none;">
 
                         <section class="domino">
@@ -92,7 +89,10 @@
                                             Modifié le  [[ orderByCopyListModificationDate(subjectScheduled) | date:'dd/MM/yyyy' ]]
                                         </div>
                                         <div class="row">
-                                            [[ numberOfCopySubmitted(subjectScheduled) ]] élèves sur [[ numberOfCopy(subjectScheduled) ]] ont rendu le devoir
+                                            Pour le  [[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]
+                                        </div>
+                                        <div class="row">
+                                            [[ numberOfCopySubmitted(subjectScheduled) ]] élève(s) sur [[ numberOfCopy(subjectScheduled) ]] ont rendu le devoir
                                         </div>
                                         <div class="row" data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}">
                                             [[ stateTextSubjectScheduled(subjectScheduled) ]]
@@ -119,13 +119,14 @@
                             <th>Titre du sujet</th>
                             <th>État</th>
                             <th>Date de modification</th>
+                            <th>Date de fin</th>
                             <th>Groupe</th>
-                            <th>Élèves ayant rendu le devoir</th>
+                            <th>Élève(s) ayant rendu le devoir</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr     data-ng-click="clickOnSubjectScheduled(subjectScheduled)"
-                                data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupSelected) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)">
+                                data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)">
                             <td>
                                 <strong>[[ subjectScheduled.title ]]</strong>
                             </td>
@@ -136,6 +137,9 @@
                             </td>
                             <td>
                                 <span>[[ subjectScheduled.modified | date:'dd/MM/yyyy' ]]</span>
+                            </td>
+                            <td>
+                                <span>[[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]</span>
                             </td>
                             <td class="four cell">
                                 <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">

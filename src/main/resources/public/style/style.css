@@ -42,11 +42,14 @@
 .custom-filter-button {
     margin-right: 20px;
     border: 1px solid lightgray;
-    padding: 10px;
     background-color: lightgray;
     border-radius: 2px;
     min-width: 150px;
     text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 7px;
+    padding-top: 7px;
 }
 
 .custom-filter-button-library {
@@ -67,7 +70,7 @@
     text-align: center;
 }
 
-.custom-filter-button.custom-selected, .custom-filter-button-library.custom-selected {
+.custom-filter-button.custom-selected, .custom-filter-button-library.custom-selected, .custom-filter-button-correction.custom-selected {
     background-color  : #FF8500;
     color: white;
 }
@@ -133,4 +136,23 @@ body editor.small-editor.edit [contenteditable]:focus {
     max-height: none!important;
     min-height: 250px!important;
     overflow: visible;
+}
+
+.association-possible-answer-left{
+    border: 1px dashed black;
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    background-color: lightgray;
+}
+
+.association-possible-answer-left:hover{
+    border: 1px dashed #FF8500;
+    background-color: white;
+}
+
+.association-drop-hover{
+    border: 1px dashed #FF8500!important;
+    background-color: white;
 }
