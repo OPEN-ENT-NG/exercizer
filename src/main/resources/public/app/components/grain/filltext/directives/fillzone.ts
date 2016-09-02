@@ -44,7 +44,7 @@
                     
 
                     scope.answer = ($item) => {
-                        scope.$parent.removeAnswer(scope.zone);
+                        scope.$parent.removeAnswer(scope.optionData.zone);
                         scope.optionData.zone.answer = $item;
                         scope.$parent.usedAnswers.push($item);
                     };
