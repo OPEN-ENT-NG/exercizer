@@ -1,4 +1,4 @@
-﻿<h2>Valeurs proposées</h2>
+﻿<h2>Réponses possibles</h2>
 
 <div class="options">
     <ul>
@@ -16,8 +16,11 @@
     </div>
 </div>
 
-<div class="row" ng-if="!displayState.editedTextZone.id">
-    <button class="right-magnet" ng-click="addElement(addZone());">
+<div class="row">
+    <button class="right-magnet" ng-click="addElement(addZone());" ng-if="!displayState.editedTextZone.id">
         <i18n>add</i18n>
+    </button>
+    <button class="right-magnet" ng-if="displayState.editedTextZone.id" ng-click="displayState.editZone = false">
+        <i18n>edit</i18n>
     </button>
 </div>

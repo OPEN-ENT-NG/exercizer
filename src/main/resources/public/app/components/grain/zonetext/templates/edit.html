@@ -39,7 +39,7 @@
         <media-library ng-model="grain.grain_data.custom_data.guideImageFile" ng-change="displayState.changeBackground = false; updateGrain();" file-format="'img'"></media-library>
     </lightbox>
     <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'list'" on-close="displayState.editZone = false">
-        <h2>Valeurs proposées</h2>
+        <h2>Réponses possibles</h2>
 
         <div class="options">
             <ul>
@@ -71,7 +71,7 @@
         </div>
     </lightbox>
     <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'drag'" on-close="displayState.editZone = false">
-        <h2>Valeurs proposées</h2>
+        <h2>Réponses possibles</h2>
 
         <div class="options">
             <ul>
