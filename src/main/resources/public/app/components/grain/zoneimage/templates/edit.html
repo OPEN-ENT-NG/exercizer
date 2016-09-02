@@ -48,8 +48,8 @@
             <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
             <img ng-src="[[option]]?thumbnail=120x120" />
         </image-zone>
-        <image-zone>
-            <img skin-src="/img/illustrations/image-default.svg" ng-click="displayState.pickOption = true" />
+        <image-zone ng-click="displayState.pickOption = true">
+            <button class="add-answer">Ajouter une réponse</button>
         </image-zone>
     </div>
 </div>
