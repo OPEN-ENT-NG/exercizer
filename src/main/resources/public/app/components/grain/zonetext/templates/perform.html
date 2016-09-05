@@ -15,7 +15,7 @@
             >
                 <text-zone>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'text'">
-                        <input type="text" ng-model="textZone.answer" />
+                        <input type="text" ng-model="textZone.answer" complete-change="updateGrainCopy();" />
                     </div>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'list'">
                         <select ng-options="o as o for o in textZone.options" ng-model="textZone.answer" ng-change="apply()"></select>

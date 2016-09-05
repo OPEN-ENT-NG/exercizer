@@ -21,6 +21,7 @@ directives.push(
                         scope.removeAnswer(iconZone);
                         iconZone.answer = $item;
                         scope.usedAnswers.push($item);
+                        scope.updateGrainCopy();
                     };
 
                     scope.removeAnswer = ($item: zoneimage.IconZone) => {
@@ -30,6 +31,7 @@ directives.push(
                         var i = scope.usedAnswers.indexOf($item.answer);
                         scope.usedAnswers.splice(i, 1);
                         $item.answer = '';
+                        scope.updateGrainCopy();
                     };
 
                     scope.availableOption = (option) => scope.usedAnswers.indexOf(option) === -1;

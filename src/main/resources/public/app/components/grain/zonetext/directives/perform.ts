@@ -21,6 +21,7 @@ directives.push(
                         scope.removeAnswer(textZone);
                         textZone.answer = $item;
                         scope.usedAnswers.push($item);
+                        scope.updateGrainCopy();
                     };
 
                     scope.removeAnswer = ($item: zonetext.TextZone) => {
@@ -30,6 +31,7 @@ directives.push(
                         var i = scope.usedAnswers.indexOf($item.answer);
                         scope.usedAnswers.splice(i, 1);
                         $item.answer = '';
+                        scope.updateGrainCopy();
                     };
 
                     scope.availableOption = (option) => scope.usedAnswers.indexOf(option) === -1;
@@ -37,6 +39,7 @@ directives.push(
                     scope.apply = () => {
                         //workaround for AngularJs bug https://github.com/angular/angular.js/issues/7692
                         scope.$apply();
+                        scope.updateGrainCopy();
                     };
                 }
             };
