@@ -168,16 +168,8 @@ directives.push(
                                                                 validationGrain =  false;
                                                             }
                                                             break;
-                                                        case 10 :
-                                                            numberQuestion++;
-                                                            // TODO
-                                                            break;
-                                                        case 11 :
-                                                            numberQuestion++;
-                                                            // TODO
-                                                            break;
                                                         default :
-                                                            console.error("switch default for grain_type_id = ", grain.grain_type_id);
+                                                            numberQuestion++;
                                                     }
 
                                             });
