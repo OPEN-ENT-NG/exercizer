@@ -33,6 +33,11 @@ directives.push(
                     };
 
                     scope.availableOption = (option) => scope.usedAnswers.indexOf(option) === -1;
+
+                    scope.apply = () => {
+                        //workaround for AngularJs bug https://github.com/angular/angular.js/issues/7692
+                        scope.$apply();
+                    };
                 }
             };
         }]

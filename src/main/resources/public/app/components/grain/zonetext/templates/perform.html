@@ -18,7 +18,7 @@
                         <input type="text" ng-model="textZone.answer" />
                     </div>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'list'">
-                        <select ng-options="o as o for o in textZone.options" ng-model="textZone.answer"></select>
+                        <select ng-options="o as o for o in textZone.options" ng-model="textZone.answer" ng-change="apply()"></select>
                     </div>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
                         <div class="drop-zone" drop-item="answer(textZone, $item);" drag-item="textZone">
