@@ -47,6 +47,7 @@
                         scope.$parent.removeAnswer(scope.optionData.zone);
                         scope.optionData.zone.answer = $item;
                         scope.$parent.usedAnswers.push($item);
+                        scope.$parent.updateGrainCopy();
                     };
                 }
             }
