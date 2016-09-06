@@ -7,6 +7,8 @@
                     zoneId: '@'
                 },
                 template: '<text-zone ng-class="{ success: optionData.correction && optionData.isCorrect, error: optionData.correction && !optionData.isCorrect }">' +
+                '<i class="close" ng-click="removeFillZone($event)" ng-if="optionData.mode === \'edit\'"></i>' +
+                '<i class="edit" ng-if="optionData.mode === \'edit\'"></i>' +
                 '<div ng-if="optionData.mode === \'view\'"><span>[[optionData.zone.answer]]</span></div>' +
                 '<input type="text" disabled placeholder="[[optionData.zone.answer]]" ng-if="optionData.mode === \'edit\'" />' +
                 '<input type="text" ng-if="optionData.mode === \'perform-text\'" ng-model="optionData.zone.answer" />' +
@@ -14,14 +16,25 @@
                 '<div drag-item="optionData.zone" drop-item="answer($item)" ng-if="optionData.mode === \'perform-drag\'"><span>[[optionData.zone.answer]]</span></div>' +
                 '</text-zone>',
                 link: function (scope, element, attributes) {
+                    scope.removeFillZone = ($event) => {
+                        $event.stopPropagation();
+                        scope.$parent.$eval('customData.zones').forEach((zone) => {
+                            if(zone.id === parseInt(scope.zoneId)){
+                                scope.$parent.customData.removeZone(zone);
+                            }
+                        });
+
+                        element.remove();
+                    };
+
                     scope.optionData = {
                         zoneId: parseInt(scope.zoneId),
-                        zone: _.findWhere(scope.$parent.$eval('customData.zones'), { id: parseInt(scope.zoneId) }),
-                        correction: scope.$parent.$eval('correction')
+                        zone: _.findWhere(scope.$parent.customData.zones, { id: parseInt(scope.zoneId) }),
+                        correction: scope.$parent.correction
                     }
 
                     if (scope.optionData.correction) {
-                        let index = scope.$parent.$eval('customData.zones').indexOf(scope.optionData.zone);
+                        let index = scope.$parent.customData.zones.indexOf(scope.optionData.zone);
                         scope.optionData.isCorrect = scope.optionData.correction[index];
                     }
 
@@ -31,26 +44,26 @@
                             scope.optionData.mode = 'edit';
                         }
                         if (element.parents('perform-fill-text').length > 0) {
-                            scope.optionData.mode = 'perform-' + scope.$parent.$eval('customData.answersType');
+                            scope.optionData.mode = 'perform-' + scope.$parent.customData.answersType;
                         }
                         scope.$apply();
                     }, 50);
                     
-                    element.on('click', (e) => {
+                    element.on('click', '.edit', (e) => {
                         scope.$parent.$eval('editZone(' + scope.optionData.zoneId + ')');
                         e.preventDefault();
                         scope.$apply();
                     });
                     
                     element.on('change', 'input, select', () => {
-                        scope.$parent.$eval('updateGrainCopy()');
+                        scope.$parent.updateGrainCopy();
                     });
 
                     scope.answer = ($item) => {
                         scope.$parent.removeAnswer(scope.optionData.zone);
                         scope.optionData.zone.answer = $item;
                         scope.$parent.usedAnswers.push($item);
-                        scope.$parent.$eval('updateGrainCopy()');
+                        scope.$parent.updateGrainCopy();
                     };
                 }
             }
