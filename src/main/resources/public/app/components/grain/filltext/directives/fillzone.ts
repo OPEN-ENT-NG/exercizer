@@ -49,11 +49,14 @@
                         scope.$apply();
                     }, 50);
                     
-                    element.on('click', '.edit', (e) => {
-                        scope.$parent.$eval('editZone(' + scope.optionData.zoneId + ')');
+                    var openEdit = (e) => {
+                        scope.$parent.editZone(scope.optionData.zoneId);
                         e.preventDefault();
                         scope.$apply();
-                    });
+                    };
+
+                    element.on('click', '.edit', openEdit);
+                    element.on('click', openEdit);
                     
                     element.on('change', 'input, select', () => {
                         scope.$parent.updateGrainCopy();
