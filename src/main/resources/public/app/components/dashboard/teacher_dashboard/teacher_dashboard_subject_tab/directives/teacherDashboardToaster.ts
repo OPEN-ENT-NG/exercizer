@@ -95,7 +95,7 @@ directives.push(
                                     }
                                 },
                                 {
-                                    publicName : 'Programmer',
+                                    publicName : 'Distribuer',
                                     actionOnClick : function(){
                                         var subject = SubjectService.getById(scope.subjectList[0]);
                                         scope.$emit('E_SCHEDULE_SUBJECT', subject);
