@@ -2,5 +2,6 @@
     "exercizer": "Exercizer",
     "exercizer.assigncopy": "Assignation de copie",
     "exercizer.submitcopy": "Rendue de copie",
-    "exercizer.correctcopy": "Correction de copie"
+    "exercizer.correctcopy": "Correction de copie",
+    "exercizer.share": "Partage de sujet"
 }

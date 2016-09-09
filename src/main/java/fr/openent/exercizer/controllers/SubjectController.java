@@ -218,7 +218,7 @@ public class SubjectController extends ControllerHelper {
 	@ResourceFilter(ShareAndOwner.class)
 	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
 	public void shareSubmit(final HttpServerRequest request) {
-		super.shareJsonSubmit(request, null, false);
+		super.shareJsonSubmit(request, "share", false);
 	}
 
 	@Put("/subject/share/remove/:id")
