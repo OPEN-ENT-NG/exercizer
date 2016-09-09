@@ -1,7 +1,7 @@
 {
 	"main" : "fr.openent.exercizer.Exercizer",
 	"port" : 8105,
-	"app-name" : "Exercizer",
+	"app-name" : "Exercices et évaluations",
 	"app-address" : "/exercizer",
 	"app-icon" : "Exercizer-large",
 	"app-displayName" : "Exercizer",
