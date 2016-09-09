@@ -21,7 +21,6 @@ directives.push(
                             current_hover.right = right && (key == index);
                         });
                         scope.$apply();
-
                     };
 
 
@@ -29,8 +28,44 @@ directives.push(
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     };
 
+                    scope.dropTo = function ($item, targetItem, index) {
+                        scope.setHover(index);
+                        targetItem.text_right = angular.copy($item.text_right);
+                        scope.resetPossibleAnswerLeftList();
+                        scope.$apply();
+                        scope.updateGrainCopy();
+                    };
 
-                    scope.drag = function (possible_answer, $originalEvent) {
+                    scope.dropToLeft = function ($item, targetItem, index, right, left) {
+                        scope.setHover(index, right, left);
+                        if(targetItem.text_left){
+                            scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
+                                item : angular.copy(targetItem.text_left),
+                                rank : 0.5 - Math.random()
+                            });
+                        }
+                        targetItem.text_left = angular.copy($item.item);
+                        scope.$apply();
+                        scope.all_possible_answer_pop(targetItem.text_left);
+                        scope.updateGrainCopy();
+                    };
+
+                    scope.dropToRight = function ($item, targetItem, index, right, left) {
+                        scope.setHover(index, right, left);
+                        if(targetItem.text_right){
+                            scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
+                                item : angular.copy(targetItem.text_right),
+                                rank : 0.5 - Math.random()
+                            });
+                        }
+                        targetItem.text_right = angular.copy($item.item);
+                        scope.$apply();
+                        scope.all_possible_answer_pop(targetItem.text_right);
+                        scope.updateGrainCopy();
+                    };
+
+
+                    /*scope.drag = function (possible_answer, $originalEvent) {
                         try {
                             $originalEvent.dataTransfer.setData('application/json', JSON.stringify(possible_answer));
                         } catch (e) {
@@ -82,6 +117,13 @@ directives.push(
                         scope.updateGrainCopy();
                     };
 
+                     scope.dropConditionFunction = function (targetItem, $originalEvent, index, right , left ) {
+                     scope.setHover(index, right, left);
+                     return DragService.dropConditionFunction(targetItem, $originalEvent);
+                     };
+
+                    */
+
                     scope.all_possible_answer_pop = function(item, left, right){
                         var index = null;
                         angular.forEach(scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer, function(current, key){
@@ -95,11 +137,6 @@ directives.push(
                         } else{
                             console.error('not found');
                         }
-                    };
-
-                    scope.dropConditionFunction = function (targetItem, $originalEvent, index, right , left ) {
-                        scope.setHover(index, right, left);
-                        return DragService.dropConditionFunction(targetItem, $originalEvent);
                     };
 
                     scope.deleteFilledAnswer = function(filled_answer){

@@ -5,13 +5,13 @@
     <div data-ng-show="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
         <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"
              class="row vertical-spacing"
-            data-ng-init="data.hover[key] = { bool : false }"
-        >
+            data-ng-init="data.hover[key] = { bool : false }">
             <input type="text" class="four cell" data-ng-model="filled_answer.text_left" disabled/>
             <div class="one cell">&nbsp;</div>
-            <div dragdrop="dropTo(filled_answer, $originalEvent)"
-                 dropcondition="dropConditionFunction(filled_answer, $originalEvent, key)"
-                 class="five cell "
+            <!-- dragdrop="dropTo(filled_answer, $originalEvent)"
+                 dropcondition="dropConditionFunction(filled_answer, $originalEvent, key)"-->
+            <div drop-item="dropTo($item, filled_answer, key)"
+                 class="five cell"
                  style="  border: 1px dashed;
                              border-radius: 10px;
                              text-align: center;
@@ -20,8 +20,7 @@
                             align-items: center;
                             justify-content: center;
                     "
-                 data-ng-class="{'association-drop-hover'  : data.hover[key].bool == true}"
-            >
+                 data-ng-class="{'association-drop-hover'  : data.hover[key].bool == true}">
                 <span style="width: 80%">{{filled_answer.text_right}}</span>
             </div>
             <div class="one cell">&nbsp;</div>
@@ -31,8 +30,8 @@
         <div class="row vertical-spacing">
             <div data-ng-repeat="possible_answer in possible_answer_left_list"
                  class="cell association-possible-answer-left"
-                 dragstart="drag(possible_answer, $originalEvent)"
-            >
+                 drag-item="possible_answer">
+                <!--dragstart="drag(possible_answer, $originalEvent)-->
                 [[possible_answer.text_right]]
             </div>
         </div>
@@ -41,8 +40,9 @@
     <div data-ng-hide="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
         <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"
              class="row vertical-spacing">
-            <div dragdrop="dropToLeft(filled_answer, $originalEvent)"
-                 dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, false, true)"
+            <!-- dragdrop="dropToLeft(filled_answer, $originalEvent)"
+                 dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, false, true)" -->
+            <div drop-item="dropToLeft($item, filled_answer, key, false, true)"
                  class="three cell "
                  style="  border: 1px dashed;
                              border-radius: 10px;
@@ -52,15 +52,15 @@
                             align-items: center;
                             justify-content: center;
                     "
-                 data-ng-class="{'association-drop-hover'  : data.hover[key].left == true}"
-            >
+                 data-ng-class="{'association-drop-hover'  : data.hover[key].left == true}">
                 <span style="width: 80%">{{filled_answer.text_left}}</span>
             </div>
             <div class="one cell">&nbsp;</div>
             <div class="one cell" data-ng-click="deleteFilledAnswerLeft(filled_answer)"><i class="close"></i></div>
             <div class="two cell">&nbsp;</div>
-            <div dragdrop="dropToRight(filled_answer, $originalEvent)"
-                 dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, true, false)"
+            <!-- dragdrop="dropToRight(filled_answer, $originalEvent)"
+                 dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, true, false)" -->
+            <div drop-item="dropToRight($item, filled_answer, key, true, false)"
                  class="three cell "
                  style="  border: 1px dashed;
                              border-radius: 10px;
@@ -70,8 +70,7 @@
                             align-items: center;
                             justify-content: center;
                     "
-                 data-ng-class="{'association-drop-hover'  : data.hover[key].right == true}"
-            >
+                 data-ng-class="{'association-drop-hover'  : data.hover[key].right == true}">
                 <span style="width: 80%">{{filled_answer.text_right}}</span>
             </div>
             <div class="one cell">&nbsp;</div>
@@ -81,8 +80,8 @@
     <div class="row vertical-spacing">
         <div data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
              class="cell association-possible-answer-left"
-             dragstart="drag(possible_answer, $originalEvent)"
-        >
+             drag-item="possible_answer">
+            <!-- dragstart="drag(possible_answer, $originalEvent)" -->
             [[possible_answer.item]]
         </div>
     </div>
