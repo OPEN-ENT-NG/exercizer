@@ -4,7 +4,7 @@
 	"app-name" : "Exercices et évaluations",
 	"app-address" : "/exercizer",
 	"app-icon" : "Exercizer-large",
-	"app-displayName" : "Exercizer",
+	"app-displayName" : "Exercices et évaluations",
 	"mode": "dev",
 	"entcore.port" : 8090,
 	"auto-redeploy": false
