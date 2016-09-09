@@ -27,5 +27,14 @@ public interface ISubjectScheduledService {
      *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
+    
+    /**
+     * Schedules a subject.
+     * 
+     * @param resource the resource
+     * @param user the user
+     * @param handler the handler
+     */
+    void schedule(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
 }

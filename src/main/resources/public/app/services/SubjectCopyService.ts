@@ -2,6 +2,7 @@ interface ISubjectCopyService {
     resolve(isTeacher:boolean): ng.IPromise<boolean>;
     persist(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
     update(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
+    addToCache(subjectCopyRaw: any): void;
     createFromSubjectScheduled(subjectScheduled:ISubjectScheduled):ISubjectCopy;
     getList():ISubjectCopy[];
     getById(id:number):ISubjectCopy;
@@ -14,8 +15,7 @@ class SubjectCopyService implements ISubjectCopyService {
         '$http',
         'GrainScheduledService',
         'GrainCopyService',
-        'DateService',
-        'SubjectScheduledService',
+        'DateService'
     ];
 
     private _listMappedById:{[id:number]:ISubjectCopy;};
@@ -28,8 +28,7 @@ class SubjectCopyService implements ISubjectCopyService {
         private _$http:ng.IHttpService,
         private _grainScheduledService,
         private _grainCopyService,
-        private _dateService,
-        private _subjectScheduledService
+        private _dateService
     )
     {
         this._$q = _$q;
@@ -37,7 +36,6 @@ class SubjectCopyService implements ISubjectCopyService {
         this._grainScheduledService = _grainScheduledService;
         this._grainCopyService = _grainCopyService;
         this._dateService = _dateService;
-        this._subjectScheduledService = _subjectScheduledService;
     }
 
     public resolve = function(isTeacher:boolean):ng.IPromise<boolean> {
@@ -54,7 +52,7 @@ class SubjectCopyService implements ISubjectCopyService {
             this._$http(request).then(
                 function(response) {
                     self._listMappedById = {};
-                    self._listBySubjectScheduled = [];
+                    self._listBySubjectScheduled = {};
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
@@ -84,7 +82,7 @@ class SubjectCopyService implements ISubjectCopyService {
             this._$http(request).then(
                 function(response) {
                     self._listMappedById = {};
-                    self._listBySubjectScheduled = [];
+                    self._listBySubjectScheduled = {};
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
@@ -176,7 +174,25 @@ class SubjectCopyService implements ISubjectCopyService {
         return deferred.promise;
     };
 
-    private replaceInList(subjectCopy : ISubjectCopy, listMappedById, listBySubjectScheduled){
+    public addToCache = function(subjectCopyRaw: any): void {
+        var subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyRaw));
+
+        if (angular.isUndefined(this._listMappedById)) {
+            this._listMappedById = {};
+        }
+
+        if (angular.isUndefined(this._listBySubjectScheduled)) {
+            this._listBySubjectScheduled = {};
+        }
+
+        if (angular.isUndefined(this._listBySubjectScheduled[subjectCopy.subject_scheduled_id])) {
+            this._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
+        }
+
+        this.replaceInList(subjectCopy, this._listMappedById, this._listBySubjectScheduled);
+    };
+
+    private replaceInList(subjectCopy : ISubjectCopy, listMappedById, listBySubjectScheduled) {
         listMappedById[subjectCopy.id] = subjectCopy;
         angular.forEach(listBySubjectScheduled[subjectCopy.subject_scheduled_id], function(copy, key){
             if(copy.id == subjectCopy.id) {
@@ -289,7 +305,7 @@ class SubjectCopyService implements ISubjectCopyService {
         // the subject have been submitted AND the subject have option one_shot == true;
         // OR
         // the copy is corrected by the teacher;
-        if (this._subjectScheduledService.is_over(subjectScheduled) === true) {
+        if (this._dateService.compare_after(new Date(), this._dateService.isoToDate(subjectScheduled.due_date), false) === true) {
             return false;
         } else {
             if (subjectScheduled.is_one_shot_submit && copy.submitted_date) {
@@ -309,7 +325,7 @@ class SubjectCopyService implements ISubjectCopyService {
         // quelque soit le statut, si la date de rendu est passée et que l'option "Affichage du résultat automatique pour les élèves" a été cochée
         // OR
         // le statut de la copie est "Corrigé" et la date de rendu est passée
-        if(this._subjectScheduledService.is_over(subjectScheduled) === true){
+        if(this._dateService.compare_after(new Date(), this._dateService.isoToDate(subjectScheduled.due_date), false) === true){
             if(subjectScheduled.has_automatic_display){
                 return true;
             } else{

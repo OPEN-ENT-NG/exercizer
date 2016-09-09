@@ -50,9 +50,9 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     protected void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         JsonArray values = new JsonArray();
         String getQuery = "SELECT * FROM " + resourceTable  + " WHERE id = ?";
-        Integer id_interger = Integer.parseInt(id);
+        Integer id_integer = Integer.parseInt(id);
 
-        sql.prepared(getQuery, values.add(id_interger), SqlResult.validUniqueResultHandler(handler));    
+        sql.prepared(getQuery, values.add(id_integer), SqlResult.validUniqueResultHandler(handler));    
     }
     
     /**

@@ -1,6 +1,7 @@
 interface IGrainCopyService {
     persist(grainCopy:IGrainCopy, subjectScheduled):ng.IPromise<IGrainCopy>;
     update(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy>;
+    addToCache(grainCopydRaw: any): void;
     getListBySubjectCopy(subjectCopy:ISubjectCopy):ng.IPromise<IGrainCopy[]>;
     instantiateGrainCopy(grainCopyObject:any): IGrainCopy;
     createGrainCopyList(grainScheduledList:IGrainScheduled[]):IGrainCopy[];
@@ -86,6 +87,17 @@ class GrainCopyService implements IGrainCopyService {
         return deferred.promise;
     };
 
+    public addToCache = function(grainCopyRaw: any): void {
+        var grainCopy = SerializationHelper.toInstance(new GrainCopy(), JSON.stringify(grainCopyRaw));
+
+        if (angular.isUndefined(this._listMappedBySubjectCopyId[grainCopy.subject_copy_id])) {
+            this._listMappedBySubjectCopyId[grainCopy.subject_copy_id] = [];
+        }
+
+        var index = this._listMappedBySubjectCopyId[grainCopy.subject_copy_id].indexOf(grainCopy);
+        this._listMappedBySubjectCopyId[grainCopy.subject_copy_id][index] = grainCopy;
+    };
+
     public getListBySubjectCopy = function(subjectCopy:ISubjectCopy):ng.IPromise<IGrainCopy[]> {
         var self = this,
             deferred = this._$q.defer(),
@@ -122,20 +134,25 @@ class GrainCopyService implements IGrainCopyService {
     };
 
     public createGrainCopyList = function(grainScheduledList:IGrainScheduled[]):IGrainCopy[] {
-        var grainCopyList = [];
+        var grainCopyList = [],
+            self = this;
 
         angular.forEach(grainScheduledList, function(grainScheduled:IGrainScheduled) {
-            grainCopyList.push(this._createFromGrainScheduled(grainScheduled));
-        }, this);
+            grainCopyList.push(self.createFromGrainScheduled(grainScheduled));
+        });
 
         return grainCopyList;
     };
 
-    private _createFromGrainScheduled = function(grainScheduled:IGrainScheduled):IGrainCopy {
+    public createFromGrainScheduled = function(grainScheduled:IGrainScheduled):IGrainCopy {
         var grainCopy = new GrainCopy();
 
         grainCopy.grain_type_id = grainScheduled.grain_type_id;
-        grainCopy.grain_scheduled_id = grainScheduled.id;
+
+        if (!angular.isUndefined(grainScheduled.id)) {
+            grainCopy.grain_scheduled_id = grainScheduled.id;
+        }
+
         grainCopy.order_by = grainScheduled.order_by;
         grainCopy.grain_copy_data = new GrainCopyData();
         grainCopy.grain_copy_data.title = grainScheduled.grain_data.title;

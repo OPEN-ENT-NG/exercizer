@@ -6,7 +6,7 @@ directives.push(
                 restrict: 'E',
                 scope: {},
                 templateUrl: 'exercizer/public/app/components/subject/subject_schedule/templates/subject-schedule.html',
-                link: (scope:any, element, attrs) => {
+                link: (scope:any) => {
 
                     /**
                      * INIT
@@ -53,11 +53,22 @@ directives.push(
 
                     scope.scheduleSubject = function () {
                         scope.scheduleSubjectInProgress = true;
-                        canSchedule(scope.option, scope.subject).then(function(data){
+                        canSchedule(scope.option, scope.subject).then(function() {
                             createIdList(scope.data.userList, scope.data.groupList).then(
                                 function (users) {
                                     if (users.length !== 0) {
-                                        createSubjectScheduled(scope.subject, scope.option, scope.data).then(
+                                        scheduleSubject(scope.subject, scope.option, scope.data, users).then(function() {
+                                                reset();
+                                                scope.isDisplayed = false;
+                                                scope.scheduleSubjectInProgress = false;
+                                                notify.info("Le sujet a bien été programmé.");
+                                        }, function(err) {
+                                            scope.scheduleSubjectInProgress = false;
+                                            notify.error(err);
+                                        });
+
+
+                                        /*createSubjectScheduled(scope.subject, scope.option, scope.data).then(
                                             function (subjectScheduled) {
                                                 //console.info('subjectScheduled',subjectScheduled);
                                                 var promises = [];
@@ -80,10 +91,10 @@ directives.push(
                                                 );
 
                                             }
-                                        )
+                                        )*/
                                     } else {
                                         scope.scheduleSubjectInProgress = false;
-                                        notify.error("Aucun utilisateur ou groupe sélectionné");
+                                        notify.error("Aucun utilisateur ou groupe sélectionné.");
                                     }
                                 }
                             );
@@ -105,7 +116,7 @@ directives.push(
                                         // create grain list scheduled
                                         console.log('grain list');
                                         if(data.length == 0 ){
-                                            deferred.reject("Il est impossible de programmer un sujet vide");
+                                            deferred.reject("Il est impossible de programmer un sujet vide.");
                                         } else {
                                             // question : all grain exept statement
                                             var validationGrain = true;
@@ -172,12 +183,12 @@ directives.push(
 
                                             });
                                             if(numberQuestion === 0){
-                                                deferred.reject("Il est impossible de programmer un sujet vide");
+                                                deferred.reject("Il est impossible de programmer un sujet vide.");
                                             } else {
                                                 if(validationGrain === true){
                                                     deferred.resolve();
                                                 } else{
-                                                    deferred.reject("Le sujet ne peut pas être programmé car des questions sans réponses renseignées subsistent");
+                                                    deferred.reject("Le sujet ne peut pas être programmé car des questions sans réponses renseignées subsistent.");
                                                 }
                                             }
                                         }
@@ -187,11 +198,11 @@ directives.push(
                                     }
                                 );
                             } else {
-                                deferred.reject("Les dates de programmation ne sont pas cohérentes")
+                                deferred.reject("Les dates de programmation ne sont pas cohérentes.")
                             }
                         } else {
                             scope.scheduleSubjectInProgress = false;
-                            deferred.reject("Toutes les options de programmation ne sont pas remplies")
+                            deferred.reject("Toutes les options de programmation ne sont pas remplies.")
                         }
                         return deferred.promise;
                     }
@@ -241,7 +252,44 @@ directives.push(
                         return deferred.promise;
                     }
 
-                    function createSubjectScheduled(subject, option, data) {
+                    function scheduleSubject(subject, option, data, users) {
+                        var deferred = $q.defer(),
+                            subjectScheduled = SubjectScheduledService.createFromSubject(subject);
+
+                        subjectScheduled.begin_date = option.begin_date;
+                        subjectScheduled.due_date = option.due_date;
+                        subjectScheduled.estimated_duration = option.estimated_duration;
+                        subjectScheduled.is_one_shot_submit = !option.allow_students_to_update_copy;
+                        subjectScheduled.scheduled_at = createSubjectScheduledAt(data);
+
+                        GrainService.getListBySubject(subject).then(
+                            function (data) {
+
+                                var grainScheduledList = GrainScheduledService.createGrainScheduledList(data),
+                                    grainCopyListTemplate = GrainCopyService.createGrainCopyList(grainScheduledList),
+                                    subjectCopyTemplate = new SubjectCopy();
+
+                                subjectCopyTemplate.has_been_started = false;
+
+                                SubjectScheduledService.schedule(subjectScheduled, grainScheduledList, subjectCopyTemplate, grainCopyListTemplate, users).then(
+                                    function() {
+                                        deferred.resolve();
+                                    },
+                                    function(err) {
+                                        deferred.reject(err);
+                                    }
+                                );
+                            },
+                            function(err) {
+                                deferred.reject(err);
+                            }
+                        );
+
+                        return deferred.promise;
+
+                    }
+
+                    /*function createSubjectScheduled(subject, option, data) {
                         var deferred = $q.defer();
                         // create scheduled subject from subject
                         var subjectScheduled = SubjectScheduledService.createFromSubject(subject);
@@ -270,7 +318,7 @@ directives.push(
                         );
 
                         return deferred.promise;
-                    }
+                    }*/
 
                     function createSubjectScheduledAt(data) {
                         if (!data) {
@@ -296,7 +344,7 @@ directives.push(
                     }
 
 
-                    function createGrainListScheduled(subjectScheduled, subject) {
+                    /*function createGrainListScheduled(subjectScheduled, subject) {
                         var deferred = $q.defer();
                         // get list grain from subject
                         GrainService.getListBySubject(subject).then(
@@ -317,9 +365,9 @@ directives.push(
                             }
                         );
                         return deferred.promise;
-                    }
+                    }*/
 
-                    function createSubjectCopy(subjectScheduled, user) {
+                    /*function createSubjectCopy(subjectScheduled, user) {
                         var deferred = $q.defer();
                         // create copy subject from subject scheduled;
                         var subjectCopy = SubjectCopyService.createFromSubjectScheduled(subjectScheduled);
@@ -340,10 +388,10 @@ directives.push(
                             }
                         );
                         return deferred.promise;
-                    }
+                    }*/
 
 
-                    function createGrainListCopy(subjectCopy, subjectScheduled) {
+                    /*function createGrainListCopy(subjectCopy, subjectScheduled) {
                         var deferred = $q.defer();
                         // get list grain from subject
                         GrainScheduledService.getListBySubjectScheduled(subjectScheduled).then(
@@ -364,7 +412,7 @@ directives.push(
                             }
                         );
                         return deferred.promise;
-                    }
+                    }*/
 
 
                     /**

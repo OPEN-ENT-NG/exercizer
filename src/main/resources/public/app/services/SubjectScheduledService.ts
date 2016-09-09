@@ -1,6 +1,7 @@
 interface ISubjectScheduledService {
     resolve(isTeacher:boolean): ng.IPromise<boolean>;
     persist(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled>;
+    schedule(subjectScheduled:ISubjectScheduled, grainScheduledList:IGrainScheduled[], subjectCopyTemplate:ISubjectCopy, grainCopyListTemplate:IGrainCopy[], userList: any[]):ng.IPromise<ISubjectScheduled>
     createFromSubject(subject:ISubject):ISubjectScheduled;
     getList():ISubjectScheduled[];
     getById(id:number):ISubjectScheduled;
@@ -12,8 +13,10 @@ class SubjectScheduledService implements ISubjectScheduledService {
     static $inject = [
         '$q',
         '$http',
+        'SubjectCopyService',
         'GrainService',
         'GrainScheduledService',
+        'GrainCopyService',
         'DateService'
     ];
 
@@ -25,15 +28,19 @@ class SubjectScheduledService implements ISubjectScheduledService {
     (
         private _$q:ng.IQService,
         private _$http:ng.IHttpService,
+        private _subjectCopyService:ISubjectCopyService,
         private _grainService:IGrainService,
         private _grainScheduledService:IGrainScheduledService,
+        private _grainCopyService:IGrainCopyService,
         private _dateService : IDateService
     )
     {
         this._$q = _$q;
         this._$http = _$http;
+        this._subjectCopyService = _subjectCopyService;
         this._grainService = _grainService;
         this._grainScheduledService = _grainScheduledService;
+        this._grainCopyService = _grainCopyService;
         this._dateService = _dateService;
         this._today = new Date()
     }
@@ -73,7 +80,7 @@ class SubjectScheduledService implements ISubjectScheduledService {
             deferred = this._$q.defer(),
             request = {
                 method: 'POST',
-                url: 'exercizer/subject-scheduled/'+ subjectScheduled.subject_id,
+                url: 'exercizer/subject-scheduled/' + subjectScheduled.subject_id,
                 data: subjectScheduled
             };
 
@@ -86,6 +93,54 @@ class SubjectScheduledService implements ISubjectScheduledService {
                 }
                 self._listMappedById[subjectScheduled.id] = subjectScheduled;
                 deferred.resolve(subjectScheduled);
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet programmé.');
+            }
+        );
+        return deferred.promise;
+    };
+
+    public schedule = function(subjectScheduled:ISubjectScheduled, grainScheduledList:IGrainScheduled[], subjectCopyTemplate:ISubjectCopy, grainCopyListTemplate:IGrainCopy[], userList: any[]):ng.IPromise<ISubjectScheduled> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/schedule-subject/' + subjectScheduled.subject_id,
+                data: {
+                    'subjectScheduled': subjectScheduled,
+                    'grainScheduledList': grainScheduledList,
+                    'subjectCopyTemplate': subjectCopyTemplate,
+                    'grainCopyListTemplate': grainCopyListTemplate,
+                    'userList': userList
+                }
+            };
+
+        this._$http(request).then(
+            function(response) {
+                var subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(response.data.subjectScheduled)) as any;
+
+                subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
+
+                if(angular.isUndefined(self._listMappedById)){
+                    self._listMappedById= {};
+                }
+
+                self._listMappedById[subjectScheduled.id] = subjectScheduled;
+
+                angular.forEach(response.data.grainScheduledList, function(grainScheduledRaw) {
+                   self._grainScheduledService.addToCache(grainScheduledRaw);
+                });
+
+                angular.forEach(response.data.subjectCopyList, function(subjectCopyRaw) {
+                    self._subjectCopyService.addToCache(subjectCopyRaw);
+                });
+
+                angular.forEach(response.data.grainCopyList, function(grainCopyRaw) {
+                    self._grainCopyService.addToCache(grainCopyRaw);
+                });
+
+                deferred.resolve();
             },
             function() {
                 deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet programmé.');

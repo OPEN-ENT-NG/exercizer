@@ -18,7 +18,8 @@
         "node_modules",
         "typings/browser",
         "typings/browser.d.ts",
-        "build"
+        "build",
+        "bin"
     ],
     "compileOnSave": true,
     "buildOnSave": false,
