@@ -2,6 +2,7 @@ package fr.openent.exercizer;
 
 import fr.openent.exercizer.controllers.*;
 import org.entcore.common.http.BaseServer;
+import org.entcore.common.service.impl.SqlCrudService;
 import org.entcore.common.share.impl.SqlShareService;
 import org.entcore.common.sql.SqlConf;
 import org.entcore.common.sql.SqlConfs;
@@ -27,6 +28,7 @@ public class Exercizer extends BaseServer {
         
         SubjectController subjectController = new SubjectController();
         subjectController.setShareService(new SqlShareService("exercizer", "subject_shares", eb, securedActions, null));
+        subjectController.setCrudService(new SqlCrudService("exercizer", "subject"));
         
         SqlConf grainConf = SqlConfs.createConf(GrainController.class.getName());
         grainConf.setSchema("exercizer");
