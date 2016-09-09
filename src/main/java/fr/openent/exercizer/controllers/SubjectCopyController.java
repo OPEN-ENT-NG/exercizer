@@ -205,7 +205,7 @@ public class SubjectCopyController extends ControllerHelper {
                                                         final String subjectId = Long.toString(subject.getLong("id"));                                                           
                                                         final List<String> recipientSet = new ArrayList<String>();
                                                         recipientSet.add(subjectCopy.getString("owner"));
-                                                        String relativeUri = "/subject/copy/view/"+subjectId+"/"+subjectCopyId;
+                                                        String relativeUri = "/subject/copy/view/"+subjectCopyId;
                                                         String message = "";
                                                         sendNotification(request, "correctcopy", user, recipientSet, relativeUri, subjectName, null, subjectCopyId);
                             							subjectCopyService.update(resource, user, notEmptyResponseHandler(request));                              	
