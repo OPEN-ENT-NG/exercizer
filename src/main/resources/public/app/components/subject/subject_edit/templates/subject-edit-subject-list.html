@@ -31,7 +31,8 @@
                 </thead>
                 <tbody>
                 <!-- grain list-->
-                <tr data-ng-repeat="grain in grainList | orderBy:'order_by'" dragstart="drag(grain, $originalEvent)">
+                <!--dragstart="drag(grain, $originalEvent)"-->
+                <tr data-ng-repeat="grain in grainList | orderBy:'order_by'" drag-item="grain">
                     <td class="cell one">
                         <div data-ng-switch="grain.grain_type_id">
                             <div data-ng-switch-when="1">

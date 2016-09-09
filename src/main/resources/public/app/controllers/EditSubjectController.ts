@@ -149,7 +149,23 @@ class EditSubjectController {
         return this._trustedHtmlStatementMap[grain.id];
     };
 
-    public dropTo = function($originalEvent) {
+    public dropTo = function($item) {
+        var self = this;
+
+        this._grainService.duplicate($item, this._subject).then(
+            function(grainDuplicated) {
+                self._$scope.$$postDigest(function() {
+                    jQuery('html, body').animate({ scrollTop: jQuery('#grain-edit-' + grainDuplicated.id).offset().top - 100}, 500);
+                });
+
+            },
+            function(err) {
+                notify.error(err);
+            }
+        )
+    };
+
+    /*public dropTo = function($originalEvent) {
         var dataField = this._dragService.dropConditionFunction(this._subject, $originalEvent),
             originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField)),
             self = this;
@@ -165,7 +181,7 @@ class EditSubjectController {
                 notify.error(err);
             }
         )
-    };
+    };*/
 
     private _updateSubject(updateMaxScore:boolean = false) {
         var self = this;
