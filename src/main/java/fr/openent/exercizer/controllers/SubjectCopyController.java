@@ -108,6 +108,18 @@ public class SubjectCopyController extends ControllerHelper {
         });
     }
 	
+
+    /**
+    *   Send a notification in copy controller
+    *   @param request : HttpServerRequest client
+    *   @param notificationName : name of the notification
+    *   @param user : user who send the notification
+    *   @param recipientSet : list of student
+    *   @param relativeUri: relative url exemple: /subject/copy/perform/9/
+    *   @param message : message of the notification
+    *   @param idResource : id of the resource
+    **/
+	
 	private void sendNotification(
 		    final HttpServerRequest request,
 		    final String notificationName,
@@ -149,7 +161,7 @@ public class SubjectCopyController extends ControllerHelper {
                                 public void handle(Either<String, JsonObject> r) {
                                 	JsonObject subjectCopy  = ResourceParser.beforeAny(r.right().getValue());
                                     final String subjectCopySubmittedDate = subjectCopy.getString("submitted_date");
-                                	if(subjectCopySubmittedDate != ressourceSubmittedDate){
+                                	if((subjectCopySubmittedDate == null || subjectCopySubmittedDate.isEmpty()) && (ressourceSubmittedDate != null || !ressourceSubmittedDate.isEmpty())){
                                 		/** start notification */
                                         final String subjectCopyId = Long.toString(subjectCopy.getLong("id"));
                                         final String subjectScheduleId = Long.toString(subjectCopy.getLong("subject_scheduled_id"));
