@@ -1,5 +1,6 @@
 interface IGrainScheduledService {
     persist(grainScheduled:IGrainScheduled, subject : ISubject):ng.IPromise<IGrainScheduled>;
+    addToCache(grainScheduledRaw: any): void;
     getListBySubjectScheduled(subjectScheduled:ISubjectScheduled):ng.IPromise<IGrainScheduled[]>;
     instantiateGrainScheduled(grainScheduledObject:any): IGrainScheduled;
     createGrainScheduledList(grainList:IGrain[]):IGrainScheduled[];
@@ -53,6 +54,14 @@ class GrainScheduledService implements IGrainScheduledService {
         return deferred.promise;
     };
 
+    public addToCache = function(grainScheduledRaw: any): void {
+        var grainScheduled = SerializationHelper.toInstance(new GrainScheduled(), JSON.stringify(grainScheduledRaw));
+        if (angular.isUndefined(this._listMappedBySubjectScheduledId[grainScheduled.subject_scheduled_id])) {
+            this._listMappedBySubjectScheduledId[grainScheduled.subject_scheduled_id] = [];
+        }
+        this._listMappedBySubjectScheduledId[grainScheduled.subject_scheduled_id].push(grainScheduled);
+    };
+
     public getListBySubjectScheduled = function(subjectScheduled:ISubjectScheduled):ng.IPromise<IGrainScheduled[]> {
         var self = this,
             deferred = this._$q.defer(),
@@ -88,16 +97,18 @@ class GrainScheduledService implements IGrainScheduledService {
     };
 
     public createGrainScheduledList = function(grainList:IGrain[]):IGrainScheduled[] {
-        var grainScheduledList = [];
+        var grainScheduledList = [],
+            self = this;
+
         angular.forEach(grainList, function(grain:IGrain) {
             if (grain.grain_type_id > 2) {
-                grainScheduledList.push(this._createFromGrain(grain));
+                grainScheduledList.push(self.createFromGrain(grain));
             }
         }, this);
         return grainScheduledList;
     };
 
-    private _createFromGrain = function(grain:IGrain):IGrainScheduled {
+    public createFromGrain = function(grain:IGrain):IGrainScheduled {
         var grainScheduled = new GrainScheduled();
 
         grainScheduled.grain_type_id = grain.grain_type_id;

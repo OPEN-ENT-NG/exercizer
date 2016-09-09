@@ -22,69 +22,93 @@ import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyRe
 
 public class SubjectScheduledController extends ControllerHelper {
 
-    private final ISubjectScheduledService subjectScheduledService;
+	private final ISubjectScheduledService subjectScheduledService;
 
-    public SubjectScheduledController() {
-        this.subjectScheduledService = new SubjectScheduledServiceSqlImpl();
-    }
+	public SubjectScheduledController() {
+		this.subjectScheduledService = new SubjectScheduledServiceSqlImpl();
+	}
 
-    @Post("/subject-scheduled/:id")
-    @ApiDoc("Persists a subject scheduled.")
-    @ResourceFilter(ShareAndOwner.class)
+	@Post("/schedule-subject/:id")
+	@ApiDoc("Schedules a subject.")
+	@ResourceFilter(ShareAndOwner.class)
 	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
-    public void persist(final HttpServerRequest request) {
-        UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-            @Override
-            public void handle(final UserInfos user) {
-                if (user != null) {
-                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-                        @Override
-                        public void handle(final JsonObject resource) {
-                            subjectScheduledService.persist(resource, user, notEmptyResponseHandler(request));
-                        }
-                    });
-                } else {
-                    log.debug("User not found in session.");
-                    unauthorized(request);
-                }
+	public void schedule(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject resource) {
+							subjectScheduledService.schedule(resource, user, notEmptyResponseHandler(request));
+						}
+					});
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
 
-            }
-        });
-    }
+			}
+		});
+	}
 
-    @Get("/subjects-scheduled")
-    @ApiDoc("Gets subject scheduled list.")
-    @SecuredAction("exercizer.subject.scheduled.list")
-    public void list(final HttpServerRequest request) {
-        UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-            @Override
-            public void handle(final UserInfos user) {
-                if (user != null) {
-                    subjectScheduledService.list(user, arrayResponseHandler(request));
-                }
-                else {
-                    log.debug("User not found in session.");
-                    unauthorized(request);
-                }
-            }
-        });
-    }
+	@Post("/subject-scheduled/:id")
+	@ApiDoc("Persists a subject scheduled.")
+	@ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
+	public void persist(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject resource) {
+							subjectScheduledService.persist(resource, user, notEmptyResponseHandler(request));
+						}
+					});
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
 
-    @Get("/subjects-scheduled-by-subjects-copy")
-    @ApiDoc("Gets subject scheduled list by subject copy list.")
-    @SecuredAction("exercizer.subject.scheduled.list.by.subject.copy.list")
-    public void listBySubjectCopyList(final HttpServerRequest request) {
-        UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-            @Override
-            public void handle(final UserInfos user) {
-                if (user != null) {
-                    subjectScheduledService.listBySubjectCopyList(user, arrayResponseHandler(request));
-                }
-                else {
-                    log.debug("User not found in session.");
-                    unauthorized(request);
-                }
-            }
-        });
-    }
+			}
+		});
+	}
+
+	@Get("/subjects-scheduled")
+	@ApiDoc("Gets subject scheduled list.")
+	@SecuredAction("exercizer.subject.scheduled.list")
+	public void list(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					subjectScheduledService.list(user, arrayResponseHandler(request));
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Get("/subjects-scheduled-by-subjects-copy")
+	@ApiDoc("Gets subject scheduled list by subject copy list.")
+	@SecuredAction("exercizer.subject.scheduled.list.by.subject.copy.list")
+	public void listBySubjectCopyList(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					subjectScheduledService.listBySubjectCopyList(user, arrayResponseHandler(request));
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
 }
