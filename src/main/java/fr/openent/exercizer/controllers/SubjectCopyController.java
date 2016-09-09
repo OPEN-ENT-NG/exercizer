@@ -156,13 +156,16 @@ public class SubjectCopyController extends ControllerHelper {
 						public void handle(final JsonObject resource) {
                             final String ressourceId = Long.toString(resource.getLong("id"));
                             final String ressourceSubmittedDate = resource.getString("submitted_date");
+                            final Boolean ressourceIsCorrected = resource.getBoolean("is_corrected");
 							subjectCopyService.getById(ressourceId, user, new Handler<Either<String,JsonObject>>() {
                                 @Override
                                 public void handle(Either<String, JsonObject> r) {
-                                	JsonObject subjectCopy  = ResourceParser.beforeAny(r.right().getValue());
+                                	final JsonObject subjectCopy  = ResourceParser.beforeAny(r.right().getValue());
                                     final String subjectCopySubmittedDate = subjectCopy.getString("submitted_date");
+                                    final Boolean subjectCopyIsCorrected = subjectCopy.getBoolean("is_corrected");
+
                                 	if((subjectCopySubmittedDate == null || subjectCopySubmittedDate.isEmpty()) && (ressourceSubmittedDate != null || !ressourceSubmittedDate.isEmpty())){
-                                		/** start notification */
+                                		/** submit notification */
                                         final String subjectCopyId = Long.toString(subjectCopy.getLong("id"));
                                         final String subjectScheduleId = Long.toString(subjectCopy.getLong("subject_scheduled_id"));
                                     	subjectScheduledService.getById(subjectScheduleId, user, new Handler<Either<String,JsonObject>>() {
@@ -180,16 +183,40 @@ public class SubjectCopyController extends ControllerHelper {
                                                         String relativeUri = "/subject/copy/view/"+subjectId+"/"+subjectCopyId;
                                                         String message = "";
                                                         sendNotification(request, "submitcopy", user, recipientSet, relativeUri, subjectName, null, subjectCopyId);
-                            							subjectCopyService.update(resource, user, notEmptyResponseHandler(request));                              	
-                                                    
+                            							subjectCopyService.update(resource, user, notEmptyResponseHandler(request));                          	
                                                     }
                                                 });
                                             }
                                         });  
                                 		
-                                	} else {
+                                	} else if(subjectCopyIsCorrected == false && ressourceIsCorrected == true){
+                                		/** correct notification */
+                                        final String subjectCopyId = Long.toString(subjectCopy.getLong("id"));
+                                        final String subjectScheduleId = Long.toString(subjectCopy.getLong("subject_scheduled_id"));
+                                    	subjectScheduledService.getById(subjectScheduleId, user, new Handler<Either<String,JsonObject>>() {
+                                            @Override
+                                            public void handle(Either<String, JsonObject> r) {
+                                            	final JsonObject subjectSchedule  = ResourceParser.beforeAny(r.right().getValue());                                         	
+                                            	subjectService.getById(Long.toString(subjectSchedule.getLong("subject_id")), user, new Handler<Either<String,JsonObject>>() {
+                                                    @Override
+                                                    public void handle(Either<String, JsonObject> r) {
+                                                    	JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
+                                                        final String subjectName = subject.getString("title");
+                                                        final String subjectId = Long.toString(subject.getLong("id"));                                                           
+                                                        final List<String> recipientSet = new ArrayList<String>();
+                                                        recipientSet.add(subjectCopy.getString("owner"));
+                                                        String relativeUri = "/subject/copy/view/"+subjectId+"/"+subjectCopyId;
+                                                        String message = "";
+                                                        sendNotification(request, "correctcopy", user, recipientSet, relativeUri, subjectName, null, subjectCopyId);
+                            							subjectCopyService.update(resource, user, notEmptyResponseHandler(request));                              	
+                                                    
+                                                    }
+                                                });
+                                            }
+                                        });                              		
+                                		
+                                	}	else {
             							subjectCopyService.update(resource, user, notEmptyResponseHandler(request));                              	
-
                                 	}
                                 }
                             }); 
