@@ -10,13 +10,13 @@
         <!-- TOP HEADER -->
         <div class="row">
             <h1>
-                <span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()">Exercizer</span> / <span class="hover-orange" data-ng-click="">[[ editSubjectController.subject.title ]]</span>
+                <span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()">Exercices et évaluations</span> / <span class="hover-orange" data-ng-click="">[[ editSubjectController.subject.title ]]</span>
             </h1>
         </div>
 
         <div class="row">
             <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
-                Programmer
+                Distribuer
             </button>
 
             <button class="flat-button right-magnet cell" data-ng-click="editSubjectController.previewPerformSubjectCopy()">
@@ -81,7 +81,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[grain.order_by]])&nbsp;[[ editSubjectController.getGrainDisplayedName(grain) ]]</div>
+                                        <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[ grain.order_by ]]&nbsp;) [[editSubjectController.getGrainDisplayedName(grain) ]]</div>
                                         <div class="cell right-magnet">
                                             <i class="drag-anchor"></i>
                                         </div>
@@ -97,7 +97,8 @@
             </section>
 
             <!-- GRAIN LIST -->
-            <section class="eight cell" dragdrop="editSubjectController.dropTo($originalEvent)">
+            <!-- dragdrop="editSubjectController.dropTo($originalEvent)" -->
+            <section class="eight cell drop-zone" drop-item="editSubjectController.dropTo($item)">
 
                 <div class="row">
 

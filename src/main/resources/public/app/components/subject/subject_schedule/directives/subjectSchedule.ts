@@ -116,7 +116,7 @@ directives.push(
                                         // create grain list scheduled
                                         console.log('grain list');
                                         if(data.length == 0 ){
-                                            deferred.reject("Il est impossible de programmer un sujet vide.");
+                                            deferred.reject("Il est impossible de distribuer un sujet vide.");
                                         } else {
                                             // question : all grain exept statement
                                             var validationGrain = true;
@@ -183,12 +183,12 @@ directives.push(
 
                                             });
                                             if(numberQuestion === 0){
-                                                deferred.reject("Il est impossible de programmer un sujet vide.");
+                                                deferred.reject("Il est impossible de distribuer un sujet vide.");
                                             } else {
                                                 if(validationGrain === true){
                                                     deferred.resolve();
                                                 } else{
-                                                    deferred.reject("Le sujet ne peut pas être programmé car des questions sans réponses renseignées subsistent.");
+                                                    deferred.reject("Le sujet ne peut pas être distribuer car des questions sans réponses renseignées subsistent.");
                                                 }
                                             }
                                         }
@@ -198,11 +198,11 @@ directives.push(
                                     }
                                 );
                             } else {
-                                deferred.reject("Les dates de programmation ne sont pas cohérentes.")
+                                deferred.reject("Les dates de distribution ne sont pas cohérentes.")
                             }
                         } else {
                             scope.scheduleSubjectInProgress = false;
-                            deferred.reject("Toutes les options de programmation ne sont pas remplies.")
+                            deferred.reject("Toutes les options de distribution ne sont pas remplies.")
                         }
                         return deferred.promise;
                     }
@@ -429,7 +429,7 @@ directives.push(
                                     reset();
                                     scope.data.lists = createLists(subject);
                                 } else {
-                                    notify.info('Vous ne pouvez pas programmer un sujet vide.');
+                                    notify.info('Vous ne pouvez pas distribuer un sujet vide.');
                                 }
                             },
                             function (err) {

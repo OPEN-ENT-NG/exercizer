@@ -115,7 +115,7 @@ class SubjectLibraryService implements ISubjectLibraryService {
                                                                 deferred.resolve(true);
                                                             },
                                                             function () {
-                                                                deferred.reject('Une erreur est survenue lors de la publication du sujet : impossible d\'associer les tags.');
+                                                                deferred.reject('Une erreur est survenue lors de la publication du sujet : impossible d\'associer les étiquettes.');
                                                             }
                                                         );
 
@@ -140,7 +140,7 @@ class SubjectLibraryService implements ISubjectLibraryService {
                                                         deferred.resolve(true);
                                                     },
                                                     function () {
-                                                        deferred.reject('Une erreur est survenue lors de la publication du sujet : impossible d\'associer les tags.');
+                                                        deferred.reject('Une erreur est survenue lors de la publication du sujet : impossible d\'associer les étiquettes.');
                                                     }
                                                 );
                                             }

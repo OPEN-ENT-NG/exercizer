@@ -92,7 +92,7 @@ directives.push(
                                     if (scope.selectedSubjectTagList.indexOf(scope.subjectTagList[i]) === -1) {
                                         scope.selectedSubjectTagList.push(scope.subjectTagList[i]);
                                     } else {
-                                        notify.info('Ce tag est déjà associé.')
+                                        notify.info('Cette étiquette est déjà associée.')
                                     }
 
                                     i = scope.subjectTagList.length;
@@ -109,7 +109,7 @@ directives.push(
 
                                 for (let i = 0; i < scope.subjectTagList.length; ++i) {
                                     if (CompareStringHelper.compare(StringISOHelper.toISO(scope.subjectTagList[i].label), newCustomTagLabel)) {
-                                        notify.info('Ce tag existe déjà.');
+                                        notify.info('Cette étiquette existe déjà.');
                                         i = scope.subjectTagList.length;
                                         isExisting = true;
                                     }
@@ -123,7 +123,7 @@ directives.push(
 
                                     for (let i = 0; i < scope.selectedSubjectTagList.length; ++i) {
                                         if (CompareStringHelper.compare(StringISOHelper.toISO(scope.selectedSubjectTagList[i].label), newCustomTagLabel)) {
-                                            notify.info('Ce tag est déjà associé.');
+                                            notify.info('Cette étiquette est déjà associée.');
                                             i = scope.selectedSubjectTagList.length;
                                             isExisting = true;
                                         }

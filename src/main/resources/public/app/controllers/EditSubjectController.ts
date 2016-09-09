@@ -60,7 +60,7 @@ class EditSubjectController {
         this._dragService = _dragService;
 
         this._hasDataLoaded = false;
-        
+
         // statement trusted html
         this._trustedHtmlStatementMap = {};
 
@@ -118,19 +118,19 @@ class EditSubjectController {
     public scheduleSubject() {
         this._$scope.$broadcast('E_DISPLAY_MODAL_SCHEDULE_SUBJECT', this._subject);
     }
-    
+
     public getGrainDisplayedName = function(grain) {
         var displayedName = '';
-        
+
         if (grain.grain_type_id > 3) {
 
             grain.grain_data.title = StringISOHelper.toISO(grain.grain_data.title);
             displayedName = angular.isUndefined(grain.grain_data.title) ? this.getGrainPublicName(grain.grain_type_id) : grain.grain_data.title;
-            
+
         } else {
             displayedName = this.getGrainPublicName(grain.grain_type_id);
         }
-        
+
         return displayedName;
     };
 
@@ -149,7 +149,23 @@ class EditSubjectController {
         return this._trustedHtmlStatementMap[grain.id];
     };
 
-    public dropTo = function($originalEvent) {
+    public dropTo = function($item) {
+        var self = this;
+
+        this._grainService.duplicate($item, this._subject).then(
+            function(grainDuplicated) {
+                self._$scope.$$postDigest(function() {
+                    jQuery('html, body').animate({ scrollTop: jQuery('#grain-edit-' + grainDuplicated.id).offset().top - 100}, 500);
+                });
+
+            },
+            function(err) {
+                notify.error(err);
+            }
+        )
+    };
+
+    /*public dropTo = function($originalEvent) {
         var dataField = this._dragService.dropConditionFunction(this._subject, $originalEvent),
             originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField)),
             self = this;
@@ -165,7 +181,7 @@ class EditSubjectController {
                 notify.error(err);
             }
         )
-    };
+    };*/
 
     private _updateSubject(updateMaxScore:boolean = false) {
         var self = this;
@@ -207,22 +223,22 @@ class EditSubjectController {
         var self = this;
 
         if (grain.grain_type_id > 3) {
-            
+
             grain.grain_data.title = StringISOHelper.toISO(grain.grain_data.title);
             grain.grain_data.statement = StringISOHelper.toISO(grain.grain_data.statement);
             grain.grain_data.answer_explanation = StringISOHelper.toISO(grain.grain_data.answer_explanation);
             grain.grain_data.answer_hint = StringISOHelper.toISO(grain.grain_data.answer_hint);
             grain.grain_data.max_score = angular.isUndefined(grain.grain_data.max_score) ? 0 : parseFloat(grain.grain_data.max_score as any);
-            
+
         } else if (grain.grain_type_id === 3) {
 
             this._trustedHtmlStatementMap[grain.id] = undefined;
 
             /*if (angular.isUndefined(this._trustedHtmlStatementMap[grain.id]) && grain.grain_data.custom_data) {
-                this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
-            } else{
+             this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
+             } else{
 
-            }*/
+             }*/
             //this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
         }
 
@@ -367,6 +383,7 @@ class EditSubjectController {
         return this._foldedGrainList.indexOf(grain) !== -1;
     };
 
+
     /**
      * ORGANIZER
      */
@@ -404,7 +421,7 @@ class EditSubjectController {
                 if (!self.isGrainFolded(grain)) {
                     self.foldGrain(grain);
                 }
-               self.updateGrain(grain);
+                self.updateGrain(grain);
             });
         }
     };

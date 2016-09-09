@@ -1,5 +1,5 @@
 <lightbox data-show="isDisplayed" data-on-close="hide()">
-    <h1>Programmer un sujet</h1>
+    <h1>Distribuer un sujet</h1>
     <div class="row">
         <div class="three cell">
             <nav class="vertical">
@@ -7,7 +7,7 @@
                     <li>
                         <a  data-ng-class="{'selected' : state == 'assignSubject'}"
                             data-ng-click="state='assignSubject'">
-                            Attribuer
+                            Destinataires
                         </a>
 
                     </li>
@@ -21,7 +21,7 @@
                     <li>
                         <a  data-ng-class="{'selected' : state == 'schedule'}"
                             data-ng-click="state='schedule'">
-                            Programmer
+                            Valider
                         </a>
 
                     </li>
@@ -111,11 +111,11 @@
 
             <div data-ng-show="state == 'schedule'">
                 <div class="row vertical-spacing">
-                    <div class="warning">Êtes-vous sûr de vouloir programmer ce sujet ?</div>
+                    <div class="warning">Êtes-vous sûr de vouloir distributer ce sujet ?</div>
                 </div>
                 <div class="row vertical-spacing">
                     <button class="right-magnet cell" data-ng-click="scheduleSubject()" data-ng-disabled="scheduleSubjectInProgress">
-                        Programmer
+                        Distribuer
                     </button>
                     <button class="flat-button right-magnet cell" data-ng-click="state = 'option'">
                         Précédent

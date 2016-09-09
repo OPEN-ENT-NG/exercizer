@@ -22,19 +22,24 @@
     </div>
 
     <div class="row vertical-spacing">
-        Rechercher et ajoutez des tags au sujet :
+        Rechercher et ajoutez des étiquettes au sujet :
     </div>
 
     <div class="row vertical-spacing">
         <autocomplete
-                class="twelve cell"
+                class="ten cell"
+                data-ng-init="searchedSubjectTagObject = undefined"
                 options="autocompleteSubjectTagList"
                 ng-change="selectSubjectTag(selectedSubjectTagObject)"
+                search="searchedSubjectTagObject"
                 ng-model="selectedSubjectTagObject">
         </autocomplete>
+        <button class="cell right-magnet" data-ng-click="addNewSubjectTag(searchedSubjectTagObject); searchedSubjectTagObject = undefined;" data-ng-disabled="!searchedSubjectTagObject && !isPublicationOnGoing">
+            Ajouter
+        </button>
     </div>
 
-    <div class="row vertical-spacing">
+    <!--<div class="row vertical-spacing">
 
         <p>Le tag n'apparaît pas ? Créez-le :</p>
 
@@ -43,9 +48,9 @@
         <button class="cell right-magnet" data-ng-click="addNewSubjectTag(newCustomTagLabel); newCustomTagLabel = undefined;" data-ng-disabled="!newCustomTagLabel && !isPublicationOnGoing">
             Créer et ajouter le tag
         </button>
-    </div>
+    </div>-->
 
-    <h2 class="row" data-ng-show="selectedSubjectTagList.length > 0">Tags associés au sujets :</h2>
+    <h2 class="row" data-ng-show="selectedSubjectTagList.length > 0">Étiquettes associées au sujets :</h2>
 
     <div class="row vertical-spacing">
         <div class="label-badge" data-ng-repeat="subjectTag in selectedSubjectTagList">
