@@ -20,6 +20,9 @@ import fr.wseduc.rs.Put;
 import fr.wseduc.webutils.request.RequestUtils;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
+import fr.wseduc.webutils.Either;
+import fr.openent.exercizer.parsers.ResourceParser;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,7 +221,40 @@ public class SubjectController extends ControllerHelper {
 	@ResourceFilter(ShareAndOwner.class)
 	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
 	public void shareSubmit(final HttpServerRequest request) {
-		super.shareJsonSubmit(request, "share", false);
+
+        super.shareJsonSubmit(request, "exercizer.share", false);
+
+        /*
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					final String subjectId = request.params().get("id");
+                	subjectService.getById(subjectId, user, new Handler<Either<String,JsonObject>>() {
+                        @Override
+                        public void handle(Either<String, JsonObject> r) {
+                        	JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
+                            final String subjectName = subject.getString("title");  
+        					log.debug("subjectName");
+        					log.debug(subjectName);
+
+
+        			        JsonObject params = new JsonObject();
+        			        params.putString("username", user.getUsername());
+        			        params.putString("uri", container.config().getString("host", "http://localhost:8090") +
+        			                "/exercizer#/subject/copy/perform/"+subjectId);
+        			        params.putString("subjectName", subjectName);
+        					SubjectController.super.shareJsonSubmit(request, "exercizer.share", false, params, null);
+                        }
+                    });					
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+		*/
 	}
 
 	@Put("/subject/share/remove/:id")

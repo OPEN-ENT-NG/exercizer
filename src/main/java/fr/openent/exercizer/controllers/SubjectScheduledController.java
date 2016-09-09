@@ -16,9 +16,31 @@ import org.entcore.common.user.UserUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonObject;
+import fr.wseduc.webutils.Either;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
+
+
+import org.entcore.common.controller.ControllerHelper;
+import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.http.filter.sql.OwnerOnly;
+import org.entcore.common.user.UserUtils;
+import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.json.JsonObject;
+import fr.openent.exercizer.parsers.ResourceParser;
+
+import fr.wseduc.rs.ApiDoc;
+import fr.wseduc.rs.Get;
+import fr.wseduc.rs.Post;
+import fr.wseduc.rs.Put;
+import fr.wseduc.security.ActionType;
+import fr.wseduc.security.SecuredAction;
+import fr.wseduc.webutils.request.RequestUtils;
+
 
 public class SubjectScheduledController extends ControllerHelper {
 
@@ -40,7 +62,15 @@ public class SubjectScheduledController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							subjectScheduledService.schedule(resource, user, notEmptyResponseHandler(request));
+							subjectScheduledService.schedule(resource, user,new Handler<Either<String,JsonObject>>() {
+								@Override
+								public void handle(Either<String, JsonObject> r) {
+                                	final JsonObject resourceScheduled  = ResourceParser.beforeAny(r.right().getValue());
+									System.out.println("----------------------------------------");									
+									System.out.println(resourceScheduled);	
+                                    renderJson(request, resourceScheduled);
+								}
+							});
 						}
 					});
 				} else {
