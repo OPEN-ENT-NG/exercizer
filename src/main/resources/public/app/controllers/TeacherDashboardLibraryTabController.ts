@@ -278,7 +278,7 @@ class TeacherDashboardLibraryTabController {
                 if (this._filters.subjectTagList.indexOf(this._subjectTagList[i]) === -1) {
                     this._filters.subjectTagList.push(this._subjectTagList[i]);
                 } else {
-                    notify.info('Ce tag est déjà dans la associé à la recherche.')
+                    notify.info('Cette étiquette est déjà associée à la recherche.')
                 }
 
                 i = this._subjectTagList.length;
