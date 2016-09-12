@@ -1,8 +1,11 @@
 <article>
     <h2 class="row">Résumé</h2>
     <div data-ng-if="previewing">
-        <div class="row vertical-spacing">Sujet à rendre avant le [[ !subjectScheduled.due_date ? ': date à définir' : subjectScheduled.due_date | date: 'dd/MM/yyyy' ]]</div>
-        <div class="row vertical-spacing">Durée de réalisation estimée : [[ !subjectScheduled.estimated_duration ? 'à définir' : subjectScheduled.estimated_duration + ' minute(s)' ]]</div>
+        <strong class="row vertical-spacing">Sujet à rendre avant le [[ !subjectScheduled.due_date ? ': date à définir' : subjectScheduled.due_date | date: 'dd/MM/yyyy' ]]</strong>
+        <strong class="row vertical-spacing">Durée de réalisation estimée : [[ !subjectScheduled.estimated_duration ? 'à définir' : subjectScheduled.estimated_duration + ' minute(s)' ]]</strong>
+        <div class="row vertical-spacing">
+            [[subjectScheduled.description]]
+        </div>
     </div>
     <div data-ng-if="!previewing">
         <div class="row vertical-spacing">Sujet à rendre avant le [[ !subjectScheduled.due_date ? ': date non définie' : subjectScheduled.due_date | date: 'dd/MM/yyyy' ]]</div>

@@ -1,9 +1,12 @@
 <article id="summary">
     <h2 class="row">Résumé</h2>
 
-    <h4 class="row">Score automatique :&nbsp;[[ formatNumber(subjectCopy.calculated_score) ]]&nbsp;sur&nbsp;[[ subjectScheduled.max_score ]] point(s)</h4>
+    <div class="row vertical-spacing">
+        [[subjectScheduled.description]]
+    </div>
 
-    <h4 class="row">Score final :&nbsp;[[ formatNumber(subjectCopy.final_score) ]]&nbsp;sur&nbsp;[[ subjectScheduled.max_score ]] point(s)</h4>
+    <strong class="row">Score automatique :&nbsp;[[ formatNumber(subjectCopy.calculated_score) ]]&nbsp;sur&nbsp;[[ subjectScheduled.max_score ]] point(s)</strong>
+    <strong class="row">Score final :&nbsp;[[ formatNumber(subjectCopy.final_score) ]]&nbsp;sur&nbsp;[[ subjectScheduled.max_score ]] point(s)</strong>
     <h2 class="row">
         Commentaire général :
     </h2>
