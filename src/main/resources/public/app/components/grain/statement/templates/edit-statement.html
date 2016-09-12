@@ -1,1 +1,13 @@
-<editor data-ng-model="grain.grain_data.custom_data.statement"></editor>
+<div class="row vertical-spacing">
+    <input 
+           class="twelve cell"
+           type="text" 
+           i18n-placeholder="title" 
+           complete-change="updateGrain()" 
+           ng-model="grain.grain_data.custom_data.title" />
+</div>
+
+<div class="row vertical-spacing">
+    <editor data-ng-model="grain.grain_data.custom_data.statement"></editor>
+</div>
+

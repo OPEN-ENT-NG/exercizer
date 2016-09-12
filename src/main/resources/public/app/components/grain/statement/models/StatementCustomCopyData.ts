@@ -4,13 +4,14 @@ interface IStatementCustomCopyData {
 
 class StatementCustomCopyData implements IStatementCustomCopyData {
 
-    statement:string;
+    statement: string;
+    title: string;
 
-    constructor
-    (
-        statement?:string
-    )
-    {
-        this.statement = statement;
+    constructor(data?: StatementCustomCopyData) {
+        if (data) {
+            this.statement = data.statement;
+            this.title = data.title;
+        }
+        
     }
 }

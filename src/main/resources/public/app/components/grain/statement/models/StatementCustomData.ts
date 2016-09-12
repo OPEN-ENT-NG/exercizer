@@ -4,13 +4,14 @@ interface IStatementCustomData {
 
 class StatementCustomData implements IStatementCustomData {
 
-    statement:string;
+    statement: string;
+    title: string;
     
-    constructor
-    (
-        statement?:string
-    )
+    constructor(data?: StatementCustomData)
     {
-        this.statement = statement;
+        if (data) {
+            this.statement = data.statement;
+            this.title = data.title;
+        }
     }
 }
