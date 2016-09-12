@@ -222,29 +222,25 @@ public class SubjectController extends ControllerHelper {
 	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
 	public void shareSubmit(final HttpServerRequest request) {
 
-        super.shareJsonSubmit(request, "exercizer.share", false);
-
-        /*
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
+					request.pause();
 					final String subjectId = request.params().get("id");
                 	subjectService.getById(subjectId, user, new Handler<Either<String,JsonObject>>() {
                         @Override
                         public void handle(Either<String, JsonObject> r) {
+                        	request.resume();
                         	JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
                             final String subjectName = subject.getString("title");  
-        					log.debug("subjectName");
-        					log.debug(subjectName);
-
 
         			        JsonObject params = new JsonObject();
         			        params.putString("username", user.getUsername());
         			        params.putString("uri", container.config().getString("host", "http://localhost:8090") +
-        			                "/exercizer#/subject/copy/perform/"+subjectId);
+        			                "/exercizer#/subject/copy/preview/perform/"+subjectId);
         			        params.putString("subjectName", subjectName);
-        					SubjectController.super.shareJsonSubmit(request, "exercizer.share", false, params, null);
+        			        SubjectController.super.shareJsonSubmit(request, "exercizer.share", false, params, null);
                         }
                     });					
 				}
@@ -254,7 +250,6 @@ public class SubjectController extends ControllerHelper {
 				}
 			}
 		});
-		*/
 	}
 
 	@Put("/subject/share/remove/:id")
