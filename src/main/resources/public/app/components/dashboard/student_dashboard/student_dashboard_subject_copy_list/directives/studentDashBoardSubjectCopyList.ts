@@ -23,14 +23,14 @@ directives.push(
 
                         // Date
                         scope.today = new Date();
-                        scope.dateInAWeek = DateService.addDays(scope.today, 8);
-                        scope.dateInAYears = DateService.addDays(scope.today, 354);
+                        scope.dateInAWeek = moment().startOf('week').add(1, 'week').toDate();
+                        scope.dateInAYears = moment().add(1, 'year').toDate();
 
                         // Search
                         if (!scope.search) {
                             scope.search = {
-                                beginDate : scope.dateInAWeek,
-                                endDate : scope.dateInAYears
+                                beginDate: moment().startOf('week').add(1, 'week').toDate(),
+                                endDate: moment().add(3, 'month').toDate()
                             }
                         }
                     }

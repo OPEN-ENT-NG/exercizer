@@ -30,7 +30,8 @@ class SubjectCopy implements  ISubjectCopy {
     submitted_date:string;
     is_correction_on_going:boolean;
     is_corrected:boolean;
-    is_deleted:boolean;
+    is_deleted: boolean;
+    dueDate: string;
 
     constructor
     (

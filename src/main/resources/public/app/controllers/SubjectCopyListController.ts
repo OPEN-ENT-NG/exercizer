@@ -1,3 +1,5 @@
+declare var moment: any;
+
 class SubjectCopyListController {
 
     static $inject = [
@@ -59,17 +61,32 @@ class SubjectCopyListController {
         }
     };
 
-    public orderBySubjectScheduledDueDate(subjectCopy) {
-        var self = this;
-        return function () {
-            var subjectScheduled = self.getSubjectScheduledById(subjectCopy.subject_scheduled_id);
+    public scheduledThisWeek(subjectCopies: SubjectCopy[]): SubjectCopy[] {
+        return _.filter(subjectCopies, function (subjectCopy) {
+            let subjectScheduled = this.getSubjectScheduledById(subjectCopy.subject_scheduled_id);
             if (subjectScheduled) {
-                return subjectScheduled.due_date;
-            } else {
-                return null;
+                return moment().week() >= moment(subjectScheduled.due_date).week()
+                    && moment().year() >= moment(subjectScheduled.due_date).year()
             }
-        }
+        }.bind(this));
     };
+
+    public orderByDueDate(subjectCopies: SubjectCopy[]): SubjectCopy[] {
+        subjectCopies = _.map(subjectCopies, function (copy: SubjectCopy) {
+            let subjectScheduled = this.getSubjectScheduledById(copy.subject_scheduled_id);
+            if (subjectScheduled) {
+                copy.dueDate = subjectScheduled.due_date;
+            }
+            
+            return copy;
+        }.bind(this));
+
+        subjectCopies.sort((a, b) => {
+            return moment(a.dueDate).unix() - moment(b.dueDate).unix();
+        });
+
+        return subjectCopies;
+    }
 
     public filterOnSubjectCopyState(filter) {
         var self = this;

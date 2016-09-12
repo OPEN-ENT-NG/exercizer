@@ -16,8 +16,8 @@ directives.push(
                     scope.subjectScheduledList = [];
                     // Date data
                     scope.today = new Date();
-                    scope.dateAYearshAgo = DateService.addDays(scope.today, -365);
-                    scope.dateInAYears = DateService.addDays(scope.today, 365);
+                    scope.dateAYearshAgo = moment().subtract('month', 1).toDate();
+                    scope.dateInAYears = moment().add('month', 3).toDate();
                     scope.search = {
                         groupList: [],
                         beginDate : scope.dateAYearshAgo,
