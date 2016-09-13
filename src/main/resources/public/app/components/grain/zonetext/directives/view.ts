@@ -7,7 +7,8 @@ directives.push(
                 scope: {
                     grainScheduled: '=',
                     grainCopy: '=',
-                    isTeacher: '='
+                    isTeacher: '=',
+                    grainCopyList: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/zonetext/templates/view.html',
                 link: (scope: any) => {
