@@ -7,6 +7,7 @@ directives.push(
                 scope: {
                     grainScheduled: '=',
                     grainCopy: '=',
+                    grainCopyList: '=',
                     isTeacher: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/multiple_answer/templates/view-multiple-answer.html',

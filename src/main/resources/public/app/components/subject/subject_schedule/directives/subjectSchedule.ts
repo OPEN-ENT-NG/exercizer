@@ -114,7 +114,6 @@ directives.push(
                                 GrainService.getListBySubject(subject).then(
                                     function (data) {
                                         // create grain list scheduled
-                                        console.log('grain list');
                                         if(data.length == 0 ){
                                             deferred.reject("Il est impossible de distribuer un sujet vide.");
                                         } else {

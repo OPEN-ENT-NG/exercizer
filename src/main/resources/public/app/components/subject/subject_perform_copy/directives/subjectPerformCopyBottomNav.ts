@@ -38,7 +38,7 @@ directives.push(
                     };
                     
                     function _navigateTo(grainCopy:IGrainCopy = undefined) {
-                        scope.$emit('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy);
+                        scope.$emit('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy, scope.grainCopyList);
                     }
 
                     scope.$on('E_CURRENT_GRAIN_COPY_CHANGE' , function(event, grainCopy:IGrainCopy) {

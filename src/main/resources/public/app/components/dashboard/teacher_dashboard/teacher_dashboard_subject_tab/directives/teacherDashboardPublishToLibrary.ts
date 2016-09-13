@@ -80,7 +80,6 @@ directives.push(
                         };
 
                         scope.selectSubjectLessonLevel = function(selectedSubjectLessonLevel) {
-                            console.log(selectedSubjectLessonLevel);
                             scope.selectedSubjectLessonLevelId = selectedSubjectLessonLevel;
                         };
 

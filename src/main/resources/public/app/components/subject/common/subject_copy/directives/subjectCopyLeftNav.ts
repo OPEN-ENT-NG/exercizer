@@ -22,7 +22,11 @@ directives.push(
                     };
 
                     scope.navigateTo = function(grainCopy:IGrainCopy = undefined) {
-                        scope.$emit('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy);
+                        scope.$emit('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy, scope.grainCopyList);
+                    };
+
+                    scope.getCorrectOrder = function(grainCopy:IGrainCopy) {
+                        return CorrectOrderHelper.getCorrectOrder(grainCopy, scope.grainCopyList);
                     };
 
                     scope.$on('E_CURRENT_GRAIN_COPY_CHANGE' , function(event, grainCopy:IGrainCopy) {

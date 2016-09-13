@@ -1,10 +1,10 @@
 <h2 class="row" data-ng-if="grainType.id === 3">
-    [[grainCopy.order_by]])&nbsp;[[ grainType.public_name ]]
+    [[ grainType.public_name ]]
 </h2>
 
 <div class="row" data-ng-if="grainType.id > 3">
     <h2 class="cell">
-        <i class="help"></i><span class="vertical-spacing">&nbsp;&nbsp;[[grainCopy.order_by]])&nbsp;[[ grainCopy.grain_copy_data.title ]] - [[ grainCopy.grain_copy_data.max_score ]] point(s)</span>
+        <i class="help"></i><span class="vertical-spacing">&nbsp;[[ getCorrectOrder() + ') ' ]] [[ grainCopy.grain_copy_data.title ]] - [[ grainCopy.grain_copy_data.max_score ]] point(s)</span>
     </h2>
 
     <!-- grain copy toggle hint button -->

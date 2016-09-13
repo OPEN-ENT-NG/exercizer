@@ -5,8 +5,9 @@ directives.push(
             return {
                 restrict: 'E',
                 scope : {
-                    subjectScheduled : "=",
-                    previewing: '='
+                    subjectScheduled : '=',
+                    previewing: '=',
+                    grainCopyList: '='
                 },
                 templateUrl: 'exercizer/public/app/components/subject/subject_perform_copy/templates/subject-perform-copy-display-current-grain-copy.html',
                 link:(scope:any) => {

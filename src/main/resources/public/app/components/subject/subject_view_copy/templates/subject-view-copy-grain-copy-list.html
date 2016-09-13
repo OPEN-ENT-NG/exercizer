@@ -9,42 +9,48 @@
     <div data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false">
         <div data-ng-switch="grainCopy.grain_type_id">
             <div data-ng-switch-when="3">
-                <view-statement data-grain-copy="grainCopy">
+                <view-statement data-grain-copy="grainCopy" data-grain-copy-list="grainCopyList">
                 </view-statement>
             </div>
             <div data-ng-switch-when="4">
                 <view-simple-answer data-grain-scheduled="getGrainScheduled(grainCopy)"
                                     data-grain-copy="grainCopy"
+                                    data-grain-copy-list="grainCopyList"
                                     data-is-teacher="isTeacher">
                 </view-simple-answer>
             </div>
             <div data-ng-switch-when="5">
                 <view-open-answer data-grain-scheduled="getGrainScheduled(grainCopy)"
                                   data-grain-copy="grainCopy"
+                                  data-grain-copy-list="grainCopyList"
                                   data-is-teacher="isTeacher">
                 </view-open-answer>
             </div>
             <div data-ng-switch-when="6">
                 <view-multiple-answer data-grain-scheduled="getGrainScheduled(grainCopy)"
                                       data-grain-copy="grainCopy"
+                                      data-grain-copy-list="grainCopyList"
                                       data-is-teacher="isTeacher">
                 </view-multiple-answer>
             </div>
             <div data-ng-switch-when="7">
                 <view-qcm data-grain-scheduled="getGrainScheduled(grainCopy)"
                           data-grain-copy="grainCopy"
+                          data-grain-copy-list="grainCopyList"
                           data-is-teacher="isTeacher">
                 </view-qcm>
             </div>
             <div data-ng-switch-when="8">
                 <view-association data-grain-scheduled="getGrainScheduled(grainCopy)"
                                   data-grain-copy="grainCopy"
+                                  data-grain-copy-list="grainCopyList"
                                   data-is-teacher="isTeacher">
                 </view-association>
             </div>
             <div data-ng-switch-when="9">
                 <view-order data-grain-scheduled="getGrainScheduled(grainCopy)"
                             data-grain-copy="grainCopy"
+                            data-grain-copy-list="grainCopyList"
                             data-is-teacher="isTeacher">
                 </view-order>
             </div>

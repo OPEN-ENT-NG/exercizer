@@ -81,7 +81,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[ grain.order_by ]]&nbsp;) [[editSubjectController.getGrainDisplayedName(grain) ]]</div>
+                                        <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[ grain.grain_type_id > 3 ? editSubjectController.getCorrectOrder(grain) + ') ' : '' ]] [[editSubjectController.getGrainDisplayedName(grain) ]]</div>
                                         <div class="cell right-magnet">
                                             <i class="drag-anchor"></i>
                                         </div>
@@ -261,14 +261,14 @@
                                     <choose-answer data-grain="grain"></choose-answer>
                                 </div>
                                 <div data-ng-switch-when="3">
-                                    <h2 data-ng-click="editSubjectController.foldGrain(grain)" class="hover-orange">[[grain.order_by]])&nbsp;Énoncé</h2>
+                                    <h2 data-ng-click="editSubjectController.foldGrain(grain)" class="hover-orange">Énoncé</h2>
                                     <div style="max-height : 100px; word-wrap: break-word; overflow: hidden; text-overflow: ellipsis;">
                                         <div data-ng-click="editSubjectController.foldGrain(grain)" class="eleven cell vertical-spacing" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
                                     </div>
                                 </div>
                                 <div data-ng-switch-default>
                                     <h2 class="eleven cell vertical-spacing hover-orange" data-ng-click="editSubjectController.foldGrain(grain)">
-                                        [[grain.order_by]])&nbsp;[[ editSubjectController.getGrainDisplayedName(grain) ]]&nbsp;-&nbsp;[[ grain.grain_data.max_score ]]&nbsp;point(s)
+                                        [[ grain.grain_type_id > 3 ? editSubjectController.getCorrectOrder(grain) + ') ' : '' ]] [[ editSubjectController.getGrainDisplayedName(grain) ]]&nbsp;-&nbsp;[[ grain.grain_data.max_score ]]&nbsp;point(s)
                                     </h2>
                                 </div>
                             </div>

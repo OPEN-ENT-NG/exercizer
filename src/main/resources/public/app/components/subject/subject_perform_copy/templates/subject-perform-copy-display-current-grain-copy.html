@@ -1,25 +1,25 @@
 <div class="row">
     <div data-ng-switch="currentGrainCopy.grain_type_id">
         <div data-ng-switch-when="3">
-            <perform-statement data-grain-copy="currentGrainCopy"></perform-statement>
+            <perform-statement data-grain-copy="currentGrainCopy" data-grain-copy-list="grainCopyList"></perform-statement>
         </div>
         <div data-ng-switch-when="4">
-            <perform-simple-answer data-grain-copy="currentGrainCopy"></perform-simple-answer>
+            <perform-simple-answer data-grain-copy="currentGrainCopy" data-grain-copy-list="grainCopyList"></perform-simple-answer>
         </div>
         <div data-ng-switch-when="5">
-            <perform-open-answer data-grain-copy="currentGrainCopy"></perform-open-answer>
+            <perform-open-answer data-grain-copy="currentGrainCopy" data-grain-copy-list="grainCopyList"></perform-open-answer>
         </div>
         <div data-ng-switch-when="6">
-            <perform-multiple-answer data-grain-copy="currentGrainCopy"></perform-multiple-answer>
+            <perform-multiple-answer data-grain-copy="currentGrainCopy" data-grain-copy-list="grainCopyList"></perform-multiple-answer>
         </div>
         <div data-ng-switch-when="7">
-            <perform-qcm data-grain-copy="currentGrainCopy"></perform-qcm>
+            <perform-qcm data-grain-copy="currentGrainCopy" data-grain-copy-list="grainCopyList"></perform-qcm>
         </div>
         <div data-ng-switch-when="8">
-            <perform-association data-grain-copy="currentGrainCopy"></perform-association>
+            <perform-association data-grain-copy="currentGrainCopy" data-grain-copy-list="grainCopyList"></perform-association>
         </div>
         <div data-ng-switch-when="9">
-            <perform-order data-grain-copy="currentGrainCopy"></perform-order>
+            <perform-order data-grain-copy="currentGrainCopy" data-grain-copy-list="grainCopyList"></perform-order>
         </div>
         <div data-ng-switch-default>
             <perform-summary data-subject-scheduled="subjectScheduled" data-previewing="previewing"></perform-summary>

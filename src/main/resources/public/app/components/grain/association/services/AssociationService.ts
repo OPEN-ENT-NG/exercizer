@@ -9,9 +9,6 @@ class AssociationService implements IAutomaticCorrection {
             isCorrectReturnArray = {},
             correct_answer;
 
-        console.log('grainScheduled', grainScheduled);
-        console.log('grainCopy', grainCopy);
-
         if (grainScheduled.grain_data.custom_data.show_left_column) {
             angular.forEach(grainCopy.grain_copy_data.custom_copy_data.filled_answer_list, function (filled_answer, key) {
                 correct_answer = grainScheduled.grain_data.custom_data.correct_answer_list[key];

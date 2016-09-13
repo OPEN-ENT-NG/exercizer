@@ -119,16 +119,12 @@ directives.push(
                         scope.clickOnSubjectTitle = function (subject) {
                             if (subject.id) {
                                 if(model.me.hasRight(subject, 'owner')){
-                                    //console.log('owner')
                                     $location.path('/subject/edit/' + subject.id);
                                 } else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager)){
-                                    //console.log('manager');
                                     $location.path('/subject/edit/' + subject.id);
                                 } else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)){
-                                    //console.log('contrib');
                                     $location.path('/subject/edit/' + subject.id);
                                 } else{
-                                    //console.log('read');
                                     AccessService.reader = true;
                                     $location.path('/subject/copy/preview/perform/' + subject.id);
                                 }

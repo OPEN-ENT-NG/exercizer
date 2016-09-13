@@ -5,7 +5,8 @@ directives.push(
             return {
                 restrict: 'E',
                 scope: {
-                    grainCopy: '='
+                    grainCopy: '=',
+                    grainCopyList: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/simple_answer/templates/perform-simple-answer.html',
                 link:(scope:any) => {

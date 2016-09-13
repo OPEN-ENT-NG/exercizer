@@ -5,7 +5,8 @@ directives.push(
             return {
                 restrict: 'E',
                 scope : {
-                    grainCopy: '='
+                    grainCopy: '=',
+                    grainCopyList: '='
                 },
                 templateUrl: 'exercizer/public/app/components/grain/common/grain_copy/templates/grain-copy-header.html',
                 link:(scope:any) => {
@@ -18,7 +19,11 @@ directives.push(
                     
                     scope.toggleGrainCopyHint = function() {
                         scope.isAnswerHintFolded = !scope.isAnswerHintFolded;
-                    }
+                    };
+
+                    scope.getCorrectOrder = function() {
+                        return CorrectOrderHelper.getCorrectOrder(scope.grainCopy, scope.grainCopyList);
+                    };
                 }
             };
         }]

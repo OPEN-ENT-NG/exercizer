@@ -11,7 +11,7 @@
                 style="overflow-x: hidden"
                 data-ng-click="navigateTo(grainCopy)" data-ng-class="(currentGrainCopy.id === grainCopy.id) ? 'selected' : ''">
                 <a>
-                    [[grainCopy.order_by]])&nbsp;[[ getGrainCopyName(grainCopy) ]]
+                    [[ grainCopy.grain_type_id > 3 ? getCorrectOrder(grainCopy) + ') ' : '' ]] [[ getGrainCopyName(grainCopy) ]]
                 </a>
             </li>
         </ul>

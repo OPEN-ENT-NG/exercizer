@@ -383,6 +383,10 @@ class EditSubjectController {
         return this._foldedGrainList.indexOf(grain) !== -1;
     };
 
+    public getCorrectOrder(grain:IGrain) {
+        return CorrectOrderHelper.getCorrectOrder(grain, this._grainList);
+    };
+
 
     /**
      * ORGANIZER
