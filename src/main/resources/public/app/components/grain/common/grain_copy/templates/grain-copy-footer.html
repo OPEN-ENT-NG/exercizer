@@ -50,7 +50,7 @@
                 Résultats :
             </h2>
             <div class="row vertical-spacing">
-                <strong>Score calculé :</strong>&nbsp;[[ formatNumber(grainCopy.calculated_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
+                <strong>Score automatique :</strong>&nbsp;[[ formatNumber(grainCopy.calculated_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
             </div>
             <div class="row vertical-spacing" data-ng-if="isTeacher">
                 <strong>Score final :</strong>&nbsp;<input type="text" data-digits-input-restrict data-ng-model="grainCopy.final_score" value="[[ grainCopy.final_score ]]" complete-change="updateGrainCopy()" style="width:50px;" />&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
