@@ -304,12 +304,12 @@ class FolderService implements IFolderService {
             // check if there are no loop in folder
             if (this.isAParentOf(originFolder, targetFolder)) {
                 console.error("Loop folder not allowed");
-                notify.error("Deplacement non autorisé");
+                notify.error("Déplacement non autorisé.");
             } else {
                 // check if the folder is not drop in itself
                 if (originFolderId == targetFolderId) {
                     console.error("A folder can't be placed in itself");
-                    notify.error("Deplacement non autorisé");
+                    notify.error("Déplacement non autorisé.");
                 } else {
                     // before change parent folder id
                     // delete folder from old _folderListByParentFolderId

@@ -1,11 +1,11 @@
 directives.push(
     {
-        name: 'teacherDashboardCopyPaste',
+        name: 'teacherDashboardMove',
         injections: ['FolderService', 'SubjectService', (FolderService, SubjectService) => {
             return {
                 restrict: 'E',
                 scope: {},
-                templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/templates/teacher-dashboard-copy-paste.html',
+                templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/templates/teacher-dashboard-move.html',
                 link: (scope:any) => {
 
                     scope.isDisplayed = false;
@@ -15,20 +15,19 @@ directives.push(
                     scope.allFolderList = FolderService.folderList;
 
                     // event to display model
-                    scope.$on('E_DISPLAY_DASHBOARD_MODAL_COPY_PASTE', function(event, selectedSubjectList, selectedFolderList, fromLibrary = false) {
+                    scope.$on('E_DISPLAY_DASHBOARD_MODAL_MOVE', function(event, selectedSubjectList, selectedFolderList) {
                         scope.isDisplayed = true;
-                        scope.fromLibrary = fromLibrary;
                         scope.subjectList = selectedSubjectList;
                         scope.folderList = selectedFolderList;
                     });
 
-                    // confirm paste
-                    scope.pasteSelection = function () {
+                    // confirm move
+                    scope. moveSelection = function () {
                         var folder = null;
                         if (scope.data.selectedFolder) {
                             folder = FolderService.folderById(scope.data.selectedFolder);
                         }
-                        scope.$emit('E_CONFIRM_COPY_PASTE', folder);
+                        scope.$emit('E_CONFIRM_MOVE', folder);
                         scope.isDisplayed = false;
                         scope.list = null;
                     };
@@ -41,16 +40,16 @@ directives.push(
                     };
 
                     // get label of folder
-                    scope.getFolderLabelById = function(id){
+                    scope.getFolderLabelById = function(id) {
                         var folder = FolderService.folderById(id);
                         return folder? folder.label : null;
                     };
 
                     // get title of subject
-                    scope.getSubjectTitleById = function(id){
+                    scope.getSubjectTitleById = function(id) {
                         var subject = SubjectService.getById(id);
                         return subject ? subject.title : null;
-                    }
+                    };
                 }
             };
         }]

@@ -117,7 +117,16 @@ directives.push(
                                 {
                                     publicName : 'Copier',
                                     actionOnClick : function(){
-                                        scope.$emit("E_COPY_SELECTED_FOLDER_SUBJECT");
+                                        scope.$emit('E_COPY_SELECTED_FOLDER_SUBJECT');
+                                    },
+                                    display : function(){
+                                        return true;
+                                    }
+                                },
+                                {
+                                    publicName : 'Déplacer',
+                                    actionOnClick : function(){
+                                        scope.$emit('E_MOVE_SELECTED_FOLDER_SUBJECT');
                                     },
                                     display : function(){
                                         return true;

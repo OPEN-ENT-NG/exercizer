@@ -1,0 +1,37 @@
+<lightbox show="isDisplayed" on-close="hide()">
+    <h2>Déplacer la sélection</h2>
+    <p>Confirmez-vous le déplacement de la sélection ?</p>
+    <div data-ng-if="!fromLibrary">
+        <ul data-ng-show="folderList.length !=0">
+            <li data-ng-repeat="folderId in folderList">
+                [[getFolderLabelById(folderId)]]
+            </li>
+        </ul>
+        <ul data-ng-show="subjectList.length !=0">
+            <li data-ng-repeat="subjectId in subjectList">
+                [[getSubjectTitleById(subjectId)]]
+            </li>
+        </ul>
+    </div>
+    <div data-ng-if="fromLibrary">
+        <ul data-ng-show="subjectList.length !=0">
+            <li data-ng-repeat="subject in subjectList">
+                [[ subject.title ]]
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <label class="four cell margin-one">Sélection du dossier cible&nbsp;* :</label>
+        <select data-ng-model="data.selectedFolder" class="four cell">
+            <option value="null">Racine</option>
+            <option data-ng-repeat="folder in allFolderList" value="[[folder.id]]">[[folder.label]]</option>
+        </select>
+    </div>
+    <div class="row">
+        *&nbsp;<em class="low-importance">si non précisé, le déplacement se fera à la racine</em>
+    </div>
+    <div class="row">
+        <button data-ng-click="moveSelection()" class="right-magnet">Déplacer</button>
+        <button data-ng-click="hide()" class="cancel right-magnet">Annuler</button>
+    </div>
+</lightbox>

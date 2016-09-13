@@ -23,13 +23,11 @@
                                          is-root="true"
                                          parent-id="parentId"
                                          current-folder-id="currentFolderId"
-                                         set-current-folder-fn="setCurrentFolder"
-                        ></folder-nav-item>
+                                         set-current-folder-fn="setCurrentFolder"></folder-nav-item>
                     </div>
                 </li>
                 <li>
-                    <a  data-ng-class="{selected: currentFolderId == null && display.tab == 'subjectShared'}"
-                    >
+                    <a  data-ng-class="{selected: currentFolderId == null && display.tab == 'subjectShared'}">
                         <i class="arrow"></i>
                         <span data-ng-click="goToRoot(); display.tab = 'subjectShared'">Sujets partagés avec moi</span>
                     </a>
@@ -49,14 +47,10 @@
             <div class="cell right-magnet">
                 <i data-ng-click="displayList = 'array'"
                    class="show-list"
-                   data-ng-class="{selected: displayList == 'array'}"
-
-                ></i>
+                   data-ng-class="{selected: displayList == 'array'}"></i>
                 <i data-ng-click="displayList = 'domino'"
                    class="show-icons"
-                   data-ng-class="{selected: displayList == 'domino'}"
-
-                ></i>
+                   data-ng-class="{selected: displayList == 'domino'}"></i>
             </div>
         </div>
         <!-- domino part -->
@@ -121,8 +115,7 @@
                                         <div class="right-magnet cell">
                                             <input type="checkbox" data-ng-model="subject.selected" data-ng-change="selectSubject(subject)"/>
                                         </div>
-                                        <div class="right-magnet cell" data-ng-show="subject.shared.length > 0"
-                                        ><i class="shared" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                                        <div class="right-magnet cell" data-ng-show="subject.shared.length > 0"><i class="shared" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
                                         </div>
                                     </div>
                                 </div>

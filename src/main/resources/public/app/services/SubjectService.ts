@@ -224,7 +224,7 @@ class SubjectService implements ISubjectService {
                                 deferred.resolve(duplicatedSubject);
                             },
                             function() {
-                                deferred.reject('Une erreur est survenue lors de la duplication des éléments du sujet à copier');
+                                deferred.reject('Une erreur est survenue lors de la duplication des éléments du sujet à copier.');
                             }
                         )
                     },

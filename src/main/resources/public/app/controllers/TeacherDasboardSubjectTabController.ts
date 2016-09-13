@@ -111,6 +111,11 @@ class TeacherDashboardSubjectTabController {
             // reset list in confirm
         });
 
+        self._$scope.$on('E_MOVE_SELECTED_FOLDER_SUBJECT', function () {
+            self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_MOVE', self._selectedSubjectList, self._selectedFolderList);
+            // reset list in confirm
+        });
+
         self._$scope.$on('E_EDIT_SUBJECT', function (event, subject) {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT', subject);
             self._resetSelectedSubjectList();
@@ -176,6 +181,31 @@ class TeacherDashboardSubjectTabController {
 
                     }
                 );
+            });
+            self._resetSelectedFolderList();
+            self._$scope.$broadcast('E_RESET_SELECT_ALL');
+
+        });
+
+        self._$scope.$on('E_CONFIRM_MOVE', function (event, folderParent) {
+            // copy subject list
+            angular.forEach(self._selectedSubjectList, function (id) {
+                var subject = self._subjectService.getById(id);
+                subject.folder_id = folderParent ? folderParent.id : null;
+                self._subjectService.update(self._subjectService.getById(id)).then(
+                    function(data){
+                    },
+                    function(err){
+                        console.error('fail', err);
+                        notify.error(err);
+
+                    }
+                );
+            });
+            self._resetSelectedSubjectList();
+            // copy folder list
+            angular.forEach(self._selectedFolderList, function (id) {
+                self._folderService.setParentFolderId(id, folderParent ? folderParent.id : null);
             });
             self._resetSelectedFolderList();
             self._$scope.$broadcast('E_RESET_SELECT_ALL');
