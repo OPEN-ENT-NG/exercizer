@@ -398,6 +398,8 @@ class EditSubjectController {
                 this.foldGrain(grain);
             }
         }, this);
+
+        jQuery('html, body').animate({ scrollTop: jQuery('#edit-subject').offset().top - 100 }, 500);
     };
 
     public previewPerformSubjectCopy = function() {
