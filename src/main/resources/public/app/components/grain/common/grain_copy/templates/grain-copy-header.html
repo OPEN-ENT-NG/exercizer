@@ -27,8 +27,3 @@
 <div class="row" data-ng-if="grainType.id > 5 && grainCopy.grain_copy_data.custom_copy_data.no_error_allowed">
     <div class="warning">Attention : une seule erreur et toutes les réponse sont considérées comme fausses !</div>
 </div>
-
-<!-- if error allowed -->
-<div class="row" data-ng-if="grainType.id > 5 && !grainCopy.grain_copy_data.custom_copy_data.no_error_allowed">
-    <div class="info">Les réponses correctes sont comptées dans le score, même s'il y a une ou plusieurs erreurs.</div>
-</div>
