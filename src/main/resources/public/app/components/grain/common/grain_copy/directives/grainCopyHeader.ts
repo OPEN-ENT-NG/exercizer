@@ -12,6 +12,8 @@ directives.push(
                 link:(scope:any) => {
                     scope.grainType = GrainTypeService.getById(scope.grainCopy.grain_type_id);
                     scope.isAnswerHintFolded = true;
+
+                    console.log(scope.grainCopy);
                     
                     scope.hasAnswerHint = function() {
                         return !angular.isUndefined(scope.grainCopy.grain_copy_data.answer_hint) && scope.grainCopy.grain_copy_data.answer_hint  !== null;

@@ -161,7 +161,6 @@ class GrainCopyService implements IGrainCopyService {
         grainCopy.grain_copy_data.document_list = grainScheduled.grain_data.document_list;
         grainCopy.grain_copy_data.answer_hint = grainScheduled.grain_data.answer_hint;
         grainCopy.grain_copy_data.document_list = grainScheduled.grain_data.document_list;
-        
       
         switch (grainScheduled.grain_type_id) {
             case 3:
@@ -288,6 +287,10 @@ class GrainCopyService implements IGrainCopyService {
             default:
                 console.error('specific part of grain copy is not defined when creating from grain scheduled', grainScheduled);
 
+        }
+
+        if (grainCopy.grain_type_id > 5) {
+            grainCopy.grain_copy_data.custom_copy_data.no_error_allowed = grainScheduled.grain_data.custom_data.no_error_allowed;
         }
 
         return grainCopy;

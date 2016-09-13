@@ -165,9 +165,9 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 												public void handle(Either<String, JsonArray> grainCopyListHandler) {
 													
 													if (grainCopyListHandler.isLeft()) {
-														SqlStatementsBuilder deleteStatement = exercizerSubjectScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "id");
-														deleteStatement = exercizerGrainScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "subject_scheduled_id", deleteStatement);
+														SqlStatementsBuilder deleteStatement = exercizerGrainScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "subject_scheduled_id");
 														deleteStatement = exercizerSubjectCopySqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "subject_scheduled_id", deleteStatement);
+														deleteStatement = exercizerSubjectScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "id", deleteStatement);
 														Sql.getInstance().transaction(deleteStatement.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
 															@Override
 															public void handle(final Either<String, JsonObject> deleteHandler) {
@@ -223,8 +223,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 											
 											
 										} else {
-											SqlStatementsBuilder deleteStatement = exercizerSubjectScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "id");
-											deleteStatement = exercizerGrainScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "subject_scheduled_id", deleteStatement);
+											SqlStatementsBuilder deleteStatement = exercizerGrainScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "subject_scheduled_id");
+											deleteStatement = exercizerSubjectScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "id", deleteStatement);
 											Sql.getInstance().transaction(deleteStatement.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
 												@Override
 												public void handle(final Either<String, JsonObject> deleteHandler) {
