@@ -119,19 +119,15 @@ class EditSubjectController {
         this._$scope.$broadcast('E_DISPLAY_MODAL_SCHEDULE_SUBJECT', this._subject);
     }
 
-    public getGrainDisplayedName = function(grain) {
-        var displayedName = '';
-
-        if (grain.grain_type_id > 3) {
-
-            grain.grain_data.title = StringISOHelper.toISO(grain.grain_data.title);
-            displayedName = angular.isUndefined(grain.grain_data.title) ? this.getGrainPublicName(grain.grain_type_id) : grain.grain_data.title;
-
-        } else {
-            displayedName = this.getGrainPublicName(grain.grain_type_id);
+    public getGrainDisplayedName = function (grain) {
+        let toIsoTitle = '';
+        if (grain.grain_data.title !== undefined) {
+            toIsoTitle = grain.grain_data.title;
         }
-
-        return displayedName;
+        else {
+            toIsoTitle = this.getGrainPublicName(grain.grain_type_id)
+        }
+        return toIsoTitle;
     };
 
     public getGrainIllustrationURL = function(grainTypeId) {

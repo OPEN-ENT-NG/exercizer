@@ -268,7 +268,7 @@
                                     <choose-answer data-grain="grain"></choose-answer>
                                 </div>
                                 <div data-ng-switch-when="3">
-                                    <h2 data-ng-click="editSubjectController.foldGrain(grain)" class="hover-orange">Énoncé</h2>
+                                    <h2 data-ng-click="editSubjectController.foldGrain(grain)" class="hover-orange">[[ grain.grain_data.title || "Énoncé" ]]</h2>
                                     <div style="max-height : 100px; word-wrap: break-word; overflow: hidden; text-overflow: ellipsis;">
                                         <div data-ng-click="editSubjectController.foldGrain(grain)" class="eleven cell vertical-spacing" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
                                     </div>
