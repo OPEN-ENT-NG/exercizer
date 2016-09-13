@@ -22,42 +22,44 @@
                 </autocomplete>
             </div>
         </div>
-        <div class="row" data-ng-if="subject" style="overflow-y:scroll; max-height: 150px; border:1px dotted lightgrey;">
-            <table class="list-view">
-                <thead>
-                <tr>
-                    <th class="cell twelve">[[ subject.title ]]</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- grain list-->
-                <!--dragstart="drag(grain, $originalEvent)"-->
-                <tr data-ng-repeat="grain in grainList | orderBy:'order_by'" drag-item="grain">
-                    <td class="cell one">
-                        <div data-ng-switch="grain.grain_type_id">
-                            <div data-ng-switch-when="1">
-                                <i class="info-pic"></i>
+        <div class="row" style="overflow-x:visible;">
+            <div data-ng-if="subject" style="overflow-y:scroll; max-height: 150px; border:1px dotted lightgrey;">
+                <table class="list-view">
+                    <thead>
+                    <tr>
+                        <th class="cell twelve">[[ subject.title ]]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- grain list-->
+                    <!--dragstart="drag(grain, $originalEvent)"-->
+                    <tr data-ng-repeat="grain in grainList | orderBy:'order_by'" drag-item="grain">
+                        <td class="cell one">
+                            <div data-ng-switch="grain.grain_type_id">
+                                <div data-ng-switch-when="1">
+                                    <i class="info-pic"></i>
+                                </div>
+                                <div data-ng-switch-when="2">
+                                    <i class="help"></i>
+                                </div>
+                                <div data-ng-switch-when="3">
+                                    <i class="doc-text"></i>
+                                </div>
+                                <div data-ng-switch-default style="width:15px; height:15px;">
+                                    <div style="width: 100%; height: 100%" data-ng-include="getGrainIllustrationURL(grain.grain_type_id)"></div>
+                                </div>
                             </div>
-                            <div data-ng-switch-when="2">
-                                <i class="help"></i>
-                            </div>
-                            <div data-ng-switch-when="3">
-                                <i class="doc-text"></i>
-                            </div>
-                            <div data-ng-switch-default style="width:15px; height:15px;">
-                                <div style="width: 100%; height: 100%" data-ng-include="getGrainIllustrationURL(grain.grain_type_id)"></div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="cell ten">
-                        [[ getGrainName(grain) ]]
-                    </td>
-                    <td class="cell one">
-                        <i class="drag-anchor"></i>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                        </td>
+                        <td class="cell ten">
+                            [[ getGrainName(grain) ]]
+                        </td>
+                        <td class="cell one">
+                            <i class="drag-anchor"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </article>
