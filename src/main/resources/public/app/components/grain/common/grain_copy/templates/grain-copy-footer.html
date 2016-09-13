@@ -1,62 +1,55 @@
-<hr class="row" style="border-bottom: 1px solid black;" />
-
 <div class="row">
-    <div class="cell right-magnet" data-ng-click="toggle()">
-        <i data-ng-show="isFolded" data-tooltip="Déplier" class="down-open"></i>
-        <i data-ng-hide="isFolded" data-tooltip="Plier" class="up-open"></i>
-    </div>
-</div>
 
-<div data-ng-show="isFolded" data-ng-click="toggle()">
-    <div class="row">
-        <div class="seven cell">
-            <h2 class="row">
-                Commentaire [[ hasComment() ? '(1)' : '(0)' ]]
-            </h2>
-        </div>
-        <div class="one cell">
-            &nbsp;
-        </div>
-        <div class="four cell">
-            <h2 class="row">
-                Résultat :&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score]] point(s)
-            </h2>
+
+    <div class="one cell right-magnet">
+        <div class="cell right-magnet" data-ng-click="toggle()">
+            <i data-ng-show="isFolded" data-tooltip="Déplier" class="down-open"></i>
+            <i data-ng-hide="isFolded" data-tooltip="Plier" class="up-open"></i>
         </div>
     </div>
-</div>
 
-<div data-ng-hide="isFolded">
-    <div class="row" data-ng-if="hasAnswerExplanation()">
-        <p style="text-align: justify"><em class="medium-importance">[[ grainScheduled.grain_data.answer_explanation ]]</em></p>
+    <div data-ng-show="isFolded" data-ng-click="toggle()" class="eleven cell">
+        <strong class="cell">
+            Commentaire [[ hasComment() ? '(1)' : '(0)' ]]
+        </strong>
+        <strong class="cell right-magnet">
+            Résultat :&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score]] point(s)
+        </strong>
     </div>
 
-    <div class="row">
-        <div class="seven cell">
-            <h2 class="row">
-                Commentaire :
-            </h2>
-            <div class="row" data-ng-if="isTeacher">
-                <textarea data-ng-model="grainCopy.comment" complete-change="updateGrainCopy()" style="height: 80px;" placeholder="Indiquez un commentaire"></textarea>
-            </div>
-            <div class="row" data-ng-if="!isTeacher">
-                <textarea data-ng-model="grainCopy.comment" style="height: 80px;" placeholder="Pas de commentaire" disabled></textarea>
-            </div>
+    <div data-ng-hide="isFolded" class="eleven cell">
+        <div class="row" data-ng-if="hasAnswerExplanation()">
+            <p style="text-align: justify"><em class="medium-importance">[[ grainScheduled.grain_data.answer_explanation ]]</em></p>
         </div>
-        <div class="one cell">
-            &nbsp;
-        </div>
-        <div class="four cell">
-            <h2 class="row">
-                Résultats :
-            </h2>
-            <div class="row vertical-spacing">
-                <strong>Score automatique :</strong>&nbsp;[[ formatNumber(grainCopy.calculated_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
+
+        <div class="row">
+            <div class="seven cell">
+                <h2 class="row">
+                    Commentaire :
+                </h2>
+                <div class="row" data-ng-if="isTeacher">
+                    <textarea data-ng-model="grainCopy.comment" complete-change="updateGrainCopy()" style="height: 80px;" placeholder="Indiquez un commentaire"></textarea>
+                </div>
+                <div class="row" data-ng-if="!isTeacher">
+                    <textarea data-ng-model="grainCopy.comment" style="height: 80px;" placeholder="Pas de commentaire" disabled></textarea>
+                </div>
             </div>
-            <div class="row vertical-spacing" data-ng-if="isTeacher">
-                <strong>Score final :</strong>&nbsp;<input type="text" data-digits-input-restrict data-ng-model="grainCopy.final_score" value="[[ grainCopy.final_score ]]" complete-change="updateGrainCopy()" style="width:50px;" />&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
+            <div class="one cell">
+                &nbsp;
             </div>
-            <div class="row vertical-spacing" data-ng-if="!isTeacher">
-                <strong>Score final :</strong>&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
+            <div class="four cell">
+                <h2 class="row">
+                    Résultats :
+                </h2>
+                <div class="row vertical-spacing">
+                    <strong>Score automatique :</strong>&nbsp;[[ formatNumber(grainCopy.calculated_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
+                </div>
+                <div class="row vertical-spacing" data-ng-if="isTeacher">
+                    <strong>Score final :</strong>&nbsp;<input type="text" data-digits-input-restrict data-ng-model="grainCopy.final_score" value="[[ grainCopy.final_score ]]" complete-change="updateGrainCopy()" style="width:50px;" />&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
+                </div>
+                <div class="row vertical-spacing" data-ng-if="!isTeacher">
+                    <strong>Score final :</strong>&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] point(s)
+                </div>
             </div>
         </div>
     </div>
