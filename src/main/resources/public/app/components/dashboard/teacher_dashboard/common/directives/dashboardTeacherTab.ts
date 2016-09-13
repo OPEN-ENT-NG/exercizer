@@ -83,7 +83,7 @@ directives.push(
                             case 'mySubjects':
                                 return "Mes sujets";
                             case 'correction':
-                                return "Correction";
+                                return "Mes corrections";
                             case 'library':
                                 return "Bibliothèque";
                             default :
