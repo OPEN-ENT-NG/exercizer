@@ -1,9 +1,10 @@
 <!-- page -->
 <div class="row vertical-spacing">
 
-    <section class="four cell">
+    <!-- LEFT STICKY NAV -->
+    <section class="four cell vertical">
 
-        <nav class="row vertical vertical-spacing" style="margin-top: 0px !important">
+        <nav data-stick-to-top class="hash-magnet floating-navigation">
             <article>
                 <h2 class="row">Filtrer sur les groupes</h2>
 
@@ -16,7 +17,7 @@
                         </autocomplete>
                     </div>
                 </div>
-                <div class="row" style="max-height: 25vh;overflow-y: scroll">
+                <div class="row" style="overflow-y:scroll; max-height: 350px;">
                     <div class="twelve cell">
                         <div data-ng-repeat="item in autocomplete.groupList" data-ng-click="clickOnItem(item)"
                              class="custom-filter-button-correction" data-ng-class="isGroupSelected(item)">
@@ -32,14 +33,12 @@
         <div class="row">
             <div class="cell custom-filter-button"
                  data-ng-click="clickFilter('corrected')"
-                 data-ng-class="filerIsSelected(search.filter, 'corrected')"
-            >
+                 data-ng-class="filerIsSelected(search.filter, 'corrected')">
                 <span>Corrigés</span>
             </div>
             <div class="cell horizontal-spacing custom-filter-button"
                  data-ng-click="clickFilter('notCorrected')"
-                 data-ng-class="filerIsSelected(search.filter, 'notCorrected')"
-            >
+                 data-ng-class="filerIsSelected(search.filter, 'notCorrected')">
                 <span>Non corrigés</span>
             </div>
             <div class="cell" style="margin-top: 10px;">
@@ -107,25 +106,19 @@
                                     </div>
                                     <div class="four cell">
                                         <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList |limitTo : 1">
-                                            <h3
-                                                    style="margin:0px;"
-                                                    data-ng-click="seeAllAssignAtList(subjectScheduled)"
-                                                    class="hover-orange"
-                                            >[[group.name]]</h3>
+                                            <h3 style="margin:0px;"
+                                                data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                                class="hover-orange">[[group.name]]</h3>
                                         </div>
                                         <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList |limitTo : 1">
-                                            <h3
-                                                    style="margin:0px;"
-                                                    data-ng-click="seeAllAssignAtList(subjectScheduled)"
-                                                    class="hover-orange"
-                                            >[[user.name]]</h3>
-                                        </div>
-                                        <h3
-                                                style="margin:0px;"
+                                            <h3 style="margin:0px;"
                                                 data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                                class="hover-orange">[[user.name]]</h3>
+                                        </div>
+                                        <h3 style="margin:0px;"
+                                            data-ng-click="seeAllAssignAtList(subjectScheduled)"
                                             class="hover-orange"
-                                            data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">
-                                            ...</h3>
+                                            data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
 
                                     </div>
                                 </div>
@@ -179,8 +172,8 @@
                                 </div>
                                 <div>
                                     <span data-ng-click="seeAllAssignAtList(subjectScheduled)"
-                                         class="hover-orange"
-                                         data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</span>
+                                          class="hover-orange"
+                                          data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</span>
                                 </div>
 
                             </td>

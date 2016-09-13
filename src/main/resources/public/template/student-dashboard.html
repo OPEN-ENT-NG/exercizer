@@ -14,13 +14,11 @@
     <div class="row twelve cell tabs" data-ng-init="data.tabSelected = 'subjectCopyList'">
         <div class="cell">
             <header data-ng-class="{'selected': data.tabSelected == 'subjectCopyList'}"
-                    data-ng-click="data.tabSelected = 'subjectCopyList'"
-            >
+                    data-ng-click="data.tabSelected = 'subjectCopyList'">
                 Mes sujets
             </header>
             <header data-ng-class="{'selected': data.tabSelected == 'finishSubjectCopyList'}"
-                    data-ng-click="data.tabSelected = 'finishSubjectCopyList'"
-            >
+                    data-ng-click="data.tabSelected = 'finishSubjectCopyList'">
                 Terminés
             </header>
         </div>
@@ -35,7 +33,7 @@
         </div>
         <div ng-switch-when="finishSubjectCopyList">
             <student-dashboard-finish-subject-copy-list></student-dashboard-finish-subject-copy-list>
-       </div>
+        </div>
         <div ng-switch-default>Default</div>
     </div>
 </div>
