@@ -33,12 +33,12 @@
         <div class="row">
             <div class="cell custom-filter-button"
                  data-ng-click="clickFilter('corrected')"
-                 data-ng-class="filerIsSelected(search.filter, 'corrected')">
+                 data-ng-class="filerIsSelected('corrected')">
                 <span>Corrigés</span>
             </div>
             <div class="cell horizontal-spacing custom-filter-button"
                  data-ng-click="clickFilter('notCorrected')"
-                 data-ng-class="filerIsSelected(search.filter, 'notCorrected')">
+                 data-ng-class="filerIsSelected('notCorrected')">
                 <span>Non corrigés</span>
             </div>
             <div class="cell" style="margin-top: 10px;">
@@ -74,7 +74,7 @@
             <div class="row vertical-spacing">
                 <!-- list subject scheduled -->
                 <div class="fallen dominos" data-ng-show="displayList == 'domino'">
-                    <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)"
+                    <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState() | orderBy : orderByCopyListModificationDate : true)"
                          class="item" style="width: 100%; max-width: none;">
 
                         <section class="domino">

@@ -21,7 +21,8 @@ directives.push(
                     scope.search = {
                         groupList: [],
                         beginDate : scope.dateAYearshAgo,
-                        endDate : scope.dateInAYears
+                        endDate : scope.dateInAYears,
+                        filter: []
                     };
 
                     /**
@@ -160,7 +161,12 @@ directives.push(
                     };
 
                     scope.clickFilter = function (filter) {
-                        scope.search.filter = scope.search.filter == filter ? null : filter;
+                        var filterIndex = scope.search.filter.indexOf(filter);
+                        if (filterIndex === -1) {
+                            scope.search.filter.push(filter);
+                        } else {
+                            scope.search.filter.splice(filterIndex, 1);
+                        }
                     };
 
                     scope.clickOnSubjectScheduled = function(subjectScheduled){
@@ -172,10 +178,8 @@ directives.push(
                      * DISPLAY
                      */
 
-                    scope.filerIsSelected = function(filter_a, filter_b){
-                        if(filter_a === filter_b){
-                            return 'custom-selected'
-                        }
+                    scope.filerIsSelected = function(filter){
+                        return scope.search.filter.indexOf(filter) !== -1 ? 'custom-selected' : '';
                     };
 
                     /**
@@ -216,19 +220,19 @@ directives.push(
                         scope.$emit('E_SEE_SUBJECT_SCHEDULED_ASSIGN_AT', {subjectScheduled : subjectScheduled});
                     };
 
-                    scope.filterOnGroupSelectedState = function(filter){
-                        return function (subjectScheduled){
-                            if(!filter){
+                    scope.filterOnGroupSelectedState = function(){
+                        return function (subjectScheduled) {
+
+                            if (scope.search.filter.length === 0 || (scope.search.filter.indexOf('corrected') !== -1 && scope.search.filter.indexOf('notCorrected') !== -1)) {
                                 return true;
-                            } else{
+                            } else {
                                 var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
-                                if(filter == 'corrected'){
+
+                                if (scope.search.filter.indexOf('corrected') !== -1) {
                                     return isListCopyCorrected(list);
-                                } else if(filter == 'notCorrected'){
-                                    return !isListCopyCorrected(list);
-                                } else{
-                                    throw "filter unknown"
                                 }
+
+                                return !isListCopyCorrected(list);
                             }
                         }
                     };

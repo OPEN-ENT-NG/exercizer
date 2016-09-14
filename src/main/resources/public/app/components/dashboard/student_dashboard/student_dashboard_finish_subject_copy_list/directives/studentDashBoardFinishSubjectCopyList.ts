@@ -22,22 +22,21 @@ directives.push(
                             scope.search = {
                                 endDate : scope.dateInAYears,
                                 beginDate : scope.dateAYearsAgo,
-                                filter : null
+                                filter : []
                             };
                         }
 
                         scope.clickFilter = function(filter){
-                            if(scope.search.filter == filter){
-                                scope.search.filter = null
-                            } else{
-                                scope.search.filter = filter
+                            var filterIndex = scope.search.filter.indexOf(filter);
+                            if (filterIndex === -1) {
+                                scope.search.filter.push(filter);
+                            } else {
+                                scope.search.filter.splice(filterIndex, 1);
                             }
                         };
 
-                        scope.filerIsSelected = function(filter_a, filter_b){
-                            if(filter_a === filter_b){
-                                return 'custom-selected'
-                            }
+                        scope.filerIsSelected = function(filter){
+                            return scope.search.filter.indexOf(filter) !== -1 ? 'custom-selected' : '';
                         };
                     }
                 }

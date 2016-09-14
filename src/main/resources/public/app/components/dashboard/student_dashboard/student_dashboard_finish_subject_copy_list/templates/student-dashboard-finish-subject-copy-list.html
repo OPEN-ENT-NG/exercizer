@@ -4,21 +4,17 @@
     <div class="row">
         <div class="cell custom-filter-button"
              data-ng-click="clickFilter('is_submitted')"
-             data-ng-class="filerIsSelected(search.filter, 'is_submitted')"
-        >
+             data-ng-class="filerIsSelected('is_submitted')">
             <span>Rendus</span>
         </div>
         <div class="cell custom-filter-button"
              data-ng-click="clickFilter('is_correction_on_going')"
-             data-ng-class="filerIsSelected(search.filter, 'is_correction_on_going')"
-         >
+             data-ng-class="filerIsSelected('is_correction_on_going')">
             <span>En cours de correction</span>
         </div>
         <div class="cell custom-filter-button"
              data-ng-click="clickFilter('is_corrected')"
-             data-ng-class="filerIsSelected(search.filter, 'is_corrected')"
-
-        >
+             data-ng-class="filerIsSelected('is_corrected')">
             <span>Corrigés</span>
         </div>
         <div class="cell right-magnet">
@@ -43,7 +39,7 @@
 
     <!-- list -->
     <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopySubmittedOrCorrectionOnGoingOrCorrected() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: subjectCopyListController.filterOnSubjectCopyState(search.filter)| orderBy:subjectCopyListController.orderBySubjectScheduledDueDate)">
-        <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
+        <subject-copy-domino subject-copy="subjectCopy" subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
     </div>
     <article data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
         <img src="exercizer/public/assets/img/smiley.PNG"/>

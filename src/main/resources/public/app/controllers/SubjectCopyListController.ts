@@ -75,7 +75,7 @@ class SubjectCopyListController {
         var self = this;
         return function (subjectCopy) {
             if (filter) {
-                return self._subjectCopyService.copyState(subjectCopy) == filter;
+                return filter.indexOf(self._subjectCopyService.copyState(subjectCopy)) !== - 1;
             } else {
                 return true;
             }
