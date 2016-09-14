@@ -58,6 +58,13 @@ class PerformSubjectCopyController {
             this._subjectService.resolve().then(function() {
                 var subject = self._subjectService.getById(subjectId);
 
+                if(model.me.hasRight(subject, 'owner')){
+                } else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager)){
+                } else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)){
+                } else{
+                    self._accessService.reader = true;
+                }
+
                 self._previewFromReader = !!self._accessService.reader;
                 if (!angular.isUndefined(subject)) {
                     self._preview(subject);
