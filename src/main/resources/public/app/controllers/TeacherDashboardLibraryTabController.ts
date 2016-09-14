@@ -171,7 +171,7 @@ class TeacherDashboardLibraryTabController {
      */
 
     public searchByFilters = function (subject:ISubject) {
-
+            var self = this;
             if (angular.isUndefined(subject)) {
                 return false;
             }
