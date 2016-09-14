@@ -156,3 +156,11 @@ body editor.small-editor.edit [contenteditable]:focus {
     border: 1px dashed #FF8500!important;
     background-color: white;
 }
+
+.subject-dragged-grain {
+    z-index: 1000;
+    width: 100%;
+    border: 1px dashed #FF8500!important;
+    background-color: white;
+    cursor: move;
+}
