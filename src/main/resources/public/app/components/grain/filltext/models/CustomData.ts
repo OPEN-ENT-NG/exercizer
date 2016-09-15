@@ -13,7 +13,7 @@ module filltext {
         htmlContent: string;
 
         constructor(copyFrom?: CustomData) {
-            if (!copyFrom.htmlContent) {
+            if (!copyFrom || !copyFrom.htmlContent) {
                 this.zones = [];
                 this.options = [];
                 this.answersType = 'text';

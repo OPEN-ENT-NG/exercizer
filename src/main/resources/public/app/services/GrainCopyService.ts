@@ -297,7 +297,7 @@ class GrainCopyService implements IGrainCopyService {
 
         }
 
-        if (grainCopy.grain_type_id > 5) {
+        if (grainScheduled.grain_data.custom_data && grainCopy.grain_copy_data.custom_copy_data && grainCopy.grain_type_id > 5) {
             grainCopy.grain_copy_data.custom_copy_data.no_error_allowed = grainScheduled.grain_data.custom_data.no_error_allowed;
         }
 

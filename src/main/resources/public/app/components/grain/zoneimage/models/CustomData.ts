@@ -15,7 +15,7 @@ module zoneimage {
         options: string[];
 
         constructor(copyFrom?: CustomData) {
-            if(!copyFrom){
+            if (!copyFrom || !copyFrom){
                 this.zones = [];
                 this.options = [];
             }

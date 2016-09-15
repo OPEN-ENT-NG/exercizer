@@ -17,7 +17,7 @@ module zonetext {
         options: string[];
 
         constructor(copyFrom?: CustomData) {
-            if(!copyFrom){
+            if (!copyFrom || !copyFrom){
                 this.zones = [];
                 this.options = [];
                 this.answersType = 'text';
