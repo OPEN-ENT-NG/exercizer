@@ -77,16 +77,17 @@ public class SubjectScheduledController extends ControllerHelper {
                                     final JsonArray subjectCopyListArray =  resourceScheduled.getArray("subjectCopyList");
                                     List<String> recipientSet;
                                     JsonObject subjectCopy;
-                                    
-                                    for (int i = 0 ; i < subjectCopyListArray.size(); i++) {
+                                    recipientSet = new ArrayList<String>();
+                                    for (int i = 0 ; i < subjectCopyListArray.size(); i++) {                                    	
                                         subjectCopy = subjectCopyListArray.get(i);
-										recipientSet = new ArrayList<String>();
+										//recipientSet = new ArrayList<String>();
 	                                    recipientSet.add(subjectCopy.getString("owner"));
-	                                    String subjectCopyId = Long.toString(subjectCopy.getLong("id"));
-	                                    String relativeUri = "/subject/copy/perform/"+subjectCopyId;
-	                                    sendNotification(request, "assigncopy", user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, subjectCopyId);
+	                                    //String subjectCopyId = Long.toString(subjectCopy.getLong("id"));
+	                                    //String relativeUri = "/subject/copy/perform/"+subjectCopyId;
+	                                    //sendNotification(request, "assigncopy", user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, subjectCopyId);
                                     }
-                                                              
+                                    String relativeUri = "/dashboard/student";
+                                    sendNotification(request, "assigncopy", user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, null);
                                     
                                     renderJson(request, resourceScheduled); 
 								}

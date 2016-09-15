@@ -170,10 +170,8 @@ class TeacherDashboardLibraryTabController {
      * FILTERS
      */
 
-    public searchByFilters = function() {
-        var self = this;
-        return function (subject:ISubject) {
-
+    public searchByFilters = function (subject:ISubject) {
+            var self = this;
             if (angular.isUndefined(subject)) {
                 return false;
             }
@@ -227,7 +225,6 @@ class TeacherDashboardLibraryTabController {
             }
 
             return titleFound && subjectLessonTypeFound && subjectLessonLevelFound && subjectTagListFound;
-        };
     };
 
     public foldFilters = function() {

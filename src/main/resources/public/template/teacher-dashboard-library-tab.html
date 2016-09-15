@@ -97,8 +97,8 @@
                 <h3 class="row"><em>[[ teacherDashboardLibraryTabController.isLanding ? 'Derniers sujets ajoutés...' : 'Résultats de la recherche...' ]]</em></h3>
 
                 <div class="fallen dominos">
-                    <div data-ng-repeat="subject in filteredSubjectList = (teacherDashboardLibraryTabController.subjectList | filter: teacherDashboardLibraryTabController.searchByFilters())">
-                        <div class="item" style="width: 100%; max-width: none;">
+                    <div data-ng-repeat="subject in teacherDashboardLibraryTabController.subjectList">
+                        <div data-ng-if="teacherDashboardLibraryTabController.searchByFilters(subject)" class="item" style="width: 100%; max-width: none;">
                             <section class="domino">
                                 <div class="top">
                                     <img class="absolute" data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)" data-ng-src="[[ teacherDashboardLibraryTabController.getSubjectPicture(subject) ]]" />
