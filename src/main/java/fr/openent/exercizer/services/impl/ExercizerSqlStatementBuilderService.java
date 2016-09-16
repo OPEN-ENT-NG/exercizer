@@ -99,7 +99,7 @@ class ExercizerSqlStatementBuilderService extends SqlCrudService {
      */
     protected SqlStatementsBuilder delete(final Number id, final String column) {
     	SqlStatementsBuilder statement = new SqlStatementsBuilder();
-        String deleteQuery = "DELERE FROM " + resourceTable + " WHERE id = ?";
+        String deleteQuery = "DELETE FROM " + resourceTable + " WHERE id = ?";
         statement.prepared(deleteQuery, new JsonArray().add(id));
       
         return statement;
@@ -114,7 +114,7 @@ class ExercizerSqlStatementBuilderService extends SqlCrudService {
      * @return SqlStatementsBuilder
      */
     protected SqlStatementsBuilder delete(final Number id, final String column, SqlStatementsBuilder statement) {        
-        String deleteQuery = "DELERE FROM " + resourceTable + " WHERE id = ?";
+        String deleteQuery = "DELETE FROM " + resourceTable + " WHERE id = ?";
         statement.prepared(deleteQuery, new JsonArray().add(id));
       
         return statement;

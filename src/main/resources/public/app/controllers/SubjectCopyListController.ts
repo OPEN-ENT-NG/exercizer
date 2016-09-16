@@ -75,7 +75,7 @@ class SubjectCopyListController {
         var self = this;
         return function (subjectCopy) {
             if (filter) {
-                return filter.indexOf(self._subjectCopyService.copyState(subjectCopy)) !== - 1;
+                return angular.isUndefined(filter) || filter === null || filter.length === 0 || filter.indexOf(self._subjectCopyService.copyState(subjectCopy)) !== - 1;
             } else {
                 return true;
             }

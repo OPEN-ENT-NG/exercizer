@@ -65,31 +65,35 @@ public class SubjectScheduledController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							subjectScheduledService.schedule(resource, user,new Handler<Either<String,JsonObject>>() {
+							subjectScheduledService.schedule(resource, user, new Handler<Either<String,JsonObject>>() {
 								@Override
 								public void handle(Either<String, JsonObject> r) {
-                                	final JsonObject resourceScheduled  = ResourceParser.beforeAny(r.right().getValue());
-                            		final JsonObject subjectScheduled = resourceScheduled.getObject("subjectScheduled");
-                            		final String subjectScheduleDueDate = subjectScheduled.getString("due_date");
-                                    final String subjectScheduleDueDate_readable = subjectScheduleDueDate.substring(8,10) + "/" + subjectScheduleDueDate.substring(5,7) + "/" + subjectScheduleDueDate.substring(0,4);
-                                    final String subjectName = subjectScheduled.getString("title"); 
-                                    
-                                    final JsonArray subjectCopyListArray =  resourceScheduled.getArray("subjectCopyList");
-                                    List<String> recipientSet;
-                                    JsonObject subjectCopy;
-                                    recipientSet = new ArrayList<String>();
-                                    for (int i = 0 ; i < subjectCopyListArray.size(); i++) {                                    	
-                                        subjectCopy = subjectCopyListArray.get(i);
-										//recipientSet = new ArrayList<String>();
-	                                    recipientSet.add(subjectCopy.getString("owner"));
-	                                    //String subjectCopyId = Long.toString(subjectCopy.getLong("id"));
-	                                    //String relativeUri = "/subject/copy/perform/"+subjectCopyId;
-	                                    //sendNotification(request, "assigncopy", user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, subjectCopyId);
-                                    }
-                                    String relativeUri = "/dashboard/student";
-                                    sendNotification(request, "assigncopy", user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, null);
-                                    
-                                    renderJson(request, resourceScheduled); 
+									if (r.isRight()) {
+										final JsonObject resourceScheduled  = ResourceParser.beforeAny(r.right().getValue());
+										final JsonObject subjectScheduled = resourceScheduled.getObject("subjectScheduled");
+										final String subjectScheduleDueDate = subjectScheduled.getString("due_date");
+										final String subjectScheduleDueDate_readable = subjectScheduleDueDate.substring(8,10) + "/" + subjectScheduleDueDate.substring(5,7) + "/" + subjectScheduleDueDate.substring(0,4);
+										final String subjectName = subjectScheduled.getString("title"); 
+
+										final JsonArray subjectCopyListArray =  resourceScheduled.getArray("subjectCopyList");
+										List<String> recipientSet;
+										JsonObject subjectCopy;
+										recipientSet = new ArrayList<String>();
+										for (int i = 0 ; i < subjectCopyListArray.size(); i++) {                                    	
+											subjectCopy = subjectCopyListArray.get(i);
+											//recipientSet = new ArrayList<String>();
+											recipientSet.add(subjectCopy.getString("owner"));
+											//String subjectCopyId = Long.toString(subjectCopy.getLong("id"));
+											//String relativeUri = "/subject/copy/perform/"+subjectCopyId;
+											//sendNotification(request, "assigncopy", user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, subjectCopyId);
+										}
+										String relativeUri = "/dashboard/student";
+										sendNotification(request, "assigncopy", user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, null);
+
+										renderJson(request, resourceScheduled); 
+									} else {
+										this.handle(new Either.Left<String, JsonObject>(r.left().getValue()));
+									}
 								}
 							});
 						}
@@ -102,37 +106,37 @@ public class SubjectScheduledController extends ControllerHelper {
 			}
 		});
 	}
-	
-    /**
-    *   Send a notification in copy controller
-    *   @param request : HttpServerRequest client
-    *   @param notificationName : name of the notification
-    *   @param user : user who send the notification
-    *   @param recipientSet : list of student
-    *   @param relativeUri: relative url exemple: /subject/copy/perform/9/
-    *   @param message : message of the notification
-    *   @param idResource : id of the resource
-    **/
-	
+
+	/**
+	 *   Send a notification in copy controller
+	 *   @param request : HttpServerRequest client
+	 *   @param notificationName : name of the notification
+	 *   @param user : user who send the notification
+	 *   @param recipientSet : list of student
+	 *   @param relativeUri: relative url exemple: /subject/copy/perform/9/
+	 *   @param message : message of the notification
+	 *   @param idResource : id of the resource
+	 **/
+
 	private void sendNotification(
-		    final HttpServerRequest request,
-		    final String notificationName,
-		    final UserInfos user,
-		    final List<String> recipientSet,
-	        final String relativeUri,
-	        final String subjectName,
-	        final String dueDate,
-	        final String idResource
-	        ) {
-	        JsonObject params = new JsonObject();
-	        params.putString("uri", container.config().getString("host", "http://localhost:8090") +
-	                "/exercizer#" + relativeUri);
-	        params.putString("username", user.getUsername());
-	        params.putString("subjectName", subjectName);
-	        params.putString("dueDate", dueDate);
-	        params.putString("resourceUri", params.getString("uri"));
-	        this.notification.notifyTimeline(request,"exercizer." + notificationName, user, recipientSet, idResource, params);
-		}
+			final HttpServerRequest request,
+			final String notificationName,
+			final UserInfos user,
+			final List<String> recipientSet,
+			final String relativeUri,
+			final String subjectName,
+			final String dueDate,
+			final String idResource
+			) {
+		JsonObject params = new JsonObject();
+		params.putString("uri", container.config().getString("host", "http://localhost:8090") +
+				"/exercizer#" + relativeUri);
+		params.putString("username", user.getUsername());
+		params.putString("subjectName", subjectName);
+		params.putString("dueDate", dueDate);
+		params.putString("resourceUri", params.getString("uri"));
+		this.notification.notifyTimeline(request,"exercizer." + notificationName, user, recipientSet, idResource, params);
+	}
 
 	@Post("/subject-scheduled/:id")
 	@ApiDoc("Persists a subject scheduled.")
