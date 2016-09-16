@@ -22,6 +22,15 @@
                         <div class="row">
                             <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em>
                         </div>
+                        <div class="row">
+                            <button style="padding: 0px;background: red none repeat scroll 0% 0%;text-transform: none;"
+                                    data-ng-if="tooLate()"
+                                    data-ng-click="submitCopyLate()"
+
+                            >
+                                Rendre la copie
+                            </button>
+                        </div>
                     </div>
                     <div class="cell right-magnet"
                          data-ng-show="isColorColumnDisplay()"

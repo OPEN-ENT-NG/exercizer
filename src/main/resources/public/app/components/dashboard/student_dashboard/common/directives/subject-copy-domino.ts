@@ -59,6 +59,24 @@ directives.push(
                             return scope.subjectScheduled.max_score || '0';
                         };
 
+
+                        scope.tooLate = function(){
+                            if(!scope.subjectCopy.submitted_date){
+                                return DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.due_date), false);
+                            } else{
+                                return false;
+                            }
+
+                        };
+
+                        scope.submitCopyLate = function(){
+                            scope.subjectCopy.submitted_date =  new Date();
+                            SubjectCopyService.update(scope.subjectCopy).then(function(){
+                                notify.info("Votre copie à été rendu");
+                            })
+
+                        };
+
                         /**
                          * Get subject copy information
                          */
