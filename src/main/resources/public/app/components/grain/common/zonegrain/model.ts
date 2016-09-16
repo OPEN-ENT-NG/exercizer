@@ -23,7 +23,7 @@
         var nbPoints = (_.filter(textZonesCorrection).length / textZonesCorrection.length) * grainScheduled.grain_data.max_score;
 
         return {
-            calculated_score: nbPoints,
+            calculated_score: nbPoints || 0,
             answers_result: {
                 correction: textZonesCorrection
             }
