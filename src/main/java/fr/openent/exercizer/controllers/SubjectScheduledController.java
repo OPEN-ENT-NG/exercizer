@@ -92,7 +92,7 @@ public class SubjectScheduledController extends ControllerHelper {
 
 										renderJson(request, resourceScheduled); 
 									} else {
-										this.handle(new Either.Left<String, JsonObject>(r.left().getValue()));
+										renderError(request, new JsonObject().putString("error",r.left().getValue()));
 									}
 								}
 							});
