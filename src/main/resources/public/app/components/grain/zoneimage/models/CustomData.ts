@@ -15,13 +15,18 @@ module zoneimage {
         options: string[];
 
         constructor(copyFrom?: CustomData) {
-            if (!copyFrom || !copyFrom){
+            if (!copyFrom){
                 this.zones = [];
                 this.options = [];
             }
-            else{
-                this.zones = JSON.parse(JSON.stringify(copyFrom.zones));
-                this.options = JSON.parse(JSON.stringify(copyFrom.options));
+            else {
+                if (copyFrom.zones) {
+                    this.zones = JSON.parse(JSON.stringify(copyFrom.zones));
+                }
+                if (copyFrom.options) {
+                    this.options = JSON.parse(JSON.stringify(copyFrom.options));
+                }
+                
                 this._guideImage = copyFrom._guideImage;
             }
         }

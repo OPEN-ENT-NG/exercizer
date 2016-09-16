@@ -17,14 +17,18 @@ module zonetext {
         options: string[];
 
         constructor(copyFrom?: CustomData) {
-            if (!copyFrom || !copyFrom){
+            if (!copyFrom){
                 this.zones = [];
                 this.options = [];
                 this.answersType = 'text';
             }
             else{
-                this.zones = JSON.parse(JSON.stringify(copyFrom.zones));
-                this.options = JSON.parse(JSON.stringify(copyFrom.options));
+                if (copyFrom.zones) {
+                    this.zones = JSON.parse(JSON.stringify(copyFrom.zones));
+                }
+                if (copyFrom.options) {
+                    this.options = JSON.parse(JSON.stringify(copyFrom.options));
+                }
                 this._guideImage = copyFrom._guideImage;
                 this.answersType = copyFrom.answersType;
             }

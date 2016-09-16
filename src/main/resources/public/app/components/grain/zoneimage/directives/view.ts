@@ -12,6 +12,8 @@ directives.push(
                 },
                 templateUrl: 'exercizer/public/app/components/grain/zoneimage/templates/view.html',
                 link: (scope: any) => {
+                    scope.grainCopy.grain_copy_data.custom_copy_data = new zonetext.CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
+
                     var result = zonegrain.automaticCorrection(scope.grainScheduled, scope.grainCopy);
                     scope.correction = result.answers_result.correction;
                     if (!scope.grainCopy.calculated_score) {
