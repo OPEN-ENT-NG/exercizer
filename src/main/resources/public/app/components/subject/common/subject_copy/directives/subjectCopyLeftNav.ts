@@ -33,7 +33,8 @@ directives.push(
                         scope.currentGrainCopy = grainCopy;
 
                         if (scope.anchorBehaviour) {
-                            jQuery('html, body').animate({ scrollTop: jQuery(angular.isUndefined(grainCopy) ? '#summary' : '#' + grainCopy.id).offset().top - 100}, 500);}
+                            //jQuery('html, body').animate({ scrollTop: jQuery(angular.isUndefined(grainCopy) ? '#summary' : '#' + grainCopy.id).offset().top - 100}, 500);
+                        }
                     });
                 }
             };
