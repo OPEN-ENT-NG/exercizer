@@ -33,6 +33,24 @@ class SubjectCopy implements  ISubjectCopy {
     is_deleted: boolean;
     dueDate: string;
 
+    toJSON(){
+        return {
+            id: this.id,
+            subject_scheduled_id: this.subject_scheduled_id,
+            owner: this.owner,
+            owner_username: this.owner_username,
+            created: this.created,
+            modified: this.modified,
+            final_score: this.final_score,
+            calculated_score: this.calculated_score,
+            comment: this.comment,
+            has_been_started: this.has_been_started,
+            is_correction_on_going: this.is_correction_on_going,
+            is_corrected: this.is_corrected,
+            is_deleted: this.is_deleted
+        }
+    }
+
     constructor
     (
         id?:number,
