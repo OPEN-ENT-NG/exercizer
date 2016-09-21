@@ -72,7 +72,7 @@ directives.push(
                         scope.submitCopyLate = function(){
                             scope.subjectCopy.submitted_date =  new Date();
                             SubjectCopyService.update(scope.subjectCopy).then(function(){
-                                notify.info("Votre copie à été rendu");
+                                notify.info("Votre copie à été rendue.");
                             })
 
                         };
