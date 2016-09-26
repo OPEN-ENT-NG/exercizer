@@ -8,8 +8,10 @@ import org.vertx.java.core.json.JsonObject;
 import fr.wseduc.webutils.Either;
 
 public interface ISubjectCopyService {
-	
-	/**
+
+	void submitCopy(final long id, final Handler<Either<String, JsonObject>> handler);
+
+		/**
      *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);

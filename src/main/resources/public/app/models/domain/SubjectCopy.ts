@@ -45,6 +45,7 @@ class SubjectCopy implements  ISubjectCopy {
             calculated_score: this.calculated_score,
             comment: this.comment,
             has_been_started: this.has_been_started,
+            submitted_date: this.submitted_date,
             is_correction_on_going: this.is_correction_on_going,
             is_corrected: this.is_corrected,
             is_deleted: this.is_deleted

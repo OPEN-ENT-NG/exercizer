@@ -1,5 +1,6 @@
 package fr.openent.exercizer.services.impl;
 
+import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
@@ -14,11 +15,20 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
 	public SubjectCopyServiceSqlImpl() {
 		super("exercizer", "subject_copy");
 	}
-	
+
+	@Override
+	public void submitCopy(final long id, final Handler<Either<String, JsonObject>> handler) {
+		sql.prepared(
+				"UPDATE " + schema + "subject_copy SET submitted_date=NOW() WHERE id = ? RETURNING *",
+				new JsonArray().addNumber(id),
+				SqlResult.validUniqueResultHandler(handler)
+		);
+	}
+
 	/**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
-    @Override
+	@Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         JsonObject subjectCopy = ResourceParser.beforeAny(resource);
         super.persistWithAnotherOwner(subjectCopy, user, handler);
