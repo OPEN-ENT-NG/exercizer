@@ -41,6 +41,7 @@ public class SubjectCopyController extends ControllerHelper {
 	private final ISubjectCopyService subjectCopyService;
 	private final ISubjectScheduledService subjectScheduledService;
 	private final ISubjectService subjectService;
+	private enum NotificationType  {ASSIGNCOPY, SUBMITCOPY, CORRECTCOPY};
 	
 	public SubjectCopyController() {
 		this.subjectCopyService = new SubjectCopyServiceSqlImpl();
@@ -89,7 +90,7 @@ public class SubjectCopyController extends ControllerHelper {
                                                             recipientSet.add(subjectCopy.getString("owner"));
                                                             String relativeUri = "/subject/copy/perform/"+subjectCopyId_string;
                                                             String message = "";
-                                                            sendNotification(request, "assigncopy", user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, subjectCopyId_string);
+                                                            sendNotification(request, NotificationType.ASSIGNCOPY, user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, subjectCopyId_string);
                                                             renderJson(request, subjectCopy);
                                                         
                                                         }
@@ -115,7 +116,7 @@ public class SubjectCopyController extends ControllerHelper {
     /**
     *   Send a notification in copy controller
     *   @param request : HttpServerRequest client
-    *   @param notificationName : name of the notification
+    *   @param nt : notification type
     *   @param user : user who send the notification
     *   @param recipientSet : list of student
     *   @param relativeUri: relative url exemple: /subject/copy/perform/9/
@@ -124,7 +125,7 @@ public class SubjectCopyController extends ControllerHelper {
 	
 	private void sendNotification(
 		    final HttpServerRequest request,
-		    final String notificationName,
+		    final NotificationType nt,
 		    final UserInfos user,
 		    final List<String> recipientSet,
 	        final String relativeUri,
@@ -139,42 +140,46 @@ public class SubjectCopyController extends ControllerHelper {
 	        params.putString("subjectName", subjectName);
 	        params.putString("dueDate", dueDate);
 	        params.putString("resourceUri", params.getString("uri"));
-	        this.notification.notifyTimeline(request,"exercizer." + notificationName, user, recipientSet, idResource, params);
+	        this.notification.notifyTimeline(request,"exercizer." + nt.name().toLowerCase(), user, recipientSet, idResource, params);
 		}
 
 	private Handler<Either<String, JsonObject>> notifyHandler(
 			final HttpServerRequest request, final UserInfos user,
-			final JsonObject subjectCopy, final String notificationName) {
+			final JsonObject subjectCopy, final NotificationType nt) {
 		final String subjectCopyId = Long.toString(subjectCopy.getLong("id"));
 		final String subjectScheduleId = Long.toString(subjectCopy.getLong("subject_scheduled_id"));
 		return new Handler<Either<String, JsonObject>>() {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
-				if (event.isRight()) {
-					subjectScheduledService.getById(subjectScheduleId, user, new Handler<Either<String,JsonObject>>() {
-						@Override
-						public void handle(Either<String, JsonObject> r) {
-							final JsonObject subjectSchedule  = ResourceParser.beforeAny(r.right().getValue());
-							subjectService.getById(Long.toString(subjectSchedule.getLong("subject_id")), user, new Handler<Either<String,JsonObject>>() {
-								@Override
-								public void handle(Either<String, JsonObject> r) {
-									final JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
-									// notify copy submission only if submitCopy scucceed
-									sendNotification(request, notificationName, user,
-											Arrays.asList(subjectSchedule.getString("owner")),
-											"/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId,
-											subject.getString("title"),
-											null,
-											subjectCopyId);
-								}
-							});
-						}
-					});
-					renderJson(request, event.right().getValue(), 200);
-				} else {
-					JsonObject error = new JsonObject().putString("error", event.left().getValue());
-					renderJson(request, error, 400);
+				if (event.isLeft()) {
+					badRequest(request, event.left().getValue());
+					return;
 				}
+				subjectScheduledService.getById(subjectScheduleId, user, new Handler<Either<String,JsonObject>>() {
+					@Override
+					public void handle(Either<String, JsonObject> r) {
+						final JsonObject subjectSchedule  = ResourceParser.beforeAny(r.right().getValue());
+						subjectService.getById(Long.toString(subjectSchedule.getLong("subject_id")), user, new Handler<Either<String,JsonObject>>() {
+							@Override
+							public void handle(Either<String, JsonObject> r) {
+								final JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
+								String recipient = "";
+								switch (nt) {
+									case SUBMITCOPY: recipient = subjectSchedule.getString("owner"); break;
+									case CORRECTCOPY: recipient = subjectCopy.getString("owner"); break;
+									case ASSIGNCOPY: recipient = subjectCopy.getString("owner"); break;
+								}
+								sendNotification(request, nt, user,
+										Arrays.asList(recipient),
+										"/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId,
+										subject.getString("title"),
+										null,
+										subjectCopyId);
+							}
+						});
+					}
+				});
+				renderJson(request, event.right().getValue(), 200);
 			}
 		};
 	}
@@ -208,10 +213,10 @@ public class SubjectCopyController extends ControllerHelper {
                                     final Boolean subjectCopyIsCorrected = subjectCopy.getBoolean("is_corrected");
                                 	if (subjectCopySubmittedDate.isEmpty() && !ressourceSubmittedDate.isEmpty()){
 										subjectCopyService.submitCopy(resource.getLong("id"),
-												notifyHandler(request, user, subjectCopy,"submitcopy"));
+												notifyHandler(request, user, subjectCopy,NotificationType.SUBMITCOPY));
                                 	} else if(subjectCopyIsCorrected == false && ressourceIsCorrected == true){
                                 		subjectCopyService.update(resource, user,
-												notifyHandler(request, user, subjectCopy, "correctcopy"));
+												notifyHandler(request, user, subjectCopy, NotificationType.CORRECTCOPY));
                                 	}	else {
             							subjectCopyService.update(resource, user, notEmptyResponseHandler(request));                              	
                                 	}
