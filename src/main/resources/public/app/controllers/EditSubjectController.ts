@@ -432,6 +432,10 @@ class EditSubjectController {
         this._isOrganizerFolded = !this._isOrganizerFolded;
     };
 
+    public scrollToGrain = (grain_id) => {
+        jQuery('html, body').animate({ scrollTop: jQuery(`#grain-edit-${grain_id}`).offset().top - 70 }, 500);
+    }
+
     /**
      *  TOASTER
      */

@@ -79,7 +79,11 @@
                                             </div>
 
                                         </div>
-                                        <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">[[ grain.grain_type_id > 3 ? editSubjectController.getCorrectOrder(grain) + ') ' : '' ]] [[editSubjectController.getGrainDisplayedName(grain) ]]</div>
+                                        <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;"
+                                             data-ng-click="editSubjectController.scrollToGrain(grain.id)">
+                                            [[ grain.grain_type_id > 3 ? editSubjectController.getCorrectOrder(grain) + ') ' : '' ]] 
+                                            [[editSubjectController.getGrainDisplayedName(grain) ]]
+                                        </div>
                                         <div class="cell right-magnet">
                                             <i class="drag-anchor"></i>
                                         </div>
