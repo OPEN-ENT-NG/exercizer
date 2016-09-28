@@ -164,14 +164,15 @@ public class SubjectCopyController extends ControllerHelper {
 							public void handle(Either<String, JsonObject> r) {
 								final JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
 								String recipient = "";
+								String url = "";
 								switch (nt) {
-									case SUBMITCOPY: recipient = subjectSchedule.getString("owner"); break;
-									case CORRECTCOPY: recipient = subjectCopy.getString("owner"); break;
-									case ASSIGNCOPY: recipient = subjectCopy.getString("owner"); break;
+									case SUBMITCOPY: recipient = subjectSchedule.getString("owner"); url = "/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId; break;
+									case CORRECTCOPY: recipient = subjectCopy.getString("owner");  url = "/subject/copy/view/"+ subjectCopyId; break;
+									case ASSIGNCOPY: recipient = subjectCopy.getString("owner");  url = "/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId; break;
 								}
 								sendNotification(request, nt, user,
 										Arrays.asList(recipient),
-										"/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId,
+										url,
 										subject.getString("title"),
 										null,
 										subjectCopyId);

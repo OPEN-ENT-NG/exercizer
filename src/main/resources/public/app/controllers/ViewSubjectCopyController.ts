@@ -11,7 +11,8 @@ class ViewSubjectCopyController {
         'GrainScheduledService',
         'GrainCopyService',
         'GrainTypeService',
-        'AccessService'
+        'AccessService',
+        'DateService'
     ];
 
     private _subjectScheduled:ISubjectScheduled;
@@ -35,7 +36,8 @@ class ViewSubjectCopyController {
         private _grainScheduledService:IGrainScheduledService,
         private _grainCopyService:IGrainCopyService,
         private _grainTypeService:IGrainTypeService,
-        private _accessService:IAccessService
+        private _accessService:IAccessService,
+        private _dateService:IDateService
     ) {
         this._$scope = _$scope;
         this._$location = _$location;
@@ -122,38 +124,44 @@ class ViewSubjectCopyController {
 
                             if (!angular.isUndefined(self._subjectScheduled)) {
 
-                                self._grainCopyService.getListBySubjectCopy(self._subjectCopy).then(
-                                    function(grainCopyList:IGrainCopy[]) {
+                                if(self._dateService.compare_after(new Date(), self._dateService.isoToDate(self._subjectScheduled.due_date), false)){
 
-                                        if (!angular.isUndefined(grainCopyList)) {
-                                            self._grainCopyList = grainCopyList;
+                                    self._grainCopyService.getListBySubjectCopy(self._subjectCopy).then(
+                                        function(grainCopyList:IGrainCopy[]) {
 
-                                            self._grainScheduledService.getListBySubjectScheduled(self._subjectScheduled).then(
-                                                function(grainScheduledList:IGrainScheduled[]) {
-                                                    
-                                                    if (!angular.isUndefined(grainScheduledList)) {
-                                                        self._grainScheduledList = grainScheduledList;
-                                                        self._eventsHandler(self);
-                                                        self._hasDataLoaded = true;
-                                                    } else {
-                                                        self._$location.path('/dashboard');
+                                            if (!angular.isUndefined(grainCopyList)) {
+                                                self._grainCopyList = grainCopyList;
+
+                                                self._grainScheduledService.getListBySubjectScheduled(self._subjectScheduled).then(
+                                                    function(grainScheduledList:IGrainScheduled[]) {
+
+                                                        if (!angular.isUndefined(grainScheduledList)) {
+                                                            self._grainScheduledList = grainScheduledList;
+                                                            self._eventsHandler(self);
+                                                            self._hasDataLoaded = true;
+                                                        } else {
+                                                            self._$location.path('/dashboard');
+                                                        }
+
+                                                    },
+                                                    function(err) {
+                                                        notify.error(err);
                                                     }
-                                                    
-                                                },
-                                                function(err) {
-                                                    notify.error(err);
-                                                }
-                                            );
-                                        } else {
-                                            self._$location.path('/dashboard');
+                                                );
+                                            } else {
+                                                self._$location.path('/dashboard');
+                                            }
+
+                                        },
+                                        function(err) {
+                                            notify.error(err);
                                         }
+                                    )
 
-                                    },
-                                    function(err) {
-                                        notify.error(err);
-                                    }
-                                )
-
+                                } else{
+                                    notify.info("Vous pourrez consulter votre copie après le " + self._dateService.isoToDate(self._subjectScheduled.due_date).toLocaleDateString());
+                                    self._$location.path('/dashboard');
+                                }
                             } else {
                                 self._$location.path('/dashboard');
                             }
