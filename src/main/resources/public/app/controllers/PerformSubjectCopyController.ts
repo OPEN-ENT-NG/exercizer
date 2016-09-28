@@ -58,9 +58,9 @@ class PerformSubjectCopyController {
             this._subjectService.resolve().then(function() {
                 var subject = self._subjectService.getById(subjectId);
 
-                if(model.me.hasRight(subject, 'owner')){
-                } else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager)){
-                } else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)){
+                if(subject && model.me.hasRight(subject, 'owner')){
+                } else if(subject && model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager)){
+                } else if(subject && model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)){
                 } else{
                     self._accessService.reader = true;
                 }
@@ -133,39 +133,39 @@ class PerformSubjectCopyController {
                 self._subjectCopyService.resolve(false).then(
                     function() {
                         self._subjectCopy = self._subjectCopyService.getById(subjectCopyId);
-                        
+
                         if (!angular.isUndefined(self._subjectCopy)) {
 
                             self._subjectScheduled = self._subjectScheduledService.getById(self._subjectCopy.subject_scheduled_id);
 
                             if (!angular.isUndefined(self._subjectScheduled)) {
-                                
+
                                 self._grainCopyService.getListBySubjectCopy(self._subjectCopy).then(
                                     function(grainCopyList:IGrainCopy[]) {
-                                        
+
                                         if (!angular.isUndefined(grainCopyList)) {
                                             self._grainCopyList = grainCopyList;
                                             self._eventsHandler(self);
                                             self._hasDataLoaded = true;
-                                            
+
                                         } else {
                                             self._$location.path('/dashboard');
                                         }
-                                        
+
                                     },
                                     function(err) {
                                         notify.error(err);
                                     }
                                 )
-                                
+
                             } else {
                                 self._$location.path('/dashboard');
                             }
-                            
+
                         } else {
                             self._$location.path('/dashboard');
                         }
-                        
+
                     },
                     function(err) {
                         notify.error(err);
@@ -276,4 +276,3 @@ class PerformSubjectCopyController {
         return this._hasDataLoaded;
     }
 }
-
