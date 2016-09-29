@@ -73,6 +73,11 @@ directives.push(
                          * GETTER
                          */
 
+
+                        scope.amITheAuthor = function(subject){
+                            return model.me.hasRight(subject, 'owner');
+                        };
+
                         scope.subjectList = function () {
                             return SubjectService.getList();
                         };

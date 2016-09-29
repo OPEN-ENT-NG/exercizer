@@ -110,6 +110,9 @@
                                         <div class="row">
                                             <span data-ng-if="subject.modified">Modifié le [[subject.modified | date: 'dd/MM/yyyy']]</span>
                                         </div>
+                                        <div class="row" data-ng-if="!amITheAuthor(subject)">
+                                            <span data-ng-if="subject.modified">Auteur :  [[subject.owner_username]]</span>
+                                        </div>
                                     </div>
                                     <div data-ng-show="canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
                                         <div class="right-magnet cell">
@@ -139,6 +142,9 @@
                     <th data-ng-if="display.tab == 'mySubject'"><i class="drag-anchor" ></i></th>
                     <th scope="col">
                         <span>Nom</span>
+                    </th>
+                    <th scope="col">
+                        <span>Auteur</span>
                     </th>
                 </tr>
                 </thead>
@@ -173,6 +179,9 @@
                     </td>
                     <td>
                         <a data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</a>
+                    </td>
+                    <td>
+                        <a>[[subject.owner_username]]</a>
                     </td>
                 </tr>
                 </tbody>
