@@ -39,6 +39,10 @@ class DateService implements IDateService {
         return new Date(parseInt(timestamp) * 1000);
     }
 
+    public addHours(date, h){
+        return new Date(date.setHours ( date.getHours() + h ));
+    }
+
     public isoToDate(iso) {
         return new Date(iso);
     }

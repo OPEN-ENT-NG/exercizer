@@ -124,7 +124,7 @@ class ViewSubjectCopyController {
 
                             if (!angular.isUndefined(self._subjectScheduled)) {
 
-                                if(self._dateService.compare_after(new Date(), self._dateService.isoToDate(self._subjectScheduled.due_date), false)){
+                                if(self._isTeacher || self._dateService.compare_after(new Date(), self._dateService.isoToDate(self._subjectScheduled.due_date), false)){
 
                                     self._grainCopyService.getListBySubjectCopy(self._subjectCopy).then(
                                         function(grainCopyList:IGrainCopy[]) {

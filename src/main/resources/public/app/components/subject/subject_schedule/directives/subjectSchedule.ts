@@ -109,6 +109,7 @@ directives.push(
                     function canSchedule(option, subject) {
                         var deferred = $q.defer();
                         if (option.begin_date && option.due_date) {
+                            option.due_date = DateService.addHours(option.due_date, -option.due_date.getTimezoneOffset()/60);
                             if (DateService.compare_after(option.due_date, option.begin_date, true)) {
                                 // shchedule options is correct , now check subject itself
                                 GrainService.getListBySubject(subject).then(
