@@ -168,18 +168,53 @@ directives.push(
 
                         scope.selectAllFn = function(selectAll){
                             angular.forEach(scope.folderList(), function(folder){
-                                if(scope.filterFolderByParentFolder(folder)){
+                                if(isSelectableFolder(folder)){
                                     folder.selected = selectAll ? true : false;
                                     scope.$emit('E_SELECT_FOLDER', folder);
                                 }
                             });
                             angular.forEach(scope.subjectList(), function(subject){
-                                if(scope.filterSubjectByParentFolder(subject)){
+                                if(isSelectableSubject(subject)){
                                     subject.selected = selectAll ? true : false;
                                     scope.$emit('E_SELECT_SUBJECT', subject);
                                 }
                             });
                         };
+
+                        function isSelectableFolder(folder){
+                            var parent_id;
+                            if(scope.currentFolderId){
+                                parent_id =  folder.parent_folder_id == scope.currentFolderId
+                            } else{
+                                parent_id =  folder.parent_folder_id == null;
+                            }
+                            return parent_id && scope.display.tab  === 'mySubject'
+                        }
+
+                        function isSelectableSubject(subject){
+                            var parent_id;
+                            var owner;
+                            if(scope.display.tab == 'subjectShared'){
+                                parent_id =  true;
+                            } else{
+                                if(scope.currentFolderId){
+                                    parent_id =  subject.folder_id == scope.currentFolderId
+                                } else{
+                                    parent_id =  subject.folder_id == null;
+                                }
+                            }
+                            //
+                            if(model.me.hasRight(subject, 'owner') && scope.display.tab == 'mySubject'){
+                                owner =  true
+                            } else if(!model.me.hasRight(subject, 'owner') && scope.display.tab == 'subjectShared') {
+                                owner =  true
+
+                            } else{
+                                owner =  false;
+                            }
+                            return parent_id && owner;
+                        }
+
 
                         /**
                          * FILTER
