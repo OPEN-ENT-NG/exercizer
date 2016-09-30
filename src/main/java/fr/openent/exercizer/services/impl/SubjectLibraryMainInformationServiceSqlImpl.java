@@ -18,7 +18,7 @@ public class SubjectLibraryMainInformationServiceSqlImpl extends AbstractExerciz
 	 */
 	@Override
 	public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-		super.persist(resource, user, handler);
+		super.persist(resource, handler);
 	}
 
 }

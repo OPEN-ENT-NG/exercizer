@@ -72,7 +72,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		subjectScheduled.putString("owner", user.getUserId());
     	subjectScheduled.putString("owner_username", user.getUsername());
 		final ExercizerSqlStatementBuilderService exercizerSubjectScheduledSqlStatementBuilderService = new ExercizerSqlStatementBuilderService("exercizer", "subject_scheduled");
-		SqlStatementsBuilder subjectScheduledSqlStatement = exercizerSubjectScheduledSqlStatementBuilderService.persist(subjectScheduled, user);
+		SqlStatementsBuilder subjectScheduledSqlStatement = exercizerSubjectScheduledSqlStatementBuilderService.persist(subjectScheduled, user, null);
 
 		Sql.getInstance().transaction(subjectScheduledSqlStatement.build(), SqlResult.validUniqueResultHandler(1, new Handler<Either<String,JsonObject>>() {
 			@Override
@@ -88,7 +88,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 					for (int i = 0; i < grainScheduledList.size(); i++) {
 						JsonObject grainScheduled = grainScheduledList.get(i);
 						grainScheduled.putNumber("subject_scheduled_id", subjectScheduled.getNumber("id"));
-						grainScheduledListSqlStatement = exercizerGrainScheduledSqlStatementBuilderService.persist(grainScheduled, user, grainScheduledListSqlStatement);
+						grainScheduledListSqlStatement = exercizerGrainScheduledSqlStatementBuilderService.persist(grainScheduled, grainScheduledListSqlStatement);
 					}
 					
 					Sql.getInstance().transaction(grainScheduledListSqlStatement.build(), SqlResult.validResultsHandler(new Handler<Either<String,JsonArray>>() {
@@ -109,7 +109,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 									subjectCopy.putNumber("subject_scheduled_id", subjectScheduled.getNumber("id"));
 									subjectCopy.putString("owner", currentUser.getString("id"));
 									subjectCopy.putString("owner_username", currentUser.getString("name"));
-									subjectCopyListSqlStatement = exercizerSubjectCopySqlStatementBuilderService.persistWithAnotherOwner(subjectCopy, user, subjectCopyListSqlStatement);
+									subjectCopyListSqlStatement = exercizerSubjectCopySqlStatementBuilderService.persistWithAnotherOwner(subjectCopy, subjectCopyListSqlStatement);
 								}
 								
 								Sql.getInstance().transaction(subjectCopyListSqlStatement.build(), SqlResult.validResultsHandler(new Handler<Either<String,JsonArray>>() {
@@ -156,7 +156,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 													JsonObject grainCopy = currentGrainCopyTemplate.copy();
 													grainCopy.putNumber("subject_copy_id", currentSubjectCopy.getNumber("id"));
 													grainCopy.putNumber("grain_scheduled_id", currentGrainScheduled.getNumber("id"));
-													grainCopyListSqlStatement = exercizerGrainCopySqlStatementBuilderService.persist(grainCopy, user, grainCopyListSqlStatement);
+													grainCopyListSqlStatement = exercizerGrainCopySqlStatementBuilderService.persist(grainCopy, grainCopyListSqlStatement);
 												}
 											}
 											

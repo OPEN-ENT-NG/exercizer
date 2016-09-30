@@ -31,7 +31,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
 	@Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         JsonObject subjectCopy = ResourceParser.beforeAny(resource);
-        super.persistWithAnotherOwner(subjectCopy, user, handler);
+        super.persistWithAnotherOwner(subjectCopy, handler);
     }
 
     /**

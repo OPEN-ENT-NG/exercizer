@@ -17,22 +17,12 @@ class ExercizerSqlStatementBuilderService extends SqlCrudService {
         super(schema, table);
     }
 
-    /**
-     * Persists a resource.
-     *
-     * @param resource the resource
-     * @param user the current user
-     * @return SqlStatementsBuilder
-     */
-    protected SqlStatementsBuilder persist(final JsonObject resource, final UserInfos user) {
-        SqlStatementsBuilder statement = new SqlStatementsBuilder();
-        String userQuery = "SELECT " + schema + "merge_users(?,?)";
-        statement.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
-        statement.insert(resourceTable, resource, "*");
-        
-        return statement;
-    }
-    
+	protected SqlStatementsBuilder persist(final JsonObject resource, SqlStatementsBuilder statement) {
+		if (statement == null) statement = new SqlStatementsBuilder();
+		statement.insert(resourceTable, resource, "*");
+		return statement;
+	}
+
     /**
      * Persists a resource.
      *
@@ -42,34 +32,14 @@ class ExercizerSqlStatementBuilderService extends SqlCrudService {
      * @return SqlStatementsBuilder
      */
     protected SqlStatementsBuilder persist(final JsonObject resource, final UserInfos user, SqlStatementsBuilder statement) {
-        String userQuery = "SELECT " + schema + "merge_users(?,?)";
+		if (statement == null) statement = new SqlStatementsBuilder();
+		String userQuery = "SELECT " + schema + "merge_users(?,?)";
         statement.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
         statement.insert(resourceTable, resource, "*");
         
         return statement;
     }
-    
-    /**
-     * Persists a resource which contains another owner as the current user.
-     *
-     * @param resource the resource
-     * @param user the current user
-     * @return SqlStatementsBuilder
-     */
-    protected SqlStatementsBuilder persistWithAnotherOwner(final JsonObject resource, final UserInfos user) {
-        SqlStatementsBuilder statement = new SqlStatementsBuilder();
-        
-        String userQuery = "SELECT " + schema + "merge_users(?,?)";
-        statement.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
-        
-        String anotherOwnerQuery = "SELECT " + schema + "merge_users(?,?)";
-        statement.prepared(anotherOwnerQuery, new JsonArray().add(resource.getString("owner")).add(resource.getString("owner_username")));
-        
-        statement.insert(resourceTable, resource, "*");
-        
-        return statement;
-    }
-    
+
     /**
      * Persists a resource which contains another owner as the current user.
      *
@@ -78,10 +48,8 @@ class ExercizerSqlStatementBuilderService extends SqlCrudService {
      * @param statement the current statement
      * @return SqlStatementsBuilder
      */
-    protected SqlStatementsBuilder persistWithAnotherOwner(final JsonObject resource, final UserInfos user, SqlStatementsBuilder statement) {        
-        String userQuery = "SELECT " + schema + "merge_users(?,?)";
-        statement.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
-        
+    protected SqlStatementsBuilder persistWithAnotherOwner(final JsonObject resource, SqlStatementsBuilder statement) {
+		if (statement == null) statement = new SqlStatementsBuilder();
         String anotherOwnerQuery = "SELECT " + schema + "merge_users(?,?)";
         statement.prepared(anotherOwnerQuery, new JsonArray().add(resource.getString("owner")).add(resource.getString("owner_username")));
         
@@ -89,32 +57,18 @@ class ExercizerSqlStatementBuilderService extends SqlCrudService {
         
         return statement;
     }
-    
+
     /**
      * Deletes a resource.
      *
      * @param id the id
      * @param column the column
+     * @param statement the current statement
      * @return SqlStatementsBuilder
      */
     protected SqlStatementsBuilder delete(final Number id, final String column) {
-    	SqlStatementsBuilder statement = new SqlStatementsBuilder();
-        String deleteQuery = "DELETE FROM " + resourceTable + " WHERE id = ?";
-        statement.prepared(deleteQuery, new JsonArray().add(id));
-      
-        return statement;
-    }
-    
-    /**
-     * Deletes a resource.
-     *
-     * @param id the id
-     * @param column the column
-     * @param statement the current statement
-     * @return SqlStatementsBuilder
-     */
-    protected SqlStatementsBuilder delete(final Number id, final String column, SqlStatementsBuilder statement) {        
-        String deleteQuery = "DELETE FROM " + resourceTable + " WHERE id = ?";
+		SqlStatementsBuilder statement = new SqlStatementsBuilder();
+		String deleteQuery = "DELETE FROM " + resourceTable + " WHERE id = ?";
         statement.prepared(deleteQuery, new JsonArray().add(id));
       
         return statement;

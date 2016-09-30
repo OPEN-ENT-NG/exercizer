@@ -21,7 +21,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         JsonObject folder = ResourceParser.beforeAny(resource);
         folder.putString("owner", user.getUserId());
-        super.persist(folder, user, handler);
+        super.persist(folder, handler);
     }
 
     /**

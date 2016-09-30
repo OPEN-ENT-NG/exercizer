@@ -18,7 +18,7 @@ public class SubjectTagServiceSqlImpl extends AbstractExercizerServiceSqlImpl im
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-    	super.persist(resource, user, handler);
+    	super.persist(resource, handler);
     }
 
     /**

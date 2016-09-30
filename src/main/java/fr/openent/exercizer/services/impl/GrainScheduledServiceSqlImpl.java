@@ -21,7 +21,7 @@ public class GrainScheduledServiceSqlImpl extends AbstractExercizerServiceSqlImp
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
     	JsonObject grainScheduled = ResourceParser.beforeAny(resource);
-    	super.persist(grainScheduled, user, handler);
+    	super.persist(grainScheduled, handler);
     }
 
     /**
