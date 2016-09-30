@@ -21,7 +21,7 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
     	JsonObject grainCopy = ResourceParser.beforeAny(resource);
-    	super.persist(grainCopy, user, handler);
+    	super.persist(grainCopy, handler);
     }
 
     /**

@@ -20,7 +20,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
     	JsonObject grain = ResourceParser.beforeAny(resource);
-    	super.persist(grain, user, handler);
+    	super.persist(grain, handler);
     }
 
     /**
