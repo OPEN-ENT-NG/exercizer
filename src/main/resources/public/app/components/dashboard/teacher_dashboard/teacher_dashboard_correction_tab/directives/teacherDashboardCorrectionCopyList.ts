@@ -45,10 +45,16 @@ directives.push(
                     };
 
                     scope.clickSelectAll = function(selectAll){
+                        var count = 0;
                         angular.forEach(scope.subjectCopyList, function(copy){
-                            copy.selected = selectAll
+                            if(!copy.is_corrected){
+                                copy.selected = selectAll;
+                                count++
+                            }
                         });
-                        scope.toasterDisplayed =  selectAll;
+                        if(count>0){
+                            scope.toasterDisplayed =  selectAll;
+                        }
                     };
 
                     scope.clickOnCopy = function(copy){
@@ -68,10 +74,13 @@ directives.push(
                                 promises.push(SubjectCopyService.update(copy));
                             }
                         });
-                        scope.selectAll = false;
                         $q.all(promises).then(
                             function(data){
-                                scope.clickSelectAll(scope.selectAll);
+                                angular.forEach(scope.subjectCopyList, function(copy){
+                                        copy.selected = false;
+                                });
+                                scope.toasterDisplayed =  false;
+                                scope.selectAll = false
                             }
                         );
                     };

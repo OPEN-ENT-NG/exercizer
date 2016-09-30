@@ -51,7 +51,7 @@
           <tbody>
           <tr data-ng-repeat="copy in subjectCopyList | orderBy: 'owner_username'">
                <td>
-                    <input data-ng-show="canCorrectACopyAsTeacher(copy)" type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
+                    <input data-ng-disabled="copy.isCorrected" data-ng-show="canCorrectACopyAsTeacher(copy) && !copy.is_corrected" type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                </td>
                <td data-ng-switch="selectTitle(copy)">
                     <span data-ng-switch-when="text">[[copy.owner_username]]</span>
