@@ -66,7 +66,7 @@ public class SubjectController extends ControllerHelper {
 	@Put("/subject/:id")
 	@ApiDoc("Updates a subject.")
 	@ResourceFilter(ShareAndOwner.class)
-	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
 	public void update(final HttpServerRequest request) {
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override

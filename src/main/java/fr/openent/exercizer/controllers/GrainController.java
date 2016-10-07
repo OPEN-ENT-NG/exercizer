@@ -29,7 +29,7 @@ public class GrainController extends ControllerHelper {
     @Post("/grain/:id")
     @ApiDoc("Persists a grain.")
     @ResourceFilter(ShareAndOwner.class)
-	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
     public void persist(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -53,7 +53,7 @@ public class GrainController extends ControllerHelper {
     @Put("/grain/:id")
     @ApiDoc("Updates a grain.")
     @ResourceFilter(ShareAndOwner.class)
-	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
     public void update(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
@@ -77,7 +77,7 @@ public class GrainController extends ControllerHelper {
     @Delete("/grain/:id")
     @ApiDoc("Deletes a grain.")
     @ResourceFilter(ShareAndOwner.class)
-	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
     public void remove(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
