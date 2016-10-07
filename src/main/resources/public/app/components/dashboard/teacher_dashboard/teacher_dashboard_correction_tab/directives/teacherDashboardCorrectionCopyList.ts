@@ -71,7 +71,7 @@ directives.push(
                         angular.forEach(scope.subjectCopyList, function(copy){
                             if(SubjectCopyService.canCorrectACopyAsTeacher(scope.selectedSubjectScheduled, copy) && copy.selected){
                                 copy.is_corrected = true;
-                                promises.push(SubjectCopyService.update(copy));
+                                promises.push(SubjectCopyService.correct(copy));
                             }
                         });
                         $q.all(promises).then(
