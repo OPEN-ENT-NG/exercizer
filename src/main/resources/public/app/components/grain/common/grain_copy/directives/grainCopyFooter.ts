@@ -28,6 +28,7 @@ directives.push(
                     scope.updateGrainCopy = function() {
                         if (scope.isTeacher) {
                             scope.grainCopy.comment = StringISOHelper.toISO(scope.grainCopy.comment);
+                            scope.grainCopy.final_score = new Number(scope.grainCopy.final_score).valueOf();
                             scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                         }
                     };

@@ -216,26 +216,24 @@ class ViewSubjectCopyController {
 
         function _handleUpdateSubjectCopy(subjectCopy:ISubjectCopy, redirect:boolean) {
             _calculateScores();
-            self._subjectCopyService.update(subjectCopy).then(
-                function(subjectCopy:ISubjectCopy) {
-                    self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
-                    self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
-                },
-                function(err) {
-                    notify.info(err);
-                }
-            )
+            let success = function(subjectCopy:ISubjectCopy) {
+                self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
+                self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
+            };
+            let error = function(err) {
+                notify.error(err);
+            }
+            if (subjectCopy.is_corrected) {
+                self._subjectCopyService.correct(subjectCopy).then(success, error);
+            } else {
+                self._subjectCopyService.update(subjectCopy).then(success, error);
+            }
         }
 
         function _handleUpdateGrainCopy(grainCopy:IGrainCopy) {
-            self._grainCopyService.update(grainCopy).then(
+            self._grainCopyService.correct(grainCopy).then(
                 function() {
                     _updateLocalGrainCopyList(grainCopy);
-                    
-                    if (!self._previewing  && self._isTeacher) {
-                        _handleUpdateSubjectCopy(self._subjectCopy, false);
-                    }
-                    
                     _calculateScores();
                 },
                 function(err) {
@@ -259,22 +257,7 @@ class ViewSubjectCopyController {
         });
 
         self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
-            if (!self._subjectCopy.is_corrected && !self._subjectCopy.is_correction_on_going && !self._previewing  && self._isTeacher) {
-                self._subjectCopy.is_correction_on_going = true;
                 _calculateScores();
-                self._subjectCopyService.update(self._subjectCopy).then(
-                    function(subjectCopy:ISubjectCopy) {
-                        self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
-                        self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
-                    },
-                    function(err) {
-                        notify.error(err);
-                    }
-                );
-            } else {
-                _calculateScores();
-                self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
-            }
         });
 
         /**

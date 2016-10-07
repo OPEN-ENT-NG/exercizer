@@ -48,11 +48,7 @@ public class Exercizer extends BaseServer {
         SqlConf subjectCopyConf = SqlConfs.createConf(SubjectCopyController.class.getName());
         subjectCopyConf.setSchema("exercizer");
         subjectCopyConf.setTable("subject_scheduled");
-        
-        SqlConf grainCopyConf = SqlConfs.createConf(GrainCopyController.class.getName());
-        grainCopyConf.setSchema("exercizer");
-        grainCopyConf.setTable("subject_scheduled");
-        
+
         SqlConf subjectLibraryMainInformationConf = SqlConfs.createConf(SubjectLibraryMainInformationController.class.getName());
         subjectLibraryMainInformationConf.setSchema("exercizer");
         subjectLibraryMainInformationConf.setTable("subject");
@@ -69,7 +65,6 @@ public class Exercizer extends BaseServer {
         addController(new SubjectScheduledController());
         addController(new GrainScheduledController());
         addController(new SubjectCopyController());
-        addController(new GrainCopyController());
         addController(new SubjectLessonLevelController());
         addController(new SubjectLessonTypeController());
         addController(new SubjectTagController());

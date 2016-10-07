@@ -1,6 +1,7 @@
 interface IGrainCopyService {
     persist(grainCopy:IGrainCopy, subjectScheduled):ng.IPromise<IGrainCopy>;
     update(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy>;
+    correct(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy>;
     addToCache(grainCopydRaw: any): void;
     getListBySubjectCopy(subjectCopy:ISubjectCopy):ng.IPromise<IGrainCopy[]>;
     instantiateGrainCopy(grainCopyObject:any): IGrainCopy;
@@ -53,7 +54,7 @@ class GrainCopyService implements IGrainCopyService {
         return deferred.promise;
     };
 
-    public update = function(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy> {
+    private write = function(grainCopy:IGrainCopy, action:String):ng.IPromise<IGrainCopy> {
         var self = this,
             deferred = this._$q.defer();
 
@@ -62,7 +63,7 @@ class GrainCopyService implements IGrainCopyService {
 
         var request = {
             method: 'PUT',
-            url: 'exercizer/grain-copy',
+            url: 'exercizer/grain-copy' + (action === 'UPDATE' ? '' : '/correct'),
             data: grainCopyObject
         };
 
@@ -85,6 +86,14 @@ class GrainCopyService implements IGrainCopyService {
         );
 
         return deferred.promise;
+    };
+
+    public update = function(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy> {
+        return this.write(grainCopy, 'UPDATE');
+    };
+
+    public correct = function(grainCopy:IGrainCopy):ng.IPromise<IGrainCopy> {
+        return this.write(grainCopy, 'CORRECT');
     };
 
     public addToCache = function(grainCopyRaw: any): void {

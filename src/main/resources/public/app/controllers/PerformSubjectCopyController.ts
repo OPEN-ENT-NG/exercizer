@@ -208,26 +208,13 @@ class PerformSubjectCopyController {
         });
 
         self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
-            if (!self._subjectCopy.has_been_started && !self._previewing) {
-                self._subjectCopy.has_been_started = true;
-                self._subjectCopyService.update(self._subjectCopy).then(
-                    function(subjectCopy:ISubjectCopy) {
-                        self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
-                        self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
-                    },
-                    function(err) {
-                        notify.error(err);
-                    }
-                );
-            } else {
-                self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
-            }
+            self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
         });
 
         self._$scope.$on('E_SUBJECT_COPY_SUBMITTED', function(event, subjectCopy:ISubjectCopy) {
             var subjectCopy : ISubjectCopy = self._subjectCopyService.getById(subjectCopy.id);
             subjectCopy.submitted_date  = new Date().toISOString();
-            self._subjectCopyService.update(subjectCopy).then(
+            self._subjectCopyService.submit(subjectCopy).then(
                 function(subjectCopy:ISubjectCopy) {
                     self._$scope.$broadcast('E_SUBMIT_SUBJECT_COPY');
                 },

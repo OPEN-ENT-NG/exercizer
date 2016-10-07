@@ -2,6 +2,8 @@ interface ISubjectCopyService {
     resolve(isTeacher:boolean): ng.IPromise<boolean>;
     persist(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
     update(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
+    submit(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
+    correct(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy>;
     addToCache(subjectCopyRaw: any): void;
     createFromSubjectScheduled(subjectScheduled:ISubjectScheduled):ISubjectCopy;
     getList():ISubjectCopy[];
@@ -151,12 +153,12 @@ class SubjectCopyService implements ISubjectCopyService {
         return deferred.promise;
     };
 
-    public update = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
+    private write = function(subjectCopy:ISubjectCopy, action:String):ng.IPromise<ISubjectCopy> {
         var deferred = this._$q.defer(),
             self = this,
             request = {
                 method: 'PUT',
-                url: 'exercizer/subject-copy',
+                url: 'exercizer/subject-copy' + action,
                 data: subjectCopy
             };
         
@@ -172,6 +174,18 @@ class SubjectCopyService implements ISubjectCopyService {
             );
         
         return deferred.promise;
+    };
+
+    public update = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
+        return this.write(subjectCopy, '/report');
+    };
+
+    public submit = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
+        return this.write(subjectCopy, '/submit');
+    };
+
+    public correct = function(subjectCopy:ISubjectCopy):ng.IPromise<ISubjectCopy> {
+        return this.write(subjectCopy, '/correct');
     };
 
     public addToCache = function(subjectCopyRaw: any): void {

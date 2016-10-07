@@ -1,5 +1,6 @@
 package fr.openent.exercizer.filters;
 
+import fr.wseduc.webutils.http.Binding;
 import org.entcore.common.http.filter.ResourcesProvider;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
@@ -10,9 +11,7 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import fr.wseduc.webutils.http.Binding;
-
-public class TypeSubjectScheduledOwnerOrSubjectCopyOwner implements ResourcesProvider {
+public class SubjectCopyOwner implements ResourcesProvider {
 
 	@Override
 	public void authorize(final HttpServerRequest resourceRequest, final Binding binding, final UserInfos user,
@@ -20,9 +19,8 @@ public class TypeSubjectScheduledOwnerOrSubjectCopyOwner implements ResourcesPro
 		
 		resourceRequest.pause();
 		
-		String query = "SELECT COUNT(*) FROM exercizer.subject_scheduled as ss JOIN exercizer.subject_copy sc ON ss.id = sc.subject_scheduled_id WHERE ss.owner = ? or sc.owner = ?";
+		String query = "SELECT COUNT(*) FROM exercizer.subject_scheduled as ss JOIN exercizer.subject_copy sc ON ss.id = sc.subject_scheduled_id WHERE sc.owner = ?";
 		JsonArray values = new JsonArray();
-		values.addString(user.getUserId());
 		values.addString(user.getUserId());
 		
 		Sql.getInstance().prepared(query,  values, new Handler<Message<JsonObject>>() {
