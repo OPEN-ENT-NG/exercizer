@@ -251,6 +251,7 @@ directives.push(
                         subjectScheduled.begin_date = option.begin_date;
                         subjectScheduled.due_date = option.due_date;
                         subjectScheduled.estimated_duration = option.estimated_duration;
+                        subjectScheduled.has_automatic_display = option.has_automatic_display;
                         subjectScheduled.is_one_shot_submit = !option.allow_students_to_update_copy;
                         subjectScheduled.scheduled_at = createSubjectScheduledAt(data);
 
