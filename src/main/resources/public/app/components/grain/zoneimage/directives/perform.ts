@@ -36,9 +36,16 @@ directives.push(
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     };
 
-                    scope.answer = (iconZone: zoneimage.IconZone, $item: string) => {
+                    scope.answer = (iconZone: zoneimage.IconZone, $item: string | zoneimage.IconZone) => {
+                        if(typeof $item !== 'string'){
+                            var currentAnswer = iconZone.answer;
+                            scope.answer(iconZone, $item.answer);
+                            scope.answer($item, currentAnswer);
+                            return;
+                        }
+
                         scope.removeAnswer(iconZone);
-                        iconZone.answer = $item;
+                        iconZone.answer = $item as string;
                         scope.usedAnswers.push($item);
                         scope.updateGrainCopy();
                     };
