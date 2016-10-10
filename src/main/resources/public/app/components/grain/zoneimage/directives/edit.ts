@@ -29,6 +29,16 @@ directives.push(
                         scope.$emit('E_UPDATE_GRAIN', scope.grain);
                     };
 
+                    scope.editAnswer = (answer: zoneimage.IconZone, option) => {
+                        let i = scope.grain.grain_data.custom_data.options.indexOf(answer.answer);
+                        scope.grain.grain_data.custom_data.options.splice(i, 1);
+
+                        scope.displayState.editedIcon.answer = option; 
+                        scope.displayState.editZone = false;
+                        scope.grain.grain_data.custom_data.options.push(option);
+                        scope.updateGrain();
+                    };
+
                     scope.editZone = (zone: zoneimage.IconZone) => {
                         scope.displayState.editZone = true;
                         if(zone){
@@ -60,27 +70,27 @@ directives.push(
                             container.options.splice(i, 1);
                             scope.displayState.editedIcon.answer = option;
                         }
-                        if(container.options.indexOf(option) === -1){
-                            container.options.push(option);
-                        }
-                        
+
+                        container.options.push(option);
                         scope.updateGrain();
                     };
 
                     scope.removeOption = (container: zoneimage.CustomData, option: string) => {
                         let i = container.options.indexOf(option);
                         container.options.splice(i, 1);
-                        let iconsZone = _.filter(container.zones, { answer: option });
-                        iconsZone.forEach((icon) => {
-                            let j = container.zones.indexOf(icon);
-                            container.zones.splice(j, 1);
-                        });
+                        let iconZone = _.findWhere(container.zones, { answer: option });
+                        let j = container.zones.indexOf(iconZone);
+                        container.zones.splice(j, 1);
                         
                         scope.updateGrain();
                     };
 
                     scope.removeZone = (zone: zoneimage.IconZone) => {
                         let container = scope.grain.grain_data.custom_data as zoneimage.CustomData;
+
+                        let j = container.options.indexOf(zone.answer);
+                        container.options.splice(j, 1);
+
                         let i = container.zones.indexOf(zone);
                         container.zones.splice(i, 1);
                         

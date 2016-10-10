@@ -30,7 +30,7 @@
 
         <div class="row options">
             <image-zone 
-                ng-click="displayState.editedIcon.answer = option; displayState.editZone = false;" 
+                ng-click="editAnswer(displayState.editedIcon, option)" 
                 ng-repeat="option in grain.grain_data.custom_data.options track by $index">
                 <img ng-src="[[option]]?thumbnail=120x120" />
             </image-zone>
