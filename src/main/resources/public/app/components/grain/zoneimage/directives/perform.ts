@@ -13,6 +13,24 @@ directives.push(
                     scope.grainCopy.grain_copy_data.custom_copy_data = new zoneimage.CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
 
                     scope.usedAnswers = [];
+                    
+                    scope.availableAnswers = () => {
+                        let returnArray = [];
+                        scope.grainCopy.grain_copy_data.custom_copy_data.options.forEach((option) => {
+                            let totalMatch = _.filter(scope.grainCopy.grain_copy_data.custom_copy_data.options, 
+                                (o, i) => o === option
+                            ).length;
+
+                            let foundMatch = _.filter(returnArray, (o) => o === option).length;
+                            let foundUsed = _.filter(scope.usedAnswers, (o) => o === option).length;
+
+                            if(foundUsed + foundMatch < totalMatch){
+                                returnArray.push(option);
+                            }
+                        });
+                        
+                        return returnArray;
+                    };
 
                     scope.updateGrainCopy = () => {
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
@@ -34,8 +52,6 @@ directives.push(
                         $item.answer = '';
                         scope.updateGrainCopy();
                     };
-
-                    scope.availableOption = (option) => scope.usedAnswers.indexOf(option) === -1;
                 }
             };
         }]

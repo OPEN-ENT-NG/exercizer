@@ -10,8 +10,8 @@
             </div>
             <placed-block ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.zones"
                 x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z">
-                <image-zone class="drop-zone" drop-item="answer(iconZone, $item);">
-                    <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" drag-item="iconZone" />
+                <image-zone class="drop-zone" drop-item="answer(iconZone, $item);" drag-item="iconZone">
+                    <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" />
                 </image-zone>
 
             </placed-block>
@@ -19,7 +19,7 @@
 
         <div class="row options" drop-item="removeAnswer($item);">
             <image-zone 
-                ng-repeat="option in grainCopy.grain_copy_data.custom_copy_data.options | filter:availableOption track by $index"
+                ng-repeat="option in availableAnswers() track by $index"
                 drag-item="option">
                 <img ng-src="[[option]]?thumbnail=120x120" />
             </image-zone>
