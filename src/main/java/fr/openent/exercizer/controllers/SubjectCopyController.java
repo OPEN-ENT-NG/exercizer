@@ -69,7 +69,7 @@ public class SubjectCopyController extends ControllerHelper {
                                             final String subjectCopyId_string = Long.toString(subjectCopyId);
                                             Long subjectScheduleId = subjectCopy.getLong("subject_scheduled_id");
                                         	String subjectScheduleId_string = Long.toString(subjectScheduleId);
-                                        	
+
                                         	subjectScheduledService.getById(subjectScheduleId_string, user, new Handler<Either<String,JsonObject>>() {
                                                 @Override
                                                 public void handle(Either<String, JsonObject> r) {
@@ -77,13 +77,13 @@ public class SubjectCopyController extends ControllerHelper {
                                                     String subjectScheduleDueDate = subjectSchedule.getString("due_date");
                                                     final String subjectScheduleDueDate_readable = subjectScheduleDueDate.substring(8,10) + "/" + subjectScheduleDueDate.substring(5,7) + "/" + subjectScheduleDueDate.substring(0,4);
                                                     Long subjectId = subjectSchedule.getLong("subject_id");
-                                                	String subjectId_string = Long.toString(subjectId);                                                	
-                                                	
+                                                	String subjectId_string = Long.toString(subjectId);
+
                                                 	subjectService.getById(subjectId_string, user, new Handler<Either<String,JsonObject>>() {
                                                         @Override
                                                         public void handle(Either<String, JsonObject> r) {
                                                         	JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
-                                                            final String subjectName = subject.getString("title");                                                             
+                                                            final String subjectName = subject.getString("title");
 
                                                             final List<String> recipientSet = new ArrayList<String>();
                                                             recipientSet.add(subjectCopy.getString("owner"));
@@ -91,11 +91,11 @@ public class SubjectCopyController extends ControllerHelper {
                                                             String message = "";
                                                             sendNotification(request, CopyAction.ASSIGNCOPY, user, recipientSet, relativeUri, subjectName, subjectScheduleDueDate_readable, subjectCopyId_string);
                                                             renderJson(request, subjectCopy);
-                                                        
+
                                                         }
                                                     });
                                                 }
-                                            });                                      	
+                                            });
                                         }
                                     }
                                 }
@@ -139,7 +139,7 @@ public class SubjectCopyController extends ControllerHelper {
     *   @param relativeUri: relative url exemple: /subject/copy/perform/9/
     *   @param idResource : id of the resource
     **/
-	
+
 	private void sendNotification(
 		    final HttpServerRequest request,
 		    final CopyAction copyAction,
@@ -153,6 +153,8 @@ public class SubjectCopyController extends ControllerHelper {
 	        JsonObject params = new JsonObject();
 	        params.putString("uri", container.config().getString("host", "http://localhost:8090") +
 	                "/exercizer#" + relativeUri);
+	        params.putString("userUri", container.config().getString("host", "http://localhost:8090") +
+	                "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
 	        params.putString("username", user.getUsername());
 	        params.putString("subjectName", subjectName);
 	        params.putString("dueDate", dueDate);
@@ -291,7 +293,7 @@ public class SubjectCopyController extends ControllerHelper {
             }
         });
     }
-	
+
 	@Post("/subjects-copy-by-subject-scheduled/:id")
     @ApiDoc("Gets subject copy list by subject scheduled.")
 	@ResourceFilter(OwnerOnly.class)
