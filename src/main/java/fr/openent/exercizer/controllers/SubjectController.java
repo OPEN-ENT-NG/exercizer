@@ -1,9 +1,15 @@
 package fr.openent.exercizer.controllers;
 
-import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
-import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
+import fr.openent.exercizer.parsers.ResourceParser;
+import fr.openent.exercizer.services.IGrainService;
 import fr.openent.exercizer.services.ISubjectService;
+import fr.openent.exercizer.services.impl.GrainServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
+import fr.wseduc.rs.*;
+import fr.wseduc.security.ActionType;
+import fr.wseduc.security.SecuredAction;
+import fr.wseduc.webutils.Either;
+import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.http.filter.sql.ShareAndOwner;
@@ -12,27 +18,20 @@ import org.entcore.common.user.UserUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonObject;
-import fr.wseduc.rs.ApiDoc;
-import fr.wseduc.rs.Delete;
-import fr.wseduc.rs.Get;
-import fr.wseduc.rs.Post;
-import fr.wseduc.rs.Put;
-import fr.wseduc.webutils.request.RequestUtils;
-import fr.wseduc.security.ActionType;
-import fr.wseduc.security.SecuredAction;
-import fr.wseduc.webutils.Either;
-import fr.openent.exercizer.parsers.ResourceParser;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.entcore.common.http.response.DefaultResponseHandler.*;
+
 public class SubjectController extends ControllerHelper {
 
 	private final ISubjectService subjectService;
+	private final IGrainService grainService;
 
 	public SubjectController() {
 		this.subjectService = new SubjectServiceSqlImpl();
+		this.grainService = new GrainServiceSqlImpl();
 	}
 
     @Post("/canSchedule")
@@ -135,7 +134,7 @@ public class SubjectController extends ControllerHelper {
 			}
 		});
 	}
-	
+
 	@Get("/subjects-all")
 	@ApiDoc("Gets all subject list.")
 	@SecuredAction("exercizer.subject.list.all")
@@ -160,7 +159,7 @@ public class SubjectController extends ControllerHelper {
 			}
 		});
 	}
-	
+
 	@Post("/subjects-for-library")
 	@ApiDoc("Gets subject list for library.")
 	@SecuredAction("exercizer.subject.list.for.library")
@@ -184,7 +183,7 @@ public class SubjectController extends ControllerHelper {
 			}
 		});
 	}
-	
+
 	@Post("/count-subjects-for-library")
 	@ApiDoc("Counts subject list for library.")
 	@SecuredAction("exercizer.subject.count.for.library")
@@ -233,7 +232,7 @@ public class SubjectController extends ControllerHelper {
                         public void handle(Either<String, JsonObject> r) {
                         	request.resume();
                         	JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
-                            final String subjectName = subject.getString("title");  
+                            final String subjectName = subject.getString("title");
 
         			        JsonObject params = new JsonObject();
         			        params.putString("username", user.getUsername());
@@ -245,7 +244,7 @@ public class SubjectController extends ControllerHelper {
                             params.putString("resourceUri", params.getString("uri"));
         			        SubjectController.super.shareJsonSubmit(request, "exercizer.share", false, params, null);
                         }
-                    });					
+                    });
 				}
 				else {
 					log.debug("User not found in session.");
@@ -261,5 +260,124 @@ public class SubjectController extends ControllerHelper {
 	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
 	public void shareRemove(final HttpServerRequest request) {
 		super.removeShare(request, false);
+	}
+
+	@Post("/subject/:id/grain")
+	@ApiDoc("Persists a grain.")
+	@ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
+	public void grainPersist(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject resource) {
+							grainService.persist(resource, user, notEmptyResponseHandler(request));
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Put("/subject/:id/grain")
+	@ApiDoc("Updates a grain.")
+	@ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
+	public void grainUpdate(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject resource) {
+							grainService.update(resource, user, defaultResponseHandler(request));
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Delete("/subject/:id/grain/:gId")
+	@ApiDoc("Deletes a grain.")
+	@ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
+	public void grainremove(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject resource) {
+							grainService.remove(resource, user, notEmptyResponseHandler(request));
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Post("/grains/:id")
+	@ApiDoc("Gets grain list.")
+	@ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.read", type = ActionType.RESOURCE)
+	public void grainList(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject resource) {
+							grainService.list(resource, arrayResponseHandler(request));
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Post("/subject-library-grains")
+	@ApiDoc("Gets subject library grain list.")
+	@SecuredAction("exercizer.subject.library.grain.list")
+	public void listBySubjectForLibrary(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject resource) {
+							grainService.listBySubjectForLibrary(resource, arrayResponseHandler(request));
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
 	}
 }

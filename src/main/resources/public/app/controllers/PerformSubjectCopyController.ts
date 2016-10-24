@@ -95,6 +95,14 @@ class PerformSubjectCopyController {
 
         this._grainService.getListBySubject(subject).then(
             function(grainList) {
+                //calculate max score
+                subject.max_score = 0;
+                angular.forEach(grainList, function(grain:IGrain) {
+                    if (grain.grain_type_id > 3) {
+                        subject.max_score += grain.grain_data.max_score;
+                    }
+                });
+
                 self._subjectScheduled = self._subjectScheduledService.createFromSubject(subject);
                 self._subjectScheduled.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
 

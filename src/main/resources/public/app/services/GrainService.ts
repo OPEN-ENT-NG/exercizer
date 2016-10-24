@@ -45,7 +45,7 @@ class GrainService implements IGrainService {
 
         var request = {
             method: 'POST',
-            url: 'exercizer/grain/' + grain.subject_id,
+            url: 'exercizer/subject/' + grain.subject_id + '/grain',
             data: grainObject
         };
 
@@ -79,13 +79,13 @@ class GrainService implements IGrainService {
 
         var request = {
             method: 'PUT',
-            url: 'exercizer/grain/' + grain.subject_id,
+            url: 'exercizer/subject/' + grain.subject_id + '/grain',
             data: grainObject
         };
 
         this._$http(request).then(
             function (response) {
-                var grain = self.instantiateGrain(response.data);
+                //ODE var grain = self.instantiateGrain(response.data);
                 deferred.resolve(grain);
             },
             function () {
@@ -125,7 +125,7 @@ class GrainService implements IGrainService {
 
         var request = {
             method: 'DELETE',
-            url: 'exercizer/grain/' + grain.subject_id,
+            url: 'exercizer/subject/' + grain.subject_id  + '/grain/' + grain.id,
             data: grainObject
         };
 

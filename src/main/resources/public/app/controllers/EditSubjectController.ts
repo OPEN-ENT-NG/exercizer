@@ -240,7 +240,8 @@ class EditSubjectController {
 
         this._grainService.update(grain).then(
             function() {
-                self._updateSubject(grain.grain_type_id > 3)
+               // maxscore of subject is updated by grain service
+               // self._updateSubject(grain.grain_type_id > 3)
             },
             function(err) {
                 notify.error(err);
