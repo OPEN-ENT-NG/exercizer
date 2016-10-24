@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "subjectId": {
+      "type": "number"
+    },
+    "authorsContributors": {
+      "type": "string"
+    },
+    "subjectLessonTypeId": {
+      "type": "number"
+    },
+    "subjectLessonLevelId": {
+      "type": "number"
+    },
+    "subjectTagList": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "subjectId",
+    "subjectLessonTypeId",
+    "subjectLessonLevelId"
+  ]
+}

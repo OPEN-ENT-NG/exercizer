@@ -17,6 +17,7 @@ import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import java.util.ArrayList;
@@ -377,6 +378,32 @@ public class SubjectController extends ControllerHelper {
 					log.debug("User not found in session.");
 					unauthorized(request);
 				}
+			}
+		});
+	}
+
+	@Post("/subject/publish/library")
+	@ApiDoc("Publish subject in library.")
+	@SecuredAction(value = "exercizer.subject.publish.library")
+	public void publishSubject(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, pathPrefix + "publish", new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject data) {
+							subjectService.publishLibrary(data.getLong("subjectId"), data.getString("authorsContributors"), data.getLong("subjectLessonTypeId"),
+									data.getLong("subjectLessonLevelId"), data.getArray("subjectTagList", new JsonArray()), user,
+									notEmptyResponseHandler(request));
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+
 			}
 		});
 	}

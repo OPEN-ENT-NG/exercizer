@@ -33,142 +33,24 @@ class SubjectLibraryService implements ISubjectLibraryService {
         var self = this,
             deferred = this._$q.defer();
 
-        var publishedSubject = CloneObjectHelper.clone(subject, true);
-        publishedSubject.id = undefined;
-        publishedSubject.owner = undefined;
-        publishedSubject.authors_contributors = authorsContributors;
-        publishedSubject.is_library_subject = true;
+        let param = {subjectId: subject.id, authorsContributors: authorsContributors,
+            subjectLessonTypeId: Number(subjectLessonTypeId), subjectLessonLevelId: Number(subjectLessonLevelId), subjectTagList:subjectTagList};
 
-        var subjectRequest = {
+        let publishRequest = {
             method: 'POST',
-            url: 'exercizer/subject',
-            data: publishedSubject
+            url: 'exercizer/subject/publish/library',
+            data: param
         };
 
-        this._$http(subjectRequest).then(
+        this._$http(publishRequest).then(
             function(response) {
-                publishedSubject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
-
-                self._grainService.getListBySubject(subject).then(
-                    function(grainList: IGrain[]) {
-                        var grainListCopy = angular.copy(grainList);
-                        self._grainService.duplicateList(grainListCopy, publishedSubject, false).then(
-                            function() {
-
-                                var subjectLibraryMainInformationRequest = {
-                                    method: 'POST',
-                                    url: 'exercizer/subject-library-main-information/' + publishedSubject.id,
-                                    data : {
-                                        subject_id: publishedSubject.id,
-                                        subject_lesson_type_id: subjectLessonTypeId,
-                                        subject_lesson_level_id: subjectLessonLevelId
-                                    }
-                                };
-
-                                self._$http(subjectLibraryMainInformationRequest).then(
-                                    function() {
-
-                                        if (subjectTagList.length > 0) {
-
-                                            var promises = [],
-                                                subjectLibraryTagRequest = {
-                                                    method: 'POST',
-                                                    url: 'exercizer/subject-library-tag/' + publishedSubject.id,
-                                                    data: {
-                                                        subject_id: publishedSubject.id,
-                                                        subject_tag_id: undefined
-                                                    }
-                                                };
-
-                                            angular.forEach(subjectTagList, function (subjectTag:ISubjectTag) {
-
-                                                if (angular.isUndefined(subjectTag.id)) {
-                                                    promises.push(self._subjectTagService.persist(subjectTag));
-                                                }
-
-                                            });
-
-                                            if (promises.length > 0) {
-                                                self._$q.all(promises).then(
-                                                    function (createdSubjectTagList:ISubjectTag[]) {
-
-                                                        promises = [];
-
-                                                        angular.forEach(subjectTagList, function (subjectTag:ISubjectTag) {
-                                                            if (!angular.isUndefined(subjectTag.id)) {
-                                                                var newSubjectLibraryTagRequest = angular.copy(subjectLibraryTagRequest);
-                                                                newSubjectLibraryTagRequest.data.subject_tag_id = subjectTag.id;
-
-                                                                promises.push(self._$http(newSubjectLibraryTagRequest));
-                                                            }
-                                                        });
-
-                                                        angular.forEach(createdSubjectTagList, function (subjectTag:ISubjectTag) {
-                                                            var newSubjectLibraryTagRequest = angular.copy(subjectLibraryTagRequest);
-                                                            newSubjectLibraryTagRequest.data.subject_tag_id = subjectTag.id;
-
-                                                            promises.push(self._$http(newSubjectLibraryTagRequest));
-                                                        });
-
-                                                        self._$q.all(promises).then(
-                                                            function () {
-                                                                deferred.resolve(true);
-                                                            },
-                                                            function () {
-                                                                deferred.reject('Une erreur est survenue lors de la publication du sujet : impossible d\'associer les étiquettes.');
-                                                            }
-                                                        );
-
-                                                    }, function (err) {
-                                                        deferred.reject(err);
-                                                    }
-                                                );
-                                            } else {
-                                                promises = [];
-
-                                                angular.forEach(subjectTagList, function (subjectTag:ISubjectTag) {
-                                                    if (!angular.isUndefined(subjectTag.id)) {
-                                                        var newSubjectLibraryTagRequest = angular.copy(subjectLibraryTagRequest);
-                                                        newSubjectLibraryTagRequest.data.subject_tag_id = subjectTag.id;
-
-                                                        promises.push(self._$http(newSubjectLibraryTagRequest));
-                                                    }
-                                                });
-
-                                                self._$q.all(promises).then(
-                                                    function () {
-                                                        deferred.resolve(true);
-                                                    },
-                                                    function () {
-                                                        deferred.reject('Une erreur est survenue lors de la publication du sujet : impossible d\'associer les étiquettes.');
-                                                    }
-                                                );
-                                            }
-                                        } else {
-                                            deferred.resolve(true);
-                                        }
-                                    },
-                                    function() {
-                                        deferred.reject('Une erreur est survenue lors de la publication du sujet : impossible d\'associer la matière ou le niveau.');
-                                    }
-                                );
-
-                            },
-                            function() {
-                                deferred.reject('Une erreur est survenue lors de la duplication des éléments du sujet à publier.');
-                            }
-                        );
-                    },
-                    function() {
-                        deferred.reject('Une erreur est survenue lors de la récupération des éléments du sujet à publier.')
-                    }
-                );
+                deferred.resolve(true);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la publication du sujet.');
+                deferred.reject('exercizer.publish.error');
             }
         );
-
+        
         return deferred.promise;
     };
 

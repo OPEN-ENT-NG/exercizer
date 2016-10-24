@@ -50,5 +50,8 @@ public interface ISubjectService {
 	 */
     void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
+	void publishLibrary(final Long fromSubjectId, final String authorsContributors,
+						final Long typeId, final Long levelId, JsonArray tag, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
+
 
 }
