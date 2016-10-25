@@ -1,14 +1,14 @@
 package fr.openent.exercizer.services.impl;
 
+import fr.openent.exercizer.parsers.ResourceParser;
+import fr.openent.exercizer.services.ISubjectService;
+import fr.wseduc.webutils.Either;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
-import fr.wseduc.webutils.Either;
-import fr.openent.exercizer.parsers.ResourceParser;
-import fr.openent.exercizer.services.ISubjectService;
 import org.vertx.java.core.logging.Logger;
 import org.vertx.java.core.logging.impl.LoggerFactory;
 
@@ -178,6 +178,50 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
         super.getById(id, user, handler);
     }
 
+	public void duplicationsFromLibrary(final JsonArray subjectIds, final Long folderId, final String titlePrefix, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		if (subjectIds != null && subjectIds.size() > 0) {
+			final String queryNewSubjectId = "SELECT nextval('" + schema + "subject_id_seq') as id";
+			final SqlStatementsBuilder sIds = new SqlStatementsBuilder();
+
+			final List<Long> ids = new ArrayList<>();
+
+			try {
+				for (int i = 0; i < subjectIds.size(); i++) {
+					sIds.raw(queryNewSubjectId);
+					ids.add(Long.parseLong(subjectIds.get(i).toString()));
+				}
+			} catch (NumberFormatException e) {
+				log.error("Can't cast id of subject", e);
+				handler.handle(new Either.Left<String, JsonObject>(e.getMessage()));
+				return;
+			}
+
+			sql.transaction(sIds.build(), SqlResult.validResultsHandler(new Handler<Either<String, JsonArray>>() {
+				@Override
+				public void handle(Either<String, JsonArray> event) {
+					if (event.isRight()) {
+						final JsonArray ja = event.right().getValue();
+						final SqlStatementsBuilder s = new SqlStatementsBuilder();
+						for (int i = 0; i < ja.size(); i++) {
+							final Long newSubjectId = ja.<JsonArray>get(i).<JsonObject>get(0).getLong("id");
+							final Long fromSubjectId = ids.get(i);
+							duplicateSubjectFromLibrary(s, newSubjectId, fromSubjectId, folderId, user, titlePrefix);
+							duplicationGrain(s, newSubjectId, fromSubjectId);
+						}
+						sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
+					} else {
+						log.error("fail to duplicate subjects : " + event.left().getValue());
+						handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
+					}
+				}
+			}));
+		} else {
+			log.error("fail to duplicate subjects : no subject id");
+			handler.handle(new Either.Left<String, JsonObject>("empty.subject.ids"));
+		}
+
+	}
+
 	public void publishLibrary(final Long fromSubjectId, final String authorsContributors,
 											 final Long typeId, final Long levelId, JsonArray tag, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		if (tag != null && tag.size() > 0) {
@@ -276,20 +320,27 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	}
 
 	private void duplicateSubjectForLibrary(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final String authorsContributors, UserInfos user) {
-		duplicationSubject(s, newSubjectId, fromSubjectId, true, authorsContributors, null, user);
+		duplicationSubject(s, newSubjectId, fromSubjectId, true, authorsContributors, null, user, "", false);
 	}
 
-	private void duplicationSubject(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Boolean isLibrary, final String authorsContributors, final Long folderId, UserInfos user) {
-		//caution original_subject_id unmanagment
-		String userQuery = "SELECT " + schema + "merge_users(?,?)";
-		s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
+	private void duplicateSubjectFromLibrary(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Long folderId, UserInfos user, String titlePrefix) {
+		duplicationSubject(s, newSubjectId, fromSubjectId, false, null, folderId, user, titlePrefix, true);
+	}
 
+	private void duplicationSubject(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Boolean isLibrary,
+									final String authorsContributors, final Long folderId, UserInfos user, final String titlePrefix, final Boolean isMergeUser) {
+
+		if (isMergeUser) {
+			String userQuery = "SELECT " + schema + "merge_users(?,?)";
+			s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
+		}
+		//caution original_subject_id unmanagment
 		final String subjectCopy = "INSERT INTO exercizer.subject (id, folder_id, owner, owner_username, created, modified, title, description, picture, max_score, is_library_subject, is_deleted, authors_contributors) " +
-				"SELECT ?, ?, ?, ?, NOW(), NOW(), s.title, s.description, s.picture, s.max_score, ?, s.is_deleted, ? FROM exercizer.subject as s " +
+				"SELECT ?, ?, ?, ?, NOW(), NOW(), s.title || ?, s.description, s.picture, s.max_score, ?, s.is_deleted, ? FROM exercizer.subject as s " +
 				"WHERE s.id = ?";
 
 		final JsonArray values = new JsonArray().add(newSubjectId).add(folderId).add(user.getUserId())
-				.add(user.getUsername()).add(isLibrary).add(authorsContributors).add(fromSubjectId);
+				.add(user.getUsername()).add(titlePrefix).add(isLibrary).add(authorsContributors).add(fromSubjectId);
 
 		s.prepared(subjectCopy, values);
 	}

@@ -25,7 +25,13 @@ directives.push(
 
                     scope.$on('E_CONFIRM_COPY_PASTE', function(event, folder:IFolder) {
                         if (scope.previewingFromLibrary) {
-                            SubjectService.duplicate(SubjectLibraryService.tmpSubjectForPreview, folder).then(
+
+                            let subjectIds = [];
+                            subjectIds.push(SubjectLibraryService.tmpSubjectForPreview.id);
+
+                            let folderId = (folder) ? folder.id : null;
+
+                            SubjectService.duplicateSubjectsFromLibrary(subjectIds, folderId).then(
                                 function() {
                                     notify.info('Le sujet a bien été ajouté dans votre liste des sujets.');
                                     $location.path('/dashboard/teacher/library');

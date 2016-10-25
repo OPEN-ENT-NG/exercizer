@@ -10,7 +10,8 @@ interface ISubjectService {
     getList(): ISubject[];
     getListByFolderId(folderId);
     getById(id: number): ISubject;
-    getByIdEvenDeleted (id:number) : ng.IPromise<any>
+    getByIdEvenDeleted (id:number) : ng.IPromise<any>;
+    duplicateSubjectsFromLibrary (subjectIds:number[], folderId:number)
 }
 
 class SubjectService implements ISubjectService {
@@ -254,6 +255,31 @@ class SubjectService implements ISubjectService {
             }
         );
         return deferred.promise;
+    };
+    
+    public duplicateSubjectsFromLibrary = function(subjectIds:number[], folderId:number) {
+        var self = this,
+            deferred = this._$q.defer();
+
+        let param = {subjectIds: subjectIds, folderId: folderId};
+
+        let request = {
+            method: 'POST',
+            url: 'exercizer/subjects/duplicate/library',
+            data: param
+        };
+
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(true);
+            },
+            function() {
+                deferred.reject('exercizer.subject.duplicate.error');
+            }
+        );
+
+        return deferred.promise;
+        
     };
 
     public getList = function(): ISubject[] {

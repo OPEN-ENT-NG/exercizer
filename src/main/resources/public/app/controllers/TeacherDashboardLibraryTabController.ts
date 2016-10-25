@@ -322,11 +322,15 @@ class TeacherDashboardLibraryTabController {
     private _copyPastSelectedSubjectList = function(parentFolder) {
         var self = this;
 
-        angular.forEach(this._selectedSubjectList, function(subject:ISubject) {
-            subject.is_library_subject = false;
-        });
+        let subjectIds = [];
 
-        this._subjectService.duplicateList(this._selectedSubjectList, parentFolder).then(
+        angular.forEach(this._selectedSubjectList, function(subject:ISubject) {
+            subjectIds.push(subject.id);
+        });
+        
+        let folderId = (parentFolder) ? parentFolder.id : null;
+
+        this._subjectService.duplicateSubjectsFromLibrary(subjectIds, folderId).then(
             function() {
                 self._selectedSubjectList = [];
                 notify.info('Les sujets ont bien été ajoutés dans votre liste des sujets.')

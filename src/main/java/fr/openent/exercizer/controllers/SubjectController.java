@@ -9,6 +9,8 @@ import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.Either;
+import fr.wseduc.webutils.I18n;
+import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
@@ -29,6 +31,7 @@ public class SubjectController extends ControllerHelper {
 
 	private final ISubjectService subjectService;
 	private final IGrainService grainService;
+	private static final I18n i18n = I18n.getInstance();
 
 	public SubjectController() {
 		this.subjectService = new SubjectServiceSqlImpl();
@@ -395,7 +398,51 @@ public class SubjectController extends ControllerHelper {
 						public void handle(final JsonObject data) {
 							subjectService.publishLibrary(data.getLong("subjectId"), data.getString("authorsContributors"), data.getLong("subjectLessonTypeId"),
 									data.getLong("subjectLessonLevelId"), data.getArray("subjectTagList", new JsonArray()), user,
-									notEmptyResponseHandler(request));
+									new Handler<Either<String, JsonObject>>() {
+										@Override
+										public void handle(Either<String, JsonObject> event) {
+											if (event.isRight()) {
+												Renders.created(request);
+											} else {
+												Renders.renderError(request, new JsonObject().putString("error", "exercizer.publish.error"));
+											}
+										}
+									});
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+
+			}
+		});
+	}
+
+	@Post("/subjects/duplicate/library")
+	@ApiDoc("Duplicate subjects from library.")
+	@SecuredAction(value = "exercizer.subject.duplicate.library")
+	public void duplicateSubjectsFromLibrary(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, pathPrefix + "duplicateSubjectLibrary",new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject data) {
+							final String titlePrefix = i18n.translate("exercizer.subject.title.copyPrefix", Renders.getHost(request), I18n.acceptLanguage(request));
+							subjectService.duplicationsFromLibrary(data.getArray("subjectIds"), data.getLong("folderId"), titlePrefix, user,
+									new Handler<Either<String, JsonObject>>() {
+										@Override
+										public void handle(Either<String, JsonObject> event) {
+											if (event.isRight()) {
+												Renders.created(request);
+											} else {
+												Renders.renderError(request, new JsonObject().putString("error", "exercizer.subject.duplicate.error"));
+											}
+										}
+									});
 						}
 					});
 				}
