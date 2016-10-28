@@ -226,6 +226,154 @@ class EditSubjectController {
             grain.grain_data.answer_hint = StringISOHelper.toISO(grain.grain_data.answer_hint);
             grain.grain_data.max_score = angular.isUndefined(grain.grain_data.max_score) ? 0 : parseFloat(grain.grain_data.max_score as any);
 
+            //TODO grain_data out of relational data
+            grain.grain_custom_data = new GrainCopyData();
+            grain.grain_custom_data.title = grain.grain_data.title;
+            grain.grain_custom_data.max_score = grain.grain_data.max_score;
+            grain.grain_custom_data.statement = grain.grain_data.statement;
+            grain.grain_custom_data.document_list = grain.grain_data.document_list;
+            grain.grain_custom_data.answer_hint = grain.grain_data.answer_hint;
+
+            switch (grain.grain_type_id) {
+                case 3:
+                    grain.grain_custom_data.custom_copy_data = new StatementCustomCopyData(grain.grain_data.custom_data);
+                    break;
+                case 4:
+                    grain.grain_custom_data.custom_copy_data = new SimpleAnswerCustomCopyData();
+                    break;
+                case 5:
+                    grain.grain_custom_data.custom_copy_data = new OpenAnswerCustomCopyData();
+                    break;
+                case 6:
+                    grain.grain_custom_data.custom_copy_data = new MultipleAnswerCustomCopyData();
+                    if(grain.grain_data && grain.grain_data.custom_data){
+                        angular.forEach(grain.grain_data.custom_data.correct_answer_list, function(correct_answer){
+                            grain.grain_custom_data.custom_copy_data.filled_answer_list.push({text : ""})
+                        });
+                    }
+
+                    break;
+                case 7:
+                    // QCM
+                    grain.grain_custom_data.custom_copy_data = new QcmCustomCopyData();
+                    if(grain.grain_data && grain.grain_data.custom_data) {
+                        angular.forEach(grain.grain_data.custom_data.correct_answer_list, function (correct_answer) {
+                            grain.grain_custom_data.custom_copy_data.filled_answer_list.push({text: correct_answer.text})
+                        });
+                    }
+                    break;
+                case 8:
+                    // Association
+                    grain.grain_custom_data.custom_copy_data = new AssociationCustomCopyData();
+                    grain.grain_custom_data.custom_copy_data.show_left_column = grain.grain_data.custom_data.show_left_column;
+                    if(grain.grain_data && grain.grain_data.custom_data) {
+                        if (grain.grain_data.custom_data.show_left_column) {
+                            angular.forEach(grain.grain_data.custom_data.correct_answer_list, function (correct_answer) {
+                                grain.grain_custom_data.custom_copy_data.filled_answer_list.push({
+                                    text_left: correct_answer.text_left,
+                                    text_right: null
+                                })
+                            });
+                            var rand,
+                                notSet,
+                                self = this,
+                                protectionCompteur;
+                            angular.forEach(grain.grain_data.custom_data.correct_answer_list, function (correct_answer) {
+                                notSet = true;
+                                protectionCompteur = 0;
+                                while (notSet) {
+                                    rand = self._getRandomIntInclusive(0, grain.grain_data.custom_data.correct_answer_list.length - 1);
+                                    if (grain.grain_custom_data.custom_copy_data.possible_answer_list[rand]) {
+                                        // one more loop
+                                    } else {
+                                        grain.grain_custom_data.custom_copy_data.possible_answer_list[rand] = {
+                                            text_right: correct_answer.text_right
+                                        };
+                                        notSet = false;
+                                    }
+                                    if (protectionCompteur > 100) {
+                                        console.error(grain.grain_custom_data.custom_copy_data);
+                                        throw "infiny loop"
+                                    } else {
+                                        protectionCompteur++;
+                                    }
+                                }
+                            });
+                        } else {
+                            grain.grain_custom_data.custom_copy_data.all_possible_answer = [];
+                            angular.forEach(grain.grain_data.custom_data.correct_answer_list, function (correct_answer) {
+                                grain.grain_custom_data.custom_copy_data.filled_answer_list.push({
+                                    text_left: null,
+                                    text_right: null
+                                });
+                                grain.grain_custom_data.custom_copy_data.all_possible_answer.push({
+                                    item: correct_answer.text_left,
+                                    rank: 0.5 - Math.random()
+                                });
+                                grain.grain_custom_data.custom_copy_data.all_possible_answer.push({
+                                    item: correct_answer.text_right,
+                                    rank: 0.5 - Math.random()
+                                });
+                            });
+                        }
+                    }
+
+                    break;
+                case 9:
+                    // Order by
+                    grain.grain_custom_data.custom_copy_data = new OrderCustomCopyData();
+                    var newOrder = [],
+                        rand,
+                        notSet,
+                        alreadySet,
+                        self = this;
+                    if(grain.grain_data && grain.grain_data.custom_data) {
+
+                        angular.forEach(grain.grain_data.custom_data.correct_answer_list, function (correct_answer, key) {
+                            notSet = true;
+                            while (notSet) {
+                                rand = self._getRandomIntInclusive(1, grain.grain_data.custom_data.correct_answer_list.length);
+                                alreadySet = false;
+                                angular.forEach(newOrder, function (value) {
+                                    if (value == rand) {
+                                        alreadySet = true;
+                                    }
+                                });
+                                if (!alreadySet) {
+                                    newOrder[key] = rand;
+                                    notSet = false;
+                                }
+                            }
+                        });
+                        angular.forEach(grain.grain_data.custom_data.correct_answer_list, function (correct_answer, key) {
+                            grain.grain_custom_data.custom_copy_data.filled_answer_list.push({
+                                text: correct_answer.text,
+                                order_by: newOrder[key],
+                                index: newOrder[key] - 1,
+
+                            })
+                        });
+                    }
+                    break;
+                case 10:
+                    grain.grain_custom_data.custom_copy_data = zonegrain.makeCopy(grain.grain_data.custom_data, filltext.CustomData);
+                    break;
+                case 12:
+                    grain.grain_custom_data.custom_copy_data = zonegrain.makeCopy(grain.grain_data.custom_data, zoneimage.CustomData);
+                    break;
+                case 11:
+                    grain.grain_custom_data.custom_copy_data = zonegrain.makeCopy(grain.grain_data.custom_data, zonetext.CustomData);
+                    break;
+                default:
+                    console.error('specific custom_copy_data of grain is not defined for this type of grain', grain);
+
+            }
+
+            if (grain.grain_data.custom_data && grain.grain_custom_data.custom_copy_data && grain.grain_type_id > 5) {
+                grain.grain_custom_data.custom_copy_data.no_error_allowed = grain.grain_data.custom_data.no_error_allowed;
+            }
+            //FIN custom_data ODE
+
         } else if (grain.grain_type_id === 3) {
 
             this._trustedHtmlStatementMap[grain.id] = undefined;
@@ -247,6 +395,14 @@ class EditSubjectController {
                 notify.error(err);
             }
         );
+    };
+
+    // On renvoie un entier aléatoire entre une valeur min (incluse)
+    // et une valeur max (incluse).
+    // Attention : si on utilisait Math.round(), on aurait une distribution
+    // non uniforme !
+    private _getRandomIntInclusive(min, max) {
+        return Math.floor(Math.random() * (max - min +1)) + min;
     };
 
     public removeGrain = function() {

@@ -1,7 +1,7 @@
 interface ISubjectScheduledService {
     resolve(isTeacher:boolean): ng.IPromise<boolean>;
     persist(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled>;
-    schedule(subjectScheduled:ISubjectScheduled, grainScheduledList:IGrainScheduled[], subjectCopyTemplate:ISubjectCopy, grainCopyListTemplate:IGrainCopy[], userList: any[]):ng.IPromise<ISubjectScheduled>
+    schedule(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled>
     createFromSubject(subject:ISubject):ISubjectScheduled;
     getList():ISubjectScheduled[];
     getById(id:number):ISubjectScheduled;
@@ -101,49 +101,30 @@ class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
-    public schedule = function(subjectScheduled:ISubjectScheduled, grainScheduledList:IGrainScheduled[], subjectCopyTemplate:ISubjectCopy, grainCopyListTemplate:IGrainCopy[], userList: any[]):ng.IPromise<ISubjectScheduled> {
+    public schedule = function(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled> {
         var self = this,
-            deferred = this._$q.defer(),
-            request = {
-                method: 'POST',
-                url: 'exercizer/schedule-subject/' + subjectScheduled.subject_id,
-                data: {
-                    'subjectScheduled': subjectScheduled,
-                    'grainScheduledList': grainScheduledList,
-                    'subjectCopyTemplate': subjectCopyTemplate,
-                    'grainCopyListTemplate': grainCopyListTemplate,
-                    'userList': userList
-                }
-            };
+            deferred = this._$q.defer();
+
+        let param = {subjectTitle: subjectScheduled.title, beginDate: subjectScheduled.begin_date, dueDate: subjectScheduled.due_date,
+            estimatedDuration: subjectScheduled.estimated_duration, isOneShotSubmit: subjectScheduled.is_one_shot_submit,
+            scheduledAt:subjectScheduled.scheduled_at};
+        
+        let request = {
+            method: 'POST',
+            url: 'exercizer/schedule-subject/' + subjectScheduled.subject_id,
+            data: param
+        };
 
         this._$http(request).then(
             function(response) {
-                var subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(response.data.subjectScheduled)) as any;
-
-                subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
-
-                if(angular.isUndefined(self._listMappedById)){
-                    self._listMappedById= {};
-                }
-
-                self._listMappedById[subjectScheduled.id] = subjectScheduled;
-
-                angular.forEach(response.data.grainScheduledList, function(grainScheduledRaw) {
-                   self._grainScheduledService.addToCache(grainScheduledRaw);
-                });
-
-                angular.forEach(response.data.subjectCopyList, function(subjectCopyRaw) {
-                    self._subjectCopyService.addToCache(subjectCopyRaw);
-                });
-
-                angular.forEach(response.data.grainCopyList, function(grainCopyRaw) {
-                    self._grainCopyService.addToCache(grainCopyRaw);
-                });
-
                 deferred.resolve();
             },
-            function() {
-                deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet programmé.');
+            function(e) {
+                if (e.status == 400) {
+                    deferred.reject(e.data.error);
+                } else {
+                    deferred.reject('exercizer.schedule.error');
+                }
             }
         );
         return deferred.promise;

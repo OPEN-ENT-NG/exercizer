@@ -31,10 +31,10 @@ public interface ISubjectScheduledService {
     /**
      * Schedules a subject.
      * 
-     * @param resource the resource
+     * @param scheduledSubject the resource
      * @param user the user
      * @param handler the handler
      */
-    void schedule(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
+    void schedule(final JsonObject scheduledSubject, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
 }

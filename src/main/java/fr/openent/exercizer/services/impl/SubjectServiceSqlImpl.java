@@ -346,8 +346,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	}
 
 	private void duplicationGrain(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId) {
-		final String grainsCopy = "INSERT INTO exercizer.grain (subject_id, grain_type_id, created, modified, order_by, grain_data) " +
-				"SELECT ?, g.grain_type_id, NOW(), NOW(), g.order_by, g.grain_data FROM exercizer.subject as s INNER JOIN exercizer.grain as g on (s.id = g.subject_id) " +
+		final String grainsCopy = "INSERT INTO exercizer.grain (subject_id, grain_type_id, created, modified, order_by, grain_data, grain_custom_data) " +
+				"SELECT ?, g.grain_type_id, NOW(), NOW(), g.order_by, g.grain_data, g.grain_custom_data FROM exercizer.subject as s INNER JOIN exercizer.grain as g on (s.id = g.subject_id) " +
 				"WHERE s.id=?";
 
 		s.prepared(grainsCopy, new JsonArray().add(newSubjectId).add(fromSubjectId));

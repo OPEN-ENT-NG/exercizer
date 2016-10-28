@@ -4,11 +4,6 @@ import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.http.Renders;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
@@ -60,203 +55,93 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
     public void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         super.getById(id, user, handler);
     }
-    
-    /**
-     * @see fr.openent.exercizer.services.ISubjectScheduledService
-     */
-    @Override
-	public void schedule(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 
-    	final JsonObject body = ResourceParser.beforeAny(resource);
-		JsonObject subjectScheduled = body.getObject("subjectScheduled");
-		subjectScheduled.putString("owner", user.getUserId());
-    	subjectScheduled.putString("owner_username", user.getUsername());
-		final ExercizerSqlStatementBuilderService exercizerSubjectScheduledSqlStatementBuilderService = new ExercizerSqlStatementBuilderService("exercizer", "subject_scheduled");
-		SqlStatementsBuilder subjectScheduledSqlStatement = exercizerSubjectScheduledSqlStatementBuilderService.persist(subjectScheduled, user, null);
+	/**
+	 * @see fr.openent.exercizer.services.ISubjectScheduledService
+	 */
+	@Override
+	public void schedule(final JsonObject scheduledSubject, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		final String queryNewSubjectScheduledId = "SELECT nextval('" + schema + "subject_scheduled_id_seq') as id";
 
-		Sql.getInstance().transaction(subjectScheduledSqlStatement.build(), SqlResult.validUniqueResultHandler(1, new Handler<Either<String,JsonObject>>() {
+		final Long fromSubjectId = scheduledSubject.getLong("subjectId");
+		final JsonArray usersJa = scheduledSubject.getArray("users");
+
+		sql.raw(queryNewSubjectScheduledId, SqlResult.validUniqueResultHandler(new Handler<Either<String, JsonObject>>() {
 			@Override
-			public void handle(final Either<String, JsonObject> subjectScheduledHandler) {
-				
-				if (subjectScheduledHandler.isRight()) {
-					
-					final JsonObject subjectScheduled = ResourceParser.beforeAny(subjectScheduledHandler.right().getValue());
-					JsonArray grainScheduledList = body.getArray("grainScheduledList");
-					final ExercizerSqlStatementBuilderService exercizerGrainScheduledSqlStatementBuilderService = new ExercizerSqlStatementBuilderService("exercizer", "grain_scheduled");
-					SqlStatementsBuilder grainScheduledListSqlStatement = new SqlStatementsBuilder();
-					
-					for (int i = 0; i < grainScheduledList.size(); i++) {
-						JsonObject grainScheduled = grainScheduledList.get(i);
-						grainScheduled.putNumber("subject_scheduled_id", subjectScheduled.getNumber("id"));
-						grainScheduledListSqlStatement = exercizerGrainScheduledSqlStatementBuilderService.persist(grainScheduled, grainScheduledListSqlStatement);
-					}
-					
-					Sql.getInstance().transaction(grainScheduledListSqlStatement.build(), SqlResult.validResultsHandler(new Handler<Either<String,JsonArray>>() {
-						@Override
-						public void handle(Either<String, JsonArray> grainScheduledListHandler) {
-							
-							if (grainScheduledListHandler.isRight()) {
-								
-								final JsonArray grainScheduledListResult = grainScheduledListHandler.right().getValue();
-								JsonArray userList = body.getArray("userList");
-								JsonObject subjectCopyTemplate = body.getObject("subjectCopyTemplate");
-								final ExercizerSqlStatementBuilderService exercizerSubjectCopySqlStatementBuilderService = new ExercizerSqlStatementBuilderService("exercizer", "subject_copy");
-								SqlStatementsBuilder subjectCopyListSqlStatement = new SqlStatementsBuilder();
-								
-								for (int i = 0; i < userList.size(); i++) {
-									JsonObject subjectCopy = subjectCopyTemplate.copy();
-									JsonObject currentUser = new JsonObject(userList.get(i).toString());
-									subjectCopy.putNumber("subject_scheduled_id", subjectScheduled.getNumber("id"));
-									subjectCopy.putString("owner", currentUser.getString("id"));
-									subjectCopy.putString("owner_username", currentUser.getString("name"));
-									subjectCopyListSqlStatement = exercizerSubjectCopySqlStatementBuilderService.persistWithAnotherOwner(subjectCopy, subjectCopyListSqlStatement);
-								}
-								
-								Sql.getInstance().transaction(subjectCopyListSqlStatement.build(), SqlResult.validResultsHandler(new Handler<Either<String,JsonArray>>() {
-									@Override
-									public void handle(Either<String, JsonArray> subjectCopyListHandler) {
-										
-										if (subjectCopyListHandler.isRight()) {
-											
-											final JsonArray subjectCopyListResult = subjectCopyListHandler.right().getValue();
-											JsonArray grainCopyListTemplate = body.getArray("grainCopyListTemplate");
-											final ExercizerSqlStatementBuilderService exercizerGrainCopySqlStatementBuilderService = new ExercizerSqlStatementBuilderService("exercizer", "grain_copy");
-											SqlStatementsBuilder grainCopyListSqlStatement = new SqlStatementsBuilder();
-											
-											// first, rebuilds arrays of grain scheduled and subject copy (because of merge user requests)
-											final List<JsonObject> grainScheduledList = new ArrayList<>();
-											
-											for (int i = 0; i < grainScheduledListResult.size(); i++) {
-												JsonArray currentResult = grainScheduledListResult.get(i);
-												JsonObject currentParsedResult = new JsonObject(currentResult.get(0).toString());
-												
-												if (currentParsedResult.containsField("id")) {
-													grainScheduledList.add(currentParsedResult);
-												}
-											}
-											
-											final List<JsonObject> subjectCopyList = new ArrayList<>();
-											
-											for (int i = 0; i < subjectCopyListResult.size(); i++) {
-												JsonArray currentResult = subjectCopyListResult.get(i);
-												JsonObject currentParsedResult = new JsonObject(currentResult.get(0).toString());
-												
-												if (currentParsedResult.containsField("id")) {
-													subjectCopyList.add(currentParsedResult);
-												}
-											}
-											
-											// then builds the statements of grain copy inserts
-											for (int i = 0; i < subjectCopyList.size(); i++) {
-												for (int j = 0; j < grainCopyListTemplate.size(); j++) {
-													// the grain scheduled and grain copy must have the same order (AngularJS job)
-													JsonObject currentSubjectCopy = subjectCopyList.get(i);
-													JsonObject currentGrainScheduled = grainScheduledList.get(j);
-													JsonObject currentGrainCopyTemplate = new JsonObject(grainCopyListTemplate.get(j).toString());
-													JsonObject grainCopy = currentGrainCopyTemplate.copy();
-													grainCopy.putNumber("subject_copy_id", currentSubjectCopy.getNumber("id"));
-													grainCopy.putNumber("grain_scheduled_id", currentGrainScheduled.getNumber("id"));
-													grainCopyListSqlStatement = exercizerGrainCopySqlStatementBuilderService.persist(grainCopy, grainCopyListSqlStatement);
-												}
-											}
-											
-											Sql.getInstance().transaction(grainCopyListSqlStatement.build(), SqlResult.validResultsHandler(new Handler<Either<String,JsonArray>>() {
-												@Override
-												public void handle(Either<String, JsonArray> grainCopyListHandler) {
-													
-													if (grainCopyListHandler.isLeft()) {
-														SqlStatementsBuilder deleteStatement = exercizerSubjectScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "id");
-														Sql.getInstance().transaction(deleteStatement.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
-															@Override
-															public void handle(final Either<String, JsonObject> deleteHandler) {
-																
-																if (deleteHandler.isLeft()) {
-																	log.debug("Failed to delete object 'subject_scheduled' with id = " + subjectScheduled.getNumber("id") + " and associated 'grain_scheduled' and 'subject_copy' objects.");
-																}
-																
-																handler.handle(new Either.Left<String, JsonObject>(""));
-															}
-														}));
-													} else {
-														// first, rebuilds array of grain copy.
-														JsonArray grainCopyListResult = grainCopyListHandler.right().getValue();
-														final List<JsonObject> grainCopyList = new ArrayList<>();
-														
-														for (int i = 0; i < grainCopyListResult.size(); i++) {
-															JsonArray currentResult = grainCopyListResult.get(i);
-															JsonObject currentParsedResult = new JsonObject(currentResult.get(0).toString());
-															
-															if (currentParsedResult.containsField("id")) {
-																grainCopyList.add(currentParsedResult);
-															}
-														}
-														
-														
-														// then builds arrays results.
-														JsonArray grainScheduledListArray = new JsonArray();
-														for (JsonObject grainScheduled : grainScheduledList) {
-															grainScheduledListArray.addObject(grainScheduled);
-														}
-														
-														JsonArray subjectCopyListArray = new JsonArray();
-														for (JsonObject subjectCopy : subjectCopyList) {
-															subjectCopyListArray.addObject(subjectCopy);
-														}
-														
-														JsonArray grainCopyListArray = new JsonArray();
-														for (JsonObject grainCopy : grainCopyList) {
-															grainCopyListArray.addObject(grainCopy);
-														}
-														
-														JsonObject result = new JsonObject();
-														result.putObject("subjectScheduled", subjectScheduled);
-														result.putArray("grainScheduledList", grainScheduledListArray);
-														result.putArray("subjectCopyList", subjectCopyListArray);
-														result.putArray("grainCopyList", grainCopyListArray);
-														
-														handler.handle(new Either.Right<String, JsonObject>(result));
-													}
-												}
-											}));
-											
-											
-										} else {
-											SqlStatementsBuilder deleteStatement = exercizerSubjectScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "id");
-											Sql.getInstance().transaction(deleteStatement.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
-												@Override
-												public void handle(final Either<String, JsonObject> deleteHandler) {
-													
-													if (deleteHandler.isLeft()) {
-														log.debug("Failed to delete object 'subject_scheduled' with id = " + subjectScheduled.getNumber("id") + " and associated 'grain_scheduled' objects.");
-													}
-													
-													handler.handle(new Either.Left<String, JsonObject>(""));
-												}
-											}));
-										}
-									}
-								}));
-								
-							} else {
-								SqlStatementsBuilder deleteStatement = exercizerSubjectScheduledSqlStatementBuilderService.delete(subjectScheduled.getNumber("id"), "id");
-								Sql.getInstance().transaction(deleteStatement.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
-									@Override
-									public void handle(final Either<String, JsonObject> deleteHandler) {
-										
-										if (deleteHandler.isLeft()) {
-											log.debug("Failed to delete object 'subject_scheduled' with id = " + subjectScheduled.getNumber("id") + ".");
-										}
-										
-										handler.handle(new Either.Left<String, JsonObject>(""));
-									}
-								}));
-							}
-						}
-					}));
-					
+			public void handle(Either<String, JsonObject> event) {
+				if (event.isRight()) {
+					final Long subjectScheduledId = event.right().getValue().getLong("id");
+					final SqlStatementsBuilder s = new SqlStatementsBuilder();
+
+					createScheduledSubject(s, fromSubjectId, subjectScheduledId, scheduledSubject, user);
+					createScheduledGrain(s, subjectScheduledId, fromSubjectId);
+					createSubjectsCopies(s, subjectScheduledId, usersJa);
+					createGrainCopies(s, subjectScheduledId);
+					sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
+				} else {
+					log.error("failure to schedule subject : " + event.left().getValue());
+					handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
 				}
 			}
 		}));
-    }
+	}
 
+	private void createScheduledSubject(final SqlStatementsBuilder s, final Long subjectId, final Long scheduledSubjectId, final JsonObject scheduledSubject, UserInfos user) {
+
+		final String query = "INSERT INTO " + schema + "subject_scheduled (id, subject_id, title, description, picture, max_score, " +
+				"owner, owner_username, begin_date, due_date, estimated_duration, is_one_shot_submit, scheduled_at) " +
+				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?::json FROM " + schema + "subject as s " +
+				"WHERE s.id=? ";
+
+		final JsonArray values = new JsonArray();
+		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))
+				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("estimatedDuration", ""))
+				.add(scheduledSubject.getBoolean("isOneShotSubmit")).add(scheduledSubject.getObject("scheduledAt"))
+				.addNumber(subjectId);
+
+		s.prepared(query, values);
+	}
+
+
+	private void createScheduledGrain(final SqlStatementsBuilder s, final Long subjectScheduledId, final Long fromSubjectId) {
+		final String query = "INSERT INTO " + schema + "grain_scheduled (subject_scheduled_id, grain_type_id, created, order_by, grain_data, grain_custom_data) " +
+				"SELECT ?, g.grain_type_id, NOW(), g.order_by, g.grain_data, g.grain_custom_data FROM " + schema + "subject as s INNER JOIN " + schema + "grain as g on (s.id = g.subject_id) " +
+				"WHERE s.id=? AND g.grain_type_id > 2";
+
+		s.prepared(query, new JsonArray().add(subjectScheduledId).add(fromSubjectId));
+	}
+
+
+	private void createSubjectsCopies(final SqlStatementsBuilder s, final Long subjectScheduledId, JsonArray users) {
+		final StringBuilder mergeUserQuery = new StringBuilder("SELECT ");
+		final StringBuilder bulkInsertSubjectCopy = new StringBuilder("INSERT INTO " + schema + "subject_copy (subject_scheduled_id, owner, owner_username) VALUES ");
+
+		final JsonArray mergeUserValues = new JsonArray();
+		final JsonArray subjectCopyValues = new JsonArray();
+
+		for (int i=0;i<users.size();i++) {
+			final JsonObject joUser =  users.<JsonObject>get(i);
+			mergeUserQuery.append(schema).append("merge_users(?,?),");
+			mergeUserValues.addString(joUser.getString("_id")).addString(joUser.getString("name"));
+
+			bulkInsertSubjectCopy.append("(?,?,?),");
+			subjectCopyValues.add(subjectScheduledId).addString(joUser.getString("_id")).addString(joUser.getString("name"));
+		}
+
+		mergeUserQuery.deleteCharAt(mergeUserQuery.length() - 1);
+		bulkInsertSubjectCopy.deleteCharAt(bulkInsertSubjectCopy.length() - 1);
+
+		s.prepared(mergeUserQuery.toString(), mergeUserValues);
+		s.prepared(bulkInsertSubjectCopy.toString(), subjectCopyValues);
+	}
+
+	private void createGrainCopies(final SqlStatementsBuilder s, final Long subjectScheduledId) {
+		final String query = "INSERT INTO " + schema + "grain_copy (subject_copy_id, grain_type_id, grain_scheduled_id, order_by, grain_copy_data) " +
+				"SELECT sc.id, gs.grain_type_id, gs.id, gs.order_by, Coalesce(gs.grain_custom_data, gs.grain_data) " +
+				"FROM " + schema +"grain_scheduled AS gs INNER JOIN " + schema + "subject_scheduled AS ss ON (ss.id=gs.subject_scheduled_id) " +
+				"    INNER JOIN " + schema + "subject_copy AS sc ON (ss.id=sc.subject_scheduled_id) " +
+				"WHERE ss.id=?";
+
+		s.prepared(query, new JsonArray().add(subjectScheduledId));
+	}
 }

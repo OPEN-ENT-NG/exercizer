@@ -6,6 +6,7 @@ interface IGrain {
     modified: string;
     order_by: number;
     grain_data: IGrainData;
+    grain_custom_data : any;
 }
 
 class Grain implements IGrain {
@@ -17,6 +18,7 @@ class Grain implements IGrain {
     modified: string;
     order_by: number;
     grain_data: IGrainData;
+    grain_custom_data : any;
 
     constructor
     (
@@ -26,7 +28,8 @@ class Grain implements IGrain {
         created?: string,
         modified?: string,
         order_by?: number,
-        grain_data?: IGrainData
+        grain_data?: IGrainData,
+        grain_custom_data?: any
     ) {
         this.id = id;
         this.subject_id = subject_id;
@@ -35,5 +38,6 @@ class Grain implements IGrain {
         this.modified = modified;
         this.order_by = order_by;
         this.grain_data = grain_data;
+        this.grain_custom_data = grain_custom_data;
     }
 }

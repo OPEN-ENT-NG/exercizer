@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "subjectTitle": {
+      "type": "string"
+    },
+    "beginDate": {
+      "type": "string"
+    },
+    "dueDate": {
+      "type": "string"
+    },
+    "estimatedDuration": {
+      "type": "string"
+    },
+    "isOneShotSubmit": {
+      "type": "boolean"
+    },
+    "scheduledAt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "groupList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "userList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "subjectTitle",
+    "beginDate",
+    "dueDate",
+    "isOneShotSubmit",
+    "scheduledAt"
+  ]
+}
+
+
