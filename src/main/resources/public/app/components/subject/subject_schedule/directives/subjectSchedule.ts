@@ -161,9 +161,17 @@ directives.push(
                         subjectScheduled.is_one_shot_submit = !option.allow_students_to_update_copy;
                         subjectScheduled.scheduled_at = createSubjectScheduledAt(data);
 
-                        SubjectScheduledService.schedule(subjectScheduled).then(
-                            function() {
-                                deferred.resolve();
+                        GrainService.getListBySubject(subject).then(
+                            function (data) {
+                                var grainsCustomCopyData = GrainCopyService.createGrainCopyCustomList(data);
+                                SubjectScheduledService.schedule(subjectScheduled, grainsCustomCopyData).then(
+                                    function() {
+                                        deferred.resolve();
+                                    },
+                                    function(err) {
+                                        deferred.reject(err);
+                                    }
+                                );
                             },
                             function(err) {
                                 deferred.reject(err);

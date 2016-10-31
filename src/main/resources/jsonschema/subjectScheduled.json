@@ -53,6 +53,9 @@
           }
         }
       }
+    },
+    "grainsCustomCopyData": {
+      "type": "array"
     }
   },
   "required": [
@@ -60,7 +63,8 @@
     "beginDate",
     "dueDate",
     "isOneShotSubmit",
-    "scheduledAt"
+    "scheduledAt",
+    "grainsCustomCopyData"
   ]
 }
 

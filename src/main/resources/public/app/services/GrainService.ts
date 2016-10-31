@@ -176,22 +176,13 @@ class GrainService implements IGrainService {
         duplicatedGrain.id = undefined;
         duplicatedGrain.subject_id = subject.id;
 
-        if (duplicatedGrain.grain_type_id > 3) {
-            duplicatedGrain.grain_custom_data = JSON.parse(grain.grain_custom_data);
-        }
-
-
         if (rename) { // duplicate action in edit subject page
 
             if (duplicatedGrain.grain_type_id > 3) {
                 if (angular.isUndefined(duplicatedGrain.grain_data.title)) {
                     duplicatedGrain.grain_data.title = this._grainTypeService.getById(duplicatedGrain.grain_type_id).public_name + '_copie';
-                    //TODO ODE title out etc.
-                    duplicatedGrain.grain_custom_data.title = duplicatedGrain.grain_data.title;
                 } else {
                     duplicatedGrain.grain_data.title += '_copie';
-                    //TODO ODE title out etc.
-                    duplicatedGrain.grain_custom_data.title += '_copie';
                 }
             }
 

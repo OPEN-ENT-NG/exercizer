@@ -13,6 +13,9 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.logging.Logger;
 import org.vertx.java.core.logging.impl.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements ISubjectScheduledService {
 	
 	protected static final Logger log = LoggerFactory.getLogger(Renders.class);
@@ -63,27 +66,55 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	public void schedule(final JsonObject scheduledSubject, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		final String queryNewSubjectScheduledId = "SELECT nextval('" + schema + "subject_scheduled_id_seq') as id";
 
+		final Map<Number,JsonObject> mapIdGrainCustomCopyData = transformJaInMapCustomCopyData(scheduledSubject.getArray("grainsCustomCopyData"));
+
 		final Long fromSubjectId = scheduledSubject.getLong("subjectId");
 		final JsonArray usersJa = scheduledSubject.getArray("users");
 
-		sql.raw(queryNewSubjectScheduledId, SqlResult.validUniqueResultHandler(new Handler<Either<String, JsonObject>>() {
+		//to prevent modification of the model and data migration, temporarily, we recovered grains of subject to associate custom data copies.
+		// in the next refactor step, grain entry can directly contain custom_data for copies of grain
+		final String queryGain = "SELECT g.id, g.grain_type_id, g.order_by, g.grain_data FROM " + schema + "grain as g " +
+				" WHERE g.subject_id = ? and g.grain_type_id > 2";
+		final JsonArray values = new JsonArray().add(fromSubjectId);
+		sql.prepared(queryGain,values, SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
 			@Override
-			public void handle(Either<String, JsonObject> event) {
+			public void handle(Either<String, JsonArray> event) {
 				if (event.isRight()) {
-					final Long subjectScheduledId = event.right().getValue().getLong("id");
-					final SqlStatementsBuilder s = new SqlStatementsBuilder();
+					final JsonArray grainJa = event.right().getValue();
+					sql.raw(queryNewSubjectScheduledId, SqlResult.validUniqueResultHandler(new Handler<Either<String, JsonObject>>() {
+						@Override
+						public void handle(Either<String, JsonObject> event) {
+							if (event.isRight()) {
+								final Long subjectScheduledId = event.right().getValue().getLong("id");
+								final SqlStatementsBuilder s = new SqlStatementsBuilder();
 
-					createScheduledSubject(s, fromSubjectId, subjectScheduledId, scheduledSubject, user);
-					createScheduledGrain(s, subjectScheduledId, fromSubjectId);
-					createSubjectsCopies(s, subjectScheduledId, usersJa);
-					createGrainCopies(s, subjectScheduledId);
-					sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
+								createScheduledSubject(s, fromSubjectId, subjectScheduledId, scheduledSubject, user);
+								createScheduledGrain(s, subjectScheduledId, fromSubjectId, grainJa, mapIdGrainCustomCopyData);
+								createSubjectsCopies(s, subjectScheduledId, usersJa);
+								createGrainCopies(s, subjectScheduledId);
+								sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
+							} else {
+								log.error("failure to schedule subject : " + event.left().getValue());
+								handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
+							}
+						}
+					}));
 				} else {
 					log.error("failure to schedule subject : " + event.left().getValue());
 					handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
 				}
 			}
 		}));
+	}
+
+	private Map<Number, JsonObject> transformJaInMapCustomCopyData(JsonArray grainsCustomCopyData) {
+		final Map<Number, JsonObject> mapIdGrainCustomCopyData = new HashMap<>();
+		for (int i=0;i<grainsCustomCopyData.size();i++) {
+			final JsonObject jo = grainsCustomCopyData.get(i);
+			mapIdGrainCustomCopyData.put(jo.getLong("grain_id"), jo.getObject("grain_copy_data"));
+		}
+
+		return mapIdGrainCustomCopyData;
 	}
 
 	private void createScheduledSubject(final SqlStatementsBuilder s, final Long subjectId, final Long scheduledSubjectId, final JsonObject scheduledSubject, UserInfos user) {
@@ -103,12 +134,26 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	}
 
 
-	private void createScheduledGrain(final SqlStatementsBuilder s, final Long subjectScheduledId, final Long fromSubjectId) {
-		final String query = "INSERT INTO " + schema + "grain_scheduled (subject_scheduled_id, grain_type_id, created, order_by, grain_data, grain_custom_data) " +
+	private void createScheduledGrain(final SqlStatementsBuilder s, final Long subjectScheduledId, final Long fromSubjectId, final JsonArray grainJa, final Map<Number,JsonObject> mapIdGrainCustomCopyData) {
+		/*the potential target : final String query = "INSERT INTO " + schema + "grain_scheduled (subject_scheduled_id, grain_type_id, created, order_by, grain_data, grain_custom_data) " +
 				"SELECT ?, g.grain_type_id, NOW(), g.order_by, g.grain_data, g.grain_custom_data FROM " + schema + "subject as s INNER JOIN " + schema + "grain as g on (s.id = g.subject_id) " +
-				"WHERE s.id=? AND g.grain_type_id > 2";
+				"WHERE s.id=? AND g.grain_type_id > 2";*/
+		final StringBuilder bulkInsertScheduledGrain = new StringBuilder("INSERT INTO " + schema + "grain_scheduled (subject_scheduled_id, grain_type_id, order_by, grain_data, grain_custom_data) VALUES ");
+		final JsonArray values = new JsonArray();
 
-		s.prepared(query, new JsonArray().add(subjectScheduledId).add(fromSubjectId));
+		for (int i=0;i<grainJa.size();i++) {
+			final JsonObject grainJo = grainJa.get(i);
+
+			values.addNumber(subjectScheduledId).addNumber(grainJo.getLong("grain_type_id")).addNumber(grainJo.getInteger("order_by"))
+					.addString(grainJo.getString("grain_data")).add(mapIdGrainCustomCopyData.get(grainJo.getLong("id")));
+
+			bulkInsertScheduledGrain.append("(?,?,?,?,?),");
+
+		}
+
+		bulkInsertScheduledGrain.deleteCharAt(bulkInsertScheduledGrain.length() - 1);
+
+		s.prepared(bulkInsertScheduledGrain.toString(),values);
 	}
 
 

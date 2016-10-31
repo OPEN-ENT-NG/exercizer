@@ -1,7 +1,7 @@
 interface ISubjectScheduledService {
     resolve(isTeacher:boolean): ng.IPromise<boolean>;
     persist(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled>;
-    schedule(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled>
+    schedule(subjectScheduled:ISubjectScheduled, grainsCustomCopyData:IGrainCustomCopy[]):ng.IPromise<ISubjectScheduled>
     createFromSubject(subject:ISubject):ISubjectScheduled;
     getList():ISubjectScheduled[];
     getById(id:number):ISubjectScheduled;
@@ -101,13 +101,13 @@ class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
-    public schedule = function(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled> {
+    public schedule = function(subjectScheduled:ISubjectScheduled, grainsCustomCopyData:IGrainCustomCopy[]):ng.IPromise<ISubjectScheduled> {
         var self = this,
             deferred = this._$q.defer();
 
         let param = {subjectTitle: subjectScheduled.title, beginDate: subjectScheduled.begin_date, dueDate: subjectScheduled.due_date,
             estimatedDuration: subjectScheduled.estimated_duration, isOneShotSubmit: subjectScheduled.is_one_shot_submit,
-            scheduledAt:subjectScheduled.scheduled_at};
+            scheduledAt:subjectScheduled.scheduled_at, grainsCustomCopyData: grainsCustomCopyData};
         
         let request = {
             method: 'POST',
