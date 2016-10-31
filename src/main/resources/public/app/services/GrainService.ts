@@ -40,18 +40,18 @@ class GrainService implements IGrainService {
             grain = this._setOrderToGrain(grain);
         }
 
-        var grainObject = angular.copy(grain);
-        grainObject.grain_data = JSON.stringify(grainObject.grain_data);
+        var body = {"grainTypeId": grain.grain_type_id, "orderBy": grain.order_by,"grainData": grain.grain_data};
 
         var request = {
             method: 'POST',
             url: 'exercizer/subject/' + grain.subject_id + '/grain',
-            data: grainObject
+            data: body
         };
 
         this._$http(request).then(
             function (response) {
-                var grain = self.instantiateGrain(response.data);
+                //var grain = self.instantiateGrain(response.data);
+                grain.id = response.data.id;
 
                 if (angular.isUndefined(self._listMappedBySubjectId[grain.subject_id])) {
                     self._listMappedBySubjectId[grain.subject_id] = [];
@@ -71,16 +71,14 @@ class GrainService implements IGrainService {
 
     public update = function (grain:IGrain):ng.IPromise<IGrain> {
         var self = this,
-            deferred = this._$q.defer(),
-            grainIndex = self._listMappedBySubjectId[grain.subject_id].indexOf(grain);
+            deferred = this._$q.defer();
 
-        var grainObject = angular.copy(grain);
-        grainObject.grain_data = JSON.stringify(grainObject.grain_data);
+        var body = {"grainTypeId": grain.grain_type_id, "orderBy": grain.order_by,"grainData": grain.grain_data};
 
         var request = {
             method: 'PUT',
-            url: 'exercizer/subject/' + grain.subject_id + '/grain',
-            data: grainObject
+            url: 'exercizer/subject/' + grain.subject_id + '/grain/' + grain.id,
+            data: body
         };
 
         this._$http(request).then(
@@ -120,13 +118,9 @@ class GrainService implements IGrainService {
         var self = this,
             deferred = this._$q.defer();
 
-        var grainObject = angular.copy(grain);
-        grainObject.grain_data = JSON.stringify(grainObject.grain_data);
-
         var request = {
             method: 'DELETE',
-            url: 'exercizer/subject/' + grain.subject_id  + '/grain/' + grain.id,
-            data: grainObject
+            url: 'exercizer/subject/' + grain.subject_id  + '/grain/' + grain.id
         };
 
         this._$http(request).then(

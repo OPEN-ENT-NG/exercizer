@@ -179,19 +179,6 @@ class EditSubjectController {
         )
     };*/
 
-    private _updateSubject(updateMaxScore:boolean = false) {
-        var self = this;
-
-        this._subjectService.update(this._subject, updateMaxScore).then(
-            function(subject:ISubject) {
-                self._subject = subject;
-            },
-            function(err) {
-                notify.error(err);
-            }
-        );
-    };
-
     /**
      *  GRAIN
      */
@@ -207,7 +194,6 @@ class EditSubjectController {
 
         this._grainService.persist(newGrain).then(
             function () {
-                self._updateSubject();
             },
             function (err) {
                 notify.error(err);
@@ -240,8 +226,6 @@ class EditSubjectController {
 
         this._grainService.update(grain).then(
             function() {
-               // maxscore of subject is updated by grain service
-               // self._updateSubject(grain.grain_type_id > 3)
             },
             function(err) {
                 notify.error(err);
@@ -265,7 +249,6 @@ class EditSubjectController {
 
         this._grainService.remove(this._currentGrainForAction).then(
             function() {
-                self._updateSubject(self._currentGrainForAction.grain_type_id > 3);
                 self._currentGrainForAction = undefined;
                 self._isModalRemoveGrainDisplayed = false;
             },
@@ -468,7 +451,6 @@ class EditSubjectController {
             function() {
                 self._selectedGrainList = [];
                 self.foldAllGrain();
-                self._updateSubject(true);
             },
             function(err) {
                 notify.error(err);
@@ -482,7 +464,6 @@ class EditSubjectController {
         this._grainService.removeList(this._selectedGrainList, this._subject).then(
             function() {
                 self._selectedGrainList = [];
-                self._updateSubject(true);
                 self._isModalRemoveSelectedGrainListDisplayed = false;
             },
             function(err) {

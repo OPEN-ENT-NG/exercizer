@@ -271,14 +271,21 @@ public class SubjectController extends ControllerHelper {
 	@ResourceFilter(ShareAndOwner.class)
 	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
 	public void grainPersist(final HttpServerRequest request) {
+		final Long subjectId;
+		try {
+			subjectId = Long.parseLong(request.params().get("id"));
+		}catch (NumberFormatException e) {
+			badRequest(request, e.getMessage());
+			return;
+		}
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+					RequestUtils.bodyToJson(request, pathPrefix + "grain", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							grainService.persist(resource, user, notEmptyResponseHandler(request));
+							grainService.persist(resource, subjectId, notEmptyResponseHandler(request));
 						}
 					});
 				}
@@ -290,19 +297,28 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
-	@Put("/subject/:id/grain")
+	@Put("/subject/:id/grain/:gId")
 	@ApiDoc("Updates a grain.")
 	@ResourceFilter(ShareAndOwner.class)
 	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
 	public void grainUpdate(final HttpServerRequest request) {
+		final Long grainId;
+		final Long subjectId;
+		try {
+			subjectId = Long.parseLong(request.params().get("id"));
+			grainId = Long.parseLong(request.params().get("gId"));
+		}catch (NumberFormatException e) {
+			badRequest(request, e.getMessage());
+			return;
+		}
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+					RequestUtils.bodyToJson(request, pathPrefix + "grain", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							grainService.update(resource, user, defaultResponseHandler(request));
+							grainService.update(resource, grainId, subjectId, defaultResponseHandler(request));
 						}
 					});
 				}
@@ -318,19 +334,31 @@ public class SubjectController extends ControllerHelper {
 	@ApiDoc("Deletes a grain.")
 	@ResourceFilter(ShareAndOwner.class)
 	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
-	public void grainremove(final HttpServerRequest request) {
+	public void grainRemove(final HttpServerRequest request) {
+		final Long grainId;
+		final Long subjectId;
+		try {
+			subjectId = Long.parseLong(request.params().get("id"));
+			grainId = Long.parseLong(request.params().get("gId"));
+		}catch (NumberFormatException e) {
+			badRequest(request, e.getMessage());
+			return;
+		}
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+					grainService.remove(grainId, subjectId, new Handler<Either<String, JsonObject>>() {
 						@Override
-						public void handle(final JsonObject resource) {
-							grainService.remove(resource, user, notEmptyResponseHandler(request));
+						public void handle(Either<String, JsonObject> event) {
+							if (event.isRight()) {
+								Renders.noContent(request);
+							} else {
+								Renders.renderError(request);
+							}
 						}
 					});
-				}
-				else {
+				} else {
 					log.debug("User not found in session.");
 					unauthorized(request);
 				}
