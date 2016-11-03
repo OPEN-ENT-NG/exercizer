@@ -204,6 +204,9 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                             }
                         }
                     });
+                } else {
+                    log.error("Fail to look for recursive folder" + event.left().getValue());
+                    handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
                 }
             }
         }));
@@ -268,8 +271,8 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
         String userQuery = "SELECT " + schema + "merge_users(?,?)";
         s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
 
-        final String subjectCopy = "INSERT INTO exercizer.subject (id, folder_id, owner, owner_username, title, description, picture, max_score) " +
-                "SELECT ?, ?, ?, ?, s.title || ?, s.description, s.picture, s.max_score FROM exercizer.subject as s " +
+        final String subjectCopy = "INSERT INTO " + schema + "subject (id, folder_id, owner, owner_username, title, description, picture, max_score) " +
+                "SELECT ?, ?, ?, ?, s.title || ?, s.description, s.picture, s.max_score FROM " + schema + "subject as s " +
                 "WHERE s.id = ?";
 
         final JsonArray values = new JsonArray().add(newSubjectId).add(folderId).add(user.getUserId())
@@ -279,8 +282,8 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     }
 
     private void duplicationGrain(final SqlStatementsBuilder s, final Number newSubjectId, final Number fromSubjectId) {
-        final String grainsCopy = "INSERT INTO exercizer.grain (subject_id, grain_type_id, order_by, grain_data) " +
-                "SELECT ?, g.grain_type_id, g.order_by, g.grain_data FROM exercizer.subject as s INNER JOIN exercizer.grain as g on (s.id = g.subject_id) " +
+        final String grainsCopy = "INSERT INTO " + schema + "grain (subject_id, grain_type_id, order_by, grain_data) " +
+                "SELECT ?, g.grain_type_id, g.order_by, g.grain_data FROM " + schema + "subject as s INNER JOIN " + schema + "grain as g on (s.id = g.subject_id) " +
                 "WHERE s.id=?";
 
         s.prepared(grainsCopy, new JsonArray().add(newSubjectId).add(fromSubjectId));
