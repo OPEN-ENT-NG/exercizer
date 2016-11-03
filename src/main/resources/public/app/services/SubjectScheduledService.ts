@@ -117,6 +117,7 @@ class SubjectScheduledService implements ISubjectScheduledService {
 
         this._$http(request).then(
             function(response) {
+                delete self._listMappedById;
                 deferred.resolve();
             },
             function(e) {

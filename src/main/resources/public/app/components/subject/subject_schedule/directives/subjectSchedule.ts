@@ -166,6 +166,7 @@ directives.push(
                                 var grainsCustomCopyData = GrainCopyService.createGrainCopyCustomList(data);
                                 SubjectScheduledService.schedule(subjectScheduled, grainsCustomCopyData).then(
                                     function() {
+                                        SubjectScheduledService.resolve(true);
                                         deferred.resolve();
                                     },
                                     function(err) {
