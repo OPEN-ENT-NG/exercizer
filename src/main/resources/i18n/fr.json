@@ -27,12 +27,18 @@
     "editor.option.filltext":  "Ajouter une zone à compléter",
     "exercizer.publish.error": "Une erreur est survenue lors de la publication du sujet.",
     "exercizer.subject.duplicate.error": "Une erreur est survenue lors de la duplication du sujet à copier.",
-    "exercizer.subject.title.copyPrefix" : "_copie",
+    "exercizer.grain.duplicate.error": "Une erreur est survenue lors de la duplication des éléments sélectionnés.",
+    "exercizer.folder.duplicate.error": "Une erreur est survenue lors de la duplication des dossiers sélectionnés.",
+    "exercizer.folder.title.copySuffix" : "_copie",
+    "exercizer.subject.title.copySuffix" : "_copie",
+    "exercizer.grain.title.copySuffix" : "_copie",
     "exercizer.schedule.empty.date" : "Vous devez spécifier une date de début et une date de fin.",
     "exercizer.schedule.empty.users" : "Vous devez sélectionner au moins un destinataire.",
     "exercizer.schedule.empty.groups" : "Les groupes de destinataire sélectionnés ne contiennent pas d'utilisateurs.",
     "exercizer.schedule.rule.date" : "La date de début de la programmation doit être antérieure ou égale à la date de fin.",
-    "exercizer.schedule.error" : "Une erreur est survenue lors de la sauvegarde du sujet programmé."
+    "exercizer.schedule.error" : "Une erreur est survenue lors de la sauvegarde du sujet programmé.",
+    "exercizer.folder.duplicate.check" : "La destination du dossier ne peut pas être le dossier d'origine ou un de ces enfants."
+
 
 
 }

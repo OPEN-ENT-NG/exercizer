@@ -158,31 +158,43 @@ class TeacherDashboardSubjectTabController {
 
         self._$scope.$on('E_CONFIRM_COPY_PASTE', function (event, folderParent) {
             // copy subject list
-            angular.forEach(self._selectedSubjectList, function (id) {
-                self._subjectService.duplicate(self._subjectService.getById(id), folderParent).then(
-                    function(data){
+
+            if (self._selectedSubjectList.length > 0) {
+                self._subjectService.duplicate(self._selectedSubjectList, folderParent).then(
+                    function (data) {
+                        self._subjectService.resolve(true);
                     },
-                    function(err){
+                    function (err) {
                         console.error('fail', err);
                         notify.error(err);
 
                     }
                 );
-            });
-            self._resetSelectedSubjectList();
-            // copy folder list
-            angular.forEach(self._selectedFolderList, function (id) {
-                self._folderService.duplicate(self._folderService.folderById(id), folderParent, true).then(
-                    function(data){
+                self._resetSelectedSubjectList();
+            } else if (self._selectedFolderList.length > 0) {
+                self._folderService.duplicate(folderParent, self._selectedFolderList).then(
+                    function (data) {                       
+                        self._folderService.resolve().then(
+                            function() {
+                                self._subjectService.resolve(true).then(
+                                    function() {
+                                        self._eventsHandler(self);
+                                    },
+                                    function(err) {
+                                        notify.error(err);
+                                    }
+                                );
+                            });
                     },
-                    function(err){
+                    function (err) {
                         console.error('fail', err);
                         notify.error(err);
 
                     }
                 );
-            });
-            self._resetSelectedFolderList();
+                self._resetSelectedFolderList();
+            }
+
             self._$scope.$broadcast('E_RESET_SELECT_ALL');
 
         });

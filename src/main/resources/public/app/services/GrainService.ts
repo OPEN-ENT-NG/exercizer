@@ -5,9 +5,9 @@ interface IGrainService {
     remove(grain:IGrain): ng.IPromise<boolean>;
     removeList(grain:IGrain[], subject:ISubject): ng.IPromise<boolean>;
     duplicate(grain:IGrain, subject:ISubject): ng.IPromise<IGrain>;
-    duplicateList(grainList:IGrain[], subject:ISubject): ng.IPromise<boolean>;
     getListBySubject(subject:ISubject): ng.IPromise<IGrain[]>;
     instantiateGrain(grainObject:any): IGrain;
+    duplicateIntoSubject(grainList:IGrain[], subjectId:number):ng.IPromise<boolean>;
 }
 
 class GrainService implements IGrainService {
@@ -187,19 +187,31 @@ class GrainService implements IGrainService {
         return this.persist(duplicatedGrain);
     };
 
-    public duplicateList = function(grainList:IGrain[], subject:ISubject, rename: boolean = true):ng.IPromise<boolean>{
+    public duplicateIntoSubject = function(grainList:IGrain[], subjectId:number):ng.IPromise<boolean>{
         var self = this,
             deferred = this._$q.defer();
 
         if(grainList.length > 0){
-            self.duplicate(grainList[0], subject, rename).then(
-                function(){
-                    grainList.shift();
-                    return self.duplicateList(grainList, subject, rename).then(
-                        function(){
-                            deferred.resolve();
-                        }
-                    );
+            var grainIds = [];
+           _.forEach(grainList, function(grain){
+               grainIds.push(grain.id);
+           });
+
+            var body = {"grainIds": grainIds};
+
+            var request = {
+                method: 'POST',
+                url: 'exercizer/subject/' + subjectId + '/duplicate/grains',
+                data: body
+            };
+
+            this._$http(request).then(
+                function (response) {
+                    delete self._listMappedBySubjectId[subjectId];
+                    deferred.resolve();
+                },
+                function (e) {
+                    deferred.reject(e.data.error);
                 }
             );
         } else{

@@ -178,7 +178,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
         super.getById(id, user, handler);
     }
 
-	public void duplicationsFromLibrary(final JsonArray subjectIds, final Long folderId, final String titlePrefix, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+	public void duplicateSubjects(final JsonArray subjectIds, final Long folderId, final String titleSuffix, final UserInfos user,  final Handler<Either<String, JsonObject>> handler) {
 		if (subjectIds != null && subjectIds.size() > 0) {
 			final String queryNewSubjectId = "SELECT nextval('" + schema + "subject_id_seq') as id";
 			final SqlStatementsBuilder sIds = new SqlStatementsBuilder();
@@ -205,7 +205,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 						for (int i = 0; i < ja.size(); i++) {
 							final Long newSubjectId = ja.<JsonArray>get(i).<JsonObject>get(0).getLong("id");
 							final Long fromSubjectId = ids.get(i);
-							duplicateSubjectFromLibrary(s, newSubjectId, fromSubjectId, folderId, user, titlePrefix);
+							duplicateSubject(s, newSubjectId, fromSubjectId, folderId, user, titleSuffix);
 							duplicationGrain(s, newSubjectId, fromSubjectId);
 						}
 						sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
@@ -219,7 +219,6 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 			log.error("fail to duplicate subjects : no subject id");
 			handler.handle(new Either.Left<String, JsonObject>("empty.subject.ids"));
 		}
-
 	}
 
 	public void publishLibrary(final Long fromSubjectId, final String authorsContributors,
@@ -323,13 +322,12 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		duplicationSubject(s, newSubjectId, fromSubjectId, true, authorsContributors, null, user, "", false);
 	}
 
-	private void duplicateSubjectFromLibrary(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Long folderId, UserInfos user, String titlePrefix) {
-		duplicationSubject(s, newSubjectId, fromSubjectId, false, null, folderId, user, titlePrefix, true);
+	private void duplicateSubject(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Long folderId, UserInfos user, String titleSuffix) {
+		duplicationSubject(s, newSubjectId, fromSubjectId, false, null, folderId, user, titleSuffix, true);
 	}
 
 	private void duplicationSubject(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Boolean isLibrary,
-									final String authorsContributors, final Long folderId, UserInfos user, final String titlePrefix, final Boolean isMergeUser) {
-
+									final String authorsContributors, final Long folderId, UserInfos user, final String titleSuffix, final Boolean isMergeUser) {
 		if (isMergeUser) {
 			String userQuery = "SELECT " + schema + "merge_users(?,?)";
 			s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
@@ -340,7 +338,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 				"WHERE s.id = ?";
 
 		final JsonArray values = new JsonArray().add(newSubjectId).add(folderId).add(user.getUserId())
-				.add(user.getUsername()).add(titlePrefix).add(isLibrary).add(authorsContributors).add(fromSubjectId);
+				.add(user.getUsername()).add(titleSuffix).add(isLibrary).add(authorsContributors).add(fromSubjectId);
 
 		s.prepared(subjectCopy, values);
 	}
@@ -352,5 +350,4 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 
 		s.prepared(grainsCopy, new JsonArray().add(newSubjectId).add(fromSubjectId));
 	}
-	
 }

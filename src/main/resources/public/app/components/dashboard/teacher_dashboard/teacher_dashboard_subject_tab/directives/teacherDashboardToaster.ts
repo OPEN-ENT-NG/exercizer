@@ -120,7 +120,7 @@ directives.push(
                                         scope.$emit('E_COPY_SELECTED_FOLDER_SUBJECT');
                                     },
                                     display : function(){
-                                        return true;
+                                        return (scope.subjectList.length > 0 && scope.folderList.length == 0) || (scope.subjectList.length == 0 && scope.folderList.length > 0);
                                     }
                                 },
                                 {

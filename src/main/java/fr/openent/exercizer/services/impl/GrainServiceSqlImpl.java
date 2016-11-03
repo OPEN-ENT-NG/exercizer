@@ -2,6 +2,7 @@ package fr.openent.exercizer.services.impl;
 
 import fr.openent.exercizer.services.IGrainService;
 import fr.wseduc.webutils.Either;
+import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.vertx.java.core.Handler;
@@ -87,5 +88,49 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
     	joins.addString("JOIN exercizer.subject s ON r.subject_id = s.id AND s.is_library_subject = true AND s.id = " + resource.getField("id"));
     	
     	super.list("r", joins, null, null, null, null, handler);
+    }
+
+    public void duplicateGrainIntoSubject(final Long subjectId, final JsonArray grainIdJa, final String titleSuffix, final Handler<Either<String, JsonObject>> handler) {
+        //TODO normalize the data model to create a title relational field (grain_data must be opaque),
+        //Not needed anymore to look for grains, use of insert / select query with case when for title
+        final Object[] grainIds = grainIdJa.toArray();
+        final String query = "SELECT g.grain_type_id as grain_type_id, g.grain_data as grain_data FROM " + resourceTable + " as g WHERE g.id IN " +
+                Sql.listPrepared(grainIds);
+        sql.prepared(query, new JsonArray(grainIds), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
+            @Override
+            public void handle(Either<String, JsonArray> event) {
+                if (event.isRight()) {
+                    final JsonArray ja = event.right().getValue();
+                    duplicationGrain(ja, subjectId, titleSuffix, handler);
+                } else {
+                    handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
+                }
+            }
+        }));
+    }
+
+    private void duplicationGrain(final JsonArray grainJa, final Long subjectId, final String titleSuffix, final Handler<Either<String, JsonObject>> handler) {
+        final SqlStatementsBuilder s = new SqlStatementsBuilder();
+
+        final String queryNewOrderBy = "(SELECT max(gr.order_by) + 1 FROM "+ resourceTable + " as gr WHERE gr.subject_id=?)";
+        final String queryinsertGrain = "INSERT INTO " + resourceTable +"(subject_id, grain_type_id, order_by, grain_data) VALUES " +
+                "(?,?," + queryNewOrderBy + ",?)";
+
+        for (int i=0;i<grainJa.size();i++) {
+            final JsonObject grainJo = grainJa.get(i);
+            //set title suffix
+            final JsonObject grainData = new JsonObject(grainJo.getString("grain_data"));
+            if (grainJo.getLong("grain_type_id") > 3) {
+                grainData.putString("title", grainData.getString("title") + titleSuffix);
+            }
+            final JsonArray values = new JsonArray();
+            values.addNumber(subjectId).addNumber(grainJo.getNumber("grain_type_id")).addNumber(subjectId).add(grainData);
+
+            s.prepared(queryinsertGrain, values);
+        }
+
+        updateMaxScore(s, subjectId);
+
+        sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
     }
 }

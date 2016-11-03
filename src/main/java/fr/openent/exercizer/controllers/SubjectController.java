@@ -1,5 +1,6 @@
 package fr.openent.exercizer.controllers;
 
+import fr.openent.exercizer.filters.MassShareAndOwner;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.IGrainService;
 import fr.openent.exercizer.services.ISubjectService;
@@ -448,19 +449,20 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
-	@Post("/subjects/duplicate/library")
-	@ApiDoc("Duplicate subjects from library.")
-	@SecuredAction(value = "exercizer.subject.duplicate.library")
-	public void duplicateSubjectsFromLibrary(final HttpServerRequest request) {
+	@Post("/subject/duplicate")
+	@ApiDoc("Duplicate subjects.")
+	@ResourceFilter(MassShareAndOwner.class)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
+	public void duplicateSubjects(final HttpServerRequest request) {
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					RequestUtils.bodyToJson(request, pathPrefix + "duplicateSubjectLibrary",new Handler<JsonObject>() {
+					RequestUtils.bodyToJson(request, pathPrefix + "duplicateSubjects",new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject data) {
-							final String titlePrefix = i18n.translate("exercizer.subject.title.copyPrefix", Renders.getHost(request), I18n.acceptLanguage(request));
-							subjectService.duplicationsFromLibrary(data.getArray("subjectIds"), data.getLong("folderId"), titlePrefix, user,
+							final String titleSuffix = i18n.translate("exercizer.subject.title.copySuffix", Renders.getHost(request), I18n.acceptLanguage(request));
+							subjectService.duplicateSubjects(data.getArray("subjectIds"), data.getLong("folderId"), titleSuffix, user,
 									new Handler<Either<String, JsonObject>>() {
 										@Override
 										public void handle(Either<String, JsonObject> event) {
@@ -478,7 +480,55 @@ public class SubjectController extends ControllerHelper {
 					log.debug("User not found in session.");
 					unauthorized(request);
 				}
+			}
+		});
+	}
 
+	@Post("/subjects/duplicate/library")
+	@ApiDoc("Duplicate subjects from library.")
+	@SecuredAction(value = "exercizer.subject.duplicate.library")
+	public void duplicateSubjectsFromLibrary(final HttpServerRequest request) {
+		duplicateSubjects(request);
+	}
+
+	@Post("/subject/:id/duplicate/grains")
+	@ApiDoc("Duplicate grains into the subject.")
+	@ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
+	public void duplicateGrainsIntoSubject(final HttpServerRequest request) {
+	    final Long subjectId;
+		try {
+			subjectId = Long.parseLong(request.params().get("id"));
+		}catch (NumberFormatException e) {
+			badRequest(request, e.getMessage());
+			return;
+		}
+
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, pathPrefix + "grainIds",new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject data) {
+							final String titleSuffix = i18n.translate("exercizer.grain.title.copySuffix", Renders.getHost(request), I18n.acceptLanguage(request));
+							grainService.duplicateGrainIntoSubject(subjectId, data.getArray("grainIds"), titleSuffix, new Handler<Either<String, JsonObject>>() {
+								@Override
+								public void handle(Either<String, JsonObject> event) {
+									if (event.isRight()) {
+										Renders.created(request);
+									} else {
+										Renders.renderError(request, new JsonObject().putString("error", "exercizer.grain.duplicate.error"));
+									}
+								}
+							});
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
 			}
 		});
 	}

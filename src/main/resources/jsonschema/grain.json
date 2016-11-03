@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "grainTypeId": {
+      "type": "number"
+    },
+    "orderBy": {
+      "type": "number"
+    },
+    "grainData": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "grainTypeId",
+    "orderBy",
+    "grainData"
+  ]
+}

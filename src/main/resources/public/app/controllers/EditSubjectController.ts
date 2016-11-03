@@ -447,10 +447,15 @@ class EditSubjectController {
     public duplicateSelectedGrainList = function() {
         var self = this;
 
-        this._grainService.duplicateList(this._selectedGrainList, this._subject).then(
+        this._grainService.duplicateIntoSubject(this._selectedGrainList, this._subject.id).then(
             function() {
                 self._selectedGrainList = [];
-                self.foldAllGrain();
+                self._grainService.getListBySubject(self._subject).then(
+                    function(grainList) {
+                        self._grainList = grainList;
+                        self.foldAllGrain();
+                    }
+                );
             },
             function(err) {
                 notify.error(err);

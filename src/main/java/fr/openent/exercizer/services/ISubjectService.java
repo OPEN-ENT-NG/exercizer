@@ -53,7 +53,7 @@ public interface ISubjectService {
 	void publishLibrary(final Long fromSubjectId, final String authorsContributors,
 						final Long typeId, final Long levelId, JsonArray tag, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
-	void duplicationsFromLibrary(final JsonArray subjectIds, final Long folderId, final String titlePrefix, final UserInfos user,
+	void duplicateSubjects(final JsonArray subjectIds, final Long folderId, final String titleSuffix, final UserInfos user,
 					  final Handler<Either<String, JsonObject>> handler);
 
 

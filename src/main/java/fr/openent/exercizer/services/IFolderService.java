@@ -28,4 +28,8 @@ public interface IFolderService {
      */
     void list(final UserInfos user, final Handler<Either<String, JsonArray>> handler);
 
+    void checkDuplicateFolders(JsonObject folder, final Handler<Boolean> handler);
+
+    void duplicateFolders(JsonObject folder, final String folderTitleSuffix, final String subjectTitleSuffix, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
+
 }

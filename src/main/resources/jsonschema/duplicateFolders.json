@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "sourceFoldersId": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "targetFolderId": {
+      "type": ["number", "null"]
+    }
+  },
+  "required": [
+    "sourceFoldersId",
+    "targetFolderId"
+  ]
+}

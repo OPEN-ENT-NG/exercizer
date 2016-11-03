@@ -3,15 +3,15 @@ interface ISubjectService {
     persist(subject: ISubject): ng.IPromise<ISubject>;
     update(subject: ISubject, updateMaxScore:boolean): ng.IPromise<ISubject>;
     remove(subject: ISubject): ng.IPromise<boolean>;
-    removeList(subjectList: ISubject[]):ng.IPromise<boolean>
-    duplicate(subject: ISubject): ng.IPromise<ISubject>;
+    removeList(subjectList: ISubject[]):ng.IPromise<boolean>;    
     getById(id: number): ISubject;
     deleteSubjectChildrenOfFolder(folder: IFolder);
     getList(): ISubject[];
     getListByFolderId(folderId);
     getById(id: number): ISubject;
     getByIdEvenDeleted (id:number) : ng.IPromise<any>;
-    duplicateSubjectsFromLibrary (subjectIds:number[], folderId:number)
+    duplicateSubjectsFromLibrary (subjectIds:number[], folderId:number);
+    duplicate(ids: number[], folder: IFolder): ng.IPromise<boolean>
 }
 
 class SubjectService implements ISubjectService {
@@ -195,65 +195,34 @@ class SubjectService implements ISubjectService {
         return deferred.promise;
     };
 
-    public duplicate = function(subject: ISubject, folder: IFolder = undefined): ng.IPromise<ISubject> {
+    public duplicate = function(ids: number[], folder: IFolder = undefined): ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer();
-        // duplicate subject
-        var duplicatedSubject = CloneObjectHelper.clone(subject, true);
-        //clean subject
-        duplicatedSubject.id = undefined;
-        duplicatedSubject.owner = undefined;
-        duplicatedSubject.owner_username = undefined;
-        duplicatedSubject.authors_contributors = undefined;
-        duplicatedSubject.is_library_subject = false;
-        if(folder){
-            duplicatedSubject.folder_id = folder.id;
-        } else{
-            duplicatedSubject.folder_id = null;
-        }
-        duplicatedSubject.title += '_copie';
-        // persist subject
-        this._beforePushBack(duplicatedSubject);
-        this.persist(duplicatedSubject).then(
-            // after persist subject, duplicate grain
-            function(duplicatedSubject: ISubject) {
-                self._grainService.getListBySubject(subject).then(
-                    function(grainList: IGrain[]) {
-                        var grainListCopy = angular.copy(grainList);
-                        self._grainService.duplicateList(grainListCopy, duplicatedSubject, false).then(
-                            function() {
-                                deferred.resolve(duplicatedSubject);
-                            },
-                            function() {
-                                deferred.reject('Une erreur est survenue lors de la duplication des éléments du sujet à copier.');
-                            }
-                        )
-                    },
-                    function() {
-                        deferred.reject('Une erreur est survenue lors de la récupération des éléments du sujet à copier.')
-                    }
-                )},
-            function() {
-                deferred.reject('Une erreur est survenue lors de la duplication du sujet à copier.');
-            });
-        return deferred.promise;
-    };
 
-    public duplicateList = function(list,parentFolder){
-        var self = this,
-            deferred = this._$q.defer(),
-            promises = [];
-        angular.forEach(list, function(value) {
-            promises.push(self.duplicate(value, parentFolder));
-        });
-        this._$q.all(promises).then(
-            function(data) {
-                deferred.resolve(data);
-            }, function(err) {
-                console.error(err);
-                deferred.reject(err);
+        var folderId;
+        if(folder){
+            folderId = folder.id;
+        } else{
+            folderId = null;
+        }
+        
+        var body = {subjectIds: ids, folderId: folderId};
+
+        let request = {
+            method: 'POST',
+            url: 'exercizer/subject/duplicate',
+            data: body
+        };
+
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(true);
+            },
+            function(e) {
+                deferred.reject(e.data.error);
             }
         );
+
         return deferred.promise;
     };
     
@@ -273,8 +242,8 @@ class SubjectService implements ISubjectService {
             function(response) {
                 deferred.resolve(true);
             },
-            function() {
-                deferred.reject('exercizer.subject.duplicate.error');
+            function(e) {
+                deferred.reject(e.data.error);
             }
         );
 
