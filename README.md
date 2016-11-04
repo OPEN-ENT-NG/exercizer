@@ -1,12 +1,12 @@
 # exercizer
 
-* Licence : Non libéré pour le moment - Copyright Conseil Régional Nord Pas de Calais - Picardie
+* Licence : AGPL V3 - Copyright Conseil Régional Nord Pas de Calais - Picardie
 
 * Développeur(s) : OPEN DIGITAL EDUCATION
 
 * Financeur(s) : Région Nord Pas de Calais-Picardie
 
-* Description : Application d'édition, de conception, de partage  et d'administration d'exercices interactifs
+* Description : "Exercices et évaluation " est une application d'édition, de conception, de partage  et d'administration d'exercices interactifs
 
 ## Add a grain named 'new_grain'
 
