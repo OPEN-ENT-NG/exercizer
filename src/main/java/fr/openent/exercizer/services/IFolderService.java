@@ -21,7 +21,7 @@ public interface IFolderService {
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
-    void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
+    void remove(final JsonArray folderIds, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl

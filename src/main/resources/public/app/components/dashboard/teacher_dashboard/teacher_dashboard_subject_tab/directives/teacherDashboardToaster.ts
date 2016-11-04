@@ -143,7 +143,8 @@ directives.push(
                                             // is only folder
                                             return true;
                                         } else {
-                                            return scope.lowerRight == 'manager' || scope.lowerRight == 'owner';
+                                            return scope.subjectList.length > 0 && scope.folderList.length == 0 &&
+                                                (scope.lowerRight == 'manager' || scope.lowerRight == 'owner');
                                         }
                                     }
                                 }

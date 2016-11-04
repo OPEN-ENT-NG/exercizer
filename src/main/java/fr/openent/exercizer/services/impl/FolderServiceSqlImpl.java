@@ -2,12 +2,13 @@ package fr.openent.exercizer.services.impl;
 
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.IFolderService;
+import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Either;
+import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.logging.Logger;
@@ -17,9 +18,11 @@ import java.util.*;
 
 public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IFolderService {
     private static final Logger log = LoggerFactory.getLogger(FolderServiceSqlImpl.class);
+    private final ISubjectService subjectService;
 
     public FolderServiceSqlImpl() {
         super("exercizer", "folder");
+        subjectService = new SubjectServiceSqlImpl();
     }
 
     /**
@@ -41,12 +44,41 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
         super.update(folder, user, handler);
     }
 
-    /**
-     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
-     */
     @Override
-    public void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        super.delete(resource, user, handler);
+    public void remove(final JsonArray folderIds, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+
+        final String findSubjectQuery =
+                "WITH RECURSIVE folder(folder_id) AS(" +
+                "SELECT id FROM " + resourceTable + " AS f WHERE f.id IN " + Sql.listPrepared(folderIds.toArray()) +
+                " UNION " +
+                "SELECT id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
+                "SELECT s.id FROM folder AS f INNER JOIN " + schema + "subject AS s ON (f.folder_id=s.folder_id)";
+
+        sql.prepared(findSubjectQuery, new JsonArray(folderIds.toArray()), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
+            @Override
+            public void handle(Either<String, JsonArray> event) {
+                if (event.isRight()) {
+                    final JsonArray values = event.right().getValue();
+                    final SqlStatementsBuilder builder = new SqlStatementsBuilder();
+                    //mark as delete subject and deleting grains
+                    if (values != null && values.size() > 0) {
+                        final JsonArray subjectIds = new JsonArray();
+                        for (int i=0;i<values.size();i++) {
+                            subjectIds.addNumber(values.<JsonObject>get(i).getNumber("id"));
+                        }
+                        subjectService.removeSubjectsAndGrains(builder, user, subjectIds);
+                    }
+
+                    //delete cascade
+                    final String removeFolderQuery = "DELETE FROM " + resourceTable + " WHERE id IN " + Sql.listPrepared(folderIds.toArray());
+                    builder.prepared(removeFolderQuery, new JsonArray(folderIds.toArray()));
+
+                    sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
+                } else {
+                    handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
+                }
+            }
+        }));
     }
 
     /**
@@ -61,36 +93,23 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
         final Number targetFolderId = folder.getNumber("targetFolderId");
         final JsonArray sourceFoldersIdJa = folder.getArray("sourceFoldersId");
 
-        final SqlStatementsBuilder s = new SqlStatementsBuilder();
+        final String query = "WITH RECURSIVE folder(folder_id) AS(" +
+                "SELECT id FROM " + resourceTable + " AS f WHERE f.id  IN " + Sql.listPrepared(sourceFoldersIdJa.toArray()) +
+                " UNION " +
+                "SELECT id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
+                "SELECT f.folder_id FROM folder AS f WHERE f.folder_id=? ";
 
-        for (int i=0;i<sourceFoldersIdJa.size();i++) {
-            final Number sourceFolderId = sourceFoldersIdJa.get(i);
-            checkDuplicateFolder(s, sourceFolderId, targetFolderId);
-        }
-
-        sql.transaction(s.build(), new Handler<Message<JsonObject>>() {
+        sql.prepared(query, new JsonArray(sourceFoldersIdJa.toArray()).addNumber(targetFolderId), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
             @Override
-            public void handle(Message<JsonObject> res) {
-                if ("ok".equals(res.body().getString("status"))) {
-                    JsonArray values = res.body().getArray("results");
-                    long counter = 0;
-                    for (int i=0;i<values.size(); i++) {
-                        JsonObject jo = values.get(i);
-                        counter += jo.getLong("rows", 0L);
-                    }
-
-                    if (counter > 0) {
-                        handler.handle(false);
-                    } else {
-                        handler.handle(true);
-                    }
-
+            public void handle(Either<String, JsonObject> event) {
+                if (event.isRight()) {
+                    handler.handle(event.right().getValue().getLong("rows", 0L)  == 0);
                 } else {
-                    log.error(res.body().getString("message", ""));
+                    log.error(event.left().getValue());
                     handler.handle(false);
                 }
             }
-        });
+        }));
     }
 
     public void duplicateFolders(JsonObject folder, final String folderTitleSuffix, final String subjectTitleSuffix, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
@@ -99,12 +118,9 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
         final JsonArray sourceFoldersIdJa = folder.getArray("sourceFoldersId");
         final Set<Long> sourceFoldersIdSet = new HashSet<>();
 
-        final SqlStatementsBuilder s = new SqlStatementsBuilder();
-
         try {
             for (int i=0;i<sourceFoldersIdJa.size();i++) {
                 final Long sourceFolderId = Long.parseLong(sourceFoldersIdJa.get(i).toString());
-                findSubjectAndFolder(s, sourceFolderId);
                 sourceFoldersIdSet.add(sourceFolderId);
             }
         } catch (NumberFormatException e) {
@@ -113,8 +129,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
             return;
         }
 
-
-        sql.transaction(s.build(), SqlResult.validResultsHandler(new Handler<Either<String, JsonArray>>() {
+        findSubjectAndFolder(sourceFoldersIdJa, new Handler<Either<String, JsonArray>>() {
             @Override
             public void handle(Either<String, JsonArray> event) {
                 if (event.isRight()) {
@@ -126,16 +141,12 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                     final List<JsonObject> foldersWithSubjects = new ArrayList<JsonObject>();
 
                     for (int i=0;i<results.size();i++) {
-                        final JsonArray result = results.get(i);
-
-                        for (int j=0;j<result.size();j++) {
-                            final JsonObject jo = result.get(j);
-                            folderIds.add(jo.getNumber("folder_id"));
-                            if (jo.getNumber("id") != null) {
-                                subjectIds.add(jo.getNumber("id"));
-                            }
-                            foldersWithSubjects.add(jo);
+                        final JsonObject jo = results.get(i);
+                        folderIds.add(jo.getNumber("folder_id"));
+                        if (jo.getNumber("id") != null) {
+                            subjectIds.add(jo.getNumber("id"));
                         }
+                        foldersWithSubjects.add(jo);
                     }
 
                     generateId(folderIds.size(), "folder_id_seq", new Handler<List<Number>>() {
@@ -209,27 +220,18 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                     handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
                 }
             }
-        }));
+        });
     }
 
-    private void checkDuplicateFolder(SqlStatementsBuilder s, final Number sourceFolderId, final Number targetFolderId) {
-        final String query = "WITH RECURSIVE folder(folder_id) AS(" +
-                "SELECT id FROM " + resourceTable + " AS f WHERE f.id  = ? " +
-                " UNION " +
-                "SELECT id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
-                "SELECT f.folder_id FROM folder AS f WHERE f.folder_id=? ";
-        s.prepared(query, new JsonArray().addNumber(sourceFolderId).addNumber(targetFolderId));
-    }
-
-    private void findSubjectAndFolder(SqlStatementsBuilder s, final Long folderId) {
+    private void findSubjectAndFolder(final JsonArray sourceFoldersIdJa, final Handler<Either<String, JsonArray>> handler) {
 
         final String query = "WITH RECURSIVE folder(folder_id) AS(" +
-                "SELECT id, f.label, f.parent_folder_id FROM " + resourceTable + " AS f WHERE f.id  = ? " +
+                "SELECT id, f.label, f.parent_folder_id FROM " + resourceTable + " AS f WHERE f.id IN " + Sql.listPrepared(sourceFoldersIdJa.toArray()) +
                 " UNION " +
                 "SELECT id, e.label, e.parent_folder_id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
                 "SELECT f.folder_id, f.label, f.parent_folder_id, s.id FROM folder AS f LEFT JOIN " + schema +
-                "subject AS s ON (f.folder_id=s.folder_id) ORDER BY f.parent_folder_id ASC NULLS FIRST, f.folder_id;";
-        s.prepared(query, new JsonArray().addNumber(folderId));
+                "subject AS s ON (f.folder_id=s.folder_id) ORDER BY f.parent_folder_id ASC NULLS FIRST, f.folder_id";
+        sql.prepared(query, new JsonArray(sourceFoldersIdJa.toArray()), SqlResult.validResultHandler(handler));
     }
 
     private void generateId(final Integer number, final String sequence, final Handler<List<Number>> handler) {

@@ -3,6 +3,7 @@ package fr.openent.exercizer.services.impl;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Either;
+import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
@@ -46,11 +47,33 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
 	 */
 	@Override
-	public void remove(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-		JsonObject subject = ResourceParser.beforeAny(resource);
-		subject.putValue("folder_id", null);
-		subject.putBoolean("is_deleted", Boolean.TRUE);
-		update(subject, user, handler);
+	public void remove(final JsonArray subjectIds, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
+
+		removeSubjectsAndGrains(builder, user, subjectIds);
+
+		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
+	}
+
+	public void removeSubjectsAndGrains(SqlStatementsBuilder builder, final UserInfos user, JsonArray subjectIds) {
+		final String preparedIds = Sql.listPrepared(subjectIds.toArray());
+
+		final String subjectsQuery = "UPDATE " + resourceTable + " SET folder_id=null, is_deleted=true, owner=?, owner_username=?, modified=NOW() WHERE id IN " +
+				preparedIds;
+
+		final String grainsQuery = "DELETE FROM " + schema + "grain WHERE subject_id IN " + preparedIds;
+
+		final JsonArray subjectsValues = new JsonArray();
+
+		subjectsValues.addString(user.getUserId());
+		subjectsValues.addString(user.getUsername());
+
+		for (int i=0;i<subjectIds.size();i++) {
+			subjectsValues.add(subjectIds.get(i));
+		}
+
+		builder.prepared(subjectsQuery, subjectsValues);
+		builder.prepared(grainsQuery, new JsonArray(subjectIds.toArray()));
 	}
 
 	/**

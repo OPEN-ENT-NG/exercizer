@@ -1,6 +1,5 @@
 package fr.openent.exercizer.filters;
 
-import fr.wseduc.webutils.Server;
 import fr.wseduc.webutils.http.Binding;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.http.filter.ResourcesProvider;
@@ -9,7 +8,6 @@ import org.entcore.common.sql.SqlConf;
 import org.entcore.common.sql.SqlConfs;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
-import org.entcore.common.utils.Config;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -22,9 +20,9 @@ public class MassOwnerOnly implements ResourcesProvider {
 	public void authorize(final HttpServerRequest request, final Binding binding, final UserInfos user,
 						  final Handler<Boolean> handler) {
 		final SqlConf conf = SqlConfs.getConf(binding.getServiceMethod().substring(0, binding.getServiceMethod().indexOf('|')));
-		RequestUtils.bodyToJson(request, Server.getPathPrefix(Config.getInstance().getConfig()) + "duplicateFolders", new Handler<JsonObject>() {
+		RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 			public void handle(JsonObject data) {
-				final Object[] ids = data.getArray("sourceFoldersId").toArray();
+				final Object[] ids = data.getArray("sourceFoldersId", new JsonArray()).toArray();
 
 				if (ids != null && ids.length > 0) {
 					request.pause();

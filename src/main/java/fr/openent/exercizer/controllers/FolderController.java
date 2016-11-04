@@ -78,19 +78,28 @@ public class FolderController extends ControllerHelper {
         });
     }
 
-    @Delete("/folder/:id")
-    @ApiDoc("Deletes a folder.")
-    @ResourceFilter(OwnerOnly.class)
+    @Post("/folders/delete")
+    @ApiDoc("Delete folders.")
+    @ResourceFilter(MassOwnerOnly.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
     public void remove(final HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
             @Override
             public void handle(final UserInfos user) {
                 if (user != null) {
-                    RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+                    RequestUtils.bodyToJson(request, pathPrefix + "deleteFolders", new Handler<JsonObject>() {
                         @Override
                         public void handle(final JsonObject resource) {
-                            folderService.remove(resource, user, notEmptyResponseHandler(request));
+                            folderService.remove(resource.getArray("sourceFoldersId"), user, new Handler<Either<String, JsonObject>>() {
+                                @Override
+                                public void handle(Either<String, JsonObject> event) {
+                                    if (event.isRight()) {
+                                        Renders.noContent(request);
+                                    } else {
+                                        Renders.renderError(request);
+                                    }
+                                }
+                            });
                         }
                     });
                 }

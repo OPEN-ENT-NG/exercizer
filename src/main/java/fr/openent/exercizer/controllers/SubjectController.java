@@ -91,19 +91,28 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
-	@Delete("/subject/:id")
-	@ApiDoc("Deletes (logically) a subject.")
-	@ResourceFilter(ShareAndOwner.class)
+	@Put("/subject/mark/delete")
+	@ApiDoc("Delete (logically) subjects and real grains.")
+	@ResourceFilter(MassShareAndOwner.class)
 	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
 	public void remove(final HttpServerRequest request) {
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+					RequestUtils.bodyToJson(request, pathPrefix + "deleteSubjects", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							subjectService.remove(resource, user, notEmptyResponseHandler(request));
+							subjectService.remove(resource.getArray("subjectIds"), user, new Handler<Either<String, JsonObject>>() {
+								@Override
+								public void handle(Either<String, JsonObject> event) {
+									if (event.isRight()) {
+										Renders.noContent(request);
+									} else {
+										Renders.renderError(request);
+									}
+								}
+							});
 						}
 					});
 				}

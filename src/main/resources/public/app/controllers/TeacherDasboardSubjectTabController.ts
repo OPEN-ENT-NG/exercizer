@@ -128,31 +128,38 @@ class TeacherDashboardSubjectTabController {
 
         self._$scope.$on('E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT', function () {
             // delete subject list
-            angular.forEach(self._selectedSubjectList, function (id) {
-                self._subjectService.remove(self._subjectService.getById(id)).then(
+            if (self._selectedSubjectList.length > 0) {
+                self._subjectService.remove(self._selectedSubjectList).then(
                     function(data){
+                        self._subjectService.resolve(true);
                     },
                     function(err){
-                        console.error('fail', err);
                         notify.error(err);
-
                     }
                 );
-            });
-            self._resetSelectedSubjectList();
-            // delete folder list
-            angular.forEach(self._selectedFolderList, function (id) {
-                self._folderService.remove(self._folderService.folderById(id)).then(
-                    function(data){
+                self._resetSelectedSubjectList();
+            } else if (self._selectedFolderList.length >0) {
+                self._folderService.remove(self._selectedFolderList).then(
+                    function (data) {
+                        self._folderService.resolve().then(
+                            function() {
+                                self._subjectService.resolve(true).then(
+                                    function () {
+                                        self._eventsHandler(self);
+                                    },
+                                    function (err) {
+                                        notify.error(err);
+                                    }
+                                );
+                            });
                     },
                     function(err){
-                        console.error('fail', err);
                         notify.error(err);
-
                     }
                 );
-            });
-            self._resetSelectedFolderList();
+                self._resetSelectedFolderList();
+            }
+                     
             self._$scope.$broadcast('E_RESET_SELECT_ALL');
         });
 

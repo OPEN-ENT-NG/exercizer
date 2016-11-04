@@ -2,7 +2,7 @@ interface IFolderService {
     resolve(): ng.IPromise<boolean>;
     persist(folder:IFolder):ng.IPromise<IFolder>;
     update(folder:IFolder):ng.IPromise<IFolder>;
-    remove(folder:IFolder) : ng.IPromise<IFolder>;
+    remove(folderIds: number[]) : ng.IPromise<boolean>;
     setParentFolderId(originFolderId, targetFolderId);
     getListOfSubFolderByFolderId(folderId);
     folderById(id:number) : IFolder;
@@ -156,59 +156,31 @@ class FolderService implements IFolderService {
         return deferred.promise;
     }
 
-    /**
-     * remove folder
-     * @param folder
-     * @returns {IPromise<T>}
-     */
-    public remove(folder:IFolder):ng.IPromise<IFolder> {
-        var deferred = this._$q.defer(),
-            self = this;
-        // before delete children
-        var promises = [];
-        promises.push(this.deleteChildrenFolder(folder));
-        promises.push(this._subjectService.deleteSubjectChildrenOfFolder(folder));
-        this._$q.all(promises).then(
-            function(results) {
-                    var request = {
-                        method: 'DELETE',
-                        url: 'exercizer/folder/'+folder.id,
-                        data: folder
-                    };
-                    self._$http(request).then(
-                    function () {
-                        delete self._folderList[folder.id];
-                        self._removeFolderToFolderListByParentFolderId(folder);
-                        deferred.resolve();
-                    },
-                    function () {
-                        deferred.reject('Une erreur est survenue lors de la suppression du dossier.');
-                    }
-                );
-            }
-        );
-        return deferred.promise;
-    }
-
-    private deleteChildrenFolder(folder:IFolder) {
+    public remove = function(folderIds: number[]): ng.IPromise<boolean> {
         var self = this,
-            deferred = this._$q.defer();
-        var promises = [];
-        angular.forEach(this._folderList, function (value, key) {
-            if (value.parent_folder_id === folder.id) {
-                promises.push(self.remove(value));
-            }
-        });
-        this._$q.all(promises).then(
-            function(results) {
-                deferred.resolve();
-            }, function(err){
-                console.error(err);
-                deferred.reject
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/folders/delete',
+                data: {sourceFoldersId: folderIds}
+            };
+
+        self._$http(request).then(
+            function() {
+                _.forEach(folderIds, function (id) {
+                    delete self._folderList[id];
+                    self._removeFolderToFolderListByParentFolderId(id);
+                });
+
+                deferred.resolve(true);
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
             }
         );
+
         return deferred.promise;
-    }
+    };
     
     public duplicate(targetFolder: IFolder, sourcesFolders: number[]): ng.IPromise<boolean> {
         var deferred = this._$q.defer(),
@@ -297,16 +269,16 @@ class FolderService implements IFolderService {
      * remove folder list  in folderListByFolderID
      * @param folder
      */
-    private _removeFolderToFolderListByParentFolderId(folder: IFolder) {
+    private _removeFolderToFolderListByParentFolderId(folderId: number) {
         var self = this;
         angular.forEach(this._folderListByParentFolderId, function(value_1, key_1) {
-            if (folder.id == key_1) {
+            if (folderId == key_1) {
                 // delete parent folder
                 delete self._folderListByParentFolderId[key_1];
             }
             if (value_1) {
                 angular.forEach(value_1, function(value_2, key_2) {
-                    if (folder.id == key_2) {
+                    if (folderId == key_2) {
                         // delete children folder
                         delete self._folderListByParentFolderId[key_1][key_2];
                     }

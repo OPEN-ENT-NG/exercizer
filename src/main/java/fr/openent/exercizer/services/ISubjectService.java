@@ -1,5 +1,6 @@
 package fr.openent.exercizer.services;
 
+import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
@@ -20,10 +21,9 @@ public interface ISubjectService {
 	 */
 	void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
-	/**
-	 *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
-	 */
-	void remove(final JsonObject resource, final UserInfos user, Handler<Either<String, JsonObject>> handler);
+	void remove(final JsonArray subjectIds, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
+
+	void removeSubjectsAndGrains(SqlStatementsBuilder builder, final UserInfos user, JsonArray subjectIds);
 
 	/**
 	 *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl

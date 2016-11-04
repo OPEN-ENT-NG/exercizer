@@ -2,8 +2,7 @@ interface ISubjectService {
     resolve(force?:boolean): ng.IPromise<boolean>;
     persist(subject: ISubject): ng.IPromise<ISubject>;
     update(subject: ISubject, updateMaxScore:boolean): ng.IPromise<ISubject>;
-    remove(subject: ISubject): ng.IPromise<boolean>;
-    removeList(subjectList: ISubject[]):ng.IPromise<boolean>;    
+    remove(subjectIds: number[]): ng.IPromise<boolean>;
     getById(id: number): ISubject;
     deleteSubjectChildrenOfFolder(folder: IFolder);
     getList(): ISubject[];
@@ -135,63 +134,24 @@ class SubjectService implements ISubjectService {
 
     };
 
-    public remove = function(subject: ISubject): ng.IPromise<boolean> {
+    public remove = function(subjectIds: number[]): ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
-                method: 'DELETE',
-                url: 'exercizer/subject/' + subject.id,
-                data: subject
+                method: 'PUT',
+                url: 'exercizer/subject/mark/delete',
+                data: {subjectIds: subjectIds}
             };
-        self. _beforePushBack(subject);
-        this._grainService.getListBySubject(subject).then(
-            function(grainList) {
-                var grainListCopy = angular.copy(grainList);
-                self._grainService.removeList(grainListCopy, subject).then(
-                    function() {
-                        self._$http(request).then(
-                            function() {
-                                delete self._listMappedById[subject.id];
-                                deferred.resolve(true);
-                            },
-                            function() {
-                                deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
-                            }
-                        );
-                    },
-                    function() {
-                        deferred.reject('Une erreur est survenue lors de la suppression des éléments sujet.');
-                    });
+
+        self._$http(request).then(
+            function() {
+                deferred.resolve(true);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la récupération des éléments du sujets.');
-            });
+                deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
+            }
+        );
 
-
-        return deferred.promise;
-    };
-
-    public removeList = function(subjectList: ISubject[]):ng.IPromise<boolean> {
-        var self = this,
-            deferred = this._$q.defer();
-        if (subjectList.length === 0) {
-            deferred.resolve(true);
-        } else {
-            var subject = subjectList[0];
-            this.remove(subject).then(
-                function () {
-                    subjectList.splice(0, 1);
-                    if (subjectList.length > 0) {
-                        self.removeList(subjectList, subject);
-                    } else {
-                        deferred.resolve(true);
-                    }
-                },
-                function () {
-                    deferred.reject('Une erreur est survenue lors de la suppression des sujets.');
-                }
-            );
-        }
         return deferred.promise;
     };
 
