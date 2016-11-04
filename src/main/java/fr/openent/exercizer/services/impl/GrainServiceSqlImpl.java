@@ -9,6 +9,8 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
+import java.util.List;
+
 public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IGrainService {
 
     public GrainServiceSqlImpl() {
@@ -53,12 +55,12 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     @Override
-    public void remove(final Long id, final Long subjectId, final Handler<Either<String, JsonObject>> handler) {
-        String query = "DELETE FROM " + resourceTable + " WHERE id = ?";
+    public void remove(final List<Long> grainIds, final Long subjectId, final Handler<Either<String, JsonObject>> handler) {
+        String query = "DELETE FROM " + resourceTable + " WHERE id IN " + Sql.listPrepared(grainIds.toArray());
 
         final SqlStatementsBuilder s = new SqlStatementsBuilder();
 
-        s.prepared(query, new JsonArray().add(id));
+        s.prepared(query, new JsonArray(grainIds.toArray()));
         updateMaxScore(s, subjectId);
 
         sql.transaction(s.build(), SqlResult.validRowsResultHandler(1, handler));

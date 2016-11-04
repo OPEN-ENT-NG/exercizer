@@ -331,25 +331,36 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
-	@Delete("/subject/:id/grain/:gId")
-	@ApiDoc("Deletes a grain.")
+	@Delete("/subject/:id/grains")
+	@ApiDoc("Delete grains of the subject.")
 	@ResourceFilter(ShareAndOwner.class)
 	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
-	public void grainRemove(final HttpServerRequest request) {
-		final Long grainId;
+	public void grainRemoves(final HttpServerRequest request) {
+		final List<String> ids = request.params().getAll("idGrain");
+
+		if (ids == null || ids.size() == 0) {
+			badRequest(request);
+			return;
+		}
+
+		final List<Long> grainIds = new ArrayList<>();
 		final Long subjectId;
 		try {
 			subjectId = Long.parseLong(request.params().get("id"));
-			grainId = Long.parseLong(request.params().get("gId"));
-		}catch (NumberFormatException e) {
+			for (final String id : ids) {
+				grainIds.add(Long.parseLong(id));
+			}
+
+		} catch (NumberFormatException e) {
 			badRequest(request, e.getMessage());
 			return;
 		}
+
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					grainService.remove(grainId, subjectId, new Handler<Either<String, JsonObject>>() {
+					grainService.remove(grainIds, subjectId, new Handler<Either<String, JsonObject>>() {
 						@Override
 						public void handle(Either<String, JsonObject> event) {
 							if (event.isRight()) {

@@ -135,11 +135,6 @@
                                 </div>
                             </div>
 
-                            <!-- GRAIN TRASH ICON -->
-                            <!--<div class="cell right-magnet" data-ng-class="(grain.grain_type_id > 2) ? 'horizontal-spacing' : ''" data-tooltip="Supprimer" data-ng-click="editSubjectController.displayModalRemoveGrain(grain)">
-                                <i class="trash"></i>
-                            </div>-->
-
                         </div>
 
                         <!-- GRAIN SPECIFIC CONTENT FOR EXERCISE GRAIN TYPE (not folded) -->
@@ -296,16 +291,6 @@
 
             </section>
         </div>
-
-        <!-- REMVOVE GRAIN MODAL -->
-        <lightbox data-show="editSubjectController.isModalRemoveGrainDisplayed" data-on-close="editSubjectController.closeModalRemoveGrain()">
-            <h2>Supprimer un élément</h2>
-            <p>Confirmez-vous la suppression de l'élément ?</p>
-            <div class="row">
-                <button data-ng-click="editSubjectController.removeGrain()" class="cell right-magnet">Supprimer l'élement</button>
-                <button data-ng-click="editSubjectController.closeModalRemoveGrain()" class="cell right-magnet cancel">Annuler</button>
-            </div>
-        </lightbox>
 
         <!-- ADD GRAIN DOCUMENT MODAL -->
         <lightbox data-show="editSubjectController.isModalAddGrainDocumentDisplayed" data-on-close="editSubjectController.closeModalAddGrainDocument()">

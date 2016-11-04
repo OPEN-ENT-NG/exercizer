@@ -1,8 +1,6 @@
 interface IGrainService {
     persist(grain:IGrain): ng.IPromise<IGrain>;
     update(grain:IGrain): ng.IPromise<IGrain>;
-    updateList(grainList:IGrain[]): ng.IPromise<boolean>;
-    remove(grain:IGrain): ng.IPromise<boolean>;
     removeList(grain:IGrain[], subject:ISubject): ng.IPromise<boolean>;
     duplicate(grain:IGrain, subject:ISubject): ng.IPromise<IGrain>;
     getListBySubject(subject:ISubject): ng.IPromise<IGrain[]>;
@@ -94,42 +92,32 @@ class GrainService implements IGrainService {
         return deferred.promise;
     };
 
-    public updateList = function(grainList:IGrain[]):ng.IPromise<boolean>{
-        var self = this,
-            deferred = this._$q.defer(),
-            promises = [];
-
-        angular.forEach(grainList, function(grain) {
-            promises.push(self.update(grain));
-        });
-
-        this._$q.all(promises).then(
-            function(data) {
-                deferred.resolve(data);
-            }, function(err) {
-                deferred.reject(err);
-            }
-        );
-
-        return deferred.promise;
-    };
-
-    public remove = function (grain:IGrain):ng.IPromise<boolean> {
+    public removeList = function(grainList:IGrain[], subject:ISubject):ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer();
 
+        var url = 'exercizer/subject/' + subject.id + '/grains?';
+
+        _.forEach(grainList, function (grain) {
+            url += 'idGrain=' + grain.id + '&';
+        });
+
+        url = url.slice(0, -1);
+
         var request = {
             method: 'DELETE',
-            url: 'exercizer/subject/' + grain.subject_id  + '/grain/' + grain.id
+            url: url
         };
 
         this._$http(request).then(
             function () {
-                var grainIndex = self._listMappedBySubjectId[grain.subject_id].indexOf(grain);
-                
-                if (grainIndex !== -1) {
-                    self._listMappedBySubjectId[grain.subject_id].splice(grainIndex, 1);
-                }
+                _.forEach(grainList, function (grain) {
+                    var grainIndex = self._listMappedBySubjectId[grain.subject_id].indexOf(grain);
+
+                    if (grainIndex !== -1) {
+                        self._listMappedBySubjectId[grain.subject_id].splice(grainIndex, 1);
+                    }
+                });
                 deferred.resolve(true);
             },
             function () {
@@ -139,25 +127,6 @@ class GrainService implements IGrainService {
         return deferred.promise;
     };
 
-    public removeList = function(grainList:IGrain[]):ng.IPromise<boolean>{
-        var self = this,
-            deferred = this._$q.defer(),
-            promises = [];
-
-        angular.forEach(grainList, function(grain) {
-            promises.push(self.remove(grain));
-        });
-
-        this._$q.all(promises).then(
-            function(data) {
-                deferred.resolve(data);
-            }, function(err) {
-                deferred.reject(err);
-            }
-        );
-
-        return deferred.promise;
-    };
 
     public duplicate = function (grain:IGrain, subject:ISubject, rename: boolean = true):ng.IPromise<IGrain> {
 

@@ -24,7 +24,6 @@ class EditSubjectController {
     private _trustedHtmlStatementMap:{[grainId:number]:string};
 
     // modal
-    private _isModalRemoveGrainDisplayed:boolean;
     private _isModalAddGrainDocumentDisplayed:boolean;
     private _isModalRemoveGrainDocumentDisplayed:boolean;
     private _isModalRemoveSelectedGrainListDisplayed:boolean;
@@ -231,41 +230,6 @@ class EditSubjectController {
                 notify.error(err);
             }
         );
-    };
-
-    public removeGrain = function() {
-        var self = this,
-            grainIndexInSelection = this._selectedGrainList.indexOf(this._currentGrainForAction),
-            grainIndexInFoldedList = this._foldedGrainList.indexOf(this._currentGrainForAction);
-
-
-        if (grainIndexInSelection !== -1) {
-            this._selectedGrainList.splice(grainIndexInSelection, 1);
-        }
-
-        if (grainIndexInFoldedList !== -1) {
-            this._foldedGrainList.splice(grainIndexInFoldedList, 1);
-        }
-
-        this._grainService.remove(this._currentGrainForAction).then(
-            function() {
-                self._currentGrainForAction = undefined;
-                self._isModalRemoveGrainDisplayed = false;
-            },
-            function(err) {
-                notify.error(err);
-            }
-        );
-    };
-
-    public displayModalRemoveGrain = function(grain:IGrain) {
-        this._currentGrainForAction = grain;
-        this._isModalRemoveGrainDisplayed = true;
-    };
-
-    public closeModalRemoveGrain = function() {
-        this._currentGrainForAction = undefined;
-        this._isModalRemoveGrainDisplayed = false;
     };
 
     public addGrainDocument = function(mediaLibraryItem:any) {
@@ -507,10 +471,6 @@ class EditSubjectController {
 
     get hasDataLoaded():boolean {
         return this._hasDataLoaded;
-    }
-
-    get isModalRemoveGrainDisplayed():boolean {
-        return this._isModalRemoveGrainDisplayed;
     }
 
     get isModalAddGrainDocumentDisplayed():boolean {

@@ -5,6 +5,8 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
+import java.util.List;
+
 public interface IGrainService {
 
     /**
@@ -20,7 +22,7 @@ public interface IGrainService {
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
-    void remove(final Long id, final Long subjectId, final Handler<Either<String, JsonObject>> handler);
+    void remove(final List<Long> id, final Long subjectId, final Handler<Either<String, JsonObject>> handler);
 
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
