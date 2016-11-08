@@ -138,10 +138,10 @@ public class FolderController extends ControllerHelper {
             @Override
             public void handle(final UserInfos user) {
                 if (user != null) {
-                    RequestUtils.bodyToJson(request, pathPrefix + "duplicateFolders" ,new Handler<JsonObject>() {
+                    RequestUtils.bodyToJson(request, pathPrefix + "folders" ,new Handler<JsonObject>() {
                         @Override
                         public void handle(final JsonObject data) {
-                            folderService.checkDuplicateFolders(data, new Handler<Boolean>() {
+                            folderService.checkFolders(data, new Handler<Boolean>() {
                                 @Override
                                 public void handle(Boolean happened) {
                                     if (happened) {
@@ -162,7 +162,50 @@ public class FolderController extends ControllerHelper {
                                             }
                                         });
                                     } else {
-                                        Renders.badRequest(request, "exercizer.folder.duplicate.check");
+                                        Renders.badRequest(request, "exercizer.folder.check");
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
+            }
+        });
+    }
+
+    @Put("/folders/move")
+    @ApiDoc("move folders.")
+    @ResourceFilter(MassOwnerOnly.class)
+    @SecuredAction(value = "", type = ActionType.RESOURCE)
+    public void move(final HttpServerRequest request) {
+        UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+            @Override
+            public void handle(final UserInfos user) {
+                if (user != null) {
+                    RequestUtils.bodyToJson(request, pathPrefix + "folders" ,new Handler<JsonObject>() {
+                        @Override
+                        public void handle(final JsonObject data) {
+                            folderService.checkFolders(data, new Handler<Boolean>() {
+                                @Override
+                                public void handle(Boolean happened) {
+                                    if (happened) {
+                                        folderService.move(data,
+                                                new Handler<Either<String, JsonObject>>() {
+                                                    @Override
+                                                    public void handle(Either<String, JsonObject> event) {
+                                                        if (event.isRight()) {
+                                                            Renders.noContent(request);
+                                                        } else {
+                                                            Renders.renderError(request, new JsonObject().putString("error", "exercizer.folder.move.error"));
+                                                        }
+                                                    }
+                                                });
+                                    } else {
+                                        Renders.badRequest(request, "exercizer.folder.check");
                                     }
                                 }
                             });

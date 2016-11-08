@@ -9,6 +9,7 @@ import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.logging.Logger;
@@ -89,7 +90,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
         super.list(user, handler);
     }
 
-    public void checkDuplicateFolders(JsonObject folder, final Handler<Boolean> handler) {
+    public void checkFolders(JsonObject folder, final Handler<Boolean> handler) {
         final Number targetFolderId = folder.getNumber("targetFolderId");
         final JsonArray sourceFoldersIdJa = folder.getArray("sourceFoldersId");
 
@@ -110,6 +111,32 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                 }
             }
         }));
+    }
+
+    public void move(JsonObject folder, final Handler<Either<String, JsonObject>> handler) {
+        final Long targetFolderId = folder.getLong("targetFolderId");
+
+        final JsonArray sourceFoldersIdJa = folder.getArray("sourceFoldersId");
+
+        final String query = "UPDATE " + resourceTable + " SET parent_folder_id=?, modified=NOW() WHERE id IN " + Sql.listPrepared(sourceFoldersIdJa.toArray());
+
+        final JsonArray values = new JsonArray().addNumber(targetFolderId);
+        try {
+            for (int i=0;i<sourceFoldersIdJa.size();i++) {
+                values.add(Long.parseLong(sourceFoldersIdJa.get(i).toString()));
+            }
+        } catch (NumberFormatException e) {
+            log.error("Can't cast id of folder", e);
+            handler.handle(new Either.Left<String, JsonObject>(e.getMessage()));
+            return;
+        }
+
+        sql.prepared(query, values, new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(Message<JsonObject> event) {
+               handler.handle(SqlResult.validRowsResult(event));
+            }
+        });
     }
 
     public void duplicateFolders(JsonObject folder, final String folderTitleSuffix, final String subjectTitleSuffix, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
@@ -224,7 +251,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     }
 
     private void findSubjectAndFolder(final JsonArray sourceFoldersIdJa, final Handler<Either<String, JsonArray>> handler) {
-
+        //recursive query that retrieves all directories (selected and every son) with potentially related subjects
         final String query = "WITH RECURSIVE folder(folder_id) AS(" +
                 "SELECT id, f.label, f.parent_folder_id FROM " + resourceTable + " AS f WHERE f.id IN " + Sql.listPrepared(sourceFoldersIdJa.toArray()) +
                 " UNION " +

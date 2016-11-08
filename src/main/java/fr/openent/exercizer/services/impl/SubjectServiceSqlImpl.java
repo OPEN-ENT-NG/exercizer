@@ -8,6 +8,7 @@ import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.logging.Logger;
@@ -200,6 +201,29 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
     public void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         super.getById(id, user, handler);
     }
+
+	public void move(final JsonArray subjectIds, final Long targetFolderId, final Handler<Either<String, JsonObject>> handler) {
+		final String query = "UPDATE " + resourceTable + " SET folder_id=?, modified=NOW() WHERE id IN " + Sql.listPrepared(subjectIds.toArray());
+
+		final JsonArray values = new JsonArray().addNumber(targetFolderId);
+
+		try {
+			for (int i = 0; i < subjectIds.size(); i++) {
+				values.addNumber(Long.parseLong(subjectIds.get(i).toString()));
+			}
+		} catch (NumberFormatException e) {
+			log.error("Can't cast id of subject", e);
+			handler.handle(new Either.Left<String, JsonObject>(e.getMessage()));
+			return;
+		}
+
+		sql.prepared(query, values, new Handler<Message<JsonObject>>() {
+			@Override
+			public void handle(Message<JsonObject> event) {
+				handler.handle(SqlResult.validRowsResult(event));
+			}
+		});
+	}
 
 	public void duplicateSubjects(final JsonArray subjectIds, final Long folderId, final String titleSuffix, final UserInfos user,  final Handler<Either<String, JsonObject>> handler) {
 		if (subjectIds != null && subjectIds.size() > 0) {

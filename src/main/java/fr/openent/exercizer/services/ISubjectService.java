@@ -56,5 +56,5 @@ public interface ISubjectService {
 	void duplicateSubjects(final JsonArray subjectIds, final Long folderId, final String titleSuffix, final UserInfos user,
 					  final Handler<Either<String, JsonObject>> handler);
 
-
+	void move(final JsonArray subjectIds, final Long targetFolderId, final Handler<Either<String, JsonObject>> handler);
 }

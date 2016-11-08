@@ -478,7 +478,7 @@ public class SubjectController extends ControllerHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					RequestUtils.bodyToJson(request, pathPrefix + "duplicateSubjects",new Handler<JsonObject>() {
+					RequestUtils.bodyToJson(request, pathPrefix + "subjects",new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject data) {
 							final String titleSuffix = i18n.translate("exercizer.subject.title.copySuffix", Renders.getHost(request), I18n.acceptLanguage(request));
@@ -542,6 +542,39 @@ public class SubjectController extends ControllerHelper {
 									}
 								}
 							});
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Put("/subjects/move")
+	@ApiDoc("Move subjects into folder.")
+	@ResourceFilter(MassShareAndOwner.class)
+	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
+	public void moveSubjects(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, pathPrefix + "subjects", new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject data) {
+							subjectService.move(data.getArray("subjectIds"), data.getLong("folderId"), new Handler<Either<String, JsonObject>>() {
+										@Override
+										public void handle(Either<String, JsonObject> event) {
+											if (event.isRight()) {
+												Renders.noContent(request);
+											} else {
+												Renders.renderError(request, new JsonObject().putString("error", "exercizer.subject.move.error"));
+											}
+										}
+									});
 						}
 					});
 				}

@@ -4,13 +4,12 @@ interface ISubjectService {
     update(subject: ISubject, updateMaxScore:boolean): ng.IPromise<ISubject>;
     remove(subjectIds: number[]): ng.IPromise<boolean>;
     getById(id: number): ISubject;
-    deleteSubjectChildrenOfFolder(folder: IFolder);
     getList(): ISubject[];
-    getListByFolderId(folderId);
     getById(id: number): ISubject;
     getByIdEvenDeleted (id:number) : ng.IPromise<any>;
     duplicateSubjectsFromLibrary (subjectIds:number[], folderId:number);
-    duplicate(ids: number[], folder: IFolder): ng.IPromise<boolean>
+    duplicate(ids: number[], folder: IFolder): ng.IPromise<boolean>;
+    move(ids: number[], folder: IFolder): ng.IPromise<boolean>
 }
 
 class SubjectService implements ISubjectService {
@@ -155,6 +154,32 @@ class SubjectService implements ISubjectService {
         return deferred.promise;
     };
 
+    public move = function(ids: number[], folder: IFolder = undefined): ng.IPromise<boolean> {
+        var self = this,
+            deferred = this._$q.defer();
+
+        var folderId = (folder) ? folder.id : null;
+
+        var body = {subjectIds: ids, folderId: folderId};
+
+        let request = {
+            method: 'PUT',
+            url: 'exercizer/subjects/move',
+            data: body
+        };
+
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(true);
+            },
+            function(e) {
+                deferred.reject(e.data.error);
+            }
+        );
+
+        return deferred.promise;
+    };
+
     public duplicate = function(ids: number[], folder: IFolder = undefined): ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer();
@@ -219,17 +244,6 @@ class SubjectService implements ISubjectService {
         }
     };
 
-    public getListByFolderId(folderId:number): { [id: number]: ISubject; } {
-        var self = this,
-            listByFolderId:{ [id: number]: ISubject; } = {};
-        angular.forEach(self._listMappedById, function(subject:ISubject) {
-            if (subject.folder_id == folderId) {
-                listByFolderId[subject.id] = subject;
-            }
-        });
-        return listByFolderId;
-    }
-
     public getById = function(id:number):ISubject {
         return this._listMappedById[id];
     };
@@ -268,39 +282,6 @@ class SubjectService implements ISubjectService {
             }
         );
         return deferred.promise;
-    };
-
-    /**
-     * remove all subject in a folder
-     * @param folder
-     */
-    public deleteSubjectChildrenOfFolder = function(folder: IFolder) {
-        var self = this,
-            deferred = this._$q.defer();
-        var promises = [];
-        angular.forEach(this._listMappedById, function(value, key) {
-            if (value.folder_id === folder.id) {
-                promises.push(self.remove(value));
-            }
-        });
-        this._$q.all(promises).then(
-            // success
-            // results: an array of data objects from each deferred.resolve(data) call
-            function(results) {
-                deferred.resolve();
-            }
-        );
-        return deferred.promise;
-    };
-
-    /**
-     * set folder id to a subject and update the subject
-     * @param subject
-     * @param folderId
-     */
-    public setFolderId = function(subject :ISubject,folderId: number){
-        subject.folder_id = folderId;
-        this.update(subject);
     };
 
     private _beforePushBack(subject){

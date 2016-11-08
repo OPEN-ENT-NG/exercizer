@@ -17,6 +17,7 @@ directives.push(
                     // event to display model
                     scope.$on('E_DISPLAY_DASHBOARD_MODAL_MOVE', function(event, selectedSubjectList, selectedFolderList) {
                         scope.isDisplayed = true;
+                        scope.allFolderList = FolderService.folderList;
                         scope.subjectList = selectedSubjectList;
                         scope.folderList = selectedFolderList;
                     });

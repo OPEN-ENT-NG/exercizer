@@ -90,27 +90,44 @@ class DragService implements IDragService {
         if (this.isSubject(originalItem)) {
             if (this.isSubject(targetItem)) {
                 throw "not possible";
-            } else if (this.isFolder(targetItem)) {
-                var subject = this._subjectService.getById(this.getId(originalItem));
-                this._subjectService.setFolderId(subject, targetItem.id);
             } else {
-                //default
-                // drop on root
-                var subject = this._subjectService.getById(this.getId(originalItem));
-                this._subjectService.setFolderId(subject, null);
+                var targetFolder = (this.isFolder(targetItem)) ? targetItem : null;
+                var self = this;
+                this._subjectService.move([this.getId(originalItem)], targetFolder).then(
+                    function (data) {
+                        self._subjectService.resolve(true);
+                    },
+                    function (err) {
+                        notify.error(err);
+                    }
+                );
             }
         }
         if (this.isFolder(originalItem)) {
             if (this.isSubject(targetItem)) {
                 throw "not possible";
-            } else if (this.isFolder(targetItem)) {
-                this._folderService.setParentFolderId(this.getId(originalItem), this.getId(targetItem));
-
             } else {
-                // default
-                // drop on root
-                this._folderService.setParentFolderId(this.getId(originalItem), null);
+                var targetFolder = (this.isFolder(targetItem)) ? targetItem : null;
+                var self = this;
 
+                self._folderService.move(targetItem, [this.getId(originalItem)]).then(
+                    function (data) {
+                        self._folderService.resolve().then(
+                            function() {
+                                self._subjectService.resolve(true).then(
+                                    function() {
+                                    },
+                                    function(err) {
+                                        notify.error(err);
+                                    }
+                                );
+                            }
+                        );
+                    },
+                    function (err) {
+                        notify.error(err);
+                    }
+                );
             }
         }
     }
@@ -140,10 +157,4 @@ class DragService implements IDragService {
             throw "";
         }
     }
-
-
-
-
-
-
 }
