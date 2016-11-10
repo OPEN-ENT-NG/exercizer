@@ -1,5 +1,6 @@
 package fr.openent.exercizer.controllers;
 
+import fr.openent.exercizer.filters.MassOwnerOnly;
 import fr.openent.exercizer.filters.MassShareAndOwner;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.IGrainService;
@@ -15,6 +16,7 @@ import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.http.filter.sql.OwnerOnly;
 import org.entcore.common.http.filter.sql.ShareAndOwner;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
@@ -100,10 +102,10 @@ public class SubjectController extends ControllerHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					RequestUtils.bodyToJson(request, pathPrefix + "deleteSubjects", new Handler<JsonObject>() {
+					RequestUtils.bodyToJson(request, pathPrefix + "delete", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							subjectService.remove(resource.getArray("subjectIds"), user, new Handler<Either<String, JsonObject>>() {
+							subjectService.remove(resource.getArray("ids"), user, new Handler<Either<String, JsonObject>>() {
 								@Override
 								public void handle(Either<String, JsonObject> event) {
 									if (event.isRight()) {
@@ -434,10 +436,18 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
-	@Post("/subject/publish/library")
+	@Post("/subject/:id/publish/library")
 	@ApiDoc("Publish subject in library.")
-	@SecuredAction(value = "exercizer.subject.publish.library")
+	@ResourceFilter(OwnerOnly.class)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void publishSubject(final HttpServerRequest request) {
+		final Long subjectId;
+		try {
+			subjectId = Long.parseLong(request.params().get("id"));
+		}catch (NumberFormatException e) {
+			badRequest(request, e.getMessage());
+			return;
+		}
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(final UserInfos user) {
@@ -445,7 +455,7 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, pathPrefix + "publish", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject data) {
-							subjectService.publishLibrary(data.getLong("subjectId"), data.getString("authorsContributors"), data.getLong("subjectLessonTypeId"),
+							subjectService.publishLibrary(subjectId, data.getString("authorsContributors"), data.getLong("subjectLessonTypeId"),
 									data.getLong("subjectLessonLevelId"), data.getArray("subjectTagList", new JsonArray()), user,
 									new Handler<Either<String, JsonObject>>() {
 										@Override
@@ -472,7 +482,7 @@ public class SubjectController extends ControllerHelper {
 	@Post("/subject/duplicate")
 	@ApiDoc("Duplicate subjects.")
 	@ResourceFilter(MassShareAndOwner.class)
-	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
+	@SecuredAction(value = "exercizer.read", type = ActionType.RESOURCE)
 	public void duplicateSubjects(final HttpServerRequest request) {
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
@@ -482,7 +492,7 @@ public class SubjectController extends ControllerHelper {
 						@Override
 						public void handle(final JsonObject data) {
 							final String titleSuffix = i18n.translate("exercizer.subject.title.copySuffix", Renders.getHost(request), I18n.acceptLanguage(request));
-							subjectService.duplicateSubjects(data.getArray("subjectIds"), data.getLong("folderId"), titleSuffix, user,
+							subjectService.duplicateSubjects(data.getArray("ids"), data.getLong("folderId"), titleSuffix, user,
 									new Handler<Either<String, JsonObject>>() {
 										@Override
 										public void handle(Either<String, JsonObject> event) {
@@ -555,8 +565,8 @@ public class SubjectController extends ControllerHelper {
 
 	@Put("/subjects/move")
 	@ApiDoc("Move subjects into folder.")
-	@ResourceFilter(MassShareAndOwner.class)
-	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
+	@ResourceFilter(MassOwnerOnly.class)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void moveSubjects(final HttpServerRequest request) {
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
@@ -565,7 +575,7 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, pathPrefix + "subjects", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject data) {
-							subjectService.move(data.getArray("subjectIds"), data.getLong("folderId"), new Handler<Either<String, JsonObject>>() {
+							subjectService.move(data.getArray("ids"), data.getLong("folderId"), new Handler<Either<String, JsonObject>>() {
 										@Override
 										public void handle(Either<String, JsonObject> event) {
 											if (event.isRight()) {

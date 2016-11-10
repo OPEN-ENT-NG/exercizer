@@ -139,7 +139,7 @@ class SubjectService implements ISubjectService {
             request = {
                 method: 'PUT',
                 url: 'exercizer/subject/mark/delete',
-                data: {subjectIds: subjectIds}
+                data: {ids: subjectIds}
             };
 
         self._$http(request).then(
@@ -160,7 +160,7 @@ class SubjectService implements ISubjectService {
 
         var folderId = (folder) ? folder.id : null;
 
-        var body = {subjectIds: ids, folderId: folderId};
+        var body = {ids: ids, folderId: folderId};
 
         let request = {
             method: 'PUT',
@@ -191,7 +191,7 @@ class SubjectService implements ISubjectService {
             folderId = null;
         }
         
-        var body = {subjectIds: ids, folderId: folderId};
+        var body = {ids: ids, folderId: folderId};
 
         let request = {
             method: 'POST',
@@ -215,7 +215,7 @@ class SubjectService implements ISubjectService {
         var self = this,
             deferred = this._$q.defer();
 
-        let param = {subjectIds: subjectIds, folderId: folderId};
+        let param = {ids: subjectIds, folderId: folderId};
 
         let request = {
             method: 'POST',

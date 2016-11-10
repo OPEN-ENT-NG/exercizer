@@ -162,7 +162,7 @@ class FolderService implements IFolderService {
             request = {
                 method: 'POST',
                 url: 'exercizer/folders/delete',
-                data: {sourceFoldersId: folderIds}
+                data: {ids: folderIds}
             };
 
         self._$http(request).then(
@@ -188,7 +188,7 @@ class FolderService implements IFolderService {
             targetFolderId = null;
         }        
 
-        var body = {targetFolderId: targetFolderId, sourceFoldersId: sourcesFolders};
+        var body = {targetFolderId: targetFolderId, ids: sourcesFolders};
 
         let request = {
             method: 'POST',
@@ -215,7 +215,7 @@ class FolderService implements IFolderService {
 
         var targetFolderId = (targetFolder) ? targetFolder.id : null;
         
-        var body = {targetFolderId: targetFolderId, sourceFoldersId: sourcesFolders};
+        var body = {targetFolderId: targetFolderId, ids: sourcesFolders};
 
         let request = {
             method: 'PUT',

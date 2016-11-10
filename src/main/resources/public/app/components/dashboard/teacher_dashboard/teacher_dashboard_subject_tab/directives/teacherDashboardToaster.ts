@@ -25,7 +25,7 @@ directives.push(
 
                             scope.$on('E_DISPLAY_DASHBOARD_TOASTER', function (event, subjectList, folderList) {
                                 var length = subjectList.length + folderList.length;
-                                if(length === 0){
+                                if (length === 0 || (subjectList.length > 0 && folderList.length > 0)) {
                                     hide();
                                 } else{
                                     scope.isDisplayed = true;
@@ -36,21 +36,40 @@ directives.push(
                             });
 
                             function checkRightFn(subjectList){
+                                var isOneRead = false;
+                                var isOneManage = false;
+                                var isOneContrib = false;
+                                var isOneOwner = false;
+
                                 angular.forEach(subjectList, function(id){
                                     var subject = SubjectService.getById(id);
                                     if(model.me.hasRight(subject, 'owner')){
-                                        scope.lowerRight = 'owner';
+                                        //scope.lowerRight = 'owner';
+                                        isOneOwner = true
                                     }
                                     else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager)){
-                                        scope.lowerRight = 'manager';
+                                        //scope.lowerRight = 'manager';
+                                        isOneManage = true;
                                     }
                                     else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)){
-                                        scope.lowerRight = 'contrib';
+                                        //scope.lowerRight = 'contrib';
+                                        isOneContrib = true;
                                     }
                                     else{
-                                        scope.lowerRight = 'read';
+                                        //scope.lowerRight = 'read';
+                                        isOneRead = true;
                                     }
                                 });
+
+                                if (isOneRead) {
+                                    scope.lowerRight = 'read';
+                                } else if (isOneContrib) {
+                                    scope.lowerRight = 'contrib';
+                                } else if (isOneManage) {
+                                    scope.lowerRight = 'manager';
+                                } else if (isOneOwner) {
+                                    scope.lowerRight = 'owner';
+                                }
                             }
 
                             scope.itemList = [
@@ -111,7 +130,8 @@ directives.push(
                                         scope.$emit('E_PUBLISH_SUBJECT', subject);
                                     },
                                     display : function(){
-                                        return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner' || scope.lowerRight == 'manager');
+                                        return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner');
+                                        //|| scope.lowerRight == 'manager');
                                     }
                                 },
                                 {
@@ -129,7 +149,13 @@ directives.push(
                                         scope.$emit('E_MOVE_SELECTED_FOLDER_SUBJECT');
                                     },
                                     display : function(){
-                                        return (scope.subjectList.length > 0 && scope.folderList.length == 0) || (scope.subjectList.length == 0 && scope.folderList.length > 0);
+                                        if(scope.subjectList.length == 0){
+                                            // is only folder
+                                            return true;
+                                        } else {
+                                            return scope.subjectList.length > 0 && scope.folderList.length == 0 &&
+                                                scope.lowerRight == 'owner';
+                                        }
                                     }
                                 },
                                 {

@@ -87,10 +87,10 @@ public class FolderController extends ControllerHelper {
             @Override
             public void handle(final UserInfos user) {
                 if (user != null) {
-                    RequestUtils.bodyToJson(request, pathPrefix + "deleteFolders", new Handler<JsonObject>() {
+                    RequestUtils.bodyToJson(request, pathPrefix + "delete", new Handler<JsonObject>() {
                         @Override
                         public void handle(final JsonObject resource) {
-                            folderService.remove(resource.getArray("sourceFoldersId"), user, new Handler<Either<String, JsonObject>>() {
+                            folderService.remove(resource.getArray("ids"), user, new Handler<Either<String, JsonObject>>() {
                                 @Override
                                 public void handle(Either<String, JsonObject> event) {
                                     if (event.isRight()) {

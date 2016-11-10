@@ -3,9 +3,6 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "subjectId": {
-      "type": "number"
-    },
     "authorsContributors": {
       "type": "string"
     },
@@ -33,7 +30,6 @@
     }
   },
   "required": [
-    "subjectId",
     "subjectLessonTypeId",
     "subjectLessonLevelId"
   ]

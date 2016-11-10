@@ -92,7 +92,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
 
     public void checkFolders(JsonObject folder, final Handler<Boolean> handler) {
         final Number targetFolderId = folder.getNumber("targetFolderId");
-        final JsonArray sourceFoldersIdJa = folder.getArray("sourceFoldersId");
+        final JsonArray sourceFoldersIdJa = folder.getArray("ids");
 
         final String query = "WITH RECURSIVE folder(folder_id) AS(" +
                 "SELECT id FROM " + resourceTable + " AS f WHERE f.id  IN " + Sql.listPrepared(sourceFoldersIdJa.toArray()) +
@@ -116,7 +116,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     public void move(JsonObject folder, final Handler<Either<String, JsonObject>> handler) {
         final Long targetFolderId = folder.getLong("targetFolderId");
 
-        final JsonArray sourceFoldersIdJa = folder.getArray("sourceFoldersId");
+        final JsonArray sourceFoldersIdJa = folder.getArray("ids");
 
         final String query = "UPDATE " + resourceTable + " SET parent_folder_id=?, modified=NOW() WHERE id IN " + Sql.listPrepared(sourceFoldersIdJa.toArray());
 
@@ -142,7 +142,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     public void duplicateFolders(JsonObject folder, final String folderTitleSuffix, final String subjectTitleSuffix, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         final Long targetFolderId = folder.getLong("targetFolderId");
 
-        final JsonArray sourceFoldersIdJa = folder.getArray("sourceFoldersId");
+        final JsonArray sourceFoldersIdJa = folder.getArray("ids");
         final Set<Long> sourceFoldersIdSet = new HashSet<>();
 
         try {

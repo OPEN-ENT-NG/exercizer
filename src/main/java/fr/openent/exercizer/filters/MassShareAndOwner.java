@@ -25,7 +25,7 @@ public class MassShareAndOwner implements ResourcesProvider {
 		final SqlConf conf = SqlConfs.getConf(binding.getServiceMethod().substring(0, binding.getServiceMethod().indexOf('|')));
 		RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 			public void handle(JsonObject data) {
-				final Object[] ids = data.getArray("subjectIds", new JsonArray()).toArray();
+				final Object[] ids = data.getArray("ids", new JsonArray()).toArray();
 				if (ids != null && ids.length > 0) {
 					request.pause();
 					String sharedMethod = binding.getServiceMethod().replaceAll("\\.", "-");

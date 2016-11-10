@@ -33,12 +33,12 @@ class SubjectLibraryService implements ISubjectLibraryService {
         var self = this,
             deferred = this._$q.defer();
 
-        let param = {subjectId: subject.id, authorsContributors: authorsContributors,
+        let param = {authorsContributors: authorsContributors,
             subjectLessonTypeId: Number(subjectLessonTypeId), subjectLessonLevelId: Number(subjectLessonLevelId), subjectTagList:subjectTagList};
 
         let publishRequest = {
             method: 'POST',
-            url: 'exercizer/subject/publish/library',
+            url: 'exercizer/subject/'+ subject.id + '/publish/library',
             data: param
         };
 
