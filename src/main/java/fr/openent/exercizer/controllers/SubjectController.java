@@ -479,6 +479,41 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
+	@Delete("/subject/:id/unpublish/library")
+	@ApiDoc("Unpublish subject in library.")
+	@ResourceFilter(OwnerOnly.class)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
+	public void unpublish(final HttpServerRequest request) {
+		final Long subjectId;
+		try {
+			subjectId = Long.parseLong(request.params().get("id"));
+		}catch (NumberFormatException e) {
+			badRequest(request, e.getMessage());
+			return;
+		}
+
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					subjectService.unpublishLibrary(subjectId, new Handler<Either<String, JsonObject>>() {
+						@Override
+						public void handle(Either<String, JsonObject> event) {
+							if (event.isRight()) {
+								Renders.noContent(request);
+							} else {
+								Renders.renderError(request);
+							}
+						}
+					});
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
 	@Post("/subject/duplicate")
 	@ApiDoc("Duplicate subjects.")
 	@ResourceFilter(MassShareAndOwner.class)

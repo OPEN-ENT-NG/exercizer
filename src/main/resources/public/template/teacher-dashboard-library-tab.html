@@ -147,6 +147,7 @@
             <div class="toggle">
                 <div class="row">
                     <div class="cell">
+                        <button data-ng-click="teacherDashboardLibraryTabController.unpublish()" data-ng-show="teacherDashboardLibraryTabController.onlyOneOwnerSubjectIsSelected()">Annuler la publication</button>
                         <button data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject()" data-ng-show="teacherDashboardLibraryTabController.onlyOneSubjectIsSelected()">Aperçu</button>
                         <button data-ng-click="teacherDashboardLibraryTabController.displayModalCopyPaste()">Copier dans mes sujets</button>
                         <button data-ng-click="teacherDashboardLibraryTabController.resetSelection()">Annuler</button>

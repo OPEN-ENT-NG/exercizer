@@ -315,6 +315,31 @@ class TeacherDashboardLibraryTabController {
             
     };
 
+    public unpublish = function(subject:ISubject = undefined) {
+        if (angular.isUndefined(subject)) {
+            subject = this._selectedSubjectList[0];
+        }
+        
+        var self = this;
+
+        this._subjectLibraryService.unpublish(subject.id).then(
+            function() {
+                self._selectedSubjectList = [];
+                //hack front
+                for(var i=0;i<self._subjectList.length; i++) {
+                    if(self._subjectList[i].id === subject.id) {
+                        self._subjectList.splice(i, 1);
+                        break;
+                    }
+                }
+                notify.info('La publication du sujet a bien été annulée.')
+            },
+            function(err) {
+                notify.error(err);
+            }
+        );        
+    };    
+
     public displayModalCopyPaste = function() {
         this._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_COPY_PASTE', this._selectedSubjectList, [], true);
     };
@@ -347,6 +372,10 @@ class TeacherDashboardLibraryTabController {
 
     public onlyOneSubjectIsSelected = function() {
         return this._selectedSubjectList.length === 1;
+    };
+
+    public onlyOneOwnerSubjectIsSelected = function() {
+        return this._selectedSubjectList.length === 1 && model.me.userId === this._selectedSubjectList[0].owner;
     };
 
     public isToasterDisplayed = function() {

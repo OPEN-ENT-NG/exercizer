@@ -3,6 +3,7 @@ interface ISubjectLibraryService {
     search(/*filters:{title:string/*, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): ng.IPromise<ISubject[]>;
     count(/*filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): ng.IPromise<Number>;
     tmpSubjectForPreview:ISubject;
+    unpublish(subjectId:number): ng.IPromise<boolean>;
 }
 
 class SubjectLibraryService implements ISubjectLibraryService {
@@ -51,6 +52,27 @@ class SubjectLibraryService implements ISubjectLibraryService {
             }
         );
         
+        return deferred.promise;
+    };
+
+    public unpublish = function(subjectId:number): ng.IPromise<boolean> {
+        var self = this,
+            deferred = this._$q.defer();
+
+        let unpublishRequest = {
+            method: 'DELETE',
+            url: 'exercizer/subject/' + subjectId + '/unpublish/library'
+        };
+
+        this._$http(unpublishRequest).then(
+            function(response) {
+                deferred.resolve(true);
+            },
+            function() {
+                deferred.reject('exercizer.unpublish.error');
+            }
+        );
+
         return deferred.promise;
     };
 

@@ -57,12 +57,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	}
 
 	public void removeSubjectsAndGrains(SqlStatementsBuilder builder, final UserInfos user, JsonArray subjectIds) {
-		final String preparedIds = Sql.listPrepared(subjectIds.toArray());
-
 		final String subjectsQuery = "UPDATE " + resourceTable + " SET folder_id=null, is_deleted=true, owner=?, owner_username=?, modified=NOW() WHERE id IN " +
-				preparedIds;
-
-		final String grainsQuery = "DELETE FROM " + schema + "grain WHERE subject_id IN " + preparedIds;
+				Sql.listPrepared(subjectIds.toArray());
 
 		final JsonArray subjectsValues = new JsonArray();
 
@@ -74,6 +70,12 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		}
 
 		builder.prepared(subjectsQuery, subjectsValues);
+		removeGrains(builder, subjectIds);
+	}
+
+	private void removeGrains(SqlStatementsBuilder builder, JsonArray subjectIds) {
+		final String grainsQuery = "DELETE FROM " + schema + "grain WHERE subject_id IN " + Sql.listPrepared(subjectIds.toArray());
+
 		builder.prepared(grainsQuery, new JsonArray(subjectIds.toArray()));
 	}
 
@@ -396,5 +398,23 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 				"WHERE s.id=?";
 
 		s.prepared(grainsCopy, new JsonArray().add(newSubjectId).add(fromSubjectId));
+	}
+
+	public void unpublishLibrary(final Long subjectId, final Handler<Either<String, JsonObject>> handler) {
+		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
+		final JsonArray values = new JsonArray().addNumber(subjectId);
+
+		final String deleteSubjectTag = "DELETE FROM " + schema + "subject_library_tag WHERE subject_id=?";
+		builder.prepared(deleteSubjectTag, values);
+
+		final String deleteSubjectInfo = "DELETE FROM " + schema + "subject_library_main_information WHERE subject_id=?";
+		builder.prepared(deleteSubjectInfo, values);
+
+		removeGrains(builder, values);
+
+		final String deleteSubject = "DELETE FROM " + resourceTable + " WHERE id=?";
+		builder.prepared(deleteSubject, values);
+
+		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
 	}
 }

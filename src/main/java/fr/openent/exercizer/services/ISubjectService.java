@@ -57,4 +57,6 @@ public interface ISubjectService {
 					  final Handler<Either<String, JsonObject>> handler);
 
 	void move(final JsonArray subjectIds, final Long targetFolderId, final Handler<Either<String, JsonObject>> handler);
+
+	void unpublishLibrary(final Long  subjectId, final Handler<Either<String, JsonObject>> handler);
 }
