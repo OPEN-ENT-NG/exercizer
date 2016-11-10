@@ -96,7 +96,8 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
         //TODO normalize the data model to create a title relational field (grain_data must be opaque),
         //Not needed anymore to look for grains, use of insert / select query with case when for title
         final Object[] grainIds = grainIdJa.toArray();
-        final String query = "SELECT g.grain_type_id as grain_type_id, g.grain_data as grain_data FROM " + resourceTable + " as g WHERE g.id IN " +
+        final String query = "SELECT g.grain_type_id as grain_type_id, g.grain_data as grain_data, gt.public_name as default_title FROM " + resourceTable +
+                " AS g INNER JOIN " + schema + "grain_type AS gt ON (g.grain_type_id=gt.id) WHERE g.id IN " +
                 Sql.listPrepared(grainIds);
         sql.prepared(query, new JsonArray(grainIds), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
             @Override
@@ -123,7 +124,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
             //set title suffix
             final JsonObject grainData = new JsonObject(grainJo.getString("grain_data"));
             if (grainJo.getLong("grain_type_id") > 3) {
-                grainData.putString("title", grainData.getString("title") + titleSuffix);
+                grainData.putString("title", grainData.getString("title", grainJo.getString("default_title")) + titleSuffix);
             }
             final JsonArray values = new JsonArray();
             values.addNumber(subjectId).addNumber(grainJo.getNumber("grain_type_id")).addNumber(subjectId).add(grainData);
