@@ -337,14 +337,17 @@ class EditSubjectController {
      */
 
     public foldAllGrain = function() {
+        this.foldAllGrainWithoutScroll();
+        jQuery('html, body').animate({ scrollTop: jQuery('#edit-subject').offset().top - 100 }, 500);
+    };
+
+    public foldAllGrainWithoutScroll = function() {
         angular.forEach(this._grainList, function(grain:IGrain) {
             if (!this.isGrainFolded(grain)) {
                 this.foldGrain(grain);
             }
         }, this);
-
-        jQuery('html, body').animate({ scrollTop: jQuery('#edit-subject').offset().top - 100 }, 500);
-    };
+    }
 
     public previewPerformSubjectCopy = function() {
         this._$location.path('/subject/copy/preview/perform/' + this._subject.id + '/');
@@ -417,7 +420,15 @@ class EditSubjectController {
                 self._grainService.getListBySubject(self._subject).then(
                     function(grainList) {
                         self._grainList = grainList;
-                        self.foldAllGrain();
+                        self.foldAllGrainWithoutScroll();
+                        var grainIdToScroll=0;
+                        _.forEach(grainList, function (grain) {
+                           if (grain.id > grainIdToScroll) grainIdToScroll = grain.id;
+                        });
+
+                        self._$scope.$$postDigest(function() {
+                            self.scrollToGrain(grainIdToScroll);
+                        });
                     }
                 );
             },
