@@ -6,7 +6,7 @@
         <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"
              class="row vertical-spacing"
             data-ng-init="data.hover[key] = { bool : false }">
-            <input type="text" class="four cell" data-ng-model="filled_answer.text_left" disabled/>
+            <div style="border-bottom: 1px solid" class="four cell">[[filled_answer.text_left]]</div>
             <div class="one cell">&nbsp;</div>
             <!-- dragdrop="dropTo(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key)"-->
