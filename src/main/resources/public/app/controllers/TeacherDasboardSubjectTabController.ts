@@ -69,8 +69,8 @@ class TeacherDashboardSubjectTabController {
             self._resetSelectedList();
         });
 
-        self._$scope.$on('E_ADD_NEW_SUBJECT', function() {
-            self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT', null);
+        self._$scope.$on('E_ADD_NEW_SUBJECT', function(event, currentFolderId) {
+            self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT', null, currentFolderId);
         });
         
         self._$scope.$on('E_SELECT_FOLDER', function (event, folder) {

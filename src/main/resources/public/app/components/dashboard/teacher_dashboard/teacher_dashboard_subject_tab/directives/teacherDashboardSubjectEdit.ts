@@ -10,7 +10,7 @@ directives.push(
 
                     scope.isDisplayed = false;
 
-                    scope.$on('E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT', function(event, subject) {
+                    scope.$on('E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT', function(event, subject, currentFolderId) {
 
                         if(subject !== null){
                             scope.isNewSubject = false;
@@ -18,7 +18,8 @@ directives.push(
 
                         } else {
                             scope.isNewSubject = true;
-                            scope.subject = new Subject();
+                            scope.subject= new Subject();
+                            scope.subject.folder_id = currentFolderId;
                         }
                         scope.isDisplayed = true;
                     });

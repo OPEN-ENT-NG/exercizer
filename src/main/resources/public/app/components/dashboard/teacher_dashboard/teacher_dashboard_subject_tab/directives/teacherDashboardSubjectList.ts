@@ -156,8 +156,8 @@ directives.push(
                             scope.$emit('E_CREATE_FOLDER');
                         };
 
-                        scope.addNewSubject = function() {
-                            scope.$emit('E_ADD_NEW_SUBJECT', null);
+                        scope.addNewSubject = function(currentFolderId) {
+                            scope.$emit('E_ADD_NEW_SUBJECT', currentFolderId);
                         };
 
 
