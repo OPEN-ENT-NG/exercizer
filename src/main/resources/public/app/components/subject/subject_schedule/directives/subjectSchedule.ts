@@ -63,8 +63,10 @@ directives.push(
                                     scope.scheduleSubjectInProgress = false;
                                     notify.error(err);
                                 });
-                            }
-                        );
+                            }, function (err) {
+                                scope.scheduleSubjectInProgress = false;
+                                notify.error(err);
+                        });
                     };
 
                     function canSchedule(option, subject) {
