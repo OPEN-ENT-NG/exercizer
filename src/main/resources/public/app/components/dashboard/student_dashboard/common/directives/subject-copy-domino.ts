@@ -70,11 +70,20 @@ directives.push(
                         };
 
                         scope.submitCopyLate = function(){
-                            scope.subjectCopy.submitted_date =  new Date();
+                            // Warn : update does a report (action for teacher when he entered final score and comment)
+                            /*scope.subjectCopy.submitted_date =  new Date();
                             SubjectCopyService.update(scope.subjectCopy).then(function(){
                                 notify.info("Votre copie à été rendue.");
-                            })
-
+                            })*/
+                            scope.subjectCopy.submitted_date  = new Date().toISOString();
+                            SubjectCopyService.submit(scope.subjectCopy).then(
+                                function(subjectCopy:ISubjectCopy) {
+                                    notify.info("Votre copie à été rendue.");
+                                },
+                                function(err) {
+                                    notify.error(err);
+                                }
+                            );
                         };
 
                         /**
