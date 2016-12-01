@@ -138,7 +138,19 @@ class GrainCopyService implements IGrainCopyService {
     
     public instantiateGrainCopy = function (grainCopyObject:any):IGrainCopy {
         var grainCopy = SerializationHelper.toInstance(new GrainCopy(), JSON.stringify(grainCopyObject));
-        grainCopy.grain_copy_data = SerializationHelper.toInstance(new GrainCopyData(), grainCopyObject.grain_copy_data);
+        if (!angular.isUndefined(grainCopyObject.grain_copy_data)) {
+            grainCopy.grain_copy_data = SerializationHelper.toInstance(new GrainCopyData(), grainCopyObject.grain_copy_data);
+            //hack for grain statement : custom_data contains title and description
+            if (!angular.isUndefined(grainCopy.grain_copy_data.custom_data)) {
+                grainCopy.grain_copy_data.custom_copy_data = new StatementCustomCopyData();
+                //title is set in custom_data if only a statement is entered else grain_copy_data.title is used
+                if (!angular.isUndefined(grainCopy.grain_copy_data.custom_data.title)) {
+                    grainCopy.grain_copy_data.title = grainCopy.grain_copy_data.custom_data.title;
+                }
+                grainCopy.grain_copy_data.custom_copy_data.statement = grainCopy.grain_copy_data.custom_data.statement;
+            }
+        }
+
         return grainCopy;
     };
 
