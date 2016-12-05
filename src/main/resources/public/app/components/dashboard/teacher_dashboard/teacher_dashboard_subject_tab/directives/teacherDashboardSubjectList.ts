@@ -21,6 +21,9 @@ directives.push(
                         };
                         scope.data = {};
 
+                        scope.isImportDisplayed = false;
+                        scope.importSubject = new Subject();
+
                         scope.$on('E_RESET_SELECT_ALL', function (event) {
                           scope.data.selectAll = false;
                         });
@@ -160,6 +163,180 @@ directives.push(
                             scope.$emit('E_ADD_NEW_SUBJECT', currentFolderId);
                         };
 
+                        scope.importNewSubject = function() {
+                            scope.importSubject = new Subject();
+                            scope.isImportDisplayed = true;
+                        };
+
+                        scope.setFilesName = function(event) {
+                            scope.fileImportName = '';
+                            scope.newFiles = event.newFiles;
+
+                            if (scope.newFiles.length > 0) {
+                                var file = scope.newFiles[0];
+                                scope.fileImportName = file.name;
+                            }
+                        };
+
+                        scope.saveImportSubject = function() {
+                            if (!scope.importSubject.title || scope.importSubject.title.length === 0) {
+                                notify.error('exercizer.import.check.title');
+                            } else if (!scope.fileImportName || scope.fileImportName.length === 0) {
+                                notify.error('exercizer.import.check.file');
+                            } else {
+                                scope.importSubject.folder_id = scope.currentFolderId;
+
+                                var reader:FileReader = new FileReader();
+
+                                reader.onloadend = function (e) {
+                                    var xml = reader.result;
+                                    var xmlDocument = null;
+                                    try {
+                                        xmlDocument = $.parseXML(xml);
+                                    } catch(e) {
+                                        notify.error('exercizer.import.xml.error');
+                                        return;
+                                    }
+
+                                    var $xml = $(xmlDocument);
+
+                                    var order = 1;
+                                    var grains:IGrain[] = [];
+
+                                    var questionsXml = $.makeArray($xml.find('question'));
+                                    _.forEach(questionsXml, function (question) {
+                                        var grain = new Grain();
+                                        grain.grain_data = new GrainData();
+                                        var grainTypeTdBase = $(question).attr('type');
+                                        var title = $(question).find('name text').text();
+                                        grain.grain_data.title = title;
+
+                                        var statement:any = $(question).find('questiontext text');
+                                        if (statement && statement.length > 0) {
+                                            statement = '<div>' + statement.html(statement.text()).text() + '</div>';
+                                        }
+
+                                        var answerExplanation:any = $(question).find('generalfeedback text');
+                                        if (answerExplanation && answerExplanation.length > 0) {
+                                            answerExplanation = answerExplanation.html(answerExplanation.text()).text();
+                                            grain.grain_data.answer_explanation = answerExplanation;
+                                        }
+
+                                        grain.order_by = order;
+                                        order++;
+
+                                        if (!('description' === grainTypeTdBase)) {
+                                            grain.grain_data.statement = statement;
+                                        }
+                                        
+                                        switch (grainTypeTdBase) {
+                                            case 'description':
+                                                //statement
+                                                grain.grain_type_id = 3;
+                                                var statementCustomData = new StatementCustomData();
+                                                statementCustomData.statement = statement;
+                                                grain.grain_data.custom_data = statementCustomData;
+                                                break;
+                                            case 'shortanswer':
+                                                //Warn : two grain type can match
+                                                fillSimpleOrMultipleAnswer(grain, question);
+                                                break;
+                                            case 'numerical':
+                                                fillSimpleOrMultipleAnswer(grain, question);
+                                                break;
+                                            case 'essay':
+                                                // open answer
+                                                grain.grain_type_id = 5;
+                                                grain.grain_data.max_score = 1;
+                                                break;
+                                            case 'multichoice':
+                                                //qcm, no information about error allowed, false by default
+                                                grain.grain_type_id = 7;
+                                                var qcmCustomData = new QcmCustomData();
+                                                qcmCustomData.no_error_allowed = false;
+
+                                                var countCorrect = 0;
+                                                var answers = $.makeArray($(question).find('answer'));
+                                                _.forEach(answers, function (answer) {
+                                                    var isCorrect = Number($(answer).attr('fraction')) > 0;
+                                                    if (isCorrect) {
+                                                        countCorrect++;
+                                                    }
+
+                                                    var textAnswer = $(answer).find('text').text();
+                                                    qcmCustomData.correct_answer_list.push({
+                                                        text: textAnswer,
+                                                        isChecked: isCorrect
+                                                    });
+                                                });
+                                                grain.grain_data.max_score = countCorrect;
+                                                grain.grain_data.custom_data = qcmCustomData;
+                                                break;
+                                            case 'matching':
+                                                grain.grain_type_id = 8;
+                                                var customData = new AssociationCustomData();
+                                                // no information about showing left column and error allowed, false by default
+                                                customData.show_left_column = false;
+                                                customData.no_error_allowed = false;
+                                                var countCorrect = 0;
+                                                var subQuestions = $.makeArray($(question).find('subquestion'));
+                                                _.forEach(subQuestions, function (subQuestion) {
+                                                    countCorrect++;
+                                                    var textLeft = $(subQuestion).find('text:first').text();
+                                                    var textRight = $(subQuestion).find('answer text').text();
+                                                    customData.correct_answer_list.push({
+                                                        text_left: textLeft,
+                                                        text_right: textRight
+                                                    });
+                                                });
+                                                grain.grain_data.max_score = countCorrect;
+                                                grain.grain_data.custom_data = customData;
+                                                break;
+                                        }
+
+                                        grains.push(grain);
+
+                                    });
+                                    
+                                    if (grains.length === 0) {
+                                        notify.error('exercizer.import.xml.empty');
+                                    } else {
+                                        SubjectService.importSubject(scope.importSubject, grains).then(function (subject) {
+                                            scope.closeImportLightbox();
+                                            SubjectService.currentSubjectId = subject.id;
+                                            $location.path('/subject/edit/' + subject.id);
+                                        }, function (err) {
+                                            notify.error(err);
+                                        });
+                                    }
+                                };
+
+                                reader.readAsText(scope.newFiles[0]);
+                            }
+                        }
+
+                        scope.closeImportLightbox = function() {
+                            scope.isImportDisplayed = false;
+                        };
+
+                        function fillSimpleOrMultipleAnswer(grain, question) {
+                            var answers = $.makeArray($(question).find('answer text'));
+                            if (answers.length === 1) {
+                                grain.grain_type_id= 4;
+                                grain.grain_data.max_score = 1;
+                                let customData = new SimpleAnswerCustomData($(answers[0]).text());
+                                grain.grain_data.custom_data = customData;
+                            } else {
+                                grain.grain_type_id= 6;
+                                grain.grain_data.max_score = answers.length;
+                                let customData = new MultipleAnswerCustomData();
+                                customData.no_error_allowed = false;
+                                _.forEach(answers, function (answer) {
+                                    customData.correct_answer_list.push({text: $(answer).text()});
+                                });
+                                grain.grain_data.custom_data = customData;
+                            }
+                        }
 
                         scope.goToRoot = function () {
                             scope.$emit('E_RESET_SELECTED_LIST');

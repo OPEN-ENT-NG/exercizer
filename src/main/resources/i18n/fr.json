@@ -42,7 +42,12 @@
     "exercizer.schedule.error" : "Une erreur est survenue lors de la sauvegarde du sujet programmé.",
     "exercizer.folder.check" : "La destination du dossier ne peut pas être le dossier d'origine ou un de ces enfants.",
     "exercizer.grain.no.error.allowed" : "Attention : une seule erreur et toutes les réponses sont considérées comme fausses !",
-    "exercizer.schedule.confirm" : "Êtes-vous sûr de vouloir distribuer ce sujet ?"
+    "exercizer.schedule.confirm" : "Êtes-vous sûr de vouloir distribuer ce sujet ?",
+    "exercizer.import.check.title" : "Veuillez renseigner un titre.",
+    "exercizer.import.check.file" : "Veuillez sélectionner un fichier à importer.",
+    "exercizer.import.choose" : "Parcourir",
+    "exercizer.import.xml.error" : "Le fichier sélectionné ne respecte pas le format attendu (xml moodle).",
+    "exercizer.import.xml.empty" : "Le fichier ne contient pas de question."
 
 
 

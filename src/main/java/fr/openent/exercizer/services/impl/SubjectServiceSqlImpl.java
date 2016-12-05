@@ -35,6 +35,46 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		super.persist(subject, user, handler);
 	}
 
+	public void persistSubjectGrains(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		final String queryNewSubjectId = "SELECT nextval('" + schema + "subject_id_seq') as id";
+
+		sql.prepared(queryNewSubjectId, new JsonArray(),
+				SqlResult.validUniqueResultHandler(
+						new Handler<Either<String, JsonObject>>() {
+							@Override
+							public void handle(Either<String, JsonObject> event) {
+								if (event.isRight()) {
+									final Long newSubjectId = event.right().getValue().getLong("id");
+									final SqlStatementsBuilder builder = new SqlStatementsBuilder();
+									final String userQuery = "SELECT " + schema + "merge_users(?,?)";
+									builder.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
+
+									final JsonObject subject = ResourceParser.beforeAny(resource.getObject("subject"));
+									subject.putString("owner", user.getUserId());
+									subject.putString("owner_username", user.getUsername());
+									subject.putNumber("id", newSubjectId);
+									builder.insert(resourceTable, subject, "*");
+
+									final JsonArray grains = resource.getArray("grains");
+									for (int i=0;i<grains.size();i++) {
+										final JsonObject grain = grains.get(i);
+										final String query = "INSERT INTO " + schema + "grain (subject_id, grain_type_id, order_by, grain_data) VALUES (?,?,?,?)";
+										builder.prepared(query, new JsonArray().add(newSubjectId).add(grain.getLong("grain_type_id")).add(grain.getInteger("order_by")).add(grain.getValue("grain_data")));
+									}
+
+									String updateSubjectQuery = "UPDATE " + resourceTable + " SET max_score=(SELECT sum(cast(g.grain_data::json->>'max_score' as double precision)) FROM " +
+											schema + "grain as g WHERE g.subject_id=?) WHERE id=?";
+									builder.prepared(updateSubjectQuery, new JsonArray().addNumber(newSubjectId).addNumber(newSubjectId));
+
+									sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(1, handler));
+								} else {
+									log.error("fail to create subject and grains  : " + event.left().getValue());
+									handler.handle(event.left());
+								}
+							}
+						}));
+	}
+
 	/**
 	 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
 	 */

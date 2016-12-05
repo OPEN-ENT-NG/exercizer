@@ -4,6 +4,7 @@ Behaviours.register('exercizer', {
     rights: {
         workflow: {
             create: 'fr.openent.exercizer.controllers.SubjectController|persist',
+            import: 'fr.openent.exercizer.controllers.SubjectController|importSubjectGrains',
             list: 'fr.openent.exercizer.controllers.SubjectController|listSubject',
             view: 'fr.openent.exercizer.controllers.SubjectController|view'
 

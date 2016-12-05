@@ -69,6 +69,29 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
+	@Post("/subject/import")
+	@ApiDoc("Import a subject with grains.")
+	@SecuredAction("exercizer.subject.import")
+	public void importSubjectGrains(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, pathPrefix + "import", new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject resource) {
+							subjectService.persistSubjectGrains(resource, user, notEmptyResponseHandler(request));
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
 	@Put("/subject/:id")
 	@ApiDoc("Updates a subject.")
 	@ResourceFilter(ShareAndOwner.class)

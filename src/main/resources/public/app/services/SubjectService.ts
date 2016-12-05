@@ -1,6 +1,7 @@
 interface ISubjectService {
     resolve(force?:boolean): ng.IPromise<boolean>;
     persist(subject: ISubject): ng.IPromise<ISubject>;
+    importSubject(subject: ISubject, grains: IGrain[]): ng.IPromise<ISubject>;
     update(subject: ISubject, updateMaxScore:boolean): ng.IPromise<ISubject>;
     remove(subjectIds: number[]): ng.IPromise<boolean>;
     getById(id: number): ISubject;
@@ -90,6 +91,37 @@ class SubjectService implements ISubjectService {
             },
             function() {
                 deferred.reject('Une erreur est survenue lors de la création du sujet.');
+            }
+        );
+        return deferred.promise;
+    };
+
+    /**
+     * use for import data from tdbase
+     */
+    public importSubject = function(subject: ISubject, grains: IGrain[]): ng.IPromise<ISubject> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject/import',
+                data: {subject:subject, grains:grains}
+            };
+
+        if (angular.isUndefined(this._listMappedById)) {
+            this._listMappedById = {};
+        }
+        
+        this._$http(request).then(
+            function(response) {
+                var subject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data)) as any;
+                self._afterPullBack(subject);
+
+                self._listMappedById[subject.id] = subject;
+                deferred.resolve(subject);
+            },
+            function() {
+                deferred.reject("Une erreur est survenue lors de l'import du sujet.");
             }
         );
         return deferred.promise;

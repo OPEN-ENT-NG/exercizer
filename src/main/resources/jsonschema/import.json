@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "folder_id": {
+          "type": ["number", "null"]
+        },
+        "picture": {
+          "type": "string"
+        }
+      },
+      "required": ["title"]
+    },
+    "grains": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "subject",
+    "grains"
+  ]
+}

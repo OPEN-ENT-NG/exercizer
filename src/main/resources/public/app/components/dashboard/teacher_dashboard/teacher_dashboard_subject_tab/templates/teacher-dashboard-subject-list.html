@@ -44,6 +44,9 @@
             <div class="cell">
                 <button data-ng-click="addNewSubject(currentFolderId)" workflow="exercizer.create">Nouveau sujet</button>
             </div>
+            <div class="cell" style="margin-left:1%">
+                <button data-ng-click="importNewSubject()" workflow="exercizer.import">Import</button>
+            </div>
             <div class="cell right-magnet">
                 <i data-ng-click="displayList = 'array'"
                    class="show-list"
@@ -188,4 +191,40 @@
             </table>
         </div>
     </section>
+    <lightbox data-show="isImportDisplayed" data-on-close="closeImportLightbox()">
+        <h1>Exercices et évaluations - importer un sujet</h1>
+        <div class="row">
+            <form name="formImport">
+                <div class="rigid-grid row">
+                    <div class="two cell clip height-two">
+                        <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail">
+                            <image-select data-ng-model="importSubject.picture" default="/img/illustrations/collaborativeeditor-default.png"></image-select>
+                        </div>
+                    </div>
+                    <div class="margin-two height-three">
+                        <div class="twelve cell horizontal-spacing">
+                            <input type="text" data-ng-model="importSubject.title" class="twelve cell" placeholder="Titre du sujet">
+                            <textarea data-ng-model="importSubject.description" class="twelve cell" placeholder="Description"></textarea>
+                        </div>
+                        <div class="twelve cell horizontal-spacing select-file input-block" style="margin-top:5px;margin-bottom:5px">
+                            <button class="file-button"><i18n>exercizer.import.choose</i18n></button>
+                            <input style="width:70% !important" ng-readonly="true" type="text" ng-model="fileImportName" data-display-file class="nomargin" />
+                            <div class="hidden-content">
+                                <input type="file" files-input-change="setFilesName(this)"  ng-model="newFiles" />
+                            </div>
+                        </div>
+
+                        <div class="twelve cell horizontal-spacing vertical-spacing">
+                            <button data-ng-click="saveImportSubject()" class="right-magnet">
+                                Importer
+                            </button>
+                            <button data-ng-click="closeImportLightbox()" class="right-magnet cancel">
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </lightbox>
 </div>
