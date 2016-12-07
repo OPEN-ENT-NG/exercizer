@@ -158,26 +158,51 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 
 
 	private void createSubjectsCopies(final SqlStatementsBuilder s, final Long subjectScheduledId, JsonArray users) {
-		final StringBuilder mergeUserQuery = new StringBuilder("SELECT ");
-		final StringBuilder bulkInsertSubjectCopy = new StringBuilder("INSERT INTO " + schema + "subject_copy (subject_scheduled_id, owner, owner_username) VALUES ");
+		final String initMergeUserQuery = "SELECT ";
+		final String initSubjectCopyQuery = "INSERT INTO " + schema + "subject_copy (subject_scheduled_id, owner, owner_username) VALUES ";
 
-		final JsonArray mergeUserValues = new JsonArray();
-		final JsonArray subjectCopyValues = new JsonArray();
+		//init query
+		StringBuilder mergeUserQuery = new StringBuilder(initMergeUserQuery);
+		StringBuilder bulkInsertSubjectCopy = new StringBuilder(initSubjectCopyQuery);
+		//init values
+		JsonArray mergeUserValues = new JsonArray();
+		JsonArray subjectCopyValues = new JsonArray();
+		//Batch of bulk insert to avoid PSQLException: ERROR: target lists can have at most 1664 entries
+		int batch = 0;
 
 		for (int i=0;i<users.size();i++) {
+			if (batch == 300) {
+				batch=0;
+				mergeUserQuery.deleteCharAt(mergeUserQuery.length() - 1);
+				bulkInsertSubjectCopy.deleteCharAt(bulkInsertSubjectCopy.length() - 1);
+				//Adding statements for this batch
+				s.prepared(mergeUserQuery.toString(), mergeUserValues);
+				s.prepared(bulkInsertSubjectCopy.toString(), subjectCopyValues);
+
+				//init for a new batch
+				mergeUserQuery = new StringBuilder(initMergeUserQuery);
+				bulkInsertSubjectCopy = new StringBuilder(initSubjectCopyQuery);
+				mergeUserValues = new JsonArray();
+				subjectCopyValues = new JsonArray();
+			}
+
 			final JsonObject joUser =  users.<JsonObject>get(i);
 			mergeUserQuery.append(schema).append("merge_users(?,?),");
 			mergeUserValues.addString(joUser.getString("_id")).addString(joUser.getString("name"));
 
 			bulkInsertSubjectCopy.append("(?,?,?),");
 			subjectCopyValues.add(subjectScheduledId).addString(joUser.getString("_id")).addString(joUser.getString("name"));
+			batch++;
 		}
 
-		mergeUserQuery.deleteCharAt(mergeUserQuery.length() - 1);
-		bulkInsertSubjectCopy.deleteCharAt(bulkInsertSubjectCopy.length() - 1);
+		// Adding statement for the latest batch
+		if (batch > 0) {
+			mergeUserQuery.deleteCharAt(mergeUserQuery.length() - 1);
+			bulkInsertSubjectCopy.deleteCharAt(bulkInsertSubjectCopy.length() - 1);
 
-		s.prepared(mergeUserQuery.toString(), mergeUserValues);
-		s.prepared(bulkInsertSubjectCopy.toString(), subjectCopyValues);
+			s.prepared(mergeUserQuery.toString(), mergeUserValues);
+			s.prepared(bulkInsertSubjectCopy.toString(), subjectCopyValues);
+		}
 	}
 
 	private void createGrainCopies(final SqlStatementsBuilder s, final Long subjectScheduledId) {
