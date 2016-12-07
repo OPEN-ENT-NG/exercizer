@@ -376,7 +376,7 @@ public class SubjectCopyController extends ControllerHelper {
 					if (!mode.getFields().contains(fieldName))
 						it.remove();
 				}
-				log.info(resource.encodePrettily());
+				log.debug(resource.encodePrettily());
 				if (resource.size() <= 2) {
 					badRequest(request);
 					return;
