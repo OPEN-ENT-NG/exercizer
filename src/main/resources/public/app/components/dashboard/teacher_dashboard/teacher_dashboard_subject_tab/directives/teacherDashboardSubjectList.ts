@@ -214,9 +214,9 @@ directives.push(
                                         var title = $(question).find('name text').text();
                                         grain.grain_data.title = title;
 
-                                        var statement:any = $(question).find('questiontext text');
+                                        var statement:any = $(question).find('questiontext text').text();
                                         if (statement && statement.length > 0) {
-                                            statement = '<div>' + statement.html(statement.text()).text() + '</div>';
+                                            statement = '<div>' + statement + '</div>';
                                         }
 
                                         var answerExplanation:any = $(question).find('generalfeedback text');
