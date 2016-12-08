@@ -193,9 +193,12 @@
     </section>
     <lightbox data-show="isImportDisplayed" data-on-close="closeImportLightbox()">
         <h1>Exercices et évaluations - importer un sujet</h1>
-        <div class="row">
-            <form name="formImport">
-                <div class="rigid-grid row">
+        <div class="row" data-ng-show="stateImport == 'import'">
+            <form name="formImport" >
+                <div class="row">
+                    <span style="font-weight: bold"><i18n>exercizer.import.intro</i18n></span>
+                </div>
+                <div class="rigid-grid row vertical-spacing">
                     <div class="two cell clip height-two">
                         <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail">
                             <image-select data-ng-model="importSubject.picture" default="/img/illustrations/collaborativeeditor-default.png"></image-select>
@@ -225,6 +228,31 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <div class="row" data-ng-show="stateImport == 'result'">
+            <div class="height-three">
+                <div class="twelve cell horizontal-spacing">
+                    <div style="font-weight: bold"><i18n>exercizer.import.count</i18n> [[grainImportCount]]</div>
+                    <div class="vertical-spacing" style="font-weight: bold"><i18n>exercizer.import.feedback</i18n></div>
+                    <ul>
+                        <li><i18n>exercizer.import.tdbase.type1</i18n></li>
+                        <li><i18n>exercizer.import.tdbase.type2</i18n></li>
+                        <li><i18n>exercizer.import.tdbase.type3</i18n></li>
+                        <li><i18n>exercizer.import.tdbase.type4</i18n></li>
+                        <li><i18n>exercizer.import.tdbase.type5</i18n></li>
+                        <li><i18n>exercizer.import.tdbase.type6</i18n></li>
+                    </ul>
+                    <div style="font-weight: bold"><i18n>exercizer.import.feedback2</i18n></div>
+                </div>
+                <div class="twelve cell horizontal-spacing vertical-spacing">
+                    <button data-ng-click="goToSubjectAfterImport()" class="right-magnet">
+                        Consulter le sujet
+                    </button>
+                    <button data-ng-click="closeImportLightbox()" class="right-magnet cancel">
+                        Fermer
+                    </button>
+                </div>
+            </div>
         </div>
     </lightbox>
 </div>

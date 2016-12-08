@@ -22,7 +22,10 @@ directives.push(
                         scope.data = {};
 
                         scope.isImportDisplayed = false;
+                        scope.fileImportName = '';
                         scope.importSubject = new Subject();
+                        scope.stateImport = 'import';
+                        scope.grainImportCount = 0;
 
                         scope.$on('E_RESET_SELECT_ALL', function (event) {
                           scope.data.selectAll = false;
@@ -302,9 +305,9 @@ directives.push(
                                         notify.error('exercizer.import.xml.empty');
                                     } else {
                                         SubjectService.importSubject(scope.importSubject, grains).then(function (subject) {
-                                            scope.closeImportLightbox();
                                             SubjectService.currentSubjectId = subject.id;
-                                            $location.path('/subject/edit/' + subject.id);
+                                            scope.stateImport = 'result';
+                                            scope.grainImportCount = grains.length;
                                         }, function (err) {
                                             notify.error(err);
                                         });
@@ -314,9 +317,17 @@ directives.push(
                                 reader.readAsText(scope.newFiles[0]);
                             }
                         }
+                        
+                        scope.goToSubjectAfterImport = function() {
+                            scope.closeImportLightbox();                            
+                            $location.path('/subject/edit/' + SubjectService.currentSubjectId);
+                        }
 
                         scope.closeImportLightbox = function() {
                             scope.isImportDisplayed = false;
+                            scope.stateImport = 'import';
+                            scope.grainImportCount = 0;
+                            scope.fileImportName = '';
                         };
 
                         function fillSimpleOrMultipleAnswer(grain, question) {
