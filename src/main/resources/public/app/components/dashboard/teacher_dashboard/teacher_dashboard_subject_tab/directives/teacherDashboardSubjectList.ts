@@ -205,6 +205,7 @@ directives.push(
 
                                     var order = 1;
                                     var grains:IGrain[] = [];
+                                    var mapImg = {};
 
                                     var questionsXml = $.makeArray($xml.find('question'));
                                     _.forEach(questionsXml, function (question) {
@@ -230,6 +231,24 @@ directives.push(
 
                                         if (!('description' === grainTypeTdBase)) {
                                             grain.grain_data.statement = statement;
+                                        }
+
+                                        var imgB64 = $(question).find('image_base64').text();
+                                        if (imgB64 && imgB64.length > 0) {
+                                            var arrayBuff = _base64ToArrayBuffer(imgB64);
+
+                                            var fileNameImg = $(question).find('image').text();
+                                            if (fileNameImg) {
+                                                var res = fileNameImg.split("/",2);
+                                                if (res.length === 2) {
+                                                    var fileName = res[1];
+                                                    var extFile = fileName.split(".",2);
+                                                    if (extFile.length === 2) {
+                                                        var blob = new Blob([arrayBuff], {type: "image/" + extFile[1]});
+                                                        mapImg[grain.order_by] = {blob: blob, name: fileName};
+                                                    }
+                                                }
+                                            }
                                         }
                                         
                                         switch (grainTypeTdBase) {
@@ -297,37 +316,76 @@ directives.push(
                                                 break;
                                         }
 
-                                        grains.push(grain);
+                                        if (grain.grain_type_id) {
+                                            grains.push(grain);
+                                        }
 
                                     });
                                     
                                     if (grains.length === 0) {
                                         notify.error('exercizer.import.xml.empty');
                                     } else {
-                                        SubjectService.importSubject(scope.importSubject, grains).then(function (subject) {
-                                            SubjectService.currentSubjectId = subject.id;
-                                            scope.stateImport = 'result';
-                                            scope.grainImportCount = grains.length;
-                                        }, function (err) {
-                                            notify.error(err);
-                                        });
+                                        var countCallBackWorkspace = _.size(mapImg);
+
+                                        if (countCallBackWorkspace > 0) {
+                                            var currentCall = 0;
+                                            _.forEach(mapImg, function (elem) {
+                                                SubjectService.importImage(elem.blob, elem.name).then(function (id) {
+                                                    //console.log(id);
+                                                    currentCall++;
+                                                    elem.link = "<div></div><div><img src=\"/workspace/document/" + id + "\" draggable=\"\" native=\"\"><div><div></div>";
+
+                                                    if (currentCall == countCallBackWorkspace) {
+                                                        persistImportSubject(grains, mapImg);
+                                                    }
+                                                }, function (err) {
+                                                    currentCall++;
+                                                    elem.link = "";
+                                                    if (currentCall == countCallBackWorkspace) {
+                                                        persistImportSubject(grains, mapImg);
+                                                    }
+                                                });
+                                            });
+                                        } else {
+                                            persistImportSubject(grains, undefined);
+                                        }
                                     }
                                 };
 
                                 reader.readAsText(scope.newFiles[0]);
                             }
-                        }
-                        
-                        scope.goToSubjectAfterImport = function() {
-                            scope.closeImportLightbox();                            
-                            $location.path('/subject/edit/' + SubjectService.currentSubjectId);
-                        }
+                        };
 
-                        scope.closeImportLightbox = function() {
-                            scope.isImportDisplayed = false;
-                            scope.stateImport = 'import';
-                            scope.grainImportCount = 0;
-                            scope.fileImportName = '';
+                        function persistImportSubject(grains, mapImg) {
+                            if (mapImg) {
+                                _.forEach(grains, function (grain) {
+                                    if (mapImg[grain.order_by]) {
+                                        if (grain.grain_data.custom_data.statement) {
+                                            grain.grain_data.custom_data.statement = mapImg[grain.order_by].link + grain.grain_data.custom_data.statement;
+                                        } else {
+                                            grain.grain_data.statement = mapImg[grain.order_by].link + grain.grain_data.statement;
+                                        }
+                                    }
+                                });
+                            }
+                            SubjectService.importSubject(scope.importSubject, grains).then(function (subject) {
+                                SubjectService.currentSubjectId = subject.id;
+                                scope.stateImport = 'result';
+                                scope.grainImportCount = grains.length;
+                            }, function (err) {
+                                notify.error(err);
+                            });
+                        };
+
+
+                        function _base64ToArrayBuffer(base64) {
+                            var binaryString =  window.atob(base64);
+                            var len = binaryString.length;
+                            var bytes = new Uint8Array( len );
+                            for (var i = 0; i < len; i++)        {
+                                bytes[i] = binaryString.charCodeAt(i);
+                            }
+                            return bytes.buffer;
                         };
 
                         function fillSimpleOrMultipleAnswer(grain, question) {
@@ -347,7 +405,19 @@ directives.push(
                                 });
                                 grain.grain_data.custom_data = customData;
                             }
-                        }
+                        };
+
+                        scope.goToSubjectAfterImport = function() {
+                            scope.closeImportLightbox();
+                            $location.path('/subject/edit/' + SubjectService.currentSubjectId);
+                        };
+
+                        scope.closeImportLightbox = function() {
+                            scope.isImportDisplayed = false;
+                            scope.stateImport = 'import';
+                            scope.grainImportCount = 0;
+                            scope.fileImportName = '';
+                        };
 
                         scope.goToRoot = function () {
                             scope.$emit('E_RESET_SELECTED_LIST');

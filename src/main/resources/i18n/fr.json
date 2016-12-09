@@ -51,7 +51,7 @@
     "exercizer.import.intro" : "Seul l'usage d'un fichier d'export depuis TD Base au format Moodle (exemple : monsujet.xml) est autorisé.",
     "exercizer.import.count" : "Nombre de questions importées : ",
     "exercizer.import.feedback" : "Pour information, les questions suivantes ne peuvent pas être importées :",
-    "exercizer.import.feedback2" : "Une saisie manuelle sera nécessaire pour ces questions ainsi que pour les images présentes initialement dans les énoncés des questions importées.",
+    "exercizer.import.feedback2" : "Une saisie manuelle sera nécessaire pour ces questions.",
     "exercizer.import.tdbase.type1" : "Texte à trous",
     "exercizer.import.tdbase.type2" : "Ordre à établir",
     "exercizer.import.tdbase.type3" : "Association graphique",

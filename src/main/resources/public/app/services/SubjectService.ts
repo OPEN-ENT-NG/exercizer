@@ -10,7 +10,8 @@ interface ISubjectService {
     getByIdEvenDeleted (id:number) : ng.IPromise<any>;
     duplicateSubjectsFromLibrary (subjectIds:number[], folderId:number);
     duplicate(ids: number[], folder: IFolder): ng.IPromise<boolean>;
-    move(ids: number[], folder: IFolder): ng.IPromise<boolean>
+    move(ids: number[], folder: IFolder): ng.IPromise<boolean>;
+    importImage(file, name): ng.IPromise<String>;
 }
 
 class SubjectService implements ISubjectService {
@@ -95,6 +96,37 @@ class SubjectService implements ISubjectService {
         );
         return deferred.promise;
     };
+
+    /**
+     * use for import data from tdbase
+     */
+    public importImage = function(file, name): ng.IPromise<String>  {
+        var formData = new FormData();
+        formData.append('blob', file, name);
+
+        var deferred = this._$q.defer(),
+            thumbnails: "thumbnail=120x120&thumbnail=150x150&thumbnail=100x100&thumbnail=290x290&thumbnail=48x48&thumbnail=82x82&thumbnail=381x381";
+
+        this._$http.post('/workspace/document?protected=true&application=media-library&' + thumbnails, formData, {
+            withCredentials: false,
+            headers: {
+                'Content-Type': undefined
+            },
+            transformRequest: angular.identity,
+            data: {
+                formData
+            },
+            responseType: 'json'
+
+        }).then(function(response){
+                deferred.resolve(response.data._id);
+            },
+            function() {
+                deferred.reject("Une erreur est survenue lors de l'import d'une image depuis Tdbase.");
+            }
+        );
+        return deferred.promise;
+    }
 
     /**
      * use for import data from tdbase
