@@ -77,6 +77,10 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
 
 	@Override
 	public void updateAndScore(final JsonObject resource, String subjectiCopyState, final Handler<Either<String, JsonObject>> handler) {
+		//initialize final score of resource
+		if (resource.getNumber("final_score") == null) {
+			resource.putNumber("final_score", resource.getNumber("calculated_score"));
+		}
 		SqlStatementsBuilder s = updateGrain(resource);
 		// update subject copy
 		s.prepared(
