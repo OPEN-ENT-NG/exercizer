@@ -11,6 +11,10 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/grain/association/templates/perform-association.html',
                 link: (scope:any) => {
 
+                    scope.$watch("grainCopy",function(newValue,oldValue) {
+                        scope.resetPossibleAnswerLeftList();
+                    });
+
                     scope.data = {
                         hover : []
                     };
@@ -180,8 +184,6 @@ directives.push(
                             }
                         });
                     };
-                    scope.resetPossibleAnswerLeftList();
-
                 }
             };
         }]
