@@ -151,7 +151,7 @@ class TeacherDashboardLibraryTabController {
      */
 
     public getSubjectPicture = function(subject:ISubject) {
-        return subject.picture || '/assets/themes/leo/img/illustrations/poll-default.png';
+        return subject.picture || (window as any).skin.theme + '../img/illustrations/image-default.svg';
     };
 
     public getSubjectLessonType = function(subject:ISubject) {

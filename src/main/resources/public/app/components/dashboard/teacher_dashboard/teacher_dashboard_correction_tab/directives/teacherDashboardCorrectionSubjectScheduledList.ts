@@ -90,7 +90,7 @@ directives.push(
                      * GET subject Scheduled information
                      */
                     scope.getSubjectScheduledPicture = function (subjectScheduled) {
-                        return subjectScheduled.picture || '/assets/themes/leo/img/illustrations/poll-default.png';
+                        return subjectScheduled.picture || (window as any).skin.theme + '../img/illustrations/image-default.svg';
                     };
 
                     scope.numberOfCopySubmitted = function (subjectScheduled){

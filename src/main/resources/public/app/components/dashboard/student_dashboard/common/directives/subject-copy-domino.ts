@@ -39,7 +39,7 @@ directives.push(
                          */
 
                         scope.getSubjectCopyPicture = function () {
-                            return scope.subjectScheduled.picture || '/assets/themes/leo/img/illustrations/poll-default.png';
+                            return scope.subjectScheduled.picture || (window as any).skin.theme + '../img/illustrations/image-default.svg';
                         };
 
                         scope.getSubjectCopySubmittedDate = function () {

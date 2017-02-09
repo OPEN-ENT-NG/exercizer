@@ -100,7 +100,7 @@ directives.push(
                         };
 
                         scope.getSubjectPicture = function (subject) {
-                            var defaultPicture = '/assets/themes/leo/img/illustrations/poll-default.png';
+                            var defaultPicture = (window as any).skin.theme + '../img/illustrations/image-default.svg';
                             return subject.picture || defaultPicture;
                         };
 
