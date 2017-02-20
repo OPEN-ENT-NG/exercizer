@@ -100,7 +100,7 @@ directives.push(
                         };
 
                         scope.getSubjectPicture = function (subject) {
-                            var defaultPicture = (window as any).skin.theme + '../img/illustrations/image-default.svg';
+                            var defaultPicture = (window as any).skin.basePath + 'img/illustrations/image-default.svg';
                             return subject.picture || defaultPicture;
                         };
 

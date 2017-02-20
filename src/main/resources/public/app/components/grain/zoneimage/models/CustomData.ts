@@ -48,7 +48,7 @@ module zoneimage {
         }
 
         get guideImage(): string {
-            return this._guideImage || (window as any).skin.theme + '../img/illustrations/image-default.svg';
+            return this._guideImage || (window as any).skin.basePath + 'img/illustrations/image-default.svg';
         }
 
         set guideImage(value: string) {
