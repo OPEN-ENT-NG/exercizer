@@ -8,7 +8,7 @@ class OrderService implements IAutomaticCorrection {
             answerCorrect,
             correspondingAnswer,
             isCorrectReturnArray = {};
-        angular.forEach(grainCopy.grain_copy_data.custom_copy_data.filled_answer_list, function(filled_answer, key){
+        angular.forEach(grainCopy.grain_copy_data.custom_copy_data.filled_answer_list, function(filled_answer){
                 answerCorrect = false;
             angular.forEach(grainScheduled.grain_data.custom_data.correct_answer_list, function(correct_answer){
                 if(correct_answer.order_by ===  filled_answer.order_by){
@@ -23,14 +23,14 @@ class OrderService implements IAutomaticCorrection {
                 answerCorrect = true;
             }
             if(answerCorrect){
-                isCorrectReturnArray[key] = true;
+                isCorrectReturnArray[filled_answer.order_by] = true;
                 if(grainScheduled.grain_data.custom_data.no_error_allowed && atLeastOneError){
                     // do not incremented
                 } else{
                     numberGoodAnswer++
                 }
             } else {
-                isCorrectReturnArray[key] = false;
+                isCorrectReturnArray[filled_answer.order_by] = false;
                 atLeastOneError = true;
                 if(grainScheduled.grain_data.custom_data.no_error_allowed){
                     numberGoodAnswer = 0;
