@@ -1,7 +1,7 @@
 interface ISubjectTagService {
     resolve(): ng.IPromise<ISubjectTag[]>;
     persist(subjectTag:ISubjectTag): ng.IPromise<ISubjectTag>;
-    resolveBySubjectId(subjectId:number): ng.IPromise<ISubjectTag[]>;
+    resolveBySubjectIds(subjectIds:number[]):ng.IPromise<Boolean>;
     getListBySubjectId(subjectId:number): ISubjectTag[];
 }
 
@@ -88,35 +88,41 @@ class SubjectTagService implements ISubjectTagService {
         return deferred.promise;
     };
     
-    public resolveBySubjectId(subjectId:number):ng.IPromise<ISubjectTag[]> {
+    public resolveBySubjectIds(subjectIds:number[]):ng.IPromise<Boolean> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
                 method: 'POST',
                 url: 'exercizer/subject-tags-by-subject-id',
                 data: {
-                    subject_id: subjectId
+                    ids: subjectIds
                 }
             };
 
         if (angular.isUndefined(this._listMappedBySubjectId)) {
             this._listMappedBySubjectId = {};
         }
+        
+        var makeCall = false;
+        for (var i=0;i<subjectIds.length;i++) {
+            if (angular.isUndefined(this._listMappedBySubjectId[subjectIds[i]])) makeCall = true;
+        }
 
-        if (!angular.isUndefined(this._listMappedBySubjectId[subjectId])) {
-            deferred.resolve(this._listMappedBySubjectId[subjectId]);
+        if (!makeCall) {
+            deferred.resolve(true);
         } else {
             this._$http(request).then(
                 function(response) {
+                    for (var i=0;i<subjectIds.length;i++) {
+                        self._listMappedBySubjectId[subjectIds[i]] = [];                       
+                    }                    
 
-                    self._listMappedBySubjectId[subjectId] = [];
-
-                    angular.forEach(response.data, function (subjectTagObject) {
+                    angular.forEach(response.data, function (subjectTagObject) {                       
                         var subjectTag = SerializationHelper.toInstance(new SubjectTag(), JSON.stringify(subjectTagObject));
-                        self._listMappedBySubjectId[subjectId].push(subjectTag);
+                        self._listMappedBySubjectId[subjectTagObject.subject_id].push(subjectTag);
                     });
 
-                    deferred.resolve(self._listMappedBySubjectId[subjectId]);
+                    deferred.resolve(true);
                 },
                 function() {
                     deferred.reject('Une erreur est survenue lors de la récupération des étiquettes des sujets de la bibliothèque.');

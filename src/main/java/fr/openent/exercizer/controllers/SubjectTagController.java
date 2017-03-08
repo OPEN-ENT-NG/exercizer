@@ -27,6 +27,7 @@ import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import fr.openent.exercizer.services.ISubjectTagService;
@@ -97,7 +98,7 @@ public class SubjectTagController extends ControllerHelper {
                 	RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
                         @Override
                         public void handle(final JsonObject resource) {
-                            subjectTagService.listBySubjectId(resource, arrayResponseHandler(request));
+                            subjectTagService.listBySubjectId(resource.getArray("ids", new JsonArray()), arrayResponseHandler(request));
                         }
                     });
                 }

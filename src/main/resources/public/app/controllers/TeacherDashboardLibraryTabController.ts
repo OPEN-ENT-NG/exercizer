@@ -104,10 +104,7 @@ class TeacherDashboardLibraryTabController {
                                                 return subject.id;
                                             });
 
-                                        angular.forEach(subjectIdList, function(subjectId:number) {
-                                            promises.push(self._subjectTagService.resolveBySubjectId(subjectId));
-                                        });
-
+                                        promises.push(self._subjectTagService.resolveBySubjectIds(angular.copy(subjectIdList)));
                                         promises.push(self._subjectLessonTypeService.resolveBySubjectIdList(angular.copy(subjectIdList)));
                                         promises.push(self._subjectLessonLevelService.resolveBySubjectIdList(angular.copy(subjectIdList)));
 

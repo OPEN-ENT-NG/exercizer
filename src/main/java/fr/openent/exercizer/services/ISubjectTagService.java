@@ -41,6 +41,6 @@ public interface ISubjectTagService {
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
-    void listBySubjectId(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
+    void listBySubjectId(final JsonArray resource, final Handler<Either<String, JsonArray>> handler);
 
 }

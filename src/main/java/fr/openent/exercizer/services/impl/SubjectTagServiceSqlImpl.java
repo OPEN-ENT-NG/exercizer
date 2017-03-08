@@ -19,6 +19,8 @@
 
 package fr.openent.exercizer.services.impl;
 
+import org.entcore.common.sql.Sql;
+import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
@@ -52,15 +54,13 @@ public class SubjectTagServiceSqlImpl extends AbstractExercizerServiceSqlImpl im
     /**
 	 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
 	 */
-	public void listBySubjectId(final JsonObject resource, final Handler<Either<String, JsonArray>> handler) {
-		JsonArray joins = new JsonArray();
-		joins.addString("JOIN exercizer.subject_library_tag slt ON r.id = slt.subject_tag_id");
+    @Override
+	public void listBySubjectId(final JsonArray ids, final Handler<Either<String, JsonArray>> handler) {
+		final String query = "SELECT st.*, slt.subject_id FROM " + resourceTable + " as st INNER JOIN " +
+				schema + "subject_library_tag slt ON st.id = slt.subject_tag_id WHERE " +
+				"slt.subject_id IN " + Sql.listPrepared(ids.toArray());
 
-		JsonArray filters = new JsonArray();
-		filters.addString("WHERE");
-		filters.addString("slt.subject_id = " + resource.getInteger("subject_id"));
-
-		super.list("r", joins, filters, null, null, null, handler);
+		sql.prepared(query, ids, SqlResult.validResultHandler(handler));
 	}
 
 }
