@@ -1,5 +1,6 @@
 <lightbox data-show="isDisplayed" data-on-close="hide()">
-    <h1>Distribuer un sujet</h1>
+    <h1 translate content="[[isSimpleSubject ? 'exercizer.schedule.simple.title' : 'exercizer.schedule.interactive.title']]"></h1>
+
     <div class="row">
         <div class="three cell">
             <nav class="vertical">
@@ -39,28 +40,27 @@
                     </autocomplete>
                 </div>
                 <div class="row">
-                    <div class="six cell">
-                        <h4>Groupes ajoutés</h4>
-                        <div class="row" data-ng-repeat="group in data.groupList">
-                            <div class="one cell">&nbsp;</div>
-                            <div class="one cell" data-ng-click="removeItem(group)"><i class="close"></i></div>
-                            <div class="one cell">&nbsp;</div>
-                            <div class="nine cell">[[group.toString()]]</div>
+                    <div class="flex-row flex-start vertical-spacing-twice">
+                        <!-- todo Lauren is it ok   -->
+                        <div class="cell six horizontal-spacing">
+                            <h4><i18n>Groupes ajoutés</i18n></h4>
+                            <label class="chip removable block" data-ng-repeat="group in data.groupList" data-ng-click="removeItem(group)">
+                                <i class="close"></i>
+                                <span class="right-magnet cell-ellipsis">[[group.toString()]]</span>
+                            </label>
+                            <div class="small-text" data-ng-if="data.groupList.length === 0">
+                                <i18n>Aucun groupe ajouté.</i18n>
+                            </div>
                         </div>
-                        <div class="row" data-ng-if="data.groupList.length === 0">
-                            Aucun groupe ajouté.
-                        </div>
-                    </div>
-                    <div class="six cell">
-                        <h4>Utilisateurs ajoutés</h4>
-                        <div class="row" data-ng-repeat="user in data.userList">
-                            <div class="one cell">&nbsp;</div>
-                            <div class="one cell" data-ng-click="removeItem(user)"><i class="close"></i></div>
-                            <div class="one cell">&nbsp;</div>
-                            <div class="nine cell">[[user.toString()]]</div>
-                        </div>
-                        <div class="row" data-ng-if="data.userList.length === 0">
-                            Aucun utilisateur ajouté.
+                        <div class="cell six horizontal-spacing">
+                            <h4><i18n>Utilisateurs ajoutés</i18n></h4>
+                            <label class="chip removable block" data-ng-repeat="user in data.userList" data-ng-click="removeItem(user)">
+                                <i class="close"></i>
+                                <span class="right-magnet cell-ellipsis">[[user.toString()]]</span>
+                            </label>
+                            <div class="small-text" data-ng-if="data.userList.length === 0">
+                                <i18n>Aucun utilisateur ajouté.</i18n>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -78,28 +78,44 @@
                 <div class="row">
                     <h4>Options</h4>
                 </div>
-                <div class="row">
-                    <div class="six cell"><span> Date de début :&nbsp;</span></div>
-                    <date-picker ng-model="option.begin_date"  class="six cell"></date-picker>
+                <div data-ng-if="!isSimpleSubject">
+                    <div class="row">
+                        <div class="six cell"><span> Date de début :&nbsp;</span></div>
+                        <date-picker ng-model="option.begin_date"  class="six cell"></date-picker>
+                    </div>
+                    <div class="row">
+                        <div class="six cell"><span> Date de fin :&nbsp;</span></div>
+                        <date-picker ng-model="option.due_date" class="six cell"></date-picker>
+                    </div>
+                    <div class="row vertical-spacing">
+                        <input type="checkbox" data-ng-model="option.allow_students_to_update_copy"/>
+                        <span>Autoriser l'élève à améliorer sa copie</span>
+                    </div>
+                    <!--
+                    <div class="row vertical-spacing">
+                        <input type="checkbox" data-ng-model="option.has_automatic_display"/>
+                        <span>Résultat et correction automatique visibles pour les élèves</span>
+                    </div>
+                    -->
+                    <div class="row vertical-spacing" style="margin-top: 50px !important;">
+                        <span>Temps de réalisation estimé du devoir </span>
+                        <input type="text" data-ng-model="option.estimated_duration"/>
+                        <span>minute(s)</span>
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="six cell"><span> Date de fin :&nbsp;</span></div>
-                    <date-picker ng-model="option.due_date" class="six cell"></date-picker>
-                </div>
-                <div class="row vertical-spacing">
-                    <input type="checkbox" data-ng-model="option.allow_students_to_update_copy"/>
-                    <span>Autoriser l'élève à améliorer sa copie</span>
-                </div>
-                <!--
-                <div class="row vertical-spacing">
-                    <input type="checkbox" data-ng-model="option.has_automatic_display"/>
-                    <span>Résultat et correction automatique visibles pour les élèves</span>
-                </div>
-                -->
-                <div class="row vertical-spacing" style="margin-top: 50px !important;">
-                    <span>Temps de réalisation estimé du devoir </span>
-                    <input type="text" data-ng-model="option.estimated_duration"/>
-                    <span>minute(s)</span>
+                <div data-ng-if="isSimpleSubject">
+                    <div class="row">
+                        <div class="six cell"><span> Date de début de la remise :&nbsp;</span></div>
+                        <date-picker ng-model="option.begin_date"  class="six cell"></date-picker>
+                    </div>
+                    <div class="row">
+                        <div class="six cell"><span> Date limite de remise :&nbsp;</span></div>
+                        <date-picker ng-model="option.due_date" class="six cell"></date-picker>
+                    </div>
+                    <div class="row">
+                        <div class="six cell"><span> Date de publication du corrigé :&nbsp;</span></div>
+                        <date-picker ng-model="option.corrected_date" class="six cell"></date-picker>
+                    </div>
                 </div>
                 <div class="row vertical-spacing">
                     <button class="right-magnet cell" data-ng-click="state = 'schedule'">
@@ -113,11 +129,11 @@
 
             <div data-ng-show="state == 'schedule'">
                 <div class="row vertical-spacing">
-                    <div class="warning"><i18n>exercizer.schedule.confirm</i18n></div>
+                    <div class="warning" translate content="[[isSimpleSubject ? 'exercizer.schedule.simple.confirm' : 'exercizer.schedule.interactive.confirm']]"></div>
                 </div>
                 <div class="row vertical-spacing">
                     <button class="right-magnet cell" data-ng-click="scheduleSubject()" data-ng-disabled="scheduleSubjectInProgress">
-                        Distribuer
+                        <i18n>exercizer.schedule</i18n>
                     </button>
                     <button class="flat-button right-magnet cell" data-ng-click="state = 'option'">
                         Précédent

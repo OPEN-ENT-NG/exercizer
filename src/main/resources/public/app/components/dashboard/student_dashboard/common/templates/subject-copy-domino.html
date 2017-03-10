@@ -3,6 +3,10 @@
         <section class="domino">
             <div class="top">
                 <img data-ng-src="[[getSubjectCopyPicture()]]" class="absolute" />
+                <!-- todo Lauren simple or interactive icon -->
+                <div class="left-magnet cell">
+                    <i class="[[subjectScheduled.type === 'simple' ? 'download' : 'attachment']]" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                </div>
             </div>
             <div class="bottom">
                 <div class="content">
@@ -23,12 +27,13 @@
                             <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em>
                         </div>
                         <div class="row">
+                            <!-- todo Lauren button style and positionning -->
                             <button style="padding: 0px;background: red none repeat scroll 0% 0%;text-transform: none;"
                                     data-ng-if="tooLate()"
                                     data-ng-click="submitCopyLate()"
 
                             >
-                                Rendre la copie
+                                Retard
                             </button>
                         </div>
                     </div>
@@ -38,7 +43,19 @@
                          style="height: 100%; width: 20px;margin-left: 20px;">
                         &nbsp;
                     </div>
-                    <div class="cell right-magnet">
+                    <!-- todo Lauren button style and positionning -->
+                    <div class="cell right-magnet" data-ng-if="canShowGeneralCorrected()" style="z-index:100">
+                        <button class="flat-button right-magnet" data-ng-click="downloadGeneralCorrectedFile()">
+                            Corrigé<i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                        </button>
+                    </div>
+                    <!-- todo Lauren button style and positionning -->
+                    <div class="cell right-magnet" data-ng-if="canShowIndividualCorrected()" style="z-index:100">
+                        <button class="flat-button right-magnet" data-ng-click="downloadCorrectedFile()">
+                            Corrigé individuel<i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                        </button>
+                    </div>
+                    <div class="cell right-magnet" data-ng-if="subjectScheduled.type === 'interactive'">
                         <strong>[[subjectCopy.final_score | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]</strong>
                     </div>
                 </div>

@@ -4,7 +4,7 @@
         <span data-ng-click="clickReturnExercizerTab()"> / <span class="hover-orange">[[ getTab()]]</span></span>
         <span data-ng-click="" data-ng-if="selectedSubjectScheduled"> / <span class="hover-orange">[[ getSubjectSelectedTitle()]]</span></span>
     </h1>
-    <div class="cell right-magnet">
+    <div class="cell right-magnet" data-ng-if="!selectedSubjectScheduled || selectedSubjectScheduled.type === 'interactive'">
         <div class="label-badge" style="padding: 5px 10px 5px 10px;" data-ng-click="switchToStudentView()">
             <span class="cell">Passer en vue apprenant</span>
             <i role="close" class="right-magnet"></i>

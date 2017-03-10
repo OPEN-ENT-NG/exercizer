@@ -13,6 +13,7 @@ interface ISubject {
     authors_contributors:string;
     is_library_subject:boolean;
     is_deleted:boolean;
+    type:string;
 }
 
 class Subject implements ISubject {
@@ -31,6 +32,7 @@ class Subject implements ISubject {
     authors_contributors:string;
     is_library_subject:boolean;
     is_deleted:boolean;
+    type:string;
 
     constructor
     (
@@ -47,7 +49,8 @@ class Subject implements ISubject {
         max_score?:number,
         authors_contributors?:string,
         is_library_subject?:boolean,
-        is_deleted?:boolean
+        is_deleted?:boolean,
+        type?:string
     )
     {
         this.id = id;
@@ -64,5 +67,6 @@ class Subject implements ISubject {
         this.authors_contributors = authors_contributors;
         this.is_library_subject = is_library_subject;
         this.is_deleted = is_deleted;
+        this.type = type;
     }
 }

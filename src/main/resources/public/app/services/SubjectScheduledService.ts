@@ -6,6 +6,8 @@ interface ISubjectScheduledService {
     getList():ISubjectScheduled[];
     getById(id:number):ISubjectScheduled;
     currentSubjectScheduledId:number;
+    removeCorrectedFile(id): ng.IPromise<any>;
+    addCorrectedFile(id, file): ng.IPromise<string>;
 }
 
 class SubjectScheduledService implements ISubjectScheduledService {
@@ -63,6 +65,7 @@ class SubjectScheduledService implements ISubjectScheduledService {
                     angular.forEach(response.data, function(subjectScheduledObject) {
                         subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(subjectScheduledObject)) as any;
                         subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
+                        subjectScheduled.corrected_metadata = JSON.parse(subjectScheduled.corrected_metadata);                       
                         self._listMappedById[subjectScheduled.id] = subjectScheduled;
                     });
                     deferred.resolve(true);
@@ -101,6 +104,50 @@ class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
+    public addCorrectedFile = function(id, file): ng.IPromise<string>  {
+        var formData = new FormData();
+        formData.append('file', file);
+
+        var deferred = this._$q.defer();         ;
+
+        this._$http.put('exercizer/subject-scheduled/add/corrected/' + id, formData, {
+            withCredentials: false,
+            headers: {
+                'Content-Type': undefined
+            },
+            transformRequest: angular.identity,
+            data: {
+                formData
+            },
+            responseType: 'json'
+
+        }).then(function(response){
+                deferred.resolve(response.data.fileId);
+            },
+            function() {
+                deferred.reject("Une erreur est survenue lors de l'ajout de la correction.");
+            }
+        );
+        return deferred.promise;
+    };
+
+    public removeCorrectedFile = function(id): ng.IPromise<any>  {       
+        var deferred = this._$q.defer(), request = {
+            method: 'PUT',
+            url: 'exercizer/subject-scheduled/remove/corrected/' + id           
+        };
+
+        this._$http(request).then(function(response){
+                deferred.resolve();
+            },
+            function() {
+                deferred.reject("Une erreur est survenue lors de la suppression de la correction.");
+            }
+        );
+        return deferred.promise;
+    };
+
+
     public schedule = function(subjectScheduled:ISubjectScheduled, grainsCustomCopyData:IGrainCustomCopy[]):ng.IPromise<ISubjectScheduled> {
         var self = this,
             deferred = this._$q.defer();
@@ -130,6 +177,36 @@ class SubjectScheduledService implements ISubjectScheduledService {
         );
         return deferred.promise;
     };
+
+    public simpleSchedule = function(subjectScheduled:ISubjectScheduled):ng.IPromise<ISubjectScheduled> {
+        var self = this,
+            deferred = this._$q.defer();
+
+        let param = {subjectTitle: subjectScheduled.title, beginDate: subjectScheduled.begin_date, dueDate: subjectScheduled.due_date,
+            correctedDate: subjectScheduled.corrected_date, scheduledAt:subjectScheduled.scheduled_at};
+
+        let request = {
+            method: 'POST',
+            url: 'exercizer/schedule-simple-subject/' + subjectScheduled.subject_id,
+            data: param
+        };
+
+        this._$http(request).then(
+            function(response) {
+                delete self._listMappedById;
+                deferred.resolve();
+            },
+            function(e) {
+                if (e.status == 400) {
+                    deferred.reject(e.data.error);
+                } else {
+                    deferred.reject('exercizer.schedule.error');
+                }
+            }
+        );
+        return deferred.promise;
+    };
+
 
     public createFromSubject = function(subject:ISubject):ISubjectScheduled {
         var subjectScheduled = new SubjectScheduled();

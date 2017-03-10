@@ -93,7 +93,8 @@ directives.push(
                                             // only one item
                                             if(scope.subjectList.length == 1){
                                                 // is subject
-                                                return scope.lowerRight == 'owner' || scope.lowerRight == 'manager';
+                                                var subject = SubjectService.getById(scope.subjectList[0]);
+                                                return (scope.lowerRight == 'owner' || scope.lowerRight == 'manager') && subject.type === 'interactive';
                                             } else {
                                                 //is folder
                                                 return true;

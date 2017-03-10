@@ -26,11 +26,15 @@ directives.push(
                         scope.subjectTagList = [];
                         scope.autocompleteSubjectTagList = [];
                         scope.selectedSubjectTagList = [];
+                        scope.isSimpleSubject = null;
+                        scope.correctedName = "";
+                        scope.newFiles = undefined;
 
 
                         // event to display modal
                         scope.$on('E_DISPLAY_MODAL_PUBLISH_TO_LIBRARY', function(event, subject:ISubject) {
                             scope.subject = subject;
+                            scope.isSimpleSubject = subject.type === 'simple';
 
                             SubjectLessonTypeService.resolve().then(
                                 function() {
@@ -147,7 +151,11 @@ directives.push(
                                 notify.error('Vous devez sélectionner une matière et un niveau.')
                             } else {
                                 scope.isPublicationOnGoing = true;
-                                SubjectLibraryService.publish(scope.subject, StringISOHelper.toISO(scope.cc.authorsContributors), scope.selection.selectedSubjectLessonTypeId, scope.selection.selectedSubjectLessonLevelId, scope.selectedSubjectTagList).then(
+                                var file;
+                                if (scope.newFiles && scope.newFiles.length > 0) {
+                                    file = scope.newFiles[0];                                    
+                                }
+                                SubjectLibraryService.publish(scope.subject, StringISOHelper.toISO(scope.cc.authorsContributors), scope.selection.selectedSubjectLessonTypeId, scope.selection.selectedSubjectLessonLevelId, scope.selectedSubjectTagList, file).then(
                                     function() {
                                         scope.isPublicationOnGoing = false;
                                         notify.info('Votre sujet a bien été publié dans la bibliothèque.');
@@ -164,6 +172,9 @@ directives.push(
                         scope.hide = function () {
                             if (!scope.isPublicationOnGoing) {
                                 scope.isDisplayed = false;
+                                scope.isSimpleSubject = null;
+                                scope.correctedName = "";
+                                scope.newFiles = undefined;
                                 scope.hasAgreedToPublish = true;
                                 scope.cc = {
                                     authorsContributors: undefined
@@ -180,6 +191,15 @@ directives.push(
                                 scope.autocompleteSubjectTagList = [];
                                 scope.selectedSubjectTagList = [];
                                 scope.$emit('E_RESET_SELECTED_LIST');
+                            }
+                        };
+
+                        scope.setCorrectedFileName = function(event) {
+                            scope.newFiles = event.newFiles;
+
+                            if (scope.newFiles.length > 0) {
+                                var file = scope.newFiles[0];
+                                scope.correctedName = file.name;
                             }
                         };
                     }

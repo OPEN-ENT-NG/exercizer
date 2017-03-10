@@ -329,25 +329,25 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		}
 	}
 
-	public void publishLibrary(final Long fromSubjectId, final String authorsContributors,
+	public void publishLibrary(final Long fromSubjectId, final String authorsContributors, final String correctedFileId, final JsonObject correctedMetadata,
 											 final Long typeId, final Long levelId, JsonArray tag, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		if (tag != null && tag.size() > 0) {
 			insertTag(tag, new Handler<Either<String, JsonArray>>() {
 				@Override
 				public void handle(Either<String, JsonArray> event) {
 					if (event.isRight()) {
-						publishSubjectGrainsLibrary(fromSubjectId, authorsContributors, typeId, levelId, event.right().getValue(), user, handler);
+						publishSubjectGrainsLibrary(fromSubjectId, authorsContributors, correctedFileId, correctedMetadata, typeId, levelId, event.right().getValue(), user, handler);
 					} else {
 						handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
 					}
 				}
 			});
 		} else {
-			publishSubjectGrainsLibrary(fromSubjectId, authorsContributors, typeId, levelId, tag, user, handler);
+			publishSubjectGrainsLibrary(fromSubjectId, authorsContributors, correctedFileId, correctedMetadata, typeId, levelId, tag, user, handler);
 		}
 	}
 
-	private void publishSubjectGrainsLibrary( final Long fromSubjectId, final String authorsContributors,
+	private void publishSubjectGrainsLibrary( final Long fromSubjectId, final String authorsContributors, final String correctedFileId, final JsonObject correctedMetadata,
 											 final Long typeId, final Long levelId,  final JsonArray tag, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		String queryNewSubjectId = "SELECT nextval('" + schema + "subject_id_seq') as id";
 		sql.prepared(queryNewSubjectId, new JsonArray(),
@@ -358,7 +358,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 								if (event.isRight()) {
 									final Long newSubjectId = event.right().getValue().getLong("id");
 									final SqlStatementsBuilder s = new SqlStatementsBuilder();
-									duplicateSubjectForLibrary(s, newSubjectId, fromSubjectId, authorsContributors, user);
+									duplicateSubjectForLibrary(s, newSubjectId, fromSubjectId, authorsContributors, correctedFileId, correctedMetadata, user);
 									duplicationGrain(s, newSubjectId, fromSubjectId);
 									insertSubjectMainInformation(newSubjectId, s, typeId, levelId);
 									insertSubjectTag(newSubjectId, s, tag);
@@ -426,27 +426,29 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		}
 	}
 
-	private void duplicateSubjectForLibrary(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final String authorsContributors, UserInfos user) {
-		duplicationSubject(s, newSubjectId, fromSubjectId, true, authorsContributors, null, user, "", false);
+	private void duplicateSubjectForLibrary(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final String authorsContributors,
+	                                        final String correctedFileId, final JsonObject correctedMetadata, UserInfos user) {
+		duplicationSubject(s, newSubjectId, fromSubjectId, true, authorsContributors, correctedFileId, correctedMetadata, null, user, "", false);
 	}
 
 	private void duplicateSubject(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Long folderId, UserInfos user, String titleSuffix) {
-		duplicationSubject(s, newSubjectId, fromSubjectId, false, null, folderId, user, titleSuffix, true);
+		duplicationSubject(s, newSubjectId, fromSubjectId, false, null, null, null, folderId, user, titleSuffix, true);
 	}
 
 	private void duplicationSubject(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Boolean isLibrary,
-									final String authorsContributors, final Long folderId, UserInfos user, final String titleSuffix, final Boolean isMergeUser) {
+									final String authorsContributors,  final String correctedFileId, JsonObject correctedMetadata, final Long folderId, UserInfos user, final String titleSuffix, final Boolean isMergeUser) {
 		if (isMergeUser) {
 			String userQuery = "SELECT " + schema + "merge_users(?,?)";
 			s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
 		}
 		//caution original_subject_id unmanagment
-		final String subjectCopy = "INSERT INTO exercizer.subject (id, folder_id, owner, owner_username, title, description, picture, max_score, is_library_subject, is_deleted, authors_contributors) " +
-				"SELECT ?, ?, ?, ?, s.title || ?, s.description, s.picture, s.max_score, ?, s.is_deleted, ? FROM exercizer.subject as s " +
+		final String subjectCopy = "INSERT INTO exercizer.subject (id, folder_id, owner, owner_username, title, description, picture, max_score, " +
+				"is_library_subject, is_deleted, authors_contributors, corrected_file_id, corrected_metadata, type) " +
+				"SELECT ?, ?, ?, ?, s.title || ?, s.description, s.picture, s.max_score, ?, s.is_deleted, ?, ?, ?::jsonb, s.type FROM exercizer.subject as s " +
 				"WHERE s.id = ?";
 
 		final JsonArray values = new JsonArray().add(newSubjectId).add(folderId).add(user.getUserId())
-				.add(user.getUsername()).add(titleSuffix).add(isLibrary).add(authorsContributors).add(fromSubjectId);
+				.add(user.getUsername()).add(titleSuffix).add(isLibrary).add(authorsContributors).add(correctedFileId).add(correctedMetadata).add(fromSubjectId);
 
 		s.prepared(subjectCopy, values);
 	}
@@ -475,5 +477,10 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		builder.prepared(deleteSubject, values);
 
 		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
+	}
+
+	@Override
+	public void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler) {
+		super.getCorrectedDownloadInformation(id, null, handler);
 	}
 }

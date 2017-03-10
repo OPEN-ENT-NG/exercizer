@@ -22,6 +22,8 @@ package fr.openent.exercizer.filters;
 import fr.wseduc.webutils.http.Binding;
 import org.entcore.common.http.filter.ResourcesProvider;
 import org.entcore.common.sql.Sql;
+import org.entcore.common.sql.SqlConf;
+import org.entcore.common.sql.SqlConfs;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
@@ -30,17 +32,34 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-public class SubjectScheduledOwner implements ResourcesProvider {
+import java.util.List;
+
+public class SubjectCopyAccess implements ResourcesProvider {
 
 	@Override
 	public void authorize(final HttpServerRequest resourceRequest, final Binding binding, final UserInfos user,
 			final Handler<Boolean> handler) {
+
+		final List<String> ids = resourceRequest.params().getAll("id");
+		final SqlConf conf = SqlConfs.getConf(binding.getServiceMethod().substring(0, binding.getServiceMethod().indexOf('|')));
+
+		if (ids == null || ids.isEmpty()) {
+			handler.handle(false);
+			return;
+		}
 		
 		resourceRequest.pause();
 		
-		String query = "SELECT COUNT(*) FROM exercizer.subject_scheduled as ss WHERE ss.owner = ?";
+		String query = "SELECT COUNT(ss.id) FROM " +
+				conf.getSchema() + "subject_scheduled as ss INNER JOIN " + conf.getSchema() + "subject_copy sc ON ss.id = sc.subject_scheduled_id " +
+				"WHERE " +
+				("Student".equalsIgnoreCase(user.getType()) ? "sc.owner = ?" : "ss.owner = ?")  + " AND sc.id IN " + Sql.listPrepared(ids.toArray());
 		JsonArray values = new JsonArray();
 		values.addString(user.getUserId());
+
+		for (final String id : ids) {
+			values.add(Sql.parseId(id));
+		}
 		
 		Sql.getInstance().prepared(query,  values, new Handler<Message<JsonObject>>() {
 			@Override
@@ -50,7 +69,5 @@ public class SubjectScheduledOwner implements ResourcesProvider {
 				handler.handle(count != null && count > 0);
 			}
 		});
-
 	}
-	
 }

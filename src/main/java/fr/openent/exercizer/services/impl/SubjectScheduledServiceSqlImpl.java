@@ -23,6 +23,7 @@ import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.http.Renders;
+import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
@@ -43,6 +44,11 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
         super("exercizer", "subject_scheduled");
     }
 
+	@Override
+	public void retieve(String id, Handler<Either<String, JsonObject>> handler) {
+		super.retrieve(id, handler);
+	}
+
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
@@ -53,6 +59,58 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
     	subjectScheduled.putString("owner_username", user.getUsername());
         super.persist(subjectScheduled, user, handler);
     }
+
+	@Override
+	public void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler) {
+		super.getCorrectedDownloadInformation(id, "s.corrected_file_id, s.corrected_metadata, s.corrected_date", handler);
+	}
+
+	@Override
+	public void addCorrectedFile(final String id, final String fileId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler) {
+		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
+
+		final String query =
+				"UPDATE " + resourceTable +
+						" SET corrected_file_id=?,corrected_metadata=?::jsonb,modified = NOW() " +
+						"WHERE id = ? ";
+
+		final JsonArray values = new JsonArray();
+		values.addString(fileId);
+		values.addObject(metadata);
+		values.add(Sql.parseId(id));
+
+		builder.prepared(query,values);
+
+		//Mark as corrected all copies
+		final String queryCopies = "UPDATE " + schema + "subject_copy SET is_corrected=true, modified = NOW() WHERE subject_scheduled_id = ?";
+
+		builder.prepared(queryCopies, new JsonArray().add(Sql.parseId(id)));
+
+		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
+
+	}
+
+	@Override
+	public void removeCorrectedFile(final String id, final Handler<Either<String, JsonObject>> handler) {
+		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
+		final String query =
+				"UPDATE " + resourceTable +
+						" SET corrected_file_id=null,corrected_metadata=null,modified = NOW() " +
+						"WHERE id = ? ";
+
+		final JsonArray values = new JsonArray();
+		values.add(Sql.parseId(id));
+
+		builder.prepared(query,values);
+
+		//Mark as not corrected all copies that don't have individual correction
+		final String queryCopies = "UPDATE " + schema + "subject_copy SET is_corrected=false, modified = NOW() WHERE " +
+				"corrected_file_id IS NULL AND subject_scheduled_id = ?";
+
+		builder.prepared(queryCopies, new JsonArray().add(Sql.parseId(id)));
+
+		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
+	}
 
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
@@ -126,6 +184,35 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		}));
 	}
 
+	/**
+	 * @see fr.openent.exercizer.services.ISubjectScheduledService
+	 */
+	@Override
+	public void simpleSchedule(final JsonObject scheduledSubject, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		final String queryNewSubjectScheduledId = "SELECT nextval('" + schema + "subject_scheduled_id_seq') as id";
+
+		final Long fromSubjectId = scheduledSubject.getLong("subjectId");
+		final JsonArray usersJa = scheduledSubject.getArray("users");
+
+		sql.raw(queryNewSubjectScheduledId, SqlResult.validUniqueResultHandler(new Handler<Either<String, JsonObject>>() {
+			@Override
+			public void handle(Either<String, JsonObject> event) {
+				if (event.isRight()) {
+					final Long subjectScheduledId = event.right().getValue().getLong("id");
+					final SqlStatementsBuilder s = new SqlStatementsBuilder();
+
+					createSimpleScheduledSubject(s, fromSubjectId, subjectScheduledId, scheduledSubject, user);
+					createSubjectsCopies(s, subjectScheduledId, usersJa);
+
+					sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
+				} else {
+					log.error("failure to schedule simple subject : " + event.left().getValue());
+					handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
+				}
+			}
+		}));
+	}
+
 	private Map<Number, JsonObject> transformJaInMapCustomCopyData(JsonArray grainsCustomCopyData) {
 		final Map<Number, JsonObject> mapIdGrainCustomCopyData = new HashMap<>();
 		for (int i=0;i<grainsCustomCopyData.size();i++) {
@@ -139,14 +226,30 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	private void createScheduledSubject(final SqlStatementsBuilder s, final Long subjectId, final Long scheduledSubjectId, final JsonObject scheduledSubject, UserInfos user) {
 
 		final String query = "INSERT INTO " + schema + "subject_scheduled (id, subject_id, title, description, picture, max_score, " +
-				"owner, owner_username, begin_date, due_date, estimated_duration, is_one_shot_submit, scheduled_at) " +
-				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?::json FROM " + schema + "subject as s " +
+				"owner, owner_username, begin_date, due_date, estimated_duration, is_one_shot_submit, scheduled_at, type) " +
+				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?::json, s.type FROM " + schema + "subject as s " +
 				"WHERE s.id=? ";
 
 		final JsonArray values = new JsonArray();
 		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))
 				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("estimatedDuration", ""))
 				.add(scheduledSubject.getBoolean("isOneShotSubmit")).add(scheduledSubject.getObject("scheduledAt"))
+				.addNumber(subjectId);
+
+		s.prepared(query, values);
+	}
+
+	private void createSimpleScheduledSubject(final SqlStatementsBuilder s, final Long subjectId, final Long scheduledSubjectId, final JsonObject scheduledSubject, UserInfos user) {
+
+		final String query = "INSERT INTO " + schema + "subject_scheduled (id, subject_id, title, description, picture, " +
+				"owner, owner_username, begin_date, due_date, corrected_date, scheduled_at, type) " +
+				"SELECT ?, s.id, s.title, s.description, s.picture, ?, ?, ?::timestamp , ?::timestamp, ?::timestamp, ?::json, s.type FROM " + schema + "subject as s " +
+				"WHERE s.id=? ";
+
+		final JsonArray values = new JsonArray();
+		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))
+				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("correctedDate"))
+				.add(scheduledSubject.getObject("scheduledAt"))
 				.addNumber(subjectId);
 
 		s.prepared(query, values);
@@ -232,5 +335,15 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				"WHERE ss.id=?";
 
 		s.prepared(query, new JsonArray().add(subjectScheduledId));
+	}
+
+	@Override
+	public void getMember(final String id, final Handler<Either<String, JsonArray>> handler) {
+
+		final String query = "SELECT sc.owner " +
+				" FROM " + resourceTable + " AS ss INNER JOIN " + schema + "subject_copy as sc ON ss.id=sc.subject_scheduled_id" +
+				" WHERE ss.id = ?";
+
+		sql.prepared(query, new JsonArray().add(Sql.parseId(id)), SqlResult.validResultHandler(handler));
 	}
 }

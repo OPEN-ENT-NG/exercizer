@@ -27,6 +27,8 @@ import org.vertx.java.core.json.JsonObject;
 
 public interface ISubjectScheduledService {
 
+    void retieve(String id, Handler<Either<String, JsonObject>> handler);
+
     /**
      *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
@@ -55,5 +57,22 @@ public interface ISubjectScheduledService {
      * @param handler the handler
      */
     void schedule(final JsonObject scheduledSubject, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
+
+    /**
+     * Schedules a simple subject.
+     *
+     * @param scheduledSubject the resource
+     * @param user the user
+     * @param handler the handler
+     */
+    void simpleSchedule(final JsonObject scheduledSubject, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
+
+    void addCorrectedFile(final String id, final String fileId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler);
+
+    void removeCorrectedFile(final String id, final Handler<Either<String, JsonObject>> handler);
+
+    void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler);
+
+    void getMember(final String id, final Handler<Either<String, JsonArray>> handler);
 
 }

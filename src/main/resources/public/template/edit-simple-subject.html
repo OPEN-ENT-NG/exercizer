@@ -1,0 +1,70 @@
+<div data-ng-controller="EditSimpleSubjectController as editSimpleSubjectController" id="edit-subject">
+
+    <!-- LOADER -->
+    <div class="row" data-ng-if="!editSimpleSubjectController.hasDataLoaded">
+        <div class="info"><i18n>exercizer.loading</i18n></div>
+    </div>
+
+    <div data-ng-if="editSimpleSubjectController.hasDataLoaded">
+
+        <!-- TOP HEADER -->
+        <div class="row">
+            <h1 class="cell">
+                <span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / <span class="hover-orange" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
+            </h1>
+
+            <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-click="editSimpleSubjectController.scheduleSubject()">
+                <i18n>exercizer.schedule</i18n>
+            </button>
+
+            <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-click="editSimpleSubjectController.openConfirmModal()">
+                <i18n>exercizer.simple.update</i18n>
+            </button>
+
+            <button class="right-magnet cell flat-button" data-ng-click="editSimpleSubjectController.redirectToDashboard()">
+                <i18n>exercizer.back.subject</i18n>
+            </button>
+        </div>
+
+        <div class="row">
+            <form name="formSubjectProperties">
+                <div class="rigid-grid row">
+                    <div class="two cell clip height-two">
+                        <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="editSimpleSubjectController.readOnly">
+                                <img ng-src="[[editSimpleSubjectController.subject.title.picture]]" ng-if="editSimpleSubjectController.subject.title.picture" class="absolute" />
+                                <img skin-src="/img/illustrations/collaborativeeditor-default.png" ng-if="!editSimpleSubjectController.subject.title.picture" class="absolute" />
+                        </div>
+                        <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="!editSimpleSubjectController.readOnly">
+                            <image-select readonly="editSimpleSubjectController.readOnly" data-ng-model="editSimpleSubjectController.subject.title.picture" default="/img/illustrations/collaborativeeditor-default.png"></image-select>
+                        </div>
+                    </div>
+                    <div class="margin-two height-three">
+                        <div class="twelve cell horizontal-spacing">
+                            <h3><i18n>exercizer.simple.edit.title</i18n></h3>
+                            <div data-ng-if="editSimpleSubjectController.readOnly" class="twelve cell">[[editSimpleSubjectController.subject.title]]</div>
+                            <input type="text" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-model="editSimpleSubjectController.subject.title" class="twelve cell" placeholder="Titre du sujet">
+                        </div>
+                        <div class="twelve cell horizontal-spacing vertical-spacing">
+                            <h3><i18n>exercizer.simple.edit.description</i18n></h3>
+                            <div data-ng-if="editSimpleSubjectController.readOnly"  style="word-wrap: break-word;" bind-html="editSimpleSubjectController.subject.description"></div>
+                            <editor data-ng-if="!editSimpleSubjectController.readOnly"  data-ng-model="editSimpleSubjectController.subject.description"></editor>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- SCHEDULE SUBJECT MODAL -->
+        <subject-schedule></subject-schedule>
+
+        <!-- Modal confirmation -->
+        <lightbox data-show="editSimpleSubjectController.isModalConfirmDisplayed" on-close="editSimpleSubjectController.closeConfirmModal()">
+            <h2><i18n>exercizer.simple.confirm.update</i18n></h2>
+
+            <div class="row">
+                <button data-ng-click="editSimpleSubjectController.saveSubjectProperties()" class="cell right-magnet"><i18n>exercizer.validate</i18n></button>
+                <button data-ng-click="editSimpleSubjectController.closeConfirmModal()" class="cell right-magnet cancel"><i18n>exercizer.cancel</i18n></button>
+            </div>
+        </lightbox>
+    </div>
+</div>

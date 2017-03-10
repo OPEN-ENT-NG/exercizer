@@ -1,6 +1,7 @@
 <lightbox data-show="isDisplayed" data-on-close="closeLightbox()">
-    <h1>Exercices et évaluations - [[ isNewSubject ? 'créer' : 'éditer' ]] un sujet</h1>
-    <div class="row">
+    <h1 data-ng-if="step == 'subject'">[[ isNewSubject ? 'Créer' : 'Editer' ]] un sujet [[ type === 'simple' ? 'simple' : 'interactif' ]]</h1>
+    <h1 data-ng-if="step == 'choose'"><i18n>exercizer.choose</i18n></h1>
+    <div data-ng-if="step == 'subject'" class="row">
         <form name="formSubjectProperties">
             <div class="rigid-grid row">
                 <div class="two cell clip height-two">
@@ -11,7 +12,8 @@
                 <div class="margin-two height-three">
                     <div class="twelve cell horizontal-spacing">
                         <input type="text" data-ng-model="subject.title" class="twelve cell" placeholder="Titre du sujet">
-                        <textarea data-ng-model="subject.description" class="twelve cell" placeholder="Description"></textarea>
+                        <textarea data-ng-model="subject.description" data-ng-if="subject.type === 'interactive'" class="twelve cell" placeholder="Description"></textarea>
+                        <editor data-ng-model="subject.description" data-ng-if="subject.type === 'simple'"  placeholder="Consigne"></editor>
                     </div>
                     <div class="twelve cell horizontal-spacing vertical-spacing">
                         <button data-ng-click="saveSubjectProperties()" class="right-magnet">
@@ -24,5 +26,22 @@
                 </div>
             </div>
         </form>
+    </div>
+    <div data-ng-if="step == 'choose'" class="row">
+        <!-- todo Lauren display message and button -->
+            <div class="horizontal-spacing vertical-spacing">
+                <div class="row">
+                    <span style="font-weight: bold"><i18n>exercizer.choose.simple</i18n></span>
+                </div>
+                <button class="flat-button left-magnet cell" data-ng-click="nextStep('simple')">
+                    <i class="eye"></i>&nbsp;&nbsp;<i18n>exercizer.choose.simple.button</i18n>
+                </button>
+                <div class="row">
+                    <span style="font-weight: bold"><i18n>exercizer.choose.interactive</i18n></span>
+                </div>
+                <button class="flat-button left-magnet cell" data-ng-click="nextStep('interactive')">
+                    <i class="eye"></i>&nbsp;&nbsp;<i18n>exercizer.choose.interactive.button</i18n>
+                </button>
+            </div>
     </div>
 </lightbox>

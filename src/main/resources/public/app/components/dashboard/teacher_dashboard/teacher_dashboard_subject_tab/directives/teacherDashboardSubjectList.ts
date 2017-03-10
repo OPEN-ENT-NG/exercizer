@@ -129,15 +129,19 @@ directives.push(
 
                         scope.clickOnSubjectTitle = function (subject) {
                             if (subject.id) {
-                                if(model.me.hasRight(subject, 'owner')){
-                                    $location.path('/subject/edit/' + subject.id);
-                                } else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager)){
-                                    $location.path('/subject/edit/' + subject.id);
-                                } else if(model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)){
-                                    $location.path('/subject/edit/' + subject.id);
-                                } else{
-                                    AccessService.reader = true;
-                                    $location.path('/subject/copy/preview/perform/' + subject.id);
+                                if ('simple' === subject.type) {
+                                    $location.path('/subject/edit/simple/' + subject.id);
+                                } else {
+                                    if (model.me.hasRight(subject, 'owner')) {
+                                        $location.path('/subject/edit/' + subject.id);
+                                    } else if (model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager)) {
+                                        $location.path('/subject/edit/' + subject.id);
+                                    } else if (model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)) {
+                                        $location.path('/subject/edit/' + subject.id);
+                                    } else {
+                                        AccessService.reader = true;
+                                        $location.path('/subject/copy/preview/perform/' + subject.id);
+                                    }
                                 }
                             }
                         };
@@ -183,7 +187,7 @@ directives.push(
 
                         scope.saveImportSubject = function() {
                             if (!scope.importSubject.title || scope.importSubject.title.length === 0) {
-                                notify.error('exercizer.import.check.title');
+                                notify.error('exercizer.check.title');
                             } else if (!scope.fileImportName || scope.fileImportName.length === 0) {
                                 notify.error('exercizer.import.check.file');
                             } else {

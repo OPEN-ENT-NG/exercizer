@@ -25,6 +25,8 @@ import org.entcore.common.service.impl.SqlCrudService;
 import org.entcore.common.share.impl.SqlShareService;
 import org.entcore.common.sql.SqlConf;
 import org.entcore.common.sql.SqlConfs;
+import org.entcore.common.storage.Storage;
+import org.entcore.common.storage.StorageFactory;
 import org.vertx.java.core.eventbus.EventBus;
 
 
@@ -35,7 +37,18 @@ public class Exercizer extends BaseServer {
         super.start();
         
         final EventBus eb = getEventBus(vertx);
-        
+
+        if (config.getObject("swift") == null && config.getObject("file-system") == null && config.getString("gridfs-address") == null) {
+            log.fatal("[Exercizer] Error : Module property 'swift', 'file-system' or 'gridfs-address' must be defined");
+            vertx.stop();
+        }
+
+        final String exportPath = container.config()
+                .getString("export-path", System.getProperty("java.io.tmpdir"));
+
+
+        final Storage storage = new StorageFactory(vertx, container.config()).getStorage();
+
         SqlConf folderConf = SqlConfs.createConf(FolderController.class.getName());
         folderConf.setSchema("exercizer");
         folderConf.setTable("folder");
@@ -45,7 +58,7 @@ public class Exercizer extends BaseServer {
         subjectConf.setTable("subject");
         subjectConf.setShareTable("subject_shares");
         
-        SubjectController subjectController = new SubjectController();
+        SubjectController subjectController = new SubjectController(storage);
         subjectController.setShareService(new SqlShareService("exercizer", "subject_shares", eb, securedActions, null));
         subjectController.setCrudService(new SqlCrudService("exercizer", "subject"));
 
@@ -67,9 +80,9 @@ public class Exercizer extends BaseServer {
         addController(new FolderController());
         addController(subjectController);
         addController(new GrainTypeController());
-        addController(new SubjectScheduledController());
+        addController(new SubjectScheduledController(storage));
         addController(new GrainScheduledController());
-        addController(new SubjectCopyController());
+        addController(new SubjectCopyController(vertx.fileSystem(), storage, exportPath));
         addController(new SubjectLessonLevelController());
         addController(new SubjectLessonTypeController());
         addController(new SubjectTagController());

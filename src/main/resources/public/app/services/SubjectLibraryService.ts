@@ -1,5 +1,5 @@
 interface ISubjectLibraryService {
-    publish(subject:ISubject, authorsContributors:string, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[]): ng.IPromise<boolean>;
+    publish(subject:ISubject, authorsContributors:string, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[], file:any): ng.IPromise<boolean>;
     search(/*filters:{title:string/*, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): ng.IPromise<ISubject[]>;
     count(/*filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): ng.IPromise<Number>;
     tmpSubjectForPreview:ISubject;
@@ -29,8 +29,16 @@ class SubjectLibraryService implements ISubjectLibraryService {
         this._grainService = _grainService;
         this._subjectTagService = _subjectTagService;
     }
+
+    public publish = function(subject:ISubject, authorsContributors:string, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[], file:any): ng.IPromise<boolean> {
+        if (file) {
+            return this.publishWithFile(subject, authorsContributors, subjectLessonTypeId, subjectLessonLevelId, subjectTagList, file);           
+        } else {
+            return this.publishWithoutFile(subject, authorsContributors, subjectLessonTypeId, subjectLessonLevelId, subjectTagList);
+        }
+    };
     
-    public publish = function(subject:ISubject, authorsContributors:string, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[]): ng.IPromise<boolean> {
+    private publishWithoutFile = function(subject:ISubject, authorsContributors:string, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[]): ng.IPromise<boolean> {
         var self = this,
             deferred = this._$q.defer();
 
@@ -52,6 +60,36 @@ class SubjectLibraryService implements ISubjectLibraryService {
             }
         );
         
+        return deferred.promise;
+    };
+
+    public publishWithFile = function(subject:ISubject, authorsContributors:string, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[], file:any): ng.IPromise<boolean>  {
+        let param = {authorsContributors: authorsContributors,
+            subjectLessonTypeId: Number(subjectLessonTypeId), subjectLessonLevelId: Number(subjectLessonLevelId), subjectTagList:subjectTagList};
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('param', JSON.stringify(param));
+
+        var deferred = this._$q.defer();         ;
+
+        this._$http.post('exercizer/subject/simple/'+ subject.id + '/publish/library', formData, {
+            withCredentials: false,
+            headers: {
+                'Content-Type': undefined
+            },
+            transformRequest: angular.identity,
+            data: {
+                formData
+            },
+            responseType: 'json'
+
+        }).then(function(response) {
+                deferred.resolve(true);
+            },
+            function() {
+                deferred.reject('exercizer.publish.error');
+            }
+        );
         return deferred.promise;
     };
 

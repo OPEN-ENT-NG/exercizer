@@ -17,7 +17,9 @@ directives.push(
                          */
 
                         scope.selectTitle = function(){
-                            if(SubjectCopyService.canPerformACopyAsStudent(scope.subjectScheduled, scope.subjectCopy)){
+                            if (scope.subjectScheduled.type === 'simple') {
+                                return 'perform'
+                            } else if(SubjectCopyService.canPerformACopyAsStudent(scope.subjectScheduled, scope.subjectCopy)){
                                 return 'perform'
                             } else if(SubjectCopyService.canAccessViewAsStudent(scope.subjectScheduled, scope.subjectCopy)){
                                 return 'view'
@@ -27,7 +29,11 @@ directives.push(
                         };
 
                         scope.performSubjectCopy = function (subjectCopyId) {
-                            $location.path('/subject/copy/perform/' + subjectCopyId);
+                            if (scope.subjectScheduled.type === 'simple') {
+                                $location.path('/subject/copy/perform/simple/' + subjectCopyId);
+                            } else {
+                                $location.path('/subject/copy/perform/' + subjectCopyId);
+                            }
                         };
 
                         scope.viewSubjectCopy = function (subjectCopyId) {
@@ -70,20 +76,19 @@ directives.push(
                         };
 
                         scope.submitCopyLate = function(){
-                            // Warn : update does a report (action for teacher when he entered final score and comment)
-                            /*scope.subjectCopy.submitted_date =  new Date();
-                            SubjectCopyService.update(scope.subjectCopy).then(function(){
-                                notify.info("Votre copie à été rendue.");
-                            })*/
-                            scope.subjectCopy.submitted_date  = new Date().toISOString();
-                            SubjectCopyService.submit(scope.subjectCopy).then(
-                                function(subjectCopy:ISubjectCopy) {
-                                    notify.info("Votre copie à été rendue.");
-                                },
-                                function(err) {
-                                    notify.error(err);
-                                }
-                            );
+                            if (scope.subjectScheduled.type === 'simple') {
+                                $location.path('/subject/copy/perform/simple/' + scope.subjectCopy.id);
+                            } else {
+                                scope.subjectCopy.submitted_date = new Date().toISOString();
+                                SubjectCopyService.submit(scope.subjectCopy).then(
+                                    function (subjectCopy:ISubjectCopy) {
+                                        notify.info("Votre copie à été rendue.");
+                                    },
+                                    function (err) {
+                                        notify.error(err);
+                                    }
+                                );
+                            }
                         };
 
                         /**
@@ -132,6 +137,31 @@ directives.push(
                         scope.isSubmittedDateDisplayed = function(){
                           return scope.subjectCopy.submitted_date;
                         };
+
+                        scope.downloadGeneralCorrectedFile = function() {
+                            window.location.href = '/exercizer/subject-scheduled/corrected/download/' + scope.subjectScheduled.id;
+                        };
+
+                        scope.downloadCorrectedFile = function() {
+                            window.location.href = '/exercizer/subject-copy/corrected/download/' + scope.subjectCopy.id;
+                        };
+
+                        scope.canShowGeneralCorrected = function() {
+                            //if corrected date has passed and subject scheduled corrected exist
+                            return  (scope.subjectScheduled.type !== 'simple') ? false : canShowCorrected() && this.subjectScheduled.corrected_file_id !== null;
+                        };
+
+                        scope.canShowIndividualCorrected = function(){
+                            //if corrected date has passed and subject copy corrected exist
+                            return  (scope.subjectScheduled.type !== 'simple') ? false : canShowCorrected() && this.subjectCopy.corrected_file_id !== null;
+                        };
+
+                        function canShowCorrected() {
+                            //if corrected date has passed
+                            return  DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.corrected_date), false);
+                        };
+
+
 
                     }
                 }

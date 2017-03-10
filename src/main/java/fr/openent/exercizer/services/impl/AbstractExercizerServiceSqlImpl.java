@@ -328,4 +328,22 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
 
         sql.prepared(query.toString(), new JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
     }
+
+
+    /**
+     * Return download informations
+     *
+     * @param id the id of resource
+     * @param handler the handler
+     *
+     */
+    protected void getCorrectedDownloadInformation(final String id, final String customSelectField, final Handler<Either<String, JsonObject>> handler) {
+        final String select = "SELECT " + ((customSelectField == null) ? "s.corrected_file_id, s.corrected_metadata" : customSelectField);
+
+        final String query = select + " FROM " +
+                super.resourceTable + " as s " +
+                "WHERE s.corrected_file_id IS NOT NULL AND s.id = ?";
+
+        sql.prepared(query, new JsonArray().add(Sql.parseId(id)), SqlResult.validUniqueResultHandler(handler, "corrected_metadata"));
+    }
 }

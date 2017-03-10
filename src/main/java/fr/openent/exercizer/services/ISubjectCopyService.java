@@ -19,14 +19,19 @@
 
 package fr.openent.exercizer.services;
 
+import fr.wseduc.webutils.Either;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import fr.wseduc.webutils.Either;
+import java.util.List;
 
 public interface ISubjectCopyService {
+    enum FileType  {
+        CORRECTED,
+        HOMEWORK
+    }
 
 	void submitCopy(final long id, final Handler<Either<String, JsonObject>> handler);
 
@@ -59,4 +64,16 @@ public interface ISubjectCopyService {
      *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */    
     void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
+
+    void getDownloadInformation(final List<String> ids, final Handler<Either<String, JsonArray>> handler);
+
+    void correctedInProgress(final List<String> ids, final Handler<Either<String, JsonObject>> handler);
+
+    void getMetadataOfSubject(final String id, final FileType fileType, final Handler<Either<String, JsonObject>> handler);
+
+    void addFile(final String id, final String fileId, final JsonObject metadata, final FileType fileType, final Handler<Either<String, JsonObject>> handler);
+
+    void removeIndividualCorrectedFile(final String id, final Handler<Either<String, JsonObject>> handler);
+
+    void getOwners(final JsonArray ids, final Handler<Either<String, JsonArray>> handler);
 }

@@ -308,7 +308,11 @@ class TeacherDashboardLibraryTabController {
             subject = this._selectedSubjectList[0];
         }
         this._subjectLibraryService.tmpSubjectForPreview = subject;
-        this._$location.path('/subject/copy/preview/perform/' + subject.id + '/');
+        if (subject.type === 'simple') {
+            this._$location.path('/subject/copy/preview/perform/simple/' + subject.id + '/');
+        } else {
+            this._$location.path('/subject/copy/preview/perform/' + subject.id + '/');
+        }
             
     };
 
@@ -377,6 +381,10 @@ class TeacherDashboardLibraryTabController {
 
     public isToasterDisplayed = function() {
         return this._selectedSubjectList.length > 0;
+    };
+
+    public downloadCorrectedFile = function(id) {
+        window.location.href = '/exercizer/subject/simple/corrected/download/' + id;
     };
 
     /**

@@ -13,6 +13,7 @@ directives.push(
                      */
                     scope.isDisplayed = false;
                     scope.subject = null;
+                    scope.isSimpleSubject = null;
                     scope.scheduleSubjectInProgress = false;
 
                     /**
@@ -27,7 +28,8 @@ directives.push(
                         scope.data.userList = [];
                         scope.option = {
                             begin_date: new Date(),
-                            due_date: DateService.addDays(new Date, 7)
+                            due_date: DateService.addDays(new Date, 7),
+                            corrected_date: DateService.addDays(new Date, 7)
                         };
                     }
 
@@ -53,7 +55,18 @@ directives.push(
 
                     scope.scheduleSubject = function () {
                         scope.scheduleSubjectInProgress = true;
-                        canSchedule(scope.option, scope.subject).then(function() {
+                        if (scope.isSimpleSubject) {
+                            scheduleSimpleSubject(scope.subject, scope.option, scope.data).then(function () {
+                                reset();
+                                scope.isDisplayed = false;
+                                scope.scheduleSubjectInProgress = false;
+                                notify.info("Le sujet a bien été programmé.");
+                            }, function (err) {
+                                scope.scheduleSubjectInProgress = false;
+                                notify.error(err);
+                            });
+                        } else {
+                            canSchedule(scope.option, scope.subject).then(function () {
                                 scheduleSubject(scope.subject, scope.option, scope.data).then(function () {
                                     reset();
                                     scope.isDisplayed = false;
@@ -66,7 +79,8 @@ directives.push(
                             }, function (err) {
                                 scope.scheduleSubjectInProgress = false;
                                 notify.error(err);
-                        });
+                            });
+                        }
                     };
 
                     function canSchedule(option, subject) {
@@ -151,7 +165,28 @@ directives.push(
                         );
                           
                         return deferred.promise;
-                    }                   
+                    }
+
+                    function scheduleSimpleSubject(subject, option, data) {
+                        var deferred = $q.defer(),
+                            subjectScheduled = SubjectScheduledService.createFromSubject(subject);
+                        subjectScheduled.begin_date = option.begin_date;
+                        subjectScheduled.due_date = option.due_date;
+                        subjectScheduled.corrected_date = option.corrected_date;
+                        subjectScheduled.scheduled_at = createSubjectScheduledAt(data);
+
+                        SubjectScheduledService.simpleSchedule(subjectScheduled).then(
+                            function() {
+                                SubjectScheduledService.resolve(true);
+                                deferred.resolve();
+                            },
+                            function(err) {
+                                deferred.reject(err);
+                            }
+                        );                            
+
+                        return deferred.promise;
+                    }
 
                     function scheduleSubject(subject, option, data) {
                         var deferred = $q.defer(),
@@ -214,22 +249,29 @@ directives.push(
 
                         // event to display model
                     scope.$on("E_DISPLAY_MODAL_SCHEDULE_SUBJECT", function (event, subject) {
-                        GrainService.getListBySubject(subject).then(
-                            function (grainList:IGrain[]) {
-                                if (grainList.length > 0) {
-                                    scope.subject = subject;
-                                    scope.isDisplayed = true;
-                                    reset();
-                                    scope.data.lists = createLists(subject);
-                                } else {
-                                    notify.info('Vous ne pouvez pas distribuer un sujet vide.');
+                        scope.isSimpleSubject = 'simple' === subject.type;
+                        if (!scope.isSimpleSubject) {
+                            GrainService.getListBySubject(subject).then(
+                                function (grainList:IGrain[]) {
+                                    if (grainList.length > 0) {
+                                        scope.subject = subject;
+                                        scope.isDisplayed = true;
+                                        reset();
+                                        scope.data.lists = createLists(subject);
+                                    } else {
+                                        notify.info('Vous ne pouvez pas distribuer un sujet vide.');
+                                    }
+                                },
+                                function (err) {
+                                    notify.error(err);
                                 }
-                            },
-                            function (err) {
-                                notify.error(err);
-                            }
-                        );
-
+                            );
+                        } else {
+                            scope.subject = subject;
+                            scope.isDisplayed = true;
+                            reset();
+                            scope.data.lists = createLists(subject);
+                        }
                     });
 
                     scope.hide = function () {

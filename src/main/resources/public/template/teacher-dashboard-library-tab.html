@@ -102,25 +102,36 @@
                             <section class="domino">
                                 <div class="top">
                                     <img class="absolute" data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)" data-ng-src="[[ teacherDashboardLibraryTabController.getSubjectPicture(subject) ]]" />
+                                    <!-- todo Lauren simple or interactive icon -->
+                                    <div class="left-magnet cell">
+                                        <i class="[[subject.type === 'simple' ? 'download' : 'attachment']]" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                                    </div>
                                 </div>
                                 <div class="bottom">
                                     <div class="content">
-                                        <div class="cell">
-                                            <div class="row">
-                                                <strong data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)">[[ subject.title ]]</strong>
-                                            </div>
-                                            <div class="row">
+                                        <div class="row">
+                                            <strong data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)">[[ subject.title ]]</strong>
+                                        </div>
+                                        <div class="row">
+                                            <div class="cell">
                                                 [[ teacherDashboardLibraryTabController.getSubjectLessonType(subject).label ]]&nbsp;/&nbsp;<em>Niveau [[ teacherDashboardLibraryTabController.getSubjectLessonLevel(subject).label ]]</em>
                                             </div>
-                                            <div class="row">
-                                                <div class="subject-library-tag" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.getSubjectTags(subject)" data-ng-click="teacherDashboardLibraryTabController.selectSubjectTag(subjectTag)">
-                                                    [[ subjectTag.label ]]
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                Ajouté par [[ subject.owner_username ]] le [[ subject.created | date: 'dd/MM/yyyy' ]]
+                                            <div class="cell absolute" data-ng-if="subject.corrected_file_id" style="z-index:100">
+                                                <!-- todo Lauren button style-->
+                                                <button class="flat-button right-magnet" data-ng-click="teacherDashboardLibraryTabController.downloadCorrectedFile(subject.id)">
+                                                    Corrigé<i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                                                </button>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="subject-library-tag" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.getSubjectTags(subject)" data-ng-click="teacherDashboardLibraryTabController.selectSubjectTag(subjectTag)">
+                                                [[ subjectTag.label ]]
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            Ajouté par [[ subject.owner_username ]] le [[ subject.created | date: 'dd/MM/yyyy' ]]
+                                        </div>
+
                                         <div class="bottom-locked eleven vertical-spacing-tripple">
                                             <div class="cell" data-ng-if="subject.authors_contributors">
                                                 <em class="high-importance">Auteur et/ou contributeurs au sujet : [[ subject.authors_contributors ]]</em>

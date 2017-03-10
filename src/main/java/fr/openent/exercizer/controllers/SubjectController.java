@@ -37,10 +37,12 @@ import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.http.filter.sql.OwnerOnly;
 import org.entcore.common.http.filter.sql.ShareAndOwner;
+import org.entcore.common.storage.Storage;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.json.DecodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
@@ -54,10 +56,12 @@ public class SubjectController extends ControllerHelper {
 	private final ISubjectService subjectService;
 	private final IGrainService grainService;
 	private static final I18n i18n = I18n.getInstance();
+	private final Storage storage;
 
-	public SubjectController() {
+	public SubjectController(final Storage storage) {
 		this.subjectService = new SubjectServiceSqlImpl();
 		this.grainService = new GrainServiceSqlImpl();
+		this.storage = storage;
 	}
 
     @Post("/canSchedule")
@@ -497,18 +501,7 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, pathPrefix + "publish", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject data) {
-							subjectService.publishLibrary(subjectId, data.getString("authorsContributors"), data.getLong("subjectLessonTypeId"),
-									data.getLong("subjectLessonLevelId"), data.getArray("subjectTagList", new JsonArray()), user,
-									new Handler<Either<String, JsonObject>>() {
-										@Override
-										public void handle(Either<String, JsonObject> event) {
-											if (event.isRight()) {
-												Renders.created(request);
-											} else {
-												Renders.renderError(request, new JsonObject().putString("error", "exercizer.publish.error"));
-											}
-										}
-									});
+							publish(data, subjectId, user, request);
 						}
 					});
 				}
@@ -521,14 +514,78 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
+	@Post("/subject/simple/:id/publish/library")
+	@ApiDoc("Publish subject in library.")
+	@ResourceFilter(OwnerOnly.class)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
+	public void publishSimpleSubject(final HttpServerRequest request) {
+		final Long subjectId;
+		try {
+			subjectId = Long.parseLong(request.params().get("id"));
+		}catch (NumberFormatException e) {
+			badRequest(request, e.getMessage());
+			return;
+		}
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					storage.writeUploadFile(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(JsonObject event) {
+							if ("ok".equals(event.getString("status"))) {
+								final String fileId = event.getString("_id");
+								final JsonObject metadata = event.getObject("metadata");
+								JsonObject data = null;
+								try {
+									data = new JsonObject(request.formAttributes().get("param"));
+								} catch (DecodeException de) {
+									Renders.badRequest(request, de.getMessage());
+								}
+
+								if (data != null) {
+									data.putString("correctedFileId", fileId);
+									data.putObject("correctedMetadata", metadata);
+
+									publish(data, subjectId, user, request);
+								}
+							} else {
+								Renders.badRequest(request, event.getString("message"));
+							}
+						}
+					});
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	private void publish(JsonObject data, Long subjectId, UserInfos user, final HttpServerRequest request) {
+		subjectService.publishLibrary(subjectId, data.getString("authorsContributors"), data.getString("correctedFileId"), data.getObject("correctedMetadata"), data.getLong("subjectLessonTypeId"),
+				data.getLong("subjectLessonLevelId"), data.getArray("subjectTagList", new JsonArray()), user,
+				new Handler<Either<String, JsonObject>>() {
+					@Override
+					public void handle(Either<String, JsonObject> event) {
+						if (event.isRight()) {
+							Renders.created(request);
+						} else {
+							Renders.renderError(request, new JsonObject().putString("error", "exercizer.publish.error"));
+						}
+					}
+				});
+	}
+
 	@Delete("/subject/:id/unpublish/library")
 	@ApiDoc("Unpublish subject in library.")
 	@ResourceFilter(OwnerOnly.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void unpublish(final HttpServerRequest request) {
+		final String id = request.params().get("id");
 		final Long subjectId;
 		try {
-			subjectId = Long.parseLong(request.params().get("id"));
+			subjectId = Long.parseLong(id);
 		}catch (NumberFormatException e) {
 			badRequest(request, e.getMessage());
 			return;
@@ -538,11 +595,32 @@ public class SubjectController extends ControllerHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					subjectService.unpublishLibrary(subjectId, new Handler<Either<String, JsonObject>>() {
+					subjectService.getCorrectedDownloadInformation(id, new Handler<Either<String, JsonObject>>() {
 						@Override
 						public void handle(Either<String, JsonObject> event) {
 							if (event.isRight()) {
-								Renders.noContent(request);
+								final String correctedFileId = event.right().getValue().getString("corrected_file_id");
+								subjectService.unpublishLibrary(subjectId, new Handler<Either<String, JsonObject>>() {
+									@Override
+									public void handle(Either<String, JsonObject> event) {
+										if (event.isRight()) {
+											Renders.noContent(request);
+
+											if (correctedFileId != null) {
+												storage.removeFile(correctedFileId, new Handler<JsonObject>() {
+													@Override
+													public void handle(JsonObject event) {
+														if ("error".equals(event.getString("status"))) {
+															log.error("Can't remove file ID : " + correctedFileId + ", message : " + event.getString("message"));
+														}
+													}
+												});
+											}
+										} else {
+											Renders.renderError(request);
+										}
+									}
+								});
 							} else {
 								Renders.renderError(request);
 							}
@@ -555,6 +633,43 @@ public class SubjectController extends ControllerHelper {
 			}
 		});
 	}
+
+	@Get("/subject/simple/corrected/download/:id")
+	@ApiDoc("Download a corrected of a library subject.")
+	@SecuredAction("exercizer.subject.simple.download.library")
+	public void downloadCorrected(final HttpServerRequest request) {
+		final String id = request.params().get("id");
+
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					subjectService.getCorrectedDownloadInformation(id, new Handler<Either<String, JsonObject>>() {
+						@Override
+						public void handle(Either<String, JsonObject> event) {
+							if (event.isRight()) {
+								final JsonObject subject = event.right().getValue();
+								final String correctedFileId = subject.getString("corrected_file_id");
+								if (correctedFileId != null) {
+									final JsonObject metadata = subject.getObject("corrected_metadata");
+									storage.sendFile(correctedFileId, metadata.getString("filename"),  request, false, metadata);
+								} else {
+									Renders.badRequest(request);
+								}
+							} else {
+								Renders.badRequest(request);
+							}
+						}
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
 
 	@Post("/subject/duplicate")
 	@ApiDoc("Duplicate subjects.")

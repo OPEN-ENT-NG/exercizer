@@ -8,14 +8,12 @@ directives.push(
                 templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/templates/teacher-dashboard-subject-edit.html',
                 link: (scope:any) => {
 
-                    scope.isDisplayed = false;
-
                     scope.$on('E_DISPLAY_DASHBOARD_MODAL_EDIT_SUBJECT', function(event, subject, currentFolderId) {
 
                         if(subject !== null){
                             scope.isNewSubject = false;
-                            scope.subject = subject;
-
+                            scope.step = 'subject';
+                            scope.subject = subject;                            
                         } else {
                             scope.isNewSubject = true;
                             scope.subject= new Subject();
@@ -28,13 +26,17 @@ directives.push(
                     scope.saveSubjectProperties = function() {
 
                         if (!scope.subject.title || scope.subject.title.length === 0) {
-                            notify.error('Veuillez renseigner un titre.');
+                            notify.error('exercizer.check.title');
                         } else {
 
                             if (scope.isNewSubject) {
                                 SubjectService.persist(scope.subject).then(function(subject) {
                                     SubjectService.currentSubjectId = subject.id;
-                                    $location.path('/subject/edit/' + subject.id);
+                                    if (subject.type === 'simple') {
+                                        $location.path('/subject/edit/simple/' + subject.id);
+                                    } else {
+                                        $location.path('/subject/edit/' + subject.id);
+                                    }
                                 }, function(err) {
                                     notify.error(err);
                                 });
@@ -49,10 +51,25 @@ directives.push(
                             }
                         }
                     };
+                    
+                    scope.nextStep = function(type) {
+                        scope.step = "subject";
+                        scope.subject.type = type;
+                        scope.type = type;
+                        
+                    };
 
                     scope.closeLightbox = function() {
                         scope.isDisplayed = false;
+                        reset();
                     };
+                    
+                    var reset = function() {
+                        scope.isDisplayed = false;
+                        scope.step = "choose";
+                    };
+
+                    reset();
                 }
             };
         }]

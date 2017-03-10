@@ -15,12 +15,21 @@ routes.define(function($routeProvider){
         .when('/subject/edit/:subjectId/', {
             action: 'editSubject'
         })
+        .when('/subject/edit/simple/:subjectId/', {
+            action: 'editSimpleSubject'
+        })
         .when('/subject/copy/preview/perform/:subjectId/', {
             action: 'previewPerformSubjectCopy'
         })
         // perform as student
         .when('/subject/copy/perform/:subjectCopyId/', {
             action: 'performSubjectCopy'
+        })
+        .when('/subject/copy/preview/perform/simple/:subjectId/', {
+            action: 'previewPerformSubjectSimpleCopy'
+        })
+        .when('/subject/copy/perform/simple/:subjectCopyId/', {
+            action: 'performSimpleSubjectCopy'
         })
         .when('/subject/copy/view/preview/:subjectId/', {
             action: 'previewViewSubjectCopy'
@@ -90,9 +99,28 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
                 template.open('main', '401-exercizer');
             }
         },
+        editSimpleSubject: function () {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'edit-simple-subject');
+            } else if (_userProfile === studentProfile) {
+                //TODO David student view
+                //template.open('main', 'student-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
         previewPerformSubjectCopy: function () {
             if (_userProfile === teacherProfile) {
                 template.open('main', 'perform-subject-copy');
+            } else if (_userProfile === studentProfile) {
+                template.open('main', 'student-dashboard');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        previewPerformSubjectSimpleCopy: function () {
+            if (_userProfile === teacherProfile) {
+                template.open('main', 'perform-simple-subject-copy');
             } else if (_userProfile === studentProfile) {
                 template.open('main', 'student-dashboard');
             } else {
@@ -104,6 +132,15 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
                 template.open('main', 'perform-subject-copy');
             } else if (_userProfile === teacherProfile) {
                 template.open('main', 'perform-subject-copy');
+            } else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        performSimpleSubjectCopy: function () {
+            if (_userProfile === studentProfile) {
+                template.open('main', 'perform-simple-subject-copy');
+            } else if (_userProfile === teacherProfile) {
+                template.open('main', 'perform-simple-subject-copy');
             } else {
                 template.open('main', '401-exercizer');
             }
@@ -243,9 +280,11 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.controller('TeacherDashboardCorrectionTabController', TeacherDashboardCorrectionTabController);
         module.controller('TeacherDashboardLibraryTabController', TeacherDashboardLibraryTabController);
         module.controller('EditSubjectController', EditSubjectController);
+        module.controller('EditSimpleSubjectController', EditSimpleSubjectController);
         module.controller('PerformSubjectCopyController', PerformSubjectCopyController);
         module.controller('ViewSubjectCopyController', ViewSubjectCopyController);
         module.controller('SubjectCopyListController', SubjectCopyListController);
+        module.controller('PerformSimpleSubjectCopyController', PerformSimpleSubjectCopyController);
 
         /**
          * Directives

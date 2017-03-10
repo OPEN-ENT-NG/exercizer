@@ -8,6 +8,14 @@ interface ISubjectCopyService {
     createFromSubjectScheduled(subjectScheduled:ISubjectScheduled):ISubjectCopy;
     getList():ISubjectCopy[];
     getById(id:number):ISubjectCopy;
+    persistSimpleCopy(id, file): ng.IPromise<String>;
+    downloadSimpleCopies(idCopies:string[]): string;
+    downloadSimpleCopy(id:string): string;
+    addCorrectedFile(id, file): ng.IPromise<String>;
+    removeCorrectedFile(id): ng.IPromise<any>;
+    remindCustomCopies(copyIds:number[], subject:string, body:string): ng.IPromise<Boolean>;
+    remindAutomaticCopies(copyIds:number[], subjectScheduleId:number): ng.IPromise<Boolean>;
+    
 }
 
 class SubjectCopyService implements ISubjectCopyService {
@@ -58,6 +66,8 @@ class SubjectCopyService implements ISubjectCopyService {
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
+                        subjectCopy.homework_metadata = JSON.parse(subjectCopy.homework_metadata);
+                        subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                         if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
                             self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
                         }
@@ -88,6 +98,8 @@ class SubjectCopyService implements ISubjectCopyService {
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
+                        subjectCopy.homework_metadata = JSON.parse(subjectCopy.homework_metadata);
+                        subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                         if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
                             self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
                         }
@@ -117,6 +129,8 @@ class SubjectCopyService implements ISubjectCopyService {
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
+                        subjectCopy.homework_metadata = JSON.parse(subjectCopy.homework_metadata);
+                        subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                         self._listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy);
 
                     });
@@ -151,6 +165,135 @@ class SubjectCopyService implements ISubjectCopyService {
             }
         );
         return deferred.promise;
+    };
+
+    public persistSimpleCopy = function(id, file): ng.IPromise<String>  {
+        var formData = new FormData();
+        formData.append('file', file);
+        
+        var deferred = this._$q.defer();         ;
+
+        this._$http.put('exercizer/subject-copy/simple/submit/' + id, formData, {
+            withCredentials: false,
+            headers: {
+                'Content-Type': undefined
+            },
+            transformRequest: angular.identity,
+            data: {
+                formData
+            },
+            responseType: 'json'
+
+        }).then(function(response){
+                deferred.resolve(response.data.fileId);
+            },
+            function() {
+                deferred.reject("Une erreur est survenue lors du rendu du devoir.");
+            }
+        );
+        return deferred.promise;
+    };
+
+    public remindCustomCopies = function(copyIds:number[], subject:string, body:string): ng.IPromise<Boolean> {
+        var deferred = this._$q.defer(),
+            self = this,
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject-copy/custom/reminder',
+                data: {ids:copyIds, subject: subject, body: body}
+            };
+
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(true);
+            },
+            function(e) {
+                deferred.reject('exercizer.reminder.custom.error');
+            }
+        );
+
+        return deferred.promise;
+    };
+
+    public remindAutomaticCopies = function(copyIds:number[], subjectScheduleId:number): ng.IPromise<Boolean> {
+        var deferred = this._$q.defer(),
+            self = this,
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject-copy/automatic/reminder/' + subjectScheduleId,
+                data: {ids:copyIds}
+            };
+
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(true);
+            },
+            function(e) {
+                deferred.reject('exercizer.reminder.auto.error');
+            }
+        );
+
+        return deferred.promise;
+    };
+
+
+    public addCorrectedFile = function(id, file): ng.IPromise<String>  {
+        var formData = new FormData();
+        formData.append('file', file);
+       var deferred = this._$q.defer();         ;
+
+        this._$http.put('exercizer/subject-copy/simple/corrected/' + id, formData, {
+            withCredentials: false,
+            headers: {
+                'Content-Type': undefined
+            },
+            transformRequest: angular.identity,
+            data: {
+                formData
+            },
+            responseType: 'json'
+
+        }).then(function(response){
+                deferred.resolve(response.data.fileId);
+            },
+            function() {
+                deferred.reject("Une erreur est survenue lors du dépôt de la correction individuelle.");
+            }
+        );
+        return deferred.promise;
+    };
+
+    public removeCorrectedFile = function(id): ng.IPromise<any>  {
+        var deferred = this._$q.defer(), request = {
+            method: 'PUT',
+            url: 'exercizer/subject-copy/simple/remove/corrected/' + id
+        };
+        
+        this._$http(request).then(function(response){
+                deferred.resolve();
+            },
+            function() {
+                deferred.reject("Une erreur est survenue lors de la suppression de la correction individuelle.");
+            }
+        );
+        return deferred.promise;
+    };
+
+    public downloadSimpleCopies = function(idCopies:string[]): string  {
+        var url = '/exercizer/subject-copy/simple/downloads?';
+
+        _.forEach(idCopies, function (id) {
+            url += 'id=' + id + '&';
+        });
+
+        url = url.slice(0, -1);
+
+        return url
+       
+    };
+
+    public downloadSimpleCopy = function(id:string): string  {
+        return '/exercizer/subject-copy/simple/download/' + id;
     };
 
     private write = function(subjectCopy:ISubjectCopy, action:String):ng.IPromise<ISubjectCopy> {

@@ -69,6 +69,22 @@
         <input type="text" class="twelve cell" maxlength="255" data-ng-model="cc.authorsContributors" placeholder="Ex : Auteur, Olivier Ortant. Contributeurs, Auriane Dunile et Raphaël Dujardin">
     </div>
 
+    <div data-ng-if="isSimpleSubject">
+        <div class="row vertical-spacing">
+            <i18n>exercizer.simple.library.corrected</i18n> :
+        </div>
+
+        <div class="row vertical-spacing">
+            <div class="twelve cell horizontal-spacing select-file input-block" style="margin-top:5px;margin-bottom:5px">
+                <button class="file-button flat-button"><i18n>exercizer.simple.upload.choose</i18n></button>
+                <input style="width:70% !important" ng-readonly="true" type="text" ng-model="correctedName" data-display-file class="nomargin" />
+                <div class="hidden-content">
+                    <input type="file" style="z-index:-1" files-input-change="setCorrectedFileName(this)"  ng-model="newFiles" />
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row vertical-spacing">
         <input type="checkbox" class="cell"
                data-ng-checked="hasAgreedToPublish"

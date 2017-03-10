@@ -8,7 +8,11 @@
             selected-subject-scheduled="selectedSubjectScheduled">
     </teacher-dashboard-correction-subject-scheduled-list>
     <teacher-dashboard-correction-copy-list
-            data-ng-show="selectedSubjectScheduled"
+            data-ng-show="selectedSubjectScheduled && selectedSubjectScheduled.type === 'interactive'"
             selected-subject-scheduled="selectedSubjectScheduled">
     </teacher-dashboard-correction-copy-list>
+    <teacher-dashboard-simple-correction-copy-list
+            data-ng-show="selectedSubjectScheduled && selectedSubjectScheduled.type === 'simple'"
+            selected-subject-scheduled="selectedSubjectScheduled">
+    </teacher-dashboard-simple-correction-copy-list>
 </div>
