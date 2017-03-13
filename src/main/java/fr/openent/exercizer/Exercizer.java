@@ -38,16 +38,10 @@ public class Exercizer extends BaseServer {
         
         final EventBus eb = getEventBus(vertx);
 
-        if (config.getObject("swift") == null && config.getObject("file-system") == null && config.getString("gridfs-address") == null) {
-            log.fatal("[Exercizer] Error : Module property 'swift', 'file-system' or 'gridfs-address' must be defined");
-            vertx.stop();
-        }
-
         final String exportPath = container.config()
                 .getString("export-path", System.getProperty("java.io.tmpdir"));
 
-
-        final Storage storage = new StorageFactory(vertx, container.config()).getStorage();
+        final Storage storage = new StorageFactory(vertx).getStorage();
 
         SqlConf folderConf = SqlConfs.createConf(FolderController.class.getName());
         folderConf.setSchema("exercizer");
