@@ -156,8 +156,8 @@ directives.push(
                     function scheduleSubject(subject, option, data) {
                         var deferred = $q.defer(),
                             subjectScheduled = SubjectScheduledService.createFromSubject(subject);
-                        subjectScheduled.begin_date = option.begin_date;
-                        subjectScheduled.due_date = option.due_date;
+                        subjectScheduled.begin_date = moment(option.begin_date).hours(14).minutes(0).seconds(0);
+                        subjectScheduled.due_date = moment(option.due_date).hours(14).minutes(0).seconds(0);
                         subjectScheduled.estimated_duration = option.estimated_duration;
                         subjectScheduled.has_automatic_display = option.has_automatic_display;
                         subjectScheduled.is_one_shot_submit = !option.allow_students_to_update_copy;
