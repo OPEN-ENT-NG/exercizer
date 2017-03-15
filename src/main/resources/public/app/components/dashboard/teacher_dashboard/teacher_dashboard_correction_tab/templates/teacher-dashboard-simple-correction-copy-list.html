@@ -52,6 +52,10 @@
      </div>
 
 </div>
+
+<div class="row vertical-spacing">
+     <input type="text" class="twelve cell" data-ng-model="search.owner.owner_username" placeholder="Rechercher un élève">
+</div>
 <form name="formCopyTest" >
      <div class="row vertical-spacing">
           <table class="list-view">
@@ -66,7 +70,7 @@
                </tr>
                </thead>
                <tbody>
-               <tr data-ng-repeat="copy in subjectCopyList | orderBy: 'owner_username'">
+               <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy: 'owner_username'">
                     <td class="one cell">
                          <input type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                     </td>

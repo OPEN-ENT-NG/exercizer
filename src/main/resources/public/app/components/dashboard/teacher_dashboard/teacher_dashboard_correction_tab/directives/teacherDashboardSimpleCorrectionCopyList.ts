@@ -13,16 +13,15 @@ directives.push(
                     scope.$watch('selectedSubjectScheduled', function(newValue, oldValue) {
                         if(scope.selectedSubjectScheduled){
                             init(scope.selectedSubjectScheduled);
+                            /**
+                             * INIT
+                             */
+                            scope.subjectCopyList = [];
+                            scope.toasterDisplayed = false;
+                            scope.search = {};
+                            resetRemind();
                         }
                     });
-
-                    /**
-                     * INIT
-                     */
-                    scope.subjectCopyList = [];
-                    scope.toasterDisplayed = false;
-                    resetRemind();
-                    
                  
                     function init(subjectScheduled){
                         SubjectCopyService.resolveBySubjectScheduled_force(subjectScheduled).then(

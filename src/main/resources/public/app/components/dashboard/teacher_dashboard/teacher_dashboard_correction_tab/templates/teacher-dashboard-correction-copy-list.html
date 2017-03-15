@@ -34,7 +34,9 @@
      <div class="cell right-magnet">
           [[numberCopySubmitted()]] élève(s) sur [[subjectCopyList.length]] ont rendu le devoir
      </div>
-
+</div>
+<div class="row vertical-spacing">
+     <input type="text" class="twelve cell" data-ng-model="search.owner.owner_username" placeholder="Rechercher un élève">
 </div>
 <div class="row vertical-spacing">
      <table class="list-view">
@@ -49,7 +51,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr data-ng-repeat="copy in subjectCopyList | orderBy: 'owner_username'">
+          <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy: 'owner_username'">
                <td>
                     <input data-ng-disabled="copy.isCorrected" data-ng-show="canCorrectACopyAsTeacher(copy) && !copy.is_corrected" type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                </td>
