@@ -43,15 +43,36 @@
           <thead>
           <tr>
                <th><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
-               <th>Copie de</th>
-               <th>État</span></th>
-               <th>Date de rendu</th>
-               <th>Score automatique</th>
-               <th>Score final</th>
+               <!-- todo Lauren sortable icon -->
+               <th scope="col" ng-click="orderByField('owner_username')">
+                    <span translate content="Copie de" ></span>
+                    <i class="arrow-bottom" ng-if="order.field === 'owner_username' && !order.desc"></i>
+                    <i class="arrow-top" ng-if="order.field === 'owner_username' && order.desc"></i>
+               </th>
+               <th scope="col" ng-click="orderByField('state')">
+                    <span translate content="État" ></span>
+                    <i class="arrow-bottom" ng-if="order.field === 'state' && !order.desc"></i>
+                    <i class="arrow-top" ng-if="order.field === 'state' && order.desc"></i>
+               </th>
+               <th scope="col" ng-click="orderByField('submitted_date')">
+                    <span translate content="Date de rendu" ></span>
+                    <i class="arrow-bottom" ng-if="order.field === 'submitted_date' && !order.desc"></i>
+                    <i class="arrow-top" ng-if="order.field === 'submitted_date' && order.desc"></i>
+               </th>
+               <th scope="col" ng-click="orderByField('calculated_score')">
+                    <span translate content="Score automatique" ></span>
+                    <i class="arrow-bottom" ng-if="order.field === 'calculated_score' && !order.desc"></i>
+                    <i class="arrow-top" ng-if="order.field === 'calculated_score' && order.desc"></i>
+               </th>
+               <th scope="col" ng-click="orderByField('final_score')">
+                    <span translate content="Score final" ></span>
+                    <i class="arrow-bottom" ng-if="order.field === 'final_score' && !order.desc"></i>
+                    <i class="arrow-top" ng-if="order.field === 'final_score' && order.desc"></i>
+               </th>
           </tr>
           </thead>
           <tbody>
-          <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy: 'owner_username'">
+          <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc">
                <td>
                     <input data-ng-disabled="copy.isCorrected" data-ng-show="canCorrectACopyAsTeacher(copy) && !copy.is_corrected" type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                </td>

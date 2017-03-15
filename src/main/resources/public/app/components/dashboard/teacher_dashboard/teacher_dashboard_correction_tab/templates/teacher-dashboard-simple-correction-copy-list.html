@@ -61,16 +61,32 @@
           <table class="list-view">
                <thead>
                <tr>
-                    <!-- todo Lauren tri -->
+                    <!-- todo Lauren sortable icon -->
                     <th class="one cell"><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
-                    <th class="two cell">Devoir de</th>
-                    <th class="one cell">Date de rendu</th>
-                    <th class="four cell">Fichier</th>
-                    <th class="four cell">Correction individuelle</th>
+                    <th scope="col" class="two cell" ng-click="orderByField('owner_username')">
+                         <span translate content="Devoir de" ></span>
+                         <i class="arrow-bottom" ng-if="order.field === 'owner_username' && !order.desc"></i>
+                         <i class="arrow-top" ng-if="order.field === 'owner_username' && order.desc"></i>
+                    </th>
+                    <th scope="col" class="one cell" ng-click="orderByField('submitted_date')">
+                         <span translate content="Date de rendu" ></span>
+                         <i class="arrow-bottom" ng-if="order.field === 'submitted_date' && !order.desc"></i>
+                         <i class="arrow-top" ng-if="order.field === 'submitted_date' && order.desc"></i>
+                    </th>
+                    <th scope="col" class="four cell" ng-click="orderByField('homework_metadata.filename')">
+                         <span translate content="Fichier" ></span>
+                         <i class="arrow-bottom" ng-if="order.field === 'homework_metadata.filename' && !order.desc"></i>
+                         <i class="arrow-top" ng-if="order.field === 'homework_metadata.filename' && order.desc"></i>
+                    </th>
+                    <th scope="col" class="four cell" ng-click="orderByField('corrected_metadata.filename')">
+                         <span translate content="Correction individuelle" ></span>
+                         <i class="arrow-bottom" ng-if="order.field === 'corrected_metadata.filename' && !order.desc"></i>
+                         <i class="arrow-top" ng-if="order.field === 'corrected_metadata.filename' && order.desc"></i>
+                    </th>
                </tr>
                </thead>
                <tbody>
-               <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy: 'owner_username'">
+               <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc">
                     <td class="one cell">
                          <input type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                     </td>

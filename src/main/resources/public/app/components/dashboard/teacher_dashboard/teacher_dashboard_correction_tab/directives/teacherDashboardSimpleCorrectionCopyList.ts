@@ -20,6 +20,9 @@ directives.push(
                             scope.toasterDisplayed = false;
                             scope.search = {};
                             resetRemind();
+                            
+                            scope.order.field = 'owner_username';
+                            scope.order.desc = false;                            
                         }
                     });
                  
@@ -258,7 +261,36 @@ directives.push(
                             }
                         });
                         return res;
-                    }
+                    };
+
+                    scope.order = {};
+
+                    scope.order.order = function(item){
+                        if(scope.order.field === 'submitted_date' && item.submitted_date){
+                            return moment(item.submitted_date);
+                        }
+
+                        if(scope.order.field.indexOf('.') >= 0){
+                            var splitted_field = scope.order.field.split('.')
+                            var sortValue = item
+                            for(var i = 0; i < splitted_field.length; i++){
+                                sortValue = (typeof sortValue === 'undefined' || sortValue === null) ? undefined : sortValue[splitted_field[i]]
+                            }
+                            return sortValue
+                        } else
+                            return (item[scope.order.field]) ? item[scope.order.field] : undefined;
+                    };
+
+                    scope.orderByField = function(fieldName){
+                        if(fieldName === scope.order.field){
+                            scope.order.desc = !scope.order.desc;
+                        }
+                        else{
+                            scope.order.desc = false;
+                            scope.order.field = fieldName;
+                        }
+                    };
+
                 }
             };
         }]
