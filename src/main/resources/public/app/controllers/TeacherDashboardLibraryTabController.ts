@@ -206,18 +206,20 @@ class TeacherDashboardLibraryTabController {
             }
 
             if (self._filters.subjectTagList.length > 0) {
-
+                let numberOfLabelFilter = self._filters.subjectTagList.length;
+                let numberOfMatch = 0;
                 var currentSubjectTagList = self._subjectTagService.getListBySubjectId(subject.id);
                 subjectTagListFound = false;
                 self._isLanding = false;
 
                 if (currentSubjectTagList.length > 0) {
+                    _.each(self._filters.subjectTagList, function (filterTag) {
+                        if (_.find(currentSubjectTagList, function (subjectTag) {
+                                return subjectTag.id === filterTag.id;
+                            })) numberOfMatch++;
+                    });
 
-                    for (var i = 0; i < currentSubjectTagList.length && !subjectTagListFound; ++i) {
-                        for (var j = 0; j < self._filters.subjectTagList.length && !subjectTagListFound; ++j) {
-                            subjectTagListFound = currentSubjectTagList[i].id === self._filters.subjectTagList[j].id;
-                        }
-                    }
+                    subjectTagListFound = numberOfMatch === numberOfLabelFilter;
                 }
             }
 
