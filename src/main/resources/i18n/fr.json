@@ -95,6 +95,7 @@
     "exercizer.simple.check.renew" : "Veuillez déposer un nouveau fichier.",
     "exercizer.simple.submit.from.library" : "Le sujet a bien été ajouté dans votre liste des sujets.",
     "exercizer.simple.library.corrected" : "Ajouté un corrigé",
+    "exercizer.simple.consult.corrected" : "La consultation du corrigé sera possible à partir du",
     "exercizer.reminder.check.subject" : "Vous devez saisir un objet.",
     "exercizer.reminder.check.body" : "Vous devez saisir un message.",
     "exercizer.reminder.auto.error" : "Une erreur est survenue lors du rappel automatique.",

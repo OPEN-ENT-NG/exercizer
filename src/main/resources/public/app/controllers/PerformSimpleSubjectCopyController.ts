@@ -188,18 +188,18 @@ class PerformSimpleSubjectCopyController {
     };
 
     public canShowGeneralCorrected = function(){
-        //if no preview and corrected date has passed and subject scheduled corrected exist
-        return  this.canShowCorrected() && this._subjectScheduled.corrected_file_id !== null;
+        //if no preview and subject scheduled corrected exist
+        return  !this._previewingFromLibrary && this._subjectScheduled.corrected_file_id !== null;
     };
 
     public canShowIndividualCorrected = function(){
-        //if no preview and corrected date has passed and subject copy corrected exist
-        return this.canShowCorrected() && this._subjectCopy.corrected_file_id !== null;
+        //if no preview and subject copy corrected exist
+        return !this._previewingFromLibrary && this._subjectCopy.corrected_file_id !== null;
     };
 
-    private canShowCorrected = function() {
-        //if no preview and corrected date has passed
-        return  !this._previewingFromLibrary && this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.corrected_date), false);
+    private canDownloadCorrected = function() {
+        //if corrected date has passed
+        return this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.corrected_date), false);
     };
 
     public redirectToDashboard = function(){

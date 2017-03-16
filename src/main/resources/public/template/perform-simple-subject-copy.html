@@ -75,19 +75,21 @@
                         </div>
                         <!-- todo Lauren button style -->
                         <div data-ng-if="performSimpleSubjectCopyController.canShowGeneralCorrected()" class="six cell">
-                            <a data-ng-click="performSimpleSubjectCopyController.downloadGeneralCorrectedFile()" target="_blank">
+                            <a data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()" data-ng-click="performSimpleSubjectCopyController.downloadGeneralCorrectedFile()" target="_blank">
                                 [[performSimpleSubjectCopyController.subjectScheduled.corrected_metadata.filename]]
                                 <i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
                             </a>
+                            <label data-ng-if="!performSimpleSubjectCopyController.canDownloadCorrected()"><i18n>exercizer.simple.consult.corrected</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'dd/MM/yyyy']]</label>
                         </div>
                         <div data-ng-if="!performSimpleSubjectCopyController.canShowGeneralCorrected()" class="six cell">
                             <i18n>exercizer.simple.no.corrected</i18n>
                         </div>
                         <div data-ng-if="performSimpleSubjectCopyController.canShowIndividualCorrected()" class="six cell">
-                            <a data-ng-click="performSimpleSubjectCopyController.downloadCorrectedFile()" target="_blank">
+                            <a data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()" data-ng-click="performSimpleSubjectCopyController.downloadCorrectedFile()" target="_blank">
                                 [[performSimpleSubjectCopyController.subjectCopy.corrected_metadata.filename]]
                                 <i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
                             </a>
+                            <label data-ng-if="!performSimpleSubjectCopyController.canDownloadCorrected()"><i18n>exercizer.simple.consult.corrected</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'dd/MM/yyyy']]</label>
                         </div>
                         <div data-ng-if="!performSimpleSubjectCopyController.canShowIndividualCorrected()" class="six cell">
                             <i18n>exercizer.simple.no.corrected</i18n>
