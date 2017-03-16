@@ -9,6 +9,7 @@
     </div>
     <div data-ng-if="!previewing">
         <div class="row vertical-spacing">Sujet à rendre avant le [[ !subjectScheduled.due_date ? ': date non définie' : subjectScheduled.due_date | date: 'dd/MM/yyyy' ]]</div>
+        <div class="row vertical-spacing" data-ng-show="!subjectScheduled.is_one_shot_submit">Le sujet peut-être rendu plusieurs fois avant sa date d'échéance</div>
         <div class="row vertical-spacing" data-ng-if="subjectScheduled.estimated_duration">Durée de réalisation estimée : [[ subjectScheduled.estimated_duration + ' minute(s)' ]]</div>
         <div class="row vertical-spacing">
             [[subjectScheduled.description]]
