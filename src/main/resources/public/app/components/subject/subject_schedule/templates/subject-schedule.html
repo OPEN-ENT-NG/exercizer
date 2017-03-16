@@ -33,11 +33,15 @@
             <div data-ng-show="state == 'assignSubject'">
                 <div class="row">
                     <h4>Rechercher un utilisateur ou un groupe</h4>
-                    <autocomplete
-                            options="data.lists"
+                    <input type="text" class="twelve cell" ng-model="search.search" autofocus ng-change="updateFoundUsersGroups()" id="to-users" />
+                    <!-- todo Lauren scroll see exercizer.html for override  -->
+                    <drop-down
+                            options="search.found"
                             ng-change="clickOnItem(selectedItem)"
-                            ng-model="selectedItem">
-                    </autocomplete>
+                            on-close="clearSearch()"
+                            ng-model="selectedItem"
+                            for="to-users">
+                    </drop-down>
                 </div>
                 <div class="row">
                     <div class="flex-row flex-start vertical-spacing-twice">

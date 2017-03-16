@@ -1,3 +1,4 @@
+declare var idiom: any;
 directives.push(
     {
         name: 'subjectSchedule',
@@ -31,6 +32,8 @@ directives.push(
                             due_date: DateService.addDays(new Date, 7),
                             corrected_date: DateService.addDays(new Date, 7)
                         };
+
+                        scope.clearSearch();
                     }
 
                     /**
@@ -330,6 +333,25 @@ directives.push(
                             }
                         };
                     }
+
+                    scope.clearSearch = function(){
+                        scope.search = {};
+                        scope.search.found = [];
+                        scope.search.search = '';
+                    };
+
+                    scope.updateFoundUsersGroups = function() {
+                        var searchTerm =  idiom.removeAccents(scope.search.search).toLowerCase();
+                           
+                        if(!searchTerm){
+                            return [];
+                        }
+                        
+                        scope.search.found = _.filter(scope.data.lists, function(item) {
+                            let titleTest = idiom.removeAccents(item.title).toLowerCase();
+                            return titleTest.indexOf(searchTerm) !== -1;
+                        });
+                    };
                 }
             };
         }]
