@@ -22,11 +22,10 @@ directives.push(
                     };
 
                     scope.navigateTo = function(grainCopy:IGrainCopy = undefined) {
-                        if (grainCopy) {
-                            var article = jQuery("article#" + grainCopy.id)
-                            if(article.length)
-                                jQuery('html, body').animate({ scrollTop: article.offset().top - 70 }, 500);
-                        }
+                        var article = jQuery("article#" + ((grainCopy) ? grainCopy.id : 'summary'));
+                        if(article.length)
+                          jQuery('html, body').animate({ scrollTop: article.offset().top - 70 }, 500);
+
                         scope.$emit('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy, scope.grainCopyList);
                     };
 
