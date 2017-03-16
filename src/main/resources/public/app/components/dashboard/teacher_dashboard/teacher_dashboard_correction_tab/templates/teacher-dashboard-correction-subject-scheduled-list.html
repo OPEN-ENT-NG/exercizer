@@ -65,132 +65,135 @@
         </div>
 
         <article class="row vertical-spacing">
-            <h2 class="row">Derniers sujets distribués</h2>
+            <div data-ng-show="filteredSubjectScheduledList.length === 0"><h2><i18n>exercizer.empty.corrections</i18n></h2></div>
+            <div data-ng-show="filteredSubjectScheduledList.length > 0">
+                <h2 class="row">Derniers sujets distribués</h2>
 
-            <div class="row">
-                <input type="text" class="twelve cell" data-ng-model="search.text.title" placeholder="Rechercher">
-            </div>
-
-            <div class="row vertical-spacing">
-                <!-- list subject scheduled -->
-                <div class="fallen dominos" data-ng-show="displayList == 'domino'">
-                    <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState() | orderBy : orderByCopyListModificationDate : true)"
-                         class="item" style="width: 100%; max-width: none;">
-
-                        <section class="domino">
-                            <div class="top">
-                                <img data-ng-src="[[getSubjectScheduledPicture(subjectScheduled)]]" class="absolute"/>
-                                <!-- todo Lauren simple or interactive icon -->
-                                <div class="left-magnet cell">
-                                    <i class="[[subjectScheduled.type === 'simple' ? 'download' : 'attachment']]" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
-                                </div>
-                            </div>
-                            <div class="bottom">
-                                <div class="content">
-                                    <div class="eight cell">
-                                        <div class="row">
-                                            <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">[[
-                                                subjectScheduled.title ]]</strong>
-                                        </div>
-                                        <div class="row">
-                                            Modifié le [[ orderByCopyListModificationDate(subjectScheduled) |
-                                            date:'dd/MM/yyyy' ]]
-                                        </div>
-                                        <div class="row">
-                                            Pour le [[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]
-                                        </div>
-                                        <div class="row">
-                                            [[ numberOfCopySubmitted(subjectScheduled) ]] élève(s) sur [[
-                                            numberOfCopy(subjectScheduled) ]] ont rendu le devoir
-                                        </div>
-                                        <div class="row"
-                                             data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}">
-                                            [[ stateTextSubjectScheduled(subjectScheduled) ]]
-                                        </div>
-                                    </div>
-                                    <div class="four cell">
-                                        <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList |limitTo : 1">
-                                            <h3 style="margin:0px;"
-                                                data-ng-click="seeAllAssignAtList(subjectScheduled)"
-                                                class="hover-orange">[[group.name]]</h3>
-                                        </div>
-                                        <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList |limitTo : 1">
-                                            <h3 style="margin:0px;"
-                                                data-ng-click="seeAllAssignAtList(subjectScheduled)"
-                                                class="hover-orange">[[user.name]]</h3>
-                                        </div>
-                                        <h3 style="margin:0px;"
-                                            data-ng-click="seeAllAssignAtList(subjectScheduled)"
-                                            class="hover-orange"
-                                            data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                    </div>
+                <div class="row">
+                    <input type="text" class="twelve cell" data-ng-model="search.text.title" placeholder="Rechercher">
                 </div>
-                <div data-ng-show="displayList == 'array'">
-                    <table class="list-view">
-                        <thead>
-                        <tr>
-                            <th>Titre du sujet</th>
-                            <th>État</th>
-                            <th>Date de modification</th>
-                            <th>Date de fin</th>
-                            <th>Groupe</th>
-                            <th>Élève(s) ayant rendu le devoir</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr
-                                data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)">
-                            <td>
-                                <strong
-                                        class="hover-orange"
-                                        data-ng-click="clickOnSubjectScheduled(subjectScheduled)"
-                                >[[ subjectScheduled.title ]]</strong>
-                                <!-- todo Lauren simple or interactive icon -->
-                                <div class="right-magnet cell">
-                                    <i class="[[subjectScheduled.type === 'simple' ? 'download' : 'attachment']]" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+
+                <div class="row vertical-spacing">
+                    <!-- list subject scheduled -->
+                    <div class="fallen dominos" data-ng-show="displayList == 'domino'">
+                        <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState() | orderBy : orderByCopyListModificationDate : true)"
+                             class="item" style="width: 100%; max-width: none;">
+
+                            <section class="domino">
+                                <div class="top">
+                                    <img data-ng-src="[[getSubjectScheduledPicture(subjectScheduled)]]" class="absolute"/>
+                                    <!-- todo Lauren simple or interactive icon -->
+                                    <div class="left-magnet cell">
+                                        <i class="[[subjectScheduled.type === 'simple' ? 'download' : 'attachment']]" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                                    </div>
                                 </div>
-                            </td>
-                            <td>
+                                <div class="bottom">
+                                    <div class="content">
+                                        <div class="eight cell">
+                                            <div class="row">
+                                                <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">[[
+                                                    subjectScheduled.title ]]</strong>
+                                            </div>
+                                            <div class="row">
+                                                Modifié le [[ orderByCopyListModificationDate(subjectScheduled) |
+                                                date:'dd/MM/yyyy' ]]
+                                            </div>
+                                            <div class="row">
+                                                Pour le [[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]
+                                            </div>
+                                            <div class="row">
+                                                [[ numberOfCopySubmitted(subjectScheduled) ]] élève(s) sur [[
+                                                numberOfCopy(subjectScheduled) ]] ont rendu le devoir
+                                            </div>
+                                            <div class="row"
+                                                 data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}">
+                                                [[ stateTextSubjectScheduled(subjectScheduled) ]]
+                                            </div>
+                                        </div>
+                                        <div class="four cell">
+                                            <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList |limitTo : 1">
+                                                <h3 style="margin:0px;"
+                                                    data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                                    class="hover-orange">[[group.name]]</h3>
+                                            </div>
+                                            <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList |limitTo : 1">
+                                                <h3 style="margin:0px;"
+                                                    data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                                    class="hover-orange">[[user.name]]</h3>
+                                            </div>
+                                            <h3 style="margin:0px;"
+                                                data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                                class="hover-orange"
+                                                data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                        </div>
+                    </div>
+                    <div data-ng-show="displayList == 'array'">
+                        <table class="list-view">
+                            <thead>
+                            <tr>
+                                <th>Titre du sujet</th>
+                                <th>État</th>
+                                <th>Date de modification</th>
+                                <th>Date de fin</th>
+                                <th>Groupe</th>
+                                <th>Élève(s) ayant rendu le devoir</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr
+                                    data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)">
+                                <td>
+                                    <strong
+                                            class="hover-orange"
+                                            data-ng-click="clickOnSubjectScheduled(subjectScheduled)"
+                                    >[[ subjectScheduled.title ]]</strong>
+                                    <!-- todo Lauren simple or interactive icon -->
+                                    <div class="right-magnet cell">
+                                        <i class="[[subjectScheduled.type === 'simple' ? 'download' : 'attachment']]" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                                    </div>
+                                </td>
+                                <td>
                                 <span data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}">
                                     [[ stateTextSubjectScheduled(subjectScheduled) ]]
                                 </span>
-                            </td>
-                            <td>
-                                <span>[[ subjectScheduled.modified | date:'dd/MM/yyyy' ]]</span>
-                            </td>
-                            <td>
-                                <span>[[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]</span>
-                            </td>
-                            <td class="four cell">
-                                <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList|limitTo : 1">
+                                </td>
+                                <td>
+                                    <span>[[ subjectScheduled.modified | date:'dd/MM/yyyy' ]]</span>
+                                </td>
+                                <td>
+                                    <span>[[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]</span>
+                                </td>
+                                <td class="four cell">
+                                    <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList|limitTo : 1">
                                     <span
                                             data-ng-click="seeAllAssignAtList(subjectScheduled)"
                                             class="hover-orange">[[group.name]]</span>
-                                </div>
-                                <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList|limitTo : 1">
+                                    </div>
+                                    <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList|limitTo : 1">
                                     <span
                                             data-ng-click="seeAllAssignAtList(subjectScheduled)"
                                             class="hover-orange">[[user.name]]</span>
-                                </div>
-                                <div>
+                                    </div>
+                                    <div>
                                     <span data-ng-click="seeAllAssignAtList(subjectScheduled)"
                                           class="hover-orange"
                                           data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</span>
-                                </div>
+                                    </div>
 
-                            </td>
-                            <td>
-                                <span>[[ numberOfCopySubmitted(subjectScheduled) ]]</span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                                </td>
+                                <td>
+                                    <span>[[ numberOfCopySubmitted(subjectScheduled) ]]</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </article>

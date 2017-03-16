@@ -22,6 +22,8 @@
     "group.school.Student": "Tous les élèves de l'{0}.",
     "group.school.Teacher": "Tous les enseignants de l'{0}.",
     "group.school.Guest": "Tous les invités de l'{0}.",
+    "exercizer.empty.subjects" : "Pour commencer, cliquez sur nouveau sujet.",
+    "exercizer.empty.corrections" : "Vous n'avez aucune correction en cours.",
     "exercizer.preview.navigation": "Navigation",
     "exercizer.preview.summary": "Résumé",
     "editor.option.filltext":  "Ajouter une zone à compléter",
