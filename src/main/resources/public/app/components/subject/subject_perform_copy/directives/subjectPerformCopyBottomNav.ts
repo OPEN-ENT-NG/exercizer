@@ -26,12 +26,14 @@ directives.push(
                     };
                     
                     scope.navigateToPrevious = function() {
+                        (window as any).scrollTo(0,0);
                         if (scope.hasPrevious()) {
                             _navigateTo(scope.grainCopyList[scope.currentGrainCopyIndex - 1]);
                         }
                     };
                     
                     scope.navigateToNext = function() {
+                        (window as any).scrollTo(0,0);
                         if (scope.hasNext()) {
                             _navigateTo(scope.grainCopyList[angular.isUndefined(scope.currentGrainCopy) ? 0 : scope.currentGrainCopyIndex + 1]);
                         }
