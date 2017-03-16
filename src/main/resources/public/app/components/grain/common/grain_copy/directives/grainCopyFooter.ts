@@ -11,7 +11,7 @@ directives.push(
                 },
                 templateUrl: 'exercizer/public/app/components/grain/common/grain_copy/templates/grain-copy-footer.html',
                 link:(scope:any) => {
-                    scope.isFolded = true;
+                    scope.isFolded = false;
 
                     scope.hasAnswerExplanation = function() {
                         return !angular.isUndefined(scope.grainScheduled.grain_data.answer_explanation) && scope.grainScheduled.grain_data.answer_explanation !== null;
