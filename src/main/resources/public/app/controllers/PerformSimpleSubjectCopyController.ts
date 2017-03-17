@@ -174,12 +174,18 @@ class PerformSimpleSubjectCopyController {
 
     public canHomeworkReplace = function(){
         return this._subjectCopy.submitted_date !== null &&  this._subjectCopy.homework_file_id !== null &&
-            this._dateService.compare_after(this._dateService.isoToDate(this._subjectScheduled.due_date), new Date(), false);
+            this._dateService.compare_after(this._dateService.isoToDate(this._subjectScheduled.due_date), new Date(), true);
     };
 
     public canHomeworkSubmit = function(){
-        //if no preview else it's possible to submit a homework even if due date is exceeded (Unless it has already submit)
-        return !this._previewingFromLibrary && (this._subjectCopy.homework_file_id === null || this.canHomeworkReplace());
+        //if no preview else it's possible to submit a homework if the begin date is passed even if due date is exceeded (Unless it has already submit)
+        return !this._previewingFromLibrary &&
+            this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.begin_date), true) &&
+            (this._subjectCopy.homework_file_id === null || this.canHomeworkReplace());
+    };
+    
+    public canShowFuturSubmitLabel = function(){
+       return this._dateService.compare_after(this._dateService.isoToDate(this._subjectScheduled.begin_date), new Date(), false);  
     };
 
     public canHomeworkOnlyView = function(){

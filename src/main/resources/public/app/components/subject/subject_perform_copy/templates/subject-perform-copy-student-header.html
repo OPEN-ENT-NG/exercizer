@@ -5,7 +5,7 @@
     </div>
 <div class="row">
 
-    <button class="cell right-magnet" data-ng-click="redirectToDashboard(true)">
+    <button class="cell right-magnet" data-ng-if="canSubmit()" data-ng-click="redirectToDashboard(true)">
         Rendre la copie
     </button>
 

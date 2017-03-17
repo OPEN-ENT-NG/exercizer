@@ -93,6 +93,7 @@
     "exercizer.simple.no.corrected" : "Pas encore de correction disponible",
     "exercizer.simple.check" : "Veuillez déposer un fichier",
     "exercizer.simple.check.renew" : "Veuillez déposer un nouveau fichier.",
+    "exercizer.future.info" : "Vous pourrez rendre votre sujet à partir du",
     "exercizer.simple.submit.from.library" : "Le sujet a bien été ajouté dans votre liste des sujets.",
     "exercizer.simple.library.corrected" : "Ajouté un corrigé",
     "exercizer.simple.consult.corrected" : "La consultation du corrigé sera possible à partir du",
