@@ -457,22 +457,16 @@ class SubjectCopyService implements ISubjectCopyService {
 
     public canPerformACopyAsStudent = function(subjectScheduled, copy){
         // a student can not access to a copy if
-        // the subject is over
-        // OR
         // the subject have been submitted AND the subject have option one_shot == true;
         // OR
         // the copy is corrected by the teacher;
-        if (this._dateService.compare_after(new Date(), this._dateService.isoToDate(subjectScheduled.due_date), false) === true) {
+        if (subjectScheduled.is_one_shot_submit && copy.submitted_date) {
             return false;
         } else {
-            if (subjectScheduled.is_one_shot_submit && copy.submitted_date) {
-                return false;
-            } else {
-                if(copy.is_correction_on_going || copy.is_corrected){
-                    return false
-                } else{
-                    return true;
-                }
+            if(copy.is_correction_on_going || copy.is_corrected){
+                return false
+            } else{
+                return true;
             }
         }
     };

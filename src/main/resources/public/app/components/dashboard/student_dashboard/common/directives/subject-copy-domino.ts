@@ -75,22 +75,6 @@ directives.push(
 
                         };
 
-                        scope.submitCopyLate = function(){
-                            if (scope.subjectScheduled.type === 'simple') {
-                                $location.path('/subject/copy/perform/simple/' + scope.subjectCopy.id);
-                            } else {
-                                scope.subjectCopy.submitted_date = new Date().toISOString();
-                                SubjectCopyService.submit(scope.subjectCopy).then(
-                                    function (subjectCopy:ISubjectCopy) {
-                                        notify.info("Votre copie à été rendue.");
-                                    },
-                                    function (err) {
-                                        notify.error(err);
-                                    }
-                                );
-                            }
-                        };
-
                         /**
                          * Get subject copy information
                          */
