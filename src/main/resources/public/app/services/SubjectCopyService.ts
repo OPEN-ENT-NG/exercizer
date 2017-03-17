@@ -383,7 +383,8 @@ class SubjectCopyService implements ISubjectCopyService {
     };
 
     public copyState = function(copy){
-        if(copy.is_corrected){
+        //simple subject : status to "is corrected" if the copy has been submitted
+        if(copy.is_corrected && copy.submitted_date){
             return 'is_corrected';
         } else if(copy.is_correction_on_going){
             return 'is_correction_on_going';
