@@ -105,7 +105,7 @@
                     </td>
                     <td class="four cell">
                          <!-- todo Lauren drop zone -->
-                         <div ng-if="!copy.corrected_metadata.filename" style="text-align: center;padding-bottom: 5px;padding-top: 5px;border: dashed #FF8500;" drop-files="newFiles" on-drop="selectedCorrectedFileCopy(copy);saveCurrentCorrected(this);">
+                         <div ng-if="!copy.corrected_metadata.filename && copy.submitted_date" style="text-align: center;padding-bottom: 5px;padding-top: 5px;border: dashed #FF8500;" drop-files="newFiles" on-drop="selectedCorrectedFileCopy(copy);saveCurrentCorrected(this);">
                               <a data-ng-click="selectedCorrectedFileCopy(copy)" onclick="$(currentUpload).click();"><i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i><i18n>Ajouter un fichier</i18n></a>
                          </div>
                          <span ng-if="copy.corrected_metadata.filename">[[copy.corrected_metadata.filename]]&nbsp;<i data-ng-click="removeCurrentCorrected(copy)" class="close-2x"></i></span>
