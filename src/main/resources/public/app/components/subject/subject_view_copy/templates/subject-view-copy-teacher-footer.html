@@ -1,0 +1,13 @@
+<div class="row">
+    <button class="cell right-magnet" data-ng-click="redirectToDashboard(true)" data-ng-hide="copyIsCorrected()">
+        Corriger
+    </button>
+
+    <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-hide="copyIsCorrected()">
+        Corriger plus tard
+    </button>
+
+    <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-show="copyIsCorrected()">
+        Retour aux corrections
+    </button>
+</div>
