@@ -21,7 +21,8 @@
 
     <div class="info">Vérifiez bien que toutes les questions soient remplies avant de rendre votre copie.</div>
 
-    <div class="warning" data-ng-if="subjectScheduled.is_one_shot_submit"><strong>Attention !</strong> Le rendu de votre copie sera définitif, vous ne pourrez plus la modifier ensuite.</div>
+    <div class="warning" data-ng-if="subjectScheduled.is_one_shot_submit"><strong><i18n>exercizer.one.submit</i18n></strong></div>
+    <div class="warning" data-ng-if="!subjectScheduled.is_one_shot_submit"><strong><i18n>exercizer.several.submit</i18n></strong></div>
 
     <div class="row">
         <button data-ng-click="submitSubjectCopy()" class="cell right-magnet">Rendre la copie</button>
