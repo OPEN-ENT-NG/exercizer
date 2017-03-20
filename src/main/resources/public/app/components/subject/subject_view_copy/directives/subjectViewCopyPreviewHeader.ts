@@ -17,6 +17,10 @@ directives.push(
                         }
                     };
 
+                    scope.redirectToDashBoard = function() {
+                        $location.path('/dashboard');
+                    };
+
                     scope.redirectToSubjectEdit = function() {
                         if (!scope.previewingFromLibrary) {
                             $location.path('/subject/edit/' + scope.subjectScheduled.subject_id + '/');

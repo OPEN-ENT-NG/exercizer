@@ -1,9 +1,12 @@
 <div class="row">
     <h1 class="cell">
-        [[ subjectScheduled.title ]]<span style="font-size: large;">&nbsp;-&nbsp;[[ subjectCopy.owner_username ]]</span>
+        <span class="hover-orange" data-ng-click="redirectToDashboard()"><i18n>exercizer.title</i18n></span> / [[ subjectScheduled.title ]]
     </h1>
 </div>
 <div class="row">
+    <h2 class="cell">
+        <strong>Copie de [[ subjectCopy.owner_username ]]</strong>
+    </h2>
     <button class="cell right-magnet cancel" data-ng-click="redirectToDashboard()">
         Retour à mes sujets
     </button>

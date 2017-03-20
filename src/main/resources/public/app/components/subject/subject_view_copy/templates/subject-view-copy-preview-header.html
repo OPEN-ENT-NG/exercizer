@@ -1,9 +1,12 @@
 <div class="row">
     <h1 class="cell">
-        [[ subjectScheduled.title ]]<span style="font-size: large;">&nbsp;-&nbsp;NOM prénom</span>
+        <span class="hover-orange" data-ng-click="(previewingFromLibrary) ? redirectToTeacherDashboardLibraryTab() : redirectToDashBoard()"><i18n>exercizer.title</i18n></span> / [[ subjectScheduled.title ]]
     </h1>
 </div>
 <div class="row">
+    <h2 class="cell">
+        <strong>Copie de NOM prénom</strong>
+    </h2>
     <button class="cell right-magnet" data-ng-click="redirectToTeacherDashboardLibraryTab()" data-ng-if="previewingFromLibrary">
         Retour à la bibliothèque
     </button>

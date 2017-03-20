@@ -20,7 +20,15 @@ directives.push(
                             $location.path('/dashboard/teacher/correction/'+scope.subjectScheduled.id);
                         }
                     };
-                    
+
+                    scope.redirectToSubjectDashboard = function() {
+                        $location.path('/dashboard');
+                    };
+
+                    scope.redirectToCorrectDashboard = function() {
+                        $location.path('dashboard/teacher/correction');
+                    };
+
                     scope.$on('E_SUBJECT_COPY_UPDATED', function(event, redirect:boolean) {
                         if (redirect) {
                             $location.path('/dashboard/teacher/correction/'+scope.subjectScheduled.id);

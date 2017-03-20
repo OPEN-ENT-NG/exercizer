@@ -1,8 +1,8 @@
 <div class="row">
     <h1 class="cell">
-        [[ subjectScheduled.title ]]&nbsp;-&nbsp;[[ subjectScheduled.max_score ]]&nbsp;point(s)
+        <span class="hover-orange" data-ng-click="redirectToDashboard(false)"><i18n>exercizer.title</i18n></span> / [[ subjectScheduled.title ]]&nbsp;-&nbsp;[[ subjectScheduled.max_score ]]&nbsp;point(s)
     </h1>
-    </div>
+</div>
 <div class="row">
 
     <button class="cell right-magnet" data-ng-if="canSubmit()" data-ng-click="redirectToDashboard(true)">

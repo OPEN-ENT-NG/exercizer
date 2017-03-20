@@ -1,10 +1,14 @@
 <div class="row">
     <h1 class="cell">
-        [[ subjectScheduled.title ]]<span style="font-size: large;">&nbsp;-&nbsp;[[ subjectCopy.owner_username ]]</span>
+        <span class="hover-orange" data-ng-click="redirectToSubjectDashboard()"><i18n>exercizer.title</i18n></span>
+        <span data-ng-click="redirectToCorrectDashboard()"> / <span class="hover-orange">Mes corrections</span></span>
+         / [[ subjectScheduled.title ]]
     </h1>
 </div>
 <div class="row">
-
+    <h2 class="cell">
+        <strong>Copie de [[ subjectCopy.owner_username ]]</strong>
+    </h2>
     <button class="cell right-magnet" data-ng-click="redirectToDashboard(true)" data-ng-hide="copyIsCorrected()">
         Corriger
     </button>
@@ -16,5 +20,4 @@
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-show="copyIsCorrected()">
         Retour aux corrections
     </button>
-
 </div>
