@@ -3,8 +3,16 @@
         Corriger
     </button>
 
+    <button class="cell right-magnet flat-button" data-ng-click="redirectToNextCopy()" data-ng-show="hasNextCopy()">
+        Copie suivante
+    </button>
+
+    <button class="cell right-magnet flat-button" data-ng-click="redirectToPreviousCopy()" data-ng-show="hasPreviousCopy()">
+        Copie précédente
+    </button>
+
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-hide="copyIsCorrected()">
-        Corriger plus tard
+        Retour
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-show="copyIsCorrected()">

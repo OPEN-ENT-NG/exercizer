@@ -15,6 +15,7 @@ interface ISubjectCopyService {
     removeCorrectedFile(id): ng.IPromise<any>;
     remindCustomCopies(copyIds:number[], subject:string, body:string): ng.IPromise<Boolean>;
     remindAutomaticCopies(copyIds:number[], subjectScheduleId:number): ng.IPromise<Boolean>;
+    getListBySubjectScheduled(subjectScheduled : ISubjectScheduled): ISubjectCopy[];
     
 }
 
@@ -374,7 +375,7 @@ class SubjectCopyService implements ISubjectCopyService {
         }
     };
 
-    public getListBySubjectScheduled = function(subjectScheduled : ISubjectScheduled){
+    public getListBySubjectScheduled = function(subjectScheduled : ISubjectScheduled):ISubjectCopy[] {
         if(this._listBySubjectScheduled && this._listBySubjectScheduled[subjectScheduled.id]){
             return this._listBySubjectScheduled[subjectScheduled.id]
         } else{
