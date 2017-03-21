@@ -445,13 +445,9 @@ class SubjectCopyService implements ISubjectCopyService {
     };
 
     public canCorrectACopyAsTeacher = function(subjectScheduled, copy){
-        //  a teacher can start correction if
-        // the copy is submitted
-        // OR
-        // due date is past
-        // if today = dur_date, the teacher can not correct
+        //  a teacher can start correction if the copy is submitted
         if(subjectScheduled && copy){
-            return copy.submitted_date || this._dateService.compare_after(new Date, this._dateService.isoToDate(subjectScheduled.due_date), false);
+            return copy.submitted_date;
         } else {
             return false;
         }
