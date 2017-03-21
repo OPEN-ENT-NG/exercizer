@@ -1,11 +1,11 @@
+<!-- subject-copy-domino -->
 <div class="fallen dominos" style="margin-bottom: 0px">
     <div class="item" style="width: 100%; max-width: none;">
         <section class="domino">
             <div class="top">
                 <img data-ng-src="[[getSubjectCopyPicture()]]" class="absolute" />
-                <!-- todo Lauren simple or interactive icon -->
-                <div class="left-magnet cell">
-                    <i class="[[subjectScheduled.type === 'simple' ? 'download' : 'attachment']]" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                <div class="cell">
+                    <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
                 </div>
             </div>
             <div class="bottom">

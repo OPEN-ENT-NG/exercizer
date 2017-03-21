@@ -102,9 +102,8 @@
                             <section class="domino">
                                 <div class="top">
                                     <img class="absolute" data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)" data-ng-src="[[ teacherDashboardLibraryTabController.getSubjectPicture(subject) ]]" />
-                                    <!-- todo Lauren simple or interactive icon -->
-                                    <div class="left-magnet cell">
-                                        <i class="[[subject.type === 'simple' ? 'download' : 'attachment']]" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                                    <div class="cell">
+                                        <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
                                     </div>
                                 </div>
                                 <div class="bottom">

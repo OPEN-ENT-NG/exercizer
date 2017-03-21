@@ -82,9 +82,8 @@
                             <section class="domino">
                                 <div class="top">
                                     <img data-ng-src="[[getSubjectScheduledPicture(subjectScheduled)]]" class="absolute"/>
-                                    <!-- todo Lauren simple or interactive icon -->
-                                    <div class="left-magnet cell">
-                                        <i class="[[subjectScheduled.type === 'simple' ? 'download' : 'attachment']]" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                                    <div class="cell">
+                                        <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
                                     </div>
                                 </div>
                                 <div class="bottom">
@@ -153,9 +152,8 @@
                                             class="hover-orange"
                                             data-ng-click="clickOnSubjectScheduled(subjectScheduled)"
                                     >[[ subjectScheduled.title ]]</strong>
-                                    <!-- todo Lauren simple or interactive icon -->
                                     <div class="right-magnet cell">
-                                        <i class="[[subjectScheduled.type === 'simple' ? 'download' : 'attachment']]" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
+                                        <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
                                     </div>
                                 </td>
                                 <td>
