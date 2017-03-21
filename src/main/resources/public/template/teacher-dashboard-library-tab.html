@@ -102,13 +102,13 @@
                             <section class="domino">
                                 <div class="top">
                                     <img class="absolute" data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)" data-ng-src="[[ teacherDashboardLibraryTabController.getSubjectPicture(subject) ]]" />
-                                    <div class="cell">
-                                        <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
-                                    </div>
                                 </div>
                                 <div class="bottom">
                                     <div class="content">
                                         <div class="row">
+                                            <div class="cell title-icon">
+                                                <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
+                                            </div>
                                             <strong data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)">[[ subject.title ]]</strong>
                                         </div>
                                         <div class="row">

@@ -4,14 +4,16 @@
         <section class="domino">
             <div class="top">
                 <img data-ng-src="[[getSubjectCopyPicture()]]" class="absolute" />
-                <div class="cell">
-                    <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
-                </div>
+
             </div>
             <div class="bottom">
                 <div class="content">
-                    <div class="cell">
+                    <div class="eleven cell">
                         <div class="row">
+                            <div class="cell title-icon">
+                                <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
+                            </div>
+
                             <div data-ng-switch="selectTitle()">
                                 <strong data-ng-switch-when="perform" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                                 <strong data-ng-switch-when="view" data-ng-click="viewSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
