@@ -37,7 +37,7 @@ public final class GroupUtils {
 		final String customReturn =
 				"MATCH (s:Group)<-[:IN]-(visibles) " +
 						"WHERE s.id IN {groupIds} " +
-						"RETURN DISTINCT visibles.id as _id, visibles.displayName as name ";
+						"RETURN DISTINCT visibles.id as _id, visibles.lastName + ' ' + visibles.firstName as name ";
 		final JsonObject params = new JsonObject().putArray("groupIds", new JsonArray(groupIds));
 		UserUtils.findVisibleUsers(eb, userId, true, false, customReturn, params, handler);
 	}

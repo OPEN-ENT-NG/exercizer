@@ -314,8 +314,8 @@ directives.push(
                                     var obj = createObjectList(group.name, group.id, 'group');
                                     array.push(obj);
                                 });
-                                angular.forEach(data.users.visibles, function (group) {
-                                    var obj = createObjectList(group.username, group.id, 'user');
+                                angular.forEach(data.users.visibles, function (user) {
+                                    var obj = createObjectList(user.lastName + ' ' + user.firstName, user.id, 'user');
                                     array.push(obj);
                                 })
                             }
