@@ -15,6 +15,14 @@ directives.push(
                     }, function () {
                         scope.grainCopy.grain_copy_data.custom_copy_data = new filltext.CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
                         scope.customData = scope.grainCopy.grain_copy_data.custom_copy_data;
+                        //shuffle
+                        if (scope.customData.answersType === 'list') {
+                            _.forEach(scope.customData.zones, function (zone) {
+                                zone.options = _.shuffle(zone.options);
+                            });
+                        } else if (scope.customData.answersType === 'drag') {
+                            scope.customData.options = _.shuffle(scope.customData.options);
+                        }
                     });
                     
                     scope.usedAnswers = [];
