@@ -86,8 +86,7 @@ public class Exercizer extends BaseServer {
         addController(new SubjectLessonTypeController());
         addController(new SubjectTagController());
 
-        //final String notifyCron = container.config().getString("scheduledNotificationCron", "0 0 4 * * ?");
-        final String notifyCron = container.config().getString("scheduledNotificationCron", "0 0/1 * * * ?");
+        final String notifyCron = container.config().getString("scheduledNotificationCron", "0 0 4 * * ?");
         final TimelineHelper timelineHelper = new TimelineHelper(vertx, vertx.eventBus(), container);
         final String host = container.config().getString("host", "http://localhost:8090");
 
