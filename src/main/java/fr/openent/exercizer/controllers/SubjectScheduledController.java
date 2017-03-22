@@ -19,7 +19,6 @@
 
 package fr.openent.exercizer.controllers;
 
-import fr.openent.exercizer.filters.SubjectCopyAccess;
 import fr.openent.exercizer.filters.SubjectScheduledCorrected;
 import fr.openent.exercizer.filters.SubjectScheduledOwner;
 import fr.openent.exercizer.services.ISubjectScheduledService;
@@ -32,12 +31,10 @@ import fr.wseduc.rs.Put;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.Either;
-import fr.wseduc.webutils.I18n;
 import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
-import org.entcore.common.http.filter.sql.OwnerOnly;
 import org.entcore.common.http.filter.sql.ShareAndOwner;
 import org.entcore.common.storage.Storage;
 import org.entcore.common.user.UserInfos;
@@ -46,7 +43,6 @@ import org.entcore.common.utils.DateUtils;
 import org.entcore.common.utils.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonArray;
@@ -242,29 +238,47 @@ public class SubjectScheduledController extends ControllerHelper {
 
 	private void scheduleAndNotifies(final JsonObject scheduledSubject, final UserInfos user, final Set<String> userIds,
 	                                 final HttpServerRequest request, final ScheduledType type) {
+		Date beginDate = null;
+		try {
+			beginDate = DateUtils.parseTimestampWithoutTimezone(scheduledSubject.getString("beginDate"));
+		} catch (ParseException e) {
+			log.error("can't parse beginDate of scheduled subject", e);
+			renderError(request);
+			return;
+		}
+
+		final Date nowUTC = new DateTime(DateTimeZone.UTC).toLocalDateTime().toDate();
+
+		final Boolean isNotify = DateUtils.lessOrEqualsWithoutTime(beginDate, nowUTC);
+		scheduledSubject.putBoolean("isNotify", isNotify);
+
 		if (ScheduledType.SIMPLE.equals(type)) {
-			subjectScheduledService.simpleSchedule(scheduledSubject, user, getHandlerScheduleAndNotifies(scheduledSubject, user, userIds, request));
+			subjectScheduledService.simpleSchedule(scheduledSubject, user, getHandlerScheduleAndNotifies(scheduledSubject, user, userIds, request, isNotify));
 		} else {
-			subjectScheduledService.schedule(scheduledSubject, user, getHandlerScheduleAndNotifies(scheduledSubject, user, userIds, request));
+			subjectScheduledService.schedule(scheduledSubject, user, getHandlerScheduleAndNotifies(scheduledSubject, user, userIds, request, isNotify));
 		}
 	}
 
-	private Handler<Either<String, JsonObject>> getHandlerScheduleAndNotifies(final JsonObject scheduledSubject, final UserInfos user, final Set<String> userIds, final HttpServerRequest request) {
+	private Handler<Either<String, JsonObject>> getHandlerScheduleAndNotifies(final JsonObject scheduledSubject, final UserInfos user, final Set<String> userIds, final HttpServerRequest request,
+	                                                                          final boolean isNotify) {
 		return new Handler<Either<String, JsonObject>>() {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
-					Date dueDate = new Date();
-					try {
-						dueDate = DateUtils.parseTimestampWithoutTimezone(scheduledSubject.getString("dueDate"));
-					} catch (ParseException e) {
-						log.error("can't parse dueDate of scheduled subject", e);
-					}
-					final String dueDateFormat = DateUtils.format(dueDate);
-					final String subjectName = scheduledSubject.getString("subjectTitle");
+					if (isNotify) {
+						Date dueDate = new Date();
+						try {
+							dueDate = DateUtils.parseTimestampWithoutTimezone(scheduledSubject.getString("dueDate"));
+						} catch (ParseException e) {
+							log.error("can't parse dueDate of scheduled subject", e);
+						}
 
-					final List<String> recipientSet = new ArrayList<String>(userIds);
-					sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName, dueDateFormat, null);
+						final String dueDateFormat = DateUtils.format(dueDate);
+						final String subjectName = scheduledSubject.getString("subjectTitle");
+
+						final List<String> recipientSet = new ArrayList<String>(userIds);
+						sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName, dueDateFormat, null);
+					}
 
 					Renders.created(request);
 				} else {

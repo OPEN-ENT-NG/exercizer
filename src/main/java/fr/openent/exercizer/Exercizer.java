@@ -20,7 +20,10 @@
 package fr.openent.exercizer;
 
 import fr.openent.exercizer.controllers.*;
+import fr.openent.exercizer.cron.ScheduledNotification;
+import fr.wseduc.cron.CronTrigger;
 import org.entcore.common.http.BaseServer;
+import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.service.impl.SqlCrudService;
 import org.entcore.common.share.impl.SqlShareService;
 import org.entcore.common.sql.SqlConf;
@@ -28,6 +31,8 @@ import org.entcore.common.sql.SqlConfs;
 import org.entcore.common.storage.Storage;
 import org.entcore.common.storage.StorageFactory;
 import org.vertx.java.core.eventbus.EventBus;
+
+import java.text.ParseException;
 
 
 public class Exercizer extends BaseServer {
@@ -80,6 +85,20 @@ public class Exercizer extends BaseServer {
         addController(new SubjectLessonLevelController());
         addController(new SubjectLessonTypeController());
         addController(new SubjectTagController());
+
+        //final String notifyCron = container.config().getString("scheduledNotificationCron", "0 0 4 * * ?");
+        final String notifyCron = container.config().getString("scheduledNotificationCron", "0 0/1 * * * ?");
+        final TimelineHelper timelineHelper = new TimelineHelper(vertx, vertx.eventBus(), container);
+        final String host = container.config().getString("host", "http://localhost:8090");
+
+        try {
+            new CronTrigger(vertx, notifyCron).schedule(
+                    new ScheduledNotification(timelineHelper, host)
+            );
+        } catch (ParseException e) {
+            log.fatal("[Exercizer] Invalid cron expression.", e);
+            vertx.stop();
+        }
     }
 
 }

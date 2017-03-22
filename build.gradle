@@ -3,6 +3,7 @@ apply plugin: 'scala'
 
 dependencies {
 	compile "org.entcore:common:$entCoreVersion"
+	compile "fr.wseduc:vertx-cron-timer:$vertxCronTimer"
 	testCompile "org.entcore:tests:$entCoreVersion"
 	testCompile 'io.gatling.highcharts:gatling-charts-highcharts:2.0.3'
 }
