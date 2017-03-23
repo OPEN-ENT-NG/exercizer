@@ -1,6 +1,6 @@
 <lightbox data-show="isDisplayed" data-on-close="closeLightbox()">
-    <h1 data-ng-if="step == 'subject'">[[ isNewSubject ? 'Créer' : 'Editer' ]] un sujet [[ type === 'simple' ? 'simple' : 'interactif' ]]</h1>
-    <h1 data-ng-if="step == 'choose'"><i18n>exercizer.choose</i18n></h1>
+    <h2 data-ng-if="step == 'subject'">[[ isNewSubject ? 'Créer' : 'Editer' ]] un sujet [[ type === 'simple' ? 'simple' : 'interactif' ]]</h2>
+    <h2 data-ng-if="step == 'choose'"><i18n>exercizer.choose</i18n></h2>
     <div data-ng-if="step == 'subject'" class="row">
         <form name="formSubjectProperties">
             <div class="rigid-grid row">
@@ -28,8 +28,8 @@
         </form>
     </div>
     <div data-ng-if="step == 'choose'" class="row">
-        <div class="horizontal-spacing vertical-spacing">
-            <div class="flex-row justify-center">
+        <div class="horizontal-spacing vertical-spacing block-container">
+            <div class="flex-row eight centered bottom-spacing-twice">
                 <button class="flat-button" data-ng-click="nextStep('simple')" style="float: none;">
                     <span><i class="file-upload"></i>&nbsp;&nbsp;</span>
                     <i18n>exercizer.choose.simple.button</i18n>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex-row justify-center">
+            <div class="flex-row eight centered bottom-spacing-twice">
                 <button class="flat-button" data-ng-click="nextStep('interactive')" style="float: none;">
                     <span><i class="file-interactive"></i>&nbsp;&nbsp;</span>
                     <i18n>exercizer.choose.interactive.button</i18n>
