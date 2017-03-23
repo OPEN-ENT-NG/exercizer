@@ -33,14 +33,9 @@ directives.push(
                             }
                         );
                     };
-                    
+
                     function resetRemind() {
-                        scope.remind = {
-                            reminderDisplayed:false,
-                            step:'choose',
-                            subject:'',
-                            body:''
-                        };                        
+                        scope.reminderDisplayed = false;
                     };
 
                     /**
@@ -48,7 +43,6 @@ directives.push(
                      */
 
                     scope.reminder = function(id){
-                        scope.remind.step = 'choose';
                         var possible = false;
 
                         scope.reminderCopies = [];
@@ -63,50 +57,10 @@ directives.push(
                         });
 
                         if (!possible) {
-                            notify.info("La séléction ne comporte pas de non-rendu");
+                            notify.info("La sélection ne comporte pas de non-rendu");
                         } else {
-                            scope.remind.reminderDisplayed=true;
+                            scope.reminderDisplayed = true;
                         }
-                    };
-                    
-                    scope.sendReminder = function() {
-                        var copyIds = [];
-                        
-                        angular.forEach(scope.reminderCopies, function(copy){                           
-                            copyIds.push(copy.id);
-                        });                        
-                        
-                        if (scope.remind.step === 'auto') {
-                            SubjectCopyService.remindAutomaticCopies(copyIds, scope.selectedSubjectScheduled.id).then(
-                                function () {
-                                    resetRemind();
-                                    notify.info('Le rappel a bien été envoyé');
-                                },
-                                function (err) {
-                                    notify.error(err);
-                                }                                
-                            );
-                        } else {
-                            if (!scope.remind.subject || scope.remind.subject === '') {
-                                notify.error('exercizer.reminder.check.subject');
-                            } else if (!scope.remind.body || scope.remind.body === '') {
-                                notify.error('exercizer.reminder.check.body');
-                            } else {
-                                SubjectCopyService.remindCustomCopies(copyIds, scope.remind.subject, scope.remind.body).then(
-                                    function () {
-                                        resetRemind();
-                                        notify.info('Le rappel a bien été envoyé');
-                                    },
-                                    function (err) {
-                                        notify.error(err);
-                                    }
-                                );
-                            }
-                        }
-                    };
-
-                    scope.closeReminder = function() {
-                        resetRemind();
                     };
 
                     scope.downloadFiles = function(){
@@ -251,6 +205,10 @@ directives.push(
                         } else{
                             return false;
                         }
+                    };
+                    
+                    scope.showReminder = function(copy) {
+                        return !copy.submitted_date && DateService.compare_after(new Date(), DateService.isoToDate(scope.selectedSubjectScheduled.begin_date), true);
                     };
 
                     scope.numberCopySubmitted = function(){

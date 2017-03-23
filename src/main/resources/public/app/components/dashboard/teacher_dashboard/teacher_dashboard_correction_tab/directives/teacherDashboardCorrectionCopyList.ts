@@ -20,6 +20,8 @@ directives.push(
                             scope.toasterDisplayed = false;
                             scope.search = {};
 
+                            resetRemind();
+
                             scope.order.field = 'owner_username';
                             scope.order.desc = false;
                         }
@@ -33,9 +35,34 @@ directives.push(
                         );
                     }
 
+                    function resetRemind() {
+                        scope.reminderDisplayed = false;
+                    };
+
                     /**
                      * EVENT
                      */
+
+                    scope.reminder = function(id){
+                        var possible = false;
+
+                        scope.reminderCopies = [];
+
+                        angular.forEach(scope.subjectCopyList, function(copy){
+                            if(copy.selected || copy.id === id){
+                                if (copy.submitted_date === null) {
+                                    possible=true;
+                                    scope.reminderCopies.push(copy);
+                                }
+                            }
+                        });
+
+                        if (!possible) {
+                            notify.info("La sélection ne comporte pas de non-rendu");
+                        } else {
+                            scope.reminderDisplayed = true;
+                        }
+                    };
 
                     scope.selectCopy = function(){
                         var res = false;
@@ -130,6 +157,10 @@ directives.push(
                             }
                         });
                         return res;
+                    };
+
+                    scope.showReminder = function(copy) {
+                        return !copy.submitted_date && DateService.compare_after(new Date(), DateService.isoToDate(scope.selectedSubjectScheduled.begin_date), true);
                     };
 
                     scope.tooLate = function(copy){

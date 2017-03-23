@@ -1,5 +1,22 @@
 <div class="row">
      <div class="cell">
+          <h2> [[selectedSubjectScheduled.title]]</h2>
+     </div>
+     <div class="cell">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     </div>
+     <div class="cell">
+          <h4> Commence le [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]], pour le [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]</h4>
+     </div>
+     <div class="cell right-magnet">
+          <button data-ng-click="clickReturnSubjectScheduledList()" class="right-magnet cancel">
+               Retour
+          </button>
+     </div>
+</div>
+
+<div class="row">
+     <div class="cell">
           <h2> Corrigé du devoir (publié le [[ selectedSubjectScheduled.corrected_date | date:'dd/MM/yyyy' ]])</h2>
      </div>
      <div class="cell">
@@ -16,11 +33,6 @@
      </div>
      <div class="cell" data-ng-if="selectedSubjectScheduled.corrected_file_id" data-tooltip="Supprimer le corrigé"  style="margin-top:5px;margin-bottom:5px">
           <button class="flat-button" data-ng-click="removeCorrected()"><i class="close-2x"  style=""></i></button>
-     </div>
-     <div class="cell right-magnet">
-          <button data-ng-click="clickReturnSubjectScheduledList()" class="right-magnet cancel">
-               Retour
-          </button>
      </div>
      <div class="two cell select-file hidden-content">
           <div class="hidden-content">
@@ -98,7 +110,7 @@
                          <!-- TODO Lauren -->
                          <span data-ng-if="tooLate(copy)" style="border: 1px solid black;border-radius: 2px;color: white;text-align: center;background-color:red;padding:4px">Retard</span>
                          <span style="[[tooLate(copy) ? 'color:red' : 'color:green']]">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
-                         <button data-ng-click="reminder(copy.id)" data-ng-if="!copy.submitted_date" class="flat-button"><i18n>Rappel</i18n></button>
+                         <button data-ng-click="reminder(copy.id)" data-ng-if="showReminder(copy)" class="flat-button"><i18n>Rappel</i18n></button>
                     </td>
                     <td class="four cell">
                          <span><a data-ng-click="downloadFile(copy)">[[copy.homework_metadata.filename]]</a></span>
@@ -129,63 +141,4 @@
      </div>
 </section>
 
-<lightbox data-show="remind.reminderDisplayed" on-close="closeReminder()">
-     <div data-ng-if="remind.step === 'choose'">
-          <h1>Rappel - [[selectedSubjectScheduled.title]]</h1>
-          <h4>Quel type de rappel voulez-vous envoyer ?</h4>
-          <div class="row">
-               <div class="cell">
-                    <button data-ng-click="remind.step = 'perso'" class="flat-button"><i18n>Personnalisé</i18n></button>
-               </div>
-               <div class="cell">
-                    <button data-ng-click="remind.step = 'auto'" class="flat-button"><i18n>Automatique</i18n></button>
-               </div>
-          </div>
-     </div>
-     <div data-ng-if="remind.step === 'auto'">
-          <h1>
-             <span class="hover-orange" data-ng-click="remind.step = 'choose'"> < Rappel automatique</span>
-          </h1>
-           <h4>Le rappel suivant sera envoyé à tous les destinataires sélectionnés : </h4>
-          <div class="row">
-               Rappel : La date limite de rendu du devoir [[selectedSubjectScheduled.title]] est le [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]
-          </div>
-     </div>
-     <div data-ng-if="remind.step === 'perso'">
-          <h1 class="row">
-               <span class="hover-orange" data-ng-click="remind.step = 'choose'"> < Rappel personnalisé</span>
-          </h1>
-          <!-- TODO Lauren recipient max-height and style-->
-          <div class="row horizontal-spacing" style="cursor:default">
-               <label class="one cell">
-                    A
-               </label>
-               <label class="three cell chip block" data-ng-repeat="copie in reminderCopies" >
-                    <span class="cell-ellipsis">[[copie.owner_username]]</span>
-               </label>
-          </div>
-          <div class="row vertical-spacing horizontal-spacing">
-               <label class="one cell">
-                    Objet
-               </label>
-               <input type="text" data-ng-model="remind.subject" class="eleven cell" placeholder="Objet">
-          </div>
-          <div class="row horizontal-spacing">
-               <div class="twelve cell">
-                    <editor data-ng-model="remind.body"></editor>
-               </div>
-          </div>
-     </div>
-     <div class="row" data-ng-if="remind.step === 'perso' || remind.step === 'auto'">
-          <div class="cell right-magnet">
-               <button data-ng-click="sendReminder()" class="right-magnet">
-                    Envoyer
-               </button>
-          </div>
-          <div class="cell right-magnet">
-               <button data-ng-click="closeReminder()" class="right-magnet cancel">
-                    Annuler
-               </button>
-          </div>
-     </div>
-</lightbox>
+<reminders is-displayed="reminderDisplayed" selected-subject-scheduled="selectedSubjectScheduled" reminder-copies="reminderCopies" />

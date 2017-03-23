@@ -1,0 +1,60 @@
+<lightbox data-show="isDisplayed" on-close="closeReminder()">
+    <div data-ng-if="remind.step === 'choose'">
+        <h1>Rappel - [[selectedSubjectScheduled.title]]</h1>
+        <h4>Quel type de rappel voulez-vous envoyer ?</h4>
+        <div class="row">
+            <div class="cell">
+                <button data-ng-click="remind.step = 'perso'" class="flat-button"><i18n>Personnalisé</i18n></button>
+            </div>
+            <div class="cell">
+                <button data-ng-click="remind.step = 'auto'" class="flat-button"><i18n>Automatique</i18n></button>
+            </div>
+        </div>
+    </div>
+    <div data-ng-if="remind.step === 'auto'">
+        <h1>
+            <span class="hover-orange" data-ng-click="remind.step = 'choose'"> < Rappel automatique</span>
+        </h1>
+        <h4>Le rappel suivant sera envoyé à tous les destinataires sélectionnés : </h4>
+        <div class="row">
+            Rappel : La date limite de rendu du devoir [[selectedSubjectScheduled.title]] est le [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]
+        </div>
+    </div>
+    <div data-ng-if="remind.step === 'perso'">
+        <h1 class="row">
+            <span class="hover-orange" data-ng-click="remind.step = 'choose'"> < Rappel personnalisé</span>
+        </h1>
+        <!-- TODO Lauren recipient max-height and style-->
+        <div class="row horizontal-spacing" style="cursor:default">
+            <label class="one cell">
+                A
+            </label>
+            <label class="three cell chip block" data-ng-repeat="copie in reminderCopies" >
+                <span class="cell-ellipsis">[[copie.owner_username]]</span>
+            </label>
+        </div>
+        <div class="row vertical-spacing horizontal-spacing">
+            <label class="one cell">
+                Objet
+            </label>
+            <input type="text" data-ng-model="remind.subject" class="eleven cell" placeholder="Objet">
+        </div>
+        <div class="row horizontal-spacing">
+            <div class="twelve cell">
+                <editor data-ng-model="remind.body"></editor>
+            </div>
+        </div>
+    </div>
+    <div class="row vertical-spacing" data-ng-if="remind.step === 'perso' || remind.step === 'auto'">
+        <div class="cell right-magnet">
+            <button data-ng-click="sendReminder()" class="right-magnet">
+                Envoyer
+            </button>
+        </div>
+        <div class="cell right-magnet">
+            <button data-ng-click="closeReminder()" class="right-magnet cancel">
+                Annuler
+            </button>
+        </div>
+    </div>
+</lightbox>

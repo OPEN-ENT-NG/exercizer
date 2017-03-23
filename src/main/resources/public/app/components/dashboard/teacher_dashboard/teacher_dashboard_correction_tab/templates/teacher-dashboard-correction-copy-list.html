@@ -92,7 +92,8 @@
                <td>
                     <!-- todo Lauren -->
                     <label data-ng-if="tooLate(copy)" style="border: 1px solid black;border-radius: 2px;color: white;text-align: center;background-color:red;padding:4px">Retard</label>
-                    <span>[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
+                    <span style="[[tooLate(copy) ? 'color:red' : 'color:green']]">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
+                    <button data-ng-click="reminder(copy.id)" data-ng-if="showReminder(copy)" class="flat-button"><i18n>Rappel</i18n></button>
                </td>
                <td>
                     <span>[[copy.calculated_score | truncateNumber ]] / [[selectedSubjectScheduled.max_score]]</span>
@@ -111,8 +112,13 @@
                <div class="cell">
                     <button data-ng-click="applyAutomaticMark()">Passer le statut de la sélection à "Corrigé"</button>
                </div>
+               <div class="cell">
+                    <button data-ng-click="reminder()">Rappel aux non-rendus</button>
+               </div>
           </div>
      </div>
 </section>
+
+<reminders is-displayed="reminderDisplayed" selected-subject-scheduled="selectedSubjectScheduled" reminder-copies="reminderCopies" />
 
 
