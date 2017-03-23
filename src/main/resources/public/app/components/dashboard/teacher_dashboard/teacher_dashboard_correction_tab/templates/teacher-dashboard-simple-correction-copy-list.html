@@ -1,3 +1,4 @@
+<!-- teacher-dashboard-simple-correction-copy-list -->
 <div class="row">
      <div class="cell">
           <h2> [[selectedSubjectScheduled.title]]</h2>
@@ -73,49 +74,56 @@
           <table class="list-view">
                <thead>
                <tr>
-                    <!-- todo Lauren sortable icon -->
-                    <th class="one cell"><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
-                    <th scope="col" class="two cell" ng-click="orderByField('owner_username')">
+                    <th class="one"><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
+                    <th scope="col" class="two" ng-click="orderByField('owner_username')">
                          <span translate content="Devoir de" ></span>
-                         <i class="arrow-bottom" ng-if="order.field === 'owner_username' && !order.desc"></i>
-                         <i class="arrow-top" ng-if="order.field === 'owner_username' && order.desc"></i>
+                         <i class="sort" ng-if="order.field !== 'owner_username'"></i>
+                         <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
+                         <i class="sort-desc" ng-if="order.field === 'owner_username' && order.desc"></i>
                     </th>
-                    <th scope="col" class="one cell" ng-click="orderByField('submitted_date')">
+                    <th scope="col" class="one" ng-click="orderByField('submitted_date')">
                          <span translate content="Date de rendu" ></span>
-                         <i class="arrow-bottom" ng-if="order.field === 'submitted_date' && !order.desc"></i>
-                         <i class="arrow-top" ng-if="order.field === 'submitted_date' && order.desc"></i>
+                         <i class="sort" ng-if="order.field !== 'submitted_date'"></i>
+                         <i class="sort-asc" ng-if="order.field === 'submitted_date' && !order.desc"></i>
+                         <i class="sort-desc" ng-if="order.field === 'submitted_date' && order.desc"></i>
                     </th>
-                    <th scope="col" class="four cell" ng-click="orderByField('homework_metadata.filename')">
+                    <th scope="col" class="four" ng-click="orderByField('homework_metadata.filename')">
                          <span translate content="Fichier" ></span>
-                         <i class="arrow-bottom" ng-if="order.field === 'homework_metadata.filename' && !order.desc"></i>
-                         <i class="arrow-top" ng-if="order.field === 'homework_metadata.filename' && order.desc"></i>
+                         <i class="sort" ng-if="order.field !== 'homework_metadata.filename'"></i>
+                         <i class="sort-asc" ng-if="order.field === 'homework_metadata.filename' && !order.desc"></i>
+                         <i class="sort-desc" ng-if="order.field === 'homework_metadata.filename' && order.desc"></i>
                     </th>
-                    <th scope="col" class="four cell" ng-click="orderByField('corrected_metadata.filename')">
+                    <th scope="col" class="four" ng-click="orderByField('corrected_metadata.filename')">
                          <span translate content="Correction individuelle" ></span>
-                         <i class="arrow-bottom" ng-if="order.field === 'corrected_metadata.filename' && !order.desc"></i>
-                         <i class="arrow-top" ng-if="order.field === 'corrected_metadata.filename' && order.desc"></i>
+                         <i class="sort" ng-if="order.field !== 'corrected_metadata.filename'"></i>
+                         <i class="sort-asc" ng-if="order.field === 'corrected_metadata.filename' && !order.desc"></i>
+                         <i class="sort-desc" ng-if="order.field === 'corrected_metadata.filename' && order.desc"></i>
                     </th>
                </tr>
                </thead>
                <tbody>
                <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc">
-                    <td class="one cell">
+                    <td>
                          <input type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                     </td>
-                    <td class="two cell">
+                    <td>
                          <span>[[copy.owner_username]]</span>
 
                     </td>
-                    <td class="one cell">
-                         <!-- TODO Lauren -->
-                         <span data-ng-if="tooLate(copy)" style="border: 1px solid black;border-radius: 2px;color: white;text-align: center;background-color:red;padding:4px">Retard</span>
-                         <span style="[[tooLate(copy) ? 'color:red' : 'color:green']]">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
+
+                    <td>
+                         <!-- DONE Lauren -->
+                         <div data-ng-if="tooLate(copy)" class="alert">
+                             <i class="timer-off"></i> &nbsp; Retard <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
+                         </div>
+                         <span data-ng-if="!tooLate(copy)" class="valid-color">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
                          <button data-ng-click="reminder(copy.id)" data-ng-if="showReminder(copy)" class="flat-button"><i18n>Rappel</i18n></button>
+
                     </td>
-                    <td class="four cell">
+                    <td>
                          <span><a data-ng-click="downloadFile(copy)">[[copy.homework_metadata.filename]]</a></span>
                     </td>
-                    <td class="four cell">
+                    <td>
                          <!-- todo Lauren drop zone -->
                          <div ng-if="!copy.corrected_metadata.filename && copy.submitted_date" style="text-align: center;padding-bottom: 5px;padding-top: 5px;border: dashed #FF8500;" drop-files="newFiles" on-drop="selectedCorrectedFileCopy(copy);saveCurrentCorrected(this);">
                               <a data-ng-click="selectedCorrectedFileCopy(copy)" onclick="$(currentUpload).click();"><i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i><i18n>Ajouter un fichier</i18n></a>
@@ -140,5 +148,4 @@
           </div>
      </div>
 </section>
-
 <reminders is-displayed="reminderDisplayed" selected-subject-scheduled="selectedSubjectScheduled" reminder-copies="reminderCopies" />
