@@ -74,26 +74,26 @@
           <table class="list-view">
                <thead>
                <tr>
-                    <th class="one"><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
-                    <th scope="col" class="two" ng-click="orderByField('owner_username')">
+                    <th class="one centered-text"><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
+                    <th scope="col" ng-click="orderByField('owner_username')">
                          <span translate content="Devoir de" ></span>
                          <i class="sort" ng-if="order.field !== 'owner_username'"></i>
                          <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
                          <i class="sort-desc" ng-if="order.field === 'owner_username' && order.desc"></i>
                     </th>
-                    <th scope="col" class="one" ng-click="orderByField('submitted_date')">
+                    <th scope="col" ng-click="orderByField('submitted_date')">
                          <span translate content="Date de rendu" ></span>
                          <i class="sort" ng-if="order.field !== 'submitted_date'"></i>
                          <i class="sort-asc" ng-if="order.field === 'submitted_date' && !order.desc"></i>
                          <i class="sort-desc" ng-if="order.field === 'submitted_date' && order.desc"></i>
                     </th>
-                    <th scope="col" class="four" ng-click="orderByField('homework_metadata.filename')">
+                    <th scope="col" ng-click="orderByField('homework_metadata.filename')">
                          <span translate content="Fichier" ></span>
                          <i class="sort" ng-if="order.field !== 'homework_metadata.filename'"></i>
                          <i class="sort-asc" ng-if="order.field === 'homework_metadata.filename' && !order.desc"></i>
                          <i class="sort-desc" ng-if="order.field === 'homework_metadata.filename' && order.desc"></i>
                     </th>
-                    <th scope="col" class="four" ng-click="orderByField('corrected_metadata.filename')">
+                    <th scope="col" ng-click="orderByField('corrected_metadata.filename')">
                          <span translate content="Correction individuelle" ></span>
                          <i class="sort" ng-if="order.field !== 'corrected_metadata.filename'"></i>
                          <i class="sort-asc" ng-if="order.field === 'corrected_metadata.filename' && !order.desc"></i>
@@ -102,8 +102,8 @@
                </tr>
                </thead>
                <tbody>
-               <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc">
-                    <td>
+               <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc" ng-class="{ checked: copy.selected }">
+                    <td class="centered-text">
                          <input type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                     </td>
                     <td>
@@ -113,12 +113,19 @@
 
                     <td>
                          <!-- DONE Lauren -->
+
                          <div data-ng-if="tooLate(copy)" class="alert">
                              <i class="timer-off"></i> &nbsp; Retard <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
                          </div>
-                         <span data-ng-if="!tooLate(copy)" class="valid-color">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
-                         <button data-ng-click="reminder(copy.id)" data-ng-if="showReminder(copy)" class="flat-button"><i18n>Rappel</i18n></button>
 
+                         <div data-ng-if="!tooLate(copy) && !showReminder(copy)" class="valid-color">
+                             <i class="check-circle"></i> &nbsp;<em>[[copy.submitted_date | date:'dd/MM/yyyy']]</em>
+                         </div>
+
+                         <div data-ng-if="showReminder(copy)" class="flex-row flex-center">
+                            <i class="pending-action horizontal-spacing medium-text"></i>
+                            <button data-ng-click="reminder(copy.id)" class="flat-button no-margin"><i18n>Rappel</i18n></button>
+                         </div>
                     </td>
                     <td>
                          <span><a data-ng-click="downloadFile(copy)">[[copy.homework_metadata.filename]]</a></span>
