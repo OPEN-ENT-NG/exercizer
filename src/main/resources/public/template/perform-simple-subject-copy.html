@@ -95,7 +95,9 @@
                         <div class="six cell">
                             <h3><i18n>exercizer.simple.individual.corrected</i18n></h3>
                         </div>
-                        <!-- todo Lauren button style -->
+
+                        <!-- todo Lauren button style psc-->
+                        <!-- DBRE impossible à afficher malgré la publication d'un corrigé -->
                         <div data-ng-if="performSimpleSubjectCopyController.canShowGeneralCorrected()" class="six cell">
                             <a data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()" data-ng-click="performSimpleSubjectCopyController.downloadGeneralCorrectedFile()" target="_blank">
                                 [[performSimpleSubjectCopyController.subjectScheduled.corrected_metadata.filename]]
@@ -103,6 +105,7 @@
                             </a>
                             <label data-ng-if="!performSimpleSubjectCopyController.canDownloadCorrected()"><i18n>exercizer.simple.consult.corrected</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'dd/MM/yyyy']]</label>
                         </div>
+
                         <div data-ng-if="!performSimpleSubjectCopyController.canShowGeneralCorrected()" class="six cell">
                             <i18n>exercizer.simple.no.corrected</i18n>
                         </div>
