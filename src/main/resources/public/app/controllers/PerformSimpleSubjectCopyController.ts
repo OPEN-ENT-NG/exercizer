@@ -203,9 +203,9 @@ class PerformSimpleSubjectCopyController {
         return !this._previewingFromLibrary && this._subjectCopy.corrected_file_id !== null;
     };
 
-    private canDownloadCorrected = function() {
+    public canDownloadCorrected = function() {
         //if corrected date has passed
-        return this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.corrected_date), false);
+        return this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.corrected_date), true);
     };
 
     public redirectToDashboard = function(){
