@@ -48,9 +48,10 @@
             </section>
         </div>
 
-        <subject-view-copy-teacher-footer data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
+        <div data-ng-if="!viewSubjectCopyController.previewing && viewSubjectCopyController.isTeacher">
+            <subject-view-copy-teacher-footer data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
                                           data-subject-copy="viewSubjectCopyController.subjectCopy" />
-
+        </div>
     </div>
 
     <!-- NO DATA -->
