@@ -1,4 +1,3 @@
-<!-- perform-simple-subject-copy -->
 <div data-ng-controller="PerformSimpleSubjectCopyController as performSimpleSubjectCopyController">
 
     <!-- LOADER -->
@@ -30,13 +29,6 @@
         <article class="row">
             <form name="formSubjectProperties">
                 <div class="rigid-grid row">
-                    <!-- <div class="two cell clip height-two">
-                        <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail" >
-                                <img ng-src="[[performSimpleSubjectCopyController.subjectScheduled.title.picture]]" ng-if="performSimpleSubjectCopyController.subjectScheduled.title.picture" class="absolute" />
-                                <img skin-src="/img/illustrations/collaborativeeditor-default.png" ng-if="!performSimpleSubjectCopyController.subjectScheduled.title.picture" class="absolute" />
-                        </div>
-                    </div> -->
-                    <!-- <div class="margin-two height-three"> -->
                     <div class="twelve cell horizontal-spacing">
                         <h1>[[performSimpleSubjectCopyController.subjectScheduled.title]]</h1>
                     </div>
@@ -51,9 +43,6 @@
                         <h3><i18n>exercizer.simple.make.label</i18n></h3>
                         <div data-ng-if="performSimpleSubjectCopyController.canHomeworkSubmit()"
                             class="twelve cell horizontal-spacing select-file input-block flex-row flex-center" style="margin-top:5px;margin-bottom:5px">
-
-                            <!-- DBRE check if hidden elements position are ok -->
-
                             <div drop-files="performSimpleSubjectCopyController.newFiles"
                                 on-drop="performSimpleSubjectCopyController.setCurrentFileName()"
                                 class="droppable flex-row flex-center seven">
@@ -68,7 +57,6 @@
                                         style="width: 100%!important; border: none;"
                                         placeholder="Glisser déposer un fichier" />
                             </div>
-
                             <div class="hidden-content">
                                 <input type="file" style="z-index:-1" files-input-change="performSimpleSubjectCopyController.setCurrentFileName()"  ng-model="performSimpleSubjectCopyController.newFiles" />
                             </div>
@@ -116,7 +104,6 @@
                             <i18n>exercizer.simple.no.corrected</i18n>
                         </div>
                     </div>
-                    <!--  </div> -->
                 </div>
             </form>
         </article>
