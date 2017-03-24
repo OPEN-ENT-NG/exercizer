@@ -24,14 +24,18 @@
         <h1 class="row">
             <span class="hover-orange" data-ng-click="remind.step = 'choose'"> < Rappel personnalisé</span>
         </h1>
-        <!-- TODO Lauren recipient max-height and style-->
         <div class="row horizontal-spacing" style="cursor:default">
             <label class="one cell">
                 A
             </label>
-            <label class="three cell chip block" data-ng-repeat="copie in reminderCopies" >
-                <span class="cell-ellipsis">[[copie.owner_username]]</span>
-            </label>
+
+            <!-- DBRE check scroll result -->
+            <div style="overflow-y: auto; max-height: 150px">
+                <div class="label-badge-disabled two cell" data-ng-repeat="copie in reminderCopies">
+                    <div class="cell-ellipsis">[[copie.owner_username]]</div>
+                </div>
+            </div>
+
         </div>
         <div class="row vertical-spacing horizontal-spacing">
             <label class="one cell">
