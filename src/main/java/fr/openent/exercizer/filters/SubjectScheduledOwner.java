@@ -35,11 +35,19 @@ public class SubjectScheduledOwner implements ResourcesProvider {
 	@Override
 	public void authorize(final HttpServerRequest resourceRequest, final Binding binding, final UserInfos user,
 			final Handler<Boolean> handler) {
-		
+
+		final String id = resourceRequest.params().get("id");
+
+		if (id == null) {
+			handler.handle(false);
+			return;
+		}
+
 		resourceRequest.pause();
 		
-		String query = "SELECT COUNT(*) FROM exercizer.subject_scheduled as ss WHERE ss.owner = ?";
+		String query = "SELECT COUNT(*) FROM exercizer.subject_scheduled as ss WHERE ss.id = ? AND ss.owner = ?";
 		JsonArray values = new JsonArray();
+		values.add(Sql.parseId(id));
 		values.addString(user.getUserId());
 		
 		Sql.getInstance().prepared(query,  values, new Handler<Message<JsonObject>>() {

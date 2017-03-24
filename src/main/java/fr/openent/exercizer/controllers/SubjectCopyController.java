@@ -19,10 +19,7 @@
 
 package fr.openent.exercizer.controllers;
 
-import fr.openent.exercizer.filters.SubjectCopyAccess;
-import fr.openent.exercizer.filters.SubjectCopyOwner;
-import fr.openent.exercizer.filters.SubjectCopyReminder;
-import fr.openent.exercizer.filters.SubjectScheduledOwner;
+import fr.openent.exercizer.filters.*;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.IGrainCopyService;
 import fr.openent.exercizer.services.ISubjectCopyService;
@@ -310,7 +307,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Put("/subject-copy/correct")
 	@ApiDoc("Acknowledge copy correction")
-	@ResourceFilter(SubjectScheduledOwner.class)
+	@ResourceFilter(SubjectScheduledOwnerForSubjectCopy.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void correctCopy(final HttpServerRequest request) {
 		writeCopy(request, CopyAction.CORRECTCOPY);
@@ -318,7 +315,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Put("/subject-copy/report")
 	@ApiDoc("Report copy final_score and general comment")
-	@ResourceFilter(SubjectScheduledOwner.class)
+	@ResourceFilter(SubjectScheduledOwnerForSubjectCopy.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void reportCopy(final HttpServerRequest request) {
 		writeCopy(request, CopyAction.REPORTCOPY);
@@ -441,7 +438,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Put("/grain-copy")
 	@ApiDoc("Updates a grain copy.")
-	@ResourceFilter(SubjectCopyOwner.class)
+	@ResourceFilter(SubjectCopyOwnerForGrain.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void updateGrain(final HttpServerRequest request) {
 		writeGrain(request, grainCopyMode.PERFORM);
@@ -449,7 +446,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Put("/grain-copy/correct")
 	@ApiDoc("Correct a grain copy.")
-	@ResourceFilter(SubjectScheduledOwner.class)
+	@ResourceFilter(SubjectScheduledOwnerForGrainCopy.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void correctGrain(final HttpServerRequest request) {
 		writeGrain(request, grainCopyMode.CORRECT);

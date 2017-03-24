@@ -33,7 +33,7 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-public class SubjectCopyOwner implements ResourcesProvider {
+public class SubjectCopyOwnerForGrain implements ResourcesProvider {
 
 	@Override
 	public void authorize(final HttpServerRequest resourceRequest, final Binding binding, final UserInfos user,
@@ -49,7 +49,9 @@ public class SubjectCopyOwner implements ResourcesProvider {
 				} else {
 					resourceRequest.pause();
 
-					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_copy sc WHERE sc.id = ? AND sc.owner = ?";
+					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_copy sc " +
+							"INNER JOIN " + conf.getSchema() + "grain_copy gc ON sc.id = gc.subject_copy_id " +
+							"WHERE gc.id = ? AND sc.owner = ?";
 					JsonArray values = new JsonArray();
 					values.addNumber(id);
 					values.addString(user.getUserId());

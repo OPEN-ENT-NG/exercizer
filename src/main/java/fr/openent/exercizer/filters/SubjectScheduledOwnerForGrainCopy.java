@@ -33,12 +33,11 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-public class SubjectCopyOwner implements ResourcesProvider {
+public class SubjectScheduledOwnerForGrainCopy implements ResourcesProvider {
 
 	@Override
 	public void authorize(final HttpServerRequest resourceRequest, final Binding binding, final UserInfos user,
 			final Handler<Boolean> handler) {
-
 		final SqlConf conf = SqlConfs.getConf(binding.getServiceMethod().substring(0, binding.getServiceMethod().indexOf('|')));
 
 		RequestUtils.bodyToJson(resourceRequest, new Handler<JsonObject>() {
@@ -49,10 +48,12 @@ public class SubjectCopyOwner implements ResourcesProvider {
 				} else {
 					resourceRequest.pause();
 
-					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_copy sc WHERE sc.id = ? AND sc.owner = ?";
+					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_scheduled as ss INNER JOIN " + conf.getSchema() +
+							"subject_copy sc ON ss.id = sc.subject_scheduled_id INNER JOIN " + conf.getSchema() + "grain_copy gc ON sc.id = gc.subject_copy_id " +
+							"WHERE ss.owner = ? AND gc.id = ?";
 					JsonArray values = new JsonArray();
-					values.addNumber(id);
 					values.addString(user.getUserId());
+					values.addNumber(id);
 
 					Sql.getInstance().prepared(query, values, new Handler<Message<JsonObject>>() {
 						@Override
