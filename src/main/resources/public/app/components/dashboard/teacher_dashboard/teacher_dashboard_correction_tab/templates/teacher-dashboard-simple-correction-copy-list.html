@@ -23,17 +23,16 @@
      <div class="cell">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      </div>
-     <div class="three cell">
-          <div class="twelve cell horizontal-spacing select-file input-block" style="margin-top:5px;margin-bottom:5px">
-               <input style="width:70% !important" ng-readonly="true" type="text" ng-model="selectedSubjectScheduled.corrected_metadata.filename" data-display-file class="nomargin" />
-               <div class="hidden-content">
-                    <input type="file" style="z-index:-1" files-input-change="saveCorrected(this)"  ng-model="newFiles" />
-               </div>
-               <button class="file-button flat-button"><i18n>exercizer.import.choose</i18n></button>
+      <div class="cell horizontal-spacing select-file input-block" style="margin-top:5px;margin-bottom:5px">
+          <div class="hidden-content cell">
+              <!-- DBRE verifier hidden elements-->
+               <input type="file"  files-input-change="saveCorrected(this)" ng-model="newFiles" />
           </div>
-     </div>
+           <input class="cell" ng-readonly="true" type="text" ng-model="selectedSubjectScheduled.corrected_metadata.filename" data-display-file class="nomargin" />
+           <button class="cell file-button flat-button"><i18n>exercizer.import.choose</i18n></button>
+      </div>
      <div class="cell" data-ng-if="selectedSubjectScheduled.corrected_file_id" data-tooltip="Supprimer le corrigé"  style="margin-top:5px;margin-bottom:5px">
-          <button class="flat-button" data-ng-click="removeCorrected()"><i class="close-2x"  style=""></i></button>
+          <button class="flat-button" data-ng-click="removeCorrected()"><i class="close"></i></button>
      </div>
      <div class="two cell select-file hidden-content">
           <div class="hidden-content">
@@ -108,11 +107,8 @@
                     </td>
                     <td>
                          <span>[[copy.owner_username]]</span>
-
                     </td>
-
                     <td>
-                         <!-- DONE Lauren -->
                          <div data-ng-if="tooLate(copy)" class="alert">
                              <i class="timer-off"></i> &nbsp; Retard <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
                          </div>
