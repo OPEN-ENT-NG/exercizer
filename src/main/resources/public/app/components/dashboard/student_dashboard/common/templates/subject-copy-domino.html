@@ -29,10 +29,9 @@
                             <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em>
                         </div>
                         <div class="row">
-                            <!-- todo Lauren label style and positionning -->
-                            <label style="border: 1px solid black;border-radius: 2px;color: white;text-align: center;background-color:red;padding:4px" data-ng-if="tooLate()">
-                                Retard
-                            </label>
+                            <div data-ng-if="tooLate()" class="alert no-margin cell">
+                                <i class="timer-off"></i> &nbsp; <span>Retard</span> &nbsp;
+                            </div>
                         </div>
                     </div>
                     <div class="cell right-magnet"
