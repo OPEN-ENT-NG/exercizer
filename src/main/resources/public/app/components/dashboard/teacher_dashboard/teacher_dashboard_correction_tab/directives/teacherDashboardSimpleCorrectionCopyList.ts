@@ -206,9 +206,13 @@ directives.push(
                             return false;
                         }
                     };
-                    
+
+                    scope.showAllReminder = function() {
+                        return DateService.compare_after(new Date(), DateService.isoToDate(scope.selectedSubjectScheduled.begin_date), true);
+                    };
+
                     scope.showReminder = function(copy) {
-                        return !copy.submitted_date && DateService.compare_after(new Date(), DateService.isoToDate(scope.selectedSubjectScheduled.begin_date), true);
+                        return !copy.submitted_date && scope.showAllReminder();
                     };
 
                     scope.numberCopySubmitted = function(){

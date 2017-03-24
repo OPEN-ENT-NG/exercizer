@@ -116,7 +116,7 @@
                <div class="cell">
                     <button data-ng-click="applyAutomaticMark()">Passer le statut de la sélection à "Corrigé"</button>
                </div>
-               <div class="cell">
+               <div class="cell" data-ng-if="showAllReminder()">
                     <button data-ng-click="reminder()">Rappel aux non-rendus</button>
                </div>
           </div>

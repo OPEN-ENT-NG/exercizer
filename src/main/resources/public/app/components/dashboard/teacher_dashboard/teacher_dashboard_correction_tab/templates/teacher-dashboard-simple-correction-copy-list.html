@@ -113,12 +113,11 @@
 
                     <td>
                          <!-- DONE Lauren -->
-
                          <div data-ng-if="tooLate(copy)" class="alert">
                              <i class="timer-off"></i> &nbsp; Retard <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
                          </div>
 
-                         <div data-ng-if="copy.submitted_date" class="valid-color">
+                         <div data-ng-if="!tooLate(copy) && copy.submitted_date" class="valid-color">
                              <i class="check-circle"></i> &nbsp;<em>[[copy.submitted_date | date:'dd/MM/yyyy']]</em>
                          </div>
 
@@ -166,7 +165,7 @@
                <div class="cell">
                     <button data-ng-click="downloadFiles()">Télécharger la sélection</button>
                </div>
-               <div class="cell">
+               <div class="cell" data-ng-if="showAllReminder()">
                     <button data-ng-click="reminder()">Rappel aux non-rendus</button>
                </div>
           </div>
