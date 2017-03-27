@@ -25,8 +25,8 @@ routes.define(function($routeProvider){
         .when('/subject/copy/perform/:subjectCopyId/', {
             action: 'performSubjectCopy'
         })
-        .when('/subject/copy/preview/perform/simple/:subjectId/', {
-            action: 'previewPerformSubjectSimpleCopy'
+        .when('/subject/edit/simple/preview/:subjectPreviewId/', {
+            action: 'previewEditSubjectSimpleCopy'
         })
         .when('/subject/copy/perform/simple/:subjectCopyId/', {
             action: 'performSimpleSubjectCopy'
@@ -118,9 +118,9 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
                 template.open('main', '401-exercizer');
             }
         },
-        previewPerformSubjectSimpleCopy: function () {
+        previewEditSubjectSimpleCopy: function () {
             if (_userProfile === teacherProfile) {
-                template.open('main', 'perform-simple-subject-copy');
+                template.open('main', 'edit-simple-subject');
             } else if (_userProfile === studentProfile) {
                 template.open('main', 'student-dashboard');
             } else {

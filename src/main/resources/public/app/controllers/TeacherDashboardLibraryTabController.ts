@@ -311,7 +311,7 @@ class TeacherDashboardLibraryTabController {
         }
         this._subjectLibraryService.tmpSubjectForPreview = subject;
         if (subject.type === 'simple') {
-            this._$location.path('/subject/copy/preview/perform/simple/' + subject.id + '/');
+            this._$location.path('/subject/edit/simple/preview/' + subject.id + '/');
         } else {
             this._$location.path('/subject/copy/preview/perform/' + subject.id + '/');
         }

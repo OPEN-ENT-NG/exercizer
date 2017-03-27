@@ -12,17 +12,15 @@
             <h1 class="cell">
                 <span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / <span class="hover-orange" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
-
             <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-click="editSimpleSubjectController.scheduleSubject()">
                 <i18n>exercizer.schedule</i18n>
             </button>
-
-            <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-click="editSimpleSubjectController.openConfirmModal()">
-                <i18n>exercizer.simple.update</i18n>
+            <button class="right-magnet cell" data-ng-click="editSimpleSubjectController.displayModalCopyPaste()" data-ng-if="editSimpleSubjectController.previewingFromLibrary">
+                <i18n>exercizer.copy.from.library</i18n>
             </button>
-
             <button class="right-magnet cell flat-button" data-ng-click="editSimpleSubjectController.redirectToDashboard()">
-                <i18n>exercizer.back.subject</i18n>
+                <i18n ng-if="editSimpleSubjectController.previewingFromLibrary">exercizer.back.library</i18n>
+                <i18n ng-if="!editSimpleSubjectController.previewingFromLibrary">exercizer.back.subject</i18n>
             </button>
         </div>
 
@@ -49,13 +47,28 @@
                             <div data-ng-if="editSimpleSubjectController.readOnly"  style="word-wrap: break-word;" bind-html="editSimpleSubjectController.subject.description"></div>
                             <editor data-ng-if="!editSimpleSubjectController.readOnly"  data-ng-model="editSimpleSubjectController.subject.description"></editor>
                         </div>
+                        <div data-ng-if="editSimpleSubjectController.subject.corrected_file_id" class="twelve cell horizontal-spacing vertical-spacing">
+                            <h3><i18n>exercizer.simple.edit.corrected</i18n></h3>
+                            <i class="attachment medium-text"></i>
+                            <a data-ng-click="editSimpleSubjectController.downloadCorrectedFile()" target="_blank">
+                                &nbsp; [[editSimpleSubjectController.subject.corrected_metadata.filename]]
+                            </a>
+                        </div>
                     </div>
                 </div>
             </form>
         </div>
+        <div class=row">
+            <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-click="editSimpleSubjectController.openConfirmModal()">
+                <i18n>exercizer.simple.update</i18n>
+            </button>
+        </div>
 
         <!-- SCHEDULE SUBJECT MODAL -->
         <subject-schedule></subject-schedule>
+
+        <!-- MODAL COPY PAST -->
+        <teacher-dashboard-copy-paste></teacher-dashboard-copy-paste>
 
         <!-- Modal confirmation -->
         <lightbox data-show="editSimpleSubjectController.isModalConfirmDisplayed" on-close="editSimpleSubjectController.closeConfirmModal()">

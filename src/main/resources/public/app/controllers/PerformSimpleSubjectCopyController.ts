@@ -1,5 +1,3 @@
-//declare var idiom: any;
-
 class PerformSimpleSubjectCopyController {
 
     static $inject = [
@@ -7,7 +5,6 @@ class PerformSimpleSubjectCopyController {
         '$scope',
         '$location',
         'SubjectService',
-        'SubjectLibraryService',
         'SubjectScheduledService',
         'SubjectCopyService',
         'DateService'
@@ -15,7 +12,6 @@ class PerformSimpleSubjectCopyController {
 
     private _subjectScheduled:ISubjectScheduled;
     private _subjectCopy:ISubjectCopy;
-    private _previewingFromLibrary:boolean;
     private _hasDataLoaded:boolean;
     private _isModalConfirmDisplayed:boolean;
 
@@ -25,7 +21,6 @@ class PerformSimpleSubjectCopyController {
         private _$scope:ng.IScope,
         private _$location:ng.ILocationService,
         private _subjectService:ISubjectService,
-        private _subjectLibraryService:ISubjectLibraryService,
         private _subjectScheduledService:ISubjectScheduledService,
         private _subjectCopyService:ISubjectCopyService,
         private _dateService:IDateService
@@ -33,62 +28,24 @@ class PerformSimpleSubjectCopyController {
         this._$scope = _$scope;
         this._$location = _$location;
         this._subjectService = _subjectService;
-        this._subjectLibraryService = _subjectLibraryService;
         this._subjectScheduledService = _subjectScheduledService;
-        this._subjectCopyService =_subjectCopyService;
+        this._subjectCopyService = _subjectCopyService;
         this._dateService = _dateService;
         this._hasDataLoaded = false;
         this._isModalConfirmDisplayed = false;
 
         var self = this,
-            subjectId = _$routeParams['subjectId'],
             subjectCopyId = _$routeParams['subjectCopyId'];
 
-        if (!angular.isUndefined(subjectId)) {
-            if (!angular.isUndefined(self._subjectLibraryService.tmpSubjectForPreview)) {
-                self._previewFromLibrary(self._subjectLibraryService.tmpSubjectForPreview);
-            } else {
-                self._$location.path('/dashboard');
-            }
+        if (!angular.isUndefined(subjectCopyId)) {
+            this._perform(subjectCopyId);
         } else {
-            if (!angular.isUndefined(subjectCopyId)) {
-                this._perform(subjectCopyId);
-            } else {
-                self._$location.path('/dashboard');
-            }
+            self._$location.path('/dashboard');
         }
-
-    }
-
-    private _previewFromLibrary(subject:ISubject) {
-        var self = this;
-        self._previewingFromLibrary = true;
-        self._subjectScheduled = self._subjectScheduledService.createFromSubject(subject);
-        self._hasDataLoaded = true;
-        self._$scope.$on('E_CONFIRM_COPY_PASTE', function(event, folder:IFolder) {
-            if (self._previewingFromLibrary) {
-
-                let subjectIds = [];
-                subjectIds.push(self._subjectLibraryService.tmpSubjectForPreview.id);
-
-                let folderId = (folder) ? folder.id : null;
-
-                self._subjectService.duplicateSubjectsFromLibrary(subjectIds, folderId).then(
-                    function() {
-                        notify.info('exercizer.simple.submit.from.library');
-                        self.redirectToDashboard();
-                    },
-                    function(err) {
-                        notify.error(err);
-                    }
-                );
-            }
-        });
     }
 
     private _perform(subjectCopyId:number) {
         var self = this;
-        this._previewingFromLibrary = false;
 
         this._subjectScheduledService.resolve(false).then(
             function() {
@@ -120,14 +77,6 @@ class PerformSimpleSubjectCopyController {
                 notify.error(err);
             }
         );
-    }
-
-    public displayModalCopyPaste = function() {
-        if (this._previewingFromLibrary) {
-            var subjectTmpArray = [];
-            subjectTmpArray.push(this._subjectLibraryService.tmpSubjectForPreview);
-            this._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_COPY_PASTE', subjectTmpArray, [], true);
-        }
     };
 
     public setCurrentFileName = function() {
@@ -178,9 +127,8 @@ class PerformSimpleSubjectCopyController {
     };
 
     public canHomeworkSubmit = function(){
-        //if no preview else it's possible to submit a homework if the begin date is passed even if due date is exceeded (Unless it has already submit)
-        return !this._previewingFromLibrary &&
-            this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.begin_date), true) &&
+        //it's possible to submit a homework if the begin date is passed even if due date is exceeded (Unless it has already submit)
+        return this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.begin_date), true) &&
             (this._subjectCopy.homework_file_id === null || this.canHomeworkReplace());
     };
     
@@ -189,18 +137,18 @@ class PerformSimpleSubjectCopyController {
     };
 
     public canHomeworkOnlyView = function(){
-        return !this._previewingFromLibrary && this._subjectCopy.submitted_date !== null &&  this._subjectCopy.homework_file_id !== null &&
+        return this._subjectCopy.submitted_date !== null &&  this._subjectCopy.homework_file_id !== null &&
             this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.due_date), false);
     };
 
     public canShowGeneralCorrected = function(){
-        //if no preview and subject scheduled corrected exist
-        return  !this._previewingFromLibrary && this._subjectScheduled.corrected_file_id !== null;
+        //if subject scheduled corrected exist
+        return this._subjectScheduled.corrected_file_id !== null;
     };
 
     public canShowIndividualCorrected = function(){
-        //if no preview and subject copy corrected exist
-        return !this._previewingFromLibrary && this._subjectCopy.corrected_file_id !== null;
+        //if subject copy corrected exist
+        return this._subjectCopy.corrected_file_id !== null;
     };
 
     public canDownloadCorrected = function() {
@@ -209,11 +157,7 @@ class PerformSimpleSubjectCopyController {
     };
 
     public redirectToDashboard = function(){
-        if (this._previewingFromLibrary) {
-            this._$location.path('/dashboard/teacher/library');
-        } else {
-            this._$location.path('/dashboard');
-        }
+        this._$location.path('/dashboard');
     };
     
     public downloadGeneralCorrectedFile = function() {
@@ -230,10 +174,6 @@ class PerformSimpleSubjectCopyController {
 
     get subjectCopy():ISubjectCopy {
         return this._subjectCopy;
-    }
-
-    get previewingFromLibrary():boolean {
-        return this._previewingFromLibrary;
     }
 
     get isModalConfirmDisplayed():boolean {

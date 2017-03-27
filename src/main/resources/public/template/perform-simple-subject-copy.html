@@ -16,13 +16,8 @@
                 <i18n>exercizer.simple.submit</i18n>
             </button>
 
-            <button class="right-magnet cell" data-ng-click="performSimpleSubjectCopyController.displayModalCopyPaste()" data-ng-if="performSimpleSubjectCopyController.previewingFromLibrary">
-                <i18n>exercizer.copy.from.library</i18n>
-            </button>
-
             <button class="right-magnet cell flat-button" data-ng-click="performSimpleSubjectCopyController.redirectToDashboard()">
-                <i18n ng-if="performSimpleSubjectCopyController.previewingFromLibrary">exercizer.back.library</i18n>
-                <i18n ng-if="!performSimpleSubjectCopyController.previewingFromLibrary">exercizer.back</i18n>
+                <i18n>exercizer.back</i18n>
             </button>
         </div>
 
@@ -42,7 +37,6 @@
                     <div class="twelve cell horizontal-spacing vertical-spacing">
                         <h3><i18n>exercizer.simple.make.label</i18n></h3>
 
-                        <!-- DBRE template à reporter -->
                         <div data-ng-if="performSimpleSubjectCopyController.canHomeworkSubmit()"
                             class="twelve cell horizontal-spacing select-file input-block flex-row flex-center" style="margin-top:5px;margin-bottom:5px">
 
@@ -68,7 +62,6 @@
 
                         </div>
 
-                        <!-- DBRE template à corriger (copie rendue) -->
                         <div data-ng-if="performSimpleSubjectCopyController.canHomeworkOnlyView()"
                             class="twelve cell"
                             style="margin-top:5px;margin-bottom:5px">
@@ -78,15 +71,6 @@
                                 [[performSimpleSubjectCopyController.subjectCopy.submitted_date | date:'dd/MM/yyyy']]
                             </span>
                         </div>
-
-                        <!-- DBRE template à corriger drop-zone -->
-                        <div data-ng-if="performSimpleSubjectCopyController.previewingFromLibrary" class="twelve cell horizontal-spacing select-file input-block" style="margin-top:5px;margin-bottom:5px">
-                            <div>
-                                <input style="width:70% !important;border:dashed" ng-readonly="true" type="text" data-display-file class="nomargin" placeholder="Glisser déposer un fichier" />
-                            </div>
-                            <button class="file-button flat-button" style="margin-left:20px"><i18n>exercizer.simple.upload.choose</i18n></button>
-                        </div>
-
                     </div>
                     <div class="row horizontal-spacing vertical-spacing">
                         <div class="six cell">
@@ -96,12 +80,13 @@
                             <h3><i18n>exercizer.simple.individual.corrected</i18n></h3>
                         </div>
 
-                        <!-- todo Lauren button style psc-->
                         <div data-ng-if="performSimpleSubjectCopyController.canShowGeneralCorrected()" class="six cell">
-                            <a data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()" data-ng-click="performSimpleSubjectCopyController.downloadGeneralCorrectedFile()" target="_blank">
-                                [[performSimpleSubjectCopyController.subjectScheduled.corrected_metadata.filename]]
-                                <i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
-                            </a>
+                            <span data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()">
+                                <i class="attachment medium-text"></i>
+                                <a data-ng-click="performSimpleSubjectCopyController.downloadGeneralCorrectedFile()" target="_blank">
+                                    &nbsp; [[performSimpleSubjectCopyController.subjectScheduled.corrected_metadata.filename]]
+                                </a>
+                            </span>
                             <label data-ng-if="!performSimpleSubjectCopyController.canDownloadCorrected()"><i18n>exercizer.simple.consult.corrected</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'dd/MM/yyyy']]</label>
                         </div>
 
@@ -109,10 +94,12 @@
                             <i18n>exercizer.simple.no.corrected</i18n>
                         </div>
                         <div data-ng-if="performSimpleSubjectCopyController.canShowIndividualCorrected()" class="six cell">
-                            <a data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()" data-ng-click="performSimpleSubjectCopyController.downloadCorrectedFile()" target="_blank">
-                                [[performSimpleSubjectCopyController.subjectCopy.corrected_metadata.filename]]
-                                <i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
-                            </a>
+                            <span data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()">
+                                <i class="attachment medium-text"></i>
+                                <a data-ng-click="performSimpleSubjectCopyController.downloadCorrectedFile()" target="_blank">
+                                    &nbsp; [[performSimpleSubjectCopyController.subjectCopy.corrected_metadata.filename]]
+                                </a>
+                            </span>
                             <label data-ng-if="!performSimpleSubjectCopyController.canDownloadCorrected()"><i18n>exercizer.simple.consult.corrected</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'dd/MM/yyyy']]</label>
                         </div>
                         <div data-ng-if="!performSimpleSubjectCopyController.canShowIndividualCorrected()" class="six cell">
@@ -122,9 +109,6 @@
                 </div>
             </form>
         </article>
-
-        <!-- MODAL COPY PAST -->
-        <teacher-dashboard-copy-paste></teacher-dashboard-copy-paste>
 
         <!-- Modal confirmation -->
         <lightbox data-show="performSimpleSubjectCopyController.isModalConfirmDisplayed" on-close="performSimpleSubjectCopyController.closeConfirmModal()">
