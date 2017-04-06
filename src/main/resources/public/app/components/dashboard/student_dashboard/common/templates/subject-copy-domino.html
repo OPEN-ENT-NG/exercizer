@@ -6,9 +6,17 @@
                 <img data-ng-src="[[getSubjectCopyPicture()]]" class="absolute" />
 
             </div>
-            <div class="bottom">
+
+            <div class="bottom" data-ng-class="copyStateBackGroundColorClass();">
+
+
                 <div class="content">
-                    <div class="eleven cell">
+                    <div class="right-magnet" data-ng-if="subjectScheduled.type === 'interactive'">
+                        <strong>[[subjectCopy.final_score | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]</strong>
+                    </div>
+
+                    <div class="ten cell">
+
                         <div class="row">
                             <div class="cell title-icon">
                                 <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
@@ -33,29 +41,24 @@
                                 <i class="timer-off"></i> &nbsp; <span>Retard</span> &nbsp;
                             </div>
                         </div>
+
                     </div>
-                    <div class="cell right-magnet"
-                         data-ng-show="isColorColumnDisplay()"
-                         data-ng-class="copyStateBackGroundColorClass();"
-                         style="height: 100%; width: 20px;margin-left: 20px;">
-                        &nbsp;
-                    </div>
-                    <!-- todo Lauren button style and positionning -->
-                    <div class="cell right-magnet" data-ng-if="canShowGeneralCorrected()" style="z-index:100">
-                        <button class="flat-button right-magnet" data-ng-click="downloadGeneralCorrectedFile()">
-                            Corrigé<i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
-                        </button>
-                    </div>
-                    <!-- todo Lauren button style and positionning -->
-                    <div class="cell right-magnet" data-ng-if="canShowIndividualCorrected()" style="z-index:100">
-                        <button class="flat-button right-magnet" data-ng-click="downloadCorrectedFile()">
-                            Corrigé individuel<i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
-                        </button>
-                    </div>
-                    <div class="cell right-magnet" data-ng-if="subjectScheduled.type === 'interactive'">
-                        <strong>[[subjectCopy.final_score | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]</strong>
-                    </div>
+
+                    <button class="flat-button right-magnet no-margin"
+                        data-ng-if="canShowGeneralCorrected()"
+                        data-ng-click="downloadGeneralCorrectedFile()">
+                        <span>Corrigé </span>
+                        &nbsp; &nbsp; <i class="download"></i>
+                    </button>
+
+                    <button class="flat-button right-magnet"
+                        data-ng-if="canShowIndividualCorrected()"
+                        data-ng-click="downloadCorrectedFile()">
+                        <span>Corrigé individuel</span>
+                        &nbsp; &nbsp; <i class="download"></i>
+                    </button>
                 </div>
+
             </div>
         </section>
     </div>

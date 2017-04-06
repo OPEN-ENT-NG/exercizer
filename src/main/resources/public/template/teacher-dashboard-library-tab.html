@@ -115,12 +115,6 @@
                                             <div class="cell">
                                                 [[ teacherDashboardLibraryTabController.getSubjectLessonType(subject).label ]]&nbsp;/&nbsp;<em>Niveau [[ teacherDashboardLibraryTabController.getSubjectLessonLevel(subject).label ]]</em>
                                             </div>
-                                            <div class="cell absolute" data-ng-if="subject.corrected_file_id" style="z-index:100">
-                                                <!-- todo Lauren button style on domino-->
-                                                <button class="flat-button right-magnet" data-ng-click="teacherDashboardLibraryTabController.downloadCorrectedFile(subject.id)">
-                                                    Corrigé<i class="download" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
-                                                </button>
-                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="subject-library-tag" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.getSubjectTags(subject)" data-ng-click="teacherDashboardLibraryTabController.selectSubjectTag(subjectTag)">
@@ -141,6 +135,13 @@
                                                        data-ng-click="teacherDashboardLibraryTabController.selectSubject(subject)" />
                                             </div>
                                         </div>
+                                        <button class="flat-button right-magnet no-margin"
+                                            data-ng-if="subject.corrected_file_id"
+                                            data-ng-click="teacherDashboardLibraryTabController.downloadCorrectedFile(subject.id)">
+                                            <span>Corrigé </span>
+                                            &nbsp; &nbsp; <i class="download"></i>
+                                        </button>
+                        
                                     </div>
                                 </div>
                             </section>
