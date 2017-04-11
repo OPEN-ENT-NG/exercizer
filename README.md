@@ -8,6 +8,64 @@
 
 * Description : "Exercices et évaluation " est une application d'édition, de conception, de partage  et d'administration d'exercices interactifs
 
+# Technical documentation
+
+## Build
+
+<pre>
+		gulp build
+		gradle install
+</pre>
+
+
+## Construction
+
+<pre>
+		gradle copyMod
+</pre>
+
+## Deploy to ent-core
+
+
+## Configuration
+
+In the file `/exercizer/deployment/exercizer/conf.json.template` :
+
+
+Declare the application :
+<pre>
+    {
+	"name": "fr.openent~exercizer~0.4-SNAPSHOT",
+      "config": {
+        "main" : "fr.openent.exercizer.Exercizer",
+        "port" : 8105,
+        "app-name" : "Exercices et évaluations",
+    	"app-address" : "/exercizer",
+    	"app-icon" : "exercizer-large",
+        "sql" : true,
+        "mongodb" : false,
+        "host": "${host}",
+        "ssl" : $ssl,
+        "auto-redeploy": false,
+        "userbook-host": "${host}",
+        "integration-mode" : "HTTP",
+        "app-registry.port" : 8012,
+        "mode" : "${mode}",
+		"scheduledNotificationCron" : "0 0 4 * * ?",
+        "entcore.port" : 8009
+      }
+    }
+</pre>
+
+
+Associate an input route with the configuration of the integrated proxy module (`"name": "fr.openent~exercizer~0.4-SNAPSHOT"`) :
+<pre>
+	{
+		"location": "/exercizer",
+		"proxy_pass": "http://localhost:8105"
+	}
+</pre>
+
 ## Add a grain named 'new_grain'
 
 ### Create folder new_grain
@@ -52,7 +110,7 @@ By creating a patch SQL in  \exercizer\src\main\resources\sql
 (42, 'new-grain', 'NewGrain', 'new-grain', true),
 ```
 
-Columns : 
+Columns :
 
 * id (auto-increment)
 * name
@@ -64,14 +122,14 @@ Columns :
 
 #### GrainTypeService.ts
 
-Modification function 
+Modification function
 
 * instantiateCustomData (switch)
 * instantiateCustomCopyData (switch)
 
 #### edit-subject.html
 
-Modification html 
+Modification html
 
 * After comment : ```<!-- SWITCH GRAIN --> ``` , add in the switch
 
@@ -83,7 +141,7 @@ Modification html
 
 #### grainCopyService.ts
 
-Modification function 
+Modification function
 
 * _createFromGrainScheduled (switch) : specific part between grain-data and grain-copy_data
 
@@ -91,7 +149,7 @@ Modification function
 
 Modification html
 
-* Add in the switch 
+* Add in the switch
 
 ```
 <div data-ng-switch-when="42">
@@ -104,7 +162,7 @@ Modification html
 
 Modification html
 
-* Add in the switch 
+* Add in the switch
 
 ```
 <div data-ng-switch-when="42">
@@ -125,6 +183,9 @@ Modification html
 * exercizer.grain.copy.list
 * exercizer.grain.scheduled.list
 * exercizer.grain.type.list
+* exercizer.subject.simple.download.library
+* exercizer.subject.duplicate.library
+* exercizer.subject.import
 * exercizer.subject.list
 * exercizer.subject.list.all
 * exercizer.subject.persist
@@ -154,23 +215,3 @@ Modification html
 * exercizer.subject.scheduled.list
 * exercizer.subject.scheduled.list.by.subject.copy.list
 * exercizer.subject.list.all
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
