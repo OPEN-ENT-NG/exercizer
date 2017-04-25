@@ -33,19 +33,19 @@
                                 <img skin-src="/img/illustrations/collaborativeeditor-default.png" ng-if="!editSimpleSubjectController.subject.picture" class="absolute" />
                         </div>
                         <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="!editSimpleSubjectController.readOnly">
-                            <image-select readonly="editSimpleSubjectController.readOnly" data-ng-model="editSimpleSubjectController.subject.picture" default="/img/illustrations/collaborativeeditor-default.png"></image-select>
+                            <image-select readonly="editSimpleSubjectController.readOnly" ng-change="editSimpleSubjectController.saveSubjectProperties()"  data-ng-model="editSimpleSubjectController.subject.picture" default="/img/illustrations/collaborativeeditor-default.png"></image-select>
                         </div>
                     </div>
                     <div class="margin-two height-three">
                         <div class="twelve cell horizontal-spacing">
                             <h3><i18n>exercizer.simple.edit.title</i18n></h3>
                             <div data-ng-if="editSimpleSubjectController.readOnly" class="twelve cell">[[editSimpleSubjectController.subject.title]]</div>
-                            <input type="text" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-model="editSimpleSubjectController.subject.title" class="twelve cell" placeholder="Titre du sujet">
+                            <input type="text" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.title" class="twelve cell" placeholder="Titre du sujet">
                         </div>
                         <div class="twelve cell horizontal-spacing vertical-spacing">
                             <h3><i18n>exercizer.simple.edit.description</i18n></h3>
                             <div data-ng-if="editSimpleSubjectController.readOnly"  style="word-wrap: break-word;" bind-html="editSimpleSubjectController.subject.description"></div>
-                            <editor data-ng-if="!editSimpleSubjectController.readOnly"  data-ng-model="editSimpleSubjectController.subject.description"></editor>
+                            <editor data-ng-if="!editSimpleSubjectController.readOnly"  on-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.description"></editor>
                         </div>
                         <div data-ng-if="editSimpleSubjectController.subject.corrected_file_id" class="twelve cell horizontal-spacing vertical-spacing">
                             <h3><i18n>exercizer.simple.edit.corrected</i18n></h3>
@@ -57,11 +57,6 @@
                     </div>
                 </div>
             </form>
-        </div>
-        <div class=row">
-            <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-click="editSimpleSubjectController.saveSubjectProperties()">
-                <i18n>exercizer.simple.update</i18n>
-            </button>
         </div>
 
         <!-- SCHEDULE SUBJECT MODAL -->
