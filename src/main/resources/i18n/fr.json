@@ -104,7 +104,7 @@
     "exercizer.reminder.auto.error" : "Une erreur est survenue lors du rappel automatique.",
     "exercizer.reminder.custom.error" : "Une erreur est survenue lors du rappel personnalisé.",
     "exercizer.reminder.sent" : "Le rappel a bien été envoyé.",
-    "exercizer.simple.confirm.update" : "Êtes-vous sûr de vouloir mettre à jour le sujet ?",
+    "exercizer.simple.updated" : "Le sujet a bien été modifié.",
     "exercizer.validate" : "Valider",
     "exercizer.cancel" : "Annuler",
     "exercizer.grain.filltext.help" : "Sélectionner le texte puis cliquer sur le crayon orange pour ajouter une réponse.",

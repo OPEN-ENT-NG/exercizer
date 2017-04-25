@@ -59,7 +59,7 @@
             </form>
         </div>
         <div class=row">
-            <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-click="editSimpleSubjectController.openConfirmModal()">
+            <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-click="editSimpleSubjectController.saveSubjectProperties()">
                 <i18n>exercizer.simple.update</i18n>
             </button>
         </div>
@@ -69,15 +69,5 @@
 
         <!-- MODAL COPY PAST -->
         <teacher-dashboard-copy-paste></teacher-dashboard-copy-paste>
-
-        <!-- Modal confirmation -->
-        <lightbox data-show="editSimpleSubjectController.isModalConfirmDisplayed" on-close="editSimpleSubjectController.closeConfirmModal()">
-            <h2><i18n>exercizer.simple.confirm.update</i18n></h2>
-
-            <div class="row">
-                <button data-ng-click="editSimpleSubjectController.saveSubjectProperties()" class="cell right-magnet"><i18n>exercizer.validate</i18n></button>
-                <button data-ng-click="editSimpleSubjectController.closeConfirmModal()" class="cell right-magnet cancel"><i18n>exercizer.cancel</i18n></button>
-            </div>
-        </lightbox>
     </div>
 </div>

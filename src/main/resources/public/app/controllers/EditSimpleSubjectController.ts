@@ -15,7 +15,6 @@ class EditSimpleSubjectController {
     private _hasDataLoaded:boolean;
     private _previewingFromLibrary:boolean;
     private _readOnly:boolean;
-    private _isModalConfirmDisplayed:boolean;
 
     constructor
     (
@@ -35,7 +34,6 @@ class EditSimpleSubjectController {
 
         this._hasDataLoaded = false;
         this._readOnly = false;
-        this._isModalConfirmDisplayed = false;
 
         var self = this,
             subjectId = _$routeParams['subjectId'],
@@ -106,14 +104,6 @@ class EditSimpleSubjectController {
         }
     };
 
-    public openConfirmModal = function() {
-       this._isModalConfirmDisplayed = true;
-    };
-    
-    public closeConfirmModal = function() {
-        this._isModalConfirmDisplayed = false;
-    }; 
-
     public redirectToDashboard() {
         if (this._previewingFromLibrary) {
             this._$location.path('/dashboard/teacher/library');
@@ -128,7 +118,7 @@ class EditSimpleSubjectController {
         } else {
             var self = this;
             this._subjectService.update(this.subject).then(function () {
-                self.closeConfirmModal();
+                notify.info('exercizer.simple.updated');
             }, function (err) {
                 notify.error(err);
             });
@@ -157,10 +147,6 @@ class EditSimpleSubjectController {
 
     get readOnly():boolean {
         return this._readOnly;
-    }
-
-    get isModalConfirmDisplayed():boolean {
-        return this._isModalConfirmDisplayed;
     }
 
     get previewingFromLibrary():boolean {
