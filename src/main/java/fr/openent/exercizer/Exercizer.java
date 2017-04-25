@@ -22,6 +22,7 @@ package fr.openent.exercizer;
 import fr.openent.exercizer.controllers.*;
 import fr.openent.exercizer.cron.ScheduledNotification;
 import fr.wseduc.cron.CronTrigger;
+import fr.wseduc.webutils.Server;
 import org.entcore.common.http.BaseServer;
 import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.service.impl.SqlCrudService;
@@ -88,11 +89,11 @@ public class Exercizer extends BaseServer {
 
         final String notifyCron = container.config().getString("scheduledNotificationCron", "0 0 4 * * ?");
         final TimelineHelper timelineHelper = new TimelineHelper(vertx, vertx.eventBus(), container);
-        final String host = container.config().getString("host", "http://localhost:8090");
+        final String pathPrefix = Server.getPathPrefix(container.config());
 
         try {
             new CronTrigger(vertx, notifyCron).schedule(
-                    new ScheduledNotification(timelineHelper, host)
+                    new ScheduledNotification(timelineHelper, pathPrefix)
             );
         } catch (ParseException e) {
             log.fatal("[Exercizer] Invalid cron expression.", e);

@@ -309,10 +309,8 @@ public class SubjectScheduledController extends ControllerHelper {
 			final String idResource
 			) {
 		JsonObject params = new JsonObject();
-		params.putString("uri", container.config().getString("host", "http://localhost:8090") +
-				"/exercizer#" + relativeUri);
-        params.putString("userUri", container.config().getString("host", "http://localhost:8090") +
-                "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
+		params.putString("uri", pathPrefix + "#" + relativeUri);
+        params.putString("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
 		params.putString("username", user.getUsername());
 		params.putString("subjectName", subjectName);
 		params.putString("dueDate", dueDate);
@@ -525,10 +523,8 @@ public class SubjectScheduledController extends ControllerHelper {
 						                    }
 
 						                    JsonObject params = new JsonObject();
-						                    params.putString("uri", container.config().getString("host", "http://localhost:8090") +
-								                    "/exercizer#/dashboard/student");
-						                    params.putString("userUri", container.config().getString("host", "http://localhost:8090") +
-								                    "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
+						                    params.putString("uri", pathPrefix + "#/dashboard/student");
+						                    params.putString("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
 						                    params.putString("username", user.getUsername());
 						                    params.putString("subjectName", subjectTitle);
 

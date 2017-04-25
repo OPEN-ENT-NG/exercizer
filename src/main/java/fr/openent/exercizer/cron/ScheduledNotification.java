@@ -43,13 +43,13 @@ public class ScheduledNotification implements Handler<Long> {
 
     private final Sql sql = Sql.getInstance();
     private final TimelineHelper timelineHelper;
-    private final String host;
+    private final String pathPrefix;
     private static final I18n i18n = I18n.getInstance();
     private static final Logger log = LoggerFactory.getLogger(ScheduledNotification.class);
 
-    public ScheduledNotification(final TimelineHelper timelineHelper, final String host) {
+    public ScheduledNotification(final TimelineHelper timelineHelper, final String pathPrefix) {
         this.timelineHelper = timelineHelper;
-        this.host = host;
+        this.pathPrefix = pathPrefix;
     }
 
     @Override
@@ -110,8 +110,8 @@ public class ScheduledNotification implements Handler<Long> {
                                                 user.setUsername(scheduledSubject.getString("owner_username"));
 
                                                 JsonObject params = new JsonObject();
-                                                params.putString("uri", host + "/exercizer#/dashboard/student");
-                                                params.putString("userUri", host + "/userbook/annuaire#" + user.getUserId());
+                                                params.putString("uri", pathPrefix + "#/dashboard/student");
+                                                params.putString("userUri", "/userbook/annuaire#" + user.getUserId());
                                                 params.putString("username", user.getUsername());
                                                 params.putString("subjectName", subjectName);
                                                 params.putString("dueDate", dueDateFormat);

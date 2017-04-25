@@ -298,10 +298,8 @@ public class SubjectController extends ControllerHelper {
 
         			        JsonObject params = new JsonObject();
         			        params.putString("username", user.getUsername());
-        			        params.putString("uri", container.config().getString("host", "http://localhost:8090") +
-        			                "/exercizer#/subject/copy/preview/perform/"+subjectId);
-                            params.putString("userUri", container.config().getString("host", "http://localhost:8090") +
-                                    "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
+        			        params.putString("uri", pathPrefix + "#/subject/copy/preview/perform/"+subjectId);
+                            params.putString("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
         			        params.putString("subjectName", subjectName);
                             params.putString("resourceUri", params.getString("uri"));
         			        SubjectController.super.shareJsonSubmit(request, "exercizer.share", false, params, null);

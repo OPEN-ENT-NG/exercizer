@@ -6,9 +6,9 @@
     "exercizer.submithomework": "Rendu de devoir",
     "exercizer.correcthomework": "Correction de devoir",
     "exercizer.share": "Partage de sujet",
-    "exercizer.submithomework.submit" : "a rendu son devoir du sujet",
-    "exercizer.correcthomework.submit" : "a corrigé votre devoir du sujet",
-    "exercizer.homeworkreminder" : "Rappel automatique",
-    "exercizer.homeworkreminder.body" : "Rappel : La date limite de rendu du devoir",
-    "exercizer.homeworkreminder.body.b" : "est le"
+    "exercizer.submithomework.submit": "a rendu son devoir du sujet",
+    "exercizer.correcthomework.submit": "a corrigé votre devoir du sujet",
+    "exercizer.homeworkreminder": "Rappel automatique",
+    "exercizer.homeworkreminder.body": "Rappel : La date limite de rendu du devoir",
+    "exercizer.homeworkreminder.body.b": "est le"
 }
