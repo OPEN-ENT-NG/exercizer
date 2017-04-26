@@ -159,12 +159,24 @@ directives.push(
                         return res;
                     };
 
-                    scope.showAllReminder = function() {
-                        return DateService.compare_after(new Date(), DateService.isoToDate(scope.selectedSubjectScheduled.begin_date), true);
+                    scope.showAutomaticMark = function() {
+                        let show = false;
+                        let loopAgain = true;
+                        angular.forEach(scope.subjectCopyList, function(copy){                      
+                            if(copy.selected && loopAgain){
+                                if (SubjectCopyService.canCorrectACopyAsTeacher(scope.selectedSubjectScheduled, copy) && !copy.is_corrected) {
+                                    show = true;
+                                } else {
+                                    show = false;
+                                    loopAgain = false;;
+                                }
+                            }
+                        });
+                        return show;
                     };
 
                     scope.showReminder = function(copy) {
-                        return !copy.submitted_date && scope.showAllReminder();
+                        return !copy.submitted_date;
                     };
 
                     scope.tooLate = function(copy){

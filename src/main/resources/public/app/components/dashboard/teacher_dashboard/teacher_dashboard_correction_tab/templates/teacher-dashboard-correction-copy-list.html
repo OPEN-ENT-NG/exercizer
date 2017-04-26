@@ -79,7 +79,7 @@
           <tbody>
           <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc">
                <td class="centered-text">
-                    <input data-ng-disabled="copy.isCorrected" data-ng-show="canCorrectACopyAsTeacher(copy) && !copy.is_corrected" type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
+                    <input type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
                </td>
                <td data-ng-switch="selectTitle(copy)">
                     <span data-ng-switch-when="text">[[copy.owner_username]]</span>
@@ -121,10 +121,10 @@
 <section class="toggle-buttons" data-ng-show="toasterDisplayed">
      <div class="toggle">
           <div class="row">
-               <div class="cell">
+               <div class="cell" data-ng-if="showAutomaticMark()">
                     <button data-ng-click="applyAutomaticMark()">Passer le statut de la sélection à "Corrigé"</button>
                </div>
-               <div class="cell" data-ng-if="showAllReminder()">
+               <div class="cell">
                     <button data-ng-click="reminder()">Rappel aux non-rendus</button>
                </div>
           </div>
