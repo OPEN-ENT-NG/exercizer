@@ -47,7 +47,7 @@ class EditSimpleSubjectController {
             } else {
                 self.redirectToDashboard();
             }
-        } else {
+        } else if (subjectId) {
             this._subjectService.resolve().then(function() {
                 self._subject = self._subjectService.getById(subjectId);
 
@@ -64,9 +64,13 @@ class EditSimpleSubjectController {
             }, function(err) {
                 notify.error(err);
             });
+        } else {
+            //new subject
+            self._subject = new Subject();
+            self._subject.type = 'simple';
+            self._previewingFromLibrary = false;
+            self._hasDataLoaded = true;
         }
-
-       
     }
 
     private _previewFromLibrary(subject:ISubject) {
@@ -112,16 +116,31 @@ class EditSimpleSubjectController {
         }
     };
 
-    public saveSubjectProperties = function() {
+    public createSubject = function() {
         if (!this._subject.title || this._subject.title.length === 0) {
             notify.error('exercizer.check.title');
         } else {
             var self = this;
-            this._subjectService.update(this.subject).then(function () {
-                notify.info('exercizer.simple.updated');
+            self._subjectService.persist(this._subject).then(function (subject) {
+                self._subject = subject;
+                notify.info('exercizer.simple.created');
             }, function (err) {
                 notify.error(err);
             });
+        }
+    };
+
+    public saveSubjectProperties = function() {
+        if (this._subject.id) {
+            if (!this._subject.title || this._subject.title.length === 0) {
+                notify.error('exercizer.check.title');
+            } else {
+                this._subjectService.update(this._subject).then(function () {
+                    notify.info('exercizer.simple.updated');
+                }, function (err) {
+                    notify.error(err);
+                });
+            }
         }
     };
 

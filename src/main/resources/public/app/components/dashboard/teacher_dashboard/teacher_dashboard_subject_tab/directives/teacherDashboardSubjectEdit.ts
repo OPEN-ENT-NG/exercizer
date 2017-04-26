@@ -24,23 +24,17 @@ directives.push(
 
 
                     scope.saveSubjectProperties = function() {
-
                         if (!scope.subject.title || scope.subject.title.length === 0) {
                             notify.error('exercizer.check.title');
                         } else {
-
                             if (scope.isNewSubject) {
                                 SubjectService.persist(scope.subject).then(function(subject) {
-                                    SubjectService.currentSubjectId = subject.id;
-                                    if (subject.type === 'simple') {
-                                        $location.path('/subject/edit/simple/' + subject.id);
-                                    } else {
-                                        $location.path('/subject/edit/' + subject.id);
-                                    }
+                                    SubjectService.currentSubjectId = subject.id;                                    
+                                    $location.path('/subject/edit/' + subject.id);
+                                    scope.closeLightbox();
                                 }, function(err) {
                                     notify.error(err);
                                 });
-
                             } else {
                                 SubjectService.update(scope.subject).then(function() {
                                     SubjectService.currentSubjectId = undefined;
@@ -57,6 +51,10 @@ directives.push(
                         scope.subject.type = type;
                         scope.type = type;
                         
+                        if (type === 'simple') {
+                            scope.closeLightbox();
+                            $location.path('/subject/create/simple/');
+                        }                        
                     };
 
                     scope.closeLightbox = function() {

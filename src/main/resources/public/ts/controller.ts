@@ -18,6 +18,9 @@ routes.define(function($routeProvider){
         .when('/subject/edit/simple/:subjectId/', {
             action: 'editSimpleSubject'
         })
+        .when('/subject/create/simple/', {
+            action: 'editSimpleSubject'
+        })
         .when('/subject/copy/preview/perform/:subjectId/', {
             action: 'previewPerformSubjectCopy'
         })
@@ -103,8 +106,7 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
             if (_userProfile === teacherProfile) {
                 template.open('main', 'edit-simple-subject');
             } else if (_userProfile === studentProfile) {
-                //TODO David student view
-                //template.open('main', 'student-dashboard');
+                template.open('main', 'student-dashboard');
             } else {
                 template.open('main', '401-exercizer');
             }

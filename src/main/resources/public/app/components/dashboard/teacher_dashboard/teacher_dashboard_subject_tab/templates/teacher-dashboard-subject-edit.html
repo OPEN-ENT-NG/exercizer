@@ -12,8 +12,7 @@
                 <div class="margin-two height-three">
                     <div class="twelve cell horizontal-spacing">
                         <input type="text" data-ng-model="subject.title" class="twelve cell" placeholder="Titre du sujet">
-                        <textarea data-ng-model="subject.description" data-ng-if="subject.type === 'interactive'" class="twelve cell" placeholder="Description"></textarea>
-                        <editor data-ng-model="subject.description" data-ng-if="subject.type === 'simple'"  placeholder="Consigne"></editor>
+                        <textarea data-ng-model="subject.description" class="twelve cell" placeholder="Description"></textarea>
                     </div>
                     <div class="twelve cell horizontal-spacing vertical-spacing">
                         <button data-ng-click="saveSubjectProperties()" class="right-magnet">

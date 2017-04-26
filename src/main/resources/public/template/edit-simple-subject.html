@@ -12,7 +12,7 @@
             <h1 class="cell">
                 <span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / <span class="hover-orange" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
-            <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly" data-ng-click="editSimpleSubjectController.scheduleSubject()">
+            <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly && editSimpleSubjectController.subject.id" data-ng-click="editSimpleSubjectController.scheduleSubject()">
                 <i18n>exercizer.schedule</i18n>
             </button>
             <button class="right-magnet cell" data-ng-click="editSimpleSubjectController.displayModalCopyPaste()" data-ng-if="editSimpleSubjectController.previewingFromLibrary">
@@ -57,6 +57,11 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <div class=row" data-ng-if="!editSimpleSubjectController.subject.id">
+            <button class="right-magnet cell"  data-ng-click="editSimpleSubjectController.createSubject()">
+                <i18n>exercizer.simple.update</i18n>
+            </button>
         </div>
 
         <!-- SCHEDULE SUBJECT MODAL -->
