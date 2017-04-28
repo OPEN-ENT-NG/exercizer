@@ -1,3 +1,4 @@
+declare var idiom: any;
 class EditSimpleSubjectController {
 
     static $inject = [
@@ -15,6 +16,7 @@ class EditSimpleSubjectController {
     private _hasDataLoaded:boolean;
     private _previewingFromLibrary:boolean;
     private _readOnly:boolean;
+    private _defaultTitle:string;
 
     constructor
     (
@@ -32,6 +34,7 @@ class EditSimpleSubjectController {
         this._subjectService = _subjectService;
         this._subjectLibraryService = _subjectLibraryService;
 
+        this._defaultTitle = idiom.translate('exercizer.simple.default.title');
         this._hasDataLoaded = false;
         this._readOnly = false;
 
@@ -68,8 +71,10 @@ class EditSimpleSubjectController {
             //new subject
             self._subject = new Subject();
             self._subject.type = 'simple';
+            self._subject.title = self._defaultTitle;
             self._previewingFromLibrary = false;
             self._hasDataLoaded = true;
+            self.createSubject();
         }
     }
 
@@ -116,31 +121,23 @@ class EditSimpleSubjectController {
         }
     };
 
-    public createSubject = function() {
-        if (!this._subject.title || this._subject.title.length === 0) {
-            notify.error('exercizer.check.title');
-        } else {
-            var self = this;
-            self._subjectService.persist(this._subject).then(function (subject) {
-                self._subject = subject;
-                notify.info('exercizer.simple.created');
-            }, function (err) {
-                notify.error(err);
-            });
-        }
+    private createSubject = function() {
+        var self = this;
+        self._subjectService.persist(this._subject).then(function (subject) {
+            self._subject = subject;
+        }, function (err) {
+            notify.error(err);
+        });
     };
 
     public saveSubjectProperties = function() {
         if (this._subject.id) {
             if (!this._subject.title || this._subject.title.length === 0) {
-                notify.error('exercizer.check.title');
-            } else {
-                this._subjectService.update(this._subject).then(function () {
-                    notify.info('exercizer.simple.updated');
-                }, function (err) {
-                    notify.error(err);
-                });
+                this._subject.title = this._defaultTitle;
             }
+            this._subjectService.update(this._subject).then(function () {}, function (err) {
+                notify.error(err);
+            });
         }
     };
 
