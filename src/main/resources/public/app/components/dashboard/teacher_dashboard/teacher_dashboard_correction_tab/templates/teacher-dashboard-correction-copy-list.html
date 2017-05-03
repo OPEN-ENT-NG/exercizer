@@ -16,20 +16,16 @@
 </div>
 <div class="row vertical-spacing">
      <div class="cell">
-          <span data-ng-repeat="user in selectedSubjectScheduled.scheduled_at.userList"
+          <span data-ng-repeat="user in lUserGroup"
                 style="font-weight: bold;font-size: large;">
-               [[user.name]] -
-          </span>
-          <span data-ng-repeat="group in selectedSubjectScheduled.scheduled_at.groupList"
-                style="font-weight: bold;font-size: large;">
-               [[group.name]] -
+               [[user.name]]
           </span>
      </div>
      <div class="cell">
           &nbsp;
      </div>
      <div class="cell">
-          Il reste [[numberCopyNotCorrected()]] copie(s) à corriger
+          - Il reste [[numberCopyNotCorrected()]] copie(s) à corriger
      </div>
      <div class="cell right-magnet">
           [[numberCopySubmitted()]] élève(s) sur [[subjectCopyList.length]] ont rendu le devoir

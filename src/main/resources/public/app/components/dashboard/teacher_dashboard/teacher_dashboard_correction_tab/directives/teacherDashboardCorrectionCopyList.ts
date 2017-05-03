@@ -33,6 +33,17 @@ directives.push(
                                 scope.subjectCopyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
                             }
                         );
+
+                        let r = _.map(_.union(scope.selectedSubjectScheduled.scheduled_at.userList, scope.selectedSubjectScheduled.scheduled_at.groupList), _.clone);
+
+                        let total = r.length;
+                        let current = 1;
+                        _.forEach(r, function (obj) {
+                            if (total !== current) obj.name = obj.name + ' - ';
+                            current++;
+                        });
+
+                        scope.lUserGroup = r;
                     }
 
                     function resetRemind() {

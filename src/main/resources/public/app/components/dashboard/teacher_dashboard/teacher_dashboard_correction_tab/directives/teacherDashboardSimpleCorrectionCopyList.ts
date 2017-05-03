@@ -33,7 +33,7 @@ directives.push(
                             }
                         );
 
-                        let r = _.union(scope.selectedSubjectScheduled.scheduled_at.userList, scope.selectedSubjectScheduled.scheduled_at.groupList);
+                        let r = _.map(_.union(scope.selectedSubjectScheduled.scheduled_at.userList, scope.selectedSubjectScheduled.scheduled_at.groupList), _.clone);
 
                         let total = r.length;
                         let current = 1;
