@@ -173,9 +173,9 @@ directives.push(
                     function scheduleSimpleSubject(subject, option, data) {
                         var deferred = $q.defer(),
                             subjectScheduled = SubjectScheduledService.createFromSubject(subject);
-                        subjectScheduled.begin_date = option.begin_date;
-                        subjectScheduled.due_date = option.due_date;
-                        subjectScheduled.corrected_date = option.corrected_date;
+                        subjectScheduled.begin_date = moment(option.begin_date).hours(14).minutes(0).seconds(0);
+                        subjectScheduled.due_date = moment(option.due_date).hours(14).minutes(0).seconds(0);
+                        subjectScheduled.corrected_date = moment(option.corrected_date).hours(14).minutes(0).seconds(0);
                         subjectScheduled.scheduled_at = createSubjectScheduledAt(data);
 
                         SubjectScheduledService.simpleSchedule(subjectScheduled).then(
