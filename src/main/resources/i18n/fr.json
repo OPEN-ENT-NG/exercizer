@@ -111,6 +111,5 @@
     "exercizer.grain.zone.img" : "La taille recommandée de l'image de fond est 760 * 600 px.",
     "exercizer.correction.search.empty" : "Aucun sujet ne correspond à votre recherche",
     "exercizer.simple.subject" : "Sujet simple",
-    "exercizer.interactive.subject" : "Sujet interactif",
-    "exercizer.allow.soon.made" : "Vous pourrez rendre votre sujet à partir du "
+    "exercizer.interactive.subject" : "Sujet interactif"
 }
