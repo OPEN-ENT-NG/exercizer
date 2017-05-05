@@ -118,7 +118,7 @@
                                                 <div class="cell title-icon">
                                                     <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'Sujet simple' : 'Sujet interactif']]"></i>
                                                 </div>
-                                                <strong data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</strong>
+                                                <strong data-ng-click="clickOnSubjectTitle(subject)">[[ subject.title | limitTo: 35  ]][[ subject.title.length > 35 ? '...' : '']]</strong>
                                             </div>
                                             <div class="row">
                                                 <span data-ng-if="subject.modified">Modifié le [[subject.modified | date: 'dd/MM/yyyy']]</span>
