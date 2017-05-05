@@ -93,7 +93,7 @@
                                             <div class="eight cell">
                                                 <div class="row">
                                                     <div class="cell title-icon">
-                                                        <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
+                                                        <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'Sujet simple' : 'Sujet interactif']]"></i>
                                                     </div>
                                                     <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">
                                                         [[subjectScheduled.title ]]
@@ -154,7 +154,7 @@
                                 <tr data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)">
                                     <td>
                                         <div class="cell">
-                                            <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
+                                            <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'Sujet simple' : 'Sujet interactif']]"></i>
                                             &nbsp;
                                         </div>
                                         <strong class="hover-orange"
