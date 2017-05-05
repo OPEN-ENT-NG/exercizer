@@ -8,10 +8,12 @@
                 sortable-element
                 data-ng-change="reOrder()"
                 data-ng-model="filled_answer.index">
-                <div class="order-index">[[ filled_answer.order_by ]]</div>
-                <div class="nine cell answer">
-                    [[ filled_answer.text ]]
-                </div>
+                <div class="flex-row align-center">
+                    <div class="order-index">[[ filled_answer.order_by ]]</div>
+                    <div class="nine cell answer">
+                        [[ filled_answer.text ]]
+                    </div>
+                </div>                
             </li>
         </ul>
     </div>
