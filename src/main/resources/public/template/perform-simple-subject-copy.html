@@ -59,8 +59,8 @@
                             </div>
                             &nbsp;&nbsp;
                             <button class="file-button flat-button no-margin"><i18n ng-if="performSimpleSubjectCopyController.canHomeworkReplace()">exercizer.simple.upload.replace</i18n><i18n ng-if="!performSimpleSubjectCopyController.canHomeworkReplace()">exercizer.simple.upload.choose</i18n></button>
-
                         </div>
+
 
                         <div data-ng-if="performSimpleSubjectCopyController.canHomeworkOnlyView()"
                             class="twelve cell"
@@ -70,6 +70,17 @@
                                 <i18n>exercizer.simple.made.label</i18n>
                                 [[performSimpleSubjectCopyController.subjectCopy.submitted_date | date:'dd/MM/yyyy']]
                             </span>
+                        </div>
+
+                         <!-- DBRE si la date de début de remise est dans le futur -->
+                        <div data-ng-if=" performSimpleSubjectCopyController.subjectScheduled.begin_date > ">
+                            <p class="info tuto">
+                                <span>
+                                    <i18n>exercizer.allow.soon.made</i18n>
+                                     <!-- DBRE afficher date début de remise (je suis pas sure)-->
+                                    <b>[[performSimpleSubjectCopyController.subjectScheduled.begin_date | date:'dd/MM/yyyy']]</b>
+                                </span>
+                            </p>
                         </div>
                     </div>
                     <div class="row horizontal-spacing vertical-spacing">
