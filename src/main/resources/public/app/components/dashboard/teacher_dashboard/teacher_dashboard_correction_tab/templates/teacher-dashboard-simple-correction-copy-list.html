@@ -107,7 +107,8 @@
                         <span>
                             <i class="attachment medium-text"></i>
                             <a data-ng-click="downloadFile(copy)" target="_blank">
-                                &nbsp; [[copy.homework_metadata.filename]]
+                                &nbsp;
+                                [[copy.homework_metadata.filename | limitTo: 15  ]][[ copy.homework_metadata.filename.length > 15 ? '...' : '']]
                             </a>
                         </span>
                     </td>
@@ -119,11 +120,11 @@
 
                     <td ng-hide="!copy.corrected_metadata.filename && !copy.submitted_date">
                          <div ng-if="!copy.corrected_metadata.filename && copy.submitted_date"
-                            class="droppable centered-text block-container flex-row align-center justify-center"
+                            class="cell droppable centered-text block-container flex-row align-center justify-center"
                             drop-files="newFiles"
                             on-drop="selectedCorrectedFileCopy(copy);saveCurrentCorrected(this);">
 
-                                <i class="upload"></i>&nbsp;&nbsp;
+                                <i class="upload"></i>&nbsp;&nbsp;&nbsp;
 
                                 <a data-ng-click="selectedCorrectedFileCopy(copy)"
                                     onclick="$(currentUpload).click();">
@@ -133,7 +134,8 @@
 
                          <span ng-if="copy.corrected_metadata.filename">
                              <i class="attachment medium-text"></i>&nbsp;&nbsp;
-                             [[copy.corrected_metadata.filename]]&nbsp;
+                             [[copy.corrected_metadata.filename | limitTo: 15  ]][[ copy.corrected_metadata.filename.length > 15 ? '...' : '']]
+                             &nbsp;
                              <i data-ng-click="removeCurrentCorrected(copy)" class="close"></i>
                          </span>
                     </td>
