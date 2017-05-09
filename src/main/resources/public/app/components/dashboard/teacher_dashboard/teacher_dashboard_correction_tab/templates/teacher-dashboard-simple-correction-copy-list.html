@@ -102,15 +102,22 @@
                             <button data-ng-click="reminder(copy.id)" class="flat-button no-margin"><i18n>Rappel</i18n></button>
                          </div>
                     </td>
-                    <td>
-                        <span data-ng-if="copy.homework_metadata">
+
+                    <td data-ng-if="copy.homework_metadata">
+                        <span>
                             <i class="attachment medium-text"></i>
                             <a data-ng-click="downloadFile(copy)" target="_blank">
                                 &nbsp; [[copy.homework_metadata.filename]]
                             </a>
                         </span>
                     </td>
-                    <td>
+                    <td data-ng-if="!copy.homework_metadata" colspan="2">
+                        <em>
+                            <i18n>exercizer.none.student.file</i18n>
+                        </em>
+                    </td>
+
+                    <td ng-hide="!copy.corrected_metadata.filename && !copy.submitted_date">
                          <div ng-if="!copy.corrected_metadata.filename && copy.submitted_date"
                             class="droppable centered-text block-container flex-row flex-center justify-center"
                             drop-files="newFiles"
@@ -123,6 +130,7 @@
                                     <i18n>Ajouter un fichier</i18n>
                                 </a>
                          </div>
+
                          <span ng-if="copy.corrected_metadata.filename">
                              <i class="attachment medium-text"></i>&nbsp;&nbsp;
                              [[copy.corrected_metadata.filename]]&nbsp;
