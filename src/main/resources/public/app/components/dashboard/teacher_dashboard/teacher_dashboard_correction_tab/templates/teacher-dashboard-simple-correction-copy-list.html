@@ -1,32 +1,25 @@
-<div class="row">
-     <div class="cell">
-          <h2> [[selectedSubjectScheduled.title]]</h2>
-     </div>
-     <div class="cell">
-          &nbsp;
-     </div>
-     <div class="cell">
-          <h4> commence le [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]], date limite de rendu le [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]] et publication du corrigé le [[ selectedSubjectScheduled.corrected_date | date:'dd/MM/yyyy' ]]</h4>
-     </div>
-     <div class="cell right-magnet">
-          <button data-ng-click="clickReturnSubjectScheduledList()" class="right-magnet cancel">
-               Retour
-          </button>
-     </div>
+
+<div class="six cell">
+    <h2 class="no-margin"> [[selectedSubjectScheduled.title]]</h2>
+    <p class="small-text">
+        Commence le <b> [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]]</b> <br>
+        Date limite de rendu le <b> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]</b> <br>
+        Publication du corrigé le <b> [[ selectedSubjectScheduled.corrected_date | date:'dd/MM/yyyy' ]]</b>
+    </p>
 </div>
 
-<div class="row">
-     <div class="cell">
-          <h2> Corrigé du devoir</h2>
-     </div>
-     <div class="cell">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     </div>
-      <div class="cell horizontal-spacing select-file input-block" style="margin-top:5px;margin-bottom:5px">
+<div class="six cell">
+
+      <b class="block"> Corrigé du devoir</b>
+
+      <div class="cell select-file input-block" style="margin-top:5px;margin-bottom:0px">
           <div class="hidden-content cell">
                <input type="file"  files-input-change="saveCorrected(this)" ng-model="newFiles" />
           </div>
-           <input class="cell" ng-readonly="true" type="text" ng-model="selectedSubjectScheduled.corrected_metadata.filename" data-display-file class="nomargin" />
+           <input class="cell" ng-readonly="true" type="text"
+           style="margin-right:5px;"
+           ng-model="selectedSubjectScheduled.corrected_metadata.filename"
+           data-display-file class="nomargin" />
            <button class="cell file-button flat-button"><i18n>exercizer.import.choose</i18n></button>
       </div>
      <div class="cell" data-ng-if="selectedSubjectScheduled.corrected_file_id" data-tooltip="Supprimer le corrigé"  style="margin-top:5px;margin-bottom:5px">
@@ -40,20 +33,20 @@
      </div>
 </div>
 
+
 <div class="row vertical-spacing">
      <div class="cell">
-          <span data-ng-repeat="user in lUserGroup"
-                style="font-weight: bold;font-size: large;">
-               [[user.name]]
+          <span data-ng-repeat="user in lUserGroup" class="small-text">
+             <b>[[user.name]]</b>
           </span>
-     </div>
-     <div class="cell right-magnet">
-          [[numberCopySubmitted()]] élève(s) sur [[subjectCopyList.length]] ont rendu le devoir
      </div>
 </div>
 
-<div class="row vertical-spacing">
-     <input type="text" class="twelve cell" data-ng-model="search.owner.owner_username" placeholder="Rechercher un élève">
+<div class="vertical-spacing">
+    <div class="small-text right-magnet" style="margin-top: 12px;">
+         [[numberCopySubmitted()]] élève(s) sur [[subjectCopyList.length]] ont rendu le devoir
+    </div>
+     <input type="text" class="five cell" data-ng-model="search.owner.owner_username" placeholder="Rechercher un élève">
 </div>
 <form name="formCopyTest" >
      <div class="row vertical-spacing">
