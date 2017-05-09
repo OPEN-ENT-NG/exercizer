@@ -112,5 +112,9 @@
     "exercizer.correction.search.empty" : "Aucun sujet ne correspond à votre recherche",
     "exercizer.simple.subject" : "Sujet simple",
     "exercizer.interactive.subject" : "Sujet interactif",
-    "exercizer.none.student.file" : "Aucun fichier transmis par l'apprenant"
+    "exercizer.none.student.file" : "Aucun fichier transmis par l'apprenant",
+    "exercizer.all.submitted" : "Rendus",
+    "exercizer.all.correcting" : "En cours de correction",
+    "exercizer.all.corrected" : "Corrigés",
+    "exercizer.all.not.corrected" : "Non corrigés"
 }

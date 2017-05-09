@@ -179,7 +179,7 @@ directives.push(
                      */
 
                     scope.filerIsSelected = function(filter){
-                        return scope.search.filter.indexOf(filter) !== -1 ? 'custom-selected' : '';
+                        return scope.search.filter.indexOf(filter) !== -1 ? 'selected' : '';
                     };
 
                     /**

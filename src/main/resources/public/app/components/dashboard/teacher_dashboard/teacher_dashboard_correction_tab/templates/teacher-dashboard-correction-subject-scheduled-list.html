@@ -31,16 +31,24 @@
 
     <section class="cell eight">
         <div class="row">
-            <div class="cell custom-filter-button"
-                 data-ng-click="clickFilter('corrected')"
-                 data-ng-class="filerIsSelected('corrected')">
-                <span>Corrigés</span>
+
+            <label class="chip cell"
+            data-ng-click="clickFilter('corrected')"
+            data-ng-class="filerIsSelected('corrected')">
+                <span><i18n>exercizer.all.corrected</i18n></span>
+            </label>
+
+            <label class="chip cell"
+            data-ng-click="clickFilter('notCorrected')"
+            data-ng-class="filerIsSelected('notCorrected')">
+                <span><i18n>exercizer.all.not.corrected<i18n></span>
+            </label>
+
+            <div class="cell">
+                &nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;
             </div>
-            <div class="cell horizontal-spacing custom-filter-button"
-                 data-ng-click="clickFilter('notCorrected')"
-                 data-ng-class="filerIsSelected('notCorrected')">
-                <span>Non corrigés</span>
-            </div>
+
             <div class="cell" style="margin-top: 10px;">
                 <label class="two cell">
                     Du
