@@ -102,11 +102,6 @@ directives.push(
                         $location.path('/subject/copy/view/'+scope.selectedSubjectScheduled.subject_id +'/'+ copy.id+'/');
                     };
 
-                    scope.clickReturnSubjectScheduledList = function(){
-                        scope.selectedSubjectScheduled = null;
-                        $location.path('/dashboard/teacher/correction');
-                    };
-
                     scope.applyAutomaticMark = function(){
                         var promises = [];
                         angular.forEach(scope.subjectCopyList, function(copy){

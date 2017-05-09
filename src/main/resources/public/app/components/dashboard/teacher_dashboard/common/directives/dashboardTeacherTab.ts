@@ -78,6 +78,11 @@ directives.push(
 
                     };
 
+                    scope.clickReturnSubjectScheduledList = function(){
+                        scope.selectedSubjectScheduled = null;
+                        $location.path('/dashboard/teacher/correction');
+                    };
+
                     scope.getTab = function(){
                         switch (scope.currentTab){
                             case 'mySubjects':
