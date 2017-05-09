@@ -35,11 +35,11 @@
                         <h3><i18n>exercizer.simple.make.label</i18n></h3>
 
                         <div data-ng-if="performSimpleSubjectCopyController.canHomeworkSubmit()"
-                            class="twelve cell horizontal-spacing select-file input-block flex-row flex-center" style="margin-top:5px;margin-bottom:5px">
+                            class="twelve cell horizontal-spacing select-file input-block flex-row align-center" style="margin-top:5px;margin-bottom:5px">
 
                             <div drop-files="performSimpleSubjectCopyController.newFiles"
                                 on-drop="performSimpleSubjectCopyController.setCurrentFileName()"
-                                class="droppable flex-row flex-center seven">
+                                class="droppable flex-row align-center seven">
 
                                     <i ng-class="{'upload': !performSimpleSubjectCopyController.newFiles, 'attachment': performSimpleSubjectCopyController.newFiles}"
                                         class="horizontal-spacing medium-text"></i>
