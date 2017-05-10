@@ -6,25 +6,25 @@
     </h1>
 </div>
 <div class="row">
+
+    <button class="cell flat-button"
+    data-ng-click="redirectToPreviousCopy()"
+    data-ng-show="hasPreviousCopy()"
+    tooltip="exercizer.previous.copy">
+        <i class="left-open"></i>
+    </button>
+
     <h2 class="cell no-margin">
-
-        <button class="cell flat-button reduce-block-eight"
-        data-ng-click="redirectToPreviousCopy()"
-        data-ng-show="hasPreviousCopy()"
-        tooltip="exercizer.previous.copy">
-            <i class="left-open"></i>
-        </button>
-
         <strong class="cell reduce-block-four">&nbsp; Copie de [[ subjectCopy.owner_username ]] &nbsp;</strong>
-
-        <button class="cell flat-button reduce-block-eight"
-        data-ng-click="redirectToNextCopy()"
-        data-ng-show="hasNextCopy()"
-        tooltip="exercizer.next.copy">
-            <i class="open-right"></i>
-        </button>
-
     </h2>
+
+    <button class="right-magnet flat-button"
+    data-ng-click="redirectToNextCopy()"
+    data-ng-show="hasNextCopy()"
+    tooltip="exercizer.next.copy">
+        <i class="open-right"></i>
+    </button>
+
     <button class="cell right-magnet" data-ng-click="redirectToDashboard(true)" data-ng-hide="copyIsCorrected()">
         Corriger
     </button>
@@ -32,6 +32,7 @@
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-hide="copyIsCorrected()">
         Retour
     </button>
+
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-show="copyIsCorrected()">
         Retour aux corrections
