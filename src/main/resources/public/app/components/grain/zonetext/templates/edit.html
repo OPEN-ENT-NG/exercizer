@@ -22,7 +22,7 @@
     <div class="row">
         <div class="drawing-zone base-image">
             <div class="image-container">
-                <img ng-src="[[grain.grain_data.custom_data.guideImage]]" />
+                <image-select ng-model="grain.grain_data.custom_data.guideImage" ng-change="updateGrain();"></image-select>
             </div>
             <placed-block ng-repeat="textZone in grain.grain_data.custom_data.zones"
                             draggable x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
