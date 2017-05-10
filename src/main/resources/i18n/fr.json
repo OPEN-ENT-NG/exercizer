@@ -116,5 +116,7 @@
     "exercizer.all.submitted" : "Rendus",
     "exercizer.all.correcting" : "En cours de correction",
     "exercizer.all.corrected" : "Corrigés",
-    "exercizer.all.not.corrected" : "Non corrigés"
+    "exercizer.all.not.corrected" : "Non corrigés",
+    "exercizer.next.copy" : "Copie suivante",
+    "exercizer.previous.copy" : "Copie précédente"
 }
