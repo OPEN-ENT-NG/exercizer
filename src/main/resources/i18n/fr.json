@@ -65,7 +65,7 @@
     "exercizer.import.tdbase.type5" : "Curseur à déplacer",
     "exercizer.import.tdbase.type6" : "Graphique à compléter",
     "exercizer.one.submit" : "Attention : Le rendu de votre copie sera définitif, vous ne pourrez plus la modifier ensuite.",
-    "exercizer.several.submit" : "Attention : Le rendu de votre copie pourra être fait plusieurs fois avant sa date d'échéance",
+    "exercizer.several.submit" : "Vous pourrez modifier et rendre cette copie autant de fois que vous le souhaitez avant la date limite de rendu",
     "exercizer.loading" : "Chargement des données...",
     "exercizer.simple.edit.title" : "Titre du sujet",
     "exercizer.simple.edit.description" : "Consigne",
