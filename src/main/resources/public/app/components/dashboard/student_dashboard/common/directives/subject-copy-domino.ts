@@ -142,7 +142,7 @@ directives.push(
 
                         function canShowCorrected() {
                             //if corrected date has passed
-                            return  DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.corrected_date), false);
+                            return  DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.corrected_date), true);
                         };
 
 
