@@ -44,22 +44,25 @@
 
                     </div>
 
-                    <button class="flat-button right-magnet no-margin"
-                        data-ng-if="canShowGeneralCorrected()"
-                        data-ng-click="downloadGeneralCorrectedFile()">
-                        <span>Corrigé </span>
-                        &nbsp; &nbsp; <i class="download"></i>
-                    </button>
+                    <div class="buttons">
+                        <button class="flat-button"
+                            data-ng-if="canShowGeneralCorrected()"
+                            data-ng-click="downloadGeneralCorrectedFile()">
+                            <span>Corrigé </span>
+                            &nbsp; &nbsp; <i class="download"></i>
+                        </button>
 
-                    <button class="flat-button right-magnet"
-                        data-ng-if="canShowIndividualCorrected()"
-                        data-ng-click="downloadCorrectedFile()">
-                        <span>Corrigé individuel</span>
-                        &nbsp; &nbsp; <i class="download"></i>
-                    </button>
+                        <button class="flat-button"
+                            data-ng-if="canShowIndividualCorrected()"
+                            data-ng-click="downloadCorrectedFile()">
+                            <span>Corrigé individuel</span>
+                            &nbsp; &nbsp; <i class="download"></i>
+                        </button>
+                    </div>
+
                 </div>
 
             </div>
         </section>
-    </div>
+    </div>  <!-- item -->
 </div>
