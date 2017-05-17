@@ -2,13 +2,9 @@
     <div data-ng-if="remind.step === 'choose'">
         <h1>Rappel - [[selectedSubjectScheduled.title]]</h1>
         <h4>Quel type de rappel voulez-vous envoyer ?</h4>
-        <div class="row">
-            <div class="cell">
-                <button data-ng-click="remind.step = 'perso'" class="flat-button"><i18n>Personnalisé</i18n></button>
-            </div>
-            <div class="cell">
-                <button data-ng-click="remind.step = 'auto'" class="flat-button"><i18n>Automatique</i18n></button>
-            </div>
+        <div class="row buttons-set-options">
+            <button data-ng-click="remind.step = 'perso'" class="flat-button"><i18n>Personnalisé</i18n></button>
+            <button data-ng-click="remind.step = 'auto'" class="flat-button"><i18n>Automatique</i18n></button>
         </div>
     </div>
     <div data-ng-if="remind.step === 'auto'">
