@@ -34,7 +34,7 @@ import org.vertx.java.core.json.JsonObject;
 
 import java.util.List;
 
-public class SubjectCopyAccess implements ResourcesProvider {
+public class SubjectCopyLearnerAccess implements ResourcesProvider {
 
 	@Override
 	public void authorize(final HttpServerRequest resourceRequest, final Binding binding, final UserInfos user,
@@ -52,7 +52,7 @@ public class SubjectCopyAccess implements ResourcesProvider {
 		
 		String query = "SELECT COUNT(ss.id) FROM " +
 				conf.getSchema() + "subject_scheduled as ss INNER JOIN " + conf.getSchema() + "subject_copy sc ON ss.id = sc.subject_scheduled_id " +
-				"WHERE ss.owner = ? AND sc.id IN " + Sql.listPrepared(ids.toArray());
+				"WHERE sc.owner = ? AND sc.id IN " + Sql.listPrepared(ids.toArray());
 		JsonArray values = new JsonArray();
 		values.addString(user.getUserId());
 

@@ -475,7 +475,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Put("/subject-copy/simple/submit/:id")
 	@ApiDoc("Submit a homework file to a subject copy.")
-	@ResourceFilter(SubjectCopyAccess.class)
+	@ResourceFilter(SubjectCopyLearnerAccess.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void submitHomeworkFile(final HttpServerRequest request) {
 		final String id = request.params().get("id");
@@ -644,7 +644,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Get("/subject-copy/corrected/download/:id")
 	@ApiDoc("Download a corrected.")
-	@ResourceFilter(SubjectCopyAccess.class)
+	@ResourceFilter(SubjectCopyLearnerAccess.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void downloadCorrected(final HttpServerRequest request) {
 		final String id = request.params().get("id");
