@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.controllers;
 
+import fr.openent.exercizer.filters.ArchiveSubjectsScheduledOwner;
 import fr.openent.exercizer.filters.SubjectScheduledCorrected;
 import fr.openent.exercizer.filters.SubjectScheduledOwner;
 import fr.openent.exercizer.services.ISubjectScheduledService;
@@ -578,6 +579,64 @@ public class SubjectScheduledController extends ControllerHelper {
 					subjectScheduledService.listBySubjectCopyList(user, arrayResponseHandler(request));
 				}
 				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Get("/archive/subjects-scheduled")
+	@SecuredAction("exercizer.subject.scheduled.list.archive")
+	public void listArchivedSubjects(final HttpServerRequest request){
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if(user != null){
+					subjectScheduledService.getArchive(user, arrayResponseHandler(request));
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Get("/archive/subjects-scheduled/export-csv")
+	@ResourceFilter(ArchiveSubjectsScheduledOwner.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void exportArchiedSubjectScheduled(final HttpServerRequest request){
+		final List<String> ids = request.params().getAll("id");
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(UserInfos user) {
+				if(user != null){
+					subjectScheduledService.getListForArchive(user, ids, new Handler<Either<String, JsonArray>>() {
+						@Override
+						public void handle(Either<String, JsonArray> event) {
+							if(event.isRight()){
+								JsonArray r = event.right().getValue();
+								processTemplate(request, "text/export.txt",
+										new JsonObject().putArray("list", r), new Handler<String>() {
+											@Override
+											public void handle(String export) {
+												if (export != null) {
+													request.response().putHeader("Content-Type", "application/csv");
+													request.response().putHeader("Content-Disposition",
+															"attachment; filename=activation_de_comptes.csv");
+													request.response().end(export);
+												} else {
+													renderError(request);
+												}
+											}
+										});
+							}else{
+
+							}
+						}
+					});
+
+				}else{
 					log.debug("User not found in session.");
 					unauthorized(request);
 				}

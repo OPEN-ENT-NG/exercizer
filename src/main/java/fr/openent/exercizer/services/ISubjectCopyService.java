@@ -76,4 +76,6 @@ public interface ISubjectCopyService {
     void removeIndividualCorrectedFile(final String id, final Handler<Either<String, JsonObject>> handler);
 
     void getOwners(final JsonArray ids, final Handler<Either<String, JsonArray>> handler);
+
+    void getArchive(final String id, final Handler<Either<String, JsonArray>> handler);
 }

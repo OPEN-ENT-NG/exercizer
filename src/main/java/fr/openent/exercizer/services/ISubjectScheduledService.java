@@ -25,6 +25,8 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
+import java.util.List;
+
 public interface ISubjectScheduledService {
 
     void retieve(String id, Handler<Either<String, JsonObject>> handler);
@@ -75,4 +77,7 @@ public interface ISubjectScheduledService {
 
     void getMember(final String id, final Handler<Either<String, JsonArray>> handler);
 
+    void getArchive(final UserInfos user, final Handler<Either<String, JsonArray>> handler);
+
+    void getListForArchive(final UserInfos user, final List<String> ids, final Handler<Either<String, JsonArray>> handler);
 }

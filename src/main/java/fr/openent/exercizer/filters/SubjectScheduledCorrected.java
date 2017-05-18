@@ -47,16 +47,16 @@ public class SubjectScheduledCorrected implements ResourcesProvider {
 			handler.handle(false);
 			return;
 		}
-		
+
 		resourceRequest.pause();
-		
+
 		String query = "SELECT COUNT(ss.id) FROM " +
 				conf.getSchema() + "subject_scheduled as ss INNER JOIN " + conf.getSchema() + "subject_copy sc ON ss.id = sc.subject_scheduled_id " +
-				"WHERE sc.owner = ? AND ss.id = ? ";
+				"WHERE "+("Student".equalsIgnoreCase(user.getType()) ? "sc.owner = ?" : "ss.owner = ?")+" AND ss.id = ? ";
 		JsonArray values = new JsonArray();
 		values.addString(user.getUserId());
 		values.add(Sql.parseId(id));
-		
+
 		Sql.getInstance().prepared(query,  values, new Handler<Message<JsonObject>>() {
 			@Override
 			public void handle(Message<JsonObject> message) {

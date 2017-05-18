@@ -34,6 +34,7 @@ import org.vertx.java.core.logging.Logger;
 import org.vertx.java.core.logging.impl.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements ISubjectScheduledService {
@@ -346,5 +347,32 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				" WHERE ss.id = ?";
 
 		sql.prepared(query, new JsonArray().add(Sql.parseId(id)), SqlResult.validResultHandler(handler));
+	}
+
+	public void getArchive(final UserInfos user, final Handler<Either<String, JsonArray>> handler){
+		final String query = "SELECT ss.*," +
+				" COUNT(sc.id) AS total_copy," +
+				" COUNT (CASE WHEN sc.submitted_date IS NOT NULL  THEN 1 END) AS corrected_copy" +
+				" FROM " + resourceTable +" AS ss" +
+				" INNER JOIN "+ schema +"subject_copy AS sc ON sc.subject_scheduled_id = ss.id" +
+				" WHERE ss.owner = ? AND ss.is_archived = true" +
+				" GROUP BY ss.id";
+
+		sql.prepared(query, new JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
+	}
+
+	public void getListForArchive(final UserInfos user, final List<String> ids, final Handler<Either<String, JsonArray>> handler){
+		final String query = "SELECT ss.title, ss.type, sc.owner_username as student, sc.comment, sc.final_score as score" +
+				" FROM exercizer.subject_scheduled AS ss" +
+				" INNER JOIN exercizer.subject_copy AS sc ON sc.subject_scheduled_id = ss.id" +
+				" WHERE ss.id IN "+Sql.listPrepared(ids.toArray())+" AND ss.owner = ? AND ss.is_archived = true" +
+				"GROUP BY sc	.id";
+
+		JsonArray values = new JsonArray();
+		for (String id: ids) {
+			values.add(Sql.parseId(id));
+		}
+		values.addString(user.getUserId());
+		sql.prepared(query, values, SqlResult.validResultHandler(handler));
 	}
 }
