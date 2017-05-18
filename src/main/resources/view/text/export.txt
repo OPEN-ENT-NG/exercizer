@@ -1,0 +1,4 @@
+"Titre du sujet";"Type de sujet";"Nom de l'élève";"Commentaire";"Note"
+{{#list}}
+"{{title}}";"{{type}}";"{{student}}";"{{comment}}";"{{score}}"
+{{/list}}
