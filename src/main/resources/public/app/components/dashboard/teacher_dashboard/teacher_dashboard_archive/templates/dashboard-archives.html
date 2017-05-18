@@ -1,0 +1,107 @@
+<div class="row ">
+    <input type="text" class="two cell" data-ng-model="search.text.title" placeholder="Rechercher">
+</div>
+
+<div class="cell" style="margin-top: 10px;">
+    <label class="two cell">
+        Du
+    </label>
+    <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
+</div>
+
+<div class="cell" style="margin-top: 10px;">
+    <label class="two cell">
+        Au
+    </label>
+    <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
+</div>
+
+<div class="cell right-magnet">
+    <button data-ng-click="exportAll()" class="right-magnet cancel">
+        Exporter
+    </button>
+</div>
+
+
+
+        <div class="row" data-ng-show="filteredSubjectScheduledList.length == 0 && search.text.title">
+            <h2><i18n>exercizer.correction.search.empty</i18n></h2>
+        </div>
+
+        <div data-ng-show="filteredSubjectScheduledList.length > 0">
+            <div class="row vertical-spacing">
+                <!-- list subject scheduled -->
+                <div class="fallen dominos">
+                    <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate))"
+                         class="item" style="width: 100%; max-width: none;">
+                        <section class="domino">
+                            <div class="top">
+                                <img data-ng-src="[[getSubjectScheduledPicture(subjectScheduled)]]" class="absolute"/>
+                            </div>
+                            <div class="bottom">
+                                <div class="content">
+                                    <div class="eight cell">
+                                        <div class="row">
+                                            <div class="cell title-icon">
+                                                <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
+                                            </div>
+                                            <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">
+                                                [[subjectScheduled.title ]]
+                                            </strong>
+                                        </div>
+                                        <div class="row">
+                                            Modifié le [[ orderByCopyListModificationDate(subjectScheduled) |
+                                            date:'dd/MM/yyyy' ]]
+                                        </div>
+                                        <div class="row">
+                                            Pour le [[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]
+                                        </div>
+                                        <div class="row">
+                                            [[subjectScheduled.corrected_copy]] élève(s) sur [[subjectScheduled.total_copy]] ont rendu le devoir
+                                        </div>
+                                        <div class="row"
+                                             data-ng-style="subjectScheduled.corrected_date !== null && {'color': '#72BB53'} || subjectScheduled.corrected_date === null && {'color': '#FF8351'}">
+                                            [[ stateTextSubjectScheduled(subjectScheduled) ]]
+                                        </div>
+                                    </div>
+                                    <div class="cell right-magnet">
+                                        <div class="row">
+                                            <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList |limitTo : 1">
+                                                <h3 style="margin:0px;"
+                                                    data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                                    class="hover-orange">[[group.name]]</h3>
+                                            </div>
+                                            <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList |limitTo : 1">
+                                                <h3 style="margin:0px;"
+                                                    data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                                    class="hover-orange">[[user.name]]</h3>
+                                            </div>
+                                            <h3 style="margin:0px;"
+                                                data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                                class="hover-orange"
+                                                data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
+                                        </div>
+                                        <div class="row">
+                                            <input class="cell right-magnet" type="checkbox" data-ng-model="subjectScheduled.selected" data-ng-change="selectsubjectScheduled(subjectScheduled)"/>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<section class="toggle-buttons" data-ng-show="selectedSubjectsScheduled.length > 0">
+    <div class="toggle">
+        <div class="row">
+            <button ng-click="exportSelected()"><i18n>export</i18n></button>
+
+        </div>
+    </div>
+</section>
+

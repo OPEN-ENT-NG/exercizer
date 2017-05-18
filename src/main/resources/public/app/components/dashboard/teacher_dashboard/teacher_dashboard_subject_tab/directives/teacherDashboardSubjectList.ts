@@ -563,6 +563,9 @@ directives.push(
                             DragService.dropTo(null, $originalEvent, scope);
                         };
 
+                        scope.openArchive = function () {
+                            $location.path('/dashboard/teacher/archive');
+                        }
                     }
                 };
             }]

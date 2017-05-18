@@ -1,0 +1,18 @@
+<div data-ng-controller="TeacherDashboardArchiveController as archiveController">
+    <div class="row">
+        <h1 class="cell">
+            <span class="hover-orange" data-ng-click="archiveController.clickReturnExercizer()"><span class="hover-orange">Exercices et évaluations</span></span>
+            <span data-ng-click="archiveController.clickReturnArchive()"> / <span class="hover-orange">Archives</span></span>
+            <span data-ng-click="" data-ng-if="selectedSubjectScheduled"> / <span class="hover-orange">[[ archiveController.getSubjectSelectedTitle()]]</span></span>
+        </h1>
+    </div>
+    <dashboard-archives
+            data-ng-hide="selectedSubjectScheduled !== undefined"
+            subject-scheduled-list="subjectScheduledList"
+            selected-subject-scheduled="selectedSubjectScheduled">
+    </dashboard-archives>
+    <dashboard-archives-copy-list
+            data-ng-show="selectedSubjectScheduled !== undefined"
+            selected-subject-scheduled="selectedSubjectScheduled">
+    </dashboard-archives-copy-list>
+</div>

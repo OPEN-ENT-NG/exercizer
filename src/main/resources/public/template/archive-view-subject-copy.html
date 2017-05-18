@@ -1,0 +1,37 @@
+<div data-ng-controller="ArchiveViewSubjectCopyController as archiveViewSubjectCopyController">
+    <div class="row">
+        <h1 class="cell">
+            <span class="hover-orange" data-ng-click="archiveViewSubjectCopyController.clickReturnExercizer()"><span class="hover-orange">Exercices et évaluations</span></span>
+            <span data-ng-click="archiveViewSubjectCopyController.clickReturnArchive()"> / <span class="hover-orange">Archives</span></span>
+            <span data-ng-click="archiveViewSubjectCopyController.clickReturnList()"> / <span class="hover-orange">[[ archiveViewSubjectCopyController.getSubjectSelectedTitle()]]</span></span>
+        </h1>
+    </div>
+    <div class="row" data-ng-hide="archiveViewSubjectCopyController.hasDataLoaded">
+        <div class="info">exercizer.loading</div>
+    </div>
+    <div class="row">
+        <h1 class="cell">[[ archiveViewSubjectCopyController.getOwnerName()]]</h1>
+        <button class="right-magnet cell flat-button" data-ng-click="archiveViewSubjectCopyController.clickReturnList()">
+            Retour
+        </button>
+    </div>
+    <div data-ng-if="archiveViewSubjectCopyController.hasDataLoaded && archiveViewSubjectCopyController.grainCopyList.length > 0">
+        <div class="row">
+            <!-- LEFT NAV -->
+            <section class="three cell vertical side-col">
+                <subject-copy-left-nav data-anchor-behaviour="true"
+                                       data-grain-copy-list="archiveViewSubjectCopyController.grainCopyList">
+                </subject-copy-left-nav>
+            </section>
+
+            <section class="nine cell main-col">
+                <!-- GRAIN COPY LIST -->
+                <subject-view-copy-grain-copy-list data-subject-scheduled="archiveViewSubjectCopyController.subjectScheduled"
+                                                   data-subject-copy="archiveViewSubjectCopyController.subjectCopy"
+                                                   data-grain-scheduled-list="archiveViewSubjectCopyController.grainScheduledList"
+                                                   data-grain-copy-list="archiveViewSubjectCopyController.grainCopyList">
+                </subject-view-copy-grain-copy-list>
+            </section>
+        </div>
+    </div>
+</div>

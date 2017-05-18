@@ -44,9 +44,19 @@
             <div class="cell">
                 <button data-ng-click="addNewSubject(currentFolderId)" workflow="exercizer.create">Nouveau sujet</button>
             </div>
-            <div class="cell" style="margin-left:1%">
-                <button data-ng-click="importNewSubject()" workflow="exercizer.import">Import</button>
-            </div>
+            <drop-down-button class="cell">
+                <button class="opener"><i class="manage" ></i></button>
+                <opts>
+                    <div>
+                        <li ng-click="importNewSubject()" >
+                            <i18n>Importer un sujet</i18n>
+                        </li>
+                        <li ng-click="openArchive()" >
+                            <i18n>Archives des programmations</i18n>
+                        </li>
+                    </div>
+                </opts>
+            </drop-down-button>
             <div class="cell right-magnet">
                 <i data-ng-click="displayList = 'array'"
                    class="show-list"

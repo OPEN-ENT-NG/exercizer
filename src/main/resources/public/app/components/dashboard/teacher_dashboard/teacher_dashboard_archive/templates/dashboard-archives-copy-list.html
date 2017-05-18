@@ -1,0 +1,203 @@
+<div data-ng-if="selectedSubjectScheduled.type === 'interactive'">
+    <div class="row vertical-spacing">
+        <div class="cell">
+          <span data-ng-repeat="user in lUserGroup"
+                style="font-weight: bold;font-size: large;">
+               [[user.name]]
+          </span>
+        </div>
+        <div class="cell">
+            &nbsp;
+        </div>
+        <div class="cell">
+            commencé le [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]], terminé le [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]
+        </div>
+        <div class="cell right-magnet">
+            [[numberCopySubmitted()]] élève(s) sur [[subjectCopyList.length]] ont rendu le devoir
+        </div>
+    </div>
+
+
+    <div class="row vertical-spacing" >
+        <table class="list-view">
+            <thead>
+            <tr>
+                <th scope="col" ng-click="orderByField('owner_username')">
+                    <span translate content="Copie de" ></span>
+                    <i class="sort" ng-if="order.field !== 'owner_username'"></i>
+                    <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
+                    <i class="sort-desc" ng-if="order.field === 'owner_username' && order.desc"></i>
+                </th>
+                <th scope="col" ng-click="orderByField('submitted_date')">
+                    <span translate content="Date de rendu" ></span>
+                    <i class="sort" ng-if="order.field !== 'submitted_date'"></i>
+                    <i class="sort-asc" ng-if="order.field === 'submitted_date' && !order.desc"></i>
+                    <i class="sort-desc" ng-if="order.field === 'submitted_date' && order.desc"></i>
+                </th>
+                <th scope="col" ng-click="orderByField('calculated_score')">
+                    <span translate content="Score automatique" ></span>
+                    <i class="sort" ng-if="order.field !== 'calculated_score'"></i>
+                    <i class="sort-asc" ng-if="order.field === 'calculated_score' && !order.desc"></i>
+                    <i class="sort-desc" ng-if="order.field === 'calculated_score' && order.desc"></i>
+                </th>
+                <th scope="col" ng-click="orderByField('final_score')">
+                    <span translate content="Score final" ></span>
+                    <i class="sort" ng-if="order.field !== 'final_score'"></i>
+                    <i class="sort-asc" ng-if="order.field === 'final_score' && !order.desc"></i>
+                    <i class="sort-desc" ng-if="order.field === 'final_score' && order.desc"></i>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-ng-repeat="copy in subjectCopyList | orderBy:order.order:order.desc">
+                <td data-ng-switch="selectTitle(copy)">
+                    <span data-ng-switch-when="text">[[copy.owner_username]]</span>
+                    <span data-ng-switch-when="correction" data-ng-click="clickOnCopy(copy)" class="hover-orange">[[copy.owner_username]]</span>
+                    <span data-ng-switch-default>Default</span>
+                </td>
+                <td>
+                    <div data-ng-if="tooLate(copy)" class="alert">
+                        <i class="timer-off"></i> &nbsp; Retard <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
+                    </div>
+
+                    <div data-ng-if="!tooLate(copy) && copy.submitted_date" class="valid-color">
+                        <i class="check-circle"></i> &nbsp;<em>[[copy.submitted_date | date:'dd/MM/yyyy']]</em>
+                    </div>
+                    <div data-ng-if="!copy.submitted_date">
+                        <i class="refused-status"></i>
+                    </div>
+                </td>
+                <td>
+                    <span>[[copy.calculated_score | truncateNumber ]] / [[selectedSubjectScheduled.max_score]]</span>
+                </td>
+                <td>
+                    <span>[[copy.final_score  | truncateNumber]] / [[selectedSubjectScheduled.max_score]]</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<div data-ng-if="selectedSubjectScheduled.type === 'simple'">
+
+    <div class="row vertical-spacing">
+
+        <div data-ng-if="selectedSubjectScheduled.corrected_file_id">
+                <h2 class="cell" > Corrigé du devoir :</h2>
+
+            <h4 class="cell">
+                &nbsp;&nbsp;
+                <span >
+                &nbsp; [[selectedSubjectScheduled.corrected_metadata.filename]]
+            </span>
+                <i data-ng-click="downloadGeneralCorrectedFile(copy)"  class="download medium-text"></i>
+
+            </h4>
+        </div>
+
+    </div>
+    <div class="row vertical-spacing">
+        <div class="cell">
+          <span data-ng-repeat="user in lUserGroup"
+                style="font-weight: bold;font-size: large;">
+               [[user.name]]
+          </span>
+        </div>
+        <div class="cell">
+            &nbsp;
+        </div>
+        <div class="cell">
+            commencé le [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]], terminé le [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]
+        </div>
+        <div class="cell right-magnet">
+            [[numberCopySubmitted()]] élève(s) sur [[subjectCopyList.length]] ont rendu le devoir
+        </div>
+    </div>
+
+
+    <form name="formCopyTest" >
+        <div class="row vertical-spacing">
+            <table class="list-view">
+                <thead>
+                <tr>
+                    <th class="one centered-text"><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
+                    <th scope="col" ng-click="orderByField('owner_username')">
+                        <span translate content="Devoir de" ></span>
+                        <i class="sort" ng-if="order.field !== 'owner_username'"></i>
+                        <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
+                        <i class="sort-desc" ng-if="order.field === 'owner_username' && order.desc"></i>
+                    </th>
+                    <th scope="col" ng-click="orderByField('submitted_date')">
+                        <span translate content="Date de rendu" ></span>
+                        <i class="sort" ng-if="order.field !== 'submitted_date'"></i>
+                        <i class="sort-asc" ng-if="order.field === 'submitted_date' && !order.desc"></i>
+                        <i class="sort-desc" ng-if="order.field === 'submitted_date' && order.desc"></i>
+                    </th>
+                    <th scope="col" ng-click="orderByField('homework_metadata.filename')">
+                        <span translate content="Fichier" ></span>
+                        <i class="sort" ng-if="order.field !== 'homework_metadata.filename'"></i>
+                        <i class="sort-asc" ng-if="order.field === 'homework_metadata.filename' && !order.desc"></i>
+                        <i class="sort-desc" ng-if="order.field === 'homework_metadata.filename' && order.desc"></i>
+                    </th>
+                    <th scope="col" ng-click="orderByField('corrected_metadata.filename')">
+                        <span translate content="Correction individuelle" ></span>
+                        <i class="sort" ng-if="order.field !== 'corrected_metadata.filename'"></i>
+                        <i class="sort-asc" ng-if="order.field === 'corrected_metadata.filename' && !order.desc"></i>
+                        <i class="sort-desc" ng-if="order.field === 'corrected_metadata.filename' && order.desc"></i>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc" ng-class="{ checked: copy.selected }">
+                    <td class="centered-text">
+                        <input type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
+                    </td>
+                    <td>
+                        <span>[[copy.owner_username]]</span>
+                    </td>
+                    <td>
+                        <div data-ng-if="tooLate(copy)" class="alert">
+                            <i class="timer-off"></i> &nbsp; Retard <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
+                        </div>
+
+                        <div data-ng-if="!tooLate(copy) && copy.submitted_date" class="valid-color">
+                            <i class="check-circle"></i> &nbsp;<em>[[copy.submitted_date | date:'dd/MM/yyyy']]</em>
+                        </div>
+
+                        <div data-ng-if="!copy.submitted_date" class="flex-row flex-center">
+                            <i class="refused-status"></i>
+                        </div>
+                    </td>
+                    <td>
+                        <span data-ng-if="copy.homework_metadata">
+                                &nbsp; [[copy.homework_metadata.filename]]
+                            <i data-ng-click="downloadFile(copy)" class="download medium-text"></i>
+                        </span>
+                    </td>
+                    <td>
+
+                        <span ng-if="copy.corrected_metadata.filename">
+                             <i class="download medium-text"></i>&nbsp;&nbsp;
+                             [[copy.corrected_metadata.filename]]&nbsp;
+                             <i data-ng-click="downloadCorrectedFile(copy)" class="close"></i>
+                         </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    <section class="toggle-buttons" data-ng-show="toasterDisplayed">
+        <div class="toggle">
+            <div class="row">
+                <div class="cell">
+                    <button data-ng-click="downloadFiles()">Télécharger la sélection</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+

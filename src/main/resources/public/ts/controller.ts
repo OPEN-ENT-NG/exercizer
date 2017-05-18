@@ -44,6 +44,12 @@ routes.define(function($routeProvider){
         .when('/subject/copy/view/:subjectCopyId/', {
             action: 'viewSubjectCopy'
         })
+        .when('/dashboard/teacher/archive/:subjectScheduledId?', {
+            action: 'dashboardTeacherArchive'
+        })
+        .when('/dashboard/teacher/archive/:subjectId/:subjectCopyId', {
+            action: 'dashboardTeacherArchiveCopy'
+        })
         .otherwise({
             redirectTo: '/dashboard'
         });
@@ -174,7 +180,21 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
             } else {
                 template.open('main', '401-exercizer');
             }
-        }
+        },
+        dashboardTeacherArchive: function () {
+            if(_userProfile === teacherProfile){
+                template.open('main', 'teacher-dashboard-archive');
+            }else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        dashboardTeacherArchiveCopy: function () {
+            if(_userProfile === teacherProfile){
+                template.open('main', 'archive-view-subject-copy');
+            }else {
+                template.open('main', '401-exercizer');
+            }
+        },
     });
 
     $route.reload();
@@ -274,6 +294,8 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.service('DateService', DateService );
         module.service('GroupService', GroupService );
         module.service('AccessService', AccessService );
+        module.service('ArchivesService', ArchivesService );
+
 
         /**
          * Controllers
@@ -287,6 +309,8 @@ function ExercizerController($scope, $rootScope, model, template, route, date, $
         module.controller('ViewSubjectCopyController', ViewSubjectCopyController);
         module.controller('SubjectCopyListController', SubjectCopyListController);
         module.controller('PerformSimpleSubjectCopyController', PerformSimpleSubjectCopyController);
+        module.controller('TeacherDashboardArchiveController', TeacherDashboardArchiveController);
+        module.controller('ArchiveViewSubjectCopyController', ArchiveViewSubjectCopyController);
 
         /**
          * Directives
