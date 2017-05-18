@@ -621,9 +621,11 @@ public class SubjectScheduledController extends ControllerHelper {
 											@Override
 											public void handle(String export) {
 												if (export != null) {
+													String filename = "Exercices_et_évaluations_" +
+															DateUtils.format(new Date())+".csv";
 													request.response().putHeader("Content-Type", "application/csv");
 													request.response().putHeader("Content-Disposition",
-															"attachment; filename=activation_de_comptes.csv");
+															"attachment; filename="+filename);
 													request.response().end(export);
 												} else {
 													renderError(request);

@@ -365,8 +365,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		final String query = "SELECT ss.title, ss.type, sc.owner_username as student, sc.comment, sc.final_score as score" +
 				" FROM exercizer.subject_scheduled AS ss" +
 				" INNER JOIN exercizer.subject_copy AS sc ON sc.subject_scheduled_id = ss.id" +
-				" WHERE ss.id IN "+Sql.listPrepared(ids.toArray())+" AND ss.owner = ? AND ss.is_archived = true" +
-				"GROUP BY sc	.id";
+				" WHERE ss.id IN "+Sql.listPrepared(ids.toArray())+" AND ss.owner = ? AND ss.is_archived = true";
 
 		JsonArray values = new JsonArray();
 		for (String id: ids) {
