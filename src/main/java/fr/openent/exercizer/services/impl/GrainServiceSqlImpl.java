@@ -155,4 +155,13 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
 
         sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
     }
+
+    public void getGrainsForExport(final String id, final Handler<Either<String, JsonArray>> handler){
+
+        final String query = "SELECT gt.name, g.grain_data::jsonb" +
+                " FROM exercizer.grain AS g INNER JOIN exercizer.grain_type AS gt ON g.grain_type_id = gt.id " +
+                " WHERE g.subject_id = ? ORDER BY g.order_by";
+
+        sql.prepared(query, new JsonArray().add(Sql.parseId(id)), SqlResult.validResultHandler(handler, "grain_data"));
+    }
 }

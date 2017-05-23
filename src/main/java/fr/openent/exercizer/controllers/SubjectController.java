@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.controllers;
 
+import fr.openent.exercizer.exporter.SubjectExporter;
 import fr.openent.exercizer.filters.MassOwnerOnly;
 import fr.openent.exercizer.filters.MassShareAndOwner;
 import fr.openent.exercizer.parsers.ResourceParser;
@@ -26,6 +27,7 @@ import fr.openent.exercizer.services.IGrainService;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.openent.exercizer.services.impl.GrainServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
+import fr.openent.exercizer.utils.MoodleUtils;
 import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
@@ -779,6 +781,37 @@ public class SubjectController extends ControllerHelper {
 					});
 				}
 				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Get("/subject/export-moodle/:id")
+	@ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.read", type = ActionType.RESOURCE)
+	public void getMoodle(final HttpServerRequest request){
+		final String id = request.params().get("id");
+
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(UserInfos user) {
+				if(user != null){
+					grainService.getGrainsForExport(id, new Handler<Either<String, JsonArray>>() {
+						@Override
+						public void handle(Either<String, JsonArray> event) {
+							if (event.isRight()){
+								SubjectExporter sb = new SubjectExporter(event.right().getValue());
+								request.response().putHeader("content-type", "application/xml");
+								request.response().putHeader("Content-Disposition",
+										"attachment; filename=moodleEpxort.xml");
+								request.response().end(sb.exportToMoodle());
+
+							}
+						}
+					});
+				}else{
 					log.debug("User not found in session.");
 					unauthorized(request);
 				}

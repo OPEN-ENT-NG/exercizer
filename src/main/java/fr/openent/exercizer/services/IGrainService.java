@@ -54,4 +54,6 @@ public interface IGrainService {
     void listBySubjectForLibrary(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
 
     public void duplicateGrainIntoSubject(final Long subjectId, final JsonArray grainIdJa, final String titleSuffix, final Handler<Either<String, JsonObject>> handler);
+
+    void getGrainsForExport(final String id, final Handler<Either<String, JsonArray>> handler);
 }
