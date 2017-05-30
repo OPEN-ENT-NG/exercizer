@@ -140,6 +140,10 @@
                                                     data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
 
                                             </div>
+                                            <div data-ng-if="subjectScheduled.type !== 'simple'" class="right-magnet">
+                                                <input class="cell right-magnet" type="checkbox" data-ng-model="subjectScheduled.selected" data-ng-change="selectsubjectScheduled(subjectScheduled)"/>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </section>
@@ -161,6 +165,9 @@
                                 <tbody>
                                 <tr data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)">
                                     <td>
+                                        <div data-ng-if="subjectScheduled.type !== 'simple'">
+                                            <input class="cell" type="checkbox" data-ng-model="subjectScheduled.selected" data-ng-change="selectsubjectScheduled(subjectScheduled)"/>
+                                        </div>
                                         <div class="cell">
                                             <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                                             &nbsp;
@@ -212,5 +219,14 @@
 
     </section>
     <subject-scheduled-assign-at></subject-scheduled-assign-at>
+
+    <section class="toggle-buttons" data-ng-show="selectedSubjectsScheduled.length > 0">
+        <div class="toggle">
+            <div class="row">
+                <button ng-click="exportSelected()"><i18n>export</i18n></button>
+
+            </div>
+        </div>
+    </section>
 
 </div>

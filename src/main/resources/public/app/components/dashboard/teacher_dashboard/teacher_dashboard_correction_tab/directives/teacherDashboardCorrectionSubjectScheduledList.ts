@@ -14,6 +14,7 @@ directives.push(
                      * INIT
                      */
                     scope.subjectScheduledList = [];
+                    scope.selectedSubjectsScheduled=[];
                     // Date data
                     scope.today = new Date();
                     scope.dateAYearshAgo = moment().subtract('month', 1).toDate();
@@ -252,6 +253,27 @@ directives.push(
                         if(lastUpdateCopy !== null){
                             return lastUpdateCopy.modified;
                         }
+                    }
+
+                    scope.selectsubjectScheduled = function(subjectScheduled){
+                        if(subjectScheduled.selected){
+                            scope.selectedSubjectsScheduled.push(subjectScheduled);
+                        }else{
+                            scope.selectedSubjectsScheduled.pop(subjectScheduled);
+                        }
+
+                    }
+
+                    scope.exportSelected = function(){
+                        exportCSV(scope.selectedSubjectsScheduled);
+                    }
+
+                    function exportCSV(subjects:ISubjectScheduled[]) {
+                        var ids:string = "?"
+                        subjects.forEach((subject) =>{
+                            ids = ids.concat("id="+subject.id+"&");
+                        } );
+                        window.location.href = '/exercizer/archive/subjects-scheduled/export-csv' + ids.slice(0,-1);
                     }
                 }
             };

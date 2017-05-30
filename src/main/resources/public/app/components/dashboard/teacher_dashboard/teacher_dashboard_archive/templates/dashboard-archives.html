@@ -16,14 +16,6 @@
     <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
 </div>
 
-<div class="cell right-magnet">
-    <button data-ng-click="exportAll()" class="right-magnet cancel">
-        Exporter
-    </button>
-</div>
-
-
-
         <div class="row" data-ng-show="filteredSubjectScheduledList.length == 0 && search.text.title">
             <h2><i18n>exercizer.correction.search.empty</i18n></h2>
         </div>
@@ -81,7 +73,7 @@
                                                 class="hover-orange"
                                                 data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
                                         </div>
-                                        <div class="row">
+                                        <div class="row" data-ng-if="subjectScheduled.type !== 'simple'">
                                             <input class="cell right-magnet" type="checkbox" data-ng-model="subjectScheduled.selected" data-ng-change="selectsubjectScheduled(subjectScheduled)"/>
                                         </div>
 
