@@ -160,6 +160,28 @@ directives.push(
                                     }
                                 },
                                 {
+                                    publicName : 'Exporter',
+                                    actionOnClick : function(){
+                                        var subject = SubjectService.getById(scope.subjectList[0]);
+                                        scope.$emit('E_EXPORT_SELECTED_SUBJECT', subject);
+                                    },
+                                    display : function(){
+                                        if(scope.folderList.length + scope.subjectList.length == 1){
+                                            // only one item
+                                            if(scope.subjectList.length == 1){
+                                                // is subject
+                                                var subject = SubjectService.getById(scope.subjectList[0]);
+                                                return (scope.lowerRight == 'owner' || scope.lowerRight == 'manager') && subject.type === 'interactive';
+                                            } else {
+                                                //is folder
+                                                return true;
+                                            }
+                                        } else{
+                                            return false;
+                                        }
+                                    }
+                                },
+                                {
                                     publicName : 'Supprimer',
                                     actionOnClick : function(){
                                         scope.$emit('E_REMOVE_SELECTED_FOLDER_SUBJECT');

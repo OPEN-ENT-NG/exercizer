@@ -1,0 +1,18 @@
+<lightbox show="isDisplayed" on-close="hide()">
+    <h2>Exporter le sujet [[subject.title]] au format moodle</h2>
+    <p class="">Attention, le format moodle (.xml) ne prend pas en charge tous les types de questions,
+        ceux listés ci-dessous ne seront pas exportés : </p>
+    <ul>
+        <li><i18n>exercizer.import.tdbase.type1</i18n></li>
+        <li><i18n>exercizer.import.tdbase.type2</i18n></li>
+        <li><i18n>exercizer.import.tdbase.type3</i18n></li>
+        <li><i18n>exercizer.import.tdbase.type4</i18n></li>
+        <li><i18n>exercizer.import.tdbase.type5</i18n></li>
+        <li><i18n>exercizer.import.tdbase.type6</i18n></li>
+    </ul>
+
+    <div class="row">
+        <button data-ng-click="exportMoodle()" class="right-magnet">Exporter</button>
+        <button data-ng-click="hide()" class="cancel right-magnet">Annuler</button>
+    </div>
+</lightbox>
