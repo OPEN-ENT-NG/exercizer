@@ -37,15 +37,15 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
             log.warn("[ExercizerRepositoryEvents][deleteGroups] groups is empty");
         }
 
-        JsonArray groupIds = new JsonArray();
+        JsonArray users;
+        JsonArray userIds = new JsonArray();
         for (Object obj : groups){
             JsonObject j = (JsonObject)obj;
-            groupIds.addString(j.getString("group"));
+            users = j.getArray("users");
+            for(Object s : users){
+                userIds.add(s);
+            }
         }
-
-        JsonArray userIds = new JsonArray();
-
-        //TODO get all users in groups
 
         SqlStatementsBuilder builder = new SqlStatementsBuilder();
 
@@ -59,7 +59,7 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
                 if(event.isRight()){
                     log.info("[ExercizerRepositoryEvents][deleteGroups] The resources created by users are archived");
                 }else {
-                    log.warn("[ExercizerRepositoryEvents][deleteGroups] Error archiving the resources created by users");
+                    log.warn("[ExercizerRepositoryEvents][deleteGroups] Error archiving the resources created by users " +  event.left().getValue() );
                 }
             }
         }));
@@ -115,7 +115,7 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
                 if(event.isRight()){
                     log.info("[ExercizerRepositoryEvents][deleteUsers] The resources created by users are deleted");
                 }else {
-                    log.warn("[ExercizerRepositoryEvents][deleteUsers] Error deleting the resources created by users");
+                    log.warn("[ExercizerRepositoryEvents][deleteUsers] Error deleting the resources created by users : " + event.left().getValue());
 
                 }
             }
