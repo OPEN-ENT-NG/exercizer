@@ -27,7 +27,6 @@ import fr.openent.exercizer.services.IGrainService;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.openent.exercizer.services.impl.GrainServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
-import fr.openent.exercizer.utils.MoodleUtils;
 import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
@@ -788,12 +787,12 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
-	@Get("/subject/export-moodle/:id")
+	@Get("/subject/export-moodle/:id/:filename")
 	@ResourceFilter(ShareAndOwner.class)
 	@SecuredAction(value = "exercizer.read", type = ActionType.RESOURCE)
 	public void getMoodle(final HttpServerRequest request){
 		final String id = request.params().get("id");
-
+		final String fileName = request.params().get("filename");
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(UserInfos user) {
@@ -805,7 +804,7 @@ public class SubjectController extends ControllerHelper {
 								SubjectExporter sb = new SubjectExporter(event.right().getValue());
 								request.response().putHeader("content-type", "application/xml");
 								request.response().putHeader("Content-Disposition",
-										"attachment; filename=moodleEpxort.xml");
+										"attachment; filename="+fileName+".xml");
 								request.response().end(sb.exportToMoodle());
 
 							}
