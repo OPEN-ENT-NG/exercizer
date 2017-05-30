@@ -67,6 +67,9 @@ public class SubjectExporter {
             case "association":
                 this.writeMaching(data);
                 break;
+            case "order_by":
+                this.writeOrdering(data);
+                break;
         }
         this.xsw.writeEndElement();
 
@@ -82,7 +85,8 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "shortanswer");
         this.writeCommon(grainData.getString("title"),
                 this.toCDATA(grainData.getString("statement")), "html");
-        this.writeAnswer(grainData.getObject("custom_data").getString("correct_answer"), "100");
+        if(grainData.getObject("custom_data") != null)
+            this.writeAnswer(grainData.getObject("custom_data").getString("correct_answer"), "100");
     }
 
     private void writeEssay(JsonObject grainData) throws XMLStreamException {
@@ -96,11 +100,13 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "multianswer");
         this.writeCommon(grainData.getString("title"),
                 grainData.getString("statement"), "html");
-        JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
-        JsonObject j;
-        for (Object o : answers) {
-            j = (JsonObject)o;
-            this.writeAnswer(j.getString("text"), String.valueOf(100/answers.size()));
+        if(grainData.getObject("custom_data") != null) {
+            JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
+            JsonObject j;
+            for (Object o : answers) {
+                j = (JsonObject) o;
+                this.writeAnswer(j.getString("text"), String.valueOf(100 / answers.size()));
+            }
         }
     }
 
@@ -108,21 +114,23 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "multichoice");
         this.writeCommon(grainData.getString("title"),
                 grainData.getString("statement"), "html");
-        JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
-        List<JsonObject> answersList = new ArrayList<>();
-        JsonObject j;
-        int totalCorrectAswer = 0;
-        for (Object o : answers) {
-            j = (JsonObject)o;
-            if(j.getBoolean("isChecked"))
-                totalCorrectAswer++;
-            answersList.add(j);
-        }
-        for (JsonObject answer: answersList) {
-            if(answer.getBoolean("isChecked"))
-                this.writeAnswer(answer.getString("text"), String.valueOf(100/totalCorrectAswer));
-            else
-                this.writeAnswer(answer.getString("text"), "0");
+        if(grainData.getObject("custom_data") != null) {
+            JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
+            List<JsonObject> answersList = new ArrayList<>();
+            JsonObject j;
+            int totalCorrectAswer = 0;
+            for (Object o : answers) {
+                j = (JsonObject) o;
+                if (j.getBoolean("isChecked"))
+                    totalCorrectAswer++;
+                answersList.add(j);
+            }
+            for (JsonObject answer : answersList) {
+                if (answer.getBoolean("isChecked"))
+                    this.writeAnswer(answer.getString("text"), String.valueOf(100 / totalCorrectAswer));
+                else
+                    this.writeAnswer(answer.getString("text"), "0");
+            }
         }
     }
 
@@ -130,14 +138,33 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "matching");
         this.writeCommon(grainData.getString("title"),
                 grainData.getString("statement"), "html");
-        JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
-        JsonObject j;
-        for (Object o : answers) {
-            j = (JsonObject) o;
-            this.xsw.writeStartElement("subquestion");
-            this.writeText(j.getString("text_left"));
-            this.writeAnswer(j.getString("text_right"), null);
-            this.xsw.writeEndElement();
+        if (grainData.getObject("custom_data") != null){
+            JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
+            JsonObject j;
+            for (Object o : answers) {
+                j = (JsonObject) o;
+                this.xsw.writeStartElement("subquestion");
+                this.writeText(j.getString("text_left"));
+                this.writeAnswer(j.getString("text_right"), null);
+                this.xsw.writeEndElement();
+            }
+        }
+    }
+
+    private void writeOrdering(JsonObject grainData) throws XMLStreamException {
+        this.xsw.writeAttribute("type", "ordering");
+        this.writeCommon(grainData.getString("title"),
+                grainData.getString("statement"), "html");
+        if(grainData.getObject("custom_data") != null) {
+            JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
+            JsonObject j;
+            for (Object o : answers) {
+                j = (JsonObject) o;
+                this.xsw.writeStartElement("element");
+                this.xsw.writeAttribute("index", String.valueOf(j.getInteger("index")));
+                this.writeAnswer(j.getString("text"), null);
+                this.xsw.writeEndElement();
+            }
         }
     }
 
