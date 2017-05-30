@@ -19,7 +19,7 @@
 
 package fr.openent.exercizer.controllers;
 
-import fr.openent.exercizer.filters.ArchiveSubjectsScheduledOwner;
+import fr.openent.exercizer.filters.SubjectsScheduledOwner;
 import fr.openent.exercizer.filters.SubjectScheduledCorrected;
 import fr.openent.exercizer.filters.SubjectScheduledOwner;
 import fr.openent.exercizer.services.ISubjectScheduledService;
@@ -603,7 +603,7 @@ public class SubjectScheduledController extends ControllerHelper {
 	}
 
 	@Get("/archive/subjects-scheduled/export-csv")
-	@ResourceFilter(ArchiveSubjectsScheduledOwner.class)
+	@ResourceFilter(SubjectsScheduledOwner.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void exportArchiedSubjectScheduled(final HttpServerRequest request){
 		final List<String> ids = request.params().getAll("id");
@@ -611,7 +611,7 @@ public class SubjectScheduledController extends ControllerHelper {
 			@Override
 			public void handle(UserInfos user) {
 				if(user != null){
-					subjectScheduledService.getListForArchive(user, ids, new Handler<Either<String, JsonArray>>() {
+					subjectScheduledService.getListForExport(user, ids, new Handler<Either<String, JsonArray>>() {
 						@Override
 						public void handle(Either<String, JsonArray> event) {
 							if(event.isRight()){

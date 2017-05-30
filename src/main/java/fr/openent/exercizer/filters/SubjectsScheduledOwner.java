@@ -13,7 +13,7 @@ import org.vertx.java.core.json.JsonObject;
 
 import java.util.List;
 
-public class ArchiveSubjectsScheduledOwner implements ResourcesProvider {
+public class SubjectsScheduledOwner implements ResourcesProvider {
 
     @Override
     public void authorize(final HttpServerRequest resourceRequest, final Binding binding, final UserInfos user, final Handler<Boolean> handler) {
@@ -23,7 +23,7 @@ public class ArchiveSubjectsScheduledOwner implements ResourcesProvider {
             return;
         }
         resourceRequest.pause();
-        String query = "SELECT COUNT(*) FROM exercizer.subject_scheduled as ss WHERE ss.is_archived = true AND ss.owner = ? AND ss.id IN " + Sql.listPrepared(ids.toArray()) ;
+        String query = "SELECT COUNT(*) FROM exercizer.subject_scheduled as ss WHERE ss.owner = ? AND ss.id IN " + Sql.listPrepared(ids.toArray()) ;
         JsonArray values = new JsonArray();
         values.addString(user.getUserId());
         for (String id: ids) {

@@ -118,7 +118,9 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
      */
     @Override
     public void list(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-        super.list(user, handler);
+		final String query = "SELECT * " +
+				" FROM " + resourceTable + " AS ss WHERE ss.owner = ? AND ss.is_archived = false";
+		sql.prepared(query, new JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
     }
 
     /**
@@ -361,11 +363,11 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		sql.prepared(query, new JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
 	}
 
-	public void getListForArchive(final UserInfos user, final List<String> ids, final Handler<Either<String, JsonArray>> handler){
+	public void getListForExport(final UserInfos user, final List<String> ids, final Handler<Either<String, JsonArray>> handler){
 		final String query = "SELECT ss.title, ss.type, sc.owner_username as student, sc.comment, sc.final_score as score" +
 				" FROM exercizer.subject_scheduled AS ss" +
 				" INNER JOIN exercizer.subject_copy AS sc ON sc.subject_scheduled_id = ss.id" +
-				" WHERE ss.id IN "+Sql.listPrepared(ids.toArray())+" AND ss.owner = ? AND ss.is_archived = true";
+				" WHERE ss.id IN "+Sql.listPrepared(ids.toArray())+" AND ss.owner = ?";
 
 		JsonArray values = new JsonArray();
 		for (String id: ids) {
