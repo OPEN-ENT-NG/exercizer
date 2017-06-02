@@ -47,6 +47,7 @@ public class SubjectExporter {
 
     private void exportGrainsFactory(JsonObject grain) throws XMLStreamException {
         JsonObject data = grain.getObject("grain_data");
+        String generalFeedback = data.getString("answer_explanation");
         this.xsw.writeStartElement("question");
         switch (grain.getString("name")){
             case "statement":
@@ -71,6 +72,11 @@ public class SubjectExporter {
                 this.writeOrdering(data);
                 break;
         }
+        if(generalFeedback != null){
+            this.xsw.writeStartElement("generalfeedback");
+            this.writeText(generalFeedback);
+            this.xsw.writeEndElement();
+        }
         this.xsw.writeEndElement();
 
     }
@@ -93,7 +99,7 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "essay");
         this.writeCommon(grainData.getString("title"),
                 grainData.getString("statement"), "html");
-        this.writeAnswer("","");
+        this.writeAnswer("","0");
     }
 
     private void writeMultiAnswer(JsonObject grainData) throws XMLStreamException {
@@ -160,14 +166,20 @@ public class SubjectExporter {
             JsonObject j;
             for (Object o : answers) {
                 j = (JsonObject) o;
-                this.xsw.writeStartElement("element");
+                this.xsw.writeStartElement("subquestion");
                 this.xsw.writeAttribute("index", String.valueOf(j.getInteger("index")));
                 this.writeAnswer(j.getString("text"), null);
                 this.xsw.writeEndElement();
             }
+            this.writeShuffleAnswer(true);
         }
     }
 
+    private void writeShuffleAnswer(boolean shuffle) throws XMLStreamException {
+        this.xsw.writeStartElement("shuffleanwers");
+        this.xsw.writeCharacters(shuffle ? "1" : "0");
+        this.xsw.writeEndElement();
+    }
     private void writeCommon(String name, String text, String format) throws XMLStreamException {
         this.xsw.writeStartElement("name");
         this.writeText(name);;
