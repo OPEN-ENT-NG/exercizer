@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.controllers;
 
+import fr.openent.exercizer.exporter.ImagesToBase64;
 import fr.openent.exercizer.exporter.SubjectExporter;
 import fr.openent.exercizer.filters.MassOwnerOnly;
 import fr.openent.exercizer.filters.MassShareAndOwner;
@@ -802,11 +803,17 @@ public class SubjectController extends ControllerHelper {
 						public void handle(Either<String, JsonArray> event) {
 							if (event.isRight()){
 								SubjectExporter sb = new SubjectExporter(event.right().getValue());
-								request.response().putHeader("content-type", "application/xml");
-								request.response().putHeader("Content-Disposition",
-										"attachment; filename="+fileName+".xml");
-								request.response().end(sb.exportToMoodle());
-
+								String xml = sb.exportToMoodle();
+								ImagesToBase64 base64 = new ImagesToBase64(xml, eb, storage);
+								base64.exportImagesToBase64(xml, new Handler<String>() {
+									@Override
+									public void handle(String event) {
+										request.response().putHeader("content-type", "application/xml");
+										request.response().putHeader("Content-Disposition",
+												"attachment; filename="+fileName+".xml");
+										request.response().end(event);
+									}
+								});
 							}
 						}
 					});
