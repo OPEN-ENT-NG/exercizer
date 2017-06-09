@@ -98,14 +98,14 @@ public class SubjectExporter {
     private void writeEssay(JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "essay");
         this.writeCommon(grainData.getString("title"),
-                grainData.getString("statement"), "html");
+                this.toCDATA(grainData.getString("statement")), "html");
         this.writeAnswer("","0");
     }
 
     private void writeMultiAnswer(JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "multianswer");
         this.writeCommon(grainData.getString("title"),
-                grainData.getString("statement"), "html");
+                this.toCDATA(grainData.getString("statement")), "html");
         if(grainData.getObject("custom_data") != null) {
             JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
             JsonObject j;
@@ -119,7 +119,7 @@ public class SubjectExporter {
     private void writeMultiChoice(JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "multichoice");
         this.writeCommon(grainData.getString("title"),
-                grainData.getString("statement"), "html");
+                this.toCDATA(grainData.getString("statement")), "html");
         if(grainData.getObject("custom_data") != null) {
             JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
             List<JsonObject> answersList = new ArrayList<>();
@@ -143,7 +143,7 @@ public class SubjectExporter {
     private void writeMaching(JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "matching");
         this.writeCommon(grainData.getString("title"),
-                grainData.getString("statement"), "html");
+                this.toCDATA(grainData.getString("statement")), "html");
         if (grainData.getObject("custom_data") != null){
             JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
             JsonObject j;
@@ -160,7 +160,7 @@ public class SubjectExporter {
     private void writeOrdering(JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "ordering");
         this.writeCommon(grainData.getString("title"),
-                grainData.getString("statement"), "html");
+                this.toCDATA(grainData.getString("statement")), "html");
         if(grainData.getObject("custom_data") != null) {
             JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
             JsonObject j;
