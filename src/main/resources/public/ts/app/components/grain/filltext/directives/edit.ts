@@ -14,7 +14,7 @@ let addEditorOption = () => {
                 scope.$watch(() => {
                     return scope.$eval('customData.answersType');
                 }, (newVal) => {
-                    scope.path = '/exercizer/public/app/components/grain/filltext/templates/editor/' + newVal + '.html';
+                    scope.path = '/exercizer/public/ts/app/components/grain/filltext/templates/editor/' + newVal + '.html';
                 });
 
                 scope.addElement = function (zone: TextZone) {
