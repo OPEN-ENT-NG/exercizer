@@ -1,3 +1,8 @@
+import { ng, notify } from 'entcore';
+import { ISubjectScheduled, ISubjectCopy, IGrainCopy, IGrainScheduled } from '../models/domain';
+import { IGrainScheduledService, IGrainCopyService } from '../services';
+
+
 class ArchiveViewSubjectCopyController {
 
     static $inject = [
@@ -19,7 +24,7 @@ class ArchiveViewSubjectCopyController {
     (
         private _$routeParams,
         private _$scope,
-        private _$location:ng.ILocationService,
+        private _$location,
         private _grainScheduledService:IGrainScheduledService,
         private _grainCopyService:IGrainCopyService,
         private _archivesService
@@ -112,3 +117,4 @@ class ArchiveViewSubjectCopyController {
     }
 }
 
+export const archiveViewSubjectCopyController = ng.controller('ArchiveViewSubjectCopyController', ArchiveViewSubjectCopyController);

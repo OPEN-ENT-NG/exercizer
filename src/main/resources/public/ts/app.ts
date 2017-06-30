@@ -18,6 +18,7 @@ import { teacherDashboardRemoveSelectedFolderAndSubject } from './app/components
 import { teacherDashboardSubjectEdit } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardSubjectEdit';
 import { teacherDashboardSubjectList } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardSubjectList';
 import { teacherDashboardToaster } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardToaster';
+import { dashboardArchives, dashboardArchivesCopyList } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_archive/directives';
 import { folderNavContainer } from './app/components/folder/common/folder_nav/directives/folderNavContainer';
 import { folderNavItem } from './app/components/folder/common/folder_nav/directives/folderNavItem';
 import { editAssociation } from './app/components/grain/association/directives/editAssociation';
@@ -28,10 +29,7 @@ import { grainCopyFooter } from './app/components/grain/common/grain_copy/direct
 import { grainCopyGrainDocumentList } from './app/components/grain/common/grain_copy/directives/grainCopyGrainDocumentList';
 import { grainCopyHeader } from './app/components/grain/common/grain_copy/directives/grainCopyHeader';
 import { grainCopyStatement } from './app/components/grain/common/grain_copy/directives/grainCopyStatement';
-import { editFillText } from './app/components/grain/filltext/directives/edit';
-import { performFillText } from './app/components/grain/filltext/directives/perform';
-import { viewFillText } from './app/components/grain/filltext/directives/view';
-import { fillZone } from './app/components/grain/filltext/directives/fillzone';
+import { editFillText, performFillText, viewFillText, fillZone } from './app/components/grain/filltext/directives';
 import { editMultipleAnswer } from './app/components/grain/multiple_answer/directives/editMultipleAnswer';
 import { performMultipleAnswer } from './app/components/grain/multiple_answer/directives/performMultipleAnswer';
 import { viewMultipleAnswer } from './app/components/grain/multiple_answer/directives/viewMultipleAnswer';
@@ -98,56 +96,27 @@ ng.directives.push(sharePanelModal);
 ng.directives.push(subjectScheduleAssignAt);
 ng.directives.push(teacherDashboardCorrectionCopyList);
 ng.directives.push(teacherDashboardCorrectionSubjectScheduledList);
-ng.directives.push(teacherDashboardSimpleCorrectionCopyList);
-ng.directives.push(teacherDashboardCopyPaste);
-ng.directives.push(teacherDashboardFolderEdit);
-ng.directives.push(teacherDashboardMove);
+ng.directives.push(teacherDashboardSimpleCorrectionCopyList, teacherDashboardCopyPaste, teacherDashboardFolderEdit, teacherDashboardMove);
 ng.directives.push(teacherDashboardPublishToLibrary);
 ng.directives.push(teacherDashboardRemoveSelectedFolderAndSubject);
-ng.directives.push(teacherDashboardSubjectEdit);
-ng.directives.push(teacherDashboardSubjectList);
+ng.directives.push(teacherDashboardSubjectEdit, teacherDashboardSubjectList);
 ng.directives.push(teacherDashboardToaster);
-ng.directives.push(folderNavContainer);
-ng.directives.push(folderNavItem);
-ng.directives.push(editAssociation);
-ng.directives.push(performAssociation);
-ng.directives.push(viewAssociation);
+ng.directives.push(dashboardArchives, dashboardArchivesCopyList);
+ng.directives.push(folderNavContainer, folderNavItem);
+ng.directives.push(editAssociation, performAssociation, viewAssociation);
 ng.directives.push(customEditor);
-ng.directives.push(grainCopyFooter);
-ng.directives.push(grainCopyGrainDocumentList);
-ng.directives.push(grainCopyHeader);
-ng.directives.push(grainCopyStatement);
-ng.directives.push(editFillText);
-ng.directives.push(performFillText);
-ng.directives.push(viewFillText);
-ng.directives.push(fillZone);
-ng.directives.push(editMultipleAnswer);
-ng.directives.push(performMultipleAnswer);
-ng.directives.push(viewMultipleAnswer);
-ng.directives.push(editOpenAnswer);
-ng.directives.push(performOpenAnswer);
-ng.directives.push(viewOpenAnswer);
-ng.directives.push(editOrder);
-ng.directives.push(performOrder);
-ng.directives.push(viewOrder);
-ng.directives.push(editQcm);
-ng.directives.push(performQcm);
-ng.directives.push(viewQcm);
-ng.directives.push(editSimpleAnswer);
-ng.directives.push(performSimpleAnswer);
-ng.directives.push(editStatement);
-ng.directives.push(performStatement);
-ng.directives.push(viewStatement);
-ng.directives.push(choose);
-ng.directives.push(chooseAnswer);
-ng.directives.push(performSummary);
-ng.directives.push(viewSummary);
-ng.directives.push(editZoneImage);
-ng.directives.push(performZoneImage);
-ng.directives.push(viewZoneImage);
-ng.directives.push(editZoneText);
-ng.directives.push(performZoneText);
-ng.directives.push(viewZoneText);
+ng.directives.push(grainCopyFooter, grainCopyGrainDocumentList, grainCopyHeader, grainCopyStatement);
+ng.directives.push(editFillText, performFillText, viewFillText, fillZone);
+ng.directives.push(editMultipleAnswer, performMultipleAnswer, viewMultipleAnswer);
+ng.directives.push(editOpenAnswer, performOpenAnswer, viewOpenAnswer);
+ng.directives.push(editOrder, performOrder, viewOrder);
+ng.directives.push(editQcm, performQcm, viewQcm);
+ng.directives.push(editSimpleAnswer, performSimpleAnswer, editStatement);
+ng.directives.push(performStatement, viewStatement);
+ng.directives.push(choose, chooseAnswer);
+ng.directives.push(performSummary, viewSummary);
+ng.directives.push(editZoneImage, performZoneImage, viewZoneImage);
+ng.directives.push(editZoneText, performZoneText, viewZoneText);
 ng.directives.push(subjectCopyLeftNav);
 ng.directives.push(subjectEditSubjectList);
 ng.directives.push(subjectPerformCopyBottomNav);
@@ -241,6 +210,12 @@ routes.define(function($routeProvider){
         // view as student
         .when('/subject/copy/view/:subjectCopyId/', {
             action: 'viewSubjectCopy'
+        })
+        .when('/dashboard/teacher/archive/:subjectScheduledId?', {
+            action: 'dashboardTeacherArchive'
+        })
+        .when('/dashboard/teacher/archive/:subjectId/:subjectCopyId', {
+            action: 'dashboardTeacherArchiveCopy'
         })
         .otherwise({
             redirectTo: '/dashboard'

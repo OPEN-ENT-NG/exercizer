@@ -1,5 +1,10 @@
+import { ng } from 'entcore';
+import { ISubjectScheduled, ISubjectCopy, SubjectScheduled, SubjectCopy } from '../models/domain';
+import { SerializationHelper, MapToListHelper } from '../models/helpers';
+
+
 interface IArchivesService {
-    resolveArchivedSubjectScheduled(): ng.IPromise<boolean>;
+    resolveArchivedSubjectScheduled(): Promise<boolean>;
     getListArchivedSubjectScheduled(): ISubjectScheduled[];
     getListArchivedSubjectScheduledCopy(id:number, callback:any);
     getSubjectScheduledById(id:number);
@@ -20,8 +25,8 @@ class ArchivesService implements IArchivesService {
 
     constructor
     (
-        private _$q:ng.IQService,
-        private _$http:ng.IHttpService
+        private _$q,
+        private _$http
     )
     {
         this._$q = _$q;
@@ -30,7 +35,7 @@ class ArchivesService implements IArchivesService {
     }
 
 
-    public resolveArchivedSubjectScheduled = function(): ng.IPromise<boolean> {
+    public resolveArchivedSubjectScheduled = function(): Promise<boolean> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -59,7 +64,7 @@ class ArchivesService implements IArchivesService {
         return deferred.promise;
     }
 
-    private resolveArchivedSubjectScheduledCopy = function(id: number): ng.IPromise<boolean> {
+    private resolveArchivedSubjectScheduledCopy = function(id: number): Promise<boolean> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -133,3 +138,5 @@ class ArchivesService implements IArchivesService {
 
 
 }
+
+export const archivesService = ng.service('ArchivesService', ArchivesService);

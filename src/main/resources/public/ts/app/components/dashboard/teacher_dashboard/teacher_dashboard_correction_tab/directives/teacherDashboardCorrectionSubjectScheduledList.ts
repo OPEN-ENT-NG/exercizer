@@ -1,21 +1,24 @@
 import { ng, skin } from 'entcore';
 import { moment } from 'entcore/libs/moment/moment';
-import { Subject } from '../../../../../models/domain/Subject';
+import { ISubjectScheduled, Subject } from '../../../../../models/domain';
+import { $ } from 'entcore/libs/jquery/jquery';
 
-export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teacherDashboardCorrectionSubjectScheduledList',
-    ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService','SubjectCopyService','$location','$route', (SubjectScheduledService, SubjectService, GroupService, DateService,SubjectCopyService, $location, $route) => {
+export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teacherDashboardCorrectionSubjectScheduledList', 
+    ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService','SubjectCopyService','$location','$route', 
+    (SubjectScheduledService, SubjectService, GroupService, DateService,SubjectCopyService, $location, $route) => {
         return {
             restrict: 'E',
             scope: {
                 selectedSubjectScheduled : "="
             },
-            templateUrl: 'exercizer/public/ts/app/components/dashboard/teacher_dashboard/teacher_dashboard_correction_tab/templates/teacher-dashboard-correction-subject-scheduled-list.html',
+            templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_correction_tab/templates/teacher-dashboard-correction-subject-scheduled-list.html',
             link: (scope:any) => {
 
                 /**
                  * INIT
                  */
                 scope.subjectScheduledList = [];
+                scope.selectedSubjectsScheduled=[];
                 // Date data
                 scope.today = new Date();
                 scope.dateAYearshAgo = moment().subtract('month', 1).toDate();
@@ -241,7 +244,7 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
 
                 scope.orderByCopyListModificationDate = function(subjectScheduled){
                     var copyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
-                    var lastUpdateCopy: any = null;
+                    var lastUpdateCopy:any;
                     angular.forEach(copyList, function(copy){
                         if(lastUpdateCopy){
                             if(DateService.compare_after(DateService.isoToDate(copy.modified), DateService.isoToDate(lastUpdateCopy))){
@@ -255,7 +258,27 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                         return lastUpdateCopy.modified;
                     }
                 }
+
+                scope.selectsubjectScheduled = function(subjectScheduled){
+                    if(subjectScheduled.selected){
+                        scope.selectedSubjectsScheduled.push(subjectScheduled);
+                    }else{
+                        scope.selectedSubjectsScheduled.pop(subjectScheduled);
+                    }
+
+                }
+
+                scope.exportSelected = function(){
+                    exportCSV(scope.selectedSubjectsScheduled);
+                }
+
+                function exportCSV(subjects:ISubjectScheduled[]) {
+                    var ids:string = "?"
+                    subjects.forEach((subject) =>{
+                        ids = ids.concat("id="+subject.id+"&");
+                    } );
+                    window.location.href = '/exercizer/archive/subjects-scheduled/export-csv' + ids.slice(0,-1);
+                }
             }
         };
-    }]
-);
+}]);

@@ -1,7 +1,7 @@
-import { ng, template } from 'entcore';
+import { ng, model, template } from 'entcore';
 
-export const exercizerController = ng.controller('ExercizerController', ['$scope', '$rootScope', 'model', 'route', '$route'
-    ,($scope, $rootScope, model, route, $route) => {
+export const exercizerController = ng.controller('ExercizerController', ['$scope', '$rootScope', 'model', 'route', '$route',
+    ($scope, $rootScope, model, route, $route) => {
 
     const teacherProfile = 'Teacher';
     const studentProfile = 'Student';
@@ -124,7 +124,21 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
             } else {
                 template.open('main', '401-exercizer');
             }
-        }
+        },
+        dashboardTeacherArchive: function () {
+            if(_userProfile === teacherProfile){
+                template.open('main', 'teacher-dashboard-archive');
+            }else {
+                template.open('main', '401-exercizer');
+            }
+        },
+        dashboardTeacherArchiveCopy: function () {
+            if(_userProfile === teacherProfile){
+                template.open('main', 'archive-view-subject-copy');
+            }else {
+                template.open('main', '401-exercizer');
+            }
+        },
     });
 
     $route.reload();

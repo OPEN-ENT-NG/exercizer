@@ -1,3 +1,5 @@
+import { ng } from 'entcore';
+
 class TeacherDashboardArchiveController {
 
     private _$location;
@@ -45,3 +47,5 @@ class TeacherDashboardArchiveController {
         }
     }
 }
+
+export const teacherDashboardArchiveController = ng.controller('TeacherDashboardArchiveController', TeacherDashboardArchiveController);
