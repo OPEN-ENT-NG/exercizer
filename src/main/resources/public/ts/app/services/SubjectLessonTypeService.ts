@@ -37,7 +37,7 @@ export class SubjectLessonTypeService implements ISubjectLessonTypeService {
                 url: 'exercizer/subject-lesson-types'
             };
 
-        if (!this._listMappedById) {
+        if (this._listMappedById) {
             deferred.resolve(true);
         } else {
             this._$http(request).then(

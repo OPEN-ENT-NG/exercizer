@@ -11,7 +11,7 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
             scope: {
                 selectedSubjectScheduled : "="
             },
-            templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_correction_tab/templates/teacher-dashboard-correction-subject-scheduled-list.html',
+            templateUrl: 'exercizer/public/ts/app/components/dashboard/teacher_dashboard/teacher_dashboard_correction_tab/templates/teacher-dashboard-correction-subject-scheduled-list.html',
             link: (scope:any) => {
 
                 /**
