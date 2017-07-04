@@ -1,9 +1,9 @@
-import { ng } from 'entcore';
+import { ng, template } from 'entcore';
 import { _ } from 'entcore/libs/underscore/underscore';
 import { ISubjectCopy } from '../../../../models/domain';
 
 export const subjectViewCopyTeacherHeader = ng.directive('subjectViewCopyTeacherHeader',
-    ['$location', 'template', 'SubjectCopyService', ($location, template, SubjectCopyService) => {
+    ['$location', 'SubjectCopyService', ($location, SubjectCopyService) => {
         return {
             restrict: 'E',
             scope: {
