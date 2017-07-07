@@ -1,3 +1,4 @@
+export * from './ArchiveViewSubjectCopyController';
 export * from './ExercizerController';
 export * from './EditSimpleSubjectController';
 export * from './EditSubjectController';
@@ -8,4 +9,5 @@ export * from './SubjectCopyListController';
 export * from './TeacherDasboardCorrectionTabController';
 export * from './TeacherDasboardSubjectTabController';
 export * from './TeacherDashboardLibraryTabController';
+export * from './TeacherDashboardArchiveController'
 export * from './ViewSubjectCopyController';

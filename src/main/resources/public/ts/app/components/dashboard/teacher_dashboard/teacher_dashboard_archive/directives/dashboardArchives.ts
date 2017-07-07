@@ -39,9 +39,9 @@ export const dashboardArchives = ng.directive('dashboardArchives', [ '$location'
                     }
                 };
 
-                scope.orderByCopyListModificationDate = function(subjectScheduled){
-                    var copyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
-                    var lastUpdateCopy:any;
+                scope.orderByCopyListModificationDate = function(id){
+                    var copyList = ArchivesService.getSubjectScheduledCopyById(id);
+                    var lastUpdateCopy:any = null;
                     angular.forEach(copyList, function(copy){
                         if(lastUpdateCopy){
                             if(DateService.compare_after(DateService.isoToDate(copy.modified), DateService.isoToDate(lastUpdateCopy))){
@@ -56,53 +56,6 @@ export const dashboardArchives = ng.directive('dashboardArchives', [ '$location'
                     }
                 }
 
-                scope.stateTextSubjectScheduled = function(subjectScheduled){
-                    var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
-                    if(isListCopyCorrected(list)){
-                        return "Corrigé";
-                    } else{
-                        return "Non corrigé";
-                    }
-                };
-
-                function isListCopyCorrected(list){
-                    if(list){
-                        var res = true;
-                        angular.forEach(list, function(copy){
-                            if(!copy.is_corrected){
-                                res = false
-                            }
-                        });
-                        return res;
-                    } else{
-                        return false;
-                    }
-                }
-
-                scope.stateSubjectScheduled = function(subjectScheduled){
-                    var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
-                    if(isListCopyCorrected(list)){
-                        return "is_corrected";
-                    } else{
-                        return "is_not_corrected";
-                    }
-                };
-
-                scope.numberOfCopySubmitted = function(subjectScheduled){
-                    var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled),
-                        res = 0;
-                    angular.forEach(list, function(copy){
-                        if(copy.submitted_date){
-                            res++
-                        }
-                    });
-                    return res;
-                };
-
-                scope.numberOfCopy = function(subjectScheduled){
-                    var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
-                    return list.length;
-                };
 
                 scope.selectsubjectScheduled = function(subjectScheduled){
                     if(subjectScheduled.selected){

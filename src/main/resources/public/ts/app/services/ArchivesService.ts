@@ -53,6 +53,7 @@ class ArchivesService implements IArchivesService {
                     subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
                     subjectScheduled.corrected_metadata = JSON.parse(subjectScheduled.corrected_metadata);
                     self._listSubjectScheduledMappedById[subjectScheduled.id] = subjectScheduled;
+                    self._listSubjectScheduledCopyMappedById[subjectScheduled.id] = [];
                 });
                 deferred.resolve(true);
             },
@@ -64,27 +65,30 @@ class ArchivesService implements IArchivesService {
         return deferred.promise;
     }
 
-    private resolveArchivedSubjectScheduledCopy = function(id: number): Promise<boolean> {
+    private resolveArchivedSubjectScheduledCopy = function(): Promise<boolean> {
         var self = this,
             deferred = this._$q.defer(),
-            request = {
-                method: 'GET',
-                url: 'exercizer/archive/subjects-copy-by-subjects-scheduled/'+id
-            };
+            url = 'exercizer/archive/subjects-copy-by-subjects-scheduled?';
 
+        angular.forEach(self._listSubjectScheduledMappedById, function (subject) {
+            url += 'id=' + subject.id + '&';
+        });
+        url = url.slice(0, -1);
+
+        var  request = {
+                method: 'GET',
+                url: url
+        };
 
         this._$http(request).then(
             function(response) {
                 var subjectCopy;
-                var array:ISubjectCopy[] = [];
                 angular.forEach(response.data, function(subjectCopyObject) {
                     subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
                     subjectCopy.homework_metadata = JSON.parse(subjectCopy.homework_metadata);
                     subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
-                    array.push(subjectCopy);
+                    self._listSubjectScheduledCopyMappedById[subjectCopy.subject_scheduled_id].push(subjectCopy);
                 });
-                self._listSubjectScheduledCopyMappedById[id] = array;
-
                 deferred.resolve(true);
             },
             function() {
@@ -117,7 +121,7 @@ class ArchivesService implements IArchivesService {
     }
 
     public getSubjectScheduledCopyById = function (id:number) {
-        return this._listSubjectScheduledCopyMappedById;
+        return this._listSubjectScheduledCopyMappedById[id];
     }
 
     public getGrainsdByCopyId = function (id:number) {
@@ -127,7 +131,7 @@ class ArchivesService implements IArchivesService {
 
     public getListArchivedSubjectScheduledCopy = function(id:number, callback:any) {
         if(angular.isUndefined(this._listSubjectScheduledCopyMappedById[id])){
-            this.resolveArchivedSubjectScheduledCopy(id).then( () => {
+            this.resolveArchivedSubjectScheduledCopy().then( () => {
                 callback(this._listSubjectScheduledCopyMappedById[id]);
             })
 

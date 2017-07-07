@@ -1,4 +1,5 @@
 export * from './AccessService';
+export * from './ArchivesService';
 export * from './DateService';
 export * from './DragService';
 export * from './FolderService';

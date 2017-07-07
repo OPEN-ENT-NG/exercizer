@@ -16,7 +16,6 @@ public class ImagesToBase64 {
 
     public ImagesToBase64(String text, EventBus eb, Storage storage) {
         this.workspaceHelper = new WorkspaceHelper(eb, storage);
-        System.out.println(text);
         this.m = this.pattern.matcher(text);
     }
 

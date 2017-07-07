@@ -17,6 +17,7 @@ class TeacherDashboardArchiveController {
         this._$scope = $scope;
         ArchivesService.resolveArchivedSubjectScheduled().then(function () {
             $scope.subjectScheduledList = ArchivesService.getListArchivedSubjectScheduled();
+            ArchivesService.resolveArchivedSubjectScheduledCopy();
             if (angular.isUndefined($routeParams['subjectScheduledId'])) {
                 $scope.selectedSubjectScheduled = undefined;
             } else {
@@ -28,7 +29,6 @@ class TeacherDashboardArchiveController {
                     throw "subject missing";
                 }
             }
-            console.log($scope.subjectScheduledList);
         });
     }
 

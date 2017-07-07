@@ -77,5 +77,5 @@ public interface ISubjectCopyService {
 
     void getOwners(final JsonArray ids, final Handler<Either<String, JsonArray>> handler);
 
-    void getArchive(final String id, final Handler<Either<String, JsonArray>> handler);
+    void getArchive(final List<String> ids, final Handler<Either<String, JsonArray>> handler);
 }

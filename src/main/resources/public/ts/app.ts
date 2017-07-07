@@ -16,6 +16,7 @@ import { teacherDashboardMove } from './app/components/dashboard/teacher_dashboa
 import { teacherDashboardPublishToLibrary } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardPublishToLibrary';
 import { teacherDashboardRemoveSelectedFolderAndSubject } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardRemoveSelectedFolderAndSubject';
 import { teacherDashboardSubjectEdit } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardSubjectEdit';
+import { teacherDashboardSubjectExport } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardSubjectExport';
 import { teacherDashboardSubjectList } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardSubjectList';
 import { teacherDashboardToaster } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardToaster';
 import { dashboardArchives, dashboardArchivesCopyList } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_archive/directives';
@@ -75,7 +76,7 @@ import {
     accessService, groupService, dateService, folderService, 
     dragService, subjectService, subjectLibraryService, subjectLessonTypeService,
     subjectCopyService, subjectLessonLevelService, subjectScheduledService, 
-    grainScheduledService, grainCopyService, grainService, grainTypeService, subjectTagService
+    grainScheduledService, grainCopyService, grainService, grainTypeService, subjectTagService, archivesService
 } from './app/services';
 
 import { orderService } from './app/components/grain/order/services/OrderService';
@@ -100,6 +101,7 @@ ng.directives.push(teacherDashboardSimpleCorrectionCopyList, teacherDashboardCop
 ng.directives.push(teacherDashboardPublishToLibrary);
 ng.directives.push(teacherDashboardRemoveSelectedFolderAndSubject);
 ng.directives.push(teacherDashboardSubjectEdit, teacherDashboardSubjectList);
+ng.directives.push(teacherDashboardSubjectExport);
 ng.directives.push(teacherDashboardToaster);
 ng.directives.push(dashboardArchives, dashboardArchivesCopyList);
 ng.directives.push(folderNavContainer, folderNavItem);
@@ -157,6 +159,7 @@ ng.services.push(folderService );
 ng.services.push(dateService );
 ng.services.push(groupService );
 ng.services.push(accessService );
+ng.services.push(archivesService);
 
 /**
  * Controllers

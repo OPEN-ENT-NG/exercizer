@@ -42,7 +42,7 @@
                                             </strong>
                                         </div>
                                         <div class="row">
-                                            Modifié le [[ orderByCopyListModificationDate(subjectScheduled) |
+                                            Modifié le [[ orderByCopyListModificationDate(subjectScheduled.id) |
                                             date:'dd/MM/yyyy' ]]
                                         </div>
                                         <div class="row">
@@ -52,8 +52,12 @@
                                             [[subjectScheduled.corrected_copy]] élève(s) sur [[subjectScheduled.total_copy]] ont rendu le devoir
                                         </div>
                                         <div class="row"
-                                             data-ng-style="subjectScheduled.corrected_date !== null && {'color': '#72BB53'} || subjectScheduled.corrected_date === null && {'color': '#FF8351'}">
-                                            [[ stateTextSubjectScheduled(subjectScheduled) ]]
+                                             data-ng-if="subjectScheduled.corrected_date !== null" style="color: #72BB53">
+                                            Corrigé
+                                        </div>
+                                        <div class="row"
+                                             data-ng-if="subjectScheduled.corrected_date === null" style="color: #FF8351">
+                                            Non corrigé
                                         </div>
                                     </div>
                                     <div class="cell right-magnet">

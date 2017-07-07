@@ -1039,16 +1039,16 @@ public class SubjectCopyController extends ControllerHelper {
 		});
 	}
 
-	@Get("/archive/subjects-copy-by-subjects-scheduled/:id")
+	@Get("/archive/subjects-copy-by-subjects-scheduled")
 	@ResourceFilter(SubjectCopyAccess.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void listArchivedCopy(final HttpServerRequest request) {
-		final String id = request.params().get("id");
+		final List<String> ids = request.params().getAll("id");
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					subjectCopyService.getArchive(id, arrayResponseHandler(request));
+					subjectCopyService.getArchive(ids, arrayResponseHandler(request));
 				} else {
 					log.debug("User not found in session.");
 					unauthorized(request);

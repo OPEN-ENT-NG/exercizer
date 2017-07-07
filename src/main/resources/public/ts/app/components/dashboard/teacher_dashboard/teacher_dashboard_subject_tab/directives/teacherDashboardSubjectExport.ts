@@ -5,7 +5,7 @@ export const teacherDashboardSubjectExport = ng.directive('teacherDashboardSubje
         return {
             restrict: 'E',
             scope: {},
-            templateUrl: 'exercizer/public/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/templates/teacher-dashboard-subject-export.html',
+            templateUrl: 'exercizer/public/ts/app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/templates/teacher-dashboard-subject-export.html',
             link: (scope:any) => {
 
                 scope.$on('E_DISPLAY_DASHBOARD_MODAL_EXPORT_SUBJECT', function(event, subject) {
