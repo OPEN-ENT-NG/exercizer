@@ -88,7 +88,7 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
             if (ActionType.RESOURCE.name().equals(action.getType()) && !action.getDisplayName().isEmpty()) {
                 if (action.getDisplayName().equals(this.actionType)) {
                     managersActions.addString(action.getName());
-                    values.addString(action.getName());
+                    values.addString(action.getName().replace(".", "-"));
                 }
             }
         }
