@@ -65,7 +65,7 @@ class EditSimpleSubjectController {
                         self._readOnly = true;
                     }
 
-                    this._previewingFromLibrary = false;
+                    self._previewingFromLibrary = false;
                     self._hasDataLoaded = true;
                 }
             }, function(err) {
