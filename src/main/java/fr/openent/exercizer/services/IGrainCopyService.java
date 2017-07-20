@@ -27,6 +27,8 @@ import org.vertx.java.core.json.JsonObject;
 
 import fr.wseduc.webutils.Either;
 
+import java.util.List;
+
 public interface IGrainCopyService {
 	
 	/**
@@ -44,5 +46,7 @@ public interface IGrainCopyService {
 		 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
 		 */
     void list(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
+
+    void listBySubjectCopyIds(final List<String> ids, final Handler<Either<String, JsonArray>> handler);
 
 }

@@ -76,7 +76,7 @@ import {
     accessService, groupService, dateService, folderService, 
     dragService, subjectService, subjectLibraryService, subjectLessonTypeService,
     subjectCopyService, subjectLessonLevelService, subjectScheduledService, 
-    grainScheduledService, grainCopyService, grainService, grainTypeService, subjectTagService, archivesService
+    grainScheduledService, grainCopyService, grainService, grainTypeService, subjectTagService, archivesService, correctionService
 } from './app/services';
 
 import { orderService } from './app/components/grain/order/services/OrderService';
@@ -113,7 +113,7 @@ ng.directives.push(editMultipleAnswer, performMultipleAnswer, viewMultipleAnswer
 ng.directives.push(editOpenAnswer, performOpenAnswer, viewOpenAnswer);
 ng.directives.push(editOrder, performOrder, viewOrder);
 ng.directives.push(editQcm, performQcm, viewQcm);
-ng.directives.push(editSimpleAnswer, performSimpleAnswer, editStatement);
+ng.directives.push(editSimpleAnswer, performSimpleAnswer, editStatement, viewSimpleAnswer);
 ng.directives.push(performStatement, viewStatement);
 ng.directives.push(choose, chooseAnswer);
 ng.directives.push(performSummary, viewSummary);
@@ -160,6 +160,7 @@ ng.services.push(dateService );
 ng.services.push(groupService );
 ng.services.push(accessService );
 ng.services.push(archivesService);
+ng.services.push(correctionService);
 
 /**
  * Controllers
@@ -278,9 +279,9 @@ ng.onInit((module) => {
 
     module.filter('truncateNumber', function () {
         return function (item) {
-            if(!item){
+            if(item != 0 && !item){
                 // if item is not a number return an empty string
-                return ""
+                return "-"
             } else {
                 if(parseFloat(item) == parseInt(item)){
                     return item;

@@ -18,7 +18,7 @@ export function automaticCorrection(grainScheduled: IGrainScheduled, grainCopy: 
     var textZonesCorrection = [];
     customData.zones.forEach((textZone, i) => {
         textZonesCorrection.push(
-            textZone.answer.toLowerCase() === customCopyData.zones[i].answer.toLowerCase()
+            textZone.answer && textZone.answer.toLowerCase() === customCopyData.zones[i].answer.toLowerCase()
         );
     });
 

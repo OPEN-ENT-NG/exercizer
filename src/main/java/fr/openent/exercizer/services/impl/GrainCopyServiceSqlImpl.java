@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.services.impl;
 
+import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
@@ -31,6 +32,7 @@ import fr.openent.exercizer.services.IGrainCopyService;
 import fr.wseduc.webutils.Either;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IGrainCopyService {
 	
@@ -104,5 +106,15 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
     public void list(final JsonObject resource, final Handler<Either<String, JsonArray>> handler) {
         super.list(resource, "subject_copy_id", "exercizer.subject_copy", handler);
     }
+
+	@Override
+	public void listBySubjectCopyIds(List<String> ids, Handler<Either<String, JsonArray>> handler) {
+		final String query = "SELECT * FROM " + resourceTable + " AS gc WHERE gc.subject_copy_id IN "+ Sql.listPrepared(ids.toArray());
+		JsonArray values = new JsonArray();
+		for (final String id : ids) {
+			values.add(Sql.parseId(id));
+		}
+		sql.prepared(query, values, SqlResult.validResultHandler(handler));
+	}
 
 }

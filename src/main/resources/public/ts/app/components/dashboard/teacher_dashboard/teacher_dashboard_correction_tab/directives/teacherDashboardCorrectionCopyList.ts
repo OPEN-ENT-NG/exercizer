@@ -3,7 +3,7 @@ import { moment } from 'entcore/libs/moment/moment';
 import { _ } from 'entcore/libs/underscore/underscore';
 
 export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboardCorrectionCopyList',
-     ['SubjectCopyService', '$location', 'GroupService','DateService','$q', (SubjectCopyService, $location, GroupService, DateService, $q) => {
+     ['SubjectCopyService', 'CorrectionService','$location', 'GroupService','DateService','$q', (SubjectCopyService, CorrectionService, $location, GroupService, DateService, $q) => {
         return {
             restrict: 'E',
             scope: {
@@ -33,6 +33,7 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     SubjectCopyService.resolveBySubjectScheduled_force(subjectScheduled).then(
                         function () {
                             scope.subjectCopyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                            CorrectionService.automaticCorrection(scope.subjectCopyList, scope.selectedSubjectScheduled);
                         }
                     );
 
@@ -109,6 +110,8 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     angular.forEach(scope.subjectCopyList, function(copy){
                         if(SubjectCopyService.canCorrectACopyAsTeacher(scope.selectedSubjectScheduled, copy) && copy.selected){
                             copy.is_corrected = true;
+                            if(!copy.final_score)
+                                copy.final_score = copy.calculated_score;
                             promises.push(SubjectCopyService.correct(copy));
                         }
                     });

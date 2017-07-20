@@ -15,3 +15,4 @@ export * from './SubjectLibraryService';
 export * from './SubjectScheduledService';
 export * from './SubjectService';
 export * from './SubjectTagService';
+export * from './CorrectionService';

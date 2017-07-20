@@ -65,7 +65,7 @@ public class SubjectCopyAccess implements ResourcesProvider {
 			public void handle(Message<JsonObject> message) {
 				resourceRequest.resume();
 				Long count = SqlResult.countResult(message);
-				handler.handle(count != null && count > 0);
+				handler.handle(count != null && count == ids.size());
 			}
 		});
 	}
