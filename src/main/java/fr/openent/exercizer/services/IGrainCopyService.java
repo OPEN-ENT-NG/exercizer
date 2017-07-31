@@ -19,15 +19,11 @@
 
 package fr.openent.exercizer.services;
 
-import org.entcore.common.sql.SqlStatementsBuilder;
+import fr.wseduc.webutils.Either;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
-
-import fr.wseduc.webutils.Either;
-
-import java.util.List;
 
 public interface IGrainCopyService {
 	
@@ -46,7 +42,5 @@ public interface IGrainCopyService {
 		 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
 		 */
     void list(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
-
-    void listBySubjectCopyIds(final List<String> ids, final Handler<Either<String, JsonArray>> handler);
 
 }

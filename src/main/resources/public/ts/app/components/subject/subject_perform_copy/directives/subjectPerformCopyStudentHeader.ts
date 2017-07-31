@@ -24,7 +24,7 @@ export const subjectPerformCopyStudentHeader = ng.directive('subjectPerformCopyS
                 scope.canSubmit = function(){
                     //it's possible to submit if the begin date is passed even if due date is exceeded (Unless it has already submit)
                     return DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.begin_date), true) &&
-                        (scope.subjectCopy.submitted_date === null || this.canReplace());
+                        (scope.subjectCopy.submitted_date === null || canReplace());
                 };
 
                 function canReplace() {

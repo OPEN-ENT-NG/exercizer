@@ -34,7 +34,7 @@ export class CorrectionService implements ICorrectionService {
         private _multipleAnswerService,
         private _openAnswerService,
         private _qcmService,
-        private _simpleAnswerService,
+        private _simpleAnswerService
     )
     {
         this._$q = _$q;
@@ -53,20 +53,17 @@ export class CorrectionService implements ICorrectionService {
     public automaticCorrection = function (subjectCopyList:ISubjectCopy[], subjectScheduled:ISubjectScheduled) {
         this._grainScheduledService.getListBySubjectScheduled(subjectScheduled).then(
             (grainScheduledList: IGrainScheduled[]) => {
-                this._grainCopyService.getListByNotCorrectedSubjectCopies(subjectCopyList).then(
-                    () => {
-                        subjectCopyList.forEach((subjectCopy) => {
-                            this._grainCopyService.getListBySubjectCopy(subjectCopy).then((grainCopyList: IGrainCopy[]) => {
-                                var score = 0;
-                                grainCopyList.forEach((grain) => {
-                                    score += this.genericCorrection(grainScheduledList.find((grainScheduled) => {return grainScheduled.id === grain.grain_scheduled_id}), grain);
-                                });
-                                subjectCopy.calculated_score = score;
-                                this._subjectCopyService.correct(subjectCopy);
-                            })
-                        })
-                    }
-                )
+                let notCorrectedAlreadySubmitted:ISubjectCopy[] =  this._grainCopyService.getListByNotCorrectedSubjectCopies(subjectCopyList);
+                notCorrectedAlreadySubmitted.forEach((subjectCopy) => {
+                    this._grainCopyService.getListBySubjectCopy(subjectCopy).then((grainCopyList: IGrainCopy[]) => {
+                        var score = 0;
+                        grainCopyList.forEach((grain) => {
+                            score += this.genericCorrection(grainScheduledList.find((grainScheduled) => {return grainScheduled.id === grain.grain_scheduled_id}), grain);
+                        });
+                        subjectCopy.calculated_score = score;
+                        this._subjectCopyService.correct(subjectCopy);
+                    })
+                })
             }
         )
     }

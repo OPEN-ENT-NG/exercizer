@@ -21,7 +21,7 @@ export interface IGrainCopyService {
     getListBySubjectCopy(subjectCopy:ISubjectCopy):Promise<IGrainCopy[]>;
     instantiateGrainCopy(grainCopyObject:any): IGrainCopy;
     createGrainCopyList(grainScheduledList:IGrainScheduled[]):IGrainCopy[];
-    getListByNotCorrectedSubjectCopies(subjectCopyList:ISubjectCopy[]):Promise<boolean>
+    getListByNotCorrectedSubjectCopies(subjectCopyList:ISubjectCopy[]):ISubjectCopy[];
 }
 
 export class GrainCopyService implements IGrainCopyService {
@@ -151,38 +151,18 @@ export class GrainCopyService implements IGrainCopyService {
         
         return deferred.promise;
     };
-
-    public getListByNotCorrectedSubjectCopies = function (subjectCopyList:ISubjectCopy[]): Promise<boolean>{
-        var self = this,
-            deferred = this._$q.defer(),
-            ids = "";
-
+    
+    //Return only copies with no score and submitted 
+    public getListByNotCorrectedSubjectCopies = function (subjectCopyList:ISubjectCopy[]):ISubjectCopy[]{          
+        let notCorrectedAlreadySubmitted:ISubjectCopy[] =  [];
+      
         angular.forEach(subjectCopyList, function (subjectCopy) {
-            if (subjectCopy.calculated_score === null && subjectCopy.submitted_date !== null) {
-                ids += 'id=' + subjectCopy.id + '&';
-                self._listMappedBySubjectCopyId[subjectCopy.id] = []
+            if (subjectCopy.calculated_score === null && subjectCopy.submitted_date != null) {
+               notCorrectedAlreadySubmitted.push(subjectCopy);
             }
         });
 
-        if(ids !== "") {
-            ids = ids.slice(0, -1);
-            var request = {
-                method: 'GET',
-                url: 'exercizer/grains-copy?' + ids
-            };
-            this._$http(request).then(
-                function (response) {
-                    response.data.forEach(function (grainCopyObject) {
-                        self._listMappedBySubjectCopyId[grainCopyObject.subject_copy_id].push(self.instantiateGrainCopy(grainCopyObject));
-                    });
-                    deferred.resolve(true);
-                },
-                function () {
-                    deferred.reject('Une erreur est survenue lors de la récupération des éléments de la copie.');
-                }
-            );
-        }
-        return deferred.promise;
+       return notCorrectedAlreadySubmitted;       
     };
     
     public instantiateGrainCopy = function (grainCopyObject:any):IGrainCopy {

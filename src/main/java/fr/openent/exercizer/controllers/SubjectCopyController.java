@@ -473,27 +473,6 @@ public class SubjectCopyController extends ControllerHelper {
 		});
 	}
 
-	@Get("/grains-copy")
-	@ApiDoc("Gets grain copy list by subject copies.")
-	@ResourceFilter(SubjectCopyAccess.class)
-	@SecuredAction(value="", type = ActionType.RESOURCE)
-	public void listGrainsBySubjectCopyIds(final HttpServerRequest request){
-		final List<String> subjectCopyIds = request.params().getAll("id");
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(UserInfos user) {
-				if(user != null){
-					if(subjectCopyIds.size() > 0)
-						grainCopyService.listBySubjectCopyIds(subjectCopyIds, arrayResponseHandler(request));
-					else
-						Renders.badRequest(request);
-				}else{
-					unauthorized(request);
-				}
-			}
-		});
-	}
-
 	@Put("/subject-copy/simple/submit/:id")
 	@ApiDoc("Submit a homework file to a subject copy.")
 	@ResourceFilter(SubjectCopyLearnerAccess.class)
