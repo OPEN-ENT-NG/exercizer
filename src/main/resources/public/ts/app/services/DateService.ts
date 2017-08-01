@@ -2,6 +2,7 @@ import { ng } from 'entcore';
 
 export interface IDateService {
     addDays(date, days);
+    addMonths(date, months);
     compare_after(date_a, date_b, value_equal):boolean;
     timestampToDate(timestamp);
     isoToDate(iso);
@@ -18,6 +19,13 @@ export class DateService implements IDateService {
     public addDays(date, days) {
         var result = new Date(date);
         result.setDate(date.getDate() + days);
+        return result;
+    }
+    
+    public addMonths(date, months) {
+        let result = new Date(date); 
+        let thisMonth = result.getUTCMonth();               
+        result.setUTCMonth(thisMonth+months);
         return result;
     }
 

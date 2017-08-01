@@ -15,8 +15,8 @@ export const studentDashboardFinishSubjectCopyList = ng.directive('studentDashbo
 
                     // Date data
                     var today = new Date();
-                    scope.dateInAYears = DateService.addDays(today, 354);
-                    scope.dateAYearsAgo = DateService.addDays(today, -354);
+                    scope.dateInAYears = DateService.addMonths(today, 3);
+                    scope.dateAYearsAgo = DateService.addMonths(today, -3);
                     //search
                     if(!scope.search){
                         scope.search = {
