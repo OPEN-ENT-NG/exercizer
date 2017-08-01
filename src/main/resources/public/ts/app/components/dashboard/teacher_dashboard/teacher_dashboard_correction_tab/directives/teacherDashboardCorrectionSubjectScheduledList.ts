@@ -254,7 +254,7 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                             lastUpdateCopy = copy;
                         }
                     });
-                    if(lastUpdateCopy !== null){
+                    if(lastUpdateCopy != null && lastUpdateCopy.modified != null){
                         return lastUpdateCopy.modified;
                     }
                 }

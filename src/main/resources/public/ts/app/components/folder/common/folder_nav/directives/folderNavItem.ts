@@ -31,10 +31,8 @@ export const folderNavItem = ng.directive('folderNavItem',
                         directiveDOM[0].remove();
                     }
                     // is folder list empty ?
-                    scope.countChildren = 0;
-                    scope.subFolderList.forEach(function (value, key) {
-                        scope.countChildren++
-                    });
+                    scope.countChildren = Object.keys( scope.subFolderList).length;
+
                     if (scope.countChildren != 0) {
                         // if not empty
                         if(scope.isItemDisplayed()){

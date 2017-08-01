@@ -51,7 +51,7 @@ export const dashboardArchives = ng.directive('dashboardArchives', [ '$location'
                             lastUpdateCopy = copy;
                         }
                     });
-                    if(lastUpdateCopy !== null){
+                    if(lastUpdateCopy != null && lastUpdateCopy.modified != null){
                         return lastUpdateCopy.modified;
                     }
                 }
