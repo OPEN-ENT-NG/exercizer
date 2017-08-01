@@ -80,7 +80,7 @@
                 <div class="row">
                     <h4>Options</h4>
                 </div>
-                <div data-ng-if="!isSimpleSubject">
+                <div data-ng-if="!isSimpleSubject && isDisplayed">
                     <div class="row">
                         <div class="six cell"><span> Date de début :&nbsp;</span></div>
                         <date-picker ng-model="option.begin_date"  class="six cell"></date-picker>
@@ -105,7 +105,7 @@
                         <span>minute(s)</span>
                     </div>
                 </div>
-                <div data-ng-if="isSimpleSubject">
+                <div data-ng-if="isSimpleSubject && isDisplayed">
                     <div class="row">
                         <div class="six cell"><span> Date de début de la remise :&nbsp;</span></div>
                         <date-picker ng-model="option.begin_date"  class="six cell"></date-picker>
