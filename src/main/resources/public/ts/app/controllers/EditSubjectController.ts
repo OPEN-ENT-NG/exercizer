@@ -33,6 +33,7 @@ class EditSubjectController {
 
     // modal
     private _isModalAddGrainDocumentDisplayed:boolean;
+    private _isDropableZone:boolean;
     private _isModalRemoveGrainDocumentDisplayed:boolean;
     private _isModalRemoveSelectedGrainListDisplayed:boolean;
     private _currentGrainForAction:IGrain;
@@ -73,6 +74,7 @@ class EditSubjectController {
 
         // modal
         this._isModalRemoveSelectedGrainListDisplayed = false;
+        this._isDropableZone = false;
         this._isModalAddGrainDocumentDisplayed = false;
         this._isModalRemoveGrainDocumentDisplayed = false;
         this._currentGrainForAction = undefined;
@@ -81,6 +83,10 @@ class EditSubjectController {
         // organizer
         this._isOrganizerFolded = false;
         this._reOrderIterationCount = 0;
+
+        _$scope.$root.$on('E_SUBJECTEDIT_DROPABLE_ACTIVATED', function(event, displayDropZone:boolean) {
+            self._isDropableZone = displayDropZone;
+        });
 
         var self = this,
             subjectId = _$routeParams['subjectId'];
@@ -166,6 +172,8 @@ class EditSubjectController {
                 notify.error(err);
             }
         )
+
+        self._isDropableZone = false;
     };
 
     /*public dropTo = function($originalEvent) {
@@ -506,6 +514,10 @@ class EditSubjectController {
 
     get isModalRemoveSelectedGrainListDisplayed():boolean {
         return this._isModalRemoveSelectedGrainListDisplayed;
+    }
+
+    get isDropableZone():boolean {
+        return this._isDropableZone;
     }
 }
 

@@ -1,5 +1,6 @@
 import { ng } from 'entcore';
 import { IGrain } from '../../../../models/domain';
+import { $ } from 'entcore/libs/jquery/jquery';
 
 export const subjectEditSubjectList = ng.directive('subjectEditSubjectList',
     [
@@ -9,8 +10,23 @@ export const subjectEditSubjectList = ng.directive('subjectEditSubjectList',
             return {
                 restrict: 'E',
                 templateUrl: 'exercizer/public/ts/app/components/subject/subject_edit/templates/subject-edit-subject-list.html',
-                link: (scope:any) => {
+                link: (scope:any, element:any) => {
+                    /* don't work
+                     element.find('.list-view').on('startDrag', '.subject-dragged-grain', function(event) {
+                     console.log('test');
 
+                     });
+
+                     element.on('startDrag', '.subject-dragged-grain', function(event) {
+                     console.log('test');
+
+                     });
+                     */
+
+                    $('body').on('startDrag', '.subject-dragged-grain', function(event) {                        
+                        scope.$root.$broadcast('E_SUBJECTEDIT_DROPABLE_ACTIVATED', true);
+                    });
+                    
                     scope.autocomplete = {
                         subjectList: null
                     };
@@ -83,18 +99,6 @@ export const subjectEditSubjectList = ng.directive('subjectEditSubjectList',
                         });
                         return array;
                     }
-
-                    /**
-                     * DRAG
-                     */
-
-                    scope.drag = function (item, $originalEvent) {
-                        try {
-                            $originalEvent.dataTransfer.setData('application/json', JSON.stringify(item));
-                        } catch (e) {
-                            $originalEvent.dataTransfer.setData('Text', JSON.stringify(item));
-                        }
-                    };
                 }
             };
         }
