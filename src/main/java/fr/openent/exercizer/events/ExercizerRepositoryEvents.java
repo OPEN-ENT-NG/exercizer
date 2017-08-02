@@ -82,7 +82,8 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
         final JsonArray managersActions = new JsonArray();
         final JsonArray values = new JsonArray();
         for (Object obj : users){
-            JsonObject j = (JsonObject)obj;
+            if (!(obj instanceof JsonObject)) continue;
+            final JsonObject j = (JsonObject)obj;
             userIds.addString(j.getString("id"));
             values.addString(j.getString("id"));
         }
@@ -97,32 +98,35 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
             }
         }
 
-        SqlStatementsBuilder builder = new SqlStatementsBuilder();
-        builder.prepared("UPDATE exercizer.users SET is_deleted = true WHERE id IN " + Sql.listPrepared(userIds.toArray()), userIds);
+        if (userIds.size() > 0) {
 
-        builder.prepared("UPDATE exercizer.subject_scheduled SET is_deleted = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
+            SqlStatementsBuilder builder = new SqlStatementsBuilder();
+            builder.prepared("UPDATE exercizer.users SET is_deleted = true WHERE id IN " + Sql.listPrepared(userIds.toArray()), userIds);
 
-        builder.prepared("UPDATE exercizer.subject_copy SET is_deleted = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
+            builder.prepared("UPDATE exercizer.subject_scheduled SET is_deleted = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
 
-        String query = "UPDATE exercizer.subject AS s SET is_deleted = true" +
-                " WHERE s.is_library_subject = false" +
-                " AND s.owner IN " + Sql.listPrepared(userIds.toArray()) +
-                " AND NOT EXISTS (SELECT 1 FROM exercizer.subject_shares as ss WHERE ss.resource_id = s.id" +
-                " AND ss.member_id IN (SELECT m.id FROM exercizer.members AS m INNER JOIN exercizer.users AS u ON m.user_id = u.id WHERE u.is_deleted = false)" +
-                " AND ss.action IN " + Sql.listPrepared(managersActions.toArray())+")";
+            builder.prepared("UPDATE exercizer.subject_copy SET is_deleted = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
 
-        builder.prepared(query, values);
+            String query = "UPDATE exercizer.subject AS s SET is_deleted = true" +
+                    " WHERE s.is_library_subject = false" +
+                    " AND s.owner IN " + Sql.listPrepared(userIds.toArray()) +
+                    " AND NOT EXISTS (SELECT 1 FROM exercizer.subject_shares as ss WHERE ss.resource_id = s.id" +
+                    " AND ss.member_id IN (SELECT m.id FROM exercizer.members AS m INNER JOIN exercizer.users AS u ON m.user_id = u.id WHERE u.is_deleted = false)" +
+                    " AND ss.action IN " + Sql.listPrepared(managersActions.toArray()) + ")";
 
-        Sql.getInstance().transaction(builder.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
-            @Override
-            public void handle(Either<String, JsonObject> event) {
-                if(event.isRight()){
-                    log.info("[ExercizerRepositoryEvents][deleteUsers] The resources created by users are deleted");
-                }else {
-                    log.warn("[ExercizerRepositoryEvents][deleteUsers] Error deleting the resources created by users : " + event.left().getValue());
+            builder.prepared(query, values);
 
+            Sql.getInstance().transaction(builder.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
+                @Override
+                public void handle(Either<String, JsonObject> event) {
+                    if (event.isRight()) {
+                        log.info("[ExercizerRepositoryEvents][deleteUsers] The resources created by users are deleted");
+                    } else {
+                        log.warn("[ExercizerRepositoryEvents][deleteUsers] Error deleting the resources created by users : " + event.left().getValue());
+
+                    }
                 }
-            }
-        }));
+            }));
+        }
     }
 }

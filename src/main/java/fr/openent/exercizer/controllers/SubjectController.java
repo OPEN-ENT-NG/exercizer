@@ -42,6 +42,7 @@ import org.entcore.common.http.filter.sql.ShareAndOwner;
 import org.entcore.common.storage.Storage;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
+import org.entcore.common.utils.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.DecodeException;
@@ -794,6 +795,12 @@ public class SubjectController extends ControllerHelper {
 	public void getMoodle(final HttpServerRequest request){
 		final String id = request.params().get("id");
 		final String fileName = request.params().get("filename");
+
+		if (StringUtils.isEmpty(id) || StringUtils.isEmpty(fileName)) {
+			badRequest(request);
+			return;
+		}
+
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(UserInfos user) {
@@ -801,20 +808,25 @@ public class SubjectController extends ControllerHelper {
 					grainService.getGrainsForExport(id, new Handler<Either<String, JsonArray>>() {
 						@Override
 						public void handle(Either<String, JsonArray> event) {
-							if (event.isRight()){
-								SubjectExporter sb = new SubjectExporter(event.right().getValue());
-								String xml = sb.exportToMoodle();
-								ImagesToBase64 base64 = new ImagesToBase64(xml, eb, storage);
-								base64.exportImagesToBase64(xml, new Handler<String>() {
-									@Override
-									public void handle(String event) {
-										request.response().putHeader("content-type", "application/xml");
-										request.response().putHeader("Content-Disposition",
-												"attachment; filename="+fileName+".xml");
-										request.response().end(event);
-									}
-								});
+							if (event.isLeft()) {
+								renderError(request, new JsonObject().putString("error", event.left().getValue()));
+								return;
 							}
+
+							final JsonArray grains = event.right().getValue();
+
+							final SubjectExporter sb = new SubjectExporter(grains);
+							final String xml = sb.exportToMoodle();
+							final ImagesToBase64 base64 = new ImagesToBase64(xml, eb, storage);
+							base64.exportImagesToBase64(xml, new Handler<String>() {
+								@Override
+								public void handle(String event) {
+									request.response().putHeader("content-type", "application/xml");
+									request.response().putHeader("Content-Disposition",
+											"attachment; filename=" + fileName + ".xml");
+									request.response().end(event);
+								}
+							});
 						}
 					});
 				}else{

@@ -608,6 +608,12 @@ public class SubjectScheduledController extends ControllerHelper {
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void exportArchiedSubjectScheduled(final HttpServerRequest request){
 		final List<String> ids = request.params().getAll("id");
+
+		if (ids == null || ids.isEmpty()) {
+			badRequest(request);
+			return;
+		}
+
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(UserInfos user) {
@@ -615,30 +621,32 @@ public class SubjectScheduledController extends ControllerHelper {
 					subjectScheduledService.getListForExport(user, ids, new Handler<Either<String, JsonArray>>() {
 						@Override
 						public void handle(Either<String, JsonArray> event) {
-							if(event.isRight()){
-								JsonArray r = event.right().getValue();
-								processTemplate(request, "text/export.txt",
-										new JsonObject().putArray("list", r), new Handler<String>() {
-											@Override
-											public void handle(String export) {
-												if (export != null) {
-													String filename = "Exercices_et_évaluations_" +
-															DateUtils.format(new Date())+".csv";
-													request.response().putHeader("Content-Type", "application/csv");
-													request.response().putHeader("Content-Disposition",
-															"attachment; filename="+filename);
-													request.response().end(export);
-												} else {
-													renderError(request);
-												}
-											}
-										});
-							}else{
-
+							if (event.isLeft()) {
+								renderError(request, new JsonObject().putString("error", event.left().getValue()));
+								return;
 							}
+
+							JsonArray r = event.right().getValue();
+							r = r == null ? new JsonArray() : r;
+							processTemplate(request, "text/export.txt",
+									new JsonObject().putArray("list", r), new Handler<String>() {
+										@Override
+										public void handle(String export) {
+											if (export != null) {
+												String filename = "Exercices_et_évaluations_" +
+														DateUtils.format(new Date()) + ".csv";
+												request.response().putHeader("Content-Type", "application/csv");
+												request.response().putHeader("Content-Disposition",
+														"attachment; filename=" + filename);
+												request.response().end(export);
+											} else {
+												renderError(request);
+											}
+										}
+									});
+
 						}
 					});
-
 				}else{
 					log.debug("User not found in session.");
 					unauthorized(request);

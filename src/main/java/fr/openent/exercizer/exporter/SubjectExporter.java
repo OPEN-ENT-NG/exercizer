@@ -1,8 +1,11 @@
 package fr.openent.exercizer.exporter;
 
 
+import org.entcore.common.utils.StringUtils;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.logging.Logger;
+import org.vertx.java.core.logging.impl.LoggerFactory;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -16,14 +19,15 @@ public class SubjectExporter {
     private StringWriter stringWriter;
     private XMLStreamWriter xsw;
     private JsonArray grains;
+    private static final Logger log = LoggerFactory.getLogger(SubjectExporter.class);
 
-    public SubjectExporter(JsonArray grains) {
-        this.grains = grains;
+    public SubjectExporter(final JsonArray grains) {
+        this.grains = grains == null ? new JsonArray() : grains;
         this.stringWriter = new StringWriter();
         try {
             this.xsw = XMLOutputFactory.newInstance().createXMLStreamWriter(stringWriter);
         } catch (XMLStreamException e) {
-            e.printStackTrace();
+            log.error("Export", e);
         }
     }
 
@@ -31,23 +35,24 @@ public class SubjectExporter {
         try {
             this.xsw.writeStartDocument("UTF-8", "1.0");
             this.xsw.writeStartElement("quiz");
-            for (Object obj: grains) {
+            for (final Object obj: grains) {
+                if (!(obj instanceof JsonObject)) continue;
                 this.exportGrainsFactory((JsonObject)obj);
             }
             this.xsw.writeEndElement();
         } catch (XMLStreamException e) {
-            e.printStackTrace();
+            log.error("Export to moodle", e);
         }
         return this.stringWriter.toString();
     }
 
-    private String toCDATA(String html){
+    private String toCDATA(final String html){
         return "<![CDATA["+html+"]]>";
     }
 
-    private void exportGrainsFactory(JsonObject grain) throws XMLStreamException {
-        JsonObject data = grain.getObject("grain_data");
-        String generalFeedback = data.getString("answer_explanation");
+    private void exportGrainsFactory(final JsonObject grain) throws XMLStreamException {
+        final JsonObject data = grain.getObject("grain_data");
+        final String generalFeedback = data.getString("answer_explanation");
         this.xsw.writeStartElement("question");
         switch (grain.getString("name")){
             case "statement":
@@ -72,7 +77,7 @@ public class SubjectExporter {
                 this.writeOrdering(data);
                 break;
         }
-        if(generalFeedback != null){
+        if (!StringUtils.isEmpty(generalFeedback)) {
             this.xsw.writeStartElement("generalfeedback");
             this.writeText(generalFeedback);
             this.xsw.writeEndElement();
@@ -81,108 +86,110 @@ public class SubjectExporter {
 
     }
 
-    private void writeStatement(JsonObject grainData) throws XMLStreamException {
+    private void writeStatement(final JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "description");
-        this.writeCommon(grainData.getString("title"),
-                this.toCDATA(grainData.getObject("custom_data").getString("statement")), "html");
+        this.writeCommon(grainData.getString("title", ""),
+                this.toCDATA(grainData.getObject("custom_data", new JsonObject()).getString("statement", "")), "html");
     }
 
-    private void writeShortAnswer(JsonObject grainData) throws XMLStreamException {
+    private void writeShortAnswer(final JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "shortanswer");
-        this.writeCommon(grainData.getString("title"),
-                this.toCDATA(grainData.getString("statement")), "html");
+        this.writeCommon(grainData.getString("title", ""),
+                this.toCDATA(grainData.getString("statement", "")), "html");
         if(grainData.getObject("custom_data") != null)
-            this.writeAnswer(grainData.getObject("custom_data").getString("correct_answer"), "100");
+            this.writeAnswer(grainData.getObject("custom_data").getString("correct_answer", ""), "100");
     }
 
-    private void writeEssay(JsonObject grainData) throws XMLStreamException {
+    private void writeEssay(final JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "essay");
-        this.writeCommon(grainData.getString("title"),
-                this.toCDATA(grainData.getString("statement")), "html");
+        this.writeCommon(grainData.getString("title", ""),
+                this.toCDATA(grainData.getString("statement", "")), "html");
         this.writeAnswer("","0");
     }
 
-    private void writeMultiAnswer(JsonObject grainData) throws XMLStreamException {
+    private void writeMultiAnswer(final JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "multianswer");
-        this.writeCommon(grainData.getString("title"),
-                this.toCDATA(grainData.getString("statement")), "html");
+        this.writeCommon(grainData.getString("title", ""),
+                this.toCDATA(grainData.getString("statement", "")), "html");
         if(grainData.getObject("custom_data") != null) {
-            JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
-            JsonObject j;
-            for (Object o : answers) {
-                j = (JsonObject) o;
-                this.writeAnswer(j.getString("text"), String.valueOf(100 / answers.size()));
+            final JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list", new JsonArray());
+
+            for (final Object o : answers) {
+                if (!(o instanceof JsonObject)) continue;
+                final JsonObject j = (JsonObject)o;
+                this.writeAnswer(j.getString("text", ""), String.valueOf(100 / answers.size()));
             }
         }
     }
 
-    private void writeMultiChoice(JsonObject grainData) throws XMLStreamException {
+    private void writeMultiChoice(final JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "multichoice");
-        this.writeCommon(grainData.getString("title"),
-                this.toCDATA(grainData.getString("statement")), "html");
+        this.writeCommon(grainData.getString("title", ""),
+                this.toCDATA(grainData.getString("statement", "")), "html");
         if(grainData.getObject("custom_data") != null) {
-            JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
-            List<JsonObject> answersList = new ArrayList<>();
-            JsonObject j;
+            final JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list", new JsonArray());
+            final List<JsonObject> answersList = new ArrayList<>();
             int totalCorrectAswer = 0;
             for (Object o : answers) {
-                j = (JsonObject) o;
-                if (j.getBoolean("isChecked"))
+                if (!(o instanceof JsonObject)) continue;
+                final JsonObject j = (JsonObject)o;
+                if (j.getBoolean("isChecked", false))
                     totalCorrectAswer++;
                 answersList.add(j);
             }
             for (JsonObject answer : answersList) {
-                if (answer.getBoolean("isChecked"))
-                    this.writeAnswer(answer.getString("text"), String.valueOf(100 / totalCorrectAswer));
+                if (answer.getBoolean("isChecked", false))
+                    this.writeAnswer(answer.getString("text", ""), String.valueOf(100 / totalCorrectAswer));
                 else
-                    this.writeAnswer(answer.getString("text"), "0");
+                    this.writeAnswer(answer.getString("text", ""), "0");
             }
         }
     }
 
-    private void writeMaching(JsonObject grainData) throws XMLStreamException {
+    private void writeMaching(final JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "matching");
-        this.writeCommon(grainData.getString("title"),
-                this.toCDATA(grainData.getString("statement")), "html");
+        this.writeCommon(grainData.getString("title", ""),
+                this.toCDATA(grainData.getString("statement", "")), "html");
         if (grainData.getObject("custom_data") != null){
-            JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
-            JsonObject j;
+            final JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list", new JsonArray());
             for (Object o : answers) {
-                j = (JsonObject) o;
+                if (!(o instanceof JsonObject)) continue;
+                final JsonObject j = (JsonObject)o;
                 this.xsw.writeStartElement("subquestion");
-                this.writeText(j.getString("text_left"));
-                this.writeAnswer(j.getString("text_right"), null);
+                this.writeText(j.getString("text_left", ""));
+                this.writeAnswer(j.getString("text_right", ""), null);
                 this.xsw.writeEndElement();
             }
         }
     }
 
-    private void writeOrdering(JsonObject grainData) throws XMLStreamException {
+    private void writeOrdering(final JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "ordering");
-        this.writeCommon(grainData.getString("title"),
-                this.toCDATA(grainData.getString("statement")), "html");
+        this.writeCommon(grainData.getString("title", ""),
+                this.toCDATA(grainData.getString("statement", "")), "html");
         if(grainData.getObject("custom_data") != null) {
-            JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list");
-            JsonObject j;
+            final JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list", new JsonArray());
+
             for (Object o : answers) {
-                j = (JsonObject) o;
+                if (!(o instanceof JsonObject)) continue;
+                final JsonObject j = (JsonObject)o;
                 this.xsw.writeStartElement("subquestion");
-                this.xsw.writeAttribute("index", String.valueOf(j.getInteger("index")));
-                this.writeAnswer(j.getString("text"), null);
+                this.xsw.writeAttribute("index", String.valueOf(j.getInteger("index", 0)));
+                this.writeAnswer(j.getString("text", ""), null);
                 this.xsw.writeEndElement();
             }
             this.writeShuffleAnswer(true);
         }
     }
 
-    private void writeShuffleAnswer(boolean shuffle) throws XMLStreamException {
+    private void writeShuffleAnswer(final boolean shuffle) throws XMLStreamException {
         this.xsw.writeStartElement("shuffleanwers");
         this.xsw.writeCharacters(shuffle ? "1" : "0");
         this.xsw.writeEndElement();
     }
-    private void writeCommon(String name, String text, String format) throws XMLStreamException {
+    private void writeCommon(final String name, final String text, final String format) throws XMLStreamException {
         this.xsw.writeStartElement("name");
-        this.writeText(name);;
+        this.writeText(name);
         this.xsw.writeEndElement();
         this.xsw.writeStartElement("questiontext");
         this.xsw.writeAttribute("format", format);
@@ -190,16 +197,16 @@ public class SubjectExporter {
         this.xsw.writeEndElement();
     }
 
-    private void writeAnswer(String text, String fraction) throws XMLStreamException {
+    private void writeAnswer(final String text, final String fraction) throws XMLStreamException {
         this.xsw.writeStartElement("answer");
-        if(fraction != null)
+        if(!StringUtils.isEmpty(fraction))
             this.xsw.writeAttribute("fraction", fraction);
         this.writeText(text);
         this.xsw.writeEndElement();
     }
 
 
-    private void writeText(String text) throws XMLStreamException {
+    private void writeText(final String text) throws XMLStreamException {
         this.xsw.writeStartElement("text");
         this.xsw.writeCharacters(text);
         this.xsw.writeEndElement();
