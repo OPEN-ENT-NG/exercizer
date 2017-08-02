@@ -316,6 +316,7 @@ public class SubjectScheduledController extends ControllerHelper {
 		params.putString("subjectName", subjectName);
 		params.putString("dueDate", dueDate);
 		params.putString("resourceUri", params.getString("uri"));
+		params.putBoolean("disableAntiFlood", true);
 		this.notification.notifyTimeline(request,"exercizer." + notificationName, user, recipientSet, idResource, params);
 	}
 

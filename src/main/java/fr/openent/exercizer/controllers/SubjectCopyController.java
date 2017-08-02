@@ -201,6 +201,7 @@ public class SubjectCopyController extends ControllerHelper {
 			if (dueDate != null) {
 				params.putString("dueDate", dueDate);
 			}
+		    params.putBoolean("disableAntiFlood", true);
 
 	        this.notification.notifyTimeline(request,"exercizer." + notificationName, user, recipientSet, idResource, params);
 		}
