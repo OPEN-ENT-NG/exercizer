@@ -53,7 +53,7 @@ export class CorrectionService implements ICorrectionService {
     public automaticCorrection = function (subjectCopyList:ISubjectCopy[], subjectScheduled:ISubjectScheduled) {
         this._grainScheduledService.getListBySubjectScheduled(subjectScheduled).then(
             (grainScheduledList: IGrainScheduled[]) => {
-                let notCorrectedAlreadySubmitted:ISubjectCopy[] =  this._grainCopyService.getListByNotCorrectedSubjectCopies(subjectCopyList);
+                let notCorrectedAlreadySubmitted:ISubjectCopy[] =  this._grainCopyService.getListByNotCorrectedSubjectCopies(subjectCopyList, subjectScheduled.is_one_shot_submit);
                 notCorrectedAlreadySubmitted.forEach((subjectCopy) => {
                     this._grainCopyService.getListBySubjectCopy(subjectCopy).then((grainCopyList: IGrainCopy[]) => {
                         var score = 0;
@@ -61,7 +61,7 @@ export class CorrectionService implements ICorrectionService {
                             score += this.genericCorrection(grainScheduledList.find((grainScheduled) => {return grainScheduled.id === grain.grain_scheduled_id}), grain);
                         });
                         subjectCopy.calculated_score = score;
-                        this._subjectCopyService.correct(subjectCopy);
+                        this._subjectCopyService.update(subjectCopy);
                     })
                 })
             }

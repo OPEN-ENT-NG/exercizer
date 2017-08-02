@@ -21,7 +21,7 @@ export interface IGrainCopyService {
     getListBySubjectCopy(subjectCopy:ISubjectCopy):Promise<IGrainCopy[]>;
     instantiateGrainCopy(grainCopyObject:any): IGrainCopy;
     createGrainCopyList(grainScheduledList:IGrainScheduled[]):IGrainCopy[];
-    getListByNotCorrectedSubjectCopies(subjectCopyList:ISubjectCopy[]):ISubjectCopy[];
+    getListByNotCorrectedSubjectCopies(subjectCopyList:ISubjectCopy[], isOneShotSubmit:boolean):ISubjectCopy[];
 }
 
 export class GrainCopyService implements IGrainCopyService {
@@ -153,12 +153,14 @@ export class GrainCopyService implements IGrainCopyService {
     };
     
     //Return only copies with no score and submitted 
-    public getListByNotCorrectedSubjectCopies = function (subjectCopyList:ISubjectCopy[]):ISubjectCopy[]{          
+    public getListByNotCorrectedSubjectCopies = function (subjectCopyList:ISubjectCopy[], isOneShotSubmit:boolean):ISubjectCopy[]{
         let notCorrectedAlreadySubmitted:ISubjectCopy[] =  [];
       
         angular.forEach(subjectCopyList, function (subjectCopy) {
-            if (subjectCopy.calculated_score === null && subjectCopy.submitted_date != null) {
+            if (subjectCopy.calculated_score === null && subjectCopy.submitted_date != null && isOneShotSubmit) {
                notCorrectedAlreadySubmitted.push(subjectCopy);
+            } else if (subjectCopy.submitted_date != null && !isOneShotSubmit && !subjectCopy.is_correction_on_going && !subjectCopy.is_corrected) {
+                notCorrectedAlreadySubmitted.push(subjectCopy);
             }
         });
 
