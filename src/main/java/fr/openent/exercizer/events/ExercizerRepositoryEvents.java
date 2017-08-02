@@ -1,4 +1,4 @@
-package fr.openent.exercizer.services.impl;
+package fr.openent.exercizer.events;
 
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.security.ActionType;
@@ -35,34 +35,38 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
     public void deleteGroups(JsonArray groups) {
         if(groups == null || groups.size() == 0){
             log.warn("[ExercizerRepositoryEvents][deleteGroups] groups is empty");
+            return;
         }
 
-        JsonArray users;
-        JsonArray userIds = new JsonArray();
+        final JsonArray userIds = new JsonArray();
         for (Object obj : groups){
-            JsonObject j = (JsonObject)obj;
-            users = j.getArray("users");
-            for(Object s : users){
-                userIds.add(s);
-            }
-        }
-
-        SqlStatementsBuilder builder = new SqlStatementsBuilder();
-
-        builder.prepared("UPDATE exercizer.subject_scheduled SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
-
-        builder.prepared("UPDATE exercizer.subject_copy SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
-
-        Sql.getInstance().transaction(builder.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
-            @Override
-            public void handle(Either<String, JsonObject> event) {
-                if(event.isRight()){
-                    log.info("[ExercizerRepositoryEvents][deleteGroups] The resources created by users are archived");
-                }else {
-                    log.warn("[ExercizerRepositoryEvents][deleteGroups] Error archiving the resources created by users " +  event.left().getValue() );
+            if (!(obj instanceof JsonObject)) continue;
+            final JsonObject j = (JsonObject)obj;
+            final JsonArray users = j.getArray("users");
+            if (users != null) {
+                for (Object s : users) {
+                    userIds.add(s);
                 }
             }
-        }));
+        }
+
+        if (userIds.size() != 0) {
+
+            SqlStatementsBuilder builder = new SqlStatementsBuilder();
+            builder.prepared("UPDATE exercizer.subject_scheduled SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
+            builder.prepared("UPDATE exercizer.subject_copy SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
+
+            Sql.getInstance().transaction(builder.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
+                @Override
+                public void handle(Either<String, JsonObject> event) {
+                    if (event.isRight()) {
+                        log.info("[ExercizerRepositoryEvents][deleteGroups] The resources created by users are archived");
+                    } else {
+                        log.warn("[ExercizerRepositoryEvents][deleteGroups] Error archiving the resources created by users " + event.left().getValue());
+                    }
+                }
+            }));
+        }
 
     }
 

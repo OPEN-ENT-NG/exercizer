@@ -21,7 +21,7 @@ package fr.openent.exercizer;
 
 import fr.openent.exercizer.controllers.*;
 import fr.openent.exercizer.cron.ScheduledNotification;
-import fr.openent.exercizer.services.impl.ExercizerRepositoryEvents;
+import fr.openent.exercizer.events.ExercizerRepositoryEvents;
 import fr.wseduc.cron.CronTrigger;
 import fr.wseduc.webutils.Server;
 import org.entcore.common.http.BaseServer;
