@@ -123,7 +123,7 @@ export class GrainCopyService implements IGrainCopyService {
         this._listMappedBySubjectCopyId[grainCopy.subject_copy_id][index] = grainCopy;
     };
 
-    public getListBySubjectCopy = function(subjectCopy:ISubjectCopy):Promise<IGrainCopy[]> {
+    public getListBySubjectCopy = function(subjectCopy:ISubjectCopy, force:boolean=false):Promise<IGrainCopy[]> {
         var self = this,
             deferred = this._$q.defer(),
             request = {
@@ -132,7 +132,7 @@ export class GrainCopyService implements IGrainCopyService {
                 data: subjectCopy
             };
 
-        if (this._listMappedBySubjectCopyId[subjectCopy.id]) {
+        if (this._listMappedBySubjectCopyId[subjectCopy.id] && !force) {
             deferred.resolve(this._listMappedBySubjectCopyId[subjectCopy.id]);
         } else {
             this._listMappedBySubjectCopyId[subjectCopy.id] = [];

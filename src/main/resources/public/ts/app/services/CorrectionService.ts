@@ -55,7 +55,7 @@ export class CorrectionService implements ICorrectionService {
             (grainScheduledList: IGrainScheduled[]) => {
                 let notCorrectedAlreadySubmitted:ISubjectCopy[] =  this._grainCopyService.getListByNotCorrectedSubjectCopies(subjectCopyList, subjectScheduled.is_one_shot_submit);
                 notCorrectedAlreadySubmitted.forEach((subjectCopy) => {
-                    this._grainCopyService.getListBySubjectCopy(subjectCopy).then((grainCopyList: IGrainCopy[]) => {
+                    this._grainCopyService.getListBySubjectCopy(subjectCopy, true).then((grainCopyList: IGrainCopy[]) => {
                         var score = 0;
                         grainCopyList.forEach((grain) => {
                             score += this.genericCorrection(grainScheduledList.find((grainScheduled) => {return grainScheduled.id === grain.grain_scheduled_id}), grain);
