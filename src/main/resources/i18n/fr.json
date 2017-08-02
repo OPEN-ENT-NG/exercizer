@@ -118,5 +118,7 @@
     "exercizer.all.corrected" : "Corrigés",
     "exercizer.all.not.corrected" : "Non corrigés",
     "exercizer.next.copy" : "Copie suivante",
-    "exercizer.previous.copy" : "Copie précédente"
+    "exercizer.previous.copy" : "Copie précédente",
+    "exercizer.check.corrected" : "Votre copie est en cours de correction ou déjà corrigée par l'enseignant."
+
 }

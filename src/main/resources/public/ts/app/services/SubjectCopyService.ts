@@ -21,6 +21,7 @@ export interface ISubjectCopyService {
     remindCustomCopies(copyIds:number[], subject:string, body:string): Promise<Boolean>;
     remindAutomaticCopies(copyIds:number[], subjectScheduleId:number): Promise<Boolean>;
     getListBySubjectScheduled(subjectScheduled : ISubjectScheduled): ISubjectCopy[];
+    checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId:number):Promise<boolean>;
     
 }
 
@@ -118,6 +119,24 @@ export class SubjectCopyService implements ISubjectCopyService {
                     deferred.reject('Une erreur est survenue lors de la récupération des copies.');
                 }
             );
+        return deferred.promise;
+    };
+
+    public checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId:number):Promise<boolean> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: 'exercizer/subject-copy/check/no-corrected/' + subjectCopyId
+            };
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(response.data.result);                
+            },
+            function() {
+                deferred.reject('Une erreur est survenue lors du contôle de la correction de la copie.');
+            }
+        );
         return deferred.promise;
     };
 

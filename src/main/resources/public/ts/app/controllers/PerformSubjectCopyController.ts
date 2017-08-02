@@ -31,6 +31,7 @@ class PerformSubjectCopyController {
     private _previewingFromLibrary:boolean;
     private _previewFromReader:boolean;
     private _hasDataLoaded:boolean;
+    private _isCanSubmit:boolean;
 
     constructor
     (
@@ -57,6 +58,7 @@ class PerformSubjectCopyController {
         this._grainCopyService = _grainCopyService;
         this._accessService = _accessService;
         this._hasDataLoaded = false;
+        this._isCanSubmit = true;
 
         var self = this,
             subjectId = _$routeParams['subjectId'],
@@ -160,10 +162,12 @@ class PerformSubjectCopyController {
                                     function(grainCopyList:IGrainCopy[]) {
 
                                         if (!angular.isUndefined(grainCopyList)) {
-                                            self._grainCopyList = grainCopyList;
-                                            self._eventsHandler(self);
-                                            self._hasDataLoaded = true;
-
+                                            self._subjectCopyService.checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId).then(function (isOk) {
+                                                self._isCanSubmit = isOk === true;
+                                                self._grainCopyList = grainCopyList;
+                                                self._eventsHandler(self);
+                                                self._hasDataLoaded = true;                                                
+                                            });
                                         } else {
                                             self._$location.path('/dashboard');
                                         }
@@ -228,16 +232,24 @@ class PerformSubjectCopyController {
         });
 
         self._$scope.$on('E_SUBJECT_COPY_SUBMITTED', function(event, subjectCopy:ISubjectCopy) {
-            var subjectCopy : ISubjectCopy = self._subjectCopyService.getById(subjectCopy.id);
-            subjectCopy.submitted_date  = new Date().toISOString();
-            self._subjectCopyService.submit(subjectCopy).then(
-                function(subjectCopy:ISubjectCopy) {
-                    self._$scope.$broadcast('E_SUBMIT_SUBJECT_COPY');
-                },
-                function(err) {
-                    notify.error(err);
+            let selfSubjectCopy:ISubjectCopy = subjectCopy;
+            self._subjectCopyService.checkIsNotCorrectionOnGoingOrCorrected(subjectCopy.id).then(function (isOk) {
+                if (isOk !== true) {
+                    self._isCanSubmit = false;
+                    notify.error("exercizer.check.corrected");
+                } else {
+                    var subjectCopy:ISubjectCopy = self._subjectCopyService.getById(selfSubjectCopy.id);
+                    subjectCopy.submitted_date = new Date().toISOString();
+                    self._subjectCopyService.submit(subjectCopy).then(
+                        function (subjectCopy:ISubjectCopy) {
+                            self._$scope.$broadcast('E_SUBMIT_SUBJECT_COPY');
+                        },
+                        function (err) {
+                            notify.error(err);
+                        }
+                    );
                 }
-            );
+            });
         });
 
         // init
@@ -277,6 +289,10 @@ class PerformSubjectCopyController {
 
     get hasDataLoaded():boolean {
         return this._hasDataLoaded;
+    }
+    
+    get isCanSubmit():boolean {
+        return this._isCanSubmit;
     }
 }
 

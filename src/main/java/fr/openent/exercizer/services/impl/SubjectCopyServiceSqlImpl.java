@@ -205,6 +205,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
         sql.prepared(query, ids, SqlResult.validResultHandler(handler));
     }
 
+    @Override
     public void getArchive(final List<String> ids, final Handler<Either<String, JsonArray>> handler){
         final String query = "SELECT * FROM " + resourceTable + " AS sc WHERE sc.subject_scheduled_id IN "+ Sql.listPrepared(ids.toArray()) +"AND sc.is_archived = true";
         JsonArray values = new JsonArray();

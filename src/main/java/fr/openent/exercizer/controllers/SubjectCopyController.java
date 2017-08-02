@@ -274,8 +274,14 @@ public class SubjectCopyController extends ControllerHelper {
 									final JsonObject subjectCopy = ResourceParser.beforeAny(r.right().getValue());
 									switch (copyAction) {
 									case SUBMITCOPY:
-										subjectCopyService.submitCopy(resource.getLong("id"),
-												notifyHandler(request, user, subjectCopy, CopyAction.SUBMITCOPY)); break;
+										if (subjectCopy.getBoolean("is_corrected", false) || subjectCopy.getBoolean("is_correction_on_going", false)) {
+											Renders.badRequest(request, "exercizer.check.corrected");
+											return;
+										} else {
+											subjectCopyService.submitCopy(resource.getLong("id"),
+													notifyHandler(request, user, subjectCopy, CopyAction.SUBMITCOPY));
+										}
+										break;
 									case CORRECTCOPY:
 										subjectCopyService.update(resource, user,
 												notifyHandler(request, user, subjectCopy, CopyAction.CORRECTCOPY)); break;
@@ -319,6 +325,39 @@ public class SubjectCopyController extends ControllerHelper {
 	public void reportCopy(final HttpServerRequest request) {
 		writeCopy(request, CopyAction.REPORTCOPY);
 	}
+
+	@Get("/subject-copy/check/no-corrected/:id")
+    @ApiDoc("Check subject copy status.")
+	@SecuredAction(value = "check.corrected", type = ActionType.AUTHENTICATED)
+    public void checkIsNotCorrected(final HttpServerRequest request) {
+		final String subjectCopyId = request.params().get("id");
+		if (StringUtils.isEmpty(subjectCopyId)) {
+			badRequest(request);
+			return;
+		}
+        UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+            @Override
+            public void handle(final UserInfos user) {
+                if (user != null) {
+	                subjectCopyService.getById(subjectCopyId, user, new Handler<Either<String, JsonObject>>() {
+		                @Override
+		                public void handle(Either<String, JsonObject> r) {
+			                if (r.isLeft()) {
+				                renderError(request, new JsonObject().putString("error", r.left().getValue()));
+				                return;
+			                }
+			                final JsonObject subjectCopy = r.right().getValue();
+			                final boolean result = !subjectCopy.getBoolean("is_corrected", false) && !subjectCopy.getBoolean("is_correction_on_going", false);
+                            Renders.renderJson(request, new JsonObject().putBoolean("result", result));
+	                    }
+                    });
+                } else {
+                    log.debug("User not found in session.");
+                    unauthorized(request);
+                }
+            }
+        });
+    }
 
 	@Get("/subjects-copy")
     @ApiDoc("Gets subject copy list.")

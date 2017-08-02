@@ -21,8 +21,12 @@
         <!-- HEADER -->
         <div data-ng-if="!performSubjectCopyController.previewing">
             <subject-perform-copy-student-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"
-                                                 data-subject-copy="performSubjectCopyController.subjectCopy">
+                                                 data-subject-copy="performSubjectCopyController.subjectCopy" is-can-submit="performSubjectCopyController.isCanSubmit">
             </subject-perform-copy-student-header>
+        </div>
+
+        <div class="row" data-ng-if="!performSubjectCopyController.isCanSubmit">
+            <div class="info"><i18n>exercizer.check.corrected</i18n></div>
         </div>
 
         <div class="row">
