@@ -32,6 +32,22 @@ export class SubjectCopy implements  ISubjectCopy {
     is_corrected:boolean;
     is_deleted: boolean;
     dueDate: string;
+    _homework_metadata: any;
+
+    set homework_metadata(thing){
+
+        if(typeof(thing) === 'string'){
+            this._homework_metadata = JSON.parse(thing);
+        }
+        else{
+            this._homework_metadata = thing;
+        }
+
+    }
+
+    get homework_metadata(){
+        return this._homework_metadata;
+    }
 
     toJSON(){
         return {

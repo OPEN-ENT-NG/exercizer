@@ -73,7 +73,6 @@ export class SubjectCopyService implements ISubjectCopyService {
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
-                        subjectCopy.homework_metadata = JSON.parse(subjectCopy.homework_metadata);
                         subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                         if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
                             self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
@@ -105,7 +104,6 @@ export class SubjectCopyService implements ISubjectCopyService {
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
-                        subjectCopy.homework_metadata = JSON.parse(subjectCopy.homework_metadata);
                         subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                         if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
                             self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
@@ -154,7 +152,6 @@ export class SubjectCopyService implements ISubjectCopyService {
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
-                        subjectCopy.homework_metadata = JSON.parse(subjectCopy.homework_metadata);
                         subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                         self._listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy);
 

@@ -85,7 +85,6 @@ class ArchivesService implements IArchivesService {
                 var subjectCopy;
                 angular.forEach(response.data, function(subjectCopyObject) {
                     subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
-                    subjectCopy.homework_metadata = JSON.parse(subjectCopy.homework_metadata);
                     subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                     self._listSubjectScheduledCopyMappedById[subjectCopy.subject_scheduled_id].push(subjectCopy);
                 });
