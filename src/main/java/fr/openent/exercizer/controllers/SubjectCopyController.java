@@ -684,7 +684,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Get("/subject-copy/corrected/download/:id")
 	@ApiDoc("Download a corrected.")
-	@ResourceFilter(SubjectCopyLearnerAccess.class)
+	@ResourceFilter(SubjectCopyCorrected.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void downloadCorrected(final HttpServerRequest request) {
 		final String id = request.params().get("id");
