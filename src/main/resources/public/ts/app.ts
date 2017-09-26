@@ -208,12 +208,12 @@ routes.define(function($routeProvider){
         .when('/subject/copy/view/preview/:subjectId/', {
             action: 'previewViewSubjectCopy'
         })
-        .when('/subject/copy/view/:subjectId/:subjectCopyId/', {
-            action: 'viewSubjectCopyAsTeacher'
-        })
         // view as student
         .when('/subject/copy/view/:subjectCopyId/', {
             action: 'viewSubjectCopy'
+        })
+        .when('/subject/copy/view/:subjectId/:subjectCopyId/', {
+            action: 'viewSubjectCopyAsTeacher'
         })
         .when('/dashboard/teacher/archive/:subjectScheduledId?', {
             action: 'dashboardTeacherArchive'
