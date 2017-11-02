@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, idiom } from 'entcore';
 import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainCopy, IGrainScheduled, ISubjectCopy, ISubjectScheduled, SubjectCopy } from '../models/domain';
 import { _ } from 'entcore';
@@ -83,7 +83,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                     deferred.resolve(true);
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récupération des copies.');
+                    deferred.reject('exercizer.error');
                 }
             );
         }
@@ -114,7 +114,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                     deferred.resolve(true);
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récupération des copies.');
+                    deferred.reject('exercizer.error');
                 }
             );
         return deferred.promise;
@@ -132,7 +132,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                 deferred.resolve(response.data.result);                
             },
             function() {
-                deferred.reject('Une erreur est survenue lors du contôle de la correction de la copie.');
+                deferred.reject('exercizer.error');
             }
         );
         return deferred.promise;
@@ -159,7 +159,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                     deferred.resolve(true);
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récupération des copies.');
+                    deferred.reject('exercizer.error');
                 }
             );
         return deferred.promise;
@@ -183,7 +183,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                 deferred.resolve(subjectCopy);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la création d une copie.');
+                deferred.reject('exercizer.error');
             }
         );
         return deferred.promise;
@@ -210,7 +210,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                 deferred.resolve(response.data.fileId);
             },
             function() {
-                deferred.reject("Une erreur est survenue lors du rendu du devoir.");
+                deferred.reject("exercizer.error");
             }
         );
         return deferred.promise;
@@ -230,7 +230,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                 deferred.resolve(true);
             },
             function(e) {
-                deferred.reject('exercizer.reminder.custom.error');
+                deferred.reject('exercizer.error');
             }
         );
 
@@ -251,7 +251,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                 deferred.resolve(true);
             },
             function(e) {
-                deferred.reject('exercizer.reminder.auto.error');
+                deferred.reject('exercizer.error');
             }
         );
 
@@ -279,7 +279,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                 deferred.resolve(response.data.fileId);
             },
             function() {
-                deferred.reject("Une erreur est survenue lors du dépôt de la correction individuelle.");
+                deferred.reject("exercizer.error");
             }
         );
         return deferred.promise;
@@ -295,7 +295,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                 deferred.resolve();
             },
             function() {
-                deferred.reject("Une erreur est survenue lors de la suppression de la correction individuelle.");
+                deferred.reject("exercizer.error");
             }
         );
         return deferred.promise;
@@ -334,7 +334,7 @@ export class SubjectCopyService implements ISubjectCopyService {
                     deferred.resolve(subjectCopy);
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la sauvegarde de la copie.');
+                    deferred.reject('exercizer.error');
                 }
             );
         
@@ -453,13 +453,13 @@ export class SubjectCopyService implements ISubjectCopyService {
     public copyStateText = function(copy){
         switch (this.copyState(copy)){
             case 'is_corrected':
-                return "Corrigé";
+                return idiom.translate("exercizer.copy.state.corrected");
             case 'is_correction_on_going':
-                return "En cours de correction";
+                return idiom.translate("exercizer.copy.state.ongoing");
             case 'is_submitted':
-                return "Rendu";
+                return idiom.translate("exercizer.copy.state.submitted");
             case 'has_been_started':
-                return "Commencé";
+                return idiom.translate("exercizer.copy.state.started");
             default:
                 return "";
         }

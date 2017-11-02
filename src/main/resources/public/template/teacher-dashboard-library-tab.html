@@ -4,7 +4,7 @@
 
     <!-- LOADER -->
     <div class="row" data-ng-if="!teacherDashboardLibraryTabController.hasDataLoaded">
-        <div class="info">Chargement des données...</div>
+        <div class="info"><i18n>exercizer.loading</i18n></div>
     </div>
 
     <div data-ng-if="teacherDashboardLibraryTabController.hasDataLoaded">
@@ -18,12 +18,12 @@
                     <!-- FILTERS -->
                     <article>
                         <div class="row">
-                            <h2 class="cell">Filtrer</h2>
+                            <h2 class="cell"><i18n>exercizer.library.filter</i18n></h2>
 
                             <!-- toggle icon -->
                             <div class="cell right-magnet" data-ng-click="teacherDashboardLibraryTabController.foldFilters()">
-                                <i data-ng-show="teacherDashboardLibraryTabController.areFiltersFolded" data-tooltip="Déplier" class="down-open"></i>
-                                <i data-ng-hide="teacherDashboardLibraryTabController.areFiltersFolded" data-tooltip="Plier" class="up-open"></i>
+                                <i data-ng-show="teacherDashboardLibraryTabController.areFiltersFolded" data-tooltip="exercizer.unfold" class="down-open"></i>
+                                <i data-ng-hide="teacherDashboardLibraryTabController.areFiltersFolded" data-tooltip="exercizer.fold" class="up-open"></i>
                             </div>
                         </div>
 
@@ -31,11 +31,11 @@
                             <div class="tabs">
                                 <header data-ng-class="teacherDashboardLibraryTabController.isFilterSubjectLessonTypeDisplayed ? 'selected' : ''"
                                         data-ng-click="teacherDashboardLibraryTabController.displayFilterSubjectLessonType()">
-                                    Matières&nbsp;<span data-ng-show="teacherDashboardLibraryTabController.filters.subjectLessonTypeList.length > 0">*</span>
+                                    <i18n>exercizer.library.filter.subject</i18n>&nbsp;<span data-ng-show="teacherDashboardLibraryTabController.filters.subjectLessonTypeList.length > 0">*</span>
                                 </header>
                                 <header data-ng-class="teacherDashboardLibraryTabController.isFilterSubjectLessonLevelDisplayed ? 'selected' : ''"
                                         data-ng-click="teacherDashboardLibraryTabController.displayFilterSubjectLessonLevel()">
-                                    Niveaux&nbsp;<span data-ng-show="teacherDashboardLibraryTabController.filters.subjectLessonLevelList.length > 0">*</span>
+                                    <i18n>exercizer.library.filter.level</i18n>&nbsp;<span data-ng-show="teacherDashboardLibraryTabController.filters.subjectLessonLevelList.length > 0">*</span>
                                 </header>
                             </div>
                         </div>
@@ -68,9 +68,9 @@
                 <!-- FILTERS -->
 
                 <div class="row">
-                    <h4 class="five cell">Recherche par étiquettes :</h4>
+                    <h4 class="five cell"><i18n>exercizer.library.search.tag</i18n> :</h4>
                     <div class="one cell">&nbsp;</div>
-                    <h4 class="five cell">Recherche par titre :</h4>
+                    <h4 class="five cell"><i18n>exercizer.library.search.title</i18n> :</h4>
                 </div>
 
                 <div class="row">
@@ -81,7 +81,7 @@
                             ng-model="selectedSubjectTagObject">
                     </autocomplete>
                     <div class="one cell">&nbsp;</div>
-                    <input type="text" class="five cell" placeholder="Rechercher" data-ng-model="teacherDashboardLibraryTabController.filters.title" />
+                    <input type="text" class="five cell" i18n-placeholder="exercizer.search" data-ng-model="teacherDashboardLibraryTabController.filters.title" />
                 </div>
 
 
@@ -94,7 +94,9 @@
                     </div>
                 </div>
 
-                <h3 class="row"><em>[[ teacherDashboardLibraryTabController.isLanding ? 'Derniers sujets ajoutés...' : 'Résultats de la recherche...' ]]</em></h3>
+                <h3 class="row">
+                    <em translate content="[[teacherDashboardLibraryTabController.isLanding ? 'exercizer.library.title.main' : 'exercizer.library.title.search']]"></em>
+                </h3>
 
                 <div class="fallen dominos">
                     <div data-ng-repeat="subject in teacherDashboardLibraryTabController.subjectList">
@@ -113,7 +115,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="cell">
-                                                [[ teacherDashboardLibraryTabController.getSubjectLessonType(subject).label ]]&nbsp;/&nbsp;<em>Niveau [[ teacherDashboardLibraryTabController.getSubjectLessonLevel(subject).label ]]</em>
+                                                [[ teacherDashboardLibraryTabController.getSubjectLessonType(subject).label ]]&nbsp;/&nbsp;<em><i18n>exercizer.library.row.level</i18n> [[ teacherDashboardLibraryTabController.getSubjectLessonLevel(subject).label ]]</em>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -122,12 +124,12 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            Ajouté par [[ subject.owner_username ]] le [[ subject.created | date: 'dd/MM/yyyy' ]]
+                                            <i18n>exercizer.library.row.owner</i18n> [[ subject.owner_username ]] <i18n>exercizer.library.row.owner2</i18n> [[ subject.created | date: 'dd/MM/yyyy' ]]
                                         </div>
 
                                         <div class="bottom-locked eleven vertical-spacing-tripple">
                                             <div class="cell" data-ng-if="subject.authors_contributors">
-                                                <em class="high-importance">Auteur et/ou contributeurs au sujet : [[ subject.authors_contributors ]]</em>
+                                                <em class="high-importance"><i18n>exercizer.library.row.contributor</i18n> : [[ subject.authors_contributors ]]</em>
                                             </div>
                                             <div class="cell right-magnet">
                                                 <input type="checkbox"
@@ -151,10 +153,10 @@
             <div class="toggle">
                 <div class="row">
                     <div class="cell">
-                        <button data-ng-click="teacherDashboardLibraryTabController.unpublish()" data-ng-show="teacherDashboardLibraryTabController.onlyOneOwnerSubjectIsSelected()">Annuler la publication</button>
-                        <button data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject()" data-ng-show="teacherDashboardLibraryTabController.onlyOneSubjectIsSelected()">Aperçu</button>
-                        <button data-ng-click="teacherDashboardLibraryTabController.displayModalCopyPaste()">Copier dans mes sujets</button>
-                        <button data-ng-click="teacherDashboardLibraryTabController.resetSelection()">Annuler</button>
+                        <button data-ng-click="teacherDashboardLibraryTabController.unpublish()" data-ng-show="teacherDashboardLibraryTabController.onlyOneOwnerSubjectIsSelected()"><i18n>exercizer.library.toaster.unpublish</i18n></button>
+                        <button data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject()" data-ng-show="teacherDashboardLibraryTabController.onlyOneSubjectIsSelected()"><i18n>exercizer.library.toaster.preview</i18n></button>
+                        <button data-ng-click="teacherDashboardLibraryTabController.displayModalCopyPaste()"><i18n>exercizer.library.toaster.copy</i18n></button>
+                        <button data-ng-click="teacherDashboardLibraryTabController.resetSelection()"><i18n>exercizer.cancel</i18n></button>
                     </div>
                 </div>
             </div>

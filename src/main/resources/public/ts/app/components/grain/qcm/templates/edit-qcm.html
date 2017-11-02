@@ -1,7 +1,7 @@
 <div class="row vertical-spacing">
-    <span>Mode de correction :&nbsp;</span>
+    <span><i18n>exercizer.grain.mode</i18n> :&nbsp;</span>
     <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
-    <span>erreur non autorisée</span>
+    <span><i18n>exercizer.grain.mode.option</i18n></span>
 </div>
 
 <div class="row">
@@ -9,13 +9,13 @@
         <thead>
         <tr>
             <th style="width:20%;">
-                Réponse(s) valide(s)
+                <i18n>exercizer.grain.qcm.responses.header1</i18n>
             </th>
             <th style="width:70%;">
-                Propositions
+                <i18n>exercizer.grain.qcm.responses.header2</i18n>
             </th>
             <th style="text-align: right">
-                Action
+                <i18n>exercizer.grain.qcm.responses.header3</i18n>
             </th>
         </tr>
         </thead>
@@ -28,7 +28,7 @@
                 </label>
             </td>
             <td>
-                <input type="text" style="width: 100%;" data-ng-model="answer.text" complete-change="updateGrain()" value="[[ answer.text ]]" placeholder="Indiquez une proposition" />
+                <input type="text" style="width: 100%;" data-ng-model="answer.text" complete-change="updateGrain()" value="[[ answer.text ]]" i18n-placeholder="exercizer.grain.qcm.answer.info" />
             </td>
             <td style="text-align: right">
                 <i class="close" data-ng-click="deleteAnswer(answer)"></i>
@@ -40,6 +40,6 @@
 
 <div class="row">
     <button data-ng-click="addAnswer()" class="twelve cell flat-button">
-        Ajouter une proposition
+        <i18n>exercizer.grain.qcm.add</i18n>
     </button>
 </div>

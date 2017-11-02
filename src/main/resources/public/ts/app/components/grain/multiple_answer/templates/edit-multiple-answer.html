@@ -1,18 +1,18 @@
 <div class="row vertical-spacing">
-    <span>Mode de correction :&nbsp;</span>
+    <span><i18n>exercizer.grain.mode</i18n> :&nbsp;</span>
     <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
-    <span>erreur non autorisée</span>
+    <span><i18n>exercizer.grain.mode.option</i18n></span>
 </div>
 
 <div class="row vertical-spacing">
     <div data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
-        <input type="text" class="eleven cell" data-ng-model="answer.text" complete-change="updateGrain()" value="[[ answer.text ]]" placeholder="Indiquez une réponse" />
+        <input type="text" class="eleven cell" data-ng-model="answer.text" complete-change="updateGrain()" value="[[ answer.text ]]" i18n-placeholder="exercizer.grain.answer.info" />
         <div class="cell right-magnet" data-ng-click="deleteAnswer(answer)"><i class="close"></i></div>
     </div>
 
     <div class="row vertical-spacing">
         <button data-ng-click="addAnswer()" class="twelve cell flat-button">
-            Ajouter une réponse
+            <i18n>exercizer.grain.add.answer</i18n>
         </button>
     </div>
 </div>

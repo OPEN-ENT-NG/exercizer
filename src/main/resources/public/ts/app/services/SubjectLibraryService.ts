@@ -62,7 +62,7 @@ export class SubjectLibraryService implements ISubjectLibraryService {
                 deferred.resolve(true);
             },
             function() {
-                deferred.reject('exercizer.publish.error');
+                deferred.reject('exercizer.error');
             }
         );
         
@@ -93,7 +93,7 @@ export class SubjectLibraryService implements ISubjectLibraryService {
                 deferred.resolve(true);
             },
             function() {
-                deferred.reject('exercizer.publish.error');
+                deferred.reject('exercizer.error');
             }
         );
         return deferred.promise;
@@ -113,7 +113,7 @@ export class SubjectLibraryService implements ISubjectLibraryService {
                 deferred.resolve(true);
             },
             function() {
-                deferred.reject('exercizer.unpublish.error');
+                deferred.reject('exercizer.error');
             }
         );
 
@@ -137,7 +137,7 @@ export class SubjectLibraryService implements ISubjectLibraryService {
                 deferred.resolve(subjectList);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la récupération des sujets de la bibliothèque.');
+                deferred.reject('exercizer.error');
             }
         );
 
@@ -157,7 +157,7 @@ export class SubjectLibraryService implements ISubjectLibraryService {
                 deferred.resolve(parseInt(response.data));
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la récupération des sujets de la bibliothèque.');
+                deferred.reject('exercizer.error');
             }
         );
 

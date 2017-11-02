@@ -1,6 +1,6 @@
 <lightbox show="isDisplayed" on-close="hide()">
-    <h2>Supprimer la sélection</h2>
-    <p>Confirmez-vous la suppression de la sélection ?</p>
+    <h2><i18n>exercizer.subject.remove.title</i18n></h2>
+    <p><i18n>exercizer.subject.remove.confirm</i18n></p>
     <ul data-ng-show="folderList.length !=0">
             <li data-ng-repeat="folderId in folderList">
                 [[ getFolderLabelById(folderId) ]]
@@ -12,7 +12,7 @@
             </li>
     </ul>
     <div class="row">
-        <button data-ng-click="deleteSelection()" class="right-magnet">Supprimer</button>
-        <button data-ng-click="hide()" class="cancel right-magnet">Annuler</button>
+        <button data-ng-click="deleteSelection()" class="right-magnet"><i18n>exercizer.subject.remove.action</i18n></button>
+        <button data-ng-click="hide()" class="cancel right-magnet"><i18n>exercizer.cancel</i18n></button>
     </div>
 </lightbox>

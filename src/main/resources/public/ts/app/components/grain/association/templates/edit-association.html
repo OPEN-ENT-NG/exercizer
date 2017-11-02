@@ -1,11 +1,11 @@
 <div class="row vertical-spacing">
-    <span>Mode de correction :&nbsp;</span>
+    <span><i18n>exercizer.grain.mode</i18n> :&nbsp;</span>
     <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
-    <span>erreur non autorisée</span>
+    <span><i18n>exercizer.grain.mode.option</i18n></span>
 </div>
 
 <div class="row vertical-spacing">
-    <span>Montrer la colonne de gauche :&nbsp;</span>
+    <span><i18n>exercizer.grain.asso.show</i18n> :&nbsp;</span>
     <input type="checkbox" data-ng-model="grain.grain_data.custom_data.show_left_column" data-ng-change="updateGrain()" />
 </div>
 
@@ -14,23 +14,23 @@
         <thead>
         <tr>
             <th style="width:45%;">
-                Réponses
+                <i18n>exercizer.grain.asso.responses.header1</i18n>
             </th>
             <th style="width:45%;">
-                Réponses associées
+                <i18n>exercizer.grain.asso.responses.header2</i18n>
             </th>
             <th style="text-align: right">
-                Action
+                <i18n>exercizer.grain.asso.responses.header3</i18n>
             </th>
         </tr>
         </thead>
         <tbody>
         <tr data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
             <td>
-                <input type="text" style="width: 100%;" data-ng-model="answer.text_left" complete-change="updateGrain()" value="[[ answer.text_left ]]" placeholder="Indiquez une réponse" />
+                <input type="text" style="width: 100%;" data-ng-model="answer.text_left" complete-change="updateGrain()" value="[[ answer.text_left ]]" i18n-placeholder="exercizer.grain.answer.info" />
             </td>
             <td>
-                <input type="text" style="width: 100%;" data-ng-model="answer.text_right" complete-change="updateGrain()" value="[[ answer.text_right ]]" placeholder="Indiquez la réponse associée" />
+                <input type="text" style="width: 100%;" data-ng-model="answer.text_right" complete-change="updateGrain()" value="[[ answer.text_right ]]" i18n-placeholder="exercizer.grain.asso.right" />
             </td>
             <td style="text-align: right">
                 <i class="close" data-ng-click="deleteAnswer(answer)"></i>
@@ -42,7 +42,7 @@
 
 <div class="row">
     <button data-ng-click="addAnswer()" class="twelve cell flat-button">
-        Ajouter une association
+        <i18n>exercizer.grain.asso.add</i18n>
     </button>
 </div>
 

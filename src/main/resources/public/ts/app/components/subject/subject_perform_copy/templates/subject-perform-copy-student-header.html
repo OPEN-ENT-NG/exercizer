@@ -1,31 +1,31 @@
 <div class="row">
     <h1 class="cell">
-        <span class="hover-orange" data-ng-click="redirectToDashboard(false)"><i18n>exercizer.title</i18n></span> / [[ subjectScheduled.title ]]&nbsp;-&nbsp;[[ subjectScheduled.max_score ]]&nbsp;point(s)
+        <span class="hover-orange" data-ng-click="redirectToDashboard(false)"><i18n>exercizer.title</i18n></span> / [[ subjectScheduled.title ]]&nbsp;-&nbsp;[[ subjectScheduled.max_score ]]&nbsp;<i18n>exercizer.score</i18n>
     </h1>
 </div>
 <div class="row">
 
     <button class="cell right-magnet" data-ng-if="canSubmit()" data-ng-click="redirectToDashboard(true)">
-        Rendre la copie
+        <i18n>exercizer.make.copy</i18n>
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)">
-        Continuer plus tard
+        <i18n>exercizer.make.later</i18n>
     </button>
 </div>
 
 <lightbox data-show="isModalDisplayed" on-close="closeModal()">
-    <h2>Rendre la copie</h2>
+    <h2><i18n>exercizer.make.copy</i18n></h2>
 
-    <p>Voulez-vous vraiment rendre votre copie du sujet <em>[[ subjectScheduled.title ]]</em> à <strong>[[ subjectScheduled.owner_username ]]</strong> ?</p>
+    <p><i18n>exercizer.make.copy.confirm</i18n> <em>[[ subjectScheduled.title ]]</em> <i18n>exercizer.to</i18n> <strong>[[ subjectScheduled.owner_username ]]</strong> ?</p>
 
-    <div class="info">Vérifiez bien que toutes les questions soient remplies avant de rendre votre copie.</div>
+    <div class="info"><i18n>exercizer.make.copy.info</i18n></div>
 
     <div class="warning" data-ng-if="subjectScheduled.is_one_shot_submit"><strong><i18n>exercizer.one.submit</i18n></strong></div>
     <div class="warning" data-ng-if="!subjectScheduled.is_one_shot_submit"><strong><i18n>exercizer.several.submit</i18n></strong></div>
 
     <div class="row">
-        <button data-ng-click="submitSubjectCopy()" class="cell right-magnet">Rendre la copie</button>
-        <button data-ng-click="closeModal()" class="cell right-magnet cancel">Annuler</button>
+        <button data-ng-click="submitSubjectCopy()" class="cell right-magnet"><i18n>exercizer.make.copy</i18n></button>
+        <button data-ng-click="closeModal()" class="cell right-magnet cancel"><i18n>exercizer.cancel</i18n></button>
     </div>
 </lightbox>

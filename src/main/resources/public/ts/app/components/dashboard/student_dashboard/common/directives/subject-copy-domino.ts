@@ -1,4 +1,4 @@
-import { ng, skin } from 'entcore'
+import { ng, idiom, skin } from 'entcore'
 
 export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService', '$location', 'SubjectScheduledService','SubjectCopyService',
     (DateService, $location, SubjectScheduledService, SubjectCopyService) => {
@@ -55,7 +55,7 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                     }
                 };
                 scope.getSubjectScheduledTitle = function () {
-                    return scope.subjectScheduled.title || 'Titre';
+                    return scope.subjectScheduled.title || idiom.translate("exercizer.domino.default.title");
                 };
                 scope.getSubjectScheduledOwner = function () {
                     return scope.subjectScheduled.owner_username || '';

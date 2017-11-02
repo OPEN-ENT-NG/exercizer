@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, idiom } from 'entcore';
 
 export const performSummary = ng.directive('performSummary',
     ['DateService', (DateService)  => {
@@ -13,6 +13,7 @@ export const performSummary = ng.directive('performSummary',
                 scope.canShowFuturSubmitLabel = function(){
                     return DateService.compare_after(DateService.isoToDate(scope.subjectScheduled.begin_date), new Date(), false);
                 };
+                scope.translate = idiom.translate;
             }
         };
     }]

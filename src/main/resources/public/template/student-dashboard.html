@@ -2,11 +2,11 @@
     <!-- PAGE -->
     <div class="row">
         <h1 class="cell">
-            <span class="hover-orange">Exercices et évaluations</span>
+            <span class="hover-orange"><i18n>exercizer.title</i18n></span>
         </h1>
         <div class="cell right-magnet"  workflow="exercizer.create">
             <div class="label-badge" style="padding: 5px 10px 5px 10px;" data-ng-click="studentDashboardController.switchToTeacherView()">
-                <span class="cell">Passer en vue enseignant</span>
+                <span class="cell"><i18n>exercizer.switch.instructer</i18n></span>
                 <i role="close" class="right-magnet"></i>
             </div>
         </div>
@@ -15,11 +15,11 @@
         <div class="cell">
             <header data-ng-class="{'selected': data.tabSelected == 'subjectCopyList'}"
                     data-ng-click="data.tabSelected = 'subjectCopyList'">
-                Mes sujets
+                <i18n>exercizer.dashboard.learner.tab1</i18n>
             </header>
             <header data-ng-class="{'selected': data.tabSelected == 'finishSubjectCopyList'}"
                     data-ng-click="data.tabSelected = 'finishSubjectCopyList'">
-                Terminés
+                <i18n>exercizer.dashboard.learner.tab2</i18n>
             </header>
         </div>
     </div>

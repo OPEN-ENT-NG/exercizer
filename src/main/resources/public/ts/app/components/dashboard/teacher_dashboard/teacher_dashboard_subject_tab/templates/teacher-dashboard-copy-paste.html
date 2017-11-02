@@ -1,6 +1,6 @@
 <lightbox show="isDisplayed" on-close="hide()">
-    <h2>Copier la sélection</h2>
-    <p>Confirmez-vous la copie de la sélection ?</p>
+    <h2><i18n>exercizer.copypaste.title</i18n></h2>
+    <p><i18n>exercizer.copypaste.confirm</i18n></p>
     <div data-ng-if="!fromLibrary">
         <ul data-ng-show="folderList.length !=0">
             <li data-ng-repeat="folderId in folderList">
@@ -21,17 +21,17 @@
         </ul>
     </div>
     <div class="row">
-        <label class="four cell margin-one">Sélection du dossier cible&nbsp;* :</label>
+        <label class="four cell margin-one"><i18n>exercizer.folder.target</i18n>&nbsp;* :</label>
         <select data-ng-model="data.selectedFolder" class="four cell">
-            <option value="null">Racine</option>
+            <option value="null">[[translate('exercizer.root.folder')]]</option>
             <option data-ng-repeat="folder in allFolderList" value="[[folder.id]]">[[folder.label]]</option>
         </select>
     </div>
     <div class="row">
-        *&nbsp;<em class="low-importance">si non précisé, la copie se fera à la racine</em>
+        *&nbsp;<em class="low-importance"><i18n>exercizer.folder.notarget</i18n></em>
     </div>
     <div class="row">
-        <button data-ng-click="pasteSelection()" class="right-magnet">Copier</button>
-        <button data-ng-click="hide()" class="cancel right-magnet">Annuler</button>
+        <button data-ng-click="pasteSelection()" class="right-magnet"><i18n>exercizer.copypaste.copy</i18n></button>
+        <button data-ng-click="hide()" class="cancel right-magnet"><i18n>exercizer.cancel</i18n></button>
     </div>
 </lightbox>

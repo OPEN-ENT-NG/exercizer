@@ -1,7 +1,7 @@
 <div class="row">
     <h1 class="cell">
         <span class="hover-orange" data-ng-click="redirectToSubjectDashboard()"><i18n>exercizer.title</i18n></span>
-        <span data-ng-click="redirectToCorrectDashboard()"> / <span class="hover-orange">Mes corrections</span></span>
+        <span data-ng-click="redirectToCorrectDashboard()"> / <span class="hover-orange"><i18n>exercizer.dashboard.instructer.tab2</i18n></span></span>
          / [[ subjectScheduled.title ]]
     </h1>
 </div>
@@ -15,7 +15,7 @@
     </button>
 
     <h2 class="cell no-margin">
-        <strong class="cell reduce-block-four">&nbsp; Copie de [[ subjectCopy.owner_username ]] &nbsp;</strong>
+        <strong class="cell reduce-block-four">&nbsp;<i18n>exercizer.copy.from</i18n> [[ subjectCopy.owner_username ]] &nbsp;</strong>
     </h2>
 
     <button class="right-magnet flat-button"
@@ -26,15 +26,15 @@
     </button>
 
     <button class="cell right-magnet" data-ng-click="redirectToDashboard(true)" data-ng-hide="copyIsCorrected()">
-        Corriger
+        <i18n>exercizer.copy.make.corrected</i18n>
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-hide="copyIsCorrected()">
-        Retour
+        <i18n>exercizer.back</i18n>
     </button>
 
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-show="copyIsCorrected()">
-        Retour aux corrections
+        <i18n>exercizer.back.corrected</i18n>
     </button>
 </div>

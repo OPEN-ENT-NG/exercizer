@@ -16,7 +16,7 @@
                     <a  data-ng-class="{selected: currentFolderId == null && display.tab == 'mySubject', opened: display.mySubjectSubFolder}"
                         dragdrop="dropToRoot($originalEvent)">
                         <i data-ng-click="display.mySubjectSubFolder = !display.mySubjectSubFolder" class="arrow"></i>
-                        <span data-ng-click="goToRoot(); display.tab = 'mySubject'" >Mes sujets</span>
+                        <span data-ng-click="goToRoot(); display.tab = 'mySubject'" ><i18n>exercizer.dashboard.learner.tab1</i18n></span>
                     </a>
                     <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false | filterIf:display.mySubjectSubFolder" >
                         <folder-nav-item item="item"
@@ -29,12 +29,12 @@
                 <li>
                     <a  data-ng-class="{selected: currentFolderId == null && display.tab == 'subjectShared'}">
                         <i class="arrow"></i>
-                        <span data-ng-click="goToRoot(); display.tab = 'subjectShared'">Sujets partagés avec moi</span>
+                        <span data-ng-click="goToRoot(); display.tab = 'subjectShared'"><i18n>exercizer.shared</i18n></span>
                     </a>
                 </li>
             </ul>
             <a class="classic-link" data-ng-click="clickCreateFolder()">
-                Créer un nouveau dossier
+                <i18n>exercizer.new.folder</i18n>
             </a>
         </nav>
     </section>
@@ -42,16 +42,16 @@
     <section class="nine cell">
         <div class="row">
             <div class="cell">
-                <button data-ng-click="addNewSubject(currentFolderId)" workflow="exercizer.create">Nouveau sujet</button>
+                <button data-ng-click="addNewSubject(currentFolderId)" workflow="exercizer.create"><i18n>exercizer.new.subject</i18n></button>
             </div>
             <dropdown-buttons class="cell">
                 <open><i class="manage" ></i></open>
                 <options>
                     <bt ng-click="importNewSubject()" >
-                        <i18n>Importer un sujet</i18n>
+                        <i18n>exercizer.import</i18n>
                     </bt>
                     <bt ng-click="openArchive()" >
-                        <i18n>Archives des programmations</i18n>
+                        <i18n>exercizer.archive.open</i18n>
                     </bt>
                 </options>
             </dropdown-buttons>
@@ -129,10 +129,10 @@
                                                 <strong data-ng-click="clickOnSubjectTitle(subject)">[[ subject.title | limitTo: 35  ]][[ subject.title.length > 35 ? '...' : '']]</strong>
                                             </div>
                                             <div class="row">
-                                                <span data-ng-if="subject.modified">Modifié le [[subject.modified | date: 'dd/MM/yyyy']]</span>
+                                                <span data-ng-if="subject.modified"><i18n>exercizer.domino.modified</i18n> [[subject.modified | date: 'dd/MM/yyyy']]</span>
                                             </div>
                                             <div class="row" data-ng-if="!amITheAuthor(subject)">
-                                                <span data-ng-if="subject.modified">Auteur :  [[subject.owner_username]]</span>
+                                                <span data-ng-if="subject.modified"><i18n>exercizer.author</i18n> :  [[subject.owner_username]]</span>
                                             </div>
                                         </div>
                                         <div data-ng-show="canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
@@ -162,10 +162,10 @@
                             <!-- icon folder -->
                             <th data-ng-if="display.tab == 'mySubject'"><i class="drag-anchor" ></i></th>
                             <th scope="col">
-                                <span>Nom</span>
+                                <span><i18n>exercizer.subject.title</i18n></span>
                             </th>
                             <th scope="col">
-                                <span>Auteur</span>
+                                <span><i18n>exercizer.author</i18n></span>
                             </th>
                         </tr>
                     </thead>
@@ -212,7 +212,7 @@
         </div>
     </section>
     <lightbox data-show="isImportDisplayed" data-on-close="closeImportLightbox()">
-        <h1>Exercices et évaluations - importer un sujet</h1>
+        <h1><i18n>exercizer.title</i18n> - <i18n>exercizer.import</i18n></h1>
         <div class="row" data-ng-show="stateImport == 'import'">
             <form name="formImport" >
                 <div class="row">
@@ -226,8 +226,8 @@
                     </div>
                     <div class="margin-two height-three">
                         <div class="twelve cell horizontal-spacing">
-                            <input type="text" data-ng-model="importSubject.title" class="twelve cell" placeholder="Titre du sujet">
-                            <textarea data-ng-model="importSubject.description" class="twelve cell" placeholder="Description"></textarea>
+                            <input type="text" data-ng-model="importSubject.title" class="twelve cell" i18n-placeholder="exercizer.subject.title">
+                            <textarea data-ng-model="importSubject.description" class="twelve cell" i18n-placeholder="exercizer.subject.desc"></textarea>
                         </div>
                         <div class="twelve cell horizontal-spacing select-file input-block" style="margin-top:5px;margin-bottom:5px">
                             <button class="file-button"><i18n>exercizer.import.choose</i18n></button>
@@ -239,10 +239,10 @@
 
                         <div class="twelve cell horizontal-spacing vertical-spacing">
                             <button data-ng-click="saveImportSubject()" class="right-magnet">
-                                Importer
+                                <i18n>exercizer.import.launch</i18n>
                             </button>
                             <button data-ng-click="closeImportLightbox()" class="right-magnet cancel">
-                                Annuler
+                                <i18n>exercizer.cancel</i18n>
                             </button>
                         </div>
                     </div>
@@ -266,10 +266,10 @@
                 </div>
                 <div class="twelve cell horizontal-spacing vertical-spacing">
                     <button data-ng-click="goToSubjectAfterImport()" class="right-magnet">
-                        Consulter le sujet
+                        <i18n>exercizer.import.view</i18n>
                     </button>
                     <button data-ng-click="closeImportLightbox()" class="right-magnet cancel">
-                        Fermer
+                        <i18n>exercizer.close</i18n>
                     </button>
                 </div>
             </div>

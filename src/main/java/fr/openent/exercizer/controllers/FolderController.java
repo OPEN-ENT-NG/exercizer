@@ -176,7 +176,7 @@ public class FolderController extends ControllerHelper {
                                                 if (event.isRight()) {
                                                     Renders.created(request);
                                                 } else {
-                                                    Renders.renderError(request, new JsonObject().putString("error", "exercizer.folder.duplicate.error"));
+                                                    Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
                                                 }
                                             }
                                         });
@@ -219,7 +219,7 @@ public class FolderController extends ControllerHelper {
                                                         if (event.isRight()) {
                                                             Renders.noContent(request);
                                                         } else {
-                                                            Renders.renderError(request, new JsonObject().putString("error", "exercizer.folder.move.error"));
+                                                            Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
                                                         }
                                                     }
                                                 });

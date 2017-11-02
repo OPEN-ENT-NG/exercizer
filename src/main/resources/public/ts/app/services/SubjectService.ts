@@ -63,7 +63,7 @@ export class SubjectService implements ISubjectService {
                     deferred.resolve(true);
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récupération de vos sujets.');
+                    deferred.reject('exercizer.error');
                 }
             );
         }
@@ -96,7 +96,7 @@ export class SubjectService implements ISubjectService {
                 deferred.resolve(subject);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la création du sujet.');
+                deferred.reject('exercizer.error');
             }
         );
         return deferred.promise;
@@ -127,7 +127,7 @@ export class SubjectService implements ISubjectService {
                 deferred.resolve(response.data._id);
             },
             function() {
-                deferred.reject("Une erreur est survenue lors de l'import d'une image depuis Tdbase.");
+                deferred.reject("exercizer.error");
             }
         );
         return deferred.promise;
@@ -158,7 +158,7 @@ export class SubjectService implements ISubjectService {
                 deferred.resolve(subject);
             },
             function() {
-                deferred.reject("Une erreur est survenue lors de l'import du sujet.");
+                deferred.reject("exercizer.error");
             }
         );
         return deferred.promise;
@@ -192,7 +192,7 @@ export class SubjectService implements ISubjectService {
                             deferred.resolve(subject);
                         },
                         function() {
-                            deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet.');
+                            deferred.reject('exercizer.error');
                         }
                     );
                 }
@@ -216,7 +216,7 @@ export class SubjectService implements ISubjectService {
                 deferred.resolve(true);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
+                deferred.reject('exercizer.error');
             }
         );
 
@@ -328,7 +328,7 @@ export class SubjectService implements ISubjectService {
             if(res){
                 deferred.resolve(res);
             } else{
-                deferred.reject("subject non trouvé");
+                deferred.reject("exercizer.error");
             }
 
         }.bind(this));
@@ -347,7 +347,7 @@ export class SubjectService implements ISubjectService {
                 deferred.resolve(data.data);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la reciperation de tous les sujets.');
+                deferred.reject('exercizer.error');
             }
         );
         return deferred.promise;

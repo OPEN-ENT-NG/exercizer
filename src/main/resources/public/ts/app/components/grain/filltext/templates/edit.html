@@ -1,20 +1,20 @@
 <div class="row vertical-spacing">
     <div class="row">
-        <h3>Types de réponses</h3>
+        <h3><i18n>exercizer.grain.types</i18n></h3>
         <div class="row">
             <form>
                 <input type="radio" name="answerType"
                        ng-model="grain.grain_data.custom_data.answersType"
                        ng-change="switchTo('text')" value="text" />
-                Saisie libre
+                <i18n>exercizer.grain.option1</i18n>
                 <input type="radio" name="answerType"
                        ng-model="grain.grain_data.custom_data.answersType"
                        ng-change="switchTo('list')" value="list" />
-                Liste déroulante
+                <i18n>exercizer.grain.option2</i18n>
                 <input type="radio" name="answerType"
                        ng-model="grain.grain_data.custom_data.answersType"
                        ng-change="switchTo('drag')" value="drag" />
-                Glisser-déposer
+                <i18n>exercizer.grain.option3</i18n>
             </form>
         </div>
     </div>

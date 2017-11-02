@@ -66,7 +66,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                             reset();
                             scope.isDisplayed = false;
                             scope.scheduleSubjectInProgress = false;
-                            notify.info("Le sujet a bien été programmé.");
+                            notify.info("exercizer.service.save.schedule");
                         }, function (err) {
                             scope.scheduleSubjectInProgress = false;
                             notify.error(err);
@@ -77,7 +77,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                                 reset();
                                 scope.isDisplayed = false;
                                 scope.scheduleSubjectInProgress = false;
-                                notify.info("Le sujet a bien été programmé.");
+                                notify.info("exercizer.service.save.schedule");
                             }, function (err) {
                                 scope.scheduleSubjectInProgress = false;
                                 notify.error(err);
@@ -96,7 +96,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         function (data) {
                             // create grain list scheduled
                             if (data.length == 0) {
-                                deferred.reject("Il est impossible de distribuer un sujet vide.");
+                                deferred.reject("exercizer.service.check.schedule");
                             } else {
                                 // question : all grain exept statement
                                 var validationGrain = true;
@@ -155,12 +155,12 @@ export const subjectSchedule = ng.directive('subjectSchedule',
 
                                 });
                                 if (numberQuestion === 0) {
-                                    deferred.reject("Il est impossible de distribuer un sujet vide.");
+                                    deferred.reject("exercizer.service.check.schedule");
                                 } else {
                                     if (validationGrain === true) {
                                         deferred.resolve();
                                     } else {
-                                        deferred.reject("Le sujet ne peut pas être distribuer car des questions sans réponses renseignées subsistent.");
+                                        deferred.reject("exercizer.service.check.schedule.resp");
                                     }
                                 }
                             }
@@ -265,7 +265,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                                     reset();
                                     scope.data.lists = createLists(subject);
                                 } else {
-                                    notify.info('Vous ne pouvez pas distribuer un sujet vide.');
+                                    notify.info('exercizer.service.check.schedule');
                                 }
                             },
                             function (err) {

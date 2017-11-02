@@ -572,7 +572,7 @@ public class SubjectController extends ControllerHelper {
 						if (event.isRight()) {
 							Renders.created(request);
 						} else {
-							Renders.renderError(request, new JsonObject().putString("error", "exercizer.publish.error"));
+							Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
 						}
 					}
 				});
@@ -692,7 +692,7 @@ public class SubjectController extends ControllerHelper {
 											if (event.isRight()) {
 												Renders.created(request);
 											} else {
-												Renders.renderError(request, new JsonObject().putString("error", "exercizer.subject.duplicate.error"));
+												Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
 											}
 										}
 									});
@@ -741,7 +741,7 @@ public class SubjectController extends ControllerHelper {
 									if (event.isRight()) {
 										Renders.created(request);
 									} else {
-										Renders.renderError(request, new JsonObject().putString("error", "exercizer.grain.duplicate.error"));
+										Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
 									}
 								}
 							});
@@ -774,7 +774,7 @@ public class SubjectController extends ControllerHelper {
 											if (event.isRight()) {
 												Renders.noContent(request);
 											} else {
-												Renders.renderError(request, new JsonObject().putString("error", "exercizer.subject.move.error"));
+												Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
 											}
 										}
 									});

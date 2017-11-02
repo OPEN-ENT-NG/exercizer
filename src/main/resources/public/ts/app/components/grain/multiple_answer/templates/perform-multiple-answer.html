@@ -3,6 +3,6 @@
     <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     <div data-ng-repeat="filled_answer in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list" class="row vertical-spacing">
-        <input type="text" class="twelve cell" data-ng-model="filled_answer.text" data-ng-blur="updateGrainCopy()" placeholder="Indiquez la réponse" />
+        <input type="text" class="twelve cell" data-ng-model="filled_answer.text" data-ng-blur="updateGrainCopy()" i18n-placeholder="exercizer.grain.answer.info" />
     </div>
 </article>

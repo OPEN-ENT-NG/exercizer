@@ -58,7 +58,7 @@ export class FolderService implements IFolderService {
                 deferred.resolve(self._folderList);
             },
             function () {
-                deferred.reject('Une erreur est survenue lors de la récupération de vos dossiers.');
+                deferred.reject('exercizer.error');
             }
         );
         return deferred.promise;
@@ -128,7 +128,7 @@ export class FolderService implements IFolderService {
                 deferred.resolve(folder);
             },
             function () {
-                deferred.reject('Une erreur est survenue lors de la création du dossier.');
+                deferred.reject('exercizer.error');
             }
         );
         return deferred.promise;
@@ -154,7 +154,7 @@ export class FolderService implements IFolderService {
                 deferred.resolve(folder);
             },
             function () {
-                deferred.reject('Une erreur est survenue lors de la création du dossier.');
+                deferred.reject('exercizer.error');
             }
         );
         return deferred.promise;
@@ -174,7 +174,7 @@ export class FolderService implements IFolderService {
                 deferred.resolve(true);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la suppression du sujet.');
+                deferred.reject('exercizer.error');
             }
         );
 

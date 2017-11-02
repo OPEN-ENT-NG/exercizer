@@ -67,7 +67,7 @@ export class GrainService implements IGrainService {
                 deferred.resolve(grain);
             },
             function () {
-                deferred.reject('Une erreur est survenue lors de la création de l\'élément.')
+                deferred.reject('exercizer.error')
             }
         );
 
@@ -92,7 +92,7 @@ export class GrainService implements IGrainService {
                 deferred.resolve(grain);
             },
             function () {
-                deferred.reject('Une erreur est survenue lors de la mise à jour de l\'élément.')
+                deferred.reject('exercizer.error')
             }
         );
 
@@ -128,7 +128,7 @@ export class GrainService implements IGrainService {
                 deferred.resolve(true);
             },
             function () {
-                deferred.reject('Un erreur est survenue lors de la suppression de l\'élément.')
+                deferred.reject('exercizer.error')
             }
         );
         return deferred.promise;
@@ -150,9 +150,9 @@ export class GrainService implements IGrainService {
 
             if (duplicatedGrain.grain_type_id > 3) {
                 if (angular.isUndefined(duplicatedGrain.grain_data.title)) {
-                    duplicatedGrain.grain_data.title = this._grainTypeService.getById(duplicatedGrain.grain_type_id).public_name + '_copie';
+                    duplicatedGrain.grain_data.title = this._grainTypeService.getById(duplicatedGrain.grain_type_id).public_name + idiom.translate('exercizer.grain.title.copySuffix');
                 } else {
-                    duplicatedGrain.grain_data.title += '_copie';
+                    duplicatedGrain.grain_data.title += idiom.translate('exercizer.grain.title.copySuffix');
                 }
             }
 
@@ -219,7 +219,7 @@ export class GrainService implements IGrainService {
                     deferred.resolve(self._listMappedBySubjectId[subject.id]);
                 },
                 function () {
-                    deferred.reject('Une erreur est survenue lors de la récupération des éléments du sujet.');
+                    deferred.reject('exercizer.error');
                 }
             );
         }

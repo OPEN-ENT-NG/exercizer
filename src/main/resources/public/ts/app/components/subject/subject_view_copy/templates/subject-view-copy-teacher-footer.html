@@ -1,21 +1,21 @@
 <div class="row">
     <button class="cell right-magnet" data-ng-click="redirectToDashboard(true)" data-ng-hide="copyIsCorrected()">
-        Corriger
+        <i18n>exercizer.copy.make.corrected</i18n>
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToNextCopy()" data-ng-show="hasNextCopy()">
-        Copie suivante
+        <i18n>exercizer.next.copy</i18n>
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToPreviousCopy()" data-ng-show="hasPreviousCopy()">
-        Copie précédente
+        <i18n>exercizer.previous.copy</i18n>
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-hide="copyIsCorrected()">
-        Retour
+        <i18n>exercizer.back</i18n>
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-show="copyIsCorrected()">
-        Retour aux corrections
+        <i18n>exercizer.back.corrected</i18n>
     </button>
 </div>

@@ -38,9 +38,9 @@
                     </div>
                     <div class="margin-two height-three">
                         <div class="twelve cell horizontal-spacing">
-                            <h3><i18n>exercizer.simple.edit.title</i18n></h3>
+                            <h3><i18n>exercizer.subject.title</i18n></h3>
                             <div data-ng-if="editSimpleSubjectController.readOnly" class="twelve cell">[[editSimpleSubjectController.subject.title]]</div>
-                            <input type="text" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.title" class="twelve cell" placeholder="Titre du sujet">
+                            <input type="text" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.title" class="twelve cell" i18n-placeholder="exercizer.subject.title">
                         </div>
                         <div class="twelve cell horizontal-spacing vertical-spacing">
                             <h3><i18n>exercizer.simple.edit.description</i18n></h3>

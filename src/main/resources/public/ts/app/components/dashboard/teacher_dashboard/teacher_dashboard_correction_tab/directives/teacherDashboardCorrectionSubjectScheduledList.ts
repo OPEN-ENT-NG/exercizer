@@ -1,4 +1,4 @@
-import { ng, skin } from 'entcore';
+import { ng, skin, idiom } from 'entcore';
 import { moment } from 'entcore';
 import { ISubjectScheduled, Subject } from '../../../../../models/domain';
 import { $ } from 'entcore';
@@ -131,9 +131,9 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                 scope.stateTextSubjectScheduled = function(subjectScheduled){
                     var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
                     if(isListCopyCorrected(list)){
-                        return "Corrigé";
+                        return idiom.translate("exercizer.copy.state.corrected");
                     } else{
-                        return "Non corrigé";
+                        return idiom.translate("exercizer.copy.state.notcorrected");
                     }
                 };
 

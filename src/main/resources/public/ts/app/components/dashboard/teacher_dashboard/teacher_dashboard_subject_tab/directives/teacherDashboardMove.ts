@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, idiom } from 'entcore';
 
 export const teacherDashboardMove = ng.directive('teacherDashboardMove',
     ['FolderService', 'SubjectService', (FolderService, SubjectService) => {
@@ -12,6 +12,7 @@ export const teacherDashboardMove = ng.directive('teacherDashboardMove',
                 scope.data = {
                     selectedFolder : null
                 };
+                scope.translate = idiom.translate;
                 scope.allFolderList = FolderService.folderList;
 
                 // event to display model

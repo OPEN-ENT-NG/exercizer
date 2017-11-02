@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, idiom } from 'entcore';
 import { MultipleAnswerCustomData } from '../models/MultipleAnswerCustomData';
 
 export const editMultipleAnswer = ng.directive('editMultipleAnswer',
@@ -21,8 +21,8 @@ export const editMultipleAnswer = ng.directive('editMultipleAnswer',
 
                 if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
                     scope.grain.grain_data.custom_data = new MultipleAnswerCustomData();
-                    scope.addAnswer( 'Réponse 1');
-                    scope.addAnswer( 'Réponse 2');
+                    scope.addAnswer( idiom.translate('exercizer.grain.manswer.default1'));
+                    scope.addAnswer( idiom.translate('exercizer.grain.manswer.default2'));
                 }
 
                 scope.deleteAnswer = function(answer){

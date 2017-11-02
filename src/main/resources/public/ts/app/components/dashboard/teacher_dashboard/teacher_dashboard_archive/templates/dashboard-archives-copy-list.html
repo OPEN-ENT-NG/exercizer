@@ -10,10 +10,10 @@
             &nbsp;
         </div>
         <div class="cell">
-            commencé le [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]], terminé le [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]
+            <i18n>exercizer.started</i18n> [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]], <i18n>exercizer.ended</i18n> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]
         </div>
         <div class="cell right-magnet">
-            [[numberCopySubmitted()]] élève(s) sur [[subjectCopyList.length]] ont rendu le devoir
+            [[numberCopySubmitted()]] <i18n>exercizer.total.made</i18n> [[subjectCopyList.length]] <i18n>exercizer.total.made2</i18n>
         </div>
     </div>
 
@@ -23,25 +23,25 @@
             <thead>
             <tr>
                 <th scope="col" ng-click="orderByField('owner_username')">
-                    <span translate content="Copie de" ></span>
+                    <span translate content="exercizer.copy.from" ></span>
                     <i class="sort" ng-if="order.field !== 'owner_username'"></i>
                     <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === 'owner_username' && order.desc"></i>
                 </th>
                 <th scope="col" ng-click="orderByField('submitted_date')">
-                    <span translate content="Date de rendu" ></span>
+                    <span translate content="exercizer.submitted.date" ></span>
                     <i class="sort" ng-if="order.field !== 'submitted_date'"></i>
                     <i class="sort-asc" ng-if="order.field === 'submitted_date' && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === 'submitted_date' && order.desc"></i>
                 </th>
                 <th scope="col" ng-click="orderByField('calculated_score')">
-                    <span translate content="Score automatique" ></span>
+                    <span translate content="exercizer.auto.score" ></span>
                     <i class="sort" ng-if="order.field !== 'calculated_score'"></i>
                     <i class="sort-asc" ng-if="order.field === 'calculated_score' && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === 'calculated_score' && order.desc"></i>
                 </th>
                 <th scope="col" ng-click="orderByField('final_score')">
-                    <span translate content="Score final" ></span>
+                    <span translate content="exercizer.final.score" ></span>
                     <i class="sort" ng-if="order.field !== 'final_score'"></i>
                     <i class="sort-asc" ng-if="order.field === 'final_score' && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === 'final_score' && order.desc"></i>
@@ -57,7 +57,7 @@
                 </td>
                 <td>
                     <div data-ng-if="tooLate(copy)" class="alert">
-                        <i class="timer-off"></i> &nbsp; Retard <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
+                        <i class="timer-off"></i> &nbsp; <i18n>exercizer.lag</i18n> <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
                     </div>
 
                     <div data-ng-if="!tooLate(copy) && copy.submitted_date" class="valid-color">
@@ -84,7 +84,7 @@
     <div class="row vertical-spacing">
 
         <div data-ng-if="selectedSubjectScheduled.corrected_file_id">
-                <h2 class="cell" > Corrigé du devoir :</h2>
+                <h2 class="cell" > <i18n>exercizer.corrected.homework</i18n> :</h2>
 
             <h4 class="cell">
                 &nbsp;&nbsp;
@@ -108,10 +108,10 @@
             &nbsp;
         </div>
         <div class="cell">
-            commencé le [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]], terminé le [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]
+            <i18n>exercizer.started</i18n> [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]], <i18n>exercizer.ended</i18n> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]
         </div>
         <div class="cell right-magnet">
-            [[numberCopySubmitted()]] élève(s) sur [[subjectCopyList.length]] ont rendu le devoir
+            [[numberCopySubmitted()]] <i18n>exercizer.total.made</i18n> [[subjectCopyList.length]] <i18n>exercizer.total.made2</i18n>
         </div>
     </div>
 
@@ -123,25 +123,25 @@
                 <tr>
                     <th class="one centered-text"><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
                     <th scope="col" ng-click="orderByField('owner_username')">
-                        <span translate content="Devoir de" ></span>
+                        <span translate content="exercizer.homework.from" ></span>
                         <i class="sort" ng-if="order.field !== 'owner_username'"></i>
                         <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
                         <i class="sort-desc" ng-if="order.field === 'owner_username' && order.desc"></i>
                     </th>
                     <th scope="col" ng-click="orderByField('submitted_date')">
-                        <span translate content="Date de rendu" ></span>
+                        <span translate content="exercizer.submitted.date" ></span>
                         <i class="sort" ng-if="order.field !== 'submitted_date'"></i>
                         <i class="sort-asc" ng-if="order.field === 'submitted_date' && !order.desc"></i>
                         <i class="sort-desc" ng-if="order.field === 'submitted_date' && order.desc"></i>
                     </th>
                     <th scope="col" ng-click="orderByField('homework_metadata.filename')">
-                        <span translate content="Fichier" ></span>
+                        <span translate content="exercizer.file" ></span>
                         <i class="sort" ng-if="order.field !== 'homework_metadata.filename'"></i>
                         <i class="sort-asc" ng-if="order.field === 'homework_metadata.filename' && !order.desc"></i>
                         <i class="sort-desc" ng-if="order.field === 'homework_metadata.filename' && order.desc"></i>
                     </th>
                     <th scope="col" ng-click="orderByField('corrected_metadata.filename')">
-                        <span translate content="Correction individuelle" ></span>
+                        <span translate content="exercizer.simple.individual.corrected" ></span>
                         <i class="sort" ng-if="order.field !== 'corrected_metadata.filename'"></i>
                         <i class="sort-asc" ng-if="order.field === 'corrected_metadata.filename' && !order.desc"></i>
                         <i class="sort-desc" ng-if="order.field === 'corrected_metadata.filename' && order.desc"></i>
@@ -158,7 +158,7 @@
                     </td>
                     <td>
                         <div data-ng-if="tooLate(copy)" class="alert">
-                            <i class="timer-off"></i> &nbsp; Retard <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
+                            <i class="timer-off"></i> &nbsp; <i18n>exercizer.lag</i18n> <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
                         </div>
 
                         <div data-ng-if="!tooLate(copy) && copy.submitted_date" class="valid-color">
@@ -192,7 +192,7 @@
         <div class="toggle">
             <div class="row">
                 <div class="cell">
-                    <button data-ng-click="downloadFiles()">Télécharger la sélection</button>
+                    <button data-ng-click="downloadFiles()"><i18n>exercizer.downloads</i18n></button>
                 </div>
             </div>
         </div>

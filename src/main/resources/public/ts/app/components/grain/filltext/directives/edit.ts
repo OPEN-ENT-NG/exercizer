@@ -6,7 +6,7 @@ import { $ } from 'entcore';
 let addEditorOption = () => {
     RTE.baseToolbarConf.option('filltext', function (instance) {
         return {
-            template: '<i ng-click="editZone();" tooltip="editor.option.filltext"></i>' +
+            template: '<i ng-click="editZone();" tooltip="exercizer.grain.zone.add"></i>' +
             '<lightbox show="displayState.editZone" on-close="displayState.editZone = false;">' +
             '<div ng-include="path"></div>' +
             '</lightbox>',

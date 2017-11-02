@@ -24,13 +24,13 @@
         <div class="cell right-magnet">
             <div class="cell">
                 <label class="two cell">
-                    Du
+                    <i18n>exercizer.date.from</i18n>
                 </label>
                 <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
             </div>
             <div class="cell">
                 <label class="two cell">
-                    Au
+                    <i18n>exercizer.date.to</i18n>
                 </label>
                 <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
             </div>
@@ -38,7 +38,7 @@
     </div>
 
     <div class="row vertical-spacing">
-        <input type="text" data-ng-model="search.text" placeholder="Rechercher" class="cell">
+        <input type="text" data-ng-model="search.text" i18n-placeholder="exercizer.search" class="cell">
     </div>
 
     <!-- list -->
@@ -47,6 +47,6 @@
     </div>
     <article data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
         <img src="exercizer/public/assets/img/smiley.PNG"/>
-        <h4>Pas de sujet</h4>
+        <h4><i18n>exercizer.dashboard.learner.finish.empty</i18n></h4>
     </article>
 </div>

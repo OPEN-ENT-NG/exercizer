@@ -58,27 +58,6 @@ export const dashboardArchivesCopyList = ng.directive('dashboardArchivesCopyList
              * EVENT
              */
 
-            scope.reminder = function(id){
-                var possible = false;
-
-                scope.reminderCopies = [];
-
-                angular.forEach(scope.subjectCopyList, function(copy){
-                    if(copy.selected || copy.id === id){
-                        if (copy.submitted_date === null) {
-                            possible=true;
-                            scope.reminderCopies.push(copy);
-                        }
-                    }
-                });
-
-                if (!possible) {
-                    notify.info("La sélection ne comporte pas de non-rendu");
-                } else {
-                    scope.reminderDisplayed = true;
-                }
-            };
-
             scope.selectCopy = function(){
                 var res = false;
                 angular.forEach(scope.subjectCopyList, function(copy){
@@ -229,7 +208,7 @@ export const dashboardArchivesCopyList = ng.directive('dashboardArchivesCopyList
                 });
 
                 if (!possible) {
-                    notify.info("La séléction ne comporte pas de rendu");
+                    notify.info("exercizer.service.check.download.copy");
                 } else {
                     window.location.href = SubjectCopyService.downloadSimpleCopies(downloadCopies);
                 }

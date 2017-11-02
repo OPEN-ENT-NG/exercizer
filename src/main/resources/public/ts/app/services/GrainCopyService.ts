@@ -64,7 +64,7 @@ export class GrainCopyService implements IGrainCopyService {
                 deferred.resolve(grainCopy);
             },
             function () {
-                deferred.reject('Une erreur est survenue lors de la création d\'un élément d\'une copie.')
+                deferred.reject('exercizer.error')
             }
         );
         return deferred.promise;
@@ -97,7 +97,7 @@ export class GrainCopyService implements IGrainCopyService {
                 deferred.resolve(grainCopy);
             },
             function () {
-                deferred.reject('Une erreur est survenue lors de la mise à jour de l\'élément de la copie.')
+                deferred.reject('exercizer.error')
             }
         );
 
@@ -144,7 +144,7 @@ export class GrainCopyService implements IGrainCopyService {
                     deferred.resolve(self._listMappedBySubjectCopyId[subjectCopy.id]);
                 },
                 function () {
-                    deferred.reject('Une erreur est survenue lors de la récupération des éléments de la copie.');
+                    deferred.reject('exercizer.error');
                 }
             );
         }

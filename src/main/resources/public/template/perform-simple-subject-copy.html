@@ -28,7 +28,7 @@
                         <h1>[[performSimpleSubjectCopyController.subjectScheduled.title]]</h1>
                     </div>
                     <div class="twelve cell horizontal-spacing vertical-spacing">
-                        <h3>Consigne</h3>
+                        <h3><i18n>exercizer.simple.edit.description</i18n></h3>
                         <div style="word-wrap: break-word;" bind-html="performSimpleSubjectCopyController.subjectScheduled.description"></div>
                     </div>
                     <div class="twelve cell horizontal-spacing vertical-spacing">
@@ -49,7 +49,7 @@
                                         data-display-file
                                         class="no-margin"
                                         style="width: 100%!important; border: none;"
-                                        placeholder="Glisser déposer un fichier" />
+                                        i18n-placeholder="exercizer.simple.upload.drag" />
                             </div>
                             <div class="hidden-content">
                                 <input type="file" style="z-index:-1" files-input-change="performSimpleSubjectCopyController.setCurrentFileName()"  ng-model="performSimpleSubjectCopyController.newFiles" />
@@ -117,7 +117,7 @@
         <lightbox data-show="performSimpleSubjectCopyController.isModalConfirmDisplayed" on-close="performSimpleSubjectCopyController.closeConfirmModal()">
             <h2><i18n>exercizer.simple.make.label</i18n> [[performSimpleSubjectCopyController.subjectScheduled.title | limitTo: 35  ]][[ performSimpleSubjectCopyController.subjectScheduled.title.length > 35 ? '...' : '']]</h2>
 
-            <p><i18n>exercizer.simple.make.confirm</i18n> <em>[[ performSimpleSubjectCopyController.subjectScheduled.title ]]</em> <i18n>exercizer.simple.make.confirm.to</i18n> <strong>[[ performSimpleSubjectCopyController.subjectScheduled.owner_username ]]</strong> ?</p>
+            <p><i18n>exercizer.simple.make.confirm</i18n> <em>[[ performSimpleSubjectCopyController.subjectScheduled.title ]]</em> <i18n>exercizer.to</i18n> <strong>[[ performSimpleSubjectCopyController.subjectScheduled.owner_username ]]</strong> ?</p>
 
             <div class="row">
                 <button data-ng-click="performSimpleSubjectCopyController.saveStudentCopy()" class="cell right-magnet"><i18n>exercizer.simple.make.label</i18n></button>

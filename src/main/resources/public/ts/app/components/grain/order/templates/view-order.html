@@ -8,7 +8,7 @@
         <input type="text" class="eleven cell"
                data-ng-class="{'input-response-correct' : isCorrect[filled_answer.order_by], 'input-response-incorrect' : !isCorrect[filled_answer.order_by]}"
                data-ng-model="filled_answer.text"
-               placeholder="Aucune réponse renseignée" disabled />
+               i18n-placeholder="exercizer.grain.noanswer" disabled />
     </div>
     <grain-copy-footer data-grain-scheduled="grainScheduled"
                        data-grain-copy="grainCopy"

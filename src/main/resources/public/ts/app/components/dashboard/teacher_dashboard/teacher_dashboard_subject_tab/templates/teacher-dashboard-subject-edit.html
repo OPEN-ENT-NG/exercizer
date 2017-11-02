@@ -1,5 +1,5 @@
 <lightbox data-show="isDisplayed" data-on-close="closeLightbox()">
-    <h2 data-ng-if="step == 'subject'">[[ isNewSubject ? 'Créer' : 'Editer' ]] un sujet [[ type === 'simple' ? 'simple' : 'interactif' ]]</h2>
+    <h2 data-ng-if="step == 'subject'"><span translate content="[[ isNewSubject ? 'exercizer.create' : 'exercizer.edit' ]]"></span> - <span translate content="[[ type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject' ]]"></span></h2>
     <h2 data-ng-if="step == 'choose'"><i18n>exercizer.choose</i18n></h2>
     <div data-ng-if="step == 'subject'" class="row">
         <form name="formSubjectProperties">
@@ -11,15 +11,15 @@
                 </div>
                 <div class="margin-two height-three">
                     <div class="twelve cell horizontal-spacing">
-                        <input type="text" data-ng-model="subject.title" class="twelve cell" placeholder="Titre du sujet">
-                        <textarea data-ng-model="subject.description" class="twelve cell" placeholder="Description"></textarea>
+                        <input type="text" data-ng-model="subject.title" class="twelve cell" i18n-placeholder="exercizer.subject.title">
+                        <textarea data-ng-model="subject.description" class="twelve cell" i18n-placeholder="exercizer.subject.desc"></textarea>
                     </div>
                     <div class="twelve cell horizontal-spacing vertical-spacing">
                         <button data-ng-click="saveSubjectProperties()" class="right-magnet">
-                            Enregistrer
+                            <i18n>exercizer.update</i18n>
                         </button>
                         <button data-ng-click="closeLightbox()" class="right-magnet cancel">
-                            Annuler
+                            <i18n>exercizer.cancel</i18n>
                         </button>
                     </div>
                 </div>

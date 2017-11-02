@@ -1,27 +1,27 @@
 <div class="row">
     <h1 class="cell">
-        <span class="hover-orange" data-ng-click="(previewingFromLibrary) ? redirectToTeacherDashboardLibraryTab() : redirectToDashBoard()"><i18n>exercizer.title</i18n></span> / [[ subjectScheduled.title ]]&nbsp;-&nbsp;[[ subjectScheduled.max_score ]] point(s)
+        <span class="hover-orange" data-ng-click="(previewingFromLibrary) ? redirectToTeacherDashboardLibraryTab() : redirectToDashBoard()"><i18n>exercizer.title</i18n></span> / [[ subjectScheduled.title ]]&nbsp;-&nbsp;[[ subjectScheduled.max_score ]] <i18n>exercizer.score</i18n>
     </h1>
 </div>
 <div class="row">
     <button class="cell right-magnet" data-ng-click="redirectToSubjectPreviewViewCopy()" data-ng-if="!previewingFromLibrary" data-ng-hide="previewingReader">
-        Aperçu de la correction
+        <i18n>exercizer.preview.correction</i18n>
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToSubjectEdit()" data-ng-if="!previewingFromLibrary" data-ng-hide="previewingReader">
-        Retour à l'édition
+        <i18n>exercizer.back.edit</i18n>
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToDashBoard()" data-ng-if="previewingReader && !previewingFromLibrary">
-        Retour à mes sujets
+        <i18n>exercizer.back.subject</i18n>
     </button>
 
     <button class="cell right-magnet" data-ng-click="displayModalCopyPaste()" data-ng-if="previewingFromLibrary">
-        Copier dans mes sujets
+        <i18n>exercizer.copy.from.library</i18n>
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="redirectToTeacherDashboardLibraryTab()" data-ng-if="previewingFromLibrary">
-        Retour à la bibliothèque
+        <i18n>exercizer.back.library</i18n>
     </button>
 </div>
 

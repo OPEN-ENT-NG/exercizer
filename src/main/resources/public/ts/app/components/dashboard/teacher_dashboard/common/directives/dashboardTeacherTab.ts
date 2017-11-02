@@ -1,4 +1,4 @@
-import { ng, notify } from 'entcore';
+import { ng, notify, idiom } from 'entcore';
 import { ISubjectService } from '../../../../../services/SubjectService';
 
 export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$location', '$window', 'SubjectService', ($location, $window, SubjectService:ISubjectService) => {
@@ -86,11 +86,11 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
             scope.getTab = function(){
                 switch (scope.currentTab){
                     case 'mySubjects':
-                        return "Mes sujets";
+                        return idiom.translate("exercizer.dashboard.instructer.tab1");
                     case 'correction':
-                        return "Mes corrections";
+                        return idiom.translate("exercizer.dashboard.instructer.tab2");
                     case 'library':
-                        return "Bibliothèque";
+                        return idiom.translate("exercizer.dashboard.instructer.tab3");
                     default :
                         throw "tab "+scope.currentTab+"  missing"
                 }

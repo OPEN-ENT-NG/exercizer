@@ -1,4 +1,4 @@
-import { ng, notify } from 'entcore';
+import { ng, notify, idiom } from 'entcore';
 import { IGrainCopy, IGrainScheduled, ISubjectScheduled, ISubjectCopy } from '../models/domain';
 import { 
     ISubjectService, ISubjectLibraryService, ISubjectCopyService, ISubjectScheduledService, 
@@ -167,7 +167,7 @@ class ViewSubjectCopyController {
                                     )
 
                                 } else{
-                                    notify.info("Vous pourrez consulter votre copie après le " + self._dateService.isoToDate(self._subjectScheduled.due_date).toLocaleDateString());
+                                    notify.info(idiom.translate("exercizer.service.check.copyview") + " " + self._dateService.isoToDate(self._subjectScheduled.due_date).toLocaleDateString());
                                     self._$location.path('/dashboard');
                                 }
                             } else {

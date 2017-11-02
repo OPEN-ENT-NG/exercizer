@@ -1,19 +1,19 @@
 <article id="summary">
-    <h2 class="row">Résumé</h2>
+    <h2 class="row"><i18n>exercizer.summary</i18n></h2>
 
     <div class="row vertical-spacing">
         [[subjectScheduled.description]]
     </div>
 
-    <strong class="row">Score automatique :&nbsp;[[ formatNumber(subjectCopy.calculated_score) ]]&nbsp;sur&nbsp;[[ subjectScheduled.max_score ]] point(s)</strong>
-    <strong class="row">Score final :&nbsp;[[ formatNumber(subjectCopy.final_score) ]]&nbsp;sur&nbsp;[[ subjectScheduled.max_score ]] point(s)</strong>
+    <strong class="row"><i18n>exercizer.auto.score</i18n> :&nbsp;[[ formatNumber(subjectCopy.calculated_score) ]]&nbsp;<i18n>exercizer.on</i18n>&nbsp;[[ subjectScheduled.max_score ]] <i18n>exercizer.score</i18n></strong>
+    <strong class="row"><i18n>exercizer.final.score</i18n> :&nbsp;[[ formatNumber(subjectCopy.final_score) ]]&nbsp;<i18n>exercizer.on</i18n>&nbsp;[[ subjectScheduled.max_score ]] <i18n>exercizer.score</i18n></strong>
     <h2 class="row">
-        Commentaire général :
+        <i18n>exercizer.summary.comment</i18n> :
     </h2>
     <div class="row" data-ng-if="isTeacher">
-        <textarea data-ng-model="subjectCopy.comment" complete-change="updateSubjectCopy()" style="height: 80px;" placeholder="Indiquez un commentaire"></textarea>
+        <textarea data-ng-model="subjectCopy.comment" complete-change="updateSubjectCopy()" style="height: 80px;" i18n-placeholder="exercizer.summary.comment.info"></textarea>
     </div>
     <div class="row" data-ng-if="!isTeacher">
-        <textarea data-ng-model="subjectCopy.comment" style="height: 80px;" placeholder="Pas de commentaire" disabled></textarea>
+        <textarea data-ng-model="subjectCopy.comment" style="height: 80px;" i18n-placeholder="exercizer.summary.nocomment" disabled></textarea>
     </div>
 </article>

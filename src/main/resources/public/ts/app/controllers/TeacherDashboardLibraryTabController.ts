@@ -280,7 +280,7 @@ class TeacherDashboardLibraryTabController {
                 if (this._filters.subjectTagList.indexOf(this._subjectTagList[i]) === -1) {
                     this._filters.subjectTagList.push(this._subjectTagList[i]);
                 } else {
-                    notify.info('Cette étiquette est déjà associée à la recherche.')
+                    notify.info('exercizer.service.check.selectedtag')
                 }
 
                 i = this._subjectTagList.length;
@@ -341,7 +341,7 @@ class TeacherDashboardLibraryTabController {
                         break;
                     }
                 }
-                notify.info('La publication du sujet a bien été annulée.')
+                notify.info('exercizer.service.save.unpublish')
             },
             function(err) {
                 notify.error(err);
@@ -367,7 +367,7 @@ class TeacherDashboardLibraryTabController {
         this._subjectService.duplicateSubjectsFromLibrary(subjectIds, folderId).then(
             function() {
                 self._selectedSubjectList = [];
-                notify.info('Les sujets ont bien été ajoutés dans votre liste des sujets.')
+                notify.info('exercizer.service.save.subject')
             },
             function(err) {
                 notify.error(err);

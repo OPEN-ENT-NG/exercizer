@@ -1,15 +1,15 @@
 <article>
     <div class="row">
-        <h2 class="cell hover-orange" data-ng-click="toggle()">Rechercher des sujets</h2>
+        <h2 class="cell hover-orange" data-ng-click="toggle()"><i18n>exercizer.subject.search</i18n></h2>
 
         <!-- grain toggle icon -->
         <div class="cell right-magnet">
-            <i data-ng-show="isFolded" data-ng-click="toggle()" data-tooltip="Déplier" class="down-open hover-orange"></i>
-            <i data-ng-hide="isFolded" data-ng-click="toggle()" data-tooltip="Plier" class="up-open hover-orange"></i>
+            <i data-ng-show="isFolded" data-ng-click="toggle()" data-tooltip="exercizer.unfold" class="down-open hover-orange"></i>
+            <i data-ng-hide="isFolded" data-ng-click="toggle()" data-tooltip="exercizer.fold" class="up-open hover-orange"></i>
         </div>
     </div>
     <div>
-        <em>Puis glisser-déposer les questions dans le sujet</em>
+        <em><i18n>exercizer.subject.search.info</i18n></em>
     </div>
 
     <div data-ng-hide="isFolded" style="margin-top: 20px">

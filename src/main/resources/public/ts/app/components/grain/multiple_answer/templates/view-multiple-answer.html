@@ -6,7 +6,7 @@
         <input type="text" class="twelve cell"
                data-ng-class="{'input-response-correct' : isCorrect[key], 'input-response-incorrect' : !isCorrect[key]}"
                data-ng-model="filled_answer.text"
-               placeholder="Aucune réponse renseignée" disabled />
+               i18n-placeholder="exercizer.grain.noanswer" disabled />
     </div>
     <grain-copy-footer data-grain-scheduled="grainScheduled"
                        data-grain-copy="grainCopy"

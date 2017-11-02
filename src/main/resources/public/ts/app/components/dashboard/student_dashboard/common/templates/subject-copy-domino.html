@@ -30,15 +30,15 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div data-ng-show="isDueDateDisplayed()">À rendre pour le <span  data-ng-bind="getSubjectCopyDueDate() | date:'dd/MM/yyyy'"></span></div>
-                            <div data-ng-show="isSubmittedDateDisplayed()">Rendu le <span  data-ng-bind="getSubjectCopySubmittedDate() | date:'dd/MM/yyyy'"></span></div>
+                            <div data-ng-show="isDueDateDisplayed()"><i18n>exercizer.domino.todelivered</i18n> <span  data-ng-bind="getSubjectCopyDueDate() | date:'dd/MM/yyyy'"></span></div>
+                            <div data-ng-show="isSubmittedDateDisplayed()"><i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="getSubjectCopySubmittedDate() | date:'dd/MM/yyyy'"></span></div>
                         </div>
                         <div class="row">
                             <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em>
                         </div>
                         <div class="row">
                             <div data-ng-if="tooLate()" class="alert no-margin cell">
-                                <i class="timer-off"></i> &nbsp; <span>Retard</span> &nbsp;
+                                <i class="timer-off"></i> &nbsp; <i18n>exercizer.lag</i18n> &nbsp;
                             </div>
                         </div>
 
@@ -48,14 +48,14 @@
                         <button class="flat-button"
                             data-ng-if="canShowGeneralCorrected()"
                             data-ng-click="downloadGeneralCorrectedFile()">
-                            <span>Corrigé </span>
+                            <i18n>exercizer.domino.corrected</i18n>
                             &nbsp; &nbsp; <i class="download"></i>
                         </button>
 
                         <button class="flat-button"
                             data-ng-if="canShowIndividualCorrected()"
                             data-ng-click="downloadCorrectedFile()">
-                            <span>Corrigé individuel</span>
+                            <i18n>exercizer.domino.individual.corrected</i18n>
                             &nbsp; &nbsp; <i class="download"></i>
                         </button>
                     </div>

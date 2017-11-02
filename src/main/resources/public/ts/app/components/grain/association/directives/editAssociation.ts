@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, idiom } from 'entcore';
 import { AssociationCustomData } from '../models/AssociationCustomData';
 
 export const editAssociation = ng.directive('editAssociation',
@@ -23,7 +23,7 @@ export const editAssociation = ng.directive('editAssociation',
 
                 if (!scope.grain.grain_data.custom_data) {
                     scope.grain.grain_data.custom_data = new AssociationCustomData();
-                    scope.addAnswer('Réponse Gauche', 'Réponse Droite');
+                    scope.addAnswer(idiom.translate('exercizer.grain.asso.left.response'), idiom.translate('exercizer.grain.asso.right.response'));
                 }
 
                 scope.deleteAnswer = function(answer){

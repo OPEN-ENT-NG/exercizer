@@ -58,7 +58,7 @@ class ArchivesService implements IArchivesService {
                 deferred.resolve(true);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la récupération des sujets programmés.');
+                deferred.reject('exercizer.error');
             }
         );
 
@@ -91,7 +91,7 @@ class ArchivesService implements IArchivesService {
                 deferred.resolve(true);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la récupération des copies.');
+                deferred.reject('exercizer.error');
             }
         );
 

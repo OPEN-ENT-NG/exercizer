@@ -34,7 +34,7 @@ export const subjectPerformCopyPreviewHeader = ng.directive('subjectPerformCopyP
 
                         SubjectService.duplicateSubjectsFromLibrary(subjectIds, folderId).then(
                             function() {
-                                notify.info('Le sujet a bien été ajouté dans votre liste des sujets.');
+                                notify.info('exercizer.service.save.library.dup');
                                 $location.path('/dashboard/teacher/library');
                             },
                             function(err) {

@@ -1,4 +1,4 @@
-import { ng, notify } from 'entcore';
+import { ng, idiom, notify } from 'entcore';
 import { ISubject, IGrain, IGrainDocument, GrainData, GrainDocument, Grain } from '../models/domain';
 import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IGrainTypeService, IGrainService, IDragService } from '../services';
 import { StringISOHelper, CorrectOrderHelper } from '../models/helpers';
@@ -126,6 +126,10 @@ class EditSubjectController {
 
     public redirectToDashboard() {
         this._$location.path('/dashboard');
+    };
+
+    public translate = function(key) {
+        return idiom.translate(key);
     };
 
     public scheduleSubject() {

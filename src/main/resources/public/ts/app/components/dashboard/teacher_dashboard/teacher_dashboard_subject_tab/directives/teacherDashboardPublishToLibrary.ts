@@ -101,7 +101,7 @@ export const teacherDashboardPublishToLibrary = ng.directive('teacherDashboardPu
                             if (scope.selectedSubjectTagList.indexOf(scope.subjectTagList[i]) === -1) {
                                 scope.selectedSubjectTagList.push(scope.subjectTagList[i]);
                             } else {
-                                notify.info('Cette étiquette est déjà associée.')
+                                notify.info('exercizer.service.check.selectedtag')
                             }
 
                             i = scope.subjectTagList.length;
@@ -118,7 +118,7 @@ export const teacherDashboardPublishToLibrary = ng.directive('teacherDashboardPu
 
                         for (let i = 0; i < scope.subjectTagList.length; ++i) {
                             if (CompareStringHelper.compare(StringISOHelper.toISO(scope.subjectTagList[i].label), newCustomTagLabel)) {
-                                notify.info('Cette étiquette existe déjà.');
+                                notify.info('exercizer.service.check.addtag');
                                 i = scope.subjectTagList.length;
                                 isExisting = true;
                             }
@@ -132,7 +132,7 @@ export const teacherDashboardPublishToLibrary = ng.directive('teacherDashboardPu
 
                             for (let i = 0; i < scope.selectedSubjectTagList.length; ++i) {
                                 if (CompareStringHelper.compare(StringISOHelper.toISO(scope.selectedSubjectTagList[i].label), newCustomTagLabel)) {
-                                    notify.info('Cette étiquette est déjà associée.');
+                                    notify.info('exercizer.service.check.selectedtag');
                                     i = scope.selectedSubjectTagList.length;
                                     isExisting = true;
                                 }
@@ -152,9 +152,9 @@ export const teacherDashboardPublishToLibrary = ng.directive('teacherDashboardPu
 
                 scope.publish = function() {
                     if (!scope.hasAgreedToPublish) {
-                        notify.error('Vous devez acceptez de publier votre sujet en Creative Commons.')
+                        notify.error('exercizer.service.check.licence.library')
                     } else if (scope.selection.selectedSubjectLessonTypeId === null || scope.selection.selectedSubjectLessonTypeId === 'null' || scope.selection.selectedSubjectLessonLevelId === null || scope.selection.selectedSubjectLessonLevelId === 'null') {
-                        notify.error('Vous devez sélectionner une matière et un niveau.')
+                        notify.error('exercizer.service.check.level.library')
                     } else {
                         scope.isPublicationOnGoing = true;
                         var file;
@@ -164,7 +164,7 @@ export const teacherDashboardPublishToLibrary = ng.directive('teacherDashboardPu
                         SubjectLibraryService.publish(scope.subject, StringISOHelper.toISO(scope.cc.authorsContributors), scope.selection.selectedSubjectLessonTypeId, scope.selection.selectedSubjectLessonLevelId, scope.selectedSubjectTagList, file).then(
                             function() {
                                 scope.isPublicationOnGoing = false;
-                                notify.info('Votre sujet a bien été publié dans la bibliothèque.');
+                                notify.info('exercizer.service.save.library');
                                 scope.hide();
                             },
                             function(err) {

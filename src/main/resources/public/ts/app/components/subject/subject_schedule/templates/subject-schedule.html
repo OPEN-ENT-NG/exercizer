@@ -8,21 +8,21 @@
                     <li>
                         <a  data-ng-class="{'selected' : state == 'assignSubject'}"
                             data-ng-click="state='assignSubject'">
-                            Destinataires
+                            <i18n>exercizer.scheduled.subject.to</i18n>
                         </a>
 
                     </li>
                     <li>
                         <a  data-ng-class="{'selected' : state == 'option'}"
                             data-ng-click="state='option'">
-                            Options
+                            <i18n>exercizer.scheduled.subject.option</i18n>
                         </a>
 
                     </li>
                     <li>
                         <a  data-ng-class="{'selected' : state == 'schedule'}"
                             data-ng-click="state='schedule'">
-                            Valider
+                            <i18n>exercizer.validate</i18n>
                         </a>
 
                     </li>
@@ -32,7 +32,7 @@
         <div class="nine cell">
             <div data-ng-show="state == 'assignSubject'">
                 <div class="row">
-                    <h4>Rechercher un utilisateur ou un groupe</h4>
+                    <h4><i18n>exercizer.scheduled.subject.search</i18n></h4>
                     <input type="text" class="twelve cell" ng-model="search.search" autofocus ng-change="updateFoundUsersGroups()" id="to-users" />
                     <drop-down
                             options="search.found"
@@ -45,53 +45,53 @@
                 <div class="row">
                     <div class="flex-row align-start vertical-spacing-twice">
                         <div class="cell six horizontal-spacing">
-                            <h4><i18n>Groupes ajoutés</i18n></h4>
+                            <h4><i18n>exercizer.scheduled.subject.group.add</i18n></h4>
                             <label class="chip removable block" data-ng-repeat="group in data.groupList" data-ng-click="removeItem(group)">
                                 <i class="close"></i>
                                 <span class="right-magnet cell-ellipsis">[[group.toString()]]</span>
                             </label>
                             <div class="small-text" data-ng-if="data.groupList.length === 0">
-                                <i18n>Aucun groupe ajouté.</i18n>
+                                <i18n>exercizer.scheduled.subject.group.empty</i18n>
                             </div>
                         </div>
                         <div class="cell six horizontal-spacing">
-                            <h4><i18n>Utilisateurs ajoutés</i18n></h4>
+                            <h4><i18n>exercizer.scheduled.subject.user.add</i18n></h4>
                             <label class="chip removable block" data-ng-repeat="user in data.userList" data-ng-click="removeItem(user)">
                                 <i class="close"></i>
                                 <span class="right-magnet cell-ellipsis">[[user.toString()]]</span>
                             </label>
                             <div class="small-text" data-ng-if="data.userList.length === 0">
-                                <i18n>Aucun utilisateur ajouté.</i18n>
+                                <i18n>exercizer.scheduled.subject.user.empty</i18n>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row vertical-spacing">
                     <button class="right-magnet cell" data-ng-click="state = 'option'">
-                        Suivant
+                        <i18n>exercizer.next</i18n>
                     </button>
                     <button class="cancel right-magnet cell" data-ng-click="hide()">
-                        Annuler
+                        <i18n>exercizer.cancel</i18n>
                     </button>
                 </div>
             </div>
 
             <div data-ng-show="state == 'option'">
                 <div class="row">
-                    <h4>Options</h4>
+                    <h4><i18n>exercizer.scheduled.subject.option</i18n></h4>
                 </div>
                 <div data-ng-if="!isSimpleSubject && isDisplayed">
                     <div class="row">
-                        <div class="six cell"><span> Date de début :&nbsp;</span></div>
+                        <div class="six cell"><span> <i18n>exercizer.scheduled.subject.start</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.begin_date"  class="six cell"></date-picker>
                     </div>
                     <div class="row">
-                        <div class="six cell"><span> Date de fin :&nbsp;</span></div>
+                        <div class="six cell"><span> <i18n>exercizer.scheduled.subject.end</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.due_date" class="six cell"></date-picker>
                     </div>
                     <div class="row vertical-spacing">
                         <input type="checkbox" data-ng-model="option.allow_students_to_update_copy"/>
-                        <span>Autoriser l'élève à améliorer sa copie</span>
+                        <span><i18n>exercizer.scheduled.subject.improve</i18n></span>
                     </div>
                     <!--
                     <div class="row vertical-spacing">
@@ -100,31 +100,31 @@
                     </div>
                     -->
                     <div class="row vertical-spacing" style="margin-top: 50px !important;">
-                        <span>Temps de réalisation estimé du devoir </span>
+                        <span><i18n>exercizer.scheduled.subject.delay</i18n></span>
                         <input type="text" data-ng-model="option.estimated_duration"/>
-                        <span>minute(s)</span>
+                        <span><i18n>exercizer.minute</i18n></span>
                     </div>
                 </div>
                 <div data-ng-if="isSimpleSubject && isDisplayed">
                     <div class="row">
-                        <div class="six cell"><span> Date de début de la remise :&nbsp;</span></div>
+                        <div class="six cell"><span><i18n>exercizer.scheduled.simple.subject.start</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.begin_date"  class="six cell"></date-picker>
                     </div>
                     <div class="row">
-                        <div class="six cell"><span> Date limite de remise :&nbsp;</span></div>
+                        <div class="six cell"><span><i18n>exercizer.scheduled.simple.subject.limit</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.due_date" class="six cell"></date-picker>
                     </div>
                     <div class="row">
-                        <div class="six cell"><span> Date de publication du corrigé :&nbsp;</span></div>
+                        <div class="six cell"><span><i18n>exercizer.scheduled.simple.subject.corrected</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.corrected_date" class="six cell"></date-picker>
                     </div>
                 </div>
                 <div class="row vertical-spacing">
                     <button class="right-magnet cell" data-ng-click="state = 'schedule'">
-                        Suivant
+                        <i18n>exercizer.next</i18n>
                     </button>
                     <button class="flat-button right-magnet cell" data-ng-click="state = 'assignSubject'">
-                        Précédent
+                        <i18n>exercizer.previous</i18n>
                     </button>
                 </div>
             </div>
@@ -138,7 +138,7 @@
                         <i18n>exercizer.schedule</i18n>
                     </button>
                     <button class="flat-button right-magnet cell" data-ng-click="state = 'option'">
-                        Précédent
+                        <i18n>exercizer.previous</i18n>
                     </button>
                 </div>
             </div>

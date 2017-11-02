@@ -2,7 +2,7 @@
 
     <!-- LOADER -->
     <div class="row" data-ng-hide="performSubjectCopyController.hasDataLoaded">
-        <div class="info">Chargement des données...</div>
+        <div class="info"><i18n>exercizer.loading</i18n></div>
     </div>
 
     <div data-ng-if="performSubjectCopyController.hasDataLoaded && performSubjectCopyController.grainCopyList.length > 0">
@@ -67,6 +67,6 @@
                                                  data-subject-copy="performSubjectCopyController.subjectCopy">
             </subject-perform-copy-student-header>
         </div>
-        <div class="warning">La copie ne contient pas d'éléments.</div>
+        <div class="warning"><i18n>exercizer.subject.empty</i18n></div>
     </div>
 </div>

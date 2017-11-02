@@ -53,7 +53,7 @@ export class SubjectTagService implements ISubjectTagService {
                     deferred.resolve(MapToListHelper.toList(self._listMappedById));
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récupération des étiquettes des sujets de la bibliothèque.');
+                    deferred.reject('exercizer.error');
                 }
             );
         //}
@@ -85,7 +85,7 @@ export class SubjectTagService implements ISubjectTagService {
                 deferred.resolve(subjectTag);
             },
             function () {
-                deferred.reject('Une erreur est survenue lors de la création de l\'étiquette.')
+                deferred.reject('exercizer.error')
             }
         );
 
@@ -129,7 +129,7 @@ export class SubjectTagService implements ISubjectTagService {
                     deferred.resolve(true);
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récupération des étiquettes des sujets de la bibliothèque.');
+                    deferred.reject('exercizer.error');
                 }
             );
         }

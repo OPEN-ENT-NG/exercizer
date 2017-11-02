@@ -1,4 +1,4 @@
-import { ng, model, Behaviours } from 'entcore';
+import { ng, model, Behaviours, idiom } from 'entcore';
 
 export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', ['FolderService','SubjectService', (FolderService,SubjectService) => {
         return {
@@ -73,7 +73,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
 
                         scope.itemList = [
                             {
-                                publicName : 'Propriétés',
+                                publicName : idiom.translate('exercizer.instructer.toaster.property'),
                                 actionOnClick : function(){
                                     if(scope.folderList.length == 1){
                                         // folder is selected
@@ -104,7 +104,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 }
                             },
                             {
-                                publicName : 'Partager',
+                                publicName : idiom.translate('exercizer.instructer.toaster.share'),
                                 actionOnClick : function(){
                                     var subject = SubjectService.getById(scope.subjectList[0]);
                                     scope.$emit('E_SHARE_SUBJECT', subject);
@@ -114,7 +114,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 }
                             },
                             {
-                                publicName : 'Distribuer',
+                                publicName : idiom.translate('exercizer.instructer.toaster.schedule'),
                                 actionOnClick : function(){
                                     var subject = SubjectService.getById(scope.subjectList[0]);
                                     scope.$emit('E_SCHEDULE_SUBJECT', subject);
@@ -124,7 +124,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 }
                             },
                             {
-                                publicName : 'Publier dans la bibliothèque',
+                                publicName : idiom.translate('exercizer.instructer.toaster.publish'),
                                 actionOnClick : function(){
                                     var subject = SubjectService.getById(scope.subjectList[0]);
                                     scope.$emit('E_PUBLISH_SUBJECT', subject);
@@ -135,7 +135,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 }
                             },
                             {
-                                publicName : 'Copier',
+                                publicName : idiom.translate('exercizer.instructer.toaster.copy'),
                                 actionOnClick : function(){
                                     scope.$emit('E_COPY_SELECTED_FOLDER_SUBJECT');
                                 },
@@ -144,7 +144,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 }
                             },
                             {
-                                publicName : 'Déplacer',
+                                publicName : idiom.translate('exercizer.instructer.toaster.move'),
                                 actionOnClick : function(){
                                     scope.$emit('E_MOVE_SELECTED_FOLDER_SUBJECT');
                                 },
@@ -159,7 +159,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 }
                             },
                             {
-                                publicName : 'Exporter',
+                                publicName : idiom.translate('exercizer.instructer.toaster.export'),
                                 actionOnClick : function(){
                                     var subject = SubjectService.getById(scope.subjectList[0]);
                                     scope.$emit('E_EXPORT_SELECTED_SUBJECT', subject);
@@ -181,7 +181,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 }
                             },
                             {
-                                publicName : 'Supprimer',
+                                publicName : idiom.translate('exercizer.instructer.toaster.delete'),
                                 actionOnClick : function(){
                                     scope.$emit('E_REMOVE_SELECTED_FOLDER_SUBJECT');
                                     hide();

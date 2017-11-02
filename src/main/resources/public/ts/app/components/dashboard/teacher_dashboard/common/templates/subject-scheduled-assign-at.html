@@ -1,13 +1,13 @@
 <lightbox data-show="isDisplayed" data-on-close="hide()">
-        <h1>Liste des groupes et apprenants</h1>
+        <h1><i18n>exercizer.scheduled.assign.header</i18n></h1>
         <div class="row">
                 <form name="form">
                         <div class="row">
-                                <h4 data-ng-if="subjectScheduled.scheduled_at.groupList.length > 0">Groupe(s)</h4>
+                                <h4 data-ng-if="subjectScheduled.scheduled_at.groupList.length > 0"><i18n>exercizer.scheduled.assign.group</i18n></h4>
                                 <h3 data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
                                     <span>[[group.name]]</span>
                                 </h3>
-                                <h4 data-ng-if="subjectScheduled.scheduled_at.userList.length > 0">Apprenant(s)</h4>
+                                <h4 data-ng-if="subjectScheduled.scheduled_at.userList.length > 0"><i18n>exercizer.scheduled.assign.learner</i18n></h4>
                                 <h3 data-ng-repeat="user in subjectScheduled.scheduled_at.userList">
                                     <span
                                     >[[user.name]]</span>

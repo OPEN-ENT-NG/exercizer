@@ -4,7 +4,7 @@
 
 <div class="row" data-ng-if="grainType.id > 3">
     <h2 class="cell">
-        <i class="help"></i><span class="vertical-spacing">&nbsp;[[ getCorrectOrder() + ') ' ]] [[ grainCopy.grain_copy_data.title ]] - [[ grainCopy.grain_copy_data.max_score ]] point(s)</span>
+        <i class="help"></i><span class="vertical-spacing">&nbsp;[[ getCorrectOrder() + ') ' ]] [[ grainCopy.grain_copy_data.title ]] - [[ grainCopy.grain_copy_data.max_score ]] <i18n>exercizer.score</i18n></span>
     </h2>
 
     <!-- grain copy toggle hint button -->
@@ -12,9 +12,9 @@
        style="margin: 0;"
        data-ng-click="toggleGrainCopyHint()"
        data-ng-if="hasAnswerHint()">
-        Aide à la réponse&nbsp;&nbsp;
-        <i data-ng-show="isAnswerHintFolded" data-tooltip="Déplier" class="down-open"></i>
-        <i data-ng-hide="isAnswerHintFolded" data-tooltip="Plier" class="up-open"></i>
+        <i18n>exercizer.grain.help</i18n>&nbsp;&nbsp;
+        <i data-ng-show="isAnswerHintFolded" data-tooltip="exercizer.unfold" class="down-open"></i>
+        <i data-ng-hide="isAnswerHintFolded" data-tooltip="exercizer.fold" class="up-open"></i>
     </a>
 </div>
 

@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, idiom } from 'entcore';
 import { QcmCustomData } from '../models/QcmCustomData';
 
 export const editQcm = ng.directive('editQcm',
@@ -22,8 +22,8 @@ export const editQcm = ng.directive('editQcm',
 
                 if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
                     scope.grain.grain_data.custom_data = new QcmCustomData();
-                    scope.addAnswer(true, 'Réponse 1');
-                    scope.addAnswer(false, 'Réponse 2');
+                    scope.addAnswer(true, idiom.translate('exercizer.grain.qcm.default1'));
+                    scope.addAnswer(false, idiom.translate('exercizer.grain.qcm.default2'));
                 }
 
                 scope.deleteAnswer = function(answer){

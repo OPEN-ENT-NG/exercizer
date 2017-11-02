@@ -6,7 +6,7 @@
 
         <nav data-stick-to-top class="hash-magnet floating-navigation">
             <article>
-                <h2 class="row">Filtrer sur les groupes</h2>
+                <h2 class="row"><i18n>exercizer.group.filter</i18n></h2>
 
                 <div class="row">
                     <div class="twelve cell" data-ng-click="clickOnAutoComplete()">
@@ -41,7 +41,7 @@
             <label class="chip cell"
             data-ng-click="clickFilter('notCorrected')"
             data-ng-class="filerIsSelected('notCorrected')">
-                <span><i18n>exercizer.all.not.corrected<i18n></span>
+                <span><i18n>exercizer.all.not.corrected</i18n></span>
             </label>
 
             <div class="cell">
@@ -51,14 +51,14 @@
 
             <div class="cell" style="margin-top: 10px;">
                 <label class="two cell">
-                    Du
+                    <i18n>exercizer.date.from</i18n>
                 </label>
                 <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
             </div>
 
             <div class="cell" style="margin-top: 10px;">
                 <label class="two cell">
-                    Au
+                    <i18n>exercizer.date.to</i18n>
                 </label>
                 <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
             </div>
@@ -75,10 +75,10 @@
         <article class="row vertical-spacing">
             <div data-ng-show="filteredSubjectScheduledList.length === 0 && !search.text.title"><h2><i18n>exercizer.empty.corrections</i18n></h2></div>
             <div data-ng-show="filteredSubjectScheduledList.length > 0 || search.text.title">
-                <h2 class="row">Derniers sujets distribués</h2>
+                <h2 class="row"><i18n>exercizer.last.scheduled.subject</i18n></h2>
 
                 <div class="row">
-                    <input type="text" class="twelve cell" data-ng-model="search.text.title" placeholder="Rechercher">
+                    <input type="text" class="twelve cell" data-ng-model="search.text.title" i18n-placeholder="exercizer.search">
                 </div>
 
                 <div class="row" data-ng-show="filteredSubjectScheduledList.length == 0 && search.text.title">
@@ -108,15 +108,15 @@
                                                     </strong>
                                                 </div>
                                                 <div class="row">
-                                                    Modifié le [[ orderByCopyListModificationDate(subjectScheduled) |
+                                                    <i18n>exercizer.domino.modified</i18n> [[ orderByCopyListModificationDate(subjectScheduled) |
                                                     date:'dd/MM/yyyy' ]]
                                                 </div>
                                                 <div class="row">
-                                                    Pour le [[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]
+                                                    <i18n>exercizer.domino.due</i18n> [[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]]
                                                 </div>
                                                 <div class="row">
-                                                    [[ numberOfCopySubmitted(subjectScheduled) ]] élève(s) sur [[
-                                                    numberOfCopy(subjectScheduled) ]] ont rendu le devoir
+                                                    [[ numberOfCopySubmitted(subjectScheduled) ]] <i18n>exercizer.total.made</i18n> [[
+                                                    numberOfCopy(subjectScheduled) ]] <i18n>exercizer.total.made2</i18n>
                                                 </div>
                                                 <div class="row"
                                                      data-ng-style="stateSubjectScheduled(subjectScheduled) == 'is_corrected' && {'color': '#72BB53'} || stateSubjectScheduled(subjectScheduled) == 'is_not_corrected' && {'color': '#FF8351'}">
@@ -154,12 +154,12 @@
                             <table class="list-view">
                                 <thead>
                                 <tr>
-                                    <th class="three">Titre du sujet</th>
-                                    <th>État</th>
-                                    <th>Date de modification</th>
-                                    <th>Date de fin</th>
-                                    <th>Groupe</th>
-                                    <th>Élève(s) ayant rendu le devoir</th>
+                                    <th class="three"><i18n>exercizer.subject.title</i18n></th>
+                                    <th><i18n>exercizer.state</i18n></th>
+                                    <th><i18n>exercizer.scheduled.subject.modified</i18n></th>
+                                    <th><i18n>exercizer.scheduled.subject.end</i18n></th>
+                                    <th><i18n>exercizer.scheduled.subject.group</i18n></th>
+                                    <th><i18n>exercizer.scheduled.subject.count.made</i18n></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -206,7 +206,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span>[[ numberOfCopySubmitted(subjectScheduled) ]] élève(s) sur [[ numberOfCopy(subjectScheduled) ]]</span>
+                                        <span>[[ numberOfCopySubmitted(subjectScheduled) ]] <i18n>exercizer.total.made</i18n> [[ numberOfCopy(subjectScheduled) ]]</span>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -223,7 +223,7 @@
     <section class="toggle-buttons" data-ng-show="selectedSubjectsScheduled.length > 0">
         <div class="toggle">
             <div class="row">
-                <button ng-click="exportSelected()"><i18n>export</i18n></button>
+                <button ng-click="exportSelected()"><i18n>exercizer.export</i18n></button>
 
             </div>
         </div>

@@ -81,7 +81,7 @@ export class GroupService implements IGroupService {
                     deferred.resolve(res.data);
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récuperation des groupes');
+                    deferred.reject('exercizer.error');
                 }
             );
         }
@@ -100,7 +100,7 @@ export class GroupService implements IGroupService {
                     deferred.resolve(res.data);
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récuperation des groupes');
+                    deferred.reject('exercizer.error');
                 }
             );
         return deferred.promise;

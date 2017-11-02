@@ -30,7 +30,7 @@ export const teacherDashboardFolderEdit = ng.directive('teacherDashboardFolderEd
 
                 scope.save = function () {
                     if (!scope.currentFolder.label || scope.currentFolder.label.length === 0) {
-                        notify.error('Veuillez renseigner un nom de dossier.');
+                        notify.error('exercizer.service.create.folder');
                     } else {
                         
                         if(scope.state === 'create'){

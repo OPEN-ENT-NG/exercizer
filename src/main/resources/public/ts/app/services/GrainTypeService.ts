@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, idiom } from 'entcore';
 import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainCopy, IGrainType, GrainType } from '../models/domain';
 import { StatementCustomData } from '../components/grain/statement/models/StatementCustomData';
@@ -168,13 +168,14 @@ export class GrainTypeService implements IGrainTypeService {
                     
                     angular.forEach(response.data, function (grainTypeObject) {
                         var grainType = SerializationHelper.toInstance(new GrainType(), JSON.stringify(grainTypeObject));
+                        grainType.public_name = idiom.translate(grainType.public_name);
                         self._listMappedById[grainType.id] = grainType;
                     });
 
                     deferred.resolve(self.getList());
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récupération des types des éléments du sujet.');
+                    deferred.reject('exercizer.error');
                 }
             );
         }

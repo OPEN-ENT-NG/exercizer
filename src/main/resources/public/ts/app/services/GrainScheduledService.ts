@@ -52,7 +52,7 @@ export class GrainScheduledService implements IGrainScheduledService {
                 deferred.resolve(grainScheduled);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la création d\'un élément du sujet programmé.');
+                deferred.reject('exercizer.error');
             }
         );
         return deferred.promise;
@@ -87,7 +87,7 @@ export class GrainScheduledService implements IGrainScheduledService {
                     deferred.resolve(self._listMappedBySubjectScheduledId[subjectScheduled.id]);
                 },
                 function () {
-                    deferred.reject('Une erreur est survenue lors de la récupération des éléments du sujet programmé.');
+                    deferred.reject('exercizer.error');
                 }
             );
         }

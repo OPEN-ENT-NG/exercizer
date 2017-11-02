@@ -80,7 +80,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
                     deferred.resolve(true);
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récupération des sujets programmés.');
+                    deferred.reject('exercizer.error');
                 }
             );
         }
@@ -107,7 +107,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
                 deferred.resolve(subjectScheduled);
             },
             function() {
-                deferred.reject('Une erreur est survenue lors de la sauvegarde du sujet programmé.');
+                deferred.reject('exercizer.error');
             }
         );
         return deferred.promise;
@@ -134,7 +134,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
                 deferred.resolve(response.data.fileId);
             },
             function() {
-                deferred.reject("Une erreur est survenue lors de l'ajout de la correction.");
+                deferred.reject("exercizer.error");
             }
         );
         return deferred.promise;
@@ -150,7 +150,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
                 deferred.resolve();
             },
             function() {
-                deferred.reject("Une erreur est survenue lors de la suppression de la correction.");
+                deferred.reject("exercizer.error");
             }
         );
         return deferred.promise;
@@ -180,7 +180,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
                 if (e.status == 400) {
                     deferred.reject(e.data.error);
                 } else {
-                    deferred.reject('exercizer.schedule.error');
+                    deferred.reject('exercizer.error');
                 }
             }
         );
@@ -209,7 +209,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
                 if (e.status == 400) {
                     deferred.reject(e.data.error);
                 } else {
-                    deferred.reject('exercizer.schedule.error');
+                    deferred.reject('exercizer.error');
                 }
             }
         );

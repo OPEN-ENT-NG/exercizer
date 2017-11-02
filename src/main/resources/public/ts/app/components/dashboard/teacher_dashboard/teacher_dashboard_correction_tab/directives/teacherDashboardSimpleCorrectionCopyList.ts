@@ -70,7 +70,7 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     });
 
                     if (!possible) {
-                        notify.info("La sélection ne comporte pas de non-rendu");
+                        notify.info("exercizer.service.check.reminder");
                     } else {
                         scope.reminderDisplayed = true;
                     }
@@ -91,7 +91,7 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     });
 
                     if (!possible) {
-                        notify.info("La séléction ne comporte pas de rendu");
+                        notify.info("exercizer.service.check.download.copy");
                     } else {                            
                         window.location.href = SubjectCopyService.downloadSimpleCopies(downloadCopies);
                     }
@@ -138,7 +138,7 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                                 angular.forEach(scope.subjectCopyList, function(copy){
                                     copy.is_corrected = true;
                                 });
-                                notify.info('La correction a bien été ajoutée');
+                                notify.info('exercizer.service.save.corrected');
                             },
                             function (err) {
                                 notify.error(err);
@@ -157,7 +157,7 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                                     copy.is_corrected = false;
                                 }
                             });
-                            notify.info('La correction a bien été supprimée');
+                            notify.info('exercizer.service.delete.corrected');
                         },
                         function (err) {
                             notify.error(err);
@@ -176,7 +176,7 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                                 scope.selectedCopy.corrected_metadata = {"filename":file.name};
                                 scope.selectedCopy.corrected_file_id = fileId;
                                 scope.selectedCopy.is_corrected = true;
-                                notify.info('La correction individuelle a bien été ajoutée');
+                                notify.info('exercizer.service.save.individual.corrected');
                             },
                             function (err) {
                                 notify.error(err);
@@ -193,7 +193,7 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                             if (!scope.selectedSubjectScheduled.corrected_file_id) {
                                 copy.is_corrected = false;
                             }
-                            notify.info('La correction individuelle a bien été supprimée');
+                            notify.info('exercizer.service.delete.individual.corrected');
                         },
                         function (err) {
                             notify.error(err);

@@ -6,14 +6,14 @@
         <input type="text" class="five cell"
                data-ng-model="filled_answer.text_left"
                data-ng-class="{'input-response-correct' : isCorrect[key], 'input-response-incorrect' : !isCorrect[key]}"
-               placeholder="Aucune réponse renseignée"
+               i18n-placeholder="exercizer.grain.noanswer"
                disabled/>
         <div class="one cell">&nbsp;</div>
         <input type="text"
                class="five cell"
                data-ng-model="filled_answer.text_right"
                style="[[ isCorrect[key] ? 'color: green; border: 1px solid green;' : 'color: red; border: 1px solid red;' ]]"
-               placeholder="Aucune réponse renseignée"
+               i18n-placeholder="exercizer.grain.noanswer"
                disabled/>
     </div>
     <grain-copy-footer data-grain-scheduled="grainScheduled"

@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, idiom } from 'entcore';
 import { MapToListHelper, SerializationHelper } from '../models/helpers';
 import { ISubjectLessonType, SubjectLessonType } from '../models/domain';
 
@@ -46,13 +46,14 @@ export class SubjectLessonTypeService implements ISubjectLessonTypeService {
 
                     angular.forEach(response.data, function (subjectLessonTypeObject) {
                         var subjectLessonType = SerializationHelper.toInstance(new SubjectLessonType(), JSON.stringify(subjectLessonTypeObject));
+                        subjectLessonType.label = idiom.translate(subjectLessonType.label);
                         self._listMappedById[subjectLessonType.id] = subjectLessonType;
                     });
 
                     deferred.resolve(true);
                 },
                 function() {
-                    deferred.reject('Une erreur est survenue lors de la récupération des matières des sujets de la bibliothèque.');
+                    deferred.reject('exercizer.error');
                 }
             );
         }
@@ -105,13 +106,15 @@ export class SubjectLessonTypeService implements ISubjectLessonTypeService {
 
                         for (var i = 0; i < subjectIds.length; ++i) {
                             var subjectLessonTypeObject = response.data[i];
-                            self._listMappedBySubjectId[subjectIds[i]] = SerializationHelper.toInstance(new SubjectLessonType(), JSON.stringify(subjectLessonTypeObject));
+                            var subjectLessonType = SerializationHelper.toInstance(new SubjectLessonType(), JSON.stringify(subjectLessonTypeObject));
+                            subjectLessonType.label = idiom.translate(subjectLessonType.label);
+                            self._listMappedBySubjectId[subjectIds[i]] = subjectLessonType;
                         }
 
                         deferred.resolve(true);
                     },
                     function () {
-                        deferred.reject('Une erreur est survenue lors de la récupération des niveaux des sujets de la bibliothèque.');
+                        deferred.reject('exercizer.error');
                     }
                 );
             }

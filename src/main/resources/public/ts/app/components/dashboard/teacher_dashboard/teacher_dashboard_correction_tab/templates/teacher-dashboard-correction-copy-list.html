@@ -2,8 +2,8 @@
  <div class="twelve cell">
      <h2 class="no-margin"> [[selectedSubjectScheduled.title]]</h2>
      <p class="small-text">
-         Commence le <b> [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]]</b> <br>
-         Date limite de rendu le <b> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]</b> <br>
+         <i18n>exercizer.scheduled.start</i18n> <b> [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]]</b> <br>
+         <i18n>exercizer.scheduled.end</i18n> <b> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]</b> <br>
      </p>
  </div>
 
@@ -12,15 +12,15 @@
           <span data-ng-repeat="user in lUserGroup" class="small-text">
               <b>[[user.name]] </b>
           </span>
-          <em class="small-text"> - Il reste <b>[[numberCopyNotCorrected()]]</b> copie(s) à corriger </em>
+          <em class="small-text"> - <i18n>exercizer.numbercopy.notcorrected</i18n> <b>[[numberCopyNotCorrected()]]</b> <i18n>exercizer.numbercopy.notcorrected2</i18n> </em>
      </div>
 </div>
 
 <div class="vertical-spacing">
     <div class="small-text right-magnet" style="margin-top: 12px;">
-         [[numberCopySubmitted()]] élève(s) sur [[subjectCopyList.length]] ont rendu le devoir
+         [[numberCopySubmitted()]] <i18n>exercizer.total.made</i18n> [[subjectCopyList.length]] <i18n>exercizer.total.made2</i18n>
     </div>
-     <input type="text" class="five cell" data-ng-model="search.owner.owner_username" placeholder="Rechercher un élève">
+     <input type="text" class="five cell" data-ng-model="search.owner.owner_username" i18n-placeholder="exercizer.find.learner">
 </div>
 <div class="row vertical-spacing">
      <table class="list-view">
@@ -28,31 +28,31 @@
           <tr>
                <th class="one centered-text" ><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
                <th scope="col" ng-click="orderByField('owner_username')">
-                    <span translate content="Copie de" ></span>
+                    <span translate content="exercizer.copy.from" ></span>
                     <i class="sort" ng-if="order.field !== 'owner_username'"></i>
                     <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === 'owner_username' && order.desc"></i>
                </th>
                <th scope="col" ng-click="orderByField('state')">
-                    <span translate content="État" ></span>
+                    <span translate content="exercizer.state" ></span>
                     <i class="sort" ng-if="order.field !== 'state'"></i>
                     <i class="sort-asc" ng-if="order.field === 'state' && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === 'state' && order.desc"></i>
                </th>
                <th scope="col" ng-click="orderByField('submitted_date')">
-                    <span translate content="Date de rendu" ></span>
+                    <span translate content="exercizer.submitted.date" ></span>
                     <i class="sort" ng-if="order.field !== 'submitted_date'"></i>
                     <i class="sort-asc" ng-if="order.field === 'submitted_date' && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === 'submitted_date' && order.desc"></i>
                </th>
                <th scope="col" ng-click="orderByField('calculated_score')">
-                    <span translate content="Score automatique" ></span>
+                    <span translate content="exercizer.auto.score" ></span>
                     <i class="sort" ng-if="order.field !== 'calculated_score'"></i>
                     <i class="sort-asc" ng-if="order.field === 'calculated_score' && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === 'calculated_score' && order.desc"></i>
                </th>
                <th scope="col" ng-click="orderByField('final_score')">
-                    <span translate content="Score final" ></span>
+                    <span translate content="exercizer.final.score" ></span>
                     <i class="sort" ng-if="order.field !== 'final_score'"></i>
                     <i class="sort-asc" ng-if="order.field === 'final_score' && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === 'final_score' && order.desc"></i>
@@ -78,7 +78,7 @@
                </td>
                <td>
                    <div data-ng-if="tooLate(copy)" class="alert">
-                       <i class="timer-off"></i> &nbsp; Retard <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
+                       <i class="timer-off"></i> &nbsp; <i18n>exercizer.lag</i18n> <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
                    </div>
 
                    <div data-ng-if="!tooLate(copy) && copy.submitted_date" class="valid-color">
@@ -87,7 +87,7 @@
 
                    <div data-ng-if="showReminder(copy)" class="flex-row align-center">
                       <i class="pending-action horizontal-spacing medium-text"></i>
-                      <button data-ng-click="reminder(copy.id)" class="flat-button no-margin"><i18n>Rappel</i18n></button>
+                      <button data-ng-click="reminder(copy.id)" class="flat-button no-margin"><i18n>exercizer.reminder</i18n></button>
                    </div>
                </td>
                <td>
@@ -105,10 +105,10 @@
      <div class="toggle">
           <div class="row">
                <div class="cell" data-ng-if="showAutomaticMark()">
-                    <button data-ng-click="applyAutomaticMark()">Passer le statut de la sélection à "Corrigé"</button>
+                    <button data-ng-click="applyAutomaticMark()"><i18n>exercizer.copies.make.corrected</i18n></button>
                </div>
                <div class="cell">
-                    <button data-ng-click="reminder()">Rappel aux non-rendus</button>
+                    <button data-ng-click="reminder()"><i18n>exercizer.reminder.raise</i18n></button>
                </div>
           </div>
      </div>

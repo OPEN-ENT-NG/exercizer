@@ -1,10 +1,10 @@
 <div class="row">
 
     <article class="cell" style="width: 49%;">
-        <h2 class="row" style="color: firebrick;">Cette semaine</h2>
+        <h2 class="row" style="color: firebrick;"><i18n>exercizer.dashboard.learner.tab1.sub.header1</i18n></h2>
 
         <div class="row">
-            <input type="text" data-ng-model="search.text_1" placeholder="Rechercher" class="four cell">
+            <input type="text" data-ng-model="search.text_1" i18n-placeholder="exercizer.search" class="four cell">
         </div>
 
         <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
@@ -14,25 +14,25 @@
 
             <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
                 <img src="exercizer/public/assets/img/smiley.PNG"/>
-                <h4>Vous n'avez aucun sujet à faire cette semaine</h4>
+                <h4><i18n>exercizer.dashboard.learner.subject.empty</i18n></h4>
             </div>
         </div>
     </article>
 
     <article class="cell right-magnet" style="width: 49%;">
-        <h2 class="row">Plus tard</h2>
+        <h2 class="row"><i18n>exercizer.dashboard.learner.tab1.sub.header2</i18n></h2>
 
         <div class="row">
-            <input type="text" data-ng-model="search.text_2" placeholder="Rechercher" class="four cell">
+            <input type="text" data-ng-model="search.text_2" i18n-placeholder="exercizer.search" class="four cell">
 
             <date-picker data-ng-model="search.endDate" class="three cell right-magnet"></date-picker>
             <label class="cell right-magnet">
-                &nbsp;&nbsp;&nbsp;Au
+                &nbsp;&nbsp;&nbsp;<i18n>exercizer.date.to</i18n>
             </label>
 
             <date-picker data-ng-model="search.beginDate" class="three cell right-magnet"></date-picker>
             <label class="cell right-magnet">
-                Du
+                <i18n>exercizer.date.from</i18n>
             </label>
         </div>
         <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
@@ -42,7 +42,7 @@
 
             <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
                 <img src="exercizer/public/assets/img/smiley.PNG"/>
-                <h4>Vous n'avez aucun sujet à faire plus tard</h4>
+                <h4><i18n>exercizer.dashboard.learner.subject.later.empty</i18n></h4>
             </div>
         </div>
     </article>

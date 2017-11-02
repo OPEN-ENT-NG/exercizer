@@ -1,20 +1,20 @@
 <div class="row vertical-spacing">
     <div class="row">
-        <h3>Types de réponses</h3>
+        <h3><i18n>exercizer.grain.types</i18n></h3>
         <div class="row">
             <form>
                 <input type="radio" name="answerType"
                        ng-model="grain.grain_data.custom_data.answersType"
                        ng-change="switchTo('text')" value="text" />
-                Saisie libre
+                <i18n>exercizer.grain.option1</i18n>
                 <input type="radio" name="answerType"
                        ng-model="grain.grain_data.custom_data.answersType"
                        ng-change="switchTo('list')" value="list" />
-                Liste déroulante
+                <i18n>exercizer.grain.option2</i18n>
                 <input type="radio" name="answerType"
                        ng-model="grain.grain_data.custom_data.answersType"
                        ng-change="switchTo('drag')" value="drag" />
-                Glisser-déposer
+                <i18n>exercizer.grain.option3</i18n>
             </form>
             
         </div>
@@ -39,10 +39,10 @@
         <media-library ng-model="grain.grain_data.custom_data.guideImageFile" ng-change="displayState.changeBackground = false; updateGrain();" file-format="'img'"></media-library>
     </lightbox>
     <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'list'" on-close="displayState.editZone = false">
-        <h2>Réponses possibles</h2>
+        <h2><i18n>exercizer.grain.responses</i18n></h2>
 
         <div class="info row">
-            Cliquez sur une réponse pour définir la réponse valide
+           <i18n>exercizer.grain.responses.info</i18n>
         </div>
 
         <div class="options">
@@ -75,10 +75,10 @@
         </div>
     </lightbox>
     <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'drag'" on-close="displayState.editZone = false">
-        <h2>Réponses possibles</h2>
+        <h2><i18n>exercizer.grain.responses</i18n></h2>
 
         <div class="info row">
-            Cliquez sur une réponse pour définir la réponse valide
+            <i18n>exercizer.grain.responses.info</i18n>
         </div>
 
         <div class="options">
@@ -110,7 +110,7 @@
         </div>
     </lightbox>
     <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'text'" on-close="displayState.editZone = false">
-        <h2>Zone à compléter</h2>
+        <h2><i18n>exercizer.grain.zone</i18n></h2>
         <form>
             <div class="row">
                 <input type="text" ng-model="displayState.editedTextZone.answer" required class="twelve cell" i18n-placeholder="Réponse" />
@@ -129,11 +129,11 @@
         </form>
     </lightbox>
     <div class="row">
-        <label><strong><i18n>exercizer.grain.zone.img</i18n></strong></label>
+        <label><strong><i18n>exercizer.grain.zoneimg.advisable</i18n></strong></label>
     </div>
     <div class="row vertical-spacing">
-        <button class="cancel" ng-click="displayState.changeBackground = true">Modifier l'image de fond</button>
-        <button ng-click="editZone()">Ajouter une zone à compléter</button>
+        <button class="cancel" ng-click="displayState.changeBackground = true"><i18n>exercizer.grain.background</i18n></button>
+        <button ng-click="editZone()"><i18n>exercizer.grain.zone.add</i18n></button>
     </div>
     <div class="options" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
         <ul>

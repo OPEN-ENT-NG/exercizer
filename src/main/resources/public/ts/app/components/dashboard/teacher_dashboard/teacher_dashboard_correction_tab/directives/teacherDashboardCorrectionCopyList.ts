@@ -72,7 +72,7 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     });
 
                     if (!possible) {
-                        notify.info("La sélection ne comporte pas de non-rendu");
+                        notify.info("exercizer.service.check.reminder");
                     } else {
                         scope.reminderDisplayed = true;
                     }
