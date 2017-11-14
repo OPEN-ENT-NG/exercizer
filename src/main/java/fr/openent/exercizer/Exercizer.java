@@ -22,6 +22,7 @@ package fr.openent.exercizer;
 import fr.openent.exercizer.controllers.*;
 import fr.openent.exercizer.cron.ScheduledNotification;
 import fr.openent.exercizer.events.ExercizerRepositoryEvents;
+import fr.openent.exercizer.services.impl.ExercizerStorage;
 import fr.wseduc.cron.CronTrigger;
 import fr.wseduc.webutils.Server;
 import org.entcore.common.http.BaseServer;
@@ -48,7 +49,7 @@ public class Exercizer extends BaseServer {
         final String exportPath = container.config()
                 .getString("export-path", System.getProperty("java.io.tmpdir"));
 
-        final Storage storage = new StorageFactory(vertx).getStorage();
+        final Storage storage = new StorageFactory(vertx, config, new ExercizerStorage()).getStorage();
 
         setRepositoryEvents(new ExercizerRepositoryEvents(securedActions, "exercizer.manager"));
 
