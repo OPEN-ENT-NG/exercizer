@@ -226,6 +226,7 @@ class EditSubjectController {
             grain.grain_data.answer_explanation = StringISOHelper.toISO(grain.grain_data.answer_explanation);
             grain.grain_data.answer_hint = StringISOHelper.toISO(grain.grain_data.answer_hint);
             grain.grain_data.max_score = angular.isUndefined(grain.grain_data.max_score) ? 0 : parseFloat(grain.grain_data.max_score as any);
+            if (isNaN(grain.grain_data.max_score)) grain.grain_data.max_score = 0;
 
         } else if (grain.grain_type_id === 3) {
 

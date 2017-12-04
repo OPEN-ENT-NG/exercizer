@@ -30,6 +30,7 @@ export const grainCopyFooter = ng.directive('grainCopyFooter',
                     if (scope.isTeacher) {
                         scope.grainCopy.comment = StringISOHelper.toISO(scope.grainCopy.comment);
                         scope.grainCopy.final_score = new Number(scope.grainCopy.final_score).valueOf();
+                        if (isNaN( scope.grainCopy.final_score)) scope.grainCopy.final_score = 0;
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     }
                 };
