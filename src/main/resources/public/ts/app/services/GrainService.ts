@@ -3,7 +3,7 @@ import { SerializationHelper, CloneObjectHelper } from '../models/helpers';
 import { IGrainService } from './GrainService';
 import { IGrainTypeService } from './GrainTypeService';
 import { ng } from 'entcore';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { _ } from 'entcore';
 
 export interface IGrainService {
     persist(grain:IGrain): Promise<IGrain>;

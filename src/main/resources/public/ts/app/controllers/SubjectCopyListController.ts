@@ -1,7 +1,7 @@
 import { ng } from 'entcore';
-import { angular } from 'entcore/libs/angular/angular';
-import { moment } from 'entcore/libs/moment/moment';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { angular } from 'entcore';
+import { moment } from 'entcore';
+import { _ } from 'entcore';
 import { SubjectCopy } from '../models/domain';
 
 class SubjectCopyListController {

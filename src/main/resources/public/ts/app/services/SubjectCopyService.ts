@@ -1,7 +1,7 @@
 import { ng } from 'entcore';
 import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainCopy, IGrainScheduled, ISubjectCopy, ISubjectScheduled, SubjectCopy } from '../models/domain';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { _ } from 'entcore';
 
 export interface ISubjectCopyService {
     resolve(isTeacher:boolean): Promise<boolean>;

@@ -1,6 +1,6 @@
 import { ng } from 'entcore';
 import { IGrain } from '../../../../models/domain';
-import { $ } from 'entcore/libs/jquery/jquery';
+import { $ } from 'entcore';
 
 export const subjectEditSubjectList = ng.directive('subjectEditSubjectList',
     [

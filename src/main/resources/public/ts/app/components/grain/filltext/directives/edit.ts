@@ -1,7 +1,7 @@
 import { ng, RTE } from 'entcore';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { _ } from 'entcore';
 import { TextZone, CustomData } from '../models/CustomData';
-import { $ } from 'entcore/libs/jquery/jquery';
+import { $ } from 'entcore';
 
 let addEditorOption = () => {
     RTE.baseToolbarConf.option('filltext', function (instance) {

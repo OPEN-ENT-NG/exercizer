@@ -2,9 +2,9 @@ import { ng, notify } from 'entcore';
 import { ISubject, IGrain, IGrainDocument, GrainData, GrainDocument, Grain } from '../models/domain';
 import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IGrainTypeService, IGrainService, IDragService } from '../services';
 import { StringISOHelper, CorrectOrderHelper } from '../models/helpers';
-import { angular } from 'entcore/libs/angular/angular';
-import { $ } from 'entcore/libs/jquery/jquery';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { angular } from 'entcore';
+import { $ } from 'entcore';
+import { _ } from 'entcore';
 
 class EditSubjectController {
 

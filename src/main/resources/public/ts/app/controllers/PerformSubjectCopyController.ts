@@ -4,7 +4,7 @@ import {
     ISubjectService, ISubjectLibraryService, ISubjectCopyService, 
     IGrainCopyService, IGrainService, IGrainScheduledService, ISubjectScheduledService, IGrainTypeService, IAccessService 
 } from '../services';
-import { angular } from 'entcore/libs/angular/angular';
+import { angular } from 'entcore';
 
 class PerformSubjectCopyController {
 

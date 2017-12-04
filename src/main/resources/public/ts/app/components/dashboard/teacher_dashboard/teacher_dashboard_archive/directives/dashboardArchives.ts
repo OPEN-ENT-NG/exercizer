@@ -1,4 +1,4 @@
-import { moment } from 'entcore/libs/moment/moment';
+import { moment } from 'entcore';
 import { ng, skin } from 'entcore';
 
 import { ISubjectScheduled } from '../../../../../models/domain';

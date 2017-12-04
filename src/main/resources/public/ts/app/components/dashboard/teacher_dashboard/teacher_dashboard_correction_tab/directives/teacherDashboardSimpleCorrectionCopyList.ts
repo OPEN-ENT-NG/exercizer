@@ -1,6 +1,6 @@
 import { ng, notify } from 'entcore';
-import { moment } from 'entcore/libs/moment/moment';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { moment } from 'entcore';
+import { _ } from 'entcore';
 
 export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDashboardSimpleCorrectionCopyList',
     ['SubjectCopyService', 'SubjectScheduledService', '$location','DateService','$q', (SubjectCopyService, SubjectScheduledService, $location, DateService, $q) => {

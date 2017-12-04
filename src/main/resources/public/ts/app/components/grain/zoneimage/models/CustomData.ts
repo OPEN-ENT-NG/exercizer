@@ -1,5 +1,5 @@
 import { skin } from 'entcore';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { _ } from 'entcore';
 import { Zone, ICustomData } from '../../common/zonegrain/model';
 
 export interface IconZone extends Zone {

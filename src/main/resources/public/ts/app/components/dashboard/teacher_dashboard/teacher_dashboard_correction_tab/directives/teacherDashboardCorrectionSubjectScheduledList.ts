@@ -1,7 +1,7 @@
 import { ng, skin } from 'entcore';
-import { moment } from 'entcore/libs/moment/moment';
+import { moment } from 'entcore';
 import { ISubjectScheduled, Subject } from '../../../../../models/domain';
-import { $ } from 'entcore/libs/jquery/jquery';
+import { $ } from 'entcore';
 
 export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teacherDashboardCorrectionSubjectScheduledList', 
     ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService','SubjectCopyService','$location','$route', 

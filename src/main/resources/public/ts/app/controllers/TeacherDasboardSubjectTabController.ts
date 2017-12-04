@@ -1,6 +1,6 @@
 import { ng, notify } from 'entcore';
 import { IFolderService, ISubjectService } from '../services';
-import { angular } from 'entcore/libs/angular/angular';
+import { angular } from 'entcore';
 
 class TeacherDashboardSubjectTabController {
 

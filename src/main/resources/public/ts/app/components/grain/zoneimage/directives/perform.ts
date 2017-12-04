@@ -1,6 +1,6 @@
 import { ng } from 'entcore';
 import { CustomData, IconZone } from '../models/CustomData';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { _ } from 'entcore';
 
 export const performZoneImage = ng.directive('performZoneImage',
     [() => {

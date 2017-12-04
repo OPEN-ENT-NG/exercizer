@@ -1,8 +1,8 @@
 import { ng, notify, model, skin } from 'entcore';
 import { ISubject, IFolder, ISubjectLessonType, ISubjectLessonLevel, ISubjectTag } from '../models/domain';
 import { ISubjectService, ISubjectLibraryService, ISubjectLessonLevelService, ISubjectLessonTypeService, ISubjectTagService } from '../services';
-import { angular } from 'entcore/libs/angular/angular';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { angular } from 'entcore';
+import { _ } from 'entcore';
 
 class TeacherDashboardLibraryTabController {
 

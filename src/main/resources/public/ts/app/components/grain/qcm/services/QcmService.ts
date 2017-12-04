@@ -1,6 +1,6 @@
 import { IAutomaticCorrection } from '../../../../models/interfaces/IAutomaticCorrection';
 import { IGrainCopy, IGrainScheduled } from '../../../../models/domain';
-import { angular } from 'entcore/libs/angular/angular';
+import { angular } from 'entcore';
 import { ng } from 'entcore';
 
 export class QcmService implements IAutomaticCorrection {

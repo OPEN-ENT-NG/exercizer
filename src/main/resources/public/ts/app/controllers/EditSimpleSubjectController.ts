@@ -1,5 +1,5 @@
 import { ng, idiom, model, Behaviours, notify } from 'entcore';
-import { angular } from 'entcore/libs/angular/angular';
+import { angular } from 'entcore';
 import { ISubject, IFolder, Subject, ISubjectScheduled } from '../models/domain';
 import { ISubjectService, ISubjectLibraryService } from '../services';
 

@@ -1,5 +1,5 @@
 import { ng } from 'entcore';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { _ } from 'entcore';
 import { CustomData, TextZone } from '../models/CustomData';
 
 export const performFillText = ng.directive('performFillText',

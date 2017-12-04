@@ -1,5 +1,5 @@
 import { ng } from 'entcore';
-import { angular } from 'entcore/libs/angular/angular';
+import { angular } from 'entcore';
 
 class TeacherDashboardCorrectionTabController {
 

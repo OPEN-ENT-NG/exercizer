@@ -1,5 +1,5 @@
 import { ng, template } from 'entcore';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { _ } from 'entcore';
 import { ISubjectCopy } from '../../../../models/domain';
 
 export const subjectViewCopyTeacherHeader = ng.directive('subjectViewCopyTeacherHeader',

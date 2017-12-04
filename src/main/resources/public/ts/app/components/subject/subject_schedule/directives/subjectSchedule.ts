@@ -1,7 +1,7 @@
 import { ng, notify, idiom } from 'entcore';
-import { moment } from 'entcore/libs/moment/moment';
-import { _ } from 'entcore/libs/underscore/underscore';
-import { $ } from 'entcore/libs/jquery/jquery';
+import { moment } from 'entcore';
+import { _ } from 'entcore';
+import { $ } from 'entcore';
 import { IGrain } from '../../../../models/domain';
 
 export const subjectSchedule = ng.directive('subjectSchedule',

@@ -1,13 +1,13 @@
 
 import { ng, model, Behaviours, notify, skin } from 'entcore';
 import { Subject, IGrain, Grain, GrainData } from '../../../../../models/domain';
-import { _ } from 'entcore/libs/underscore/underscore';
+import { _ } from 'entcore';
 import { StatementCustomData } from '../../../../grain/statement/models/StatementCustomData';
 import { QcmCustomData } from '../../../../grain/qcm/models/QcmCustomData';
 import { AssociationCustomData } from '../../../../grain/association/models/AssociationCustomData';
 import { SimpleAnswerCustomData } from '../../../../grain/simple_answer/models/SimpleAnswerCustomData';
 import { MultipleAnswerCustomData } from '../../../../grain/multiple_answer/models/MultipleAnswerCustomData';
-import { $ } from 'entcore/libs/jquery/jquery';
+import { $ } from 'entcore';
 
 export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubjectList', ['SubjectService', 'FolderService', 'DragService', '$location','AccessService',
     (SubjectService, FolderService, DragService, $location, AccessService) => {

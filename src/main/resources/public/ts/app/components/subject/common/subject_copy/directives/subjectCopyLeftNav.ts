@@ -1,7 +1,7 @@
 import { ng } from 'entcore';
 import { IGrainCopy } from '../../../../../models/domain';
 import { CorrectOrderHelper } from '../../../../../models/helpers';
-import { $ } from 'entcore/libs/jquery/jquery';
+import { $ } from 'entcore';
 
 export const subjectCopyLeftNav = ng.directive('subjectCopyLeftNav',
     ['GrainTypeService', (GrainTypeService) => {

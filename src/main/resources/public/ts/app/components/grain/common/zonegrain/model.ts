@@ -1,4 +1,4 @@
-﻿import { _ } from 'entcore/libs/underscore/underscore';
+﻿import { _ } from 'entcore';
 import { IGrainCopy, IGrainScheduled } from '../../../../models/domain';
 
 export interface Zone {

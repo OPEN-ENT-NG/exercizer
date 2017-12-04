@@ -45,6 +45,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var entcore_1 = __webpack_require__(1);
 	console.log('Exercizer behaviours loaded');
 	entcore_1.Behaviours.register('exercizer', {
@@ -70,7 +71,6 @@
 	    dependencies: {},
 	    loadResources: function (callback) { }
 	});
-	
 
 
 /***/ }),
