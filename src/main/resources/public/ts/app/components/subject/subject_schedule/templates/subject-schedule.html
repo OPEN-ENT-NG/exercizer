@@ -46,9 +46,9 @@
                     <div class="flex-row align-start vertical-spacing-twice">
                         <div class="cell six horizontal-spacing">
                             <h4><i18n>exercizer.scheduled.subject.group.add</i18n></h4>
-                            <label class="chip removable block" data-ng-repeat="group in data.groupList" data-ng-click="removeItem(group)">
-                                <i class="close"></i>
-                                <span class="right-magnet cell-ellipsis">[[group.toString()]]</span>
+                            <label class="chip removable block" data-ng-repeat="group in data.groupList">
+                                <i class="close right-magnet" data-ng-click="removeItem(group)"></i>
+                                <span class="cell-ellipsis block">[[group.toString()]]</span>
                             </label>
                             <div class="small-text" data-ng-if="data.groupList.length === 0">
                                 <i18n>exercizer.scheduled.subject.group.empty</i18n>
@@ -56,9 +56,9 @@
                         </div>
                         <div class="cell six horizontal-spacing">
                             <h4><i18n>exercizer.scheduled.subject.user.add</i18n></h4>
-                            <label class="chip removable block" data-ng-repeat="user in data.userList" data-ng-click="removeItem(user)">
-                                <i class="close"></i>
-                                <span class="right-magnet cell-ellipsis">[[user.toString()]]</span>
+                            <label class="chip removable block" data-ng-repeat="user in data.userList">
+                                <i class="close right-magnet" data-ng-click="removeItem(user)"></i>
+                                <span class="cell-ellipsis block">[[user.toString()]]</span>
                             </label>
                             <div class="small-text" data-ng-if="data.userList.length === 0">
                                 <i18n>exercizer.scheduled.subject.user.empty</i18n>
