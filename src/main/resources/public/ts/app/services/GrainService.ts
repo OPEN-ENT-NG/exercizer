@@ -2,7 +2,7 @@ import { IGrain, ISubject, Grain, GrainData } from '../models/domain';
 import { SerializationHelper, CloneObjectHelper } from '../models/helpers';
 import { IGrainService } from './GrainService';
 import { IGrainTypeService } from './GrainTypeService';
-import { ng } from 'entcore';
+import { ng, idiom } from 'entcore';
 import { _ } from 'entcore';
 
 export interface IGrainService {
