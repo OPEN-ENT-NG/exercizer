@@ -151,19 +151,23 @@ export const performAssociation = ng.directive('performAssociation',
                 };
 
                 scope.deleteFilledAnswerLeft = function(filled_answer){
-                    scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
-                        item : angular.copy(filled_answer.text_left),
-                        rank : 0.5 - Math.random()
-                    });
+                    if (filled_answer && filled_answer.text_left !== null) {
+                        scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
+                            item: angular.copy(filled_answer.text_left),
+                            rank: 0.5 - Math.random()
+                        });
+                    }
                     filled_answer.text_left= null;
 
                 };
 
                 scope.deleteFilledAnswerRight = function(filled_answer){
-                    scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
-                        item : angular.copy(filled_answer.text_right),
-                        rank : 0.5 - Math.random()
-                    });
+                    if (filled_answer && filled_answer.text_right !== null) {
+                        scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
+                            item : angular.copy(filled_answer.text_right),
+                            rank : 0.5 - Math.random()
+                        });
+                    }
                     filled_answer.text_right = null;
 
                 };
