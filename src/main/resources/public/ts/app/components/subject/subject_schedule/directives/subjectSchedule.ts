@@ -15,7 +15,6 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 /**
                  * INIT
                  */
-                scope.isDisplayed = false;
                 scope.subject = null;
                 scope.isSimpleSubject = null;
                 scope.scheduleSubjectInProgress = false;
@@ -26,7 +25,10 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                  */
 
                 function reset() {
-                    scope.state = 'assignSubject';
+                    scope.lightbox = {
+                        state: 'assignSubject',
+                        isDisplayed : false
+                    };
                     scope.data = {};
                     scope.data.groupList = [];
                     scope.data.userList = [];
@@ -64,7 +66,6 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     if (scope.isSimpleSubject) {
                         scheduleSimpleSubject(scope.subject, scope.option, scope.data).then(function () {
                             reset();
-                            scope.isDisplayed = false;
                             scope.scheduleSubjectInProgress = false;
                             notify.info("exercizer.service.save.schedule");
                         }, function (err) {
@@ -75,7 +76,6 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         canSchedule(scope.option, scope.subject).then(function () {
                             scheduleSubject(scope.subject, scope.option, scope.data).then(function () {
                                 reset();
-                                scope.isDisplayed = false;
                                 scope.scheduleSubjectInProgress = false;
                                 notify.info("exercizer.service.save.schedule");
                             }, function (err) {
@@ -261,8 +261,8 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                             function (grainList:IGrain[]) {
                                 if (grainList.length > 0) {
                                     scope.subject = subject;
-                                    scope.isDisplayed = true;
                                     reset();
+                                    scope.lightbox.isDisplayed = true;
                                     scope.data.lists = createLists(subject);
                                 } else {
                                     notify.info('exercizer.service.check.schedule');
@@ -274,8 +274,8 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         );
                     } else {
                         scope.subject = subject;
-                        scope.isDisplayed = true;
                         reset();
+                        scope.lightbox.isDisplayed = true;
                         scope.data.lists = createLists(subject);
                     }
                 });
@@ -284,8 +284,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     // cheat
                     $('[data-drop-down]').height("");
                     $('[data-drop-down]').addClass('hidden');
-                    scope.isDisplayed = false;
-                    scope.state = 'assignSubject';
+                    reset();
                     scope.$emit('E_RESET_SELECTED_LIST');
                 };
 

@@ -1,4 +1,4 @@
-<lightbox data-show="isDisplayed" data-on-close="hide()">
+<lightbox data-show="lightbox.isDisplayed" data-on-close="hide()">
     <h1 translate content="[[isSimpleSubject ? 'exercizer.schedule.simple.title' : 'exercizer.schedule.interactive.title']]"></h1>
 
     <div class="row">
@@ -6,22 +6,22 @@
             <nav class="vertical">
                 <ul>
                     <li>
-                        <a  data-ng-class="{'selected' : state == 'assignSubject'}"
-                            data-ng-click="state='assignSubject'">
+                        <a  data-ng-class="{'selected' : lightbox.state == 'assignSubject'}"
+                            data-ng-click="lightbox.state='assignSubject'">
                             <i18n>exercizer.scheduled.subject.to</i18n>
                         </a>
 
                     </li>
                     <li>
-                        <a  data-ng-class="{'selected' : state == 'option'}"
-                            data-ng-click="state='option'">
+                        <a  data-ng-class="{'selected' : lightbox.state == 'option'}"
+                            data-ng-click="lightbox.state='option'">
                             <i18n>exercizer.scheduled.subject.option</i18n>
                         </a>
 
                     </li>
                     <li>
-                        <a  data-ng-class="{'selected' : state == 'schedule'}"
-                            data-ng-click="state='schedule'">
+                        <a  data-ng-class="{'selected' : lightbox.state == 'schedule'}"
+                            data-ng-click="lightbox.state='schedule'">
                             <i18n>exercizer.validate</i18n>
                         </a>
 
@@ -30,7 +30,7 @@
             </nav>
         </div>
         <div class="nine cell">
-            <div data-ng-show="state == 'assignSubject'">
+            <div data-ng-show="lightbox.state == 'assignSubject'">
                 <div class="row">
                     <h4><i18n>exercizer.scheduled.subject.search</i18n></h4>
                     <input type="text" class="twelve cell" ng-model="search.search" autofocus ng-change="updateFoundUsersGroups()" id="to-users" />
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div class="row vertical-spacing">
-                    <button class="right-magnet cell" data-ng-click="state = 'option'">
+                    <button class="right-magnet cell" data-ng-click="lightbox.state = 'option'">
                         <i18n>exercizer.next</i18n>
                     </button>
                     <button class="cancel right-magnet cell" data-ng-click="hide()">
@@ -76,11 +76,11 @@
                 </div>
             </div>
 
-            <div data-ng-show="state == 'option'">
+            <div data-ng-show="lightbox.state == 'option'">
                 <div class="row">
                     <h4><i18n>exercizer.scheduled.subject.option</i18n></h4>
                 </div>
-                <div data-ng-if="!isSimpleSubject && isDisplayed">
+                <div data-ng-if="!isSimpleSubject && lightbox.isDisplayed">
                     <div class="row">
                         <div class="six cell"><span> <i18n>exercizer.scheduled.subject.start</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.begin_date"  class="six cell"></date-picker>
@@ -105,7 +105,7 @@
                         <span><i18n>exercizer.minute</i18n></span>
                     </div>
                 </div>
-                <div data-ng-if="isSimpleSubject && isDisplayed">
+                <div data-ng-if="isSimpleSubject && lightbox.isDisplayed">
                     <div class="row">
                         <div class="six cell"><span><i18n>exercizer.scheduled.simple.subject.start</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.begin_date"  class="six cell"></date-picker>
@@ -120,16 +120,16 @@
                     </div>
                 </div>
                 <div class="row vertical-spacing">
-                    <button class="right-magnet cell" data-ng-click="state = 'schedule'">
+                    <button class="right-magnet cell" data-ng-click="lightbox.state = 'schedule'">
                         <i18n>exercizer.next</i18n>
                     </button>
-                    <button class="flat-button right-magnet cell" data-ng-click="state = 'assignSubject'">
+                    <button class="flat-button right-magnet cell" data-ng-click="lightbox.state = 'assignSubject'">
                         <i18n>exercizer.previous</i18n>
                     </button>
                 </div>
             </div>
 
-            <div data-ng-show="state == 'schedule'">
+            <div data-ng-show="lightbox.state == 'schedule'">
                 <div class="row vertical-spacing">
                     <div class="warning" translate content="[[isSimpleSubject ? 'exercizer.schedule.simple.confirm' : 'exercizer.schedule.interactive.confirm']]"></div>
                 </div>
@@ -137,7 +137,7 @@
                     <button class="right-magnet cell" data-ng-click="scheduleSubject()" data-ng-disabled="scheduleSubjectInProgress">
                         <i18n>exercizer.schedule</i18n>
                     </button>
-                    <button class="flat-button right-magnet cell" data-ng-click="state = 'option'">
+                    <button class="flat-button right-magnet cell" data-ng-click="lightbox.state = 'option'">
                         <i18n>exercizer.previous</i18n>
                     </button>
                 </div>
