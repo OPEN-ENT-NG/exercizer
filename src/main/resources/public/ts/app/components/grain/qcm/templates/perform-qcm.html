@@ -4,9 +4,9 @@
     <div class="row vertical-spacing">
         <div class="row" data-ng-repeat="filled_answer in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list track by $index">
             <div class="cell">
-                <label class="checkbox">
+                <label class="checkbox" style="line-height: 30px;">
                     <input type="checkbox" data-ng-model="filled_answer.isChecked" data-ng-change="updateGrainCopy()" />
-                    <span></span>
+                    <span style="vertical-align:middle"></span>
                 </label>
             </div>
             <div class="cell eleven">
