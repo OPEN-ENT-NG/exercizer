@@ -150,7 +150,7 @@ export class GrainService implements IGrainService {
 
             if (duplicatedGrain.grain_type_id > 3) {
                 if (angular.isUndefined(duplicatedGrain.grain_data.title)) {
-                    duplicatedGrain.grain_data.title = this._grainTypeService.getById(duplicatedGrain.grain_type_id).public_name + idiom.translate('exercizer.grain.title.copySuffix');
+                    duplicatedGrain.grain_data.title = idiom.translate(this._grainTypeService.getById(duplicatedGrain.grain_type_id).public_name) + idiom.translate('exercizer.grain.title.copySuffix');
                 } else {
                     duplicatedGrain.grain_data.title += idiom.translate('exercizer.grain.title.copySuffix');
                 }

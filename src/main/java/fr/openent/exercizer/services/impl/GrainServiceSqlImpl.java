@@ -19,8 +19,10 @@
 
 package fr.openent.exercizer.services.impl;
 
+import fr.openent.exercizer.controllers.SubjectController;
 import fr.openent.exercizer.services.IGrainService;
 import fr.wseduc.webutils.Either;
+import fr.wseduc.webutils.I18n;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
@@ -31,6 +33,8 @@ import org.vertx.java.core.json.JsonObject;
 import java.util.List;
 
 public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IGrainService {
+
+    private static final I18n i18n = I18n.getInstance();
 
     public GrainServiceSqlImpl() {
         super("exercizer", "grain");
@@ -111,7 +115,8 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
     	super.list("r", joins, null, null, null, null, handler);
     }
 
-    public void duplicateGrainIntoSubject(final Long subjectId, final JsonArray grainIdJa, final String titleSuffix, final Handler<Either<String, JsonObject>> handler) {
+    public void duplicateGrainIntoSubject(final Long subjectId, final JsonArray grainIdJa, final String host, final String acceptLanguage, final Handler<Either<String, JsonObject>> handler) {
+
         //TODO normalize the data model to create a title relational field (grain_data must be opaque),
         //Not needed anymore to look for grains, use of insert / select query with case when for title
         final Object[] grainIds = grainIdJa.toArray();
@@ -123,7 +128,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
             public void handle(Either<String, JsonArray> event) {
                 if (event.isRight()) {
                     final JsonArray ja = event.right().getValue();
-                    duplicationGrain(ja, subjectId, titleSuffix, handler);
+                    duplicationGrain(ja, subjectId, host, acceptLanguage, handler);
                 } else {
                     handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
                 }
@@ -131,7 +136,9 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
         }));
     }
 
-    private void duplicationGrain(final JsonArray grainJa, final Long subjectId, final String titleSuffix, final Handler<Either<String, JsonObject>> handler) {
+    private void duplicationGrain(final JsonArray grainJa, final Long subjectId, final String host, final String acceptLanguage, final Handler<Either<String, JsonObject>> handler) {
+
+        final String titleSuffix = i18n.translate("exercizer.grain.title.copySuffix", host, acceptLanguage);
         final SqlStatementsBuilder s = new SqlStatementsBuilder();
 
         final String queryNewOrderBy = "(SELECT max(gr.order_by) + 1 FROM "+ resourceTable + " as gr WHERE gr.subject_id=?)";
@@ -143,7 +150,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
             //set title suffix
             final JsonObject grainData = new JsonObject(grainJo.getString("grain_data"));
             if (grainJo.getLong("grain_type_id") > 3) {
-                grainData.putString("title", grainData.getString("title", grainJo.getString("default_title")) + titleSuffix);
+                grainData.putString("title", grainData.getString("title", i18n.translate(grainJo.getString("default_title"), host, acceptLanguage)) + titleSuffix);
             }
             final JsonArray values = new JsonArray();
             values.addNumber(subjectId).addNumber(grainJo.getNumber("grain_type_id")).addNumber(subjectId).add(grainData);

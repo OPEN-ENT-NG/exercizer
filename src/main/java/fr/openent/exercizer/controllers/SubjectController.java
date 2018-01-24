@@ -734,8 +734,7 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, pathPrefix + "grainIds",new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject data) {
-							final String titleSuffix = i18n.translate("exercizer.grain.title.copySuffix", Renders.getHost(request), I18n.acceptLanguage(request));
-							grainService.duplicateGrainIntoSubject(subjectId, data.getArray("grainIds"), titleSuffix, new Handler<Either<String, JsonObject>>() {
+							grainService.duplicateGrainIntoSubject(subjectId, data.getArray("grainIds"), Renders.getHost(request), I18n.acceptLanguage(request), new Handler<Either<String, JsonObject>>() {
 								@Override
 								public void handle(Either<String, JsonObject> event) {
 									if (event.isRight()) {
