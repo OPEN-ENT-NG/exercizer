@@ -25,10 +25,7 @@ import fr.openent.exercizer.filters.SubjectScheduledOwner;
 import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.openent.exercizer.services.impl.SubjectScheduledServiceSqlImpl;
 import fr.openent.exercizer.utils.GroupUtils;
-import fr.wseduc.rs.ApiDoc;
-import fr.wseduc.rs.Get;
-import fr.wseduc.rs.Post;
-import fr.wseduc.rs.Put;
+import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.Either;
@@ -92,6 +89,56 @@ public class SubjectScheduledController extends ControllerHelper {
 					unauthorized(request);
 				}
 
+			}
+		});
+	}
+
+	@Delete("/unschedule-subject/:id")
+	@ApiDoc("Unschedules a subject.")
+	@ResourceFilter(SubjectScheduledOwner.class)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
+	public void unSchedule(final HttpServerRequest request) {
+		final Long subjectScheduledId;
+		try {
+			subjectScheduledId = Long.parseLong(request.params().get("id"));
+		}catch (NumberFormatException e) {
+			badRequest(request, e.getMessage());
+			return;
+		}
+
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					//find subject title and members of scheduled subject for notification
+					subjectScheduledService.findUnscheduledData(subjectScheduledId, new Handler<Either<String, JsonObject>>() {
+						@Override
+						public void handle(Either<String, JsonObject> event) {
+							if (event.isLeft()) {
+								leftToResponse(request, event.left());
+								return;
+							}
+
+							final JsonObject jo = event.right().getValue();
+							final List<String> recipientSet = jo.getArray("owners", new JsonArray()).toList();
+							subjectScheduledService.unSchedule(subjectScheduledId, new Handler<Either<String, JsonObject>>() {
+								@Override
+								public void handle(Either<String, JsonObject> either) {
+									if (either.isLeft()) {
+										leftToResponse(request, either.left());
+										return;
+									}
+
+									Renders.noContent(request);
+									sendNotification(request, "unassigncopy", user, recipientSet, "", jo.getString("title"), jo.getString("due_date"), null);
+								}
+							});
+						}
+					});
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
 			}
 		});
 	}
@@ -267,18 +314,9 @@ public class SubjectScheduledController extends ControllerHelper {
 			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
 					if (isNotify) {
-						Date dueDate = new Date();
-						try {
-							dueDate = DateUtils.parseTimestampWithoutTimezone(scheduledSubject.getString("dueDate"));
-						} catch (ParseException e) {
-							log.error("can't parse dueDate of scheduled subject", e);
-						}
-
-						final String dueDateFormat = DateUtils.format(dueDate);
 						final String subjectName = scheduledSubject.getString("subjectTitle");
-
 						final List<String> recipientSet = new ArrayList<String>(userIds);
-						sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName, dueDateFormat, null);
+						sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName, scheduledSubject.getString("dueDate"), null);
 					}
 
 					Renders.created(request);
@@ -306,18 +344,29 @@ public class SubjectScheduledController extends ControllerHelper {
 			final List<String> recipientSet,
 			final String relativeUri,
 			final String subjectName,
-			final String dueDate,
+			final String date,
 			final String idResource
 			) {
-		JsonObject params = new JsonObject();
-		params.putString("uri", pathPrefix + "#" + relativeUri);
-        params.putString("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
-		params.putString("username", user.getUsername());
-		params.putString("subjectName", subjectName);
-		params.putString("dueDate", dueDate);
-		params.putString("resourceUri", params.getString("uri"));
-		params.putBoolean("disableAntiFlood", true);
-		this.notification.notifyTimeline(request,"exercizer." + notificationName, user, recipientSet, idResource, params);
+		if (recipientSet.size() > 0) {
+			Date dueDate = new Date();
+			try {
+				dueDate = DateUtils.parseTimestampWithoutTimezone(date);
+			} catch (ParseException e) {
+				log.error("can't parse dueDate of scheduled subject", e);
+			}
+
+			final String dueDateFormat = DateUtils.format(dueDate);
+
+			JsonObject params = new JsonObject();
+			params.putString("uri", pathPrefix + "#" + relativeUri);
+			params.putString("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
+			params.putString("username", user.getUsername());
+			params.putString("subjectName", subjectName);
+			params.putString("dueDate", dueDateFormat);
+			params.putString("resourceUri", params.getString("uri", ""));
+			params.putBoolean("disableAntiFlood", true);
+			this.notification.notifyTimeline(request, "exercizer." + notificationName, user, recipientSet, idResource, params);
+		}
 	}
 
 	@Post("/subject-scheduled/:id")

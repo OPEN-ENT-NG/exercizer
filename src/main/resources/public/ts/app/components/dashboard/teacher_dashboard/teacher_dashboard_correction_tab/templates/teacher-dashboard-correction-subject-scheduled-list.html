@@ -140,7 +140,7 @@
                                                     data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
 
                                             </div>
-                                            <div data-ng-if="subjectScheduled.type !== 'simple'" class="right-magnet">
+                                            <div class="right-magnet">
                                                 <input class="cell right-magnet" type="checkbox" data-ng-model="subjectScheduled.selected" data-ng-change="selectsubjectScheduled(subjectScheduled)"/>
                                             </div>
 
@@ -165,7 +165,7 @@
                                 <tbody>
                                 <tr data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState(search.filter) | orderBy : orderByCopyListModificationDate : true)">
                                     <td>
-                                        <div data-ng-if="subjectScheduled.type !== 'simple'">
+                                        <div>
                                             <input class="cell" type="checkbox" data-ng-model="subjectScheduled.selected" data-ng-change="selectsubjectScheduled(subjectScheduled)"/>
                                         </div>
                                         <div class="cell">
@@ -220,13 +220,32 @@
     </section>
     <subject-scheduled-assign-at></subject-scheduled-assign-at>
 
-    <section class="toggle-buttons" data-ng-show="selectedSubjectsScheduled.length > 0">
+    <section class="toggle-buttons" data-ng-show="toggle.show">
         <div class="toggle">
             <div class="row">
-                <button ng-click="exportSelected()"><i18n>exercizer.export</i18n></button>
-
+                <div class="cell" data-ng-show="toggle.showExport">
+                    <button ng-click="exportSelected()"><i18n>exercizer.export</i18n></button>
+                </div>
+                <div class="cell" data-ng-show="toggle.showUnScheduled">
+                    <button data-ng-click="lightbox.isDisplayed=true"><i18n>exercizer.unschedule</i18n></button>
+                </div>
             </div>
         </div>
     </section>
+
+    <lightbox show="lightbox.isDisplayed" on-close="lightbox.isDisplayed=false">
+        <h2><i18n>exercizer.unschedule</i18n></h2>
+        <p><i18n>exercizer.unschedule.confirm</i18n></p>
+
+        <ul data-ng-show="subjectList.length !=0">
+            <li>
+                [[ selectedSubjectsScheduled[0].title ]]
+            </li>
+        </ul>
+        <div class="row">
+            <button data-ng-click="unScheduled()" class="right-magnet"><i18n>exercizer.unschedule</i18n></button>
+            <button data-ng-click="lightbox.isDisplayed=false" class="cancel right-magnet"><i18n>exercizer.cancel</i18n></button>
+        </div>
+    </lightbox>
 
 </div>

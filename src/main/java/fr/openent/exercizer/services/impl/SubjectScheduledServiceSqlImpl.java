@@ -216,6 +216,28 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		}));
 	}
 
+	/**
+	 * @see fr.openent.exercizer.services.ISubjectScheduledService
+	 */
+	@Override
+	public void unSchedule(final Long subjectScheduledId, final Handler<Either<String, JsonObject>> handler) {
+		final String query = "DELETE FROM " + schema + "subject_scheduled WHERE id = ?";
+
+		sql.prepared(query, new JsonArray().add(subjectScheduledId), SqlResult.validRowsResultHandler(handler));
+
+	}
+
+	/**
+	 * @see fr.openent.exercizer.services.ISubjectScheduledService
+	 */
+	public void findUnscheduledData(final Long subjectScheduledId, final Handler<Either<String, JsonObject>> handler) {
+		final String query = "SELECT ss.title, ss.due_date, array_to_json(array_agg(sc.owner)) AS owners FROM " +
+				schema + "subject_scheduled AS ss INNER JOIN " + schema + "subject_copy AS sc ON ss.id=sc.subject_scheduled_id " +
+				"WHERE ss.id = ? GROUP BY ss.title, ss.due_date";
+
+		sql.prepared(query, new JsonArray().add(subjectScheduledId), SqlResult.validUniqueResultHandler(handler, "owners"));
+	}
+
 	private Map<Number, JsonObject> transformJaInMapCustomCopyData(JsonArray grainsCustomCopyData) {
 		final Map<Number, JsonObject> mapIdGrainCustomCopyData = new HashMap<>();
 		for (int i=0;i<grainsCustomCopyData.size();i++) {

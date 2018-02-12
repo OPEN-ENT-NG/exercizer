@@ -11,6 +11,7 @@ export interface ISubjectScheduledService {
     resolve(isTeacher:boolean): Promise<boolean>;
     persist(subjectScheduled:ISubjectScheduled):Promise<ISubjectScheduled>;
     schedule(subjectScheduled:ISubjectScheduled, grainsCustomCopyData:IGrainCustomCopy[]):Promise<ISubjectScheduled>
+    unScheduled(subjectScheduled:ISubjectScheduled):Promise<ISubjectScheduled>;
     createFromSubject(subject:ISubject):ISubjectScheduled;
     getList():ISubjectScheduled[];
     getById(id:number):ISubjectScheduled;
@@ -216,6 +217,30 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
+    public unScheduled = function(subjectScheduled:ISubjectScheduled):Promise<ISubjectScheduled> {
+        var self = this,
+            deferred = this._$q.defer();
+
+        let request = {
+            method: 'DELETE',
+            url: 'exercizer/unschedule-subject/' + subjectScheduled.id
+        };
+
+        this._$http(request).then(
+            function(response) {
+                delete self._listMappedById;
+                deferred.resolve();
+            },
+            function(e) {
+                if (e.status == 400) {
+                    deferred.reject(e.data.error);
+                } else {
+                    deferred.reject('exercizer.error');
+                }
+            }
+        );
+        return deferred.promise;
+    };
 
     public createFromSubject = function(subject:ISubject):ISubjectScheduled {
         var subjectScheduled = new SubjectScheduled();

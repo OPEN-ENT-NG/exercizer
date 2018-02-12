@@ -61,6 +61,22 @@ public interface ISubjectScheduledService {
     void schedule(final JsonObject scheduledSubject, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
     /**
+     * find data of subject scheduled.
+     *
+     * @param subjectScheduledId the id
+     * @param handler the handler
+     */
+    void findUnscheduledData(final Long subjectScheduledId, final Handler<Either<String, JsonObject>> handler);
+
+    /**
+     * unScheduled a subject.
+     *
+     * @param subjectScheduledId the id
+     * @param handler the handler
+     */
+    void unSchedule(final Long subjectScheduledId, final Handler<Either<String, JsonObject>> handler);
+
+    /**
      * Schedules a simple subject.
      *
      * @param scheduledSubject the resource

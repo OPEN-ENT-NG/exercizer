@@ -1,6 +1,7 @@
 {
     "exercizer": "Exercices et évaluations",
     "exercizer.assigncopy": "Assignation de copie",
+    "exercizer.unassigncopy": "Retrait de copie",
     "exercizer.submitcopy": "Rendu de copie",
     "exercizer.submitcopy.body": "a rendu sa copie du sujet",
     "exercizer.correctcopy": "Correction de copie",
@@ -15,5 +16,7 @@
     "exercizer.homeworkreminder.body": "Rappel : La date limite de rendu du devoir",
     "exercizer.homeworkreminder.body.b": "est le",
     "exercizer.assigncopy.body" : "vous a attribué le sujet",
-    "exercizer.assigncopy.body.b" : "à rendre pour le"
+    "exercizer.assigncopy.body.b" : "à rendre pour le",
+    "exercizer.unassigncopy.body" : "a déprogrammmé le sujet",
+    "exercizer.unassigncopy.body.b" : "qui était à rendre le"
 }
