@@ -27,12 +27,12 @@ import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.logging.Logger;
-import org.vertx.java.core.logging.impl.LoggerFactory;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 
 import java.util.*;
 
@@ -51,7 +51,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         JsonObject folder = ResourceParser.beforeAny(resource);
-        folder.putString("owner", user.getUserId());
+        folder.put("owner", user.getUserId());
         super.persist(folder, handler);
     }
 
@@ -69,12 +69,12 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
 
         final String findSubjectQuery =
                 "WITH RECURSIVE folder(folder_id) AS(" +
-                "SELECT id FROM " + resourceTable + " AS f WHERE f.id IN " + Sql.listPrepared(folderIds.toArray()) +
+                "SELECT id FROM " + resourceTable + " AS f WHERE f.id IN " + Sql.listPrepared(folderIds.getList()) +
                 " UNION " +
                 "SELECT id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
                 "SELECT s.id FROM folder AS f INNER JOIN " + schema + "subject AS s ON (f.folder_id=s.folder_id)";
 
-        sql.prepared(findSubjectQuery, new JsonArray(folderIds.toArray()), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
+        sql.prepared(findSubjectQuery, new JsonArray(folderIds.getList()), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
             @Override
             public void handle(Either<String, JsonArray> event) {
                 if (event.isRight()) {
@@ -84,14 +84,14 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                     if (values != null && values.size() > 0) {
                         final JsonArray subjectIds = new JsonArray();
                         for (int i=0;i<values.size();i++) {
-                            subjectIds.addNumber(values.<JsonObject>get(i).getNumber("id"));
+                            subjectIds.add(values.getJsonObject(i).getLong("id"));
                         }
                         subjectService.removeSubjectsAndGrains(builder, user, subjectIds);
                     }
 
                     //delete cascade
-                    final String removeFolderQuery = "DELETE FROM " + resourceTable + " WHERE id IN " + Sql.listPrepared(folderIds.toArray());
-                    builder.prepared(removeFolderQuery, new JsonArray(folderIds.toArray()));
+                    final String removeFolderQuery = "DELETE FROM " + resourceTable + " WHERE id IN " + Sql.listPrepared(folderIds.getList());
+                    builder.prepared(removeFolderQuery, new JsonArray(folderIds.getList()));
 
                     sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
                 } else {
@@ -110,16 +110,16 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     }
 
     public void checkFolders(JsonObject folder, final Handler<Boolean> handler) {
-        final Number targetFolderId = folder.getNumber("targetFolderId");
-        final JsonArray sourceFoldersIdJa = folder.getArray("ids");
+        final Number targetFolderId = folder.getLong("targetFolderId");
+        final JsonArray sourceFoldersIdJa = folder.getJsonArray("ids");
 
         final String query = "WITH RECURSIVE folder(folder_id) AS(" +
-                "SELECT id FROM " + resourceTable + " AS f WHERE f.id  IN " + Sql.listPrepared(sourceFoldersIdJa.toArray()) +
+                "SELECT id FROM " + resourceTable + " AS f WHERE f.id  IN " + Sql.listPrepared(sourceFoldersIdJa.getList()) +
                 " UNION " +
                 "SELECT id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
                 "SELECT f.folder_id FROM folder AS f WHERE f.folder_id=? ";
 
-        sql.prepared(query, new JsonArray(sourceFoldersIdJa.toArray()).addNumber(targetFolderId), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
+        sql.prepared(query, new JsonArray(sourceFoldersIdJa.getList()).add(targetFolderId), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
             @Override
             public void handle(Either<String, JsonObject> event) {
                 if (event.isRight()) {
@@ -135,14 +135,14 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     public void move(JsonObject folder, final Handler<Either<String, JsonObject>> handler) {
         final Long targetFolderId = folder.getLong("targetFolderId");
 
-        final JsonArray sourceFoldersIdJa = folder.getArray("ids");
+        final JsonArray sourceFoldersIdJa = folder.getJsonArray("ids");
 
-        final String query = "UPDATE " + resourceTable + " SET parent_folder_id=?, modified=NOW() WHERE id IN " + Sql.listPrepared(sourceFoldersIdJa.toArray());
+        final String query = "UPDATE " + resourceTable + " SET parent_folder_id=?, modified=NOW() WHERE id IN " + Sql.listPrepared(sourceFoldersIdJa.getList());
 
-        final JsonArray values = new JsonArray().addNumber(targetFolderId);
+        final JsonArray values = new JsonArray().add(targetFolderId);
         try {
             for (int i=0;i<sourceFoldersIdJa.size();i++) {
-                values.add(Long.parseLong(sourceFoldersIdJa.get(i).toString()));
+                values.add(Long.parseLong(sourceFoldersIdJa.getValue(i).toString()));
             }
         } catch (NumberFormatException e) {
             log.error("Can't cast id of folder", e);
@@ -161,12 +161,12 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     public void duplicateFolders(JsonObject folder, final String folderTitleSuffix, final String subjectTitleSuffix, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         final Long targetFolderId = folder.getLong("targetFolderId");
 
-        final JsonArray sourceFoldersIdJa = folder.getArray("ids");
+        final JsonArray sourceFoldersIdJa = folder.getJsonArray("ids");
         final Set<Long> sourceFoldersIdSet = new HashSet<>();
 
         try {
             for (int i=0;i<sourceFoldersIdJa.size();i++) {
-                final Long sourceFolderId = Long.parseLong(sourceFoldersIdJa.get(i).toString());
+                final Long sourceFolderId = Long.parseLong(sourceFoldersIdJa.getValue(i).toString());
                 sourceFoldersIdSet.add(sourceFolderId);
             }
         } catch (NumberFormatException e) {
@@ -187,10 +187,10 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                     final List<JsonObject> foldersWithSubjects = new ArrayList<JsonObject>();
 
                     for (int i=0;i<results.size();i++) {
-                        final JsonObject jo = results.get(i);
-                        folderIds.add(jo.getNumber("folder_id"));
-                        if (jo.getNumber("id") != null) {
-                            subjectIds.add(jo.getNumber("id"));
+                        final JsonObject jo = results.getJsonObject(i);
+                        folderIds.add(jo.getLong("folder_id"));
+                        if (jo.getLong("id") != null) {
+                            subjectIds.add(jo.getLong("id"));
                         }
                         foldersWithSubjects.add(jo);
                     }
@@ -205,26 +205,26 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                                 int countSetNewFolderId=0;
                                 //matching between old folder id with new folder id and old subject id
                                 for (JsonObject folderSubject : foldersWithSubjects) {
-                                    final Number oldFolderID = folderSubject.getNumber("folder_id");
+                                    final Number oldFolderID = folderSubject.getLong("folder_id");
                                     //avoid the same folder by subject id
                                     if (!mapFolderNewFolder.containsKey(oldFolderID)) {
                                         mapFolderNewFolder.put(oldFolderID, newFolderIds.get(countSetNewFolderId));
                                         countSetNewFolderId++;
                                     }
 
-                                    if (folderSubject.getNumber("id") != null) {
-                                        mapOldSubjectIdOldFolderId.put(folderSubject.getNumber("id"), oldFolderID);
+                                    if (folderSubject.getLong("id") != null) {
+                                        mapOldSubjectIdOldFolderId.put(folderSubject.getLong("id"), oldFolderID);
                                     }
                                 }
 
                                 final SqlStatementsBuilder globalStatements = new SqlStatementsBuilder();
                                 final Set<Number> treatyFolder = new HashSet<Number>();
                                 for (JsonObject folderSubject : foldersWithSubjects) {
-                                    final Number oldFolderId = folderSubject.getNumber("folder_id");
+                                    final Number oldFolderId = folderSubject.getLong("folder_id");
                                     //avoid the same folder by subject id
                                     if (!treatyFolder.contains(oldFolderId)) {
                                         final Number parentId = (sourceFoldersIdSet.contains(oldFolderId)) ? targetFolderId :
-                                                mapFolderNewFolder.get(folderSubject.getNumber("parent_folder_id"));
+                                                mapFolderNewFolder.get(folderSubject.getLong("parent_folder_id"));
                                         duplicateFolder(globalStatements, mapFolderNewFolder.get(oldFolderId), parentId,
                                                 folderSubject.getString("label") + folderTitleSuffix, user.getUserId());
                                         treatyFolder.add(oldFolderId);
@@ -272,12 +272,12 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     private void findSubjectAndFolder(final JsonArray sourceFoldersIdJa, final Handler<Either<String, JsonArray>> handler) {
         //recursive query that retrieves all directories (selected and every son) with potentially related subjects
         final String query = "WITH RECURSIVE folder(folder_id) AS(" +
-                "SELECT id, f.label, f.parent_folder_id FROM " + resourceTable + " AS f WHERE f.id IN " + Sql.listPrepared(sourceFoldersIdJa.toArray()) +
+                "SELECT id, f.label, f.parent_folder_id FROM " + resourceTable + " AS f WHERE f.id IN " + Sql.listPrepared(sourceFoldersIdJa.getList()) +
                 " UNION " +
                 "SELECT id, e.label, e.parent_folder_id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
                 "SELECT f.folder_id, f.label, f.parent_folder_id, s.id FROM folder AS f LEFT JOIN " + schema +
                 "subject AS s ON (f.folder_id=s.folder_id) ORDER BY f.parent_folder_id ASC NULLS FIRST, f.folder_id";
-        sql.prepared(query, new JsonArray(sourceFoldersIdJa.toArray()), SqlResult.validResultHandler(handler));
+        sql.prepared(query, new JsonArray(sourceFoldersIdJa.getList()), SqlResult.validResultHandler(handler));
     }
 
     private void generateId(final Integer number, final String sequence, final Handler<List<Number>> handler) {
@@ -297,7 +297,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                     final JsonArray ja = event.right().getValue();
                     final SqlStatementsBuilder s = new SqlStatementsBuilder();
                     for (int i = 0; i < ja.size(); i++) {
-                        results.add(ja.<JsonArray>get(i).<JsonObject>get(0).getLong("id"));
+                        results.add(ja.getJsonArray(i).getJsonObject(0).getLong("id"));
                     }
                     handler.handle(results);
                 } else {
@@ -311,7 +311,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     private void duplicateFolder(SqlStatementsBuilder s, final Number newFolderId, final Number parentId, final String label, final String userId) {
         final String query = "INSERT INTO " + resourceTable + "(id, parent_folder_id, label, owner) VALUES " +
                 "(?,?,?,?)";
-        s.prepared(query, new JsonArray().addNumber(newFolderId).addNumber(parentId).addString(label).addString(userId));
+        s.prepared(query, new JsonArray().add(newFolderId).add(parentId).add(label).add(userId));
     }
 
     private void duplicationSubject(final SqlStatementsBuilder s, final Number newSubjectId, final Number fromSubjectId,

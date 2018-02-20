@@ -23,9 +23,9 @@ import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectCopyService;
@@ -47,7 +47,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     public void submitCopy(final long id, final Handler<Either<String, JsonObject>> handler) {
         sql.prepared(
                 "UPDATE " + schema + "subject_copy SET submitted_date=NOW() WHERE id = ? RETURNING *",
-                new JsonArray().addNumber(id),
+                new JsonArray().add(id),
                 SqlResult.validUniqueResultHandler(handler)
         );
     }
@@ -176,8 +176,8 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
                         "WHERE id = ? ";
 
         final JsonArray values = new JsonArray();
-        values.addString(fileId);
-        values.addObject(metadata);
+        values.add(fileId);
+        values.add(metadata);
         values.add(Sql.parseId(id));
 
         sql.prepared(query, values, SqlResult.validRowsResultHandler(handler));
@@ -190,8 +190,8 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
                         "WHERE id = ? ";
 
         final JsonArray values = new JsonArray();
-        values.addString(fileId);
-        values.addObject(metadata);
+        values.add(fileId);
+        values.add(metadata);
         values.add(Sql.parseId(id));
 
         sql.prepared(query, values, SqlResult.validRowsResultHandler(handler));
@@ -200,7 +200,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     @Override
     public void getOwners(final JsonArray ids, final Handler<Either<String, JsonArray>> handler) {
         final String query = "SELECT sc.owner " +
-                " FROM " + resourceTable + " AS sc WHERE sc.id IN " + Sql.listPrepared(ids.toArray());
+                " FROM " + resourceTable + " AS sc WHERE sc.id IN " + Sql.listPrepared(ids.getList());
 
         sql.prepared(query, ids, SqlResult.validResultHandler(handler));
     }

@@ -19,9 +19,9 @@
 
 package fr.openent.exercizer.services.impl;
 
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import fr.openent.exercizer.services.ISubjectLessonTypeService;
 import fr.wseduc.webutils.Either;
@@ -37,7 +37,7 @@ public class SubjectLessonTypeServiceSqlImpl extends AbstractExercizerServiceSql
 	 */
 	public void list(final Handler<Either<String, JsonArray>> handler) {
 		JsonArray orderBy = new JsonArray();
-		orderBy.addString("ORDER BY r.label ASC");
+		orderBy.add("ORDER BY r.label ASC");
 		super.list("r", null, null, orderBy, null, null, handler);
 	}
 
@@ -45,23 +45,23 @@ public class SubjectLessonTypeServiceSqlImpl extends AbstractExercizerServiceSql
 	 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
 	 */
 	public void listBySubjectIdList(final JsonObject resources, final Handler<Either<String, JsonArray>> handler) {
-		JsonArray subjectIdList = resources.getArray("subject_id_list");
+		JsonArray subjectIdList = resources.getJsonArray("subject_id_list");
 		
 		JsonArray joins = new JsonArray();
-		joins.addString("JOIN exercizer.subject_library_main_information slmi ON r.id = slmi.subject_lesson_type_id");
+		joins.add("JOIN exercizer.subject_library_main_information slmi ON r.id = slmi.subject_lesson_type_id");
 
 		JsonArray filters = new JsonArray();
-		filters.addString("WHERE");
-		filters.addString("slmi.subject_id = " + subjectIdList.get(0));
+		filters.add("WHERE");
+		filters.add("slmi.subject_id = " + subjectIdList.getValue(0));
 
 		for (Object subjectId : subjectIdList) {
-			if (!subjectIdList.get(0).equals(subjectId)) {
-				filters.addString("OR slmi.subject_id = " + subjectId);
+			if (!subjectIdList.getValue(0).equals(subjectId)) {
+				filters.add("OR slmi.subject_id = " + subjectId);
 			}
 		}
 		
 		JsonArray orderBy = new JsonArray();
-		orderBy.addString("ORDER BY slmi.subject_id ASC");
+		orderBy.add("ORDER BY slmi.subject_id ASC");
 
 		super.list("r", joins, filters, orderBy, null, null, handler);
 	}

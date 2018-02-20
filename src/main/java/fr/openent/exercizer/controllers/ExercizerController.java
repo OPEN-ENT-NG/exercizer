@@ -20,7 +20,7 @@
 package fr.openent.exercizer.controllers;
 
 import org.entcore.common.controller.ControllerHelper;
-import org.vertx.java.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerRequest;
 
 import fr.wseduc.rs.*;
 import fr.wseduc.security.SecuredAction;

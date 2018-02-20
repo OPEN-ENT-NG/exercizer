@@ -26,12 +26,12 @@ import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.logging.Logger;
-import org.vertx.java.core.logging.impl.LoggerFactory;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +49,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	@Override
 	public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		JsonObject subject = ResourceParser.beforeAny(resource);
-		subject.putString("owner", user.getUserId()); 
-		subject.putString("owner_username", user.getUsername());
+		subject.put("owner", user.getUserId()); 
+		subject.put("owner_username", user.getUsername());
 		super.persist(subject, user, handler);
 	}
 
@@ -68,22 +68,22 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 									final String userQuery = "SELECT " + schema + "merge_users(?,?)";
 									builder.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
 
-									final JsonObject subject = ResourceParser.beforeAny(resource.getObject("subject"));
-									subject.putString("owner", user.getUserId());
-									subject.putString("owner_username", user.getUsername());
-									subject.putNumber("id", newSubjectId);
+									final JsonObject subject = ResourceParser.beforeAny(resource.getJsonObject("subject"));
+									subject.put("owner", user.getUserId());
+									subject.put("owner_username", user.getUsername());
+									subject.put("id", newSubjectId);
 									builder.insert(resourceTable, subject, "*");
 
-									final JsonArray grains = resource.getArray("grains");
+									final JsonArray grains = resource.getJsonArray("grains");
 									for (int i=0;i<grains.size();i++) {
-										final JsonObject grain = grains.get(i);
+										final JsonObject grain = grains.getJsonObject(i);
 										final String query = "INSERT INTO " + schema + "grain (subject_id, grain_type_id, order_by, grain_data) VALUES (?,?,?,?)";
 										builder.prepared(query, new JsonArray().add(newSubjectId).add(grain.getLong("grain_type_id")).add(grain.getInteger("order_by")).add(grain.getValue("grain_data")));
 									}
 
 									String updateSubjectQuery = "UPDATE " + resourceTable + " SET max_score=(SELECT sum(cast(g.grain_data::json->>'max_score' as double precision)) FROM " +
 											schema + "grain as g WHERE g.subject_id=?) WHERE id=?";
-									builder.prepared(updateSubjectQuery, new JsonArray().addNumber(newSubjectId).addNumber(newSubjectId));
+									builder.prepared(updateSubjectQuery, new JsonArray().add(newSubjectId).add(newSubjectId));
 
 									sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(1, handler));
 								} else {
@@ -117,15 +117,15 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 
 	public void removeSubjectsAndGrains(SqlStatementsBuilder builder, final UserInfos user, JsonArray subjectIds) {
 		final String subjectsQuery = "UPDATE " + resourceTable + " SET folder_id=null, is_deleted=true, owner=?, owner_username=?, modified=NOW() WHERE id IN " +
-				Sql.listPrepared(subjectIds.toArray());
+				Sql.listPrepared(subjectIds.getList());
 
 		final JsonArray subjectsValues = new JsonArray();
 
-		subjectsValues.addString(user.getUserId());
-		subjectsValues.addString(user.getUsername());
+		subjectsValues.add(user.getUserId());
+		subjectsValues.add(user.getUsername());
 
 		for (int i=0;i<subjectIds.size();i++) {
-			subjectsValues.add(subjectIds.get(i));
+			subjectsValues.add(subjectIds.getValue(i));
 		}
 
 		builder.prepared(subjectsQuery, subjectsValues);
@@ -133,9 +133,9 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	}
 
 	private void removeGrains(SqlStatementsBuilder builder, JsonArray subjectIds) {
-		final String grainsQuery = "DELETE FROM " + schema + "grain WHERE subject_id IN " + Sql.listPrepared(subjectIds.toArray());
+		final String grainsQuery = "DELETE FROM " + schema + "grain WHERE subject_id IN " + Sql.listPrepared(subjectIds.getList());
 
-		builder.prepared(grainsQuery, new JsonArray(subjectIds.toArray()));
+		builder.prepared(grainsQuery, new JsonArray(subjectIds.getList()));
 	}
 
 	/**
@@ -144,8 +144,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	@Override
 	public void list(final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
 		JsonArray filters = new JsonArray();
-		filters.addString("is_library_subject = false");
-		filters.addString("is_deleted = false");
+		filters.add("is_library_subject = false");
+		filters.add("is_deleted = false");
 		super.list(filters, groupsAndUserIds, user, handler);
 	}
 	
@@ -155,7 +155,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	@Override
 	public void listAll(final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
 		JsonArray filters = new JsonArray();
-		filters.addString("is_library_subject = false");
+		filters.add("is_library_subject = false");
 		super.list(filters, groupsAndUserIds, user, handler);
 	}
 	
@@ -166,45 +166,45 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	public void listLibrarySubject(final JsonObject searchData, final Handler<Either<String, JsonArray>> handler) {
 		JsonArray joins = new JsonArray();
 
-		if (searchData.containsField("subject_lesson_type_id") || searchData.containsField("subject_lesson_level_id")) {
+		if (searchData.containsKey("subject_lesson_type_id") || searchData.containsKey("subject_lesson_level_id")) {
 
-			joins.addString("JOIN exercizer.subject_libray_main_information slmi ON r.id = slmi.subject_id");
+			joins.add("JOIN exercizer.subject_libray_main_information slmi ON r.id = slmi.subject_id");
 
-			if (searchData.containsField("subject_lesson_type_id")) {
-				joins.addString("AND slmi.subject_lesson_type_id = " + searchData.getString("subject_lesson_type_id"));
+			if (searchData.containsKey("subject_lesson_type_id")) {
+				joins.add("AND slmi.subject_lesson_type_id = " + searchData.getString("subject_lesson_type_id"));
 			}
 			
-			if (searchData.containsField("subject_lesson_level_id")) {
-				joins.addString("AND slmi.subject_lesson_level_id = " + searchData.getString("subject_lesson_level_id"));
+			if (searchData.containsKey("subject_lesson_level_id")) {
+				joins.add("AND slmi.subject_lesson_level_id = " + searchData.getString("subject_lesson_level_id"));
 			}
 		}
 
-		if (searchData.containsField("subject_tags")) {
-			JsonArray subjectTags = searchData.getArray("subject_tags");
+		if (searchData.containsKey("subject_tags")) {
+			JsonArray subjectTags = searchData.getJsonArray("subject_tags");
 			
-			joins.addString("JOIN exercizer.subject_libray_tag slt ON r.id = slt.subject_id");
+			joins.add("JOIN exercizer.subject_libray_tag slt ON r.id = slt.subject_id");
 			
 			for (Object subjectTag : subjectTags) {
-				joins.addString("AND slt.subject_tag_id = " + subjectTag);
+				joins.add("AND slt.subject_tag_id = " + subjectTag);
 			}
 		}
 
 		JsonArray filters = new JsonArray();
-		filters.addString("WHERE");
-		filters.addString("r.is_library_subject = true");
-		filters.addString("AND r.is_deleted = false");
+		filters.add("WHERE");
+		filters.add("r.is_library_subject = true");
+		filters.add("AND r.is_deleted = false");
 		
-		if (searchData.containsField("subject_title")) {
-			filters.addString("AND r.title ~* '.*" + searchData.getString("subject_title") + ".*'");
+		if (searchData.containsKey("subject_title")) {
+			filters.add("AND r.title ~* '.*" + searchData.getString("subject_title") + ".*'");
 		}
 
 		JsonArray orderBy = new JsonArray();
-		orderBy.addString("ORDER BY r.created DESC");
+		orderBy.add("ORDER BY r.created DESC");
 		
 		String limit = null;
 		String offset = null;
 		
-		if (searchData.containsField("limit") && searchData.containsField("offset")) {
+		if (searchData.containsKey("limit") && searchData.containsKey("offset")) {
 			limit = searchData.getString("limit");
 			offset = searchData.getString("offset");
 		}
@@ -219,36 +219,36 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	public void countLibrarySubject(final JsonObject searchData, final Handler<Either<String, JsonObject>> handler) {
 		JsonArray joins = new JsonArray();
 
-		if (searchData.containsField("subject_lesson_type_id") || searchData.containsField("subject_lesson_level_id")) {
+		if (searchData.containsKey("subject_lesson_type_id") || searchData.containsKey("subject_lesson_level_id")) {
 
-			joins.addString("JOIN exercizer.subject_libray_main_information slmi ON r.id = slmi.subject_id");
+			joins.add("JOIN exercizer.subject_libray_main_information slmi ON r.id = slmi.subject_id");
 
-			if (searchData.containsField("subject_lesson_type_id")) {
-				joins.addString("AND slmi.subject_lesson_type_id = " + searchData.getString("subject_lesson_type_id"));
+			if (searchData.containsKey("subject_lesson_type_id")) {
+				joins.add("AND slmi.subject_lesson_type_id = " + searchData.getString("subject_lesson_type_id"));
 			}
 			
-			if (searchData.containsField("subject_lesson_level_id")) {
-				joins.addString("AND slmi.subject_lesson_level_id = " + searchData.getString("subject_lesson_level_id"));
+			if (searchData.containsKey("subject_lesson_level_id")) {
+				joins.add("AND slmi.subject_lesson_level_id = " + searchData.getString("subject_lesson_level_id"));
 			}
 		}
 
-		if (searchData.containsField("subject_tags")) {
-			JsonArray subjectTags = searchData.getArray("subject_tags");
+		if (searchData.containsKey("subject_tags")) {
+			JsonArray subjectTags = searchData.getJsonArray("subject_tags");
 			
-			joins.addString("JOIN exercizer.subject_libray_tag slt ON r.id = slt.subject_id");
+			joins.add("JOIN exercizer.subject_libray_tag slt ON r.id = slt.subject_id");
 			
 			for (Object subjectTag : subjectTags) {
-				joins.addString("AND slt.subject_tag_id = " + subjectTag);
+				joins.add("AND slt.subject_tag_id = " + subjectTag);
 			}
 		}
 
 		JsonArray filters = new JsonArray();
-		filters.addString("WHERE");
-		filters.addString("r.is_library_subject = true");
-		filters.addString("AND r.is_deleted = false");
+		filters.add("WHERE");
+		filters.add("r.is_library_subject = true");
+		filters.add("AND r.is_deleted = false");
 		
-		if (searchData.containsField("subject_title")) {
-			filters.addString("AND r.title ~* '.*" + searchData.getString("subject_title") + ".*'");
+		if (searchData.containsKey("subject_title")) {
+			filters.add("AND r.title ~* '.*" + searchData.getString("subject_title") + ".*'");
 		}
 		
 		super.count("r", joins, filters, handler);
@@ -264,13 +264,13 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
     }
 
 	public void move(final JsonArray subjectIds, final Long targetFolderId, final Handler<Either<String, JsonObject>> handler) {
-		final String query = "UPDATE " + resourceTable + " SET folder_id=?, modified=NOW() WHERE id IN " + Sql.listPrepared(subjectIds.toArray());
+		final String query = "UPDATE " + resourceTable + " SET folder_id=?, modified=NOW() WHERE id IN " + Sql.listPrepared(subjectIds.getList());
 
-		final JsonArray values = new JsonArray().addNumber(targetFolderId);
+		final JsonArray values = new JsonArray().add(targetFolderId);
 
 		try {
 			for (int i = 0; i < subjectIds.size(); i++) {
-				values.addNumber(Long.parseLong(subjectIds.get(i).toString()));
+				values.add(Long.parseLong(subjectIds.getValue(i).toString()));
 			}
 		} catch (NumberFormatException e) {
 			log.error("Can't cast id of subject", e);
@@ -296,7 +296,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 			try {
 				for (int i = 0; i < subjectIds.size(); i++) {
 					sIds.raw(queryNewSubjectId);
-					ids.add(Long.parseLong(subjectIds.get(i).toString()));
+					ids.add(Long.parseLong(subjectIds.getValue(i).toString()));
 				}
 			} catch (NumberFormatException e) {
 				log.error("Can't cast id of subject", e);
@@ -311,7 +311,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 						final JsonArray ja = event.right().getValue();
 						final SqlStatementsBuilder s = new SqlStatementsBuilder();
 						for (int i = 0; i < ja.size(); i++) {
-							final Long newSubjectId = ja.<JsonArray>get(i).<JsonObject>get(0).getLong("id");
+							final Long newSubjectId = ja.getJsonArray(i).getJsonObject(0).getLong("id");
 							final Long fromSubjectId = ids.get(i);
 							duplicateSubject(s, newSubjectId, fromSubjectId, folderId, user, titleSuffix);
 							duplicationGrain(s, newSubjectId, fromSubjectId);
@@ -374,13 +374,13 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	}
 
 	private void insertSubjectMainInformation(Long newSubjectId, SqlStatementsBuilder s, Long typeId, Long levelId) {
-		s.insert(schema+"subject_library_main_information", new JsonObject().putNumber("subject_id", newSubjectId).putNumber("subject_lesson_type_id", typeId).putNumber("subject_lesson_level_id", levelId));
+		s.insert(schema+"subject_library_main_information", new JsonObject().put("subject_id", newSubjectId).put("subject_lesson_type_id", typeId).put("subject_lesson_level_id", levelId));
 	}
 
 	private void insertSubjectTag(Long newSubjectId, SqlStatementsBuilder s, JsonArray tag) {
 		if (tag != null && tag.size() > 0) {
 			for (int i=0;i<tag.size();i++) {
-				s.insert(schema+ "subject_library_tag", new JsonObject().putNumber("subject_id", newSubjectId).putNumber("subject_tag_id", tag.<JsonObject>get(i).getLong("id")));
+				s.insert(schema+ "subject_library_tag", new JsonObject().put("subject_id", newSubjectId).put("subject_tag_id", tag.getJsonObject(i).getLong("id")));
 			}
 		}
 	}
@@ -394,12 +394,12 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		boolean isNewTag = false;
 		//prepare new Tag
 		for (int i=0; i<tag.size(); i++) {
-			final JsonObject t = tag.get(i);
+			final JsonObject t = tag.getJsonObject(i);
 			if (t.getLong("id") == null) {
-				tagStatements.insert(schema+"subject_tag", new JsonObject().putString("label", t.getString("label")), "*");
+				tagStatements.insert(schema+"subject_tag", new JsonObject().put("label", t.getString("label")), "*");
 				isNewTag = true;
 			} else {
-				jaResult.addObject(t);
+				jaResult.add(t);
 			}
 		}
 
@@ -409,9 +409,9 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 				public void handle(Either<String, JsonArray> event) {
 					if (event.isRight()) {
 						final JsonArray ja = event.right().getValue();
-						final List<JsonObject> listResult = jaResult.toList();
+						final List<JsonObject> listResult = jaResult.getList();
 						for (int i=0;i<ja.size();i++) {
-							listResult.addAll((ja.<JsonArray>get(i)).toList());
+							listResult.addAll((ja.getJsonArray(i)).getList());
 						}
 
 						handler.handle(new Either.Right<String, JsonArray>(new JsonArray(listResult)));
@@ -463,7 +463,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 
 	public void unpublishLibrary(final Long subjectId, final Handler<Either<String, JsonObject>> handler) {
 		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
-		final JsonArray values = new JsonArray().addNumber(subjectId);
+		final JsonArray values = new JsonArray().add(subjectId);
 
 		final String deleteSubjectTag = "DELETE FROM " + schema + "subject_library_tag WHERE subject_id=?";
 		builder.prepared(deleteSubjectTag, values);

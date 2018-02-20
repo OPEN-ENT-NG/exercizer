@@ -27,9 +27,9 @@ import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
@@ -106,7 +106,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         StringBuilder query = new StringBuilder();
         JsonArray values = new JsonArray();
 
-        for (String attr : resource.getFieldNames()) {
+        for (String attr : resource.fieldNames()) {
                 query.append(attr).append(" = ?, ");
                 values.add(resource.getValue(attr));
         }

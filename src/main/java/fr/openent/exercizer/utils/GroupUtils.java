@@ -20,10 +20,10 @@
 package fr.openent.exercizer.utils;
 
 import org.entcore.common.user.UserUtils;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.EventBus;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public final class GroupUtils {
 				"MATCH (s:Group)<-[:IN]-(visibles) " +
 						"WHERE s.id IN {groupIds} " +
 						"RETURN DISTINCT visibles.id as _id, visibles.lastName + ' ' + visibles.firstName as name ";
-		final JsonObject params = new JsonObject().putArray("groupIds", new JsonArray(groupIds));
+		final JsonObject params = new JsonObject().put("groupIds", new JsonArray(groupIds));
 		UserUtils.findVisibleUsers(eb, userId, true, false, customReturn, params, handler);
 	}
 

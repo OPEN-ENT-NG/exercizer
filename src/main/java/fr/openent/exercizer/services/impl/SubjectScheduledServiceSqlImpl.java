@@ -27,11 +27,11 @@ import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.logging.Logger;
-import org.vertx.java.core.logging.impl.LoggerFactory;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,8 +56,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
     @Override
     public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
     	JsonObject subjectScheduled = ResourceParser.beforeAny(resource);
-    	subjectScheduled.putString("owner", user.getUserId());
-    	subjectScheduled.putString("owner_username", user.getUsername());
+    	subjectScheduled.put("owner", user.getUserId());
+    	subjectScheduled.put("owner_username", user.getUsername());
         super.persist(subjectScheduled, user, handler);
     }
 
@@ -76,8 +76,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 						"WHERE id = ? ";
 
 		final JsonArray values = new JsonArray();
-		values.addString(fileId);
-		values.addObject(metadata);
+		values.add(fileId);
+		values.add(metadata);
 		values.add(Sql.parseId(id));
 
 		builder.prepared(query,values);
@@ -146,10 +146,10 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	public void schedule(final JsonObject scheduledSubject, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		final String queryNewSubjectScheduledId = "SELECT nextval('" + schema + "subject_scheduled_id_seq') as id";
 
-		final Map<Number,JsonObject> mapIdGrainCustomCopyData = transformJaInMapCustomCopyData(scheduledSubject.getArray("grainsCustomCopyData"));
+		final Map<Number,JsonObject> mapIdGrainCustomCopyData = transformJaInMapCustomCopyData(scheduledSubject.getJsonArray("grainsCustomCopyData"));
 
 		final Long fromSubjectId = scheduledSubject.getLong("subjectId");
-		final JsonArray usersJa = scheduledSubject.getArray("users");
+		final JsonArray usersJa = scheduledSubject.getJsonArray("users");
 
 		//to prevent modification of the model and data migration, temporarily, we recovered grains of subject to associate custom data copies.
 		// in the next refactor step, grain entry can directly contain custom_data for copies of grain
@@ -195,7 +195,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		final String queryNewSubjectScheduledId = "SELECT nextval('" + schema + "subject_scheduled_id_seq') as id";
 
 		final Long fromSubjectId = scheduledSubject.getLong("subjectId");
-		final JsonArray usersJa = scheduledSubject.getArray("users");
+		final JsonArray usersJa = scheduledSubject.getJsonArray("users");
 
 		sql.raw(queryNewSubjectScheduledId, SqlResult.validUniqueResultHandler(new Handler<Either<String, JsonObject>>() {
 			@Override
@@ -241,8 +241,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	private Map<Number, JsonObject> transformJaInMapCustomCopyData(JsonArray grainsCustomCopyData) {
 		final Map<Number, JsonObject> mapIdGrainCustomCopyData = new HashMap<>();
 		for (int i=0;i<grainsCustomCopyData.size();i++) {
-			final JsonObject jo = grainsCustomCopyData.get(i);
-			mapIdGrainCustomCopyData.put(jo.getLong("grain_id"), jo.getObject("grain_copy_data"));
+			final JsonObject jo = grainsCustomCopyData.getJsonObject(i);
+			mapIdGrainCustomCopyData.put(jo.getLong("grain_id"), jo.getJsonObject("grain_copy_data"));
 		}
 
 		return mapIdGrainCustomCopyData;
@@ -258,9 +258,9 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		final JsonArray values = new JsonArray();
 		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))
 				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("estimatedDuration", ""))
-				.add(scheduledSubject.getBoolean("isOneShotSubmit")).add(scheduledSubject.getObject("scheduledAt"))
-				.addBoolean(scheduledSubject.getBoolean("isNotify"))
-				.addNumber(subjectId);
+				.add(scheduledSubject.getBoolean("isOneShotSubmit")).add(scheduledSubject.getJsonObject("scheduledAt"))
+				.add(scheduledSubject.getBoolean("isNotify"))
+				.add(subjectId);
 
 		s.prepared(query, values);
 	}
@@ -275,8 +275,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		final JsonArray values = new JsonArray();
 		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))
 				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("correctedDate"))
-				.add(scheduledSubject.getObject("scheduledAt")).addBoolean(scheduledSubject.getBoolean("isNotify"))
-				.addNumber(subjectId);
+				.add(scheduledSubject.getJsonObject("scheduledAt")).add(scheduledSubject.getBoolean("isNotify"))
+				.add(subjectId);
 
 		s.prepared(query, values);
 	}
@@ -290,10 +290,10 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		final JsonArray values = new JsonArray();
 
 		for (int i=0;i<grainJa.size();i++) {
-			final JsonObject grainJo = grainJa.get(i);
+			final JsonObject grainJo = grainJa.getJsonObject(i);
 
-			values.addNumber(subjectScheduledId).addNumber(grainJo.getLong("grain_type_id")).addNumber(grainJo.getInteger("order_by"))
-					.addString(grainJo.getString("grain_data")).add(mapIdGrainCustomCopyData.get(grainJo.getLong("id")));
+			values.add(subjectScheduledId).add(grainJo.getLong("grain_type_id")).add(grainJo.getInteger("order_by"))
+					.add(grainJo.getString("grain_data")).add(mapIdGrainCustomCopyData.get(grainJo.getLong("id")));
 
 			bulkInsertScheduledGrain.append("(?,?,?,?,?),");
 
@@ -334,12 +334,12 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				subjectCopyValues = new JsonArray();
 			}
 
-			final JsonObject joUser =  users.<JsonObject>get(i);
+			final JsonObject joUser =  users.getJsonObject(i);
 			mergeUserQuery.append(schema).append("merge_users(?,?),");
-			mergeUserValues.addString(joUser.getString("_id")).addString(joUser.getString("name"));
+			mergeUserValues.add(joUser.getString("_id")).add(joUser.getString("name"));
 
 			bulkInsertSubjectCopy.append("(?,?,?),");
-			subjectCopyValues.add(subjectScheduledId).addString(joUser.getString("_id")).addString(joUser.getString("name"));
+			subjectCopyValues.add(subjectScheduledId).add(joUser.getString("_id")).add(joUser.getString("name"));
 			batch++;
 		}
 
@@ -395,7 +395,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		for (String id: ids) {
 			values.add(Sql.parseId(id));
 		}
-		values.addString(user.getUserId());
+		values.add(user.getUserId());
 		sql.prepared(query, values, SqlResult.validResultHandler(handler));
 	}
 }

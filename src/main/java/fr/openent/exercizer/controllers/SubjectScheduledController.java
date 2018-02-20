@@ -41,10 +41,10 @@ import org.entcore.common.utils.DateUtils;
 import org.entcore.common.utils.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.text.ParseException;
 import java.util.*;
@@ -120,7 +120,7 @@ public class SubjectScheduledController extends ControllerHelper {
 							}
 
 							final JsonObject jo = event.right().getValue();
-							final List<String> recipientSet = jo.getArray("owners", new JsonArray()).toList();
+							final List<String> recipientSet = jo.getJsonArray("owners", new JsonArray()).getList();
 							subjectScheduledService.unSchedule(subjectScheduledId, new Handler<Either<String, JsonObject>>() {
 								@Override
 								public void handle(Either<String, JsonObject> either) {
@@ -175,18 +175,18 @@ public class SubjectScheduledController extends ControllerHelper {
             @Override
             public void handle(final JsonObject scheduledSubject) {
                 if (checkScheduledSubject(request, scheduledSubject, type)) {
-                    scheduledSubject.putNumber("subjectId", subjectId);
+                    scheduledSubject.put("subjectId", subjectId);
 
-                    final JsonObject scheduledAt = scheduledSubject.getObject("scheduledAt");
-                    final JsonArray usersJa = scheduledAt.getArray("userList", new JsonArray());
-                    final JsonArray groupsJa = scheduledAt.getArray("groupList", new JsonArray());
+                    final JsonObject scheduledAt = scheduledSubject.getJsonObject("scheduledAt");
+                    final JsonArray usersJa = scheduledAt.getJsonArray("userList", new JsonArray());
+                    final JsonArray groupsJa = scheduledAt.getJsonArray("groupList", new JsonArray());
 
                     if (groupsJa.size() > 0) {
                         //find group member
                         Set<String> groupIds = new HashSet<String>();
                         for (int i = 0; i < groupsJa.size(); i++) {
-                            if (!(groupsJa.get(i) instanceof JsonObject)) continue;
-                            groupIds.add(groupsJa.<JsonObject>get(i).getString("_id"));
+                            if (!(groupsJa.getValue(i) instanceof JsonObject)) continue;
+                            groupIds.add(groupsJa.getJsonObject(i).getString("_id"));
                         }
 
                         GroupUtils.findMembers(eb, user.getUserId(), new ArrayList<String>(groupIds), new Handler<JsonArray>() {
@@ -203,7 +203,7 @@ public class SubjectScheduledController extends ControllerHelper {
                                             //members of groups
                                             safeUsersCollections(membersJa, usersSafe, userIds);
 
-                                            scheduledSubject.putArray("users", usersSafe);
+                                            scheduledSubject.put("users", usersSafe);
 
                                             //check, mainly in case of groups, they contain members
                                             if (userIds.size() > 0) {
@@ -224,7 +224,7 @@ public class SubjectScheduledController extends ControllerHelper {
                         final Set<String> userIds = new HashSet<String>();
                         safeUsersCollections(usersJa, usersSafe, userIds);
 
-                        scheduledSubject.putArray("users", usersSafe);
+                        scheduledSubject.put("users", usersSafe);
                         scheduleAndNotifies(scheduledSubject, user, userIds, request, type);
                     }
                 }
@@ -263,8 +263,8 @@ public class SubjectScheduledController extends ControllerHelper {
 			return false;
 		}
 
-		final JsonObject scheduledAt = scheduledSubject.getObject("scheduledAt");
-		if (scheduledAt.getArray("userList", new JsonArray()).size() == 0 && scheduledAt.getArray("groupList", new JsonArray()).size() == 0) {
+		final JsonObject scheduledAt = scheduledSubject.getJsonObject("scheduledAt");
+		if (scheduledAt.getJsonArray("userList", new JsonArray()).size() == 0 && scheduledAt.getJsonArray("groupList", new JsonArray()).size() == 0) {
 			badRequest(request, "exercizer.schedule.empty.users");
 			return false;
 		}
@@ -274,8 +274,8 @@ public class SubjectScheduledController extends ControllerHelper {
 
 	private void safeUsersCollections(JsonArray usersParam, JsonArray usersSafe, Set<String> userIds) {
 		for (int i=0;i<usersParam.size();i++) {
-			if (!(usersParam.get(i) instanceof JsonObject)) continue;
-			final JsonObject joUser = usersParam.<JsonObject>get(i);
+			if (!(usersParam.getValue(i) instanceof JsonObject)) continue;
+			final JsonObject joUser = usersParam.getJsonObject(i);
 			final String currentUserId = joUser.getString("_id");
 			if (!userIds.contains(currentUserId)) {
 				userIds.add(currentUserId);
@@ -298,7 +298,7 @@ public class SubjectScheduledController extends ControllerHelper {
 		final Date nowUTC = new DateTime(DateTimeZone.UTC).toLocalDateTime().toDate();
 
 		final Boolean isNotify = DateUtils.lessOrEqualsWithoutTime(beginDate, nowUTC);
-		scheduledSubject.putBoolean("isNotify", isNotify);
+		scheduledSubject.put("isNotify", isNotify);
 
 		if (ScheduledType.SIMPLE.equals(type)) {
 			subjectScheduledService.simpleSchedule(scheduledSubject, user, getHandlerScheduleAndNotifies(scheduledSubject, user, userIds, request, isNotify));
@@ -321,7 +321,7 @@ public class SubjectScheduledController extends ControllerHelper {
 
 					Renders.created(request);
 				} else {
-					renderError(request, new JsonObject().putString("error","exercizer.subject.scheduled.error"));
+					renderError(request, new JsonObject().put("error","exercizer.subject.scheduled.error"));
 				}
 			}
 		};
@@ -358,13 +358,13 @@ public class SubjectScheduledController extends ControllerHelper {
 			final String dueDateFormat = DateUtils.format(dueDate);
 
 			JsonObject params = new JsonObject();
-			params.putString("uri", pathPrefix + "#" + relativeUri);
-			params.putString("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
-			params.putString("username", user.getUsername());
-			params.putString("subjectName", subjectName);
-			params.putString("dueDate", dueDateFormat);
-			params.putString("resourceUri", params.getString("uri", ""));
-			params.putBoolean("disableAntiFlood", true);
+			params.put("uri", pathPrefix + "#" + relativeUri);
+			params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
+			params.put("username", user.getUsername());
+			params.put("subjectName", subjectName);
+			params.put("dueDate", dueDateFormat);
+			params.put("resourceUri", params.getString("uri", ""));
+			params.put("disableAntiFlood", true);
 			this.notification.notifyTimeline(request, "exercizer." + notificationName, user, recipientSet, idResource, params);
 		}
 	}
@@ -424,7 +424,7 @@ public class SubjectScheduledController extends ControllerHelper {
 								//check download is authorized only if corrected date is passed
 								if (DateUtils.lessOrEqualsWithoutTime(correctedDate, nowUTC)) {
 									if (correctedFileId != null) {
-										final JsonObject metadata = subjectScheduled.getObject("corrected_metadata");
+										final JsonObject metadata = subjectScheduled.getJsonObject("corrected_metadata");
 										storage.sendFile(correctedFileId, metadata.getString("filename"), request, false, metadata);
 									} else {
 										Renders.badRequest(request);
@@ -537,7 +537,7 @@ public class SubjectScheduledController extends ControllerHelper {
             public void handle(JsonObject event) {
                 if ("ok".equals(event.getString("status"))) {
                     final String fileId = event.getString("_id");
-                    final JsonObject metadata = event.getObject("metadata");
+                    final JsonObject metadata = event.getJsonObject("metadata");
                     subjectScheduledService.addCorrectedFile(id, fileId, metadata, new Handler<Either<String, JsonObject>>() {
 	                    @Override
 	                    public void handle(Either<String, JsonObject> event) {
@@ -546,7 +546,7 @@ public class SubjectScheduledController extends ControllerHelper {
 				                    @Override
 				                    public void handle(Either<String, JsonArray> event) {
 					                    if (event.isRight()) {
-						                    Renders.renderJson(request, new JsonObject().putString("fileId", fileId));
+						                    Renders.renderJson(request, new JsonObject().put("fileId", fileId));
 
 						                    final JsonArray members = event.right().getValue();
 						                    final List<String> recipientSet = new ArrayList<String>();
@@ -557,12 +557,12 @@ public class SubjectScheduledController extends ControllerHelper {
 						                    }
 
 						                    JsonObject params = new JsonObject();
-						                    params.putString("uri", pathPrefix + "#/dashboard/student");
-						                    params.putString("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
-						                    params.putString("username", user.getUsername());
-						                    params.putString("subjectName", subjectTitle);
+						                    params.put("uri", pathPrefix + "#/dashboard/student");
+						                    params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
+						                    params.put("username", user.getUsername());
+						                    params.put("subjectName", subjectTitle);
 
-						                    params.putString("resourceUri", params.getString("uri"));
+						                    params.put("resourceUri", params.getString("uri"));
 						                    notification.notifyTimeline(request, "exercizer.correcthomework", user, recipientSet, id, params);
 
 											if (!StringUtils.isEmpty(existingFileId)) {
@@ -665,14 +665,14 @@ public class SubjectScheduledController extends ControllerHelper {
 						@Override
 						public void handle(Either<String, JsonArray> event) {
 							if (event.isLeft()) {
-								renderError(request, new JsonObject().putString("error", event.left().getValue()));
+								renderError(request, new JsonObject().put("error", event.left().getValue()));
 								return;
 							}
 
 							JsonArray r = event.right().getValue();
 							r = r == null ? new JsonArray() : r;
 							processTemplate(request, "text/export.txt",
-									new JsonObject().putArray("list", r), new Handler<String>() {
+									new JsonObject().put("list", r), new Handler<String>() {
 										@Override
 										public void handle(String export) {
 											if (export != null) {

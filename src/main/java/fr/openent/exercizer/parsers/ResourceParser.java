@@ -21,7 +21,7 @@ package fr.openent.exercizer.parsers;
 
 import java.util.ArrayList;
 
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonObject;
 
 public class ResourceParser {
 	
@@ -35,8 +35,8 @@ public class ResourceParser {
 		fields.add("modified");
 		
 		for (String field : fields) {
-			if (resource.containsField(field)) {
-				resource.removeField(field);
+			if (resource.containsKey(field)) {
+				resource.remove(field);
 			}
 		}
 

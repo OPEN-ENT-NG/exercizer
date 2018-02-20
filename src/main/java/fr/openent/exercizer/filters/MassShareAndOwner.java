@@ -27,11 +27,11 @@ import org.entcore.common.sql.SqlConf;
 import org.entcore.common.sql.SqlConfs;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,8 @@ public class MassShareAndOwner implements ResourcesProvider {
 		final SqlConf conf = SqlConfs.getConf(binding.getServiceMethod().substring(0, binding.getServiceMethod().indexOf('|')));
 		RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 			public void handle(JsonObject data) {
-				final Object[] ids = data.getArray("ids", new JsonArray()).toArray();
-				if (ids != null && ids.length > 0) {
+				final List ids = data.getJsonArray("ids", new JsonArray()).getList();
+				if (ids != null && ids.size() > 0) {
 					request.pause();
 					String sharedMethod = binding.getServiceMethod().replaceAll("\\.", "-");
 					List<String> gu = new ArrayList<>();
@@ -53,13 +53,12 @@ public class MassShareAndOwner implements ResourcesProvider {
 					if (user.getGroupsIds() != null) {
 						gu.addAll(user.getGroupsIds());
 					}
-					final Object[] groupsAndUserIds = gu.toArray();
 					String query =
 							"SELECT count(DISTINCT id) FROM " + conf.getSchema() + conf.getTable() +
 									" LEFT JOIN " + conf.getSchema() + conf.getShareTable() + " ON id = resource_id " +
-									"WHERE ((member_id IN " + Sql.listPrepared(groupsAndUserIds) + " AND action = ?) " +
+									"WHERE ((member_id IN " + Sql.listPrepared(gu) + " AND action = ?) " +
 									"OR owner = ?) AND id IN " + Sql.listPrepared(ids);
-					JsonArray values = new JsonArray(groupsAndUserIds).add(sharedMethod)
+					JsonArray values = new JsonArray(gu).add(sharedMethod)
 							.add(user.getUserId());
 
 					for (final Object id : ids) {
@@ -71,7 +70,7 @@ public class MassShareAndOwner implements ResourcesProvider {
 						public void handle(Message<JsonObject> message) {
 							request.resume();
 							Long count = SqlResult.countResult(message);
-							handler.handle(count != null && count == ids.length);
+							handler.handle(count != null && count == ids.size());
 						}
 					});
 				} else {

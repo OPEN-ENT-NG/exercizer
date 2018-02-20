@@ -26,9 +26,9 @@ import fr.wseduc.webutils.I18n;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
@@ -83,7 +83,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
 
         final SqlStatementsBuilder s = new SqlStatementsBuilder();
 
-        s.prepared(query, new JsonArray(grainIds.toArray()));
+        s.prepared(query, new JsonArray(grainIds));
         updateMaxScore(s, subjectId);
 
         sql.transaction(s.build(), SqlResult.validRowsResultHandler(1, handler));
@@ -110,7 +110,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
     @Override
     public void listBySubjectForLibrary(final JsonObject resource, final Handler<Either<String, JsonArray>> handler) {
     	JsonArray joins = new JsonArray();
-    	joins.addString("JOIN exercizer.subject s ON r.subject_id = s.id AND s.is_library_subject = true AND s.id = " + resource.getField("id"));
+    	joins.add("JOIN exercizer.subject s ON r.subject_id = s.id AND s.is_library_subject = true AND s.id = " + resource.getValue("id"));
     	
     	super.list("r", joins, null, null, null, null, handler);
     }
@@ -119,7 +119,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
 
         //TODO normalize the data model to create a title relational field (grain_data must be opaque),
         //Not needed anymore to look for grains, use of insert / select query with case when for title
-        final Object[] grainIds = grainIdJa.toArray();
+        final List grainIds = grainIdJa.getList();
         final String query = "SELECT g.grain_type_id as grain_type_id, g.grain_data as grain_data, gt.public_name as default_title FROM " + resourceTable +
                 " AS g INNER JOIN " + schema + "grain_type AS gt ON (g.grain_type_id=gt.id) WHERE g.id IN " +
                 Sql.listPrepared(grainIds);
@@ -146,14 +146,14 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
                 "(?,?," + queryNewOrderBy + ",?)";
 
         for (int i=0;i<grainJa.size();i++) {
-            final JsonObject grainJo = grainJa.get(i);
+            final JsonObject grainJo = grainJa.getJsonObject(i);
             //set title suffix
             final JsonObject grainData = new JsonObject(grainJo.getString("grain_data"));
             if (grainJo.getLong("grain_type_id") > 3) {
-                grainData.putString("title", grainData.getString("title", i18n.translate(grainJo.getString("default_title"), host, acceptLanguage)) + titleSuffix);
+                grainData.put("title", grainData.getString("title", i18n.translate(grainJo.getString("default_title"), host, acceptLanguage)) + titleSuffix);
             }
             final JsonArray values = new JsonArray();
-            values.addNumber(subjectId).addNumber(grainJo.getNumber("grain_type_id")).addNumber(subjectId).add(grainData);
+            values.add(subjectId).add(grainJo.getLong("grain_type_id")).add(subjectId).add(grainData);
 
             s.prepared(queryinsertGrain, values);
         }

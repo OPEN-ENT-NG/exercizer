@@ -43,11 +43,11 @@ import org.entcore.common.storage.Storage;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.entcore.common.utils.StringUtils;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.json.DecodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.DecodeException;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,7 +154,7 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, pathPrefix + "delete", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							subjectService.remove(resource.getArray("ids"), user, new Handler<Either<String, JsonObject>>() {
+							subjectService.remove(resource.getJsonArray("ids"), user, new Handler<Either<String, JsonObject>>() {
 								@Override
 								public void handle(Either<String, JsonObject> event) {
 									if (event.isRight()) {
@@ -300,11 +300,11 @@ public class SubjectController extends ControllerHelper {
                             final String subjectName = subject.getString("title");
 
         			        JsonObject params = new JsonObject();
-        			        params.putString("username", user.getUsername());
-        			        params.putString("uri", pathPrefix + "#/subject/copy/preview/perform/"+subjectId);
-                            params.putString("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
-        			        params.putString("subjectName", subjectName);
-                            params.putString("resourceUri", params.getString("uri"));
+        			        params.put("username", user.getUsername());
+        			        params.put("uri", pathPrefix + "#/subject/copy/preview/perform/"+subjectId);
+                            params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
+        			        params.put("subjectName", subjectName);
+                            params.put("resourceUri", params.getString("uri"));
         			        SubjectController.super.shareJsonSubmit(request, "exercizer.share", false, params, null);
                         }
                     });
@@ -536,7 +536,7 @@ public class SubjectController extends ControllerHelper {
 						public void handle(JsonObject event) {
 							if ("ok".equals(event.getString("status"))) {
 								final String fileId = event.getString("_id");
-								final JsonObject metadata = event.getObject("metadata");
+								final JsonObject metadata = event.getJsonObject("metadata");
 								JsonObject data = null;
 								try {
 									data = new JsonObject(request.formAttributes().get("param"));
@@ -545,8 +545,8 @@ public class SubjectController extends ControllerHelper {
 								}
 
 								if (data != null) {
-									data.putString("correctedFileId", fileId);
-									data.putObject("correctedMetadata", metadata);
+									data.put("correctedFileId", fileId);
+									data.put("correctedMetadata", metadata);
 
 									publish(data, subjectId, user, request);
 								}
@@ -564,15 +564,15 @@ public class SubjectController extends ControllerHelper {
 	}
 
 	private void publish(JsonObject data, Long subjectId, UserInfos user, final HttpServerRequest request) {
-		subjectService.publishLibrary(subjectId, data.getString("authorsContributors"), data.getString("correctedFileId"), data.getObject("correctedMetadata"), data.getLong("subjectLessonTypeId"),
-				data.getLong("subjectLessonLevelId"), data.getArray("subjectTagList", new JsonArray()), user,
+		subjectService.publishLibrary(subjectId, data.getString("authorsContributors"), data.getString("correctedFileId"), data.getJsonObject("correctedMetadata"), data.getLong("subjectLessonTypeId"),
+				data.getLong("subjectLessonLevelId"), data.getJsonArray("subjectTagList", new JsonArray()), user,
 				new Handler<Either<String, JsonObject>>() {
 					@Override
 					public void handle(Either<String, JsonObject> event) {
 						if (event.isRight()) {
 							Renders.created(request);
 						} else {
-							Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
+							Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
 						}
 					}
 				});
@@ -652,7 +652,7 @@ public class SubjectController extends ControllerHelper {
 								final JsonObject subject = event.right().getValue();
 								final String correctedFileId = subject.getString("corrected_file_id");
 								if (correctedFileId != null) {
-									final JsonObject metadata = subject.getObject("corrected_metadata");
+									final JsonObject metadata = subject.getJsonObject("corrected_metadata");
 									storage.sendFile(correctedFileId, metadata.getString("filename"),  request, false, metadata);
 								} else {
 									Renders.badRequest(request);
@@ -685,14 +685,14 @@ public class SubjectController extends ControllerHelper {
 						@Override
 						public void handle(final JsonObject data) {
 							final String titleSuffix = i18n.translate("exercizer.subject.title.copySuffix", Renders.getHost(request), I18n.acceptLanguage(request));
-							subjectService.duplicateSubjects(data.getArray("ids"), data.getLong("folderId"), titleSuffix, user,
+							subjectService.duplicateSubjects(data.getJsonArray("ids"), data.getLong("folderId"), titleSuffix, user,
 									new Handler<Either<String, JsonObject>>() {
 										@Override
 										public void handle(Either<String, JsonObject> event) {
 											if (event.isRight()) {
 												Renders.created(request);
 											} else {
-												Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
+												Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
 											}
 										}
 									});
@@ -734,13 +734,13 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, pathPrefix + "grainIds",new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject data) {
-							grainService.duplicateGrainIntoSubject(subjectId, data.getArray("grainIds"), Renders.getHost(request), I18n.acceptLanguage(request), new Handler<Either<String, JsonObject>>() {
+							grainService.duplicateGrainIntoSubject(subjectId, data.getJsonArray("grainIds"), Renders.getHost(request), I18n.acceptLanguage(request), new Handler<Either<String, JsonObject>>() {
 								@Override
 								public void handle(Either<String, JsonObject> event) {
 									if (event.isRight()) {
 										Renders.created(request);
 									} else {
-										Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
+										Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
 									}
 								}
 							});
@@ -767,13 +767,13 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, pathPrefix + "subjects", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject data) {
-							subjectService.move(data.getArray("ids"), data.getLong("folderId"), new Handler<Either<String, JsonObject>>() {
+							subjectService.move(data.getJsonArray("ids"), data.getLong("folderId"), new Handler<Either<String, JsonObject>>() {
 										@Override
 										public void handle(Either<String, JsonObject> event) {
 											if (event.isRight()) {
 												Renders.noContent(request);
 											} else {
-												Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
+												Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
 											}
 										}
 									});
@@ -808,7 +808,7 @@ public class SubjectController extends ControllerHelper {
 						@Override
 						public void handle(Either<String, JsonArray> event) {
 							if (event.isLeft()) {
-								renderError(request, new JsonObject().putString("error", event.left().getValue()));
+								renderError(request, new JsonObject().put("error", event.left().getValue()));
 								return;
 							}
 

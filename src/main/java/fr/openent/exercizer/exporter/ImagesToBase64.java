@@ -2,9 +2,10 @@ package fr.openent.exercizer.exporter;
 
 import org.entcore.common.bus.WorkspaceHelper;
 import org.entcore.common.storage.Storage;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.EventBus;
-import org.vertx.java.core.json.impl.Base64;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.EventBus;
+
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +28,7 @@ public class ImagesToBase64 {
                 public void handle(WorkspaceHelper.Document doc) {
                     if(doc != null) {
                         exportImagesToBase64(text.replace(sub, "&lt;img src=\"data:image/png;base64," +
-                                Base64.encodeBytes(doc.getData().getBytes())), handler);
+                                Base64.getEncoder().encodeToString(doc.getData().getBytes())), handler);
                     }else{
                         exportImagesToBase64(text.replace(sub, "&lt;img src=\""), handler);
                     }

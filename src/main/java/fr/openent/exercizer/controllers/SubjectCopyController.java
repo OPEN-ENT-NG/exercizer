@@ -51,20 +51,21 @@ import org.entcore.common.utils.StringUtils;
 import org.entcore.common.utils.Zip;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.vertx.java.core.AsyncResult;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.file.FileSystem;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.HttpServerResponse;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.file.FileSystem;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.io.File;
 import java.text.ParseException;
 import java.util.*;
 import java.util.zip.Deflater;
 
+import static fr.wseduc.webutils.Utils.handlerToAsyncHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.*;
 
 public class SubjectCopyController extends ControllerHelper {
@@ -192,16 +193,16 @@ public class SubjectCopyController extends ControllerHelper {
 	        ) {
 	        JsonObject params = new JsonObject();
 			if (relativeUri != null) {
-				params.putString("uri", pathPrefix + "#" + relativeUri);
-				params.putString("resourceUri", params.getString("uri"));
+				params.put("uri", pathPrefix + "#" + relativeUri);
+				params.put("resourceUri", params.getString("uri"));
 			}
-	        params.putString("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
-	        params.putString("username", user.getUsername());
-	        params.putString("subjectName", subjectName);
+	        params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
+	        params.put("username", user.getUsername());
+	        params.put("subjectName", subjectName);
 			if (dueDate != null) {
-				params.putString("dueDate", dueDate);
+				params.put("dueDate", dueDate);
 			}
-		    params.putBoolean("disableAntiFlood", true);
+		    params.put("disableAntiFlood", true);
 
 	        this.notification.notifyTimeline(request,"exercizer." + notificationName, user, recipientSet, idResource, params);
 		}
@@ -258,7 +259,7 @@ public class SubjectCopyController extends ControllerHelper {
 						public void handle(final JsonObject resource) {
 							final String ressourceId = Long.toString(resource.getLong("id"));
 							// hack : remove useless fields
-							Iterator<String> it = resource.getFieldNames().iterator();
+							Iterator<String> it = resource.fieldNames().iterator();
 							while (it.hasNext()) {
 								String fieldName = it.next();
 								if (!copyAction.getFields().contains(fieldName))
@@ -268,7 +269,7 @@ public class SubjectCopyController extends ControllerHelper {
 								@Override
 								public void handle(Either<String, JsonObject> r) {
 									if (r.isLeft()) {
-										renderError(request, new JsonObject().putString("error", r.left().getValue()));
+										renderError(request, new JsonObject().put("error", r.left().getValue()));
 										return;
 									}
 									final JsonObject subjectCopy = ResourceParser.beforeAny(r.right().getValue());
@@ -343,12 +344,12 @@ public class SubjectCopyController extends ControllerHelper {
 		                @Override
 		                public void handle(Either<String, JsonObject> r) {
 			                if (r.isLeft()) {
-				                renderError(request, new JsonObject().putString("error", r.left().getValue()));
+				                renderError(request, new JsonObject().put("error", r.left().getValue()));
 				                return;
 			                }
 			                final JsonObject subjectCopy = r.right().getValue();
 			                final boolean result = !subjectCopy.getBoolean("is_corrected", false) && !subjectCopy.getBoolean("is_correction_on_going", false);
-                            Renders.renderJson(request, new JsonObject().putBoolean("result", result));
+                            Renders.renderJson(request, new JsonObject().put("result", result));
 	                    }
                     });
                 } else {
@@ -453,7 +454,7 @@ public class SubjectCopyController extends ControllerHelper {
 			@Override
 			public void handle(final JsonObject resource) {
 				// hack : remove useless fields
-				Iterator<String> it = resource.getFieldNames().iterator();
+				Iterator<String> it = resource.fieldNames().iterator();
 				while (it.hasNext()) {
 					String fieldName = it.next();
 					if (!mode.getFields().contains(fieldName))
@@ -580,12 +581,12 @@ public class SubjectCopyController extends ControllerHelper {
 			public void handle(JsonObject event) {
 				if ("ok".equals(event.getString("status"))) {
 					final String fileId = event.getString("_id");
-					final JsonObject metadata = event.getObject("metadata");
+					final JsonObject metadata = event.getJsonObject("metadata");
 					subjectCopyService.addFile(id, fileId, metadata, fileType, new Handler<Either<String, JsonObject>>() {
 						@Override
 						public void handle(Either<String, JsonObject> event) {
 							if (event.isRight()) {
-								Renders.renderJson(request, new JsonObject().putString("fileId", fileId));
+								Renders.renderJson(request, new JsonObject().put("fileId", fileId));
 								JsonObject params = new JsonObject();
 
 								String relativeUri = "";
@@ -692,7 +693,7 @@ public class SubjectCopyController extends ControllerHelper {
 						@Override
 						public void handle(Either<String, JsonArray> event) {
 							if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() == 1) {
-								final JsonObject jo = event.right().getValue().get(0);
+								final JsonObject jo = event.right().getValue().getJsonObject(0);
 
 								final Date nowUtc = new DateTime(DateTimeZone.UTC).toLocalDateTime().toDate();
 								Date correctedDate;
@@ -708,7 +709,7 @@ public class SubjectCopyController extends ControllerHelper {
 								if (DateUtils.lessOrEqualsWithoutTime(correctedDate, nowUtc)) {
 									final String correctedFileId = jo.getString("corrected_file_id");
 									if (correctedFileId != null) {
-										final JsonObject metadata = jo.getObject("corrected_metadata");
+										final JsonObject metadata = jo.getJsonObject("corrected_metadata");
 										storage.sendFile(correctedFileId, metadata.getString("filename"),  request, false, metadata);
 									} else {
 										Renders.badRequest(request);
@@ -746,11 +747,11 @@ public class SubjectCopyController extends ControllerHelper {
 						@Override
 						public void handle(Either<String, JsonArray> event) {
 							if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() == 1) {
-								final JsonObject jo = event.right().getValue().get(0);
+								final JsonObject jo = event.right().getValue().getJsonObject(0);
 
 								final String fileName = makeDownloadFileName(jo);
 
-								storage.sendFile(jo.getString("homework_file_id"), fileName, request, false, jo.getObject("homework_metadata"), new Handler<AsyncResult<Void>>() {
+								storage.sendFile(jo.getString("homework_file_id"), fileName, request, false, jo.getJsonObject("homework_metadata"), new Handler<AsyncResult<Void>>() {
 									@Override
 									public void handle(AsyncResult<Void> event) {
 										if (event.succeeded()) {
@@ -805,8 +806,8 @@ public class SubjectCopyController extends ControllerHelper {
 								for (final Object o : event.right().getValue()) {
 									if (!(o instanceof JsonObject)) continue;
 									final JsonObject jo = (JsonObject) o;
-									final String fileName = FileUtils.getNameWithExtension(makeDownloadFileName(jo), jo.getObject("homework_metadata"));
-									aliasFileName.putString(jo.getString("homework_file_id"), fileName);
+									final String fileName = FileUtils.getNameWithExtension(makeDownloadFileName(jo), jo.getJsonObject("homework_metadata"));
+									aliasFileName.put(jo.getString("homework_file_id"), fileName);
 									fileIds.add(jo.getString("homework_file_id"));
 									subjectTitle = jo.getString("title", "file");
 								}
@@ -814,7 +815,7 @@ public class SubjectCopyController extends ControllerHelper {
 								final String zipDownloadName = makeZipFileName(subjectTitle);
 								final String zipDirectory = exportPath + File.separator + UUID.randomUUID().toString();
 
-								fs.mkdir(zipDirectory, true, new Handler<AsyncResult<Void>>() {
+								fs.mkdirs(zipDirectory, new Handler<AsyncResult<Void>>() {
 									@Override
 									public void handle(AsyncResult<Void> event) {
 										if (event.succeeded()) {
@@ -871,7 +872,7 @@ public class SubjectCopyController extends ControllerHelper {
 												}
 
 												private void deleteZipDirectory() {
-													fs.delete(zipDirectory, true, new Handler<AsyncResult<Void>>() {
+													fs.deleteRecursive(zipDirectory, true, new Handler<AsyncResult<Void>>() {
 														@Override
 														public void handle(AsyncResult<Void> event) {
 															if (event.failed()) {
@@ -883,7 +884,7 @@ public class SubjectCopyController extends ControllerHelper {
 												}
 
 												private void deleteZipFile() {
-													fs.delete(zipFile, true, new Handler<AsyncResult<Void>>() {
+													fs.deleteRecursive(zipFile, true, new Handler<AsyncResult<Void>>() {
 														@Override
 														public void handle(AsyncResult<Void> event) {
 															if (event.failed()) {
@@ -953,7 +954,7 @@ public class SubjectCopyController extends ControllerHelper {
 								return;
 							}
 
-							subjectCopyService.getOwners(param.getArray("ids"), new Handler<Either<String, JsonArray>>() {
+							subjectCopyService.getOwners(param.getJsonArray("ids"), new Handler<Either<String, JsonArray>>() {
 								@Override
 								public void handle(Either<String, JsonArray> event) {
 									if (event.isRight()) {
@@ -965,9 +966,9 @@ public class SubjectCopyController extends ControllerHelper {
 										}
 
 										final JsonObject message = new JsonObject();
-										message.putString("subject", param.getString("subject"));
-										message.putString("body", param.getString("body"));
-										message.putArray("to", new JsonArray(to));
+										message.put("subject", param.getString("subject"));
+										message.put("body", param.getString("body"));
+										message.put("to", new JsonArray(to));
 
 										sendMail(message, user, request);
 									} else {
@@ -988,17 +989,17 @@ public class SubjectCopyController extends ControllerHelper {
 
 	private void sendMail(JsonObject message, UserInfos user, final HttpServerRequest request) {
 		JsonObject jo = new JsonObject();
-		jo.putString("action", "send");
-		jo.putObject("message", message);
-		jo.putString("userId", user.getUserId());
-		jo.putString("username", user.getUsername());
-		jo.putObject("request", new JsonObject()
-						.putObject("headers", new JsonObject()
-								.putString("Host", Renders.getHost(request))
-								.putString("X-Forwarded-Proto", Renders.getScheme(request))
-								.putString("Accept-Language", I18n.acceptLanguage(request))));
+		jo.put("action", "send");
+		jo.put("message", message);
+		jo.put("userId", user.getUserId());
+		jo.put("username", user.getUsername());
+		jo.put("request", new JsonObject()
+						.put("headers", new JsonObject()
+								.put("Host", Renders.getHost(request))
+								.put("X-Forwarded-Proto", Renders.getScheme(request))
+								.put("Accept-Language", I18n.acceptLanguage(request))));
 
-		SubjectCopyController.this.eb.send(CONVERSATION_ADDRESS, jo, new Handler<Message<JsonObject>>() {
+		SubjectCopyController.this.eb.send(CONVERSATION_ADDRESS, jo, handlerToAsyncHandler(new Handler<Message<JsonObject>>() {
 			@Override
 			public void handle(Message<JsonObject> response) {
 				if ("ok".equals(response.body().getString("status"))) {
@@ -1007,7 +1008,7 @@ public class SubjectCopyController extends ControllerHelper {
 					Renders.badRequest(request);
 				}
 			}
-		});
+		}));
 	}
 
 	@Post("/subject-copy/automatic/reminder/:subjectScheduledId")
@@ -1031,7 +1032,7 @@ public class SubjectCopyController extends ControllerHelper {
 										final JsonObject subject = event.right().getValue();
 										final String subjectName = subject.getString("title");
 
-										subjectCopyService.getOwners(param.getArray("ids"), new Handler<Either<String, JsonArray>>() {
+										subjectCopyService.getOwners(param.getJsonArray("ids"), new Handler<Either<String, JsonArray>>() {
 											@Override
 											public void handle(Either<String, JsonArray> event) {
 												if (event.isRight()) {

@@ -22,9 +22,9 @@ package fr.openent.exercizer.services.impl;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import fr.openent.exercizer.services.ISubjectTagService;
 import fr.wseduc.webutils.Either;
@@ -47,7 +47,7 @@ public class SubjectTagServiceSqlImpl extends AbstractExercizerServiceSqlImpl im
      */
     public void list(final Handler<Either<String, JsonArray>> handler) {
     	JsonArray orderBy = new JsonArray();
-    	orderBy.addString("ORDER BY r.label ASC");
+    	orderBy.add("ORDER BY r.label ASC");
         super.list("r", null, null, orderBy, null, null, handler);
     }
     
@@ -58,7 +58,7 @@ public class SubjectTagServiceSqlImpl extends AbstractExercizerServiceSqlImpl im
 	public void listBySubjectId(final JsonArray ids, final Handler<Either<String, JsonArray>> handler) {
 		final String query = "SELECT st.*, slt.subject_id FROM " + resourceTable + " as st INNER JOIN " +
 				schema + "subject_library_tag slt ON st.id = slt.subject_tag_id WHERE " +
-				"slt.subject_id IN " + Sql.listPrepared(ids.toArray());
+				"slt.subject_id IN " + Sql.listPrepared(ids.getList());
 
 		sql.prepared(query, ids, SqlResult.validResultHandler(handler));
 	}

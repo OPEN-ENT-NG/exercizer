@@ -28,11 +28,11 @@ import org.entcore.common.user.UserInfos;
 import org.entcore.common.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.logging.Logger;
-import org.vertx.java.core.logging.impl.LoggerFactory;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -94,7 +94,7 @@ public class ScheduledNotification implements Handler<Long> {
                                                     "WHERE id = ? ";
 
                                     final JsonArray values = new JsonArray();
-                                    values.addNumber(scheduledSubject.getLong("id"));
+                                    values.add(scheduledSubject.getLong("id"));
 
                                     sql.prepared(query, values, SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
                                         @Override
@@ -103,19 +103,19 @@ public class ScheduledNotification implements Handler<Long> {
 
                                                 final String subjectName = scheduledSubject.getString("title");
 
-                                                final List<String> recipientSet = scheduledSubject.getArray("owners").toList();
+                                                final List<String> recipientSet = scheduledSubject.getJsonArray("owners").getList();
 
                                                 final UserInfos user = new UserInfos();
                                                 user.setUserId(scheduledSubject.getString("owner"));
                                                 user.setUsername(scheduledSubject.getString("owner_username"));
 
                                                 JsonObject params = new JsonObject();
-                                                params.putString("uri", pathPrefix + "#/dashboard/student");
-                                                params.putString("userUri", "/userbook/annuaire#" + user.getUserId());
-                                                params.putString("username", user.getUsername());
-                                                params.putString("subjectName", subjectName);
-                                                params.putString("dueDate", dueDateFormat);
-                                                params.putString("resourceUri", params.getString("uri"));
+                                                params.put("uri", pathPrefix + "#/dashboard/student");
+                                                params.put("userUri", "/userbook/annuaire#" + user.getUserId());
+                                                params.put("username", user.getUsername());
+                                                params.put("subjectName", subjectName);
+                                                params.put("dueDate", dueDateFormat);
+                                                params.put("resourceUri", params.getString("uri"));
                                                 timelineHelper.notifyTimeline(null, "exercizer.assigncopy", user, recipientSet, null, params);
                                             } else {
                                                 log.error("[CRON Exerciser] Can't update scheduled subject : " + event.left().getValue());

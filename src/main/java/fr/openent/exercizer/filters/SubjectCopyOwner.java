@@ -27,11 +27,11 @@ import org.entcore.common.sql.SqlConf;
 import org.entcore.common.sql.SqlConfs;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 public class SubjectCopyOwner implements ResourcesProvider {
 
@@ -51,8 +51,8 @@ public class SubjectCopyOwner implements ResourcesProvider {
 
 					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_copy sc WHERE sc.id = ? AND sc.owner = ?";
 					JsonArray values = new JsonArray();
-					values.addNumber(id);
-					values.addString(user.getUserId());
+					values.add(id);
+					values.add(user.getUserId());
 
 					Sql.getInstance().prepared(query, values, new Handler<Message<JsonObject>>() {
 						@Override

@@ -2,10 +2,10 @@ package fr.openent.exercizer.exporter;
 
 
 import org.entcore.common.utils.StringUtils;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.logging.Logger;
-import org.vertx.java.core.logging.impl.LoggerFactory;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -51,7 +51,7 @@ public class SubjectExporter {
     }
 
     private void exportGrainsFactory(final JsonObject grain) throws XMLStreamException {
-        final JsonObject data = grain.getObject("grain_data");
+        final JsonObject data = grain.getJsonObject("grain_data");
         final String generalFeedback = data.getString("answer_explanation");
         this.xsw.writeStartElement("question");
         switch (grain.getString("name")){
@@ -89,15 +89,15 @@ public class SubjectExporter {
     private void writeStatement(final JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "description");
         this.writeCommon(grainData.getString("title", ""),
-                this.toCDATA(grainData.getObject("custom_data", new JsonObject()).getString("statement", "")), "html");
+                this.toCDATA(grainData.getJsonObject("custom_data", new JsonObject()).getString("statement", "")), "html");
     }
 
     private void writeShortAnswer(final JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "shortanswer");
         this.writeCommon(grainData.getString("title", ""),
                 this.toCDATA(grainData.getString("statement", "")), "html");
-        if(grainData.getObject("custom_data") != null)
-            this.writeAnswer(grainData.getObject("custom_data").getString("correct_answer", ""), "100");
+        if(grainData.getJsonObject("custom_data") != null)
+            this.writeAnswer(grainData.getJsonObject("custom_data").getString("correct_answer", ""), "100");
     }
 
     private void writeEssay(final JsonObject grainData) throws XMLStreamException {
@@ -111,8 +111,8 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "multianswer");
         this.writeCommon(grainData.getString("title", ""),
                 this.toCDATA(grainData.getString("statement", "")), "html");
-        if(grainData.getObject("custom_data") != null) {
-            final JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list", new JsonArray());
+        if(grainData.getJsonObject("custom_data") != null) {
+            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new JsonArray());
 
             for (final Object o : answers) {
                 if (!(o instanceof JsonObject)) continue;
@@ -126,8 +126,8 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "multichoice");
         this.writeCommon(grainData.getString("title", ""),
                 this.toCDATA(grainData.getString("statement", "")), "html");
-        if(grainData.getObject("custom_data") != null) {
-            final JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list", new JsonArray());
+        if(grainData.getJsonObject("custom_data") != null) {
+            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new JsonArray());
             final List<JsonObject> answersList = new ArrayList<>();
             int totalCorrectAswer = 0;
             for (Object o : answers) {
@@ -150,8 +150,8 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "matching");
         this.writeCommon(grainData.getString("title", ""),
                 this.toCDATA(grainData.getString("statement", "")), "html");
-        if (grainData.getObject("custom_data") != null){
-            final JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list", new JsonArray());
+        if (grainData.getJsonObject("custom_data") != null){
+            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new JsonArray());
             for (Object o : answers) {
                 if (!(o instanceof JsonObject)) continue;
                 final JsonObject j = (JsonObject)o;
@@ -167,8 +167,8 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "ordering");
         this.writeCommon(grainData.getString("title", ""),
                 this.toCDATA(grainData.getString("statement", "")), "html");
-        if(grainData.getObject("custom_data") != null) {
-            final JsonArray answers = grainData.getObject("custom_data").getArray("correct_answer_list", new JsonArray());
+        if(grainData.getJsonObject("custom_data") != null) {
+            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new JsonArray());
 
             for (Object o : answers) {
                 if (!(o instanceof JsonObject)) continue;

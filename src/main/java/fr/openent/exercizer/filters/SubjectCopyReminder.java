@@ -27,11 +27,11 @@ import org.entcore.common.sql.SqlConf;
 import org.entcore.common.sql.SqlConfs;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class SubjectCopyReminder implements ResourcesProvider {
 
 		RequestUtils.bodyToJson(resourceRequest, new Handler<JsonObject>() {
 			public void handle(JsonObject data) {
-				final List<Number> ids = data.getArray("ids").toList();
+				final List<Number> ids = data.getJsonArray("ids").getList();
 				if (ids != null && !ids.isEmpty()) {
 					resourceRequest.pause();
 
@@ -53,7 +53,7 @@ public class SubjectCopyReminder implements ResourcesProvider {
 							conf.getSchema() + "subject_scheduled as ss INNER JOIN " + conf.getSchema() + "subject_copy sc ON ss.id = sc.subject_scheduled_id " +
 							"WHERE ss.owner = ? AND sc.id IN " + Sql.listPrepared(ids.toArray());
 					JsonArray values = new JsonArray();
-					values.addString(user.getUserId());
+					values.add(user.getUserId());
 
 					for (final Number id : ids) {
 						values.add(id);

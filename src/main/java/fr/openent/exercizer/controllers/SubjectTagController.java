@@ -25,10 +25,10 @@ import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyRe
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import fr.openent.exercizer.services.ISubjectTagService;
 import fr.openent.exercizer.services.impl.SubjectTagServiceSqlImpl;
@@ -98,7 +98,7 @@ public class SubjectTagController extends ControllerHelper {
                 	RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
                         @Override
                         public void handle(final JsonObject resource) {
-                            subjectTagService.listBySubjectId(resource.getArray("ids", new JsonArray()), arrayResponseHandler(request));
+                            subjectTagService.listBySubjectId(resource.getJsonArray("ids", new JsonArray()), arrayResponseHandler(request));
                         }
                     });
                 }

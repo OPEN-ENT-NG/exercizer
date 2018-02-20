@@ -22,16 +22,16 @@ package fr.openent.exercizer.services.impl;
 import fr.openent.exercizer.Exercizer;
 import fr.wseduc.webutils.DefaultAsyncResult;
 import fr.wseduc.webutils.Either;
+import io.vertx.core.AsyncResult;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.storage.FileInfos;
 import org.entcore.common.storage.StorageException;
 import org.entcore.common.storage.impl.AbstractApplicationStorage;
-import org.vertx.java.core.AsyncResultHandler;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 
 import static org.entcore.common.sql.SqlResult.validResults;
@@ -42,7 +42,7 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 	private static final String application = Exercizer.class.getSimpleName();
 
 	@Override
-	public void getInfo(final String fileId, final AsyncResultHandler<FileInfos> handler) {
+	public void getInfo(final String fileId, final Handler<AsyncResult<FileInfos>> handler) {
 		final JsonArray params = new JsonArray().add(fileId);
 		final String query1 = "select owner, corrected_metadata from exercizer.subject where corrected_file_id = ?";
 		final String query2 = "select owner, homework_metadata from exercizer.subject_copy where homework_file_id = ?";
@@ -64,7 +64,7 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 				if (r.isRight() && r.right().getValue() != null) {
 					for (Object o : r.right().getValue()) {
 						if (o instanceof JsonArray && ((JsonArray) o).size() == 1) {
-							final JsonObject res = ((JsonArray) o).get(0);
+							final JsonObject res = ((JsonArray) o).getJsonObject(0);
 							final FileInfos fi = new FileInfos();
 							fi.setApplication(application);
 							fi.setId(fileId);
@@ -94,7 +94,7 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 	}
 
 	@Override
-	public void updateInfo(String fileId, FileInfos fileInfos, final AsyncResultHandler<Integer> handler) {
+	public void updateInfo(String fileId, FileInfos fileInfos, final Handler<AsyncResult<Integer>> handler) {
 		final JsonArray params = new JsonArray().add(fileId);
 		final String query1 =
 				"update exercizer.subject " +
@@ -123,8 +123,8 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 			public void handle(Message<JsonObject> message) {
 				if ("ok".equals(message.body().getString("status"))) {
 					Integer count = 0;
-					if (message.body().getArray("results") != null) {
-						for (Object o : message.body().getArray("results")) {
+					if (message.body().getJsonArray("results") != null) {
+						for (Object o : message.body().getJsonArray("results")) {
 							if (o instanceof JsonObject) {
 								count += ((JsonObject) o).getInteger("rows");
 							}

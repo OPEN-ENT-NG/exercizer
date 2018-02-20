@@ -27,11 +27,13 @@ import org.entcore.common.sql.SqlConf;
 import org.entcore.common.sql.SqlConfs;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+
+import java.util.List;
 
 public class MassOwnerOnly implements ResourcesProvider {
 
@@ -41,9 +43,9 @@ public class MassOwnerOnly implements ResourcesProvider {
 		final SqlConf conf = SqlConfs.getConf(binding.getServiceMethod().substring(0, binding.getServiceMethod().indexOf('|')));
 		RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 			public void handle(JsonObject data) {
-				final Object[] ids = data.getArray("ids", new JsonArray()).toArray();
+				final List ids = data.getJsonArray("ids", new JsonArray()).getList();
 
-				if (ids != null && ids.length > 0) {
+				if (ids != null && ids.size() > 0) {
 					request.pause();
 					final String sharedMethod = binding.getServiceMethod().replaceAll("\\.", "-");
 
@@ -58,7 +60,7 @@ public class MassOwnerOnly implements ResourcesProvider {
 						public void handle(Message<JsonObject> message) {
 							request.resume();
 							Long count = SqlResult.countResult(message);
-							handler.handle(count != null && count == ids.length);
+							handler.handle(count != null && count == ids.size());
 						}
 					});
 				} else {

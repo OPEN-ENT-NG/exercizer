@@ -7,11 +7,11 @@ import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.RepositoryEvents;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.logging.Logger;
-import org.vertx.java.core.logging.impl.LoggerFactory;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
         for (Object obj : groups){
             if (!(obj instanceof JsonObject)) continue;
             final JsonObject j = (JsonObject)obj;
-            final JsonArray users = j.getArray("users");
+            final JsonArray users = j.getJsonArray("users");
             if (users != null) {
                 for (Object s : users) {
                     userIds.add(s);
@@ -53,8 +53,8 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
         if (userIds.size() != 0) {
 
             SqlStatementsBuilder builder = new SqlStatementsBuilder();
-            builder.prepared("UPDATE exercizer.subject_scheduled SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
-            builder.prepared("UPDATE exercizer.subject_copy SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
+            builder.prepared("UPDATE exercizer.subject_scheduled SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.getList()), userIds);
+            builder.prepared("UPDATE exercizer.subject_copy SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.getList()), userIds);
 
             Sql.getInstance().transaction(builder.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
                 @Override
@@ -84,16 +84,16 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
         for (Object obj : users){
             if (!(obj instanceof JsonObject)) continue;
             final JsonObject j = (JsonObject)obj;
-            userIds.addString(j.getString("id"));
-            values.addString(j.getString("id"));
+            userIds.add(j.getString("id"));
+            values.add(j.getString("id"));
         }
 
         //Get managers actions
         for (SecuredAction action : securedActions.values()) {
             if (ActionType.RESOURCE.name().equals(action.getType()) && !action.getDisplayName().isEmpty()) {
                 if (action.getDisplayName().equals(this.actionType)) {
-                    managersActions.addString(action.getName());
-                    values.addString(action.getName().replace(".", "-"));
+                    managersActions.add(action.getName());
+                    values.add(action.getName().replace(".", "-"));
                 }
             }
         }
@@ -101,18 +101,18 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
         if (userIds.size() > 0) {
 
             SqlStatementsBuilder builder = new SqlStatementsBuilder();
-            builder.prepared("UPDATE exercizer.users SET is_deleted = true WHERE id IN " + Sql.listPrepared(userIds.toArray()), userIds);
+            builder.prepared("UPDATE exercizer.users SET is_deleted = true WHERE id IN " + Sql.listPrepared(userIds.getList()), userIds);
 
-            builder.prepared("UPDATE exercizer.subject_scheduled SET is_deleted = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
+            builder.prepared("UPDATE exercizer.subject_scheduled SET is_deleted = true WHERE owner IN " + Sql.listPrepared(userIds.getList()), userIds);
 
-            builder.prepared("UPDATE exercizer.subject_copy SET is_deleted = true WHERE owner IN " + Sql.listPrepared(userIds.toArray()), userIds);
+            builder.prepared("UPDATE exercizer.subject_copy SET is_deleted = true WHERE owner IN " + Sql.listPrepared(userIds.getList()), userIds);
 
             String query = "UPDATE exercizer.subject AS s SET is_deleted = true" +
                     " WHERE s.is_library_subject = false" +
-                    " AND s.owner IN " + Sql.listPrepared(userIds.toArray()) +
+                    " AND s.owner IN " + Sql.listPrepared(userIds.getList()) +
                     " AND NOT EXISTS (SELECT 1 FROM exercizer.subject_shares as ss WHERE ss.resource_id = s.id" +
                     " AND ss.member_id IN (SELECT m.id FROM exercizer.members AS m INNER JOIN exercizer.users AS u ON m.user_id = u.id WHERE u.is_deleted = false)" +
-                    " AND ss.action IN " + Sql.listPrepared(managersActions.toArray()) + ")";
+                    " AND ss.action IN " + Sql.listPrepared(managersActions.getList()) + ")";
 
             builder.prepared(query, values);
 

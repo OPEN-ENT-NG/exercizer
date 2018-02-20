@@ -24,11 +24,11 @@ import org.entcore.common.http.filter.ResourcesProvider;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 public class SubjectScheduledOwner implements ResourcesProvider {
 
@@ -48,7 +48,7 @@ public class SubjectScheduledOwner implements ResourcesProvider {
 		String query = "SELECT COUNT(*) FROM exercizer.subject_scheduled as ss WHERE ss.id = ? AND ss.owner = ?";
 		JsonArray values = new JsonArray();
 		values.add(Sql.parseId(id));
-		values.addString(user.getUserId());
+		values.add(user.getUserId());
 		
 		Sql.getInstance().prepared(query,  values, new Handler<Message<JsonObject>>() {
 			@Override

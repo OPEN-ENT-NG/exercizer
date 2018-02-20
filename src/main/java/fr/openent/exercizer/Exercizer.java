@@ -33,7 +33,7 @@ import org.entcore.common.sql.SqlConf;
 import org.entcore.common.sql.SqlConfs;
 import org.entcore.common.storage.Storage;
 import org.entcore.common.storage.StorageFactory;
-import org.vertx.java.core.eventbus.EventBus;
+import io.vertx.core.eventbus.EventBus;
 
 import java.text.ParseException;
 
@@ -41,12 +41,12 @@ import java.text.ParseException;
 public class Exercizer extends BaseServer {
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         super.start();
         
         final EventBus eb = getEventBus(vertx);
 
-        final String exportPath = container.config()
+        final String exportPath = config
                 .getString("export-path", System.getProperty("java.io.tmpdir"));
 
         final Storage storage = new StorageFactory(vertx, config, new ExercizerStorage()).getStorage();
@@ -91,9 +91,9 @@ public class Exercizer extends BaseServer {
         addController(new SubjectLessonTypeController());
         addController(new SubjectTagController());
 
-        final String notifyCron = container.config().getString("scheduledNotificationCron", "0 0 4 * * ?");
-        final TimelineHelper timelineHelper = new TimelineHelper(vertx, vertx.eventBus(), container);
-        final String pathPrefix = Server.getPathPrefix(container.config());
+        final String notifyCron = config.getString("scheduledNotificationCron", "0 0 4 * * ?");
+        final TimelineHelper timelineHelper = new TimelineHelper(vertx, vertx.eventBus(), config);
+        final String pathPrefix = Server.getPathPrefix(config);
 
         try {
             new CronTrigger(vertx, notifyCron).schedule(
@@ -101,7 +101,7 @@ public class Exercizer extends BaseServer {
             );
         } catch (ParseException e) {
             log.fatal("[Exercizer] Invalid cron expression.", e);
-            vertx.stop();
+            vertx.close();
         }
     }
 

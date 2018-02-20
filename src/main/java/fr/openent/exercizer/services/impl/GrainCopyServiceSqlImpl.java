@@ -25,9 +25,9 @@ import fr.wseduc.webutils.Either;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IGrainCopyService {
 	
@@ -48,7 +48,7 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
 		// update copy grain
 		JsonArray values = new JsonArray();
 		StringBuilder updateGrainQuery = new StringBuilder();
-		for (String attr : resource.getFieldNames()) {
+		for (String attr : resource.fieldNames()) {
 			updateGrainQuery.append(attr).append(" = ?, ");
 			values.add(resource.getValue(attr));
 		}
@@ -67,7 +67,7 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
 		// update subject copy
 		s.prepared(
 				"UPDATE " + schema + "subject_copy SET modified=NOW(), " + subjectiCopyState+ "=true WHERE id = ? RETURNING *",
-				new JsonArray().addNumber(resource.getNumber("subject_copy_id")));
+				new JsonArray().add(resource.getLong("subject_copy_id")));
 
 		sql.transaction(s.build(), SqlResult.validUniqueResultHandler(1, handler));
 	}
@@ -75,8 +75,8 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
 	@Override
 	public void updateAndScore(final JsonObject resource, String subjectiCopyState, final Handler<Either<String, JsonObject>> handler) {
 		//initialize final score of resource
-		if (resource.getNumber("final_score") == null) {
-			resource.putNumber("final_score", resource.getNumber("calculated_score"));
+		if (resource.getDouble("final_score") == null) {
+			resource.put("final_score", resource.getDouble("calculated_score"));
 		}
 		SqlStatementsBuilder s = updateGrain(resource);
 		// update subject copy
@@ -86,9 +86,9 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
 						"final_score=(select sum(final_score) from "+schema+"grain_copy where subject_copy_id = ?), " +
 						"calculated_score=(select sum(calculated_score) from "+schema+"grain_copy where subject_copy_id = ?), "
 						+ subjectiCopyState+ "=true WHERE id = ? RETURNING *",
-				new JsonArray().addNumber(resource.getNumber("subject_copy_id"))
-						.addNumber(resource.getNumber("subject_copy_id"))
-						.addNumber(resource.getNumber("subject_copy_id")));
+				new JsonArray().add(resource.getLong("subject_copy_id"))
+						.add(resource.getLong("subject_copy_id"))
+						.add(resource.getLong("subject_copy_id")));
 
 		sql.transaction(s.build(), SqlResult.validUniqueResultHandler(1, handler));
 	}

@@ -37,9 +37,9 @@ import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.http.filter.sql.OwnerOnly;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonObject;
 
 public class FolderController extends ControllerHelper {
 
@@ -109,7 +109,7 @@ public class FolderController extends ControllerHelper {
                     RequestUtils.bodyToJson(request, pathPrefix + "delete", new Handler<JsonObject>() {
                         @Override
                         public void handle(final JsonObject resource) {
-                            folderService.remove(resource.getArray("ids"), user, new Handler<Either<String, JsonObject>>() {
+                            folderService.remove(resource.getJsonArray("ids"), user, new Handler<Either<String, JsonObject>>() {
                                 @Override
                                 public void handle(Either<String, JsonObject> event) {
                                     if (event.isRight()) {
@@ -176,7 +176,7 @@ public class FolderController extends ControllerHelper {
                                                 if (event.isRight()) {
                                                     Renders.created(request);
                                                 } else {
-                                                    Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
+                                                    Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
                                                 }
                                             }
                                         });
@@ -219,7 +219,7 @@ public class FolderController extends ControllerHelper {
                                                         if (event.isRight()) {
                                                             Renders.noContent(request);
                                                         } else {
-                                                            Renders.renderError(request, new JsonObject().putString("error", "exercizer.error"));
+                                                            Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
                                                         }
                                                     }
                                                 });
