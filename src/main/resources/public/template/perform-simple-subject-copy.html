@@ -41,7 +41,7 @@
                                 on-drop="performSimpleSubjectCopyController.setCurrentFileName()"
                                 class="droppable flex-row align-center seven">
 
-                                    <i ng-class="{'upload': !performSimpleSubjectCopyController.newFiles, 'attachment': performSimpleSubjectCopyController.newFiles}"
+                                    <i ng-class="{'upload': !performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename, 'attachment': performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename}"
                                         class="horizontal-spacing medium-text"></i>
 
                                     <input ng-readonly="true" type="text"

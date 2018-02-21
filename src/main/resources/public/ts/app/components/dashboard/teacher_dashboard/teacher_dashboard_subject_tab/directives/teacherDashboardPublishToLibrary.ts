@@ -168,6 +168,7 @@ export const teacherDashboardPublishToLibrary = ng.directive('teacherDashboardPu
                                 scope.hide();
                             },
                             function(err) {
+                                scope.isPublicationOnGoing = false;
                                 notify.error(err);
                             }
                         );

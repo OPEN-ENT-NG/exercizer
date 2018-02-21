@@ -515,25 +515,8 @@ public class SubjectScheduledController extends ControllerHelper {
 							if (event.isRight()) {
 								final JsonObject subjectScheduled = event.right().getValue();
 								final String subjectTitle = subjectScheduled.getString("title");
-								//replace corrected file
-								if (subjectScheduled.getString("corrected_file_id") != null) {
-									final String existingFileId = subjectScheduled.getString("corrected_file_id");
-									request.pause();
-									storage.removeFile(existingFileId, new Handler<JsonObject>() {
-										@Override
-										public void handle(JsonObject event) {
-											request.resume();
-											if ("error".equals(event.getString("status"))) {
-												Renders.badRequest(request, event.getString("message"));
-											} else {
-												addCorrectedFile(request, id, user, subjectTitle);
-											}
-										}
-									});
-								} else {
-									//adding a file
-									addCorrectedFile(request, id, user, subjectTitle);
-								}
+								final String existingFileId = subjectScheduled.getString("corrected_file_id", "");
+								storage.writeUploadFile(request, getAddOrReplaceCorrectedFileHandler(request, id, user, subjectTitle, existingFileId));
 							} else {
 								Renders.badRequest(request, event.left().getValue());
 							}
@@ -548,8 +531,8 @@ public class SubjectScheduledController extends ControllerHelper {
 		});
 	}
 
-	private void addCorrectedFile(final HttpServerRequest request, final String id, final UserInfos user, final String subjectTitle) {
-		storage.writeUploadFile(request, new Handler<JsonObject>() {
+	private Handler<JsonObject> getAddOrReplaceCorrectedFileHandler(final HttpServerRequest request, final String id, final UserInfos user, final String subjectTitle, final String existingFileId) {
+		return new Handler<JsonObject>() {
             @Override
             public void handle(JsonObject event) {
                 if ("ok".equals(event.getString("status"))) {
@@ -581,6 +564,17 @@ public class SubjectScheduledController extends ControllerHelper {
 
 						                    params.putString("resourceUri", params.getString("uri"));
 						                    notification.notifyTimeline(request, "exercizer.correcthomework", user, recipientSet, id, params);
+
+											if (!StringUtils.isEmpty(existingFileId)) {
+												storage.removeFile(existingFileId, new Handler<JsonObject>() {
+													@Override
+													public void handle(JsonObject event) {
+														if ("error".equals(event.getString("status"))) {
+															log.warn("Fail to delete file due to : " + event.getString("message"));
+														}
+													}
+												});
+											}
 					                    } else {
 						                    Renders.badRequest(request, event.left().getValue());
 					                    }
@@ -597,7 +591,7 @@ public class SubjectScheduledController extends ControllerHelper {
                 }
             }
 
-        });
+        };
 	}
 
 	@Get("/subjects-scheduled")

@@ -565,24 +565,8 @@ public class SubjectCopyController extends ControllerHelper {
                     final JsonObject subjectCopy = event.right().getValue();
                     //replace corrected file
 	                final String labelFileId = ISubjectCopyService.FileType.CORRECTED.equals(fileType) ? "corrected_file_id" : "homework_file_id";
-	                if (subjectCopy.getString(labelFileId) != null) {
-                        final String existingFileId = subjectCopy.getString(labelFileId);
-                        request.pause();
-                        storage.removeFile(existingFileId, new Handler<JsonObject>() {
-                            @Override
-                            public void handle(JsonObject event) {
-                                request.resume();
-                                if ("error".equals(event.getString("status"))) {
-                                    Renders.badRequest(request, event.getString("message"));
-                                } else {
-                                    addFile(request, id, fileType, subjectCopy, user);
-                                }
-                            }
-                        });
-                    } else {
-                        //adding a file
-                        addFile(request, id, fileType, subjectCopy, user);
-                    }
+					final String existingFileId = subjectCopy.getString(labelFileId, "");
+					storage.writeUploadFile(request, getAddOrReplaceFileHandler(request, id, fileType, subjectCopy, user, existingFileId));
                 } else {
                     Renders.badRequest(request, event.left().getValue());
                 }
@@ -590,8 +574,8 @@ public class SubjectCopyController extends ControllerHelper {
         });
 	}
 
-	private void addFile(final HttpServerRequest request, final String id, final ISubjectCopyService.FileType fileType, final JsonObject subject, final UserInfos user) {
-		storage.writeUploadFile(request, new Handler<JsonObject>() {
+	private Handler<JsonObject> getAddOrReplaceFileHandler(final HttpServerRequest request, final String id, final ISubjectCopyService.FileType fileType, final JsonObject subject, final UserInfos user, final String existingFileId) {
+		return new Handler<JsonObject>() {
 			@Override
 			public void handle(JsonObject event) {
 				if ("ok".equals(event.getString("status"))) {
@@ -618,6 +602,17 @@ public class SubjectCopyController extends ControllerHelper {
 								recipientSet.add(recipient);
 
 								sendNotification(request, notificationName, user, recipientSet, relativeUri, subject.getString("title"), null, id);
+
+								if (!StringUtils.isEmpty(existingFileId)) {
+									storage.removeFile(existingFileId, new Handler<JsonObject>() {
+										@Override
+										public void handle(JsonObject event) {
+											if ("error".equals(event.getString("status"))) {
+												log.warn("Fail to delete file due to : " + event.getString("message"));
+											}
+										}
+									});
+								}
 							} else {
 								Renders.badRequest(request, event.left().getValue());
 							}
@@ -629,7 +624,7 @@ public class SubjectCopyController extends ControllerHelper {
 				}
 			}
 
-		});
+		};
 	}
 
 	@Put("/subject-copy/simple/remove/corrected/:id")

@@ -134,8 +134,8 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         }).then(function(response){
                 deferred.resolve(response.data.fileId);
             },
-            function() {
-                deferred.reject("exercizer.error");
+            function(e) {
+                deferred.reject(e.data.error);
             }
         );
         return deferred.promise;

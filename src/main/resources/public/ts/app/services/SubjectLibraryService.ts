@@ -76,7 +76,7 @@ export class SubjectLibraryService implements ISubjectLibraryService {
         formData.append('file', file);
         formData.append('param', JSON.stringify(param));
 
-        var deferred = this._$q.defer();         ;
+        var deferred = this._$q.defer();
 
         this._$http.post('exercizer/subject/simple/'+ subject.id + '/publish/library', formData, {
             withCredentials: false,
@@ -92,8 +92,8 @@ export class SubjectLibraryService implements ISubjectLibraryService {
         }).then(function(response) {
                 deferred.resolve(true);
             },
-            function() {
-                deferred.reject('exercizer.error');
+            function(e) {
+                deferred.reject(e.data.error);
             }
         );
         return deferred.promise;

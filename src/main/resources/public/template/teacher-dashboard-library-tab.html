@@ -74,12 +74,13 @@
                 </div>
 
                 <div class="row">
-                    <autocomplete
-                            class="five cell"
+                    <div class="five cell">
+                        <autocomplete
                             options="teacherDashboardLibraryTabController.autocompleteSubjectTagList"
                             ng-change="teacherDashboardLibraryTabController.selectSubjectTag(selectedSubjectTagObject)"
                             ng-model="selectedSubjectTagObject">
-                    </autocomplete>
+                        </autocomplete>
+                    </div>
                     <div class="one cell">&nbsp;</div>
                     <input type="text" class="five cell" i18n-placeholder="exercizer.search" data-ng-model="teacherDashboardLibraryTabController.filters.title" />
                 </div>
