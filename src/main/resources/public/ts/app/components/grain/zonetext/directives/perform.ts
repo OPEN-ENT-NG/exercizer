@@ -11,7 +11,13 @@ export const performZoneText = ng.directive('performZoneText',
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/zonetext/templates/perform.html',
             link: (scope: any) => {
-                scope.grainCopy.grain_copy_data.custom_copy_data = new CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
+                scope.$watch("grainCopy",function(newValue,oldValue) {
+                    scope.init();
+                });
+
+                scope.init = () => {
+                    scope.grainCopy.grain_copy_data.custom_copy_data = new CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
+                };
 
                 scope.usedAnswers = [];
 
