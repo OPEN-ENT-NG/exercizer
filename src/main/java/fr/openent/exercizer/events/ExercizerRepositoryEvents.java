@@ -38,7 +38,7 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
             return;
         }
 
-        final JsonArray userIds = new JsonArray();
+        final JsonArray userIds = new fr.wseduc.webutils.collections.JsonArray();
         for (Object obj : groups){
             if (!(obj instanceof JsonObject)) continue;
             final JsonObject j = (JsonObject)obj;
@@ -78,9 +78,9 @@ public class ExercizerRepositoryEvents implements RepositoryEvents {
             return;
         }
 
-        final JsonArray userIds = new JsonArray();
-        final JsonArray managersActions = new JsonArray();
-        final JsonArray values = new JsonArray();
+        final JsonArray userIds = new fr.wseduc.webutils.collections.JsonArray();
+        final JsonArray managersActions = new fr.wseduc.webutils.collections.JsonArray();
+        final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
         for (Object obj : users){
             if (!(obj instanceof JsonObject)) continue;
             final JsonObject j = (JsonObject)obj;

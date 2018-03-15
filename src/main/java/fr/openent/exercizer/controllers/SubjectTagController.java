@@ -98,7 +98,7 @@ public class SubjectTagController extends ControllerHelper {
                 	RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
                         @Override
                         public void handle(final JsonObject resource) {
-                            subjectTagService.listBySubjectId(resource.getJsonArray("ids", new JsonArray()), arrayResponseHandler(request));
+                            subjectTagService.listBySubjectId(resource.getJsonArray("ids", new fr.wseduc.webutils.collections.JsonArray()), arrayResponseHandler(request));
                         }
                     });
                 }

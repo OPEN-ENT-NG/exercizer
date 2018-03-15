@@ -36,7 +36,7 @@ public class SubjectLessonTypeServiceSqlImpl extends AbstractExercizerServiceSql
 	 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
 	 */
 	public void list(final Handler<Either<String, JsonArray>> handler) {
-		JsonArray orderBy = new JsonArray();
+		JsonArray orderBy = new fr.wseduc.webutils.collections.JsonArray();
 		orderBy.add("ORDER BY r.label ASC");
 		super.list("r", null, null, orderBy, null, null, handler);
 	}
@@ -47,10 +47,10 @@ public class SubjectLessonTypeServiceSqlImpl extends AbstractExercizerServiceSql
 	public void listBySubjectIdList(final JsonObject resources, final Handler<Either<String, JsonArray>> handler) {
 		JsonArray subjectIdList = resources.getJsonArray("subject_id_list");
 		
-		JsonArray joins = new JsonArray();
+		JsonArray joins = new fr.wseduc.webutils.collections.JsonArray();
 		joins.add("JOIN exercizer.subject_library_main_information slmi ON r.id = slmi.subject_lesson_type_id");
 
-		JsonArray filters = new JsonArray();
+		JsonArray filters = new fr.wseduc.webutils.collections.JsonArray();
 		filters.add("WHERE");
 		filters.add("slmi.subject_id = " + subjectIdList.getValue(0));
 
@@ -60,7 +60,7 @@ public class SubjectLessonTypeServiceSqlImpl extends AbstractExercizerServiceSql
 			}
 		}
 		
-		JsonArray orderBy = new JsonArray();
+		JsonArray orderBy = new fr.wseduc.webutils.collections.JsonArray();
 		orderBy.add("ORDER BY slmi.subject_id ASC");
 
 		super.list("r", joins, filters, orderBy, null, null, handler);

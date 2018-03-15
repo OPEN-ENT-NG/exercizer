@@ -43,7 +43,7 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 
 	@Override
 	public void getInfo(final String fileId, final Handler<AsyncResult<FileInfos>> handler) {
-		final JsonArray params = new JsonArray().add(fileId);
+		final JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(fileId);
 		final String query1 = "select owner, corrected_metadata from exercizer.subject where corrected_file_id = ?";
 		final String query2 = "select owner, homework_metadata from exercizer.subject_copy where homework_file_id = ?";
 		final String query3 = "select owner, corrected_metadata from exercizer.subject_scheduled where corrected_file_id = ?";
@@ -71,10 +71,10 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 							fi.setOwner(res.getString("owner"));
 							JsonObject meta = null;
 							if (res.getString("corrected_metadata") != null) {
-								meta = new JsonObject(res.getString("corrected_metadata"));
+								meta = new fr.wseduc.webutils.collections.JsonObject(res.getString("corrected_metadata"));
 							}
 							if (meta == null && res.getString("homework_metadata") != null) {
-								meta = new JsonObject(res.getString("homework_metadata"));
+								meta = new fr.wseduc.webutils.collections.JsonObject(res.getString("homework_metadata"));
 							}
 							if (meta != null) {
 								fi.setName(meta.getString("filename"));
@@ -95,7 +95,7 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 
 	@Override
 	public void updateInfo(String fileId, FileInfos fileInfos, final Handler<AsyncResult<Integer>> handler) {
-		final JsonArray params = new JsonArray().add(fileId);
+		final JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(fileId);
 		final String query1 =
 				"update exercizer.subject " +
 				"set corrected_metadata = jsonb_set(corrected_metadata, '{filename}', '\"" + fileInfos.getName() + "\"') " +

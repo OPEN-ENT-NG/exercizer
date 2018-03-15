@@ -22,7 +22,7 @@ public class SubjectExporter {
     private static final Logger log = LoggerFactory.getLogger(SubjectExporter.class);
 
     public SubjectExporter(final JsonArray grains) {
-        this.grains = grains == null ? new JsonArray() : grains;
+        this.grains = grains == null ? new fr.wseduc.webutils.collections.JsonArray() : grains;
         this.stringWriter = new StringWriter();
         try {
             this.xsw = XMLOutputFactory.newInstance().createXMLStreamWriter(stringWriter);
@@ -89,7 +89,7 @@ public class SubjectExporter {
     private void writeStatement(final JsonObject grainData) throws XMLStreamException {
         this.xsw.writeAttribute("type", "description");
         this.writeCommon(grainData.getString("title", ""),
-                this.toCDATA(grainData.getJsonObject("custom_data", new JsonObject()).getString("statement", "")), "html");
+                this.toCDATA(grainData.getJsonObject("custom_data", new fr.wseduc.webutils.collections.JsonObject()).getString("statement", "")), "html");
     }
 
     private void writeShortAnswer(final JsonObject grainData) throws XMLStreamException {
@@ -112,7 +112,7 @@ public class SubjectExporter {
         this.writeCommon(grainData.getString("title", ""),
                 this.toCDATA(grainData.getString("statement", "")), "html");
         if(grainData.getJsonObject("custom_data") != null) {
-            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new JsonArray());
+            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new fr.wseduc.webutils.collections.JsonArray());
 
             for (final Object o : answers) {
                 if (!(o instanceof JsonObject)) continue;
@@ -127,7 +127,7 @@ public class SubjectExporter {
         this.writeCommon(grainData.getString("title", ""),
                 this.toCDATA(grainData.getString("statement", "")), "html");
         if(grainData.getJsonObject("custom_data") != null) {
-            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new JsonArray());
+            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new fr.wseduc.webutils.collections.JsonArray());
             final List<JsonObject> answersList = new ArrayList<>();
             int totalCorrectAswer = 0;
             for (Object o : answers) {
@@ -151,7 +151,7 @@ public class SubjectExporter {
         this.writeCommon(grainData.getString("title", ""),
                 this.toCDATA(grainData.getString("statement", "")), "html");
         if (grainData.getJsonObject("custom_data") != null){
-            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new JsonArray());
+            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new fr.wseduc.webutils.collections.JsonArray());
             for (Object o : answers) {
                 if (!(o instanceof JsonObject)) continue;
                 final JsonObject j = (JsonObject)o;
@@ -168,7 +168,7 @@ public class SubjectExporter {
         this.writeCommon(grainData.getString("title", ""),
                 this.toCDATA(grainData.getString("statement", "")), "html");
         if(grainData.getJsonObject("custom_data") != null) {
-            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new JsonArray());
+            final JsonArray answers = grainData.getJsonObject("custom_data").getJsonArray("correct_answer_list", new fr.wseduc.webutils.collections.JsonArray());
 
             for (Object o : answers) {
                 if (!(o instanceof JsonObject)) continue;

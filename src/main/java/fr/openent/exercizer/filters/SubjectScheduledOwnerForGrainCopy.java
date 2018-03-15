@@ -51,7 +51,7 @@ public class SubjectScheduledOwnerForGrainCopy implements ResourcesProvider {
 					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_scheduled as ss INNER JOIN " + conf.getSchema() +
 							"subject_copy sc ON ss.id = sc.subject_scheduled_id INNER JOIN " + conf.getSchema() + "grain_copy gc ON sc.id = gc.subject_copy_id " +
 							"WHERE ss.owner = ? AND gc.id = ?";
-					JsonArray values = new JsonArray();
+					JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 					values.add(user.getUserId());
 					values.add(id);
 

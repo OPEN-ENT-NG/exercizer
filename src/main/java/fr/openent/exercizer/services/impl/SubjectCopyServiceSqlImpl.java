@@ -47,7 +47,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     public void submitCopy(final long id, final Handler<Either<String, JsonObject>> handler) {
         sql.prepared(
                 "UPDATE " + schema + "subject_copy SET submitted_date=NOW() WHERE id = ? RETURNING *",
-                new JsonArray().add(id),
+                new fr.wseduc.webutils.collections.JsonArray().add(id),
                 SqlResult.validUniqueResultHandler(handler)
         );
     }
@@ -111,7 +111,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
                 resourceTable + " as sc INNER JOIN " + schema + "subject_scheduled as ss ON (ss.id = sc.subject_scheduled_id) " +
                 "WHERE sc.id IN " + Sql.listPrepared(ids.toArray());
 
-        JsonArray values = new JsonArray();
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
         for (final String id : ids) {
             values.add(Sql.parseId(id));
         }
@@ -128,7 +128,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
                 " FROM " + resourceTable + " AS sc INNER JOIN " + schema + "subject_scheduled as ss ON ss.id=sc.subject_scheduled_id" +
                 " WHERE sc.id = ?";
 
-        sql.prepared(query, new JsonArray().add(Sql.parseId(id)), SqlResult.validUniqueResultHandler(handler));
+        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)), SqlResult.validUniqueResultHandler(handler));
     }
 
     @Override
@@ -142,13 +142,13 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
                         " SET corrected_file_id=null,corrected_metadata=null,modified = NOW(), is_corrected = " + queryCorrected +
                         "WHERE id = ? ";
 
-        sql.prepared(query, new JsonArray().add(Sql.parseId(id)), SqlResult.validRowsResultHandler(handler));
+        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)), SqlResult.validRowsResultHandler(handler));
     }
 
     @Override
     public void correctedInProgress(final List<String> ids, final Handler<Either<String, JsonObject>> handler) {
         final List<Object> sqlIds = new ArrayList<>();
-        JsonArray values = new JsonArray();
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
         for (final String id : ids) {
             values.add(Sql.parseId(id));
         }
@@ -175,7 +175,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
                         " SET homework_file_id=?, homework_metadata=?::jsonb, submitted_date=NOW(), modified = NOW() " +
                         "WHERE id = ? ";
 
-        final JsonArray values = new JsonArray();
+        final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
         values.add(fileId);
         values.add(metadata);
         values.add(Sql.parseId(id));
@@ -189,7 +189,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
                         " SET corrected_file_id=?, corrected_metadata=?::jsonb, is_corrected=true, modified = NOW() " +
                         "WHERE id = ? ";
 
-        final JsonArray values = new JsonArray();
+        final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
         values.add(fileId);
         values.add(metadata);
         values.add(Sql.parseId(id));
@@ -208,7 +208,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     @Override
     public void getArchive(final List<String> ids, final Handler<Either<String, JsonArray>> handler){
         final String query = "SELECT * FROM " + resourceTable + " AS sc WHERE sc.subject_scheduled_id IN "+ Sql.listPrepared(ids.toArray()) +"AND sc.is_archived = true";
-        JsonArray values = new JsonArray();
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
         for (final String id : ids) {
             values.add(Sql.parseId(id));
         }

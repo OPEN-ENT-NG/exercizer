@@ -52,7 +52,7 @@ public class SubjectCopyOwnerForGrain implements ResourcesProvider {
 					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_copy sc " +
 							"INNER JOIN " + conf.getSchema() + "grain_copy gc ON sc.id = gc.subject_copy_id " +
 							"WHERE gc.id = ? AND sc.owner = ?";
-					JsonArray values = new JsonArray();
+					JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 					values.add(id);
 					values.add(user.getUserId());
 

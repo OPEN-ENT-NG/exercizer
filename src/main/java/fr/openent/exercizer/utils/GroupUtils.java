@@ -38,7 +38,7 @@ public final class GroupUtils {
 				"MATCH (s:Group)<-[:IN]-(visibles) " +
 						"WHERE s.id IN {groupIds} " +
 						"RETURN DISTINCT visibles.id as _id, visibles.lastName + ' ' + visibles.firstName as name ";
-		final JsonObject params = new JsonObject().put("groupIds", new JsonArray(groupIds));
+		final JsonObject params = new fr.wseduc.webutils.collections.JsonObject().put("groupIds", new fr.wseduc.webutils.collections.JsonArray(groupIds));
 		UserUtils.findVisibleUsers(eb, userId, true, false, customReturn, params, handler);
 	}
 

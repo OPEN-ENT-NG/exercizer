@@ -50,7 +50,7 @@ public class SubjectCopyOwner implements ResourcesProvider {
 					resourceRequest.pause();
 
 					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_copy sc WHERE sc.id = ? AND sc.owner = ?";
-					JsonArray values = new JsonArray();
+					JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 					values.add(id);
 					values.add(user.getUserId());
 

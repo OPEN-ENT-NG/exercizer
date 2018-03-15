@@ -191,7 +191,7 @@ public class SubjectCopyController extends ControllerHelper {
 	        final String dueDate,
 	        final String idResource
 	        ) {
-	        JsonObject params = new JsonObject();
+	        JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
 			if (relativeUri != null) {
 				params.put("uri", pathPrefix + "#" + relativeUri);
 				params.put("resourceUri", params.getString("uri"));
@@ -269,7 +269,7 @@ public class SubjectCopyController extends ControllerHelper {
 								@Override
 								public void handle(Either<String, JsonObject> r) {
 									if (r.isLeft()) {
-										renderError(request, new JsonObject().put("error", r.left().getValue()));
+										renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", r.left().getValue()));
 										return;
 									}
 									final JsonObject subjectCopy = ResourceParser.beforeAny(r.right().getValue());
@@ -344,12 +344,12 @@ public class SubjectCopyController extends ControllerHelper {
 		                @Override
 		                public void handle(Either<String, JsonObject> r) {
 			                if (r.isLeft()) {
-				                renderError(request, new JsonObject().put("error", r.left().getValue()));
+				                renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", r.left().getValue()));
 				                return;
 			                }
 			                final JsonObject subjectCopy = r.right().getValue();
 			                final boolean result = !subjectCopy.getBoolean("is_corrected", false) && !subjectCopy.getBoolean("is_correction_on_going", false);
-                            Renders.renderJson(request, new JsonObject().put("result", result));
+                            Renders.renderJson(request, new fr.wseduc.webutils.collections.JsonObject().put("result", result));
 	                    }
                     });
                 } else {
@@ -586,8 +586,8 @@ public class SubjectCopyController extends ControllerHelper {
 						@Override
 						public void handle(Either<String, JsonObject> event) {
 							if (event.isRight()) {
-								Renders.renderJson(request, new JsonObject().put("fileId", fileId));
-								JsonObject params = new JsonObject();
+								Renders.renderJson(request, new fr.wseduc.webutils.collections.JsonObject().put("fileId", fileId));
+								JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
 
 								String relativeUri = "";
 								String notificationName = "";
@@ -798,7 +798,7 @@ public class SubjectCopyController extends ControllerHelper {
 						public void handle(Either<String, JsonArray> event) {
 							if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() > 0) {
 
-								final JsonObject aliasFileName = new JsonObject();
+								final JsonObject aliasFileName = new fr.wseduc.webutils.collections.JsonObject();
 								final List<String> fileIds = new ArrayList<String>();
 
 								String subjectTitle = "";
@@ -965,10 +965,10 @@ public class SubjectCopyController extends ControllerHelper {
 											to.add(((JsonObject)owner).getString("owner"));
 										}
 
-										final JsonObject message = new JsonObject();
+										final JsonObject message = new fr.wseduc.webutils.collections.JsonObject();
 										message.put("subject", param.getString("subject"));
 										message.put("body", param.getString("body"));
-										message.put("to", new JsonArray(to));
+										message.put("to", new fr.wseduc.webutils.collections.JsonArray(to));
 
 										sendMail(message, user, request);
 									} else {
@@ -988,13 +988,13 @@ public class SubjectCopyController extends ControllerHelper {
 
 
 	private void sendMail(JsonObject message, UserInfos user, final HttpServerRequest request) {
-		JsonObject jo = new JsonObject();
+		JsonObject jo = new fr.wseduc.webutils.collections.JsonObject();
 		jo.put("action", "send");
 		jo.put("message", message);
 		jo.put("userId", user.getUserId());
 		jo.put("username", user.getUsername());
-		jo.put("request", new JsonObject()
-						.put("headers", new JsonObject()
+		jo.put("request", new fr.wseduc.webutils.collections.JsonObject()
+						.put("headers", new fr.wseduc.webutils.collections.JsonObject()
 								.put("Host", Renders.getHost(request))
 								.put("X-Forwarded-Proto", Renders.getScheme(request))
 								.put("Accept-Language", I18n.acceptLanguage(request))));

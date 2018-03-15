@@ -43,7 +43,7 @@ public class MassOwnerOnly implements ResourcesProvider {
 		final SqlConf conf = SqlConfs.getConf(binding.getServiceMethod().substring(0, binding.getServiceMethod().indexOf('|')));
 		RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 			public void handle(JsonObject data) {
-				final List ids = data.getJsonArray("ids", new JsonArray()).getList();
+				final List ids = data.getJsonArray("ids", new fr.wseduc.webutils.collections.JsonArray()).getList();
 
 				if (ids != null && ids.size() > 0) {
 					request.pause();
@@ -53,7 +53,7 @@ public class MassOwnerOnly implements ResourcesProvider {
 							"SELECT count(*) FROM " + conf.getSchema() + conf.getTable() +
 									" WHERE id IN " + Sql.listPrepared(ids) + " AND owner = ?";
 
-					final JsonArray values = new JsonArray(ids).add(user.getUserId());
+					final JsonArray values = new fr.wseduc.webutils.collections.JsonArray(ids).add(user.getUserId());
 
 					Sql.getInstance().prepared(query, values, new Handler<Message<JsonObject>>() {
 						@Override

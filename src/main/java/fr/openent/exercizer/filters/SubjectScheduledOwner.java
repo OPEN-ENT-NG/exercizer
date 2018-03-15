@@ -46,7 +46,7 @@ public class SubjectScheduledOwner implements ResourcesProvider {
 		resourceRequest.pause();
 		
 		String query = "SELECT COUNT(*) FROM exercizer.subject_scheduled as ss WHERE ss.id = ? AND ss.owner = ?";
-		JsonArray values = new JsonArray();
+		JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 		values.add(Sql.parseId(id));
 		values.add(user.getUserId());
 		

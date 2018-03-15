@@ -59,7 +59,7 @@ public class ScheduledNotification implements Handler<Long> {
                 " FROM exercizer.subject_scheduled AS ss INNER JOIN exercizer.subject_copy as sc ON ss.id=sc.subject_scheduled_id" +
                 " WHERE ss.is_notify = false GROUP BY ss.id";
 
-        sql.prepared(query, new JsonArray(), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
+        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray(), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
             @Override
             public void handle(Either<String, JsonArray> event) {
                 if (event.isRight()) {
@@ -93,7 +93,7 @@ public class ScheduledNotification implements Handler<Long> {
                                                     " SET is_notify=TRUE, modified = NOW() " +
                                                     "WHERE id = ? ";
 
-                                    final JsonArray values = new JsonArray();
+                                    final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
                                     values.add(scheduledSubject.getLong("id"));
 
                                     sql.prepared(query, values, SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
@@ -109,7 +109,7 @@ public class ScheduledNotification implements Handler<Long> {
                                                 user.setUserId(scheduledSubject.getString("owner"));
                                                 user.setUsername(scheduledSubject.getString("owner_username"));
 
-                                                JsonObject params = new JsonObject();
+                                                JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
                                                 params.put("uri", pathPrefix + "#/dashboard/student");
                                                 params.put("userUri", "/userbook/annuaire#" + user.getUserId());
                                                 params.put("username", user.getUsername());

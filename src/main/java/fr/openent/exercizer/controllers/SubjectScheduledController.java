@@ -120,7 +120,7 @@ public class SubjectScheduledController extends ControllerHelper {
 							}
 
 							final JsonObject jo = event.right().getValue();
-							final List<String> recipientSet = jo.getJsonArray("owners", new JsonArray()).getList();
+							final List<String> recipientSet = jo.getJsonArray("owners", new fr.wseduc.webutils.collections.JsonArray()).getList();
 							subjectScheduledService.unSchedule(subjectScheduledId, new Handler<Either<String, JsonObject>>() {
 								@Override
 								public void handle(Either<String, JsonObject> either) {
@@ -178,8 +178,8 @@ public class SubjectScheduledController extends ControllerHelper {
                     scheduledSubject.put("subjectId", subjectId);
 
                     final JsonObject scheduledAt = scheduledSubject.getJsonObject("scheduledAt");
-                    final JsonArray usersJa = scheduledAt.getJsonArray("userList", new JsonArray());
-                    final JsonArray groupsJa = scheduledAt.getJsonArray("groupList", new JsonArray());
+                    final JsonArray usersJa = scheduledAt.getJsonArray("userList", new fr.wseduc.webutils.collections.JsonArray());
+                    final JsonArray groupsJa = scheduledAt.getJsonArray("groupList", new fr.wseduc.webutils.collections.JsonArray());
 
                     if (groupsJa.size() > 0) {
                         //find group member
@@ -194,7 +194,7 @@ public class SubjectScheduledController extends ControllerHelper {
                                     public void handle(JsonArray membersJa) {
                                         if (membersJa != null) {
                                             //users list without duplicates
-                                            final JsonArray usersSafe = new JsonArray();
+                                            final JsonArray usersSafe = new fr.wseduc.webutils.collections.JsonArray();
                                             final Set<String> userIds = new HashSet<String>();
 
                                             //users
@@ -220,7 +220,7 @@ public class SubjectScheduledController extends ControllerHelper {
                         );
                     } else {
                         //only users
-                        final JsonArray usersSafe = new JsonArray();
+                        final JsonArray usersSafe = new fr.wseduc.webutils.collections.JsonArray();
                         final Set<String> userIds = new HashSet<String>();
                         safeUsersCollections(usersJa, usersSafe, userIds);
 
@@ -264,7 +264,7 @@ public class SubjectScheduledController extends ControllerHelper {
 		}
 
 		final JsonObject scheduledAt = scheduledSubject.getJsonObject("scheduledAt");
-		if (scheduledAt.getJsonArray("userList", new JsonArray()).size() == 0 && scheduledAt.getJsonArray("groupList", new JsonArray()).size() == 0) {
+		if (scheduledAt.getJsonArray("userList", new fr.wseduc.webutils.collections.JsonArray()).size() == 0 && scheduledAt.getJsonArray("groupList", new JsonArray()).size() == 0) {
 			badRequest(request, "exercizer.schedule.empty.users");
 			return false;
 		}
@@ -321,7 +321,7 @@ public class SubjectScheduledController extends ControllerHelper {
 
 					Renders.created(request);
 				} else {
-					renderError(request, new JsonObject().put("error","exercizer.subject.scheduled.error"));
+					renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error","exercizer.subject.scheduled.error"));
 				}
 			}
 		};
@@ -357,7 +357,7 @@ public class SubjectScheduledController extends ControllerHelper {
 
 			final String dueDateFormat = DateUtils.format(dueDate);
 
-			JsonObject params = new JsonObject();
+			JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
 			params.put("uri", pathPrefix + "#" + relativeUri);
 			params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
 			params.put("username", user.getUsername());
@@ -546,7 +546,7 @@ public class SubjectScheduledController extends ControllerHelper {
 				                    @Override
 				                    public void handle(Either<String, JsonArray> event) {
 					                    if (event.isRight()) {
-						                    Renders.renderJson(request, new JsonObject().put("fileId", fileId));
+						                    Renders.renderJson(request, new fr.wseduc.webutils.collections.JsonObject().put("fileId", fileId));
 
 						                    final JsonArray members = event.right().getValue();
 						                    final List<String> recipientSet = new ArrayList<String>();
@@ -556,7 +556,7 @@ public class SubjectScheduledController extends ControllerHelper {
 							                    recipientSet.add(((JsonObject)member).getString("owner"));
 						                    }
 
-						                    JsonObject params = new JsonObject();
+						                    JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
 						                    params.put("uri", pathPrefix + "#/dashboard/student");
 						                    params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
 						                    params.put("username", user.getUsername());
@@ -665,14 +665,14 @@ public class SubjectScheduledController extends ControllerHelper {
 						@Override
 						public void handle(Either<String, JsonArray> event) {
 							if (event.isLeft()) {
-								renderError(request, new JsonObject().put("error", event.left().getValue()));
+								renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", event.left().getValue()));
 								return;
 							}
 
 							JsonArray r = event.right().getValue();
-							r = r == null ? new JsonArray() : r;
+							r = r == null ? new fr.wseduc.webutils.collections.JsonArray() : r;
 							processTemplate(request, "text/export.txt",
-									new JsonObject().put("list", r), new Handler<String>() {
+									new fr.wseduc.webutils.collections.JsonObject().put("list", r), new Handler<String>() {
 										@Override
 										public void handle(String export) {
 											if (export != null) {

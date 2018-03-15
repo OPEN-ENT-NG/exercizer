@@ -48,7 +48,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
         final String query = "INSERT INTO " + resourceTable + "(subject_id, grain_type_id, order_by, grain_data) VALUES (?,?,?,?) returning id";
 
         final SqlStatementsBuilder s = new SqlStatementsBuilder();
-        s.prepared(query, new JsonArray().add(subjectId).add(resource.getLong("grainTypeId")).add(resource.getInteger("orderBy")).add(resource.getValue("grainData")));
+        s.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectId).add(resource.getLong("grainTypeId")).add(resource.getInteger("orderBy")).add(resource.getValue("grainData")));
 
         //required for replicate grain directly from the subject
         updateMaxScore(s, subjectId);
@@ -66,7 +66,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
 
         final SqlStatementsBuilder s = new SqlStatementsBuilder();
 
-        s.prepared(updateGrainQuery, new JsonArray().add(subjectId).add(resource.getLong("grainTypeId")).
+        s.prepared(updateGrainQuery, new fr.wseduc.webutils.collections.JsonArray().add(subjectId).add(resource.getLong("grainTypeId")).
                 add(resource.getInteger("orderBy")).add(resource.getValue("grainData")).add(id));
 
         updateMaxScore(s, subjectId);
@@ -83,7 +83,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
 
         final SqlStatementsBuilder s = new SqlStatementsBuilder();
 
-        s.prepared(query, new JsonArray(grainIds));
+        s.prepared(query, new fr.wseduc.webutils.collections.JsonArray(grainIds));
         updateMaxScore(s, subjectId);
 
         sql.transaction(s.build(), SqlResult.validRowsResultHandler(1, handler));
@@ -93,7 +93,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
         //update max score of subject
         String updateSubjectQuery = "UPDATE " + schema + "subject SET max_score=(SELECT sum(cast(g.grain_data::json->>'max_score' as double precision)) FROM " +
                 resourceTable + " as g WHERE g.subject_id=?) WHERE id=?";
-        s.prepared(updateSubjectQuery, new JsonArray().add(subjectId).add(subjectId));
+        s.prepared(updateSubjectQuery, new fr.wseduc.webutils.collections.JsonArray().add(subjectId).add(subjectId));
     }
 
     /**
@@ -109,7 +109,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
      */
     @Override
     public void listBySubjectForLibrary(final JsonObject resource, final Handler<Either<String, JsonArray>> handler) {
-    	JsonArray joins = new JsonArray();
+    	JsonArray joins = new fr.wseduc.webutils.collections.JsonArray();
     	joins.add("JOIN exercizer.subject s ON r.subject_id = s.id AND s.is_library_subject = true AND s.id = " + resource.getValue("id"));
     	
     	super.list("r", joins, null, null, null, null, handler);
@@ -123,7 +123,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
         final String query = "SELECT g.grain_type_id as grain_type_id, g.grain_data as grain_data, gt.public_name as default_title FROM " + resourceTable +
                 " AS g INNER JOIN " + schema + "grain_type AS gt ON (g.grain_type_id=gt.id) WHERE g.id IN " +
                 Sql.listPrepared(grainIds);
-        sql.prepared(query, new JsonArray(grainIds), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
+        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray(grainIds), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
             @Override
             public void handle(Either<String, JsonArray> event) {
                 if (event.isRight()) {
@@ -148,11 +148,11 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
         for (int i=0;i<grainJa.size();i++) {
             final JsonObject grainJo = grainJa.getJsonObject(i);
             //set title suffix
-            final JsonObject grainData = new JsonObject(grainJo.getString("grain_data"));
+            final JsonObject grainData = new fr.wseduc.webutils.collections.JsonObject(grainJo.getString("grain_data"));
             if (grainJo.getLong("grain_type_id") > 3) {
                 grainData.put("title", grainData.getString("title", i18n.translate(grainJo.getString("default_title"), host, acceptLanguage)) + titleSuffix);
             }
-            final JsonArray values = new JsonArray();
+            final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
             values.add(subjectId).add(grainJo.getLong("grain_type_id")).add(subjectId).add(grainData);
 
             s.prepared(queryinsertGrain, values);
@@ -169,6 +169,6 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
                 " FROM exercizer.grain AS g INNER JOIN exercizer.grain_type AS gt ON g.grain_type_id = gt.id " +
                 " WHERE g.subject_id = ? ORDER BY g.order_by";
 
-        sql.prepared(query, new JsonArray().add(Sql.parseId(id)), SqlResult.validResultHandler(handler, "grain_data"));
+        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)), SqlResult.validResultHandler(handler, "grain_data"));
     }
 }

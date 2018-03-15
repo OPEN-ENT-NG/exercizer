@@ -53,7 +53,7 @@ public class SubjectScheduledCorrected implements ResourcesProvider {
 		String query = "SELECT COUNT(ss.id) FROM " +
 				conf.getSchema() + "subject_scheduled as ss INNER JOIN " + conf.getSchema() + "subject_copy sc ON ss.id = sc.subject_scheduled_id " +
 				"WHERE "+("Student".equalsIgnoreCase(user.getType()) ? "sc.owner = ?" : "ss.owner = ?")+" AND ss.id = ? ";
-		JsonArray values = new JsonArray();
+		JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 		values.add(user.getUserId());
 		values.add(Sql.parseId(id));
 

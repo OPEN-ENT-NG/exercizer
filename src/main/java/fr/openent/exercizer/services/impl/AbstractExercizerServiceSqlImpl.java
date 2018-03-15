@@ -59,7 +59,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
 	protected void persist (final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		SqlStatementsBuilder s = new SqlStatementsBuilder();
 		String userQuery = "SELECT " + schema + "merge_users(?,?)";
-		s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
+		s.prepared(userQuery, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUsername()));
 
 		s.insert(resourceTable, resource, "*");
 		sql.transaction(s.build(), SqlResult.validUniqueResultHandler(1, handler));
@@ -73,7 +73,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      * @param handler the handler
      */
     protected void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
-        JsonArray values = new JsonArray();
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
         String getQuery = "SELECT * FROM " + resourceTable  + " WHERE id = ?";
         Integer id_integer = Integer.parseInt(id);
 
@@ -89,7 +89,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     protected void persistWithAnotherOwner(final JsonObject resource, final Handler<Either<String, JsonObject>> handler) {
         SqlStatementsBuilder s = new SqlStatementsBuilder();
         String anotherOwnerQuery = "SELECT " + schema + "merge_users(?,?)";
-        s.prepared(anotherOwnerQuery, new JsonArray().add(resource.getString("owner")).add(resource.getString("owner_username")));
+        s.prepared(anotherOwnerQuery, new fr.wseduc.webutils.collections.JsonArray().add(resource.getString("owner")).add(resource.getString("owner_username")));
         
         s.insert(resourceTable, resource, "*");
         sql.transaction(s.build(), SqlResult.validUniqueResultHandler(2, handler));
@@ -104,7 +104,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      */
     protected void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
         StringBuilder query = new StringBuilder();
-        JsonArray values = new JsonArray();
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 
         for (String attr : resource.fieldNames()) {
                 query.append(attr).append(" = ?, ");
@@ -124,7 +124,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      */
     protected void delete(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
     	String query = "DELETE FROM " + resourceTable + " WHERE id = ? RETURNING *";
-		sql.prepared(query, new JsonArray().add(resource.getInteger("id")), SqlResult.validUniqueResultHandler(handler));
+		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(resource.getInteger("id")), SqlResult.validUniqueResultHandler(handler));
     }
     
     /**
@@ -165,7 +165,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
     		}
     	}
     	
-    	sql.prepared(query.toString(), new JsonArray(), SqlResult.validResultHandler(handler)); 
+    	sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray(), SqlResult.validResultHandler(handler)); 
     }
     
     /**
@@ -193,7 +193,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
             }
     	}
     	
-    	sql.prepared(query.toString(), new JsonArray(), SqlResult.validUniqueResultHandler(handler)); 
+    	sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray(), SqlResult.validUniqueResultHandler(handler)); 
     }
     
     /**
@@ -216,7 +216,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
         }
     	
     	query.append(" ORDER BY created DESC");
-    	sql.prepared(query.toString(), new JsonArray(), SqlResult.validResultHandler(handler));
+    	sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray(), SqlResult.validResultHandler(handler));
     }
 
     /**
@@ -239,7 +239,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      */
     protected void list(final JsonArray filters, final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
         StringBuilder query = new StringBuilder();
-        JsonArray values = new JsonArray();
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 
         query.append("SELECT r.*,")
                 .append(" json_agg(row_to_json(row(rs.member_id,rs.action)::")
@@ -297,7 +297,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(resourceIdentifierName)
                 .append(" WHERE r.id = ?");
 
-        sql.prepared(query.toString(), new JsonArray().add(resource.getInteger("id")), SqlResult.validResultHandler(handler));
+        sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray().add(resource.getInteger("id")), SqlResult.validResultHandler(handler));
     }
 
     /**
@@ -326,7 +326,7 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(" WHERE")
                 .append(" r.owner = ?");
 
-        sql.prepared(query.toString(), new JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
+        sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
     }
 
 
@@ -344,6 +344,6 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 super.resourceTable + " as s " +
                 "WHERE s.corrected_file_id IS NOT NULL AND s.id = ?";
 
-        sql.prepared(query, new JsonArray().add(Sql.parseId(id)), SqlResult.validUniqueResultHandler(handler, "corrected_metadata"));
+        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)), SqlResult.validUniqueResultHandler(handler, "corrected_metadata"));
     }
 }
