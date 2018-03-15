@@ -66,6 +66,8 @@ gulp.task('watch', () => {
         springboard += '/';
     }
 
+    console.log('Using springboard at ' + springboard);
+
     gulp.watch('./src/main/resources/public/ts/**/*.ts', () => gulp.start('build'));
 
     fs.readFile("./gradle.properties", "utf8", function(error, content){

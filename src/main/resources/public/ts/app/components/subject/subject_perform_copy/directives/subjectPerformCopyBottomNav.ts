@@ -1,5 +1,6 @@
 import { ng } from 'entcore';
 import { IGrainCopy } from '../../../../models/domain';
+import { $ } from 'entcore';
 
 export const subjectPerformCopyBottomNav = ng.directive('subjectPerformCopyBottomNav',
     [() => {
@@ -41,7 +42,11 @@ export const subjectPerformCopyBottomNav = ng.directive('subjectPerformCopyBotto
                 };
                 
                 function _navigateTo(grainCopy:IGrainCopy = undefined) {
-                    scope.$emit('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy, scope.grainCopyList);
+                    $('.grain-perform').css({ opacity: 0, transition: 'all 300ms ease' });
+                    setTimeout(() => {
+                        scope.$emit('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy, scope.grainCopyList);
+                        scope.$apply();
+                    }, 300);
                 }
 
                 scope.$on('E_CURRENT_GRAIN_COPY_CHANGE' , function(event, grainCopy:IGrainCopy) {
