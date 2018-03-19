@@ -42,8 +42,9 @@ export const subjectPerformCopyBottomNav = ng.directive('subjectPerformCopyBotto
                 };
                 
                 function _navigateTo(grainCopy:IGrainCopy = undefined) {
-                    $('.grain-perform').css({ opacity: 0, transition: 'all 300ms ease' });
+                    $('.grain-perform').css({ opacity: 0, transition: 'all 250ms ease' });
                     setTimeout(() => {
+                        $('.grain-perform').removeAttr("style");
                         scope.$emit('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy, scope.grainCopyList);
                         scope.$apply();
                     }, 300);
