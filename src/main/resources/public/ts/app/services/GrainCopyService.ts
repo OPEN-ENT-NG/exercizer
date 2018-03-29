@@ -343,17 +343,37 @@ export class GrainCopyService implements IGrainCopyService {
                     alreadySet,
                     self = this;
                 if (grain.grain_data && grain.grain_data.custom_data) {
+                    var correctSize = grain.grain_data.custom_data.correct_answer_list.length;
 
                     angular.forEach(grain.grain_data.custom_data.correct_answer_list, function (correct_answer, key) {
                         notSet = true;
                         while (notSet) {
-                            rand = self._getRandomIntInclusive(1, grain.grain_data.custom_data.correct_answer_list.length);
+                            var currentOrder = correct_answer.order_by;
+                            rand = self._getRandomIntInclusive(1, grain.grain_data.custom_data.correct_answer_list.length, currentOrder);
                             alreadySet = false;
                             angular.forEach(newOrder, function (value) {
                                 if (value == rand) {
                                     alreadySet = true;
                                 }
                             });
+
+                            //avoid infinite loop : the last order can be randomly the same as the origin
+                            if (alreadySet && newOrder.length == (correctSize - 1)) {
+                                var noMoreChoice = true;
+                                angular.forEach(newOrder, function (value) {
+                                    if (value == currentOrder) {
+                                        noMoreChoice = false;
+                                    }
+                                });
+
+                                //permutation
+                                if (noMoreChoice) {
+                                    notSet = false;
+                                    newOrder[key] = newOrder[key-1];
+                                    newOrder[key-1] = currentOrder;
+                                }
+                            }
+
                             if (!alreadySet) {
                                 newOrder[key] = rand;
                                 notSet = false;
@@ -393,8 +413,12 @@ export class GrainCopyService implements IGrainCopyService {
     // et une valeur max (incluse).
     // Attention : si on utilisait Math.round(), on aurait une distribution
     // non uniforme !
-    private _getRandomIntInclusive(min, max) {
-        return Math.floor(Math.random() * (max - min +1)) + min;
+    private _getRandomIntInclusive(min, max, responseValue=-1) {
+        var newValue = responseValue;
+        while (newValue == responseValue) {
+            newValue = Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        return newValue;
     }
 }
 
