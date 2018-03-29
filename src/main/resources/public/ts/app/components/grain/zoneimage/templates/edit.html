@@ -18,7 +18,9 @@
         </div>
     </div>
     <lightbox show="displayState.changeBackground" on-close="displayState.changeBackground = false">
-        <media-library ng-model="grain.grain_data.custom_data.guideImageFile" ng-change="displayState.changeBackground = false; updateGrain();" file-format="'img'"></media-library>
+        <div ng-if="displayState.changeBackground">
+            <media-library ng-model="grain.grain_data.custom_data.guideImageFile" ng-change="displayState.changeBackground = false; updateGrain();" file-format="'img'"></media-library>
+        </div>
     </lightbox>
 
     <lightbox show="displayState.editZone" on-close="displayState.editZone = false">
@@ -37,7 +39,9 @@
         </div>
     </lightbox>
     <lightbox show="displayState.pickOption" on-close="displayState.pickOption = false">
-        <media-library ng-model="displayState.newOption" file-format="'img'" ng-change="addOption(grain.grain_data.custom_data); displayState.pickOption = false"></media-library>
+        <div ng-if="displayState.pickOption">
+            <media-library ng-model="displayState.newOption" file-format="'img'" ng-change="addOption(grain.grain_data.custom_data); displayState.pickOption = false"></media-library>
+        </div>
     </lightbox>
     <div class="row">
         <label><strong><i18n>exercizer.grain.zoneimg.advisable</i18n></strong></label>

@@ -294,7 +294,9 @@
 
         <!-- ADD GRAIN DOCUMENT MODAL -->
         <lightbox data-show="editSubjectController.isModalAddGrainDocumentDisplayed" data-on-close="editSubjectController.closeModalAddGrainDocument()">
-            <media-library data-ng-model="mediaLibraryItem" visibility="'protected'" file-format="'any'" data-ng-change="editSubjectController.addGrainDocument(mediaLibraryItem)"></media-library>
+            <div ng-if="editSubjectController.isModalAddGrainDocumentDisplayed">
+                <media-library data-ng-model="mediaLibraryItem" visibility="'protected'" file-format="'any'" data-ng-change="editSubjectController.addGrainDocument(mediaLibraryItem)"></media-library>
+            </div>
         </lightbox>
 
         <!-- REMOVE GRAIN DOCUMENT MODAL -->

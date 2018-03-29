@@ -36,7 +36,9 @@
         </div>
     </div>
     <lightbox show="displayState.changeBackground" on-close="displayState.changeBackground = false">
-        <media-library ng-model="grain.grain_data.custom_data.guideImageFile" ng-change="displayState.changeBackground = false; updateGrain();" file-format="'img'"></media-library>
+        <div ng-if="displayState.changeBackground">
+            <media-library ng-model="grain.grain_data.custom_data.guideImageFile" ng-change="displayState.changeBackground = false; updateGrain();" file-format="'img'"></media-library>
+        </div>
     </lightbox>
     <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'list'" on-close="displayState.editZone = false">
         <h2><i18n>exercizer.grain.responses</i18n></h2>
