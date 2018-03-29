@@ -10,7 +10,7 @@
         <!-- TOP HEADER -->
         <div class="row">
             <h1 class="cell">
-                <span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / <span class="hover-orange" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
+                <span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / <span class="hover-orange" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
             <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly && editSimpleSubjectController.subject.id" data-ng-click="editSimpleSubjectController.scheduleSubject()">
                 <i18n>exercizer.schedule</i18n>
@@ -40,7 +40,7 @@
                         <div class="twelve cell horizontal-spacing">
                             <h3><i18n>exercizer.subject.title</i18n></h3>
                             <div data-ng-if="editSimpleSubjectController.readOnly" class="twelve cell">[[editSimpleSubjectController.subject.title]]</div>
-                            <input type="text" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.title" class="twelve cell" i18n-placeholder="exercizer.subject.title">
+                            <input type="text" maxlength="200" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.title" class="twelve cell" i18n-placeholder="exercizer.subject.title">
                         </div>
                         <div class="twelve cell horizontal-spacing vertical-spacing">
                             <h3><i18n>exercizer.simple.edit.description</i18n></h3>

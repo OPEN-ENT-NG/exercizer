@@ -104,7 +104,7 @@
                                                         <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                                                     </div>
                                                     <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">
-                                                        [[subjectScheduled.title ]]
+                                                        [[ subjectScheduled.title | limitTo: 70  ]][[ subjectScheduled.title.length > 70 ? '...' : '']]
                                                     </strong>
                                                 </div>
                                                 <div class="row">

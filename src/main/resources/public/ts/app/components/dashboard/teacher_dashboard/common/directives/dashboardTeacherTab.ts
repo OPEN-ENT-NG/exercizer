@@ -95,12 +95,6 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
                         throw "tab "+scope.currentTab+"  missing"
                 }
             };
-
-            scope.getSubjectSelectedTitle = function(){
-                if(scope.selectedSubjectScheduled){
-                    return scope.selectedSubjectScheduled.title
-                }
-            }
         }
     };
 }]
