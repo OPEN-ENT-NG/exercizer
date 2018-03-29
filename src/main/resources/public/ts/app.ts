@@ -189,7 +189,7 @@ routes.define(function($routeProvider){
         .when('/subject/edit/simple/:subjectId/', {
             action: 'editSimpleSubject'
         })
-        .when('/subject/create/simple/', {
+        .when('/subject/create/simple/:folderId?', {
             action: 'editSimpleSubject'
         })
         .when('/subject/copy/preview/perform/:subjectId/', {

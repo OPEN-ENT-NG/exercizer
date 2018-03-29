@@ -73,9 +73,13 @@ class EditSimpleSubjectController {
             });
         } else {
             //new subject
+            var folderId = _$routeParams['folderId'];
             self._subject = new Subject();
             self._subject.type = 'simple';
             self._subject.title = self._defaultTitle;
+            if (folderId) {
+                self._subject.folder_id = folderId;
+            }
             self._previewingFromLibrary = false;
             self._hasDataLoaded = true;
             self.createSubject();

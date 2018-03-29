@@ -54,7 +54,11 @@ export const teacherDashboardSubjectEdit = ng.directive('teacherDashboardSubject
                     
                     if (type === 'simple') {
                         scope.closeLightbox();
-                        $location.path('/subject/create/simple/');
+                        if (scope.subject.folder_id) {
+                            $location.path('/subject/create/simple/' + scope.subject.folder_id);
+                        } else {
+                            $location.path('/subject/create/simple/');
+                        }
                     }                        
                 };
 
