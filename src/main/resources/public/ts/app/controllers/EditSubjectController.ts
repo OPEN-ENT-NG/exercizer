@@ -513,8 +513,12 @@ class EditSubjectController {
         return this._isModalRemoveGrainDocumentDisplayed;
     }
 
-    get isOrganizerFolded():boolean {
+    get organizerFolded():boolean {
         return this._isOrganizerFolded;
+    }
+
+    set organizerFolded(value : boolean) {
+        this._isOrganizerFolded = value;
     }
 
     get isModalRemoveSelectedGrainListDisplayed():boolean {

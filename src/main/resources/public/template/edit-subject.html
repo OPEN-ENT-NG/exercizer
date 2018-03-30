@@ -39,14 +39,14 @@
 
                             <!-- grain toggle icon -->
                             <div class="cell right-magnet">
-                                <i data-ng-show="editSubjectController.isOrganizerFolded" data-ng-click="editSubjectController.foldOrganizer()" data-tooltip="exercizer.unfold" class="down-open hover-orange"></i>
-                                <i data-ng-hide="editSubjectController.isOrganizerFolded" data-ng-click="editSubjectController.foldOrganizer()" data-tooltip="exercizer.fold" class="up-open hover-orange"></i>
+                                <i data-ng-show="editSubjectController.organizerFolded" data-ng-click="editSubjectController.foldOrganizer()" data-tooltip="exercizer.unfold" class="down-open hover-orange"></i>
+                                <i data-ng-hide="editSubjectController.organizerFolded" data-ng-click="editSubjectController.foldOrganizer()" data-tooltip="exercizer.fold" class="up-open hover-orange"></i>
                             </div>
                         </div>
 
-                        <div data-ng-hide="editSubjectController.isOrganizerFolded">
+                        <div data-ng-hide="editSubjectController.organizerFolded">
                             <div class="row">
-                                <div class="cell">
+                                <div class="cell" style="width:60%">
                                     <em><i18n>exercizer.rank.desc</i18n></em>
                                 </div>
                                 <a class="comment right-magnet cell" style="margin-right:10px;" data-ng-click="editSubjectController.foldAllGrain()">
@@ -54,7 +54,7 @@
                                 </a>
                             </div>
 
-                            <div class="row" style="overflow-y:scroll; max-height: 50vh; border:1px dotted lightgrey;" data-ng-show="editSubjectController.grainList.length > 0">
+                            <div class="row" style="overflow-y:scroll; max-height: 30vh; border:1px dotted lightgrey;" data-ng-show="editSubjectController.grainList.length > 0">
                                 <!-- do not add data- before sortable-list and sortable element -->
                                 <ul sortable-list class="thought-out-actions">
                                     <li data-ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false"
@@ -94,7 +94,7 @@
                     </article>
 
                     <!-- SUBJECT LIST -->
-                    <subject-edit-subject-list></subject-edit-subject-list>
+                    <subject-edit-subject-list is-organizer-folded="editSubjectController.organizerFolded"></subject-edit-subject-list>
                 </nav>
             </section>
 
