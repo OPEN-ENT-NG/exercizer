@@ -20,10 +20,21 @@ export const performFillText = ng.directive('performFillText',
                     //shuffle
                     if (scope.customData.answersType === 'list') {
                         _.forEach(scope.customData.zones, function (zone) {
-                            zone.options = _.shuffle(zone.options);
+                            var tmp = _.clone(zone.options);
+
+                            if (tmp && tmp.length > 1) {
+                                while (zone.options[0] === tmp[0]) {
+                                    zone.options = _.shuffle(zone.options);
+                                }
+                            }
                         });
                     } else if (scope.customData.answersType === 'drag') {
-                        scope.customData.options = _.shuffle(scope.customData.options);
+                        var tmp = _.clone(scope.customData.options);
+                        if (tmp && tmp.length > 1) {
+                            while (scope.customData.options[0] === tmp[0]) {
+                                scope.customData.options = _.shuffle(scope.customData.options);
+                            }
+                        }
                     }
                 });
                 
