@@ -93,7 +93,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                         if(scope.subjectList.length == 1){
                                             // is subject
                                             var subject = SubjectService.getById(scope.subjectList[0]);
-                                            return (scope.lowerRight == 'owner' || scope.lowerRight == 'manager') && subject.type === 'interactive';
+                                            return (scope.lowerRight == 'owner' || scope.lowerRight == 'manager') && subject && subject.type === 'interactive';
                                         } else {
                                             //is folder
                                             return true;
