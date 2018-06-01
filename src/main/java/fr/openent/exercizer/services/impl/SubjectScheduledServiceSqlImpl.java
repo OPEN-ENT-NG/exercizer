@@ -386,7 +386,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	}
 
 	public void getListForExport(final UserInfos user, final List<String> ids, final Handler<Either<String, JsonArray>> handler){
-		final String query = "SELECT ss.title, ss.type, sc.owner_username as student, sc.comment, sc.final_score as score" +
+		//replace for escape single quote (mustache issue)
+		final String query = "SELECT REPLACE(ss.title, '''', '‘') as title, ss.type, REPLACE(sc.owner_username, '''', '‘') as student, REPLACE(sc.comment, '''', '‘') as comment, sc.final_score as score" +
 				" FROM exercizer.subject_scheduled AS ss" +
 				" INNER JOIN exercizer.subject_copy AS sc ON sc.subject_scheduled_id = ss.id" +
 				" WHERE ss.id IN "+Sql.listPrepared(ids.toArray())+" AND ss.owner = ?";
