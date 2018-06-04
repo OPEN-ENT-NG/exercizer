@@ -26,8 +26,6 @@ export const studentDashboardSubjectCopyList = ng.directive('studentDashboardSub
                     scope.today = new Date();
                     scope.dateInAWeek = moment().startOf('week').add(1, 'week').toDate();
                     scope.dateInAYears = moment().add(1, 'year').toDate();
-                    
-                    scope.titleLength = "60";
 
                     // Search
                     if (!scope.search) {

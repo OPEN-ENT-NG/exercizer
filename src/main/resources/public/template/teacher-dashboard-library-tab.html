@@ -108,11 +108,11 @@
                                 </div>
                                 <div class="bottom">
                                     <div class="content">
-                                        <div class="row">
+                                        <div class="row custom-ellipsis">
                                             <div class="cell title-icon">
                                                 <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                                             </div>
-                                            <strong data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)">[[ subject.title | limitTo: 100  ]][[ subject.title.length > 100 ? '...' : '']]</strong>
+                                            <strong data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)">[[ subject.title ]]</strong>
                                         </div>
                                         <div class="row">
                                             <div class="cell">

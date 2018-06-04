@@ -99,12 +99,12 @@
                                     <div class="bottom">
                                         <div class="content">
                                             <div class="eight cell">
-                                                <div class="row">
+                                                <div class="row custom-ellipsis">
                                                     <div class="cell title-icon">
                                                         <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                                                     </div>
                                                     <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">
-                                                        [[ subjectScheduled.title | limitTo: 70  ]][[ subjectScheduled.title.length > 70 ? '...' : '']]
+                                                        [[ subjectScheduled.title ]]
                                                     </strong>
                                                 </div>
                                                 <div class="row">
