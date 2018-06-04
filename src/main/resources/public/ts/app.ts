@@ -73,7 +73,7 @@ import { subjectViewCopyTeacherFooter } from './app/components/subject/subject_v
 import { subjectViewCopyTeacherHeader } from './app/components/subject/subject_view_copy/directives/subjectViewCopyTeacherHeader';
 import { digitsInputRestrict } from './app/directives/input_restrictions/digitsInputRestrict';
 import { 
-    accessService, groupService, dateService, folderService, 
+    accessService, groupService, dateService, folderService, importService,
     dragService, subjectService, subjectLibraryService, subjectLessonTypeService,
     subjectCopyService, subjectLessonLevelService, subjectScheduledService, 
     grainScheduledService, grainCopyService, grainService, grainTypeService, subjectTagService, archivesService, correctionService
@@ -161,6 +161,7 @@ ng.services.push(groupService );
 ng.services.push(accessService );
 ng.services.push(archivesService);
 ng.services.push(correctionService);
+ng.services.push(importService);
 
 /**
  * Controllers
