@@ -8,6 +8,7 @@ export * from './GrainScheduledService';
 export * from './GrainService';
 export * from './GrainTypeService';
 export * from './GroupService';
+export * from './ImportService';
 export * from './SubjectCopyService';
 export * from './SubjectLessonLevelService';
 export * from './SubjectLessonTypeService';

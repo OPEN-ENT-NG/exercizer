@@ -21,18 +21,24 @@ export const performFillText = ng.directive('performFillText',
                     if (scope.customData.answersType === 'list') {
                         _.forEach(scope.customData.zones, function (zone) {
                             var tmp = _.clone(zone.options);
+                            var secureLoop = 0;
 
                             if (tmp && tmp.length > 1) {
                                 while (zone.options[0] === tmp[0]) {
                                     zone.options = _.shuffle(zone.options);
+                                    if (secureLoop === 5) return false;
+                                    secureLoop++;
                                 }
                             }
                         });
                     } else if (scope.customData.answersType === 'drag') {
                         var tmp = _.clone(scope.customData.options);
+                        var secureLoop = 0;
                         if (tmp && tmp.length > 1) {
                             while (scope.customData.options[0] === tmp[0]) {
                                 scope.customData.options = _.shuffle(scope.customData.options);
+                                if (secureLoop === 5) return false;
+                                secureLoop++;
                             }
                         }
                     }
