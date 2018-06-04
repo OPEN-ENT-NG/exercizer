@@ -6,8 +6,7 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
             restrict: 'E',
             scope: {
                 subjectCopy: '=',
-                subjectScheduled: '=',
-                titleLength: '='
+                subjectScheduled: '='
             },
             templateUrl: 'exercizer/public/ts/app/components/dashboard/student_dashboard/common/templates/subject-copy-domino.html',
             link: (scope:any) => {
@@ -56,8 +55,7 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                     }
                 };
                 scope.getSubjectScheduledTitle = function () {
-                    var title = scope.subjectScheduled.title || idiom.translate("exercizer.domino.default.title");
-                    return (title.length > scope.titleLength) ? title.substring(0, scope.titleLength) + '...' : title;
+                    return scope.subjectScheduled.title || idiom.translate("exercizer.domino.default.title");
                 };
                 scope.getSubjectScheduledOwner = function () {
                     return scope.subjectScheduled.owner_username || '';
