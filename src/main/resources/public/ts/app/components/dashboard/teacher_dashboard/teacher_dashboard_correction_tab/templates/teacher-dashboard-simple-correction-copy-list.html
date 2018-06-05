@@ -2,9 +2,9 @@
 <div class="six cell">
     <h2 class="no-margin"> [[selectedSubjectScheduled.title]]</h2>
     <p class="small-text">
-        <i18n>exercizer.scheduled.start</i18n> <b> [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]]</b> <br>
-        <i18n>exercizer.scheduled.end</i18n> <b> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]]</b> <br>
-        <i18n>exercizer.scheduled.publish.corrected</i18n> <b> [[ selectedSubjectScheduled.corrected_date | date:'dd/MM/yyyy' ]]</b>
+        <i18n>exercizer.scheduled.start</i18n> <b> [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.begin_date | date:'HH:mm']]</b> <br>
+        <i18n>exercizer.scheduled.end</i18n> <b> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.due_date | date:'HH:mm']]</b> <br>
+        <i18n>exercizer.scheduled.publish.corrected</i18n> <b> [[ selectedSubjectScheduled.corrected_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.corrected_date | date:'HH:mm']]</b>
     </p>
 </div>
 
@@ -90,11 +90,11 @@
                     </td>
                     <td>
                          <div data-ng-if="tooLate(copy)" class="alert">
-                             <i class="timer-off"></i> &nbsp; <i18n>exercizer.lag</i18n> <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']]</span>
+                             <i class="timer-off"></i> &nbsp; <i18n>exercizer.lag</i18n> <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']] <i18n>exercizer.at</i18n> [[copy.submitted_date | date:'HH:mm']]</span>
                          </div>
 
                          <div data-ng-if="!tooLate(copy) && copy.submitted_date" class="valid-color">
-                             <i class="check-circle"></i> &nbsp;<em>[[copy.submitted_date | date:'dd/MM/yyyy']]</em>
+                             <i class="check-circle"></i> &nbsp;<em>[[copy.submitted_date | date:'dd/MM/yyyy']] <i18n>exercizer.at</i18n> [[copy.submitted_date | date:'HH:mm']]</em>
                          </div>
 
                          <div data-ng-if="showReminder(copy)" class="flex-row align-center">

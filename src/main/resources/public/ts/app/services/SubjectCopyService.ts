@@ -195,7 +195,7 @@ export class SubjectCopyService implements ISubjectCopyService {
         
         var deferred = this._$q.defer();         ;
 
-        this._$http.put('exercizer/subject-copy/simple/submit/' + id, formData, {
+        this._$http.put('exercizer/subject-copy/simple/submit/' + id + '/' + new Date().getTimezoneOffset(), formData, {
             withCredentials: false,
             headers: {
                 'Content-Type': undefined
@@ -346,6 +346,7 @@ export class SubjectCopyService implements ISubjectCopyService {
     };
 
     public submit = function(subjectCopy:ISubjectCopy):Promise<ISubjectCopy> {
+        subjectCopy.offset = new Date().getTimezoneOffset();
         return this.write(subjectCopy, '/submit');
     };
 

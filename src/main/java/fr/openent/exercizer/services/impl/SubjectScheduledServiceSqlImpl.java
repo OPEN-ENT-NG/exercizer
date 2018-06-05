@@ -251,8 +251,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	private void createScheduledSubject(final SqlStatementsBuilder s, final Long subjectId, final Long scheduledSubjectId, final JsonObject scheduledSubject, UserInfos user) {
 
 		final String query = "INSERT INTO " + schema + "subject_scheduled (id, subject_id, title, description, picture, max_score, " +
-				"owner, owner_username, begin_date, due_date, estimated_duration, is_one_shot_submit, scheduled_at, type, is_notify) " +
-				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?::json, s.type, ? FROM " + schema + "subject as s " +
+				"owner, owner_username, begin_date, due_date, estimated_duration, is_one_shot_submit, scheduled_at, type, is_notify, use_time) " +
+				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?::json, s.type, ?, ? FROM " + schema + "subject as s " +
 				"WHERE s.id=? ";
 
 		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
@@ -260,6 +260,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("estimatedDuration", ""))
 				.add(scheduledSubject.getBoolean("isOneShotSubmit")).add(scheduledSubject.getJsonObject("scheduledAt"))
 				.add(scheduledSubject.getBoolean("isNotify"))
+				.add(scheduledSubject.getBoolean("useTime", true))
 				.add(subjectId);
 
 		s.prepared(query, values);
@@ -268,14 +269,15 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	private void createSimpleScheduledSubject(final SqlStatementsBuilder s, final Long subjectId, final Long scheduledSubjectId, final JsonObject scheduledSubject, UserInfos user) {
 
 		final String query = "INSERT INTO " + schema + "subject_scheduled (id, subject_id, title, description, picture, " +
-				"owner, owner_username, begin_date, due_date, corrected_date, scheduled_at, type, is_notify) " +
-				"SELECT ?, s.id, s.title, s.description, s.picture, ?, ?, ?::timestamp , ?::timestamp, ?::timestamp, ?::json, s.type, ? FROM " + schema + "subject as s " +
+				"owner, owner_username, begin_date, due_date, corrected_date, scheduled_at, type, is_notify, use_time) " +
+				"SELECT ?, s.id, s.title, s.description, s.picture, ?, ?, ?::timestamp , ?::timestamp, ?::timestamp, ?::json, s.type, ?, ? FROM " + schema + "subject as s " +
 				"WHERE s.id=? ";
 
 		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))
 				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("correctedDate"))
 				.add(scheduledSubject.getJsonObject("scheduledAt")).add(scheduledSubject.getBoolean("isNotify"))
+				.add(scheduledSubject.getBoolean("useTime", true))
 				.add(subjectId);
 
 		s.prepared(query, values);

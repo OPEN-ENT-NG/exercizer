@@ -44,10 +44,10 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     }
 
     @Override
-    public void submitCopy(final long id, final Handler<Either<String, JsonObject>> handler) {
+    public void submitCopy(final long id, int timezoneOffset, final Handler<Either<String, JsonObject>> handler) {
         sql.prepared(
-                "UPDATE " + schema + "subject_copy SET submitted_date=NOW() WHERE id = ? RETURNING *",
-                new fr.wseduc.webutils.collections.JsonArray().add(id),
+                "UPDATE " + schema + "subject_copy SET submitted_date=NOW() at time zone 'utc' - (? * interval '1 minute') WHERE id = ? RETURNING *",
+                new fr.wseduc.webutils.collections.JsonArray().add(timezoneOffset).add(id),
                 SqlResult.validUniqueResultHandler(handler)
         );
     }
@@ -161,23 +161,24 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     }
 
     @Override
-    public void addFile(final String id, final String fileId, final JsonObject metadata, final FileType fileType, final Handler<Either<String, JsonObject>> handler) {
+    public void addFile(final String id, final String fileId, final JsonObject metadata, final FileType fileType, int timezoneOffset, final Handler<Either<String, JsonObject>> handler) {
         if (FileType.CORRECTED.equals(fileType)) {
             addIndividualCorrectedFile(id, fileId, metadata, handler);
         } else {
-            addHomeworkFile(id, fileId, metadata, handler);
+            addHomeworkFile(id, fileId, metadata, timezoneOffset, handler);
         }
     }
 
-    private void addHomeworkFile(final String id, final String fileId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler) {
+    private void addHomeworkFile(final String id, final String fileId, final JsonObject metadata, int timezoneOffset, final Handler<Either<String, JsonObject>> handler) {
         final String query =
                 "UPDATE " + resourceTable +
-                        " SET homework_file_id=?, homework_metadata=?::jsonb, submitted_date=NOW(), modified = NOW() " +
+                        " SET homework_file_id=?, homework_metadata=?::jsonb, submitted_date=NOW() at time zone 'utc' - (? * interval '1 minute'), modified = NOW() " +
                         "WHERE id = ? ";
 
         final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
         values.add(fileId);
         values.add(metadata);
+        values.add(timezoneOffset);
         values.add(Sql.parseId(id));
 
         sql.prepared(query, values, SqlResult.validRowsResultHandler(handler));
