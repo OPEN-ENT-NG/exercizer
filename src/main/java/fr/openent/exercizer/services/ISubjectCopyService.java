@@ -33,7 +33,7 @@ public interface ISubjectCopyService {
         HOMEWORK
     }
 
-	void submitCopy(final long id, final Handler<Either<String, JsonObject>> handler);
+	void submitCopy(final long id, int timezoneOffset, final Handler<Either<String, JsonObject>> handler);
 
 		/**
      *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
@@ -71,7 +71,7 @@ public interface ISubjectCopyService {
 
     void getMetadataOfSubject(final String id, final FileType fileType, final Handler<Either<String, JsonObject>> handler);
 
-    void addFile(final String id, final String fileId, final JsonObject metadata, final FileType fileType, final Handler<Either<String, JsonObject>> handler);
+    void addFile(final String id, final String fileId, final JsonObject metadata, final FileType fileType, int timezoneOffset, final Handler<Either<String, JsonObject>> handler);
 
     void removeIndividualCorrectedFile(final String id, final Handler<Either<String, JsonObject>> handler);
 

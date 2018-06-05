@@ -13,6 +13,7 @@ export interface ISubjectCopy {
     is_correction_on_going:boolean;
     is_corrected:boolean;
     is_deleted:boolean;
+    offset:number;
 }
 
 export class SubjectCopy implements  ISubjectCopy {
@@ -31,6 +32,7 @@ export class SubjectCopy implements  ISubjectCopy {
     is_correction_on_going:boolean;
     is_corrected:boolean;
     is_deleted: boolean;
+    offset:number;
     dueDate: string;
     _homework_metadata: any;
 
@@ -64,7 +66,8 @@ export class SubjectCopy implements  ISubjectCopy {
             submitted_date: this.submitted_date,
             is_correction_on_going: this.is_correction_on_going,
             is_corrected: this.is_corrected,
-            is_deleted: this.is_deleted
+            is_deleted: this.is_deleted,
+            offset: this.offset
         }
     }
 

@@ -1,15 +1,15 @@
 <article class="grain-perform">
     <h2 class="row"><i18n>exercizer.summary</i18n></h2>
     <div data-ng-if="previewing">
-        <strong class="row vertical-spacing"><i18n>exercizer.summary.date</i18n> [[ !subjectScheduled.due_date ? ': ' + translate('exercizer.summary.nodate') : subjectScheduled.due_date | date: 'dd/MM/yyyy' ]]</strong>
+        <strong class="row vertical-spacing"><i18n>exercizer.summary.date</i18n> [[ !subjectScheduled.due_date ? ': ' + translate('exercizer.summary.nodate') : subjectScheduled.due_date | date: 'dd/MM/yyyy' + ' ' +translate('exercizer.at') +' '+ (subjectScheduled.due_date | date:'HH:mm')]]</strong>
         <strong class="row vertical-spacing"><i18n>exercizer.summary.make</i18n> : [[ !subjectScheduled.estimated_duration ? translate('exercizer.summary.nomake') : subjectScheduled.estimated_duration + ' ' + translate('exercizer.minute') ]]</strong>
         <div class="row vertical-spacing">
             [[subjectScheduled.description]]
         </div>
     </div>
     <div data-ng-if="!previewing">
-        <div class="row vertical-spacing" data-ng-show="canShowFuturSubmitLabel()"><strong><i18n>exercizer.future.info</i18n> [[ subjectScheduled.begin_date | date: 'dd/MM/yyyy' ]]</strong></div>
-        <div class="row vertical-spacing"><i18n>exercizer.summary.date</i18n> [[ !subjectScheduled.due_date ? ': ' + translate('exercizer.summary.nodate') : subjectScheduled.due_date | date: 'dd/MM/yyyy' ]]</div>
+        <div class="row vertical-spacing" data-ng-show="canShowFuturSubmitLabel()"><strong><i18n>exercizer.future.info</i18n> [[ subjectScheduled.begin_date | date: 'dd/MM/yyyy'  ]] <i18n>exercizer.at</i18n> [[subjectScheduled.due_date | date: 'HH:mm' ]]</strong></div>
+        <div class="row vertical-spacing"><i18n>exercizer.summary.date</i18n> [[ !subjectScheduled.due_date ? ': ' + translate('exercizer.summary.nodate') : subjectScheduled.due_date | date:'dd/MM/yyyy' + ' ' +translate('exercizer.at') +' '+(subjectScheduled.due_date | date:'HH:mm')]]</div>
         <div class="row vertical-spacing" data-ng-show="!subjectScheduled.is_one_shot_submit"><i18n>exercizer.several.submit</i18n></div>
         <div class="row vertical-spacing" data-ng-show="subjectScheduled.is_one_shot_submit"><i18n>exercizer.one.submit</i18n></div>
         <div class="row vertical-spacing" data-ng-if="subjectScheduled.estimated_duration"><i18n>exercizer.summary.make</i18n> : [[ subjectScheduled.estimated_duration + ' ' + translate('exercizer.minute') ]]</div>

@@ -154,7 +154,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	private enum CopyAction  {
 
-		SUBMITCOPY(Arrays.asList("id")),
+		SUBMITCOPY(Arrays.asList("id", "offset")),
 		CORRECTCOPY(Arrays.asList("id", "subject_copy_id", "calculated_score", "final_score", "comment", "is_corrected")),
 		ASSIGNCOPY(Arrays.asList("id")),
 		REPORTCOPY(Arrays.asList("id", "subject_copy_id", "calculated_score", "final_score", "comment"));
@@ -258,6 +258,7 @@ public class SubjectCopyController extends ControllerHelper {
 						@Override
 						public void handle(final JsonObject resource) {
 							final String ressourceId = Long.toString(resource.getLong("id"));
+							final Integer offset = resource.getInteger("offset", 0);
 							// hack : remove useless fields
 							Iterator<String> it = resource.fieldNames().iterator();
 							while (it.hasNext()) {
@@ -279,7 +280,7 @@ public class SubjectCopyController extends ControllerHelper {
 											Renders.badRequest(request, "exercizer.check.corrected");
 											return;
 										} else {
-											subjectCopyService.submitCopy(resource.getLong("id"),
+											subjectCopyService.submitCopy(resource.getLong("id"), offset,
 													notifyHandler(request, user, subjectCopy, CopyAction.SUBMITCOPY));
 										}
 										break;
@@ -514,25 +515,32 @@ public class SubjectCopyController extends ControllerHelper {
 		});
 	}
 
-	@Put("/subject-copy/simple/submit/:id")
+	@Put("/subject-copy/simple/submit/:id/:offset")
 	@ApiDoc("Submit a homework file to a subject copy.")
 	@ResourceFilter(SubjectCopyLearnerAccess.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void submitHomeworkFile(final HttpServerRequest request) {
 		final String id = request.params().get("id");
-		final ISubjectCopyService.FileType homeworkType = ISubjectCopyService.FileType.HOMEWORK;
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(final UserInfos user) {
-				if (user != null) {
-					addOrReplaceFile(request, id, homeworkType, user);
-				} else {
-					log.debug("User not found in session.");
-					unauthorized(request);
+		try {
+			final Integer offset = Integer.parseInt(request.params().get("offset"));
+			final ISubjectCopyService.FileType homeworkType = ISubjectCopyService.FileType.HOMEWORK;
+			UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+				@Override
+				public void handle(final UserInfos user) {
+					if (user != null) {
+						addOrReplaceFile(request, id, offset, homeworkType, user);
+					} else {
+						log.debug("User not found in session.");
+						unauthorized(request);
+					}
 				}
-			}
 
-		});
+			});
+
+		}catch (NumberFormatException e){
+			log.error("can't parse offset of subject-copy", e);
+			badRequest(request);
+		}
 	}
 
 	@Put("/subject-copy/simple/corrected/:id")
@@ -546,7 +554,7 @@ public class SubjectCopyController extends ControllerHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					addOrReplaceFile(request, id, correctedType, user);
+					addOrReplaceFile(request, id, 0, correctedType, user);
 				} else {
 					log.debug("User not found in session.");
 					unauthorized(request);
@@ -556,7 +564,7 @@ public class SubjectCopyController extends ControllerHelper {
 		});
 	}
 
-	private void addOrReplaceFile(final HttpServerRequest request, final String id, final ISubjectCopyService.FileType fileType, final UserInfos user) {
+	private void addOrReplaceFile(final HttpServerRequest request, final String id, final int offset, final ISubjectCopyService.FileType fileType, final UserInfos user) {
 		request.pause();
 		subjectCopyService.getMetadataOfSubject(id, fileType, new Handler<Either<String, JsonObject>>() {
             @Override
@@ -567,6 +575,7 @@ public class SubjectCopyController extends ControllerHelper {
                     //replace corrected file
 	                final String labelFileId = ISubjectCopyService.FileType.CORRECTED.equals(fileType) ? "corrected_file_id" : "homework_file_id";
 					final String existingFileId = subjectCopy.getString(labelFileId, "");
+					subjectCopy.put("offset", offset);
 					storage.writeUploadFile(request, getAddOrReplaceFileHandler(request, id, fileType, subjectCopy, user, existingFileId));
                 } else {
                     Renders.badRequest(request, event.left().getValue());
@@ -582,7 +591,7 @@ public class SubjectCopyController extends ControllerHelper {
 				if ("ok".equals(event.getString("status"))) {
 					final String fileId = event.getString("_id");
 					final JsonObject metadata = event.getJsonObject("metadata");
-					subjectCopyService.addFile(id, fileId, metadata, fileType, new Handler<Either<String, JsonObject>>() {
+					subjectCopyService.addFile(id, fileId, metadata, fileType, subject.getInteger("offset", 0), new Handler<Either<String, JsonObject>>() {
 						@Override
 						public void handle(Either<String, JsonObject> event) {
 							if (event.isRight()) {
