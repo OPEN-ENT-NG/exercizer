@@ -30,8 +30,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div data-ng-show="isDueDateDisplayed()"><i18n>exercizer.domino.todelivered</i18n> <span  data-ng-bind="getSubjectCopyDueDate() | date:'dd/MM/yyyy'"></span></div>
-                            <div data-ng-show="isSubmittedDateDisplayed()"><i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="getSubjectCopySubmittedDate() | date:'dd/MM/yyyy'"></span></div>
+                                <div data-ng-show="isDueDateDisplayed()"><i18n>exercizer.domino.todelivered</i18n> <span  data-ng-bind="dueDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="dueDate | date:'HH:mm'"></span> </div>
+                            <div data-ng-show="isSubmittedDateDisplayed()"><i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span></div>
                         </div>
                         <div class="row">
                             <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em>

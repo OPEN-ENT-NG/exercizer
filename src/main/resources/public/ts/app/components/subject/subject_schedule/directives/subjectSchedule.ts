@@ -5,7 +5,7 @@ import { $ } from 'entcore';
 import { IGrain } from '../../../../models/domain';
 
 export const subjectSchedule = ng.directive('subjectSchedule',
-    ['GroupService', '$q', 'SubjectScheduledService', 'GrainScheduledService', 'SubjectCopyService', 'GrainCopyService', 'GrainService', 'DateService', (GroupService, $q, SubjectScheduledService, GrainScheduledService, SubjectCopyService, GrainCopyService, GrainService, DateService) => {
+    ['GroupService', '$q', 'SubjectScheduledService', 'GrainScheduledService', 'SubjectCopyService', 'GrainCopyService', 'GrainService', 'DateService', '$filter', (GroupService, $q, SubjectScheduledService, GrainScheduledService, SubjectCopyService, GrainCopyService, GrainService, DateService, $filter) => {
         return {
             restrict: 'E',
             scope: {},
@@ -35,7 +35,10 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     scope.option = {
                         begin_date: new Date(),
                         due_date: DateService.addDays(new Date, 7),
-                        corrected_date: DateService.addDays(new Date, 7)
+                        corrected_date: DateService.addDays(new Date, 7),
+                        begin_time: "00:00",
+                        due_time: "23:59",
+                        corrected_time: "00:00"
                     };
 
                     scope.clearSearch();
@@ -52,6 +55,10 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         addInList(scope.data.userList, selectedItem);
                     }
                 };
+                
+                scope.checkTime = function (time, def?) {
+                    return !time.match("/([01][0-9]|2[0-3]):[0-5][0-9]/") ? def ? "23:59" : "00:00" : time;
+                }
 
                 scope.removeItem = function (selectedItem) {
                     if (selectedItem.groupOrUser == 'group') {
@@ -176,11 +183,13 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 function scheduleSimpleSubject(subject, option, data) {
                     var deferred = $q.defer(),
                         subjectScheduled = SubjectScheduledService.createFromSubject(subject);
-                    subjectScheduled.begin_date = moment(option.begin_date).hours(14).minutes(0).seconds(0);
-                    subjectScheduled.due_date = moment(option.due_date).hours(14).minutes(0).seconds(0);
-                    subjectScheduled.corrected_date = moment(option.corrected_date).hours(14).minutes(0).seconds(0);
-                    subjectScheduled.scheduled_at = createSubjectScheduledAt(data);
-
+                    subjectScheduled.begin_date = moment(option.begin_date).hours(14).minutes(0).seconds(0)
+                        .toISOString().replace(/T..:../, "T"+option.begin_time);
+                    subjectScheduled.due_date = moment(option.due_date).hours(14).minutes(0).seconds(0)
+                        .toISOString().replace(/T..:../, "T"+option.due_time);
+                    subjectScheduled.corrected_date = moment(option.corrected_date).hours(14).minutes(0).seconds(0)
+                        .toISOString().replace(/T..:../, "T"+option.corrected_time);
+                    subjectScheduled.scheduled_at = createSubjectScheduledAt(data)
                     SubjectScheduledService.simpleSchedule(subjectScheduled).then(
                         function() {
                             SubjectScheduledService.resolve(true);
@@ -197,8 +206,10 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 function scheduleSubject(subject, option, data) {
                     var deferred = $q.defer(),
                         subjectScheduled = SubjectScheduledService.createFromSubject(subject);
-                    subjectScheduled.begin_date = moment(option.begin_date).hours(14).minutes(0).seconds(0);
-                    subjectScheduled.due_date = moment(option.due_date).hours(14).minutes(0).seconds(0);
+                    subjectScheduled.begin_date = moment(option.begin_date).hours(14).minutes(0).seconds(0)
+                        .toISOString().replace(/T..:../, "T"+option.begin_time);
+                    subjectScheduled.due_date = moment(option.due_date).hours(14).minutes(0).seconds(0)
+                        .toISOString().replace(/T..:../, "T"+option.due_time);
                     subjectScheduled.estimated_duration = option.estimated_duration;
                     subjectScheduled.has_automatic_display = option.has_automatic_display;
                     subjectScheduled.is_one_shot_submit = !option.allow_students_to_update_copy;
@@ -354,6 +365,11 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         return titleTest.indexOf(searchTerm) !== -1;
                     });
                 };
+
+                scope.confirmation = function () {
+                    return (scope.isSimpleSubject ? idiom.translate('exercizer.schedule.simple.confirm') : idiom.translate('exercizer.schedule.interactive.confirm')) + ' ' +
+                        $filter('date')(scope.option.due_date, 'dd/MM/yyyy') + ' ' +idiom.translate('exercizer.at') +' '+ $filter('date')(scope.option.due_time, 'HH:mm')+ ' ?';
+                }
             }
         };
     }]
