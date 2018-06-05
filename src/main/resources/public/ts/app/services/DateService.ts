@@ -3,7 +3,7 @@ import { ng } from 'entcore';
 export interface IDateService {
     addDays(date, days);
     addMonths(date, months);
-    compare_after(date_a, date_b, value_equal):boolean;
+    compare_after(date_a, date_b, value_equal, reset_time?):boolean;
     timestampToDate(timestamp);
     isoToDate(iso);
 }
@@ -29,11 +29,13 @@ export class DateService implements IDateService {
         return result;
     }
 
-    public compare_after(date_a, date_b, value_equal) {
+    public compare_after(date_a, date_b, value_equal, reset_time?) {
         var a = angular.copy(date_a);
         var b = angular.copy(date_b);
-        a.setHours(0, 0, 0, 0);
-        b.setHours(0, 0, 0, 0);
+        if(reset_time) {
+            a.setHours(0, 0, 0, 0);
+            b.setHours(0, 0, 0, 0);
+        }
         if (a > b) {
             return true;
         } else if (a < b) {

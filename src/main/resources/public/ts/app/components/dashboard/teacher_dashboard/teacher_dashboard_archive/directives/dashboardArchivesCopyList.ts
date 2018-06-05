@@ -144,7 +144,7 @@ export const dashboardArchivesCopyList = ng.directive('dashboardArchivesCopyList
 
             scope.tooLate = function(copy){
                 if(copy.submitted_date && scope.selectedSubjectScheduled && scope.selectedSubjectScheduled.due_date){
-                    return DateService.compare_after(DateService.isoToDate(copy.submitted_date), DateService.isoToDate(scope.selectedSubjectScheduled.due_date), false);
+                    return DateService.compare_after(DateService.isoToDate(copy.submitted_date), DateService.isoToDate(scope.selectedSubjectScheduled.due_date), false, scope.selectedSubjectScheduled.use_time);
                 } else{
                     return false;
                 }

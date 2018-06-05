@@ -49,10 +49,11 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
 
                 scope.getSubjectCopySubmittedDate = function () {
                     if (scope.subjectCopy.submitted_date) {
-                        return DateService.isoToDate(scope.subjectCopy.submitted_date);
+                        scope.submittedDate = DateService.isoToDate(scope.subjectCopy.submitted_date);
                     } else {
-                        return '';
+                        scope.submittedDate = '';
                     }
+                    return scope.submittedDate;
                 };
                 scope.getSubjectScheduledTitle = function () {
                     return scope.subjectScheduled.title || idiom.translate("exercizer.domino.default.title");
@@ -80,10 +81,11 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
 
                 scope.getSubjectCopyDueDate = function () {
                     if (scope.subjectScheduled.due_date) {
-                        return DateService.isoToDate(scope.subjectScheduled.due_date);
+                        scope.dueDate = DateService.isoToDate(scope.subjectScheduled.due_date);
                     } else {
-                        return '';
+                        scope.dueDate = '';
                     }
+                    return scope.dueDate;
                 };
 
                 /**
@@ -114,10 +116,12 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                 };
 
                 scope.isDueDateDisplayed = function(){
+                    scope.getSubjectCopyDueDate();
                     return !scope.subjectCopy.submitted_date;
                 };
 
                 scope.isSubmittedDateDisplayed = function(){
+                    scope.getSubjectCopySubmittedDate();
                     return scope.subjectCopy.submitted_date;
                 };
 
