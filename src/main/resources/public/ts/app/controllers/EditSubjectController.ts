@@ -229,7 +229,7 @@ class EditSubjectController {
             grain.grain_data.statement = StringISOHelper.toISO(grain.grain_data.statement);
             grain.grain_data.answer_explanation = StringISOHelper.toISO(grain.grain_data.answer_explanation);
             grain.grain_data.answer_hint = StringISOHelper.toISO(grain.grain_data.answer_hint);
-            grain.grain_data.max_score = angular.isUndefined(grain.grain_data.max_score) ? 0 : parseFloat(grain.grain_data.max_score as any);
+            grain.grain_data.max_score = angular.isUndefined(grain.grain_data.max_score) ? 0 : parseFloat(parseFloat(String(grain.grain_data.max_score).replace(',', '.')).toFixed(2));
             if (isNaN(grain.grain_data.max_score)) grain.grain_data.max_score = 0;
 
         } else if (grain.grain_type_id === 3) {
