@@ -9,7 +9,7 @@
                 <img ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
             </div>
 
-            <placed-block ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.zones"
+            <placed-block ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
                 x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z">
                 <image-zone ng-class="{ success: correction[$index], error: !correction[$index] }">
                     <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" drag-item="iconZone" />

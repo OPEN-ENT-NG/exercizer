@@ -8,11 +8,8 @@
             <div class="image-container">
                 <img ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
             </div>
-            
-            <placed-block 
-                ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones"
-                x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
-            >
+            <placed-block ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
+                x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
                 <text-zone>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'text'">
                         <input type="text" ng-model="textZone.answer" complete-change="updateGrainCopy();" />
