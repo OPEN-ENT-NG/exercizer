@@ -119,7 +119,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                 "SELECT id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
                 "SELECT f.folder_id FROM folder AS f WHERE f.folder_id=? ";
 
-        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray(sourceFoldersIdJa.getList()).add(targetFolderId), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
+        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray(new ArrayList(sourceFoldersIdJa.getList())).add(targetFolderId), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
             @Override
             public void handle(Either<String, JsonObject> event) {
                 if (event.isRight()) {
