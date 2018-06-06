@@ -29,7 +29,7 @@ export const grainCopyFooter = ng.directive('grainCopyFooter',
                 scope.updateGrainCopy = function() {
                     if (scope.isTeacher) {
                         scope.grainCopy.comment = StringISOHelper.toISO(scope.grainCopy.comment);
-                        scope.grainCopy.final_score = new Number(scope.grainCopy.final_score).valueOf();
+                        scope.grainCopy.final_score = angular.isUndefined(scope.grainCopy.final_score) ? 0 : parseFloat(parseFloat(String(scope.grainCopy.final_score).replace(',', '.')).toFixed(2));
                         if (isNaN( scope.grainCopy.final_score)) scope.grainCopy.final_score = 0;
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     }
