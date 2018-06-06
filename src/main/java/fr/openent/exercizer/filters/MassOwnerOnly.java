@@ -33,6 +33,7 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MassOwnerOnly implements ResourcesProvider {
@@ -53,7 +54,7 @@ public class MassOwnerOnly implements ResourcesProvider {
 							"SELECT count(*) FROM " + conf.getSchema() + conf.getTable() +
 									" WHERE id IN " + Sql.listPrepared(ids) + " AND owner = ?";
 
-					final JsonArray values = new fr.wseduc.webutils.collections.JsonArray(ids).add(user.getUserId());
+					final JsonArray values = new fr.wseduc.webutils.collections.JsonArray(new ArrayList(ids)).add(user.getUserId());
 
 					Sql.getInstance().prepared(query, values, new Handler<Message<JsonObject>>() {
 						@Override
