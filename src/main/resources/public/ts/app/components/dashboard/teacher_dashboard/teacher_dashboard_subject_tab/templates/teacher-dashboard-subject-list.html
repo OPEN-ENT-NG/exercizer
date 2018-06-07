@@ -285,10 +285,14 @@
                         </div>
 
                         <div class="twelve cell horizontal-spacing vertical-spacing">
-                            <button data-ng-click="saveImportSubject()" class="right-magnet">
+                            <span style="padding:10px" data-ng-show="loadingImport">
+                                <i class="left-magnet loading" style="padding:10px"></i>
+                                <strong class="left-magnet" style="padding:10px"><i18n>exercizer.import.loading</i18n></strong>
+                            </span>
+                            <button data-ng-click="saveImportSubject()" class="right-magnet" data-ng-disabled="loadingImport">
                                 <i18n>exercizer.import.launch</i18n>
                             </button>
-                            <button data-ng-click="closeImportLightbox()" class="right-magnet cancel">
+                            <button data-ng-click="closeImportLightbox()" class="right-magnet cancel" data-ng-disabled="loadingImport">
                                 <i18n>exercizer.cancel</i18n>
                             </button>
                         </div>
