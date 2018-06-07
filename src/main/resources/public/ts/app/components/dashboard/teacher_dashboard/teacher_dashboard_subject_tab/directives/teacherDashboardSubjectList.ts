@@ -28,6 +28,7 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                 scope.stateImport = 'begin';
                 scope.grainImportCount = 0;
                 scope.unsupported = [];
+                scope.loadingImport = false;
 
                 scope.$on('E_RESET_SELECT_ALL', function (event) {
                     scope.data.selectAll = false;
@@ -200,15 +201,20 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                     } else {
                         scope.importSubject.folder_id = scope.currentFolderId;
 
+                        scope.loadingImport = true;
+
                         ImportService.importFile(scope.newFiles[0], scope.importSubject).then(function (objectData) {
                             SubjectService.currentSubjectId = objectData.subject.id;
+                            scope.loadingImport = false;
                             scope.stateImport = 'result';
                             scope.grainImportCount = objectData.count;
                             scope.unsupported = objectData.unsupported;
                             scope.newFiles = undefined;
                             scope.$apply();
                         }, function (err) {
+                            scope.loadingImport = false;
                             notify.error(err);
+                            scope.$apply();
                         });
                     }
                 };
@@ -221,6 +227,7 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                 scope.closeImportLightbox = function() {
                     scope.isImportDisplayed = false;
                     scope.stateImport = 'begin';
+                    scope.loadingImport = false;
                     scope.grainImportCount = 0;
                     scope.fileImportName = '';
                     scope.newFiles = undefined;
