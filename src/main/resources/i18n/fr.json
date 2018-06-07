@@ -107,6 +107,7 @@
     "exercizer.import.moodle.type3" : "Cloze (réponses intégrées)",
     "exercizer.import.moodle.type4" : "Marqueurs à glisser-déposer",
     "exercizer.import" : "Importer un sujet",
+    "exercizer.import.loading" : "Import en cours",
     "exercizer.import.view" : "Consulter le sujet",
     "exercizer.import.launch" : "Importer",
     "exercizer.import.truefalse.true" : "Vrai",
