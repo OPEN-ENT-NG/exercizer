@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "beginDate": {
+      "type": "string"
+    },
+    "dueDate": {
+      "type": "string"
+    },
+    "correctedDate": {
+      "type": "string"
+    },
+    "offset":{
+      "type": "number"
+    }
+  },
+  "required": [
+    "beginDate",
+    "dueDate",
+    "offset"
+  ]
+}
+
+

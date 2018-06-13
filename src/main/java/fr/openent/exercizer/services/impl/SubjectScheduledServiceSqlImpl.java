@@ -63,7 +63,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 
 	@Override
 	public void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler) {
-		super.getCorrectedDownloadInformation(id, "s.corrected_file_id, s.corrected_metadata, s.corrected_date", handler);
+		super.getCorrectedDownloadInformation(id, "s.owner, s.corrected_file_id, s.corrected_metadata, s.corrected_date", handler);
 	}
 
 	@Override
@@ -400,5 +400,28 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		}
 		values.add(user.getUserId());
 		sql.prepared(query, values, SqlResult.validResultHandler(handler));
+	}
+
+	@Override
+	public void modify(final String id, JsonObject fiedls, final Handler<Either<String, JsonObject>> handler) {
+		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+		String query = "UPDATE " + resourceTable + " SET modified = NOW()";
+		if(fiedls.containsKey("beginDate")){
+			query += ", begin_date = ?";
+			values.add(fiedls.getString("beginDate"));
+		}
+		if(fiedls.containsKey("dueDate")){
+			query += ", due_date = ?";
+			values.add(fiedls.getString("dueDate"));
+		}
+		if(fiedls.containsKey("correctedDate")){
+			query += ", corrected_date = ?";
+			values.add(fiedls.getString("correctedDate"));
+		}
+
+		query += " WHERE id = ? ";
+		values.add(id);
+
+		sql.prepared(query, values, SqlResult.validUniqueResultHandler(handler));
 	}
 }

@@ -96,4 +96,6 @@ public interface ISubjectScheduledService {
     void getArchive(final UserInfos user, final Handler<Either<String, JsonArray>> handler);
 
     void getListForExport(final UserInfos user, final List<String> ids, final Handler<Either<String, JsonArray>> handler);
+
+    void modify(final String id, JsonObject fiedls, final Handler<Either<String, JsonObject>> handler);
 }

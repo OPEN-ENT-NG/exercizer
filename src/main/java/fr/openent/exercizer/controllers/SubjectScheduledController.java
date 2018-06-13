@@ -22,7 +22,9 @@ package fr.openent.exercizer.controllers;
 import fr.openent.exercizer.filters.SubjectsScheduledOwner;
 import fr.openent.exercizer.filters.SubjectScheduledCorrected;
 import fr.openent.exercizer.filters.SubjectScheduledOwner;
+import fr.openent.exercizer.services.ISubjectCopyService;
 import fr.openent.exercizer.services.ISubjectScheduledService;
+import fr.openent.exercizer.services.impl.SubjectCopyServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectScheduledServiceSqlImpl;
 import fr.openent.exercizer.utils.GroupUtils;
 import fr.wseduc.rs.*;
@@ -55,6 +57,7 @@ import static org.entcore.common.http.response.DefaultResponseHandler.*;
 public class SubjectScheduledController extends ControllerHelper {
 
 	private final ISubjectScheduledService subjectScheduledService;
+	private final ISubjectCopyService subjectCopyService;
 	private final Storage storage;
 	private enum ScheduledType  {
 		SIMPLE,
@@ -63,6 +66,7 @@ public class SubjectScheduledController extends ControllerHelper {
 
 	public SubjectScheduledController(final Storage storage) {
 		this.subjectScheduledService = new SubjectScheduledServiceSqlImpl();
+		this.subjectCopyService = new SubjectCopyServiceSqlImpl();
 		this.storage = storage;
 	}
 
@@ -180,7 +184,6 @@ public class SubjectScheduledController extends ControllerHelper {
 			badRequest(request);
 			return;
 		}
-
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(final UserInfos user) {
@@ -200,9 +203,165 @@ public class SubjectScheduledController extends ControllerHelper {
 					log.debug("User not found in session.");
 					unauthorized(request);
 				}
+		}
+	});
+}
+
+
+
+	@Post("/schedule-subject/modify/:id")
+	@ApiDoc("Schedules a simple subject.")
+	@ResourceFilter(SubjectScheduledOwner.class)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
+	public void modifySchedule(final HttpServerRequest request) {
+		String subjectId = request.params().get("id");
+		if(subjectId == null || subjectId.trim().isEmpty()){
+			badRequest(request);
+		}
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, pathPrefix+"modifySchedule", new Handler<JsonObject>() {
+						@Override
+						public void handle( final JsonObject body) {
+							Integer offset = - body.getInteger("offset", 0);
+							int hours = offset / 60;
+							int minutes = offset % 60;
+							final Date nowClient = new DateTime(DateTimeZone.forOffsetHoursMinutes(hours, minutes)).toLocalDateTime().toDate();
+   							final Map<String, Date> newDates = new HashMap<String, Date>();
+							try {
+								newDates.put("beginDate", DateUtils.parseTimestampWithoutTimezone(body.getString("beginDate")));
+								newDates.put("dueDate", DateUtils.parseTimestampWithoutTimezone(body.getString("dueDate")));
+								if(body.getString("correctedDate") != null)
+									newDates.put("correctedDate", DateUtils.parseTimestampWithoutTimezone(body.getString("correctedDate")));
+							} catch (ParseException e) {
+								log.error("can't parse dates of scheduled subject", e);
+								badRequest(request);
+								return;
+							}
+
+							final Date newBeginDate = newDates.get("beginDate");
+							final Date newDueDate = newDates.get("dueDate");
+
+							if(newBeginDate.after(newDueDate)) {
+								badRequest(request, "exercizer.schedule.rule.date");
+								return;
+							}
+
+							subjectScheduledService.getById(subjectId, user, new Handler<Either<String, JsonObject>>() {
+								@Override
+								public void handle(Either<String, JsonObject> event) {
+									if(event.isLeft()){
+										badRequest(request);
+										return;
+									}else {
+										JsonObject scheduledSubject = event.right().getValue();
+										final Date oldBeginDate;
+
+										try {
+											oldBeginDate = DateUtils.parseTimestampWithoutTimezone(scheduledSubject.getString("begin_date"));
+										} catch (ParseException e) {
+											log.error("can't parse dates of scheduled subject", e);
+											renderError(request);
+											return;
+										}
+
+										if(!newBeginDate.equals(oldBeginDate)){
+											if(nowClient.after(newBeginDate)) {
+												badRequest(request, "exercizer.schedule.rule.date.start");
+												return;
+											}
+											subjectCopyService.getSubmittedBySubjectScheduled(subjectId, new Handler<Either<String, JsonArray>>() {
+													@Override
+													public void handle(Either<String, JsonArray> event) {
+														if (event.isLeft()) {
+
+														} else {
+															if (!event.right().getValue().isEmpty()) {
+																badRequest(request, "exercizer.schedule.rule.copies");
+																return;
+															}
+															checkAndModifySchedule(request, subjectId, scheduledSubject, newDates, body, true, user);
+														}
+													}
+												});
+
+										}else {
+											checkAndModifySchedule(request, subjectId, scheduledSubject, newDates, body, false, user);
+										}
+									}
+								}
+							});
+						}
+					});
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
 			}
 		});
 	}
+
+	private void checkAndModifySchedule(final HttpServerRequest request, final String subjectId, final JsonObject scheduledSubject,
+											  final Map<String, Date> newDates, JsonObject values, boolean changeBegin , UserInfos user){
+		Date beginDate = newDates.get("beginDate");
+		Date newDueDate = newDates.get("dueDate");
+		Date newCorrectedDate = newDates.get("correctedDate");
+		Date oldDueDate;
+
+		JsonObject fields = new JsonObject();
+
+		if(changeBegin)
+			fields.put("beginDate", values.getString("beginDate"));
+
+		try {
+			oldDueDate = DateUtils.parseTimestampWithoutTimezone(scheduledSubject.getString("due_date"));
+		} catch (ParseException e) {
+			log.error("can't parse old DueDate of scheduled subject", e);
+			renderError(request);
+			return;
+		}
+
+		if (!newDueDate.equals(oldDueDate)){
+			fields.put("dueDate", values.getString("dueDate"));
+		}
+
+		if(scheduledSubject.getString("corrected_date") != null && newCorrectedDate != null){
+			fields.put("correctedDate", values.getString("correctedDate"));
+		}
+		subjectScheduledService.modify(subjectId, fields, new Handler<Either<String, JsonObject>>() {
+			@Override
+			public void handle(Either<String, JsonObject> event) {
+				if (event.isRight()) {
+					if (scheduledSubject.getBoolean("is_notify") && changeBegin)
+						notifyModification(request, user, subjectId, scheduledSubject);
+
+					renderJson(request, fields);
+				} else {
+					renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error","exercizer.subject.scheduled.error"));
+				}
+			}
+		});
+	}
+
+	private void notifyModification(final HttpServerRequest request, final UserInfos user, final String subjectId, final JsonObject scheduledSubject ){
+			subjectScheduledService.getMember(subjectId, new Handler<Either<String, JsonArray>>() {
+				@Override
+				public void handle(Either<String, JsonArray> event) {
+					final JsonArray members = event.right().getValue();
+					final List<String> recipientSet = new ArrayList<String>();
+					final String subjectName = scheduledSubject.getString("title");
+
+					for (Object member : members) {
+						if (!(member instanceof JsonObject)) continue;
+						recipientSet.add(((JsonObject) member).getString("owner"));
+					}
+					sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName, scheduledSubject.getString("due_date"), null);
+				}
+			});
+	}
+
 
 	private Handler<JsonObject> getScheduleHandler(final UserInfos user, final HttpServerRequest request, final Long subjectId, final ScheduledType type) {
 		return new Handler<JsonObject>() {
@@ -340,7 +499,6 @@ public class SubjectScheduledController extends ControllerHelper {
 		}
 
 		final Date nowUTC = new DateTime(DateTimeZone.UTC).toLocalDateTime().toDate();
-
 		final Boolean isNotify = DateUtils.lessOrEqualsWithoutTime(beginDate, nowUTC);
 		scheduledSubject.put("isNotify", isNotify);
 
@@ -466,7 +624,7 @@ public class SubjectScheduledController extends ControllerHelper {
 								}
 
 								//check download is authorized only if corrected date is passed
-								if (DateUtils.lessOrEqualsWithoutTime(correctedDate, nowUTC)) {
+								if (DateUtils.lessOrEqualsWithoutTime(correctedDate, nowUTC) || subjectScheduled.getString("owner").equals(user.getUserId())) {
 									if (correctedFileId != null) {
 										final JsonObject metadata = subjectScheduled.getJsonObject("corrected_metadata");
 										storage.sendFile(correctedFileId, metadata.getString("filename"), request, false, metadata);

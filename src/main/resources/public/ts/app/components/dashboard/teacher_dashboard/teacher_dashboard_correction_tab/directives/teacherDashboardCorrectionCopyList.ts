@@ -3,7 +3,7 @@ import { moment } from 'entcore';
 import { _ } from 'entcore';
 
 export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboardCorrectionCopyList',
-     ['SubjectCopyService', 'CorrectionService','$location', 'GroupService','DateService','$q', (SubjectCopyService, CorrectionService, $location, GroupService, DateService, $q) => {
+     ['SubjectCopyService', 'CorrectionService', 'SubjectScheduledService','$location', 'GroupService','DateService','$q', '$filter', (SubjectCopyService, CorrectionService, SubjectScheduledService, $location, GroupService, DateService, $q, $filter) => {
         return {
             restrict: 'E',
             scope: {
@@ -26,6 +26,12 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
 
                         scope.order.field = 'owner_username';
                         scope.order.desc = false;
+                        scope.option = {
+                            begin_date: new Date(scope.selectedSubjectScheduled.begin_date),
+                            due_date: new Date(scope.selectedSubjectScheduled.due_date),
+                            begin_time: $filter('date')(scope.selectedSubjectScheduled.begin_date, 'HH:mm'),
+                            due_time: $filter('date')(scope.selectedSubjectScheduled.due_date, 'HH:mm'),
+                        }
                     }
                 });                    
 
@@ -138,6 +144,43 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     );
                 };
 
+                scope.unScheduled = function() {
+                    SubjectScheduledService.unScheduled(scope.selectedSubjectScheduled).then(function () {
+                        notify.info("exercizer.service.unschedule");
+                        scope.option.showUnScheduled=false;
+                        window.location.reload();
+                    }, function (err) {
+                        notify.error(err);
+                    });
+                };
+
+                scope.checkTime = function (time, def) {
+                    return time.match("^([01][0-9]|2[0-3]):[0-5][0-9]$") ? time : $filter('date')(def, 'HH:mm');
+                }
+
+                scope.modifySchedule = function () {
+                    var subjectScheduled = {
+                        id:scope.selectedSubjectScheduled.id,
+                        begin_date:moment(scope.option.begin_date).hours(14).minutes(0).seconds(0)
+                            .toISOString().replace(/T..:../, "T"+scope.option.begin_time),
+                        due_date:moment(scope.option.due_date).hours(14).minutes(0).seconds(0)
+                            .toISOString().replace(/T..:../, "T"+scope.option.due_time)
+                    };
+                    SubjectScheduledService.modifySchedule(subjectScheduled).then(
+                        function() {
+                            window.location.reload();
+                        },
+                        function(err) {
+                            notify.error(err);
+                        }
+                    );
+                }
+
+                scope.seeAllAssignAtList = function(){
+                    scope.$emit('E_SEE_SUBJECT_SCHEDULED_ASSIGN_AT', {subjectScheduled : scope.selectedSubjectScheduled});
+                };
+
+
                 /**
                  * DISPLAY
                  */
@@ -176,6 +219,7 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     var res = 0;
                     angular.forEach(scope.subjectCopyList, function(copy){
                         if(copy.submitted_date){
+                            scope.option.hasSubmitted = true;
                             res++;
                         }
                     });
