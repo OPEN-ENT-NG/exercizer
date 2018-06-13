@@ -78,7 +78,7 @@
                     <div data-ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'label':false">
                         <div class="item">
                             <section class="domino">
-                                <div class="top" style="padding-top : 10%;"
+                                    <div class="top" style="padding-top : 10%;"
                                      dragstart="drag(folder, $originalEvent)"
                                      dragcondition="dragFolderCondition(folder)"
                                      dragdrop="dropTo(folder, $originalEvent)"

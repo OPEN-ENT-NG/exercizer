@@ -1,17 +1,49 @@
+<article class="five cell left-magnet" style="height:250px">
+    <h2 class="no-margin"><i18n>exercizer.schedule.info</i18n> "[[selectedSubjectScheduled.title]]"</h2>
+    <div data-ng-if="option.editedDates && option.hasSubmitted" class="warning no-margin no-padding"><i18n>exercizer.schedule.rule.copies</i18n></div>
+    <div class="row vertical-spacing">
+        <div class="cell"><span><i18n>exercizer.scheduled.start</i18n>&nbsp;</span></div>
+        <b ng-if="!option.editedDates || option.hasSubmitted">  [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.begin_date | date:'HH:mm']]</b>
+        <div ng-if="option.editedDates && !option.hasSubmitted">
+            <date-picker ng-model="option.begin_date" class="two no-margin no-padding" ></date-picker>
+            <i18n>exercizer.at</i18n>
+            <input class="one no-margin no-padding" type="text" data-ng-model="option.begin_time" data-ng-blur="option.begin_time = checkTime(option.begin_time, selectedSubjectScheduled.begin_date)"/>
+        </div>
+    </div>
+    <div class="row vertical-spacing">
+        <div class="cell"><span><i18n>exercizer.scheduled.end</i18n> &nbsp;</span></div>
+        <b ng-if="!option.editedDates"> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.due_date | date:'HH:mm']]</b>
+        <div ng-if="option.editedDates ">
+            <date-picker ng-model="option.due_date" class="two no-margin no-padding"></date-picker>
+            <i18n>exercizer.at</i18n>
+            <input class="one no-margin no-padding" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, selectedSubjectScheduled.due_date)"/>
+        </div>
+    </div>
+    <div class="cell right-magnet" data-ng-show="!option.editedDates">
+        <button class="flat-button" data-ng-click="option.showUnScheduled=true"><i18n>exercizer.unschedule</i18n></button>
+        <button data-ng-click="option.editedDates=true"> <i18n>edit</i18n></button>
+    </div>
+    <div class="cell right-magnet" data-ng-show="option.editedDates">
+        <button class="flat-button" data-ng-click="option.editedDates=false"><i18n>cancel</i18n></button>
+        <button data-ng-click="option.edit=true"> <i18n>update</i18n></button>
+    </div>
+</article>
 
- <div class="twelve cell">
-     <h2 class="no-margin"> [[selectedSubjectScheduled.title]]</h2>
-     <p class="small-text">
-         <i18n>exercizer.scheduled.start</i18n> <b> [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.begin_date | date:'HH:mm']] </b> <br>
-         <i18n>exercizer.scheduled.end</i18n> <b> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.due_date | date:'HH:mm']] </b> <br>
-     </p>
- </div>
+<article class="six cell right-magnet" style="height:250px">
+    <h2 class="block"> <i18n>exercizer.schedule.stats</i18n> "[[selectedSubjectScheduled.title]]"</h2>
+    <div class="cell right-magnet">
+        <button class="flat-button" data-ng-click=""><i18n>exercizer.schedule.stats.more</i18n></button>
+    </div>
+</article>
 
 <div class="row vertical-spacing">
      <div class="cell">
-          <span data-ng-repeat="user in lUserGroup" class="small-text">
+          <span data-ng-repeat="user in lUserGroup | limitTo: 3" class="small-text">
               <b>[[user.name]] </b>
           </span>
+         <span data-ng-click="seeAllAssignAtList(subjectScheduled)"
+            class="hover-orange"
+            data-ng-if="lUserGroup.length > 3">...</span>
           <em class="small-text"> - <i18n>exercizer.numbercopy.notcorrected</i18n> <b>[[numberCopyNotCorrected()]]</b> <i18n>exercizer.numbercopy.notcorrected2</i18n> </em>
      </div>
 </div>
@@ -117,5 +149,26 @@
      </div>
 </section>
 
+<subject-scheduled-assign-at></subject-scheduled-assign-at>
+
 <reminders is-displayed="reminderDisplayed" selected-subject-scheduled="selectedSubjectScheduled" reminder-copies="reminderCopies" />
 <exclude is-displayed="excludeDisplayed" subject-copy-list="subjectCopyList" toaster-displayed="toasterDisplayed" />
+<lightbox show="option.showUnScheduled" on-close="option.showUnScheduled=false">
+    <h2><i18n>exercizer.unschedule.title</i18n></h2>
+    <p><i18n>exercizer.unschedule.confirm</i18n></p>
+    <div class="row">
+        <button data-ng-click="unScheduled(); " class="right-magnet"><i18n>exercizer.unschedule</i18n></button>
+        <button data-ng-click="option.showUnScheduled=false" class="cancel right-magnet"><i18n>exercizer.cancel</i18n></button>
+    </div>
+</lightbox>
+<lightbox show="option.edit" on-close="option.edit=false">
+    <h2><i18n>exercizer.schedule.edit.title</i18n></h2>
+    <p>
+        <span><i18n>exercizer.schedule.edit.confirm</i18n></span>
+        <span data-ng-if="selectedSubjectScheduled.is_notify"><i18n>exercizer.schedule.edit.confirm.notif</i18n></span>
+    </p>
+    <div class="cell right-magnet">
+        <button class="flat-button" data-ng-click="option.edit=false"><i18n>cancel</i18n></button>
+        <button data-ng-click="modifySchedule(); option.edit=false;"> <i18n>update</i18n></button>
+    </div>
+</lightbox>

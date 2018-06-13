@@ -217,6 +217,35 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
+    public modifySchedule =  function(subjectScheduled:ISubjectScheduled):Promise<ISubjectScheduled> {
+        var self = this,
+            deferred = this._$q.defer();
+
+        let param = {beginDate: subjectScheduled.begin_date, dueDate: subjectScheduled.due_date,
+            correctedDate: subjectScheduled.corrected_date, offset:new Date().getTimezoneOffset()};
+
+        let request = {
+            method: 'POST',
+            url: 'exercizer/schedule-subject/modify/' + subjectScheduled.id,
+            data: param
+        };
+
+        this._$http(request).then(
+            function(response) {
+                delete self._listMappedById;
+                deferred.resolve();
+            },
+            function(e) {
+                if (e.status == 400) {
+                    deferred.reject(e.data.error);
+                } else {
+                    deferred.reject('exercizer.error');
+                }
+            }
+        );
+        return deferred.promise;
+    };
+
     public unScheduled = function(subjectScheduled:ISubjectScheduled):Promise<ISubjectScheduled> {
         var self = this,
             deferred = this._$q.defer();

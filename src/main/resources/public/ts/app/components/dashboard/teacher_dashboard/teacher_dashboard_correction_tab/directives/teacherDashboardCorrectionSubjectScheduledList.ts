@@ -237,10 +237,6 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                     }
                 };
 
-                scope.seeAllAssignAtList = function(subjectScheduled){
-                    scope.$emit('E_SEE_SUBJECT_SCHEDULED_ASSIGN_AT', {subjectScheduled : subjectScheduled});
-                };
-
                 scope.filterOnGroupSelectedState = function(){
                     return function (subjectScheduled) {
 
@@ -275,17 +271,6 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                     }
                 }
 
-                scope.selectsubjectScheduled = function(subjectScheduled) {
-                    var selectedIndex = scope.selectedSubjectsScheduled.indexOf(subjectScheduled);
-                    if (selectedIndex === -1) {
-                        scope.selectedSubjectsScheduled.push(subjectScheduled);
-                    } else {
-                        scope.selectedSubjectsScheduled.splice(selectedIndex, 1);
-                    }
-
-                    showToggle();
-                };
-
                 scope.exportSelected = function(){
                     exportCSV(scope.selectedSubjectsScheduled);
                 }
@@ -308,25 +293,6 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                     });
                 };
 
-                function showToggle() {
-                    if (scope.selectedSubjectsScheduled.length > 1) {
-                        scope.toggle.showUnScheduled = false;
-                        var isSimple = false;
-                        angular.forEach(scope.selectedSubjectsScheduled, function(subject){
-                            if(subject.type === 'simple'){
-                                isSimple = true;
-                            }
-                        });
-                        scope.toggle.show = !isSimple;
-                        scope.toggle.showExport = !isSimple;                        
-                    } else if (scope.selectedSubjectsScheduled.length === 1) {
-                        scope.toggle.show = true;
-                        scope.toggle.showExport = scope.selectedSubjectsScheduled[0].type !== 'simple';
-                        scope.toggle.showUnScheduled = true;
-                    } else {
-                        scope.toggle.show = false;                      
-                    }
-                };
             }
         };
 }]);
