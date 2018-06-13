@@ -221,4 +221,11 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
         final String removeCopies = "DELETE FROM " + resourceTable + " AS sc WHERE sc.id IN " + Sql.listPrepared(ids.getList());
         sql.prepared(removeCopies, new fr.wseduc.webutils.collections.JsonArray(ids.getList()), SqlResult.validRowsResultHandler(handler));
     }
+
+    @Override
+    public void getSubmittedBySubjectScheduled(final String scheduledId, final Handler<Either<String, JsonArray>> handler){
+        final String query = "SELECT * FROM " + resourceTable + " AS sc WHERE sc.subject_scheduled_id = ? AND sc.submitted_date IS NOT NULL";
+
+        sql.prepared(query, new JsonArray().add(scheduledId), SqlResult.validResultHandler(handler));
+    }
 }
