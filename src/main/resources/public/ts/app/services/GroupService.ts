@@ -1,6 +1,7 @@
 import { ng } from 'entcore';
 
 export interface IGroupService {
+    findMembers(id:string):Promise<any>;
     getList(subject): Promise<any>;
     getUserFromGroup(group) : Promise<any>;
     getClassFromStructures(structureId : any) : Promise<any>;
@@ -85,6 +86,28 @@ export class GroupService implements IGroupService {
                 }
             );
         }
+        return deferred.promise;
+    };
+
+    public findMembers = function(id:string):Promise<any> {
+        var self = this,
+            deferred = this._$q.defer();
+
+        var url = 'exercizer/members?' + 'id=' + id;
+
+        var request = {
+            method: 'GET',
+            url: url
+        };
+
+        this._$http(request).then(
+            function (response) {
+                deferred.resolve(response.data);
+            },
+            function () {
+                deferred.reject('exercizer.error')
+            }
+        );
         return deferred.promise;
     };
 

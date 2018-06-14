@@ -1,0 +1,23 @@
+<lightbox data-show="isDisplayed" on-close="close()">
+    <h1><i18n>exercizer.exclude</i18n></h1>
+    <div class="row vertical-spacing">
+        <i18n>exercizer.exclude.confirm</i18n> <strong><i18n>exercizer.exclude.info</i18n></strong>
+    </div>
+    <div class="row vertical-spacing">
+        <ul style="overflow-y: auto; max-height: 170px;">
+            <li data-ng-repeat="item in subjectCopyList track by $index" ng-if="item.selected">[[ item.owner_username ]]</li>
+        </ul>
+    </div>
+    <div class="row vertical-spacing">
+        <div class="cell right-magnet">
+            <button data-ng-click="confirmExclude()" class="right-magnet">
+                <i18n>exercizer.validate</i18n>
+            </button>
+        </div>
+        <div class="cell right-magnet">
+            <button data-ng-click="close()" class="right-magnet cancel">
+                <i18n>exercizer.cancel</i18n>
+            </button>
+        </div>
+    </div>
+</lightbox>

@@ -5,6 +5,7 @@ import { studentDashboardFinishSubjectCopyList } from './app/components/dashboar
 import { studentDashboardSubjectCopyList } from './app/components/dashboard/student_dashboard/student_dashboard_subject_copy_list/directives/studentDashBoardSubjectCopyList';
 import { dashboardTeacherTab } from './app/components/dashboard/teacher_dashboard/common/directives/dashboardTeacherTab';
 import { reminders } from './app/components/dashboard/teacher_dashboard/common/directives/reminders';
+import { exclude } from './app/components/dashboard/teacher_dashboard/common/directives/exclude';
 import { sharePanelModal } from './app/components/dashboard/teacher_dashboard/common/directives/share-panel-light-box';
 import { subjectScheduleAssignAt } from './app/components/dashboard/teacher_dashboard/common/directives/subject-scheduled-assign-at';
 import { teacherDashboardCorrectionCopyList } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_correction_tab/directives/teacherDashboardCorrectionCopyList';
@@ -93,6 +94,7 @@ ng.directives.push(studentDashboardFinishSubjectCopyList);
 ng.directives.push(studentDashboardSubjectCopyList);
 ng.directives.push(dashboardTeacherTab);
 ng.directives.push(reminders);
+ng.directives.push(exclude);
 ng.directives.push(sharePanelModal);
 ng.directives.push(subjectScheduleAssignAt);
 ng.directives.push(teacherDashboardCorrectionCopyList);

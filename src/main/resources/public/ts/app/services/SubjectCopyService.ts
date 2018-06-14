@@ -20,6 +20,7 @@ export interface ISubjectCopyService {
     removeCorrectedFile(id): Promise<any>;
     remindCustomCopies(copyIds:number[], subject:string, body:string): Promise<Boolean>;
     remindAutomaticCopies(copyIds:number[], subjectScheduleId:number): Promise<Boolean>;
+    excludeCopies(copyIds:number[]): Promise<Boolean>;
     getListBySubjectScheduled(subjectScheduled : ISubjectScheduled): ISubjectCopy[];
     checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId:number):Promise<boolean>;
     
@@ -243,6 +244,27 @@ export class SubjectCopyService implements ISubjectCopyService {
             request = {
                 method: 'POST',
                 url: 'exercizer/subject-copy/automatic/reminder/' + subjectScheduleId,
+                data: {ids:copyIds}
+            };
+
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(true);
+            },
+            function(e) {
+                deferred.reject('exercizer.error');
+            }
+        );
+
+        return deferred.promise;
+    };
+
+    public excludeCopies = function(copyIds:number[]): Promise<Boolean> {
+        var deferred = this._$q.defer(),
+            self = this,
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject-copy/exclude',
                 data: {ids:copyIds}
             };
 
