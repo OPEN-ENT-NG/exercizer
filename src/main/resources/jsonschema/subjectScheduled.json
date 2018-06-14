@@ -51,6 +51,21 @@
               }
             }
           }
+        },
+        "exclude": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     },

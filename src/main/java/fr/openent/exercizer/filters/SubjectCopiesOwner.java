@@ -35,7 +35,7 @@ import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
-public class SubjectCopyReminder implements ResourcesProvider {
+public class SubjectCopiesOwner implements ResourcesProvider {
 
 	@Override
 	public void authorize(final HttpServerRequest resourceRequest, final Binding binding, final UserInfos user,

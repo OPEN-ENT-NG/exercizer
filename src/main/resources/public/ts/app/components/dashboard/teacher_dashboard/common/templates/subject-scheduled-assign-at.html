@@ -4,14 +4,23 @@
                 <form name="form">
                         <div class="row">
                                 <h4 data-ng-if="subjectScheduled.scheduled_at.groupList.length > 0"><i18n>exercizer.scheduled.assign.group</i18n></h4>
-                                <h3 data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
-                                    <span>[[group.name]]</span>
-                                </h3>
+                                <div style="overflow-y: auto; max-height:150px;">
+                                        <h3 data-ng-repeat="group in subjectScheduled.scheduled_at.groupList">
+                                                <span>[[group.name]]</span>
+                                        </h3>
+                                </div>
                                 <h4 data-ng-if="subjectScheduled.scheduled_at.userList.length > 0"><i18n>exercizer.scheduled.assign.learner</i18n></h4>
-                                <h3 data-ng-repeat="user in subjectScheduled.scheduled_at.userList">
-                                    <span
-                                    >[[user.name]]</span>
-                                </h3>
+                                <div style="overflow-y: auto; max-height:150px;">
+                                        <h3 data-ng-repeat="user in subjectScheduled.scheduled_at.userList">
+                                                <span>[[user.name]]</span>
+                                        </h3>
+                                </div>
+                                <h4 data-ng-if="subjectScheduled.scheduled_at.exclude.length > 0"><i18n>exercizer.scheduled.assign.exclude</i18n></h4>
+                                <div style="overflow-y: auto; max-height:150px;">
+                                        <h3 data-ng-repeat="user in subjectScheduled.scheduled_at.exclude">
+                                                <span>[[user.name]]</span>
+                                        </h3>
+                                </div>
                         </div>
                 </form>
         </div>

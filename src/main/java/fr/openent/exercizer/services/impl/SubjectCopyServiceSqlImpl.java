@@ -215,4 +215,10 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
         }
         sql.prepared(query, values, SqlResult.validResultHandler(handler));
     }
+
+    @Override
+    public void exclude(final JsonArray ids, final Handler<Either<String, JsonObject>> handler) {
+        final String removeCopies = "DELETE FROM " + resourceTable + " AS sc WHERE sc.id IN " + Sql.listPrepared(ids.getList());
+        sql.prepared(removeCopies, new fr.wseduc.webutils.collections.JsonArray(ids.getList()), SqlResult.validRowsResultHandler(handler));
+    }
 }
