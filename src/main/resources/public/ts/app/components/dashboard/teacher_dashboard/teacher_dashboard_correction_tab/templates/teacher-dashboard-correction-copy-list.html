@@ -101,7 +101,7 @@
      </table>
 </div>
 
-<section class="toggle-buttons" data-ng-show="toasterDisplayed">
+<section class="toggle-buttons" data-ng-show="toasterDisplayed.main">
      <div class="toggle">
           <div class="row">
                <div class="cell" data-ng-if="showAutomaticMark()">
@@ -110,8 +110,12 @@
                <div class="cell">
                     <button data-ng-click="reminder()"><i18n>exercizer.reminder.raise</i18n></button>
                </div>
+              <div class="cell" data-ng-show="toasterDisplayed.exclude">
+                  <button data-ng-click="exclude()"><i18n>exercizer.exclude</i18n></button>
+              </div>
           </div>
      </div>
 </section>
 
 <reminders is-displayed="reminderDisplayed" selected-subject-scheduled="selectedSubjectScheduled" reminder-copies="reminderCopies" />
+<exclude is-displayed="excludeDisplayed" subject-copy-list="subjectCopyList" toaster-displayed="toasterDisplayed" />

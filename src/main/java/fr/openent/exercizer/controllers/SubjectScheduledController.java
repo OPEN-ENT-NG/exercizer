@@ -170,6 +170,40 @@ public class SubjectScheduledController extends ControllerHelper {
 		});
 	}
 
+	@Get("/members")
+	@ApiDoc("Get members of groups.")
+	@SecuredAction(value = "", type = ActionType.AUTHENTICATED)
+	public void getMembers(final HttpServerRequest request) {
+		final String id = request.params().get("id");
+
+		if (StringUtils.isEmpty(id)) {
+			badRequest(request);
+			return;
+		}
+
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					GroupUtils.findMembers(eb, user.getUserId(), Arrays.asList(id), new Handler<JsonArray>() {
+						@Override
+						public void handle(JsonArray membersJa) {
+							if (membersJa != null) {
+								renderJson(request, membersJa);
+							} else {
+								log.error("Failure to find group members : JsonArray null");
+								renderError(request);
+							}
+						}
+					});
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
 	private Handler<JsonObject> getScheduleHandler(final UserInfos user, final HttpServerRequest request, final Long subjectId, final ScheduledType type) {
 		return new Handler<JsonObject>() {
             @Override
@@ -180,6 +214,7 @@ public class SubjectScheduledController extends ControllerHelper {
                     final JsonObject scheduledAt = scheduledSubject.getJsonObject("scheduledAt");
                     final JsonArray usersJa = scheduledAt.getJsonArray("userList", new fr.wseduc.webutils.collections.JsonArray());
                     final JsonArray groupsJa = scheduledAt.getJsonArray("groupList", new fr.wseduc.webutils.collections.JsonArray());
+					final JsonArray excludeJa = scheduledAt.getJsonArray("exclude", new fr.wseduc.webutils.collections.JsonArray());
 
                     if (groupsJa.size() > 0) {
                         //find group member
@@ -198,10 +233,10 @@ public class SubjectScheduledController extends ControllerHelper {
                                             final Set<String> userIds = new HashSet<String>();
 
                                             //users
-                                            safeUsersCollections(usersJa, usersSafe, userIds);
+                                            safeUsersCollections(usersJa, usersSafe, userIds, excludeJa);
 
                                             //members of groups
-                                            safeUsersCollections(membersJa, usersSafe, userIds);
+                                            safeUsersCollections(membersJa, usersSafe, userIds, excludeJa);
 
                                             scheduledSubject.put("users", usersSafe);
 
@@ -222,7 +257,7 @@ public class SubjectScheduledController extends ControllerHelper {
                         //only users
                         final JsonArray usersSafe = new fr.wseduc.webutils.collections.JsonArray();
                         final Set<String> userIds = new HashSet<String>();
-                        safeUsersCollections(usersJa, usersSafe, userIds);
+                        safeUsersCollections(usersJa, usersSafe, userIds, excludeJa);
 
                         scheduledSubject.put("users", usersSafe);
                         scheduleAndNotifies(scheduledSubject, user, userIds, request, type);
@@ -272,12 +307,21 @@ public class SubjectScheduledController extends ControllerHelper {
 		return true;
 	}
 
-	private void safeUsersCollections(JsonArray usersParam, JsonArray usersSafe, Set<String> userIds) {
+	private void safeUsersCollections(JsonArray usersParam, JsonArray usersSafe, Set<String> userIds, JsonArray excludeJa) {
 		for (int i=0;i<usersParam.size();i++) {
 			if (!(usersParam.getValue(i) instanceof JsonObject)) continue;
 			final JsonObject joUser = usersParam.getJsonObject(i);
 			final String currentUserId = joUser.getString("_id");
-			if (!userIds.contains(currentUserId)) {
+			boolean exclude = false;
+			for (Object o : excludeJa) {
+				if (!(o instanceof JsonObject)) continue;
+				if (StringUtils.trimToBlank(currentUserId).equals(((JsonObject)o).getString("_id"))) {
+					exclude = true;
+					break;
+				}
+			}
+
+			if (!userIds.contains(currentUserId) && !exclude) {
 				userIds.add(currentUserId);
 				usersSafe.add(joUser);
 			}
