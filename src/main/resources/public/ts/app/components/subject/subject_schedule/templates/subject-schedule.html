@@ -33,7 +33,7 @@
             <div data-ng-show="lightbox.state == 'assignSubject'">
                 <div class="row">
                     <h4><i18n>exercizer.scheduled.subject.search</i18n></h4>
-                    <input type="text" class="twelve cell" ng-model="search.search" autofocus ng-change="updateFoundUsersGroups()" id="to-users" />
+                    <input type="text" class="twelve cell" ng-model="search.search" autofocus ng-change="updateFoundUsersGroups()" i18n-placeholder="exercizer.search" id="to-users" />
                     <drop-down
                             options="search.found"
                             ng-change="clickOnItem(selectedItem)"
@@ -46,22 +46,29 @@
                     <div class="flex-row align-start vertical-spacing-twice">
                         <div class="cell six horizontal-spacing">
                             <h4><i18n>exercizer.scheduled.subject.group.add</i18n></h4>
-                            <label class="chip removable block" data-ng-repeat="group in data.groupList">
-                                <i class="close right-magnet" data-ng-click="removeItem(group)"></i>
-                                <span class="cell-ellipsis block">[[group.toString()]]</span>
-                            </label>
-                            <div class="small-text" data-ng-if="data.groupList.length === 0">
-                                <i18n>exercizer.scheduled.subject.group.empty</i18n>
+                            <div style="overflow-y: auto; max-height: 210px;">
+                                <label class="chip block" data-ng-repeat="group in data.groupList" ng-class="{selected: group.selected, removable: !group.selected}" data-ng-click="selectGroupItem(group)">
+                                    <i class="close right-magnet" data-ng-click="removeItem(group)"></i>
+                                    <span class="cell-ellipsis block">[[group.title]]</span>
+                                </label>
+                                <div class="small-text" data-ng-if="data.groupList.length === 0">
+                                    <i18n>exercizer.scheduled.subject.group.empty</i18n>
+                                </div>
                             </div>
                         </div>
                         <div class="cell six horizontal-spacing">
                             <h4><i18n>exercizer.scheduled.subject.user.add</i18n></h4>
-                            <label class="chip removable block" data-ng-repeat="user in data.userList">
-                                <i class="close right-magnet" data-ng-click="removeItem(user)"></i>
-                                <span class="cell-ellipsis block">[[user.toString()]]</span>
-                            </label>
-                            <div class="small-text" data-ng-if="data.userList.length === 0">
-                                <i18n>exercizer.scheduled.subject.user.empty</i18n>
+                            <div class="small-text row">
+                                <input type="text" class="six cell" ng-model="search.user" i18n-placeholder="exercizer.search" /><span class="one cell">&nbsp;</span><label>[[getTotalUser().ok]] <i18n>exercizer.users</i18n></label>
+                            </div>
+                            <div style="overflow-y: auto; max-height: 170px;">
+                                <label class="chip block" data-ng-repeat="user in data.userList | filter:filterAllUser()" style="cursor:default" ng-class="{selected: user.selected, removable: !user.selected}" data-ng-if="!user.exclude">
+                                    <i class="close right-magnet" data-ng-click="removeItem(user)"></i>
+                                    <span class="cell-ellipsis block">[[user.title]]</span>
+                                </label>
+                                <div class="small-text" data-ng-if="data.userList.length === 0">
+                                    <i18n>exercizer.scheduled.subject.user.empty</i18n>
+                                </div>
                             </div>
                         </div>
                     </div>

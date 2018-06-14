@@ -949,7 +949,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Post("/subject-copy/custom/reminder")
 	@ApiDoc("send custom mail reminder.")
-	@ResourceFilter(SubjectCopyReminder.class)
+	@ResourceFilter(SubjectCopiesOwner.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void customReminder(final HttpServerRequest request) {
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
@@ -1023,7 +1023,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Post("/subject-copy/automatic/reminder/:subjectScheduledId")
 	@ApiDoc("send a standard notify reminder.")
-	@ResourceFilter(SubjectCopyReminder.class)
+	@ResourceFilter(SubjectCopiesOwner.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void automaticReminder(final HttpServerRequest request) {
 		final String subjectScheduledId = request.params().get("subjectScheduledId");
@@ -1070,6 +1070,43 @@ public class SubjectCopyController extends ControllerHelper {
 												}
 											}
 										});
+									} else {
+										renderError(request);
+									}
+								}
+							});
+						}
+					});
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Post("/subject-copy/exclude")
+	@ApiDoc("Exclude copies.")
+	@ResourceFilter(SubjectCopiesOwner.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void exclude(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject param) {
+							if (param.getJsonArray("ids") == null || param.getJsonArray("ids").size() == 0) {
+								badRequest(request);
+								return;
+							}
+
+							subjectCopyService.exclude(param.getJsonArray("ids"), new Handler<Either<String, JsonObject>>() {
+								@Override
+								public void handle(Either<String, JsonObject> event) {
+									if (event.isRight()) {
+										Renders.noContent(request);
 									} else {
 										renderError(request);
 									}

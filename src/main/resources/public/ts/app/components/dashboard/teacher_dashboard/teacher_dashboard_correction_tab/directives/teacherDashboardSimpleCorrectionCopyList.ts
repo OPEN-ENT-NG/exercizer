@@ -19,9 +19,9 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                          * INIT
                          */
                         scope.subjectCopyList = [];
-                        scope.toasterDisplayed = false;
+                        scope.toasterDisplayed = {main: false, exclude: false};
                         scope.search = {};
-                        resetRemind();
+                        resetDisplay();
                         
                         scope.order.field = 'owner_username';
                         scope.order.desc = false;                            
@@ -47,8 +47,9 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     scope.lUserGroup = r; 
                 };
 
-                function resetRemind() {
+                function resetDisplay() {
                     scope.reminderDisplayed = false;
+                    scope.excludeDisplayed = false;
                 };
 
                 /**
@@ -74,6 +75,10 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     } else {
                         scope.reminderDisplayed = true;
                     }
+                };
+
+                scope.exclude = function(){                    
+                    scope.excludeDisplayed = true;
                 };
 
                 scope.downloadFiles = function(){
@@ -107,12 +112,17 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
 
                 scope.selectCopy = function(){
                     var res = false;
+                    scope.toasterDisplayed.exclude = true;
                     angular.forEach(scope.subjectCopyList, function(copy){
                         if(copy.selected){
                             res = true;
+                            if (copy.submitted_date) {
+                                scope.toasterDisplayed.exclude = false;
+                                return false;
+                            }
                         }
                     });
-                    scope.toasterDisplayed =  res;
+                    scope.toasterDisplayed.main =  res;
                 };
 
                 scope.clickSelectAll = function(selectAll){
@@ -122,8 +132,10 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                         count++
                     });
                     if(count>0){
-                        scope.toasterDisplayed =  selectAll;
+                        scope.toasterDisplayed.main =  selectAll;
                     }
+
+                    scope.toasterDisplayed.exclude = false;
                 };
 
                 scope.saveCorrected = function(event) {
