@@ -33,7 +33,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     scope.option = {
                         begin_date: new Date(),
                         due_date: DateService.addDays(new Date, 7),
-                        corrected_date: DateService.addDays(new Date, 7),
+                        corrected_date: DateService.addDays(new Date, 8),
                         begin_time: "00:00",
                         due_time: "23:59",
                         corrected_time: "00:00"
@@ -92,7 +92,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 };
                 
                 scope.checkTime = function (time, def?) {
-                    return !time.match("/([01][0-9]|2[0-3]):[0-5][0-9]/") ? def ? "23:59" : "00:00" : time;
+                    return time.match("^([01][0-9]|2[0-3]):[0-5][0-9]$") ? time : def ? "23:59" : "00:00";
                 };
                 
                 scope.selectGroupItem = function (selectedItem) {
@@ -481,8 +481,9 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 };
 
                 scope.confirmation = function () {
-                    return (scope.option) ? (scope.isSimpleSubject ? idiom.translate('exercizer.schedule.simple.confirm') : idiom.translate('exercizer.schedule.interactive.confirm')) + ' ' +
-                        $filter('date')(scope.option.due_date, 'dd/MM/yyyy') + ' ' +idiom.translate('exercizer.at') +' '+ $filter('date')(scope.option.due_time, 'HH:mm')+ ' ?' : '';
+                    if(scope.option)
+                        return (scope.isSimpleSubject ? idiom.translate('exercizer.schedule.simple.confirm') : idiom.translate('exercizer.schedule.interactive.confirm')) + ' ' +
+                            $filter('date')(scope.option.due_date, 'dd/MM/yyyy') + ' ' +idiom.translate('exercizer.at') +' '+ $filter('date')(scope.option.due_time, 'HH:mm')+ ' ?';
                 }
             }
         };
