@@ -39,6 +39,8 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         corrected_time: "00:00"
                     };
 
+                    scope.selectedGroup = false;
+
                     scope.search = {};
                     scope.clearSearch();
                 }
@@ -52,7 +54,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     var index = list.indexOf(selectedItem);
                     if (index === -1) {
                         clearSelectedList();
-                        selectedItem.selected = true;
+                        selectedItem.selected = false;
 
                         if (selectedItem.groupOrUser == 'group') {
                             findMembers(selectedItem['_id'], isEmpty => {
@@ -60,10 +62,13 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                                     notify.info("exercizer.schedule.empty.group");
                                 } else {
                                     list.push(selectedItem);
+                                    scope.data.userList = _.sortBy(scope.data.userList, 'title');
                                 }
                             });
                         } else {
                             list.push(selectedItem);
+                            scrollToUser(selectedItem['_id']);
+                            scope.data.userList = _.sortBy(scope.data.userList, 'title');
                         }
                     } else {
                         console.error('item already in the list');
@@ -74,12 +79,11 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     GroupService.findMembers(groupId).then(
                         function (data) {
                             var isEmpty = data.length === 0;
-                            var result = _.sortBy(data, 'name');
-                            _.forEach(result, function (user) {
+                            _.forEach(data, function (user) {
                                 scope.data.userList.push({
                                     _id: user['_id'],
                                     title: user.name,
-                                    selected: true,
+                                    selected: false,
                                     exclude: false,
                                     groupId: groupId
                                 });
@@ -90,6 +94,10 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         }
                     );
                 };
+
+                function scrollToUser(userId) {
+                    setTimeout(() => $('#userScroll').animate({ scrollTop: $('#userScroll').scrollTop() - $('#userScroll').offset().top + $('#user-' + userId).offset().top}, 500), 100);
+                }
                 
                 scope.checkTime = function (time, def?) {
                     return time.match("^([01][0-9]|2[0-3]):[0-5][0-9]$") ? time : def ? "23:59" : "00:00";
@@ -98,6 +106,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 scope.selectGroupItem = function (selectedItem) {
                     clearSelectedList();
                     selectedItem.selected = true;
+                    scope.selectedGroup = true;
                     _.forEach(scope.data.userList, user => {
                         if (user.groupId === selectedItem['_id']) user.selected = true;
                     });                    
@@ -464,6 +473,12 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         scope.search.found = [];
                         scope.search.search = '';
                         scope.search.user = '';
+                    }
+
+                    if (scope.data && !scope.selectedGroup) {
+                        clearSelectedList();
+                    } else {
+                        scope.selectedGroup = false;
                     }
                 };
 
