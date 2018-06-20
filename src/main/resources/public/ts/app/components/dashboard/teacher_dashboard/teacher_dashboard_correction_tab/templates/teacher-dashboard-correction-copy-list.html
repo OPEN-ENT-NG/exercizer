@@ -1,7 +1,7 @@
 <article class="five cell left-magnet" style="height:250px">
     <h2 class="no-margin"><i18n>exercizer.schedule.info</i18n> "[[selectedSubjectScheduled.title]]"</h2>
     <div data-ng-if="option.editedDates && option.hasSubmitted" class="warning no-margin no-padding"><i18n>exercizer.schedule.rule.copies</i18n></div>
-    <div class="row vertical-spacing">
+    <div class="row vertical-spacing row-like-input">
         <div class="cell"><span><i18n>exercizer.scheduled.start</i18n>&nbsp;</span></div>
         <b ng-if="!option.editedDates || option.hasSubmitted">  [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.begin_date | date:'HH:mm']]</b>
         <div ng-if="option.editedDates && !option.hasSubmitted">
@@ -10,7 +10,7 @@
             <input class="one no-margin no-padding" type="text" data-ng-model="option.begin_time" data-ng-blur="option.begin_time = checkTime(option.begin_time, selectedSubjectScheduled.begin_date)"/>
         </div>
     </div>
-    <div class="row vertical-spacing">
+    <div class="row vertical-spacing row-like-input">
         <div class="cell"><span><i18n>exercizer.scheduled.end</i18n> &nbsp;</span></div>
         <b ng-if="!option.editedDates"> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.due_date | date:'HH:mm']]</b>
         <div ng-if="option.editedDates ">
@@ -24,8 +24,8 @@
         <button data-ng-click="option.editedDates=true"> <i18n>edit</i18n></button>
     </div>
     <div class="cell right-magnet" data-ng-show="option.editedDates">
-        <button class="flat-button" data-ng-click="option.editedDates=false"><i18n>cancel</i18n></button>
-        <button data-ng-click="option.edit=true"> <i18n>update</i18n></button>
+        <button class="flat-button" data-ng-click="option.editedDates=false"><i18n>exercizer.cancel</i18n></button>
+        <button data-ng-click="option.edit=true"> <i18n>exercizer.validate</i18n></button>
     </div>
 </article>
 
@@ -38,9 +38,12 @@
 
 <div class="row vertical-spacing">
      <div class="cell">
-          <span data-ng-repeat="user in lUserGroup | limitTo: 3" class="small-text">
-              <b>[[user.name]] </b>
-          </span>
+         <span>
+             <i18n>exercizer.schedule.at</i18n>
+         </span>
+         <span data-ng-repeat="user in lUserGroup | limitTo: 3" class="small-text">
+             <b>[[user.name]] </b>
+         </span>
          <span data-ng-click="seeAllAssignAtList(subjectScheduled)"
             class="hover-orange"
             data-ng-if="lUserGroup.length > 3">...</span>
