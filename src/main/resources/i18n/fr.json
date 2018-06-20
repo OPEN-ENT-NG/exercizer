@@ -60,6 +60,7 @@
     "exercizer.schedule.stats.more" : "Plus de stats",
     "exercizer.schedule.simple.title" : "Distribuer une remise de devoir",
     "exercizer.schedule.interactive.title" : "Distribuer un sujet interactif",
+    "exercizer.schedule.at" : "Distribué à",
     "exercizer.schedule.info" : "Informations du sujet",
     "exercizer.folder.check" : "La destination du dossier ne peut pas être le dossier d'origine ou un de ses enfants.",
     "exercizer.grain.no.error.allowed" : "Attention : une seule erreur et toutes les réponses sont considérées comme fausses !",
