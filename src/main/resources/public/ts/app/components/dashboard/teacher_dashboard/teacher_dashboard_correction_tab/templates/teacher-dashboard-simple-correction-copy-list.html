@@ -1,7 +1,7 @@
 <article class="five cell left-magnet" style="height:250px">
     <h2 class="no-margin"><i18n>exercizer.schedule.info</i18n> "[[selectedSubjectScheduled.title]]"</h2>
     <div data-ng-if="option.editedDates && option.hasSubmitted" class="warning no-margin no-padding"><i18n>exercizer.schedule.rule.copies</i18n></div>
-        <div class="row vertical-spacing">
+        <div class="row vertical-spacing row-like-input">
             <div class="cell"><span><i18n>exercizer.scheduled.start</i18n>&nbsp;</span></div>
             <b ng-if="!option.editedDates || option.hasSubmitted">  [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.begin_date | date:'HH:mm']]</b>
             <div ng-if="option.editedDates && !option.hasSubmitted">
@@ -10,7 +10,7 @@
                 <input class="one no-margin no-padding" type="text" data-ng-model="option.begin_time" data-ng-blur="option.begin_time = checkTime(option.begin_time, selectedSubjectScheduled.begin_date)"/>
             </div>
         </div>
-        <div class="row vertical-spacing">
+        <div class="row vertical-spacing row-like-input">
             <div class="cell"><span><i18n>exercizer.scheduled.end</i18n> &nbsp;</span></div>
             <b ng-if="!option.editedDates"> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.due_date | date:'HH:mm']]</b>
             <div ng-if="option.editedDates ">
@@ -19,7 +19,7 @@
                 <input class="one no-margin no-padding" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, selectedSubjectScheduled.due_date)"/>
             </div>
         </div>
-        <div class="row vertical-spacing">
+        <div class="row vertical-spacing row-like-input">
             <div class="cell"><span><i18n>exercizer.scheduled.publish.corrected</i18n> &nbsp;</span></div>
             <b ng-if="!option.editedDates"> [[ selectedSubjectScheduled.corrected_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.corrected_date | date:'HH:mm']]</b>
             <div ng-if="option.editedDates">
@@ -34,31 +34,48 @@
         <button data-ng-click="option.editedDates=true"> <i18n>edit</i18n></button>
     </div>
     <div class="cell right-magnet" data-ng-show="option.editedDates">
-        <button class="flat-button" data-ng-click="option.editedDates=false"><i18n>cancel</i18n></button>
-        <button data-ng-click="option.edit=true"> <i18n>update</i18n></button>
+        <button class="flat-button" data-ng-click="option.editedDates=false"><i18n>exercizer.cancel</i18n></button>
+        <button data-ng-click="option.edit=true"><i18n>exercizer.validate</i18n></button>
     </div>
 </article>
 
 <article class="six cell right-magnet" style="height:250px">
-      <h2 class="block"> <i18n>exercizer.corrected.homework</i18n></h2>
-
-      <div class="cell select-file input-block" data-ng-if="!selectedSubjectScheduled.corrected_file_id" style="margin-top:5px;margin-bottom:0px">
-          <div class="hidden-content cell">
-               <input type="file"  files-input-change="saveCorrected(this)" ng-model="newFiles" />
-          </div>
-           <input class="cell" ng-readonly="true" type="text"
-           style="margin-right:5px;"
-           ng-model="selectedSubjectScheduled.corrected_metadata.filename"
-           data-display-file class="nomargin" />
-           <button class="cell file-button flat-button"><i18n>exercizer.import.choose</i18n></button>
-      </div>
-    <div data-ng-if="selectedSubjectScheduled.corrected_file_id">
-        [[selectedSubjectScheduled.corrected_metadata.filename]]
-        <div class="cell right-magnet" >
-            <button class="flat-button" data-ng-click="removeCorrected()"><i18n>exercizer.scheduled.corrected.delete</i18n></button>
-            <button data-ng-click="downloadCorrectedFile()"> <i18n>exercizer.scheduled.corrected.download</i18n></button>
+    <h2 class="block"> <i18n>exercizer.corrected.homework</i18n></h2>
+    <div class="row media-library" data-ng-show="!selectedSubjectScheduled.corrected_file_id">
+        <div id="simple-correction-id" class="drop-zone import-files import-files-custom">
+            <article class="drop flex-row align-center">
+                <i class="two cloud-upload"></i>
+                <div class="ten help">
+                    <em><i18n>medialibrary.drop.help2</i18n></em>
+                </div>
+            </article>
+            <article class="default flex-row align-center">
+                <div class="three select-file">
+                    <div class="hidden-content">
+                        <input type="file" multiple files-input-change="saveCorrected()" ng-model="newFiles" />
+                    </div>
+                    <button class="file-button no-margin"><i18n>library.file.choose</i18n></button>
+                </div>
+                <i class="two cloud-upload"></i>
+                <div class="seven help">
+                    <em><i18n>medialibrary.drop.help</i18n></em>
+                </div>
+            </article>
         </div>
-    </div >
+    </div>
+    <div data-ng-if="selectedSubjectScheduled.corrected_file_id">
+        <div class="row vertical-spacing row-like-input">
+           <label style="font-style: italic;">[[selectedSubjectScheduled.corrected_metadata.filename]]</label>
+        </div>
+        <div class="row vertical-spacing row-like-input"/>
+        <div class="row vertical-spacing row-like-input"/>
+        <div class="row">
+            <div class="cell right-magnet" >
+                <button class="flat-button" data-ng-click="removeCorrected()"><i18n>exercizer.scheduled.corrected.delete</i18n></button>
+                <button data-ng-click="downloadCorrectedFile()"> <i18n>exercizer.scheduled.corrected.download</i18n></button>
+            </div>
+        </div>
+    </div>
      <div class="two cell select-file hidden-content">
           <div class="hidden-content">
                <input type="file" files-input-change="saveCurrentCorrected(this)"  ng-model="newFiles" />
@@ -70,9 +87,12 @@
 
 <div class="row vertical-spacing">
      <div class="cell">
-          <span data-ng-repeat="user in lUserGroup | limitTo: 3" class="small-text">
+         <span>
+              <i18n>exercizer.schedule.at</i18n>
+         </span>
+         <span data-ng-repeat="user in lUserGroup | limitTo: 3" class="small-text">
               <b>[[user.name]] </b>
-          </span>
+         </span>
          <span data-ng-click="seeAllAssignAtList(subjectScheduled)"
             class="hover-orange"
             data-ng-if="lUserGroup.length > 3">...</span>

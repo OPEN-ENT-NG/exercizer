@@ -1,4 +1,4 @@
-import { ng, notify } from 'entcore';
+import { ng, notify, $ } from 'entcore';
 import { moment } from 'entcore';
 import { _ } from 'entcore';
 
@@ -33,8 +33,36 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                             due_time: $filter('date')(scope.selectedSubjectScheduled.due_date, 'HH:mm'),
                             corrected_time: $filter('date')(scope.selectedSubjectScheduled.corrected_date, 'HH:mm')
                         }
+
+                        //disabled drag/drop browser feacture
+                        $('html, body').on('drop', (e) => e.preventDefault());
+                        $('html, body').on('dragover', (e) => e.preventDefault());
+
+                        //enabled just for simple-correction-id
+                        $('#simple-correction-id').on('dragenter', (e) => e.preventDefault());
+                        
+                        $('#simple-correction-id').on('dragover', (e) => {
+                            $('#simple-correction-id').addClass('dragover');
+                            e.preventDefault();
+                        });
+
+                        $('#simple-correction-id').on('dragleave', () => {
+                            $('#simple-correction-id').removeClass('dragover');
+                        });
+
+                        $('#simple-correction-id').on('drop', dropFiles);
                     }
                 });
+
+                const dropFiles = async (e) => {
+                    if(!e.originalEvent.dataTransfer.files.length){
+                        return;
+                    }
+                    $('#simple-correction-id').removeClass('dragover');
+                    e.preventDefault();
+                    scope.saveCorrected(e.originalEvent.dataTransfer.files);
+                    scope.$apply();
+                };
                 
                 function init(subjectScheduled){
                     SubjectCopyService.resolveBySubjectScheduled_force(subjectScheduled).then(
@@ -149,11 +177,13 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     scope.toasterDisplayed.exclude = false;
                 };
 
-                scope.saveCorrected = function(event) {
-                    scope.newFiles = event.newFiles;
+                scope.saveCorrected = function(files) {
+                    if(!files){
+                        files = scope.newFiles;
+                    }
 
-                    if (scope.newFiles.length > 0) {
-                        var file = scope.newFiles[0];
+                    if (files.length > 0) {
+                        var file = files[0];
                         SubjectScheduledService.addCorrectedFile(scope.selectedSubjectScheduled.id, file).then(
                             function (fileId) {
                                 scope.selectedSubjectScheduled.corrected_metadata = {"filename":file.name};
@@ -314,7 +344,6 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                         scope.order.field = fieldName;
                     }
                 };
-
             }
         };
     }]
