@@ -29,6 +29,7 @@ import fr.openent.exercizer.services.impl.GrainCopyServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectCopyServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectScheduledServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
+import fr.openent.exercizer.utils.PushNotificationUtils;
 import fr.wseduc.rs.ApiDoc;
 import fr.wseduc.rs.Get;
 import fr.wseduc.rs.Post;
@@ -203,7 +204,7 @@ public class SubjectCopyController extends ControllerHelper {
 				params.put("dueDate", dueDate);
 			}
 		    params.put("disableAntiFlood", true);
-
+            params.put("pushNotif", PushNotificationUtils.getNotification(request, notificationName, params));
 	        this.notification.notifyTimeline(request,"exercizer." + notificationName, user, recipientSet, idResource, params);
 		}
 

@@ -37,6 +37,7 @@ import io.vertx.core.logging.LoggerFactory;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class ScheduledNotification implements Handler<Long> {
@@ -116,6 +117,20 @@ public class ScheduledNotification implements Handler<Long> {
                                                 params.put("subjectName", subjectName);
                                                 params.put("dueDate", dueDateFormat);
                                                 params.put("resourceUri", params.getString("uri"));
+                                                JsonObject pushNotif = new JsonObject()
+                                                        .put("title", "exercizer.assigncopy")
+                                                        .put("body", I18n.getInstance()
+                                                                .translate(
+                                                                        "exercizer.push.notif.assigncopy",
+                                                                        I18n.DEFAULT_DOMAIN,
+                                                                        Locale.FRANCE,
+                                                                        user.getUsername(),
+                                                                        subjectName,
+                                                                        dueDateFormat
+                                                                )
+                                                        );
+                                                params.put("pushNotif", pushNotif);
+
                                                 timelineHelper.notifyTimeline(null, "exercizer.assigncopy", user, recipientSet, null, params);
                                             } else {
                                                 log.error("[CRON Exerciser] Can't update scheduled subject : " + event.left().getValue());

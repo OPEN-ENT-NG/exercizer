@@ -25,6 +25,7 @@ import fr.openent.exercizer.filters.SubjectScheduledOwner;
 import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.openent.exercizer.services.impl.SubjectScheduledServiceSqlImpl;
 import fr.openent.exercizer.utils.GroupUtils;
+import fr.openent.exercizer.utils.PushNotificationUtils;
 import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
@@ -365,6 +366,7 @@ public class SubjectScheduledController extends ControllerHelper {
 			params.put("dueDate", dueDateFormat);
 			params.put("resourceUri", params.getString("uri", ""));
 			params.put("disableAntiFlood", true);
+			params.put("pushNotif", PushNotificationUtils.getNotification(request, notificationName, params));
 			this.notification.notifyTimeline(request, "exercizer." + notificationName, user, recipientSet, idResource, params);
 		}
 	}
@@ -561,8 +563,8 @@ public class SubjectScheduledController extends ControllerHelper {
 						                    params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
 						                    params.put("username", user.getUsername());
 						                    params.put("subjectName", subjectTitle);
-
 						                    params.put("resourceUri", params.getString("uri"));
+						                    params.put("pushNotif", PushNotificationUtils.getNotification(request, "exercizer.correcthomework", params));
 						                    notification.notifyTimeline(request, "exercizer.correcthomework", user, recipientSet, id, params);
 
 											if (!StringUtils.isEmpty(existingFileId)) {
