@@ -429,6 +429,13 @@
     "exercizer.subject.lesson.type19" : "Méthodologie",
     "exercizer.subject.lesson.type20" : "Enseignement moral et civique",
     "exercizer.subject.lesson.type21" : "Droit",
-    "exercizer.subject.lesson.type22" : "Autre"
-
+    "exercizer.subject.lesson.type22" : "Autre",
+    "exercizer.push.notif.assigncopy.body": "{0} vous a attribué le sujet {1} à rendre pour le {2}",
+    "exercizer.push.notif.submitcopy.body": "{0} a rendu sa copie du sujet {1}",
+    "exercizer.push.notif.correctcopy.body": "{0} a corrigé votre copie du sujet {1}",
+    "exercizer.push.notif.correcthomework.submit.body": "{0} a corrigé votre devoir du sujet {1}",
+    "exercizer.push.notif.submithomework.submit.body": "{0} a rendu son devoir du sujet {1}",
+    "exercizer.push.notif.homeworkreminder.body": "Rappel : La date limite de rendu du devoir {0} est le {1}",
+    "exercizer.push.notif.share.body": "{0} vous a partagé le sujet {1}",
+    "exercizer.push.notif.unassigncopy.body" : "{0} a déprogrammé le sujet {1} qui était à rendre le {2}"
 }

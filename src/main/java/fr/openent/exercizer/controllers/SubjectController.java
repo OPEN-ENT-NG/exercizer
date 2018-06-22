@@ -305,6 +305,17 @@ public class SubjectController extends ControllerHelper {
                             params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
         			        params.put("subjectName", subjectName);
                             params.put("resourceUri", params.getString("uri"));
+                            JsonObject pushNotif = new JsonObject()
+                                    .put("title", "exercizer.share")
+                                    .put("body", I18n.getInstance().translate(
+                                            "exercizer.push.notif.share.body",
+                                            getHost(request),
+                                            I18n.acceptLanguage(request),
+                                            user.getUsername(),
+                                            subjectName
+                                    ));
+
+                            params.put("pushNotif", pushNotif);
         			        SubjectController.super.shareJsonSubmit(request, "exercizer.share", false, params, null);
                         }
                     });
