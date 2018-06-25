@@ -147,6 +147,8 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                                scope.data.userList = _.reject(scope.data.userList, (user) => {
                                    return (user && user.groupId && selectedItem.groupId === user.groupId);
                                });
+                           } else {
+                               scope.selectedGroup = true;
                            }
 
                            //ERASE same user in implict user (not from group)
@@ -161,8 +163,6 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                                 user.exclude = true;
                             }
                         });
-
-
                     }
 
                     if (!selectedItem.exclude) {
