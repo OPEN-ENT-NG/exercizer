@@ -21,6 +21,7 @@ package fr.openent.exercizer.cron;
 
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.I18n;
+import org.entcore.common.http.request.JsonHttpServerRequest;
 import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
@@ -55,7 +56,7 @@ public class ScheduledNotification implements Handler<Long> {
     @Override
     public void handle(Long event) {
         // find subject scheduled doesn't notified
-        final String query = "SELECT ss.id, ss.owner, ss.owner_username, ss.title, ss.begin_date, ss.due_date, array_to_json(array_agg(sc.owner)) AS owners " +
+        final String query = "SELECT ss.id, ss.owner, ss.owner_username, ss.title, ss.begin_date, ss.due_date, array_to_json(array_agg(sc.owner)) AS owners, ss.locale " +
                 " FROM exercizer.subject_scheduled AS ss INNER JOIN exercizer.subject_copy as sc ON ss.id=sc.subject_scheduled_id" +
                 " WHERE ss.is_notify = false GROUP BY ss.id";
 
@@ -116,7 +117,8 @@ public class ScheduledNotification implements Handler<Long> {
                                                 params.put("subjectName", subjectName);
                                                 params.put("dueDate", dueDateFormat);
                                                 params.put("resourceUri", params.getString("uri"));
-                                                timelineHelper.notifyTimeline(null, "exercizer.assigncopy", user, recipientSet, null, params);
+                                                timelineHelper.notifyTimeline(new JsonHttpServerRequest(new JsonObject()
+                                                        .put("headers", new JsonObject().put("Accept-Language", scheduledSubject.getString("locale", "fr")))), "exercizer.assigncopy", user, recipientSet, null, params);
                                             } else {
                                                 log.error("[CRON Exerciser] Can't update scheduled subject : " + event.left().getValue());
                                             }

@@ -31,6 +31,7 @@ import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.Either;
+import fr.wseduc.webutils.I18n;
 import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
@@ -501,6 +502,7 @@ public class SubjectScheduledController extends ControllerHelper {
 		final Date nowUTC = new DateTime(DateTimeZone.UTC).toLocalDateTime().toDate();
 		final Boolean isNotify = DateUtils.lessOrEqualsWithoutTime(beginDate, nowUTC);
 		scheduledSubject.put("isNotify", isNotify);
+		scheduledSubject.put("locale",  I18n.acceptLanguage(request));
 
 		if (ScheduledType.SIMPLE.equals(type)) {
 			subjectScheduledService.simpleSchedule(scheduledSubject, user, getHandlerScheduleAndNotifies(scheduledSubject, user, userIds, request, isNotify));
