@@ -1,0 +1,1 @@
+ALTER TABLE exercizer.subject_scheduled ADD COLUMN locale character varying(50) NOT NULL DEFAULT 'fr'::character varying;
