@@ -151,7 +151,49 @@ export class GrainCopyService implements IGrainCopyService {
         
         return deferred.promise;
     };
-    
+
+    public getListBySubjectCopies = function(subjectCopies:ISubjectCopy[]):Promise<{[subjectCopyId:number]:IGrainCopy[]}> {
+        var copyIds = [];
+        var self = this, deferred = this._$q.defer();
+        var listMapped: {[subjectCopyId:number]:IGrainCopy[]} ={};
+        subjectCopies.forEach( copy => {
+            if(!this._listMappedBySubjectCopyId[copy.id]) {
+                copyIds.push(copy.id)
+                this._listMappedBySubjectCopyId[copy.id] = [];
+            }
+            listMapped[copy.id] = this._listMappedBySubjectCopyId[copy.id];
+        });
+
+        if(copyIds.length < 1)
+            deferred.resolve(listMapped);
+        else {
+            var request = {
+                method: 'POST',
+                url: 'exercizer/grains-copy-by-subjects',
+                data: {"ids": copyIds}
+            };
+
+            this._$http(request).then(
+                function (response) {
+                    response.data.forEach(function (grainCopyObject) {
+                        self._listMappedBySubjectCopyId[grainCopyObject.subject_copy_id].push(self.instantiateGrainCopy(grainCopyObject));
+                    });
+                    copyIds.forEach(id => {
+                        listMapped[id] = self._listMappedBySubjectCopyId[id];
+                    })
+                    deferred.resolve(listMapped);
+                },
+                function () {
+                    deferred.reject('exercizer.error');
+                }
+            );
+        }
+        return deferred.promise;
+    };
+
+    public getById = function(id:number):IGrainCopy {
+        return this._listMappedBySubjectCopyId[id];
+    };
     //Return only copies with no score and submitted 
     public getListByNotCorrectedSubjectCopies = function (subjectCopyList:ISubjectCopy[], isOneShotSubmit:boolean):ISubjectCopy[]{
         let notCorrectedAlreadySubmitted:ISubjectCopy[] =  [];

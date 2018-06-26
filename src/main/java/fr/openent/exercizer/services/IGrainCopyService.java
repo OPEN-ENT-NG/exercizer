@@ -25,6 +25,8 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
+import java.util.List;
+
 public interface IGrainCopyService {
 	
 	/**
@@ -42,5 +44,7 @@ public interface IGrainCopyService {
 		 * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
 		 */
     void list(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
+
+	void listBySubjectIds(final JsonArray subjectIds, final Handler<Either<String, JsonArray>> handler);
 
 }

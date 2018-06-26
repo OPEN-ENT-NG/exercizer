@@ -28,6 +28,7 @@ import org.entcore.common.user.UserInfos;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import java.util.List;
 
 public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IGrainCopyService {
 	
@@ -101,5 +102,11 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
     public void list(final JsonObject resource, final Handler<Either<String, JsonArray>> handler) {
         super.list(resource, "subject_copy_id", "exercizer.subject_copy", handler);
     }
+
+	@Override
+    public void listBySubjectIds(final JsonArray subjectIds, final Handler<Either<String, JsonArray>> handler){
+		final String query = "SELECT * FROM "+schema+"grain_copy WHERE subject_copy_id IN "+sql.listPrepared(subjectIds.getList());
+		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray(subjectIds.getList()), SqlResult.validResultHandler(handler));
+	}
 
 }
