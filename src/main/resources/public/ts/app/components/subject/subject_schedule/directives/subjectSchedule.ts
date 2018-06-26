@@ -53,7 +53,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     var list = (selectedItem.groupOrUser == 'group') ? scope.data.groupList : scope.data.userList;
                     var index = list.indexOf(selectedItem);
                     if (index === -1) {
-                        clearSelectedList();
+                        clearSelectedList(undefined);
                         selectedItem.selected = false;
 
                         if (selectedItem.groupOrUser == 'group') {
@@ -104,12 +104,12 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 };
                 
                 scope.selectGroupItem = function (selectedItem) {
-                    clearSelectedList();
-                    selectedItem.selected = true;
-                    scope.selectedGroup = true;
+                    clearSelectedList(selectedItem);
+                    selectedItem.selected = !selectedItem.selected;
+                    scope.selectedGroup = selectedItem.selected;
                     _.forEach(scope.data.userList, user => {
-                        if (user.groupId === selectedItem['_id']) user.selected = true;
-                    });                    
+                        if (user.groupId === selectedItem['_id']) user.selected = selectedItem.selected;
+                    });
                 };
 
                 scope.getTotalUser = function() {
@@ -430,8 +430,9 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                  */
 
                            
-                function clearSelectedList() {
+                function clearSelectedList(selectedGroupItem) {
                    _.forEach(scope.data.groupList, group => {
+                       if (selectedGroupItem && selectedGroupItem._id === group._id) return;
                        group.selected = false; 
                     });
 
@@ -476,7 +477,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     }
 
                     if (scope.data && !scope.selectedGroup) {
-                        clearSelectedList();
+                        clearSelectedList(undefined);
                     } else {
                         scope.selectedGroup = false;
                     }
