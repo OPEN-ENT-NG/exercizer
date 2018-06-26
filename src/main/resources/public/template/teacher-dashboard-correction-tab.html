@@ -8,11 +8,16 @@
             selected-subject-scheduled="selectedSubjectScheduled">
     </teacher-dashboard-correction-subject-scheduled-list>
     <teacher-dashboard-correction-copy-list
-            data-ng-show="selectedSubjectScheduled && selectedSubjectScheduled.type === 'interactive'"
+            data-ng-show="selectedSubjectScheduled && selectedSubjectScheduled.type === 'interactive' && !selectedSubjectScheduled.showStats"
             selected-subject-scheduled="selectedSubjectScheduled">
     </teacher-dashboard-correction-copy-list>
+    <teacher-dashboard-correction-stats
+            data-ng-show="selectedSubjectScheduled && selectedSubjectScheduled.type === 'interactive' && selectedSubjectScheduled.showStats"
+            selected-subject-scheduled="selectedSubjectScheduled">
+    </teacher-dashboard-correction-stats>
     <teacher-dashboard-simple-correction-copy-list
             data-ng-show="selectedSubjectScheduled && selectedSubjectScheduled.type === 'simple'"
             selected-subject-scheduled="selectedSubjectScheduled">
     </teacher-dashboard-simple-correction-copy-list>
+
 </div>

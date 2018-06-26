@@ -1,5 +1,11 @@
 <div data-ng-if="selectedSubjectScheduled.type === 'interactive'">
     <div class="row vertical-spacing">
+        <div class="cell right-magnet">
+            <button data-ng-show="!option.stats" data-ng-click="option.stats=true"><i18n>exercizer.schedule.stats.more</i18n></button>
+            <button data-ng-show="option.stats" class="flat-button" data-ng-click="option.stats=false"><i18n>exercizer.back</i18n></button>
+        </div>
+    </div>
+    <div class="row vertical-spacing">
         <div class="cell">
           <span data-ng-repeat="user in lUserGroup"
                 style="font-weight: bold;font-size: large;">
@@ -18,7 +24,7 @@
     </div>
 
 
-    <div class="row vertical-spacing" >
+    <div data-ng-if="!option.stats" class="row vertical-spacing" >
         <table class="list-view">
             <thead>
             <tr>
@@ -77,6 +83,9 @@
             </tbody>
         </table>
     </div>
+
+    <stats data-ng-if="option.stats" subject-copy-list="subjectCopyList" subject-scheduled="selectedSubjectScheduled" />
+
 
 </div>
 <div data-ng-if="selectedSubjectScheduled.type === 'simple'">

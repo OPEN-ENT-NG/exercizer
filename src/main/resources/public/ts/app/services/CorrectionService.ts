@@ -68,6 +68,12 @@ export class CorrectionService implements ICorrectionService {
         )
     }
 
+    public  grainsCorrection = function (grainCopyList: IGrainCopy[], grainScheduledList: IGrainScheduled[]) {
+        grainCopyList.forEach((grain) => {
+            grain.calculated_score = this.genericCorrection(grainScheduledList.find((grainScheduled) => {return grainScheduled.id === grain.grain_scheduled_id}), grain);
+        });
+    }
+
     private genericCorrection = function(grainScheduled:IGrainScheduled, grainCopy:IGrainCopy):number {
         switch(grainScheduled.grain_type_id) {
 
