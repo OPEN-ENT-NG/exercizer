@@ -293,6 +293,11 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                     });
                 };
 
+                scope.seeAllAssignAtList = function(subjectScheduled){
+                    scope.assignDisplayed=true;
+                    scope.assignInfoSubject = subjectScheduled;
+                };
+
             }
         };
 }]);

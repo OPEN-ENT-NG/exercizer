@@ -31,33 +31,35 @@
 
 <article class="six cell right-magnet" style="height:250px">
     <h2 class="block"> <i18n>exercizer.schedule.stats</i18n> "[[selectedSubjectScheduled.title]]"</h2>
+    <div class="row vertical-spacing">
+        <i18n>exercizer.schedule.stats.info1</i18n> [[score.nb]] <i18n>exercizer.schedule.stats.info2</i18n> : [[score.sum/score.nb | truncateNumber]] / [[selectedSubjectScheduled.max_score]]
+    </div>
+    <div class="row vertical-spacing">
+        [[numberCopySubmitted()]] <i18n>exercizer.total.made</i18n> [[subjectCopyList.length]] <i18n>exercizer.total.made2</i18n>
+    </div>
     <div class="cell right-magnet">
-        <button class="flat-button" data-ng-click=""><i18n>exercizer.schedule.stats.more</i18n></button>
+        <button class="flat-button" data-ng-click="selectedSubjectScheduled.showStats=true"><i18n>exercizer.schedule.stats.more</i18n></button>
     </div>
 </article>
 
 <div class="row vertical-spacing">
-     <div class="cell">
+     <div class="cell" data-ng-click="seeAllAssignAtList(subjectScheduled)">
          <span>
              <i18n>exercizer.schedule.at</i18n>
          </span>
-         <span data-ng-repeat="user in lUserGroup | limitTo: 3" class="small-text">
+         <span data-ng-repeat="user in lUserGroup | limitTo: 3" class="small-text" class="hover-orange">
              <b>[[user.name]] </b>
          </span>
-         <span data-ng-click="seeAllAssignAtList(subjectScheduled)"
-            class="hover-orange"
+         <span class="hover-orange"
             data-ng-if="lUserGroup.length > 3">...</span>
           <em class="small-text"> - <i18n>exercizer.numbercopy.notcorrected</i18n> <b>[[numberCopyNotCorrected()]]</b> <i18n>exercizer.numbercopy.notcorrected2</i18n> </em>
      </div>
 </div>
 
 <div class="vertical-spacing">
-    <div class="small-text right-magnet" style="margin-top: 12px;">
-         [[numberCopySubmitted()]] <i18n>exercizer.total.made</i18n> [[subjectCopyList.length]] <i18n>exercizer.total.made2</i18n>
-    </div>
      <input type="text" class="five cell" data-ng-model="search.owner.owner_username" i18n-placeholder="exercizer.find.learner">
 </div>
-<div class="row vertical-spacing">
+<div class="row vertical-spacing" data-ng-if="!option.stat">
      <table class="list-view">
           <thead>
           <tr>
@@ -152,7 +154,7 @@
      </div>
 </section>
 
-<subject-scheduled-assign-at></subject-scheduled-assign-at>
+<subject-scheduled-assign-at is-displayed="assignDisplayed" subject-scheduled="selectedSubjectScheduled"></subject-scheduled-assign-at>
 
 <reminders is-displayed="reminderDisplayed" selected-subject-scheduled="selectedSubjectScheduled" reminder-copies="reminderCopies" />
 <exclude is-displayed="excludeDisplayed" subject-copy-list="subjectCopyList" toaster-displayed="toasterDisplayed" />
@@ -172,6 +174,6 @@
     </p>
     <div class="cell right-magnet">
         <button class="flat-button" data-ng-click="option.edit=false"><i18n>cancel</i18n></button>
-        <button data-ng-click="modifySchedule(); option.edit=false;"> <i18n>update</i18n></button>
+        <button data-ng-click="modifySchedule(); option.edit=false;"> <i18n>exercizer.validate</i18n></button>
     </div>
 </lightbox>

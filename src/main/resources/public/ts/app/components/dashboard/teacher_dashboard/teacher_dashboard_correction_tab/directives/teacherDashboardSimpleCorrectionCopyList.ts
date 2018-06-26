@@ -289,7 +289,7 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                 }
 
                 scope.seeAllAssignAtList = function(){
-                    scope.$emit('E_SEE_SUBJECT_SCHEDULED_ASSIGN_AT', {subjectScheduled : scope.selectedSubjectScheduled});
+                    scope.assignDisplayed=true;
                 };
                 /**
                  * DISPLAY

@@ -493,6 +493,35 @@ public class SubjectCopyController extends ControllerHelper {
 		writeGrain(request, grainCopyMode.CORRECT);
 	}
 
+	@Post("/grains-copy-by-subjects")
+	@ApiDoc("ets grain copy list by subjects id")
+	@ResourceFilter(SubjectCopiesOwner.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void listGrainsBySubjectIds(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject body) {
+							JsonArray subjectIds = body.getJsonArray("ids");
+							if (subjectIds == null || subjectIds.size() == 0) {
+								badRequest(request);
+								return;
+							}
+
+							grainCopyService.listBySubjectIds(subjectIds, arrayResponseHandler(request));
+						}
+					});
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
 	@Post("/grains-copy")
 	@ApiDoc("Gets grain copy list.")
 	@SecuredAction("exercizer.grain.copy.list")
@@ -1123,7 +1152,7 @@ public class SubjectCopyController extends ControllerHelper {
 	}
 
 	@Get("/archive/subjects-copy-by-subjects-scheduled")
-	@ResourceFilter(SubjectCopyAccess.class)
+	@ResourceFilter(SubjectsScheduledOwner.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void listArchivedCopy(final HttpServerRequest request) {
 		final List<String> ids = request.params().getAll("id");

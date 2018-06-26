@@ -123,7 +123,7 @@
                                                     [[ stateTextSubjectScheduled(subjectScheduled) ]]
                                                 </div>
                                             </div>
-                                            <div class="four cell">
+                                            <div class="four cell" data-ng-click="seeAllAssignAtList(subjectScheduled)">
                                                 <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList |limitTo : 1">
                                                     <h3 style="margin:0px;">[[group.name]]</h3>
                                                 </div>
@@ -199,5 +199,5 @@
         </article>
 
     </section>
-    <subject-scheduled-assign-at></subject-scheduled-assign-at>
+    <subject-scheduled-assign-at is-displayed="assignDisplayed" subject-scheduled="assignInfoSubject"></subject-scheduled-assign-at>
 </div>
