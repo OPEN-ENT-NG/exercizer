@@ -1,6 +1,9 @@
 {
     "exercizer": "Exercices et évaluations",
     "exercizer.assigncopy": "Assignation de copie",
+    "exercizer.at": "à",
+    "exercizer.to": "au",
+    "exercizer.from": "du",
     "exercizer.unassigncopy": "Retrait de copie",
     "exercizer.submitcopy": "Rendu de copie",
     "exercizer.submitcopy.body": "a rendu sa copie du sujet",
@@ -18,5 +21,7 @@
     "exercizer.assigncopy.body" : "vous a attribué le sujet",
     "exercizer.assigncopy.body.b" : "à rendre pour le",
     "exercizer.unassigncopy.body" : "a déprogrammé le sujet",
-    "exercizer.unassigncopy.body.b" : "qui était à rendre le"
+    "exercizer.modify.begin" : "a modifié la date de début du sujet",
+    "exercizer.modify.due" : "a modifié la date de fin du sujet",
+    "exercizer.modify.period" : "a modifié la période de distribution du sujet"
 }
