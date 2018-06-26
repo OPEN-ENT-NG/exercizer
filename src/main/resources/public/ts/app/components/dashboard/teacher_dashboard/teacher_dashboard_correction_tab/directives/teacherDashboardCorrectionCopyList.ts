@@ -21,6 +21,7 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                         scope.subjectCopyList = [];
                         scope.toasterDisplayed = {main: false, exclude: false};
                         scope.search = {};
+                        scope.score = {sum:0, nb:0};
 
                         resetDisplay();
 
@@ -39,6 +40,12 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     SubjectCopyService.resolveBySubjectScheduled_force(subjectScheduled).then(
                         function () {
                             scope.subjectCopyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                            scope.subjectCopyList.forEach(copy => {
+                                if(copy.is_corrected){
+                                    scope.score.sum += copy.final_score;
+                                    scope.score.nb++;
+                                }
+                            });
                             CorrectionService.automaticCorrection(scope.subjectCopyList, scope.selectedSubjectScheduled);
                         }
                     );
@@ -53,6 +60,7 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     });
 
                     scope.lUserGroup = r;
+                    scope.selectedSubjectScheduled.lUserGroup = scope.lUserGroup;
                 }
 
                 function resetDisplay() {
@@ -125,12 +133,17 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
 
                 scope.applyAutomaticMark = function(){
                     var promises = [];
+                    scope.score = {sum:0, nb:0};
                     angular.forEach(scope.subjectCopyList, function(copy){
                         if(SubjectCopyService.canCorrectACopyAsTeacher(scope.selectedSubjectScheduled, copy) && copy.selected){
                             copy.is_corrected = true;
                             if(!copy.final_score)
                                 copy.final_score = copy.calculated_score;
                             promises.push(SubjectCopyService.correct(copy));
+                        }
+                        if(copy.is_corrected){
+                            scope.score.sum += copy.final_score;
+                            scope.score.nb++;
                         }
                     });
                     $q.all(promises).then(
@@ -177,7 +190,7 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                 }
 
                 scope.seeAllAssignAtList = function(){
-                    scope.$emit('E_SEE_SUBJECT_SCHEDULED_ASSIGN_AT', {subjectScheduled : scope.selectedSubjectScheduled});
+                    scope.assignDisplayed=true;
                 };
 
 

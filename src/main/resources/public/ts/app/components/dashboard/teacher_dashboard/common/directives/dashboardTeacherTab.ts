@@ -79,8 +79,12 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
             };
 
             scope.clickReturnSubjectScheduledList = function(){
-                scope.selectedSubjectScheduled = null;
-                $location.path('/dashboard/teacher/correction');
+                if(scope.selectedSubjectScheduled.showStats){
+                    scope.selectedSubjectScheduled.showStats = false;
+                }else {
+                    scope.selectedSubjectScheduled = null;
+                    $location.path('/dashboard/teacher/correction');
+                }
             };
 
             scope.getTab = function(){

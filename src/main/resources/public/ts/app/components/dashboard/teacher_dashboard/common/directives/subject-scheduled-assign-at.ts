@@ -3,11 +3,14 @@ import { ng } from 'entcore';
 export const subjectScheduleAssignAt = ng.directive('subjectScheduledAssignAt', [() => {
         return {
             restrict: 'E',
-            scope: {},
+            scope: {
+                isDisplayed: "=",
+                subjectScheduled: "="
+            },
             templateUrl: 'exercizer/public/ts/app/components/dashboard/teacher_dashboard/common/templates/subject-scheduled-assign-at.html',
             link: (scope:any, element, attrs) => {
 
-                scope.isDisplayed = false;
+                 scope.isDisplayed = false;
                 scope.subject = [];
 
                 // event to display model

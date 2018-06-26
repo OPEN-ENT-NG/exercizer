@@ -1,0 +1,104 @@
+<div class="small-text right-magnet" style="margin-top: 12px;">
+    *<i18n>exercizer.schedule.stats.score</i18n>
+</div>
+
+<form name="formCopyTest" >
+    <div class="row vertical-spacing">
+
+        <table class="list-view infos">
+            <thead class="display-table">
+            <tr>
+                <th class="centered-text" ng-click="orderByField('owner_username')">
+                    <span translate content="exercizer.students" ></span>
+                    <i class="sort" ng-if="order.field !== 'owner_username'"></i>
+                    <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
+                    <i class="sort-desc" ng-if="order.field === 'owner_username' && order.desc"></i>
+                </th>
+                <th class="centered-text" ng-click="orderByField('calculated_score')">
+                    <span translate content="exercizer.auto.score" ></span>
+                    <i class="sort" ng-if="order.field !== 'calculated_score'"></i>
+                    <i class="sort-asc" ng-if="order.field === 'calculated_score' && !order.desc"></i>
+                    <i class="sort-desc" ng-if="order.field === 'calculated_score' && order.desc"></i>
+                </th>
+                <th class="centered-text" ng-click="orderByField('final_score')">
+                    <span translate content="exercizer.final.score" ></span>
+                    <i class="sort" ng-if="order.field !== 'final_score'"></i>
+                    <i class="sort-asc" ng-if="order.field === 'final_score' && !order.desc"></i>
+                    <i class="sort-desc" ng-if="order.field === 'final_score' && order.desc"></i>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="infos">
+            <tr data-ng-repeat="copy in subjectCopyList | filter:filterOwner | orderBy:order.order:order.desc" class="display-table hover-hidden">
+                <td>
+                    <span>[[copy.owner_username]]</span>
+                    <span>[[getGrains(copy.id).length()]]</span>
+                </td>
+                <td class="centered-text">
+                    <span class="chip text chip-hide">[[copy.calculated_score | truncateNumber ]] / [[subjectScheduled.max_score]]</span>
+                </td>
+
+                <td class="centered-text">
+                    <span class="chip text chip-hide">[[copy.final_score  | truncateNumber]] / [[subjectScheduled.max_score]]</span>
+                </td>
+            </tr>
+            </tbody>
+            <thead class="display-table">
+            <tr>
+                <th>
+                    <span><i18n>exercizer.schedule.stats.average</i18n></span>
+                </th>
+                <th class="centered-text">
+                    <span>[[scores.auto.sum/scores.auto.nb | truncateNumber]] / [[subjectScheduled.max_score]]</span>
+                </th>
+                <th class="centered-text">
+                    <span>[[scores.final.sum/scores.final.nb | truncateNumber]] / [[subjectScheduled.max_score]]</span>
+                </th>
+            </tr>
+            </thead>
+        </table>
+        <table class="list-view scores">
+            <thead class="display-table">
+            <tr>
+                <th class="small-cell nav" data-ng-click="downIndex()">
+                    <i class="left-open"></i>
+                </th>
+                <th class="centered-text" data-ng-repeat="grain in filtredScheduledGrains | orderBy:'order_by'" ng-click="orderByField(grain.id, true)" data-ng-show="$index >= index && $index < index+6">
+                    <span tooltip="[[translate('exercizer.question')]] : [[grain.grain_data.title]]">Q[[$index + 1]]</span>
+                    <i class="sort" ng-if="order.field !== grain.id"></i>
+                    <i class="sort-asc" ng-if="order.field === grain.id && !order.desc"></i>
+                    <i class="sort-desc" ng-if="order.field === grain.id && order.desc"></i>
+                </th>
+                <th class="small-cell nav" data-ng-click="upIndex()">
+                    <i class="open-right"></i>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="scores">
+            <tr data-ng-repeat="copy in subjectCopyList | filter:filterOwner | orderBy:order.order:order.desc"  class="display-table hover-hidden">
+                <td class="small-cell">
+                </td>
+                <td class="centered-text" data-ng-repeat="grain in filtredScheduledGrains | orderBy:'order_by'"  data-ng-show="$index >= index && $index < index+6">
+                    <div class="chip text" data-ng-class="scoreClass(copy.id,grain.id,grain.grain_data.max_score)">
+                        <span data-ng-if="!matrice[copy.id][grain.id].changed">[[getGrainScore(copy.id, grain.id) | truncateNumber]] / [[grain.grain_data.max_score]]</span>
+                        <span data-ng-if="matrice[copy.id][grain.id].changed" data-tooltip="[[translate('exercizer.auto.score')]] : [[matrice[copy.id][grain.id].calculated_score | truncateNumber]] / [[grain.grain_data.max_score]]">[[getGrainScore(copy.id, grain.id)]] / [[grain.grain_data.max_score]]*</span>
+                    </div>
+                </td>
+                <td class="small-cell">
+                </td>
+            </tr>
+            </tbody>
+            <thead class="display-table">
+            <tr>
+                <th class="small-cell">
+                </th>
+                <th class="centered-text" data-ng-repeat="grain in filtredScheduledGrains | orderBy:'order_by'" data-ng-show="$index >= index && $index < index+6">
+                    <span>[[getScore(grain.id) | truncateNumber]] / [[grain.grain_data.max_score]]</span>
+                </th>
+                <th class="small-cell">
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</form>
