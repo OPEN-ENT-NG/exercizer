@@ -136,7 +136,7 @@ public class SubjectScheduledController extends ControllerHelper {
 									}
 
 									Renders.noContent(request);
-									sendNotification(request, "unassigncopy", user, recipientSet, "", jo.getString("title"), jo.getString("due_date"), null);
+									sendNotification(request, "unassigncopy", user, recipientSet, "", jo.getString("title"),null, jo.getString("due_date"), null);
 								}
 							});
 						}
@@ -311,7 +311,6 @@ public class SubjectScheduledController extends ControllerHelper {
 		Date newDueDate = newDates.get("dueDate");
 		Date newCorrectedDate = newDates.get("correctedDate");
 		Date oldDueDate;
-
 		JsonObject fields = new JsonObject();
 
 		if(changeBegin)
@@ -336,9 +335,13 @@ public class SubjectScheduledController extends ControllerHelper {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
-					if (scheduledSubject.getBoolean("is_notify") && changeBegin)
-						notifyModification(request, user, subjectId, scheduledSubject);
-
+					if (scheduledSubject.getBoolean("is_notify")){
+						String notification = changeBegin ? "modifybegin" : null;
+						if(fields.containsKey("dueDate"))
+							notification = notification != null ? "modifyperiod" : "modifydue";
+						if(notification != null)
+							notifyModification(request, user, subjectId, fields.put("title", scheduledSubject.getString("title")), notification);
+					}
 					renderJson(request, fields);
 				} else {
 					renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error","exercizer.subject.scheduled.error"));
@@ -347,19 +350,20 @@ public class SubjectScheduledController extends ControllerHelper {
 		});
 	}
 
-	private void notifyModification(final HttpServerRequest request, final UserInfos user, final String subjectId, final JsonObject scheduledSubject ){
+	private void notifyModification(final HttpServerRequest request, final UserInfos user, final String subjectId, final JsonObject values, final String notificationName){
 			subjectScheduledService.getMember(subjectId, new Handler<Either<String, JsonArray>>() {
 				@Override
 				public void handle(Either<String, JsonArray> event) {
 					final JsonArray members = event.right().getValue();
 					final List<String> recipientSet = new ArrayList<String>();
-					final String subjectName = scheduledSubject.getString("title");
+					final String subjectName = values.getString("title");
 
 					for (Object member : members) {
 						if (!(member instanceof JsonObject)) continue;
 						recipientSet.add(((JsonObject) member).getString("owner"));
 					}
-					sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName, scheduledSubject.getString("due_date"), null);
+					sendNotification(request, notificationName, user, recipientSet, "/dashboard/student", subjectName, values.getString("beginDate"),
+							values.getString("dueDate"), null);
 				}
 			});
 	}
@@ -521,7 +525,7 @@ public class SubjectScheduledController extends ControllerHelper {
 					if (isNotify) {
 						final String subjectName = scheduledSubject.getString("subjectTitle");
 						final List<String> recipientSet = new ArrayList<String>(userIds);
-						sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName, scheduledSubject.getString("dueDate"), null);
+						sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName,null, scheduledSubject.getString("dueDate"), null);
 					}
 
 					Renders.created(request);
@@ -549,28 +553,38 @@ public class SubjectScheduledController extends ControllerHelper {
 			final List<String> recipientSet,
 			final String relativeUri,
 			final String subjectName,
-			final String date,
+			final String startDate,
+			final String endDate,
 			final String idResource
 			) {
 		if (recipientSet.size() > 0) {
 			Date dueDate = new Date();
+			Date beginDate = new Date();
 			try {
-				dueDate = DateUtils.parseTimestampWithoutTimezone(date);
+				if(endDate != null)
+					dueDate = DateUtils.parseTimestampWithoutTimezone(endDate);
+				if(startDate != null)
+					beginDate = DateUtils.parseTimestampWithoutTimezone(startDate);
 			} catch (ParseException e) {
 				log.error("can't parse dueDate of scheduled subject", e);
 			}
-
-			final String dueDateFormat = DateUtils.format(dueDate);
 
 			JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
 			params.put("uri", pathPrefix + "#" + relativeUri);
 			params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
 			params.put("username", user.getUsername());
 			params.put("subjectName", subjectName);
-			params.put("dueDate", dueDateFormat);
 			params.put("resourceUri", params.getString("uri", ""));
 			params.put("disableAntiFlood", true);
 			params.put("pushNotif", PushNotificationUtils.getNotification(request, notificationName, params));
+			if(endDate != null) {
+				params.put("dueDate", DateUtils.format(dueDate));
+				params.put("dueTime", DateUtils.format(dueDate, "HH:mm"));
+			}
+			if(startDate != null) {
+				params.put("beginDate", DateUtils.format(beginDate));
+				params.put("beginTime", DateUtils.format(beginDate, "HH:mm"));
+			}
 			this.notification.notifyTimeline(request, "exercizer." + notificationName, user, recipientSet, idResource, params);
 		}
 	}
