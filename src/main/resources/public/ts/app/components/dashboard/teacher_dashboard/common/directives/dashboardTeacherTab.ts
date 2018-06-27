@@ -87,6 +87,10 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
                 }
             };
 
+            scope.export = function () {
+                scope.$emit('E_EXPORT_STATS', scope.selectedSubjectScheduled);
+            }
+
             scope.getTab = function(){
                 switch (scope.currentTab){
                     case 'mySubjects':

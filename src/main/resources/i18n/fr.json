@@ -232,6 +232,7 @@
     "exercizer.correction.search.empty" : "Aucun sujet ne correspond à votre recherche",
     "exercizer.simple.subject" : "Sujet simple",
     "exercizer.interactive.subject" : "Sujet interactif",
+    "exercizer.interactive" : "Interactive",
     "exercizer.none.student.file" : "Aucun fichier transmis par l'apprenant",
     "exercizer.all.submitted" : "Rendus",
     "exercizer.all.correcting" : "En cours de correction",
@@ -467,6 +468,9 @@
     "exercizer.subject.lesson.type19" : "Méthodologie",
     "exercizer.subject.lesson.type20" : "Enseignement moral et civique",
     "exercizer.subject.lesson.type21" : "Droit",
-    "exercizer.subject.lesson.type22" : "Autre"
-
+    "exercizer.subject.lesson.type22" : "Autre",
+    "exercizer.export.subject.title" : "Titre du sujet",
+    "exercizer.export.subject.type" : "Type de sujet",
+    "exercizer.export.subject.comment" : "Commentaire",
+    "exercizer.export.student.name" : "Nom de l'élève"
 }
