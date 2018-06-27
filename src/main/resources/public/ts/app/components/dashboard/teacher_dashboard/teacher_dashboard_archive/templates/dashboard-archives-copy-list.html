@@ -3,6 +3,7 @@
         <div class="cell right-magnet">
             <button data-ng-show="!option.stats" data-ng-click="option.stats=true"><i18n>exercizer.schedule.stats.more</i18n></button>
             <button data-ng-show="option.stats" class="flat-button" data-ng-click="option.stats=false"><i18n>exercizer.back</i18n></button>
+            <button  data-ng-show="option.stats" data-ng-click="export()" class="right-magnet"><i18n>exercizer.export.action</i18n></button>
         </div>
     </div>
     <div class="row vertical-spacing">
