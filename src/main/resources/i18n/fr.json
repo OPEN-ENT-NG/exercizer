@@ -232,6 +232,7 @@
     "exercizer.correction.search.empty" : "Aucun sujet ne correspond à votre recherche",
     "exercizer.simple.subject" : "Sujet simple",
     "exercizer.interactive.subject" : "Sujet interactif",
+    "exercizer.interactive" : "Interactive",
     "exercizer.none.student.file" : "Aucun fichier transmis par l'apprenant",
     "exercizer.all.submitted" : "Rendus",
     "exercizer.all.correcting" : "En cours de correction",
@@ -475,5 +476,9 @@
     "exercizer.push.notif.submithomework.submit.body": "{0} a rendu son devoir du sujet {1}",
     "exercizer.push.notif.homeworkreminder.body": "Rappel : La date limite de rendu du devoir {0} est le {1}",
     "exercizer.push.notif.share.body": "{0} vous a partagé le sujet {1}",
-    "exercizer.push.notif.unassigncopy.body" : "{0} a déprogrammé le sujet {1} qui était à rendre le {2}"
+    "exercizer.push.notif.unassigncopy.body" : "{0} a déprogrammé le sujet {1} qui était à rendre le {2}",
+    "exercizer.export.subject.title" : "Titre du sujet",
+    "exercizer.export.subject.type" : "Type de sujet",
+    "exercizer.export.subject.comment" : "Commentaire",
+    "exercizer.export.student.name" : "Nom de l'élève"
 }

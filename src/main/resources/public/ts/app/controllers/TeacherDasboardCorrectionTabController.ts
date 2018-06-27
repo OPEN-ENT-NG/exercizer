@@ -37,6 +37,11 @@ class TeacherDashboardCorrectionTabController {
             $scope.$broadcast('SEE_SUBJECT_SCHEDULED_ASSIGN_AT', data);
         });
 
+        $scope.$on("E_EXPORT_STATS", function(event, data) {
+            $scope.$broadcast('EXPORT_STATS', data);
+        });
+
+
     }
 }
 

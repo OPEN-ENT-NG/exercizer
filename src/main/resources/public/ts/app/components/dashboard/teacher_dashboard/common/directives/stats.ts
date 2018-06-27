@@ -32,7 +32,7 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                             }
                             if(copy.final_score != null) {
                                 scope.scores.final.sum += copy.final_score;
-                                scope.scores.auto.nb++;
+                                scope.scores.final.nb++;
                             }
 
 
@@ -160,6 +160,79 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                     scope.order.field = fieldName;
                 }
             };
+            
+            scope.formatScore = function (val:number) {
+                if(val != null)
+                    return val.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0].replace(".",",");
+                return '';
+            }
+
+            scope.exportCSV = function(){
+                var scheduledGrains =scope.filtredScheduledGrains.sort((a, b) => {
+                    return a.order_by - b.order_by;
+                });
+                var csvStr = '';
+                var i=0;
+                csvStr+= scope.translate("exercizer.subject.title")+";";
+                csvStr+= scope.translate("exercizer.export.subject.type")+";";
+                csvStr+= scope.translate("exercizer.export.student.name")+";";
+                scheduledGrains.forEach(grain => {
+                    csvStr+="Q"+(++i)+">"+ (grain.grain_data.title ? grain.grain_data.title : '')+";";
+                })
+                csvStr+= scope.translate("exercizer.auto.score")+";";
+                csvStr+= scope.translate("exercizer.final.score")+";";
+                csvStr+= scope.translate("exercizer.export.subject.comment")+";";
+                csvStr+= '\r\n';
+                scope.subjectCopyList.forEach(copy => {
+                    csvStr+= scope.subjectScheduled.title+";";
+                    csvStr+= scope.translate("exercizer.interactive")+";";
+                    csvStr+= copy.owner_username+";";
+                    if(scope.matrice[copy.id]){
+                        scheduledGrains.forEach(grain => {
+                            csvStr+=scope.formatScore(scope.matrice[copy.id][grain.id].score)+";";
+                        })
+                    }else{
+                        scheduledGrains.forEach(grain => {csvStr+=";";})
+                    }
+                    csvStr+= (copy.calculated_score != null ? copy.calculated_score : '')+";";
+                    csvStr+= (copy.final_score != null? copy.final_score : '')+";";
+                    csvStr+= (copy.comment != null ? copy.comment : '')+";";
+                    csvStr+= '\r\n';
+                });
+
+                csvStr+= scope.translate("exercizer.schedule.stats.average")+";;;";
+                scheduledGrains.forEach(grain => {
+                    if(scope.scores[grain.id])
+                        csvStr+= scope.scores[grain.id].nb > 0 ? scope.formatScore(scope.scores[grain.id].sum/scope.scores[grain.id].nb) : '';
+                    csvStr+=";";
+                })
+                csvStr+= (scope.scores.auto.nb > 0 ? scope.formatScore(scope.scores.auto.sum/scope.scores.auto.nb) : '') +";";
+                csvStr+= (scope.scores.final.nb > 0 ? scope.formatScore(scope.scores.final.sum/scope.scores.final.nb) : '') +";;";
+                csvStr+= '\r\n';
+
+                var blob = new Blob([csvStr], { type: 'text/csv;charset=utf-8;' });
+                if (navigator.msSaveBlob) { // IE 10+
+                    navigator.msSaveBlob(blob, "export.csv");
+                } else {
+                    var link = document.createElement("a");
+                    if (link.download !== undefined) { // feature detection
+                        // Browsers that support HTML5 download attribute
+                        var url = URL.createObjectURL(blob);
+                        link.setAttribute("href", url);
+                        link.setAttribute("download", scope.subjectScheduled.title+".csv");
+                        link.style.visibility = 'hidden';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                }
+                console.log(csvStr);
+            }
+
+            scope.$on("EXPORT_STATS", function(event, subjectScheduled) {
+                if(scope.subjectScheduled.id == subjectScheduled.id)
+                    scope.exportCSV()
+            });
         }
     };
 }]
