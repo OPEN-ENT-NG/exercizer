@@ -17,6 +17,7 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                     GrainScheduledService.getListBySubjectScheduled(scope.subjectScheduled).then(scheduledGrains => {
                         scope.scheduledGrains= scheduledGrains;
                         scope.filtredScheduledGrains =scope.scheduledGrains.filter(grain => grain.grain_type_id > 3)
+                        scope.canUpIndex =  scope.filtredScheduledGrains.length > 6;
                     });
                     scope.matrice = {};
                     scope.index = 0;
@@ -94,13 +95,21 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
             });
 
             scope.upIndex = function(){
-                if(scope.index < scope.filtredScheduledGrains.length-6)
-                    scope.index++;
+                var diff = scope.filtredScheduledGrains.length-6-scope.index;
+                if(5 < diff)
+                    scope.index+=6;
+                else {
+                    scope.index += diff;
+                    scope.canUpIndex = false;
+                }
             }
 
             scope.downIndex = function(){
-                if(scope.index > 0)
-                    scope.index--;
+                if(5 < scope.index)
+                    scope.index-=6;
+                else
+                    scope.index=0;
+                scope.canUpIndex = true;
             }
 
 
@@ -226,7 +235,6 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                         document.body.removeChild(link);
                     }
                 }
-                console.log(csvStr);
             }
 
             scope.$on("EXPORT_STATS", function(event, subjectScheduled) {
