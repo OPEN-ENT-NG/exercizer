@@ -60,8 +60,10 @@
         <table class="list-view scores">
             <thead class="display-table">
             <tr>
-                <th class="small-cell nav" data-ng-click="downIndex()">
+                <th class="small-cell nav" data-ng-click="downIndex()" ng-if="index > 0">
                     <i class="left-open"></i>
+                </th>
+                <th class="small-cell" ng-if="index < 1">
                 </th>
                 <th class="centered-text" data-ng-repeat="grain in filtredScheduledGrains | orderBy:'order_by'" ng-click="orderByField(grain.id, true)" data-ng-show="$index >= index && $index < index+6">
                     <span tooltip="[[translate('exercizer.question')]] : [[grain.grain_data.title]]">Q[[$index + 1]]</span>
@@ -69,8 +71,10 @@
                     <i class="sort-asc" ng-if="order.field === grain.id && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === grain.id && order.desc"></i>
                 </th>
-                <th class="small-cell nav" data-ng-click="upIndex()">
+                <th class="small-cell nav" data-ng-click="upIndex()"  ng-if="canUpIndex">
                     <i class="open-right"></i>
+                </th>
+                <th class="small-cell"   ng-if="!canUpIndex">
                 </th>
             </tr>
             </thead>
