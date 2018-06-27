@@ -213,6 +213,10 @@ export const dashboardArchivesCopyList = ng.directive('dashboardArchivesCopyList
                     window.location.href = SubjectCopyService.downloadSimpleCopies(downloadCopies);
                 }
             };
+
+            scope.export = function () {
+                scope.$emit('E_EXPORT_STATS', scope.selectedSubjectScheduled);
+            }
         }
     };
 }]

@@ -30,6 +30,11 @@ class TeacherDashboardArchiveController {
                 }
             }
         });
+
+
+        $scope.$on("E_EXPORT_STATS", function(event, data) {
+            $scope.$broadcast('EXPORT_STATS', data);
+        });
     }
 
     public clickReturnExercizer(){
