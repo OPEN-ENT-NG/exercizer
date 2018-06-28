@@ -325,6 +325,39 @@ public class SubjectController extends ControllerHelper {
 		super.removeShare(request, false);
 	}
 
+	@Put("/subject/share/resource/:id")
+	@ApiDoc("Adds rights for a given subject.")
+	@ResourceFilter(ShareAndOwner.class)
+	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
+	public void shareResource(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					request.pause();
+					final String subjectId = request.params().get("id");
+					subjectService.getById(subjectId, user, r -> {
+						request.resume();
+						JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
+						final String subjectName = subject.getString("title");
+
+						JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
+						params.put("username", user.getUsername());
+						params.put("uri", pathPrefix + "#/subject/copy/preview/perform/"+subjectId);
+						params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
+						params.put("subjectName", subjectName);
+						params.put("resourceUri", params.getString("uri"));
+						SubjectController.super.shareResource(request, "exercizer.share", false, params, null);
+					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
 	@Post("/subject/:id/grain")
 	@ApiDoc("Persists a grain.")
 	@ResourceFilter(ShareAndOwner.class)
