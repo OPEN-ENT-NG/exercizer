@@ -564,7 +564,7 @@ public class SubjectScheduledController extends ControllerHelper {
 						                    params.put("username", user.getUsername());
 						                    params.put("subjectName", subjectTitle);
 						                    params.put("resourceUri", params.getString("uri"));
-						                    params.put("pushNotif", PushNotificationUtils.getNotification(request, "exercizer.correcthomework", params));
+						                    params.put("pushNotif", PushNotificationUtils.getNotification(request, "correcthomework", params));
 						                    notification.notifyTimeline(request, "exercizer.correcthomework", user, recipientSet, id, params);
 
 											if (!StringUtils.isEmpty(existingFileId)) {
