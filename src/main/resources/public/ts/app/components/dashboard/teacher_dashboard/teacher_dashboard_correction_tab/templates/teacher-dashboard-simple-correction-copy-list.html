@@ -86,15 +86,14 @@
 
 
 <div class="row vertical-spacing">
-     <div class="cell">
+     <div class="cell" data-ng-click="seeAllAssignAtList(subjectScheduled)">
          <span class="small-text">
               <i18n>exercizer.schedule.at</i18n>
          </span>
          <span data-ng-repeat="user in lUserGroup | limitTo: 3" class="small-text">
               <b>[[user.name]] </b>
          </span>
-         <span data-ng-click="seeAllAssignAtList(subjectScheduled)"
-            class="hover-orange"
+         <span class="hover-orange"
             data-ng-if="lUserGroup.length > 3">...</span>
      </div>
 </div>
