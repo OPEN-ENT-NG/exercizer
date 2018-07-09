@@ -497,9 +497,12 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 };
 
                 scope.confirmation = function () {
-                    if(scope.option)
-                        return (scope.isSimpleSubject ? idiom.translate('exercizer.schedule.simple.confirm') : idiom.translate('exercizer.schedule.interactive.confirm')) + ' ' +
-                            $filter('date')(scope.option.due_date, 'dd/MM/yyyy') + ' ' +idiom.translate('exercizer.at') +' '+ $filter('date')(scope.option.due_time, 'HH:mm')+ ' ?';
+                    if(scope.option){
+                        return idiom.translate('exercizer.schedule.confirm').replace(/\{0\}/g, $filter('date')(scope.option.begin_date, 'dd/MM/yyyy'))
+                            .replace(/\{1\}/g, $filter('date')(scope.option.begin_time, 'HH:mm'))
+                            .replace(/\{2\}/g, $filter('date')(scope.option.due_date, 'dd/MM/yyyy'))
+                            .replace(/\{3\}/g, $filter('date')(scope.option.due_time, 'HH:mm'));
+                    }
                 }
             }
         };
