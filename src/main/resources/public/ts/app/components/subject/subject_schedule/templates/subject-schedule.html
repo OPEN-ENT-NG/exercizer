@@ -47,7 +47,7 @@
                         <div class="cell six horizontal-spacing">
                             <h4><i18n>exercizer.scheduled.subject.group.add</i18n></h4>
                             <div style="overflow-y: auto; max-height: 210px;">
-                                <label class="chip block" data-ng-repeat="group in data.groupList" ng-class="{selected: group.selected, removable: !group.selected}" data-ng-click="selectGroupItem(group)">
+                                <label class="chip block" data-ng-repeat="group in data.groupList" ng-class="{selected: group.selected, deletable: !group.selected}" data-ng-click="selectGroupItem(group)">
                                     <i class="close right-magnet" data-ng-click="removeItem(group)"></i>
                                     <span class="cell-ellipsis block">[[group.title]]</span>
                                 </label>
@@ -62,7 +62,7 @@
                                 <input type="text" class="six cell" ng-model="search.user" i18n-placeholder="exercizer.search" /><span class="one cell">&nbsp;</span><label>[[getTotalUser().ok]] <i18n>exercizer.users</i18n></label>
                             </div>
                             <div id="userScroll" style="overflow-y: auto; max-height: 170px;">
-                                <label id='user-[[user._id]]' class="chip block" data-ng-repeat="user in data.userList | filter:filterAllUser()" style="cursor:default" ng-class="{selected: user.selected, removable: !user.selected}" data-ng-if="!user.exclude">
+                                <label id='user-[[user._id]]' class="chip block" data-ng-repeat="user in data.userList | filter:filterAllUser()" style="cursor:default" ng-class="{selected: user.selected, deletable: !user.selected}" data-ng-if="!user.exclude">
                                     <i class="close right-magnet" data-ng-click="removeItem(user)"></i>
                                     <span class="cell-ellipsis block">[[user.title]]</span>
                                 </label>
