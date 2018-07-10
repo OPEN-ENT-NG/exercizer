@@ -96,7 +96,7 @@
     "exercizer.scheduled.subject.user.add" : "Tous les utilisateurs ajoutés",
     "exercizer.scheduled.subject.user.empty" : "Aucun utilisateur ajouté.",
     "exercizer.scheduled.subject.improve" : "Autoriser l'élève à modifier sa copie après avoir rendu (si la date de fin n'est pas dépassée)",
-    "exercizer.scheduled.subject.delay" : "Temps indicatif de réalisation du devoir",
+    "exercizer.scheduled.subject.delay" : "Temps indicatif de réalisation du devoir :",
     "exercizer.scheduled.simple.subject.start" : "Date de début de la remise",
     "exercizer.scheduled.simple.subject.limit" : "Date limite de remise",
     "exercizer.scheduled.simple.subject.corrected" : "Date de publication du corrigé",
