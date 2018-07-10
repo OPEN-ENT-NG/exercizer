@@ -35,11 +35,15 @@
                     <span>[[getGrains(copy.id).length()]]</span>
                 </td>
                 <td class="centered-text">
-                    <span class="chip text chip-hide">[[copy.calculated_score | truncateNumber ]] / [[subjectScheduled.max_score]]</span>
+                    <div class="chip text chip-hide">
+                        <span>[[copy.calculated_score | truncateNumber ]] / [[subjectScheduled.max_score]]</span>
+                    </div>
                 </td>
 
                 <td class="centered-text">
-                    <span class="chip text chip-hide">[[copy.final_score  | truncateNumber]] / [[subjectScheduled.max_score]]</span>
+                    <div class="chip text chip-hide">
+                        <span>[[copy.final_score  | truncateNumber]] / [[subjectScheduled.max_score]]</span>
+                    </div>
                 </td>
             </tr>
             </tbody>
