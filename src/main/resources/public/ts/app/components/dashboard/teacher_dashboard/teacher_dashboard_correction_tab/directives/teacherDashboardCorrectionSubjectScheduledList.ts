@@ -192,6 +192,7 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
 
                 scope.clickOnSubjectScheduled = function(subjectScheduled){
                     scope.selectedSubjectScheduled = subjectScheduled;
+                    scope.selectedSubjectScheduled.showStats= false;
                     $location.path('/dashboard/teacher/correction/'+subjectScheduled.id);
                 };
 
