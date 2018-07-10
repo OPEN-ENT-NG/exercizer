@@ -180,7 +180,7 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                 var scheduledGrains =scope.filtredScheduledGrains.sort((a, b) => {
                     return a.order_by - b.order_by;
                 });
-                var csvStr = '';
+                var csvStr = "\ufeff";
                 var i=0;
                 csvStr+= scope.translate("exercizer.subject.title")+";";
                 csvStr+= scope.translate("exercizer.export.subject.type")+";";
