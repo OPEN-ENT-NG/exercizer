@@ -268,6 +268,16 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     return time.match("^([01][0-9]|2[0-3]):[0-5][0-9]$") ? time : $filter('date')(def, 'HH:mm');
                 }
 
+                scope.cancelDatesEditing = function () {
+                    scope.option.editedDates = false;
+                    scope.option.begin_date = new Date(scope.selectedSubjectScheduled.begin_date);
+                    scope.option.due_date = new Date(scope.selectedSubjectScheduled.due_date);
+                    scope.option.corrected_date = new Date(scope.selectedSubjectScheduled.corrected_date);
+                    scope.option.begin_time = $filter('date')(scope.selectedSubjectScheduled.begin_date, 'HH:mm');
+                    scope.option.due_time = $filter('date')(scope.selectedSubjectScheduled.due_date, 'HH:mm');
+                    scope.option.corrected_time = $filter('date')(scope.selectedSubjectScheduled.corrected_date, 'HH:mm');
+                }
+
                 scope.modifySchedule = function () {
                     var subjectScheduled = {
                         id:scope.selectedSubjectScheduled.id,
