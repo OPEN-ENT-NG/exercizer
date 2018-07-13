@@ -260,6 +260,7 @@
     "exercizer.library.toaster.preview" : "Aperçu",
     "exercizer.library.toaster.copy" : "Copier dans mes sujets",
     "exercizer.group.filter" : "Filtrer sur les groupes",
+    "exercizer.domino.access" : "Le sujet sera accesible le",
     "exercizer.domino.todelivered" : "À rendre pour le",
     "exercizer.domino.delivered" : "Rendu le",
     "exercizer.domino.corrected" : "Corrigé",

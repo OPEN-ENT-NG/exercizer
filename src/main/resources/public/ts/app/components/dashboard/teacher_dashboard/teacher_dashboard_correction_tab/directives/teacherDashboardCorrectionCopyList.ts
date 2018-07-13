@@ -243,6 +243,8 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                             scope.option.hasSubmitted = true;
                             res++;
                         }
+                        if(copy.has_been_started)
+                            scope.option.hasBeenSarted = true;
                     });
                     return res;
                 };
