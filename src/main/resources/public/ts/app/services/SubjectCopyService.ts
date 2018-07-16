@@ -502,6 +502,8 @@ export class SubjectCopyService implements ISubjectCopyService {
         // the subject have been submitted AND the subject have option one_shot == true;
         // OR
         // the copy is corrected by the teacher;
+        if(!this._dateService.compare_after(new Date(), this._dateService.isoToDate(subjectScheduled.begin_date), true))
+            return false
         if (subjectScheduled.is_one_shot_submit && copy.submitted_date) {
             return false;
         } else {
@@ -518,6 +520,8 @@ export class SubjectCopyService implements ISubjectCopyService {
         // quelque soit le statut, si la date de rendu est passée et que l'option "Affichage du résultat automatique pour les élèves" a été cochée
         // OR
         // le statut de la copie est "Corrigé" et la date de rendu est passée
+        if(!this._dateService.compare_after(new Date(), this._dateService.isoToDate(subjectScheduled.begin_date), true))
+            return false
         if(this._dateService.compare_after(new Date(), this._dateService.isoToDate(subjectScheduled.due_date), false) === true){
             if(subjectScheduled.has_automatic_display){
                 return true;
@@ -532,7 +536,6 @@ export class SubjectCopyService implements ISubjectCopyService {
             return false
         }
     };
-
 
 
     public getById = function(id:number):ISubjectCopy {

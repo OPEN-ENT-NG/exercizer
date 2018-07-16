@@ -524,7 +524,8 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Post("/grains-copy")
 	@ApiDoc("Gets grain copy list.")
-	@SecuredAction("exercizer.grain.copy.list")
+	@ResourceFilter(GrainsCopyAccess.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void listGrain(final HttpServerRequest request) {
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override

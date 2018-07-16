@@ -89,6 +89,9 @@ public class ScheduledNotification implements Handler<Long> {
 
                                 if (isNotify) {
                                     final String dueDateFormat = DateUtils.format(dueDate);
+                                    final String dueTimeFormat = DateUtils.format(dueDate, "HH:mm");
+                                    final String beginDateFormat = DateUtils.format(dueDate);
+                                    final String beginTimeFormat = DateUtils.format(dueDate, "HH:mm");
 
                                     final String query =
                                             "UPDATE exercizer.subject_scheduled " +
@@ -117,6 +120,9 @@ public class ScheduledNotification implements Handler<Long> {
                                                 params.put("username", user.getUsername());
                                                 params.put("subjectName", subjectName);
                                                 params.put("dueDate", dueDateFormat);
+                                                params.put("dueTime", dueTimeFormat);
+                                                params.put("beginDate", beginDateFormat);
+                                                params.put("beginTime", beginTimeFormat);
                                                 params.put("resourceUri", params.getString("uri"));
 
                                                 JsonObject pushNotif = new JsonObject()

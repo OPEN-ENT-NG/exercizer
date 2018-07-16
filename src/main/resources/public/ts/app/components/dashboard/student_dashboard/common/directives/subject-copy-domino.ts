@@ -17,6 +17,8 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
 
                 scope.selectTitle = function(){
                     if (scope.subjectScheduled.type === 'simple') {
+                        if(!DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.begin_date), true))
+                            return 'text'
                         return 'perform'
                     } else if(SubjectCopyService.canPerformACopyAsStudent(scope.subjectScheduled, scope.subjectCopy)){
                         return 'perform'
@@ -73,6 +75,10 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                         return false;
                     }
 
+                };
+
+                scope.cantSart = function(){
+                    return  DateService.compare_after(DateService.isoToDate(scope.subjectScheduled.begin_date), new Date(), true)
                 };
 
                 /**

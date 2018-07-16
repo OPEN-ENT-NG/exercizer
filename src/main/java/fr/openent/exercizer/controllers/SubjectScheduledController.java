@@ -525,7 +525,7 @@ public class SubjectScheduledController extends ControllerHelper {
 					if (isNotify) {
 						final String subjectName = scheduledSubject.getString("subjectTitle");
 						final List<String> recipientSet = new ArrayList<String>(userIds);
-						sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName,null, scheduledSubject.getString("dueDate"), null);
+						sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName, scheduledSubject.getString("beginDate"), scheduledSubject.getString("dueDate"), null);
 					}
 
 					Renders.created(request);
@@ -832,7 +832,7 @@ public class SubjectScheduledController extends ControllerHelper {
 		});
 	}
 
-	@Get("/subjects-scheduled-by-subjects-copy")
+	@Get("/subjects-scheduled-by-subjects-copy/:offset")
 	@ApiDoc("Gets subject scheduled list by subject copy list.")
 	@SecuredAction("exercizer.subject.scheduled.list.by.subject.copy.list")
 	public void listBySubjectCopyList(final HttpServerRequest request) {
@@ -840,7 +840,34 @@ public class SubjectScheduledController extends ControllerHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					subjectScheduledService.listBySubjectCopyList(user, arrayResponseHandler(request));
+					final Integer offset = Integer.parseInt(request.params().get("offset"));
+					subjectScheduledService.listBySubjectCopyList(user, new Handler<Either<String, JsonArray>>() {
+						@Override
+						public void handle(Either<String, JsonArray> event) {
+							if(event.isRight()){
+								JsonArray subjects = event.right().getValue();
+								int hours = offset / 60;
+								int minutes = offset % 60;
+								final Date nowClient = new DateTime(DateTimeZone.forOffsetHoursMinutes(hours, minutes)).toLocalDateTime().toDate();
+								subjects.forEach( s -> {
+									JsonObject subject = (JsonObject)s;
+									try {
+										Date beginDate = DateUtils.parseTimestampWithoutTimezone(subject.getString("begin_date"));
+										if(nowClient.before(beginDate))
+											subject.put("description", "");
+									} catch (ParseException e) {
+										log.error("can't parse dates of scheduled subject", e);
+										renderError(request);
+										return;
+									}
+
+								});
+								renderJson(request, subjects);
+							}else{
+								Renders.badRequest(request, event.left().getValue());
+							}
+						}
+					});
 				}
 				else {
 					log.debug("User not found in session.");

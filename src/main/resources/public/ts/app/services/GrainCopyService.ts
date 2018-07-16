@@ -125,8 +125,9 @@ export class GrainCopyService implements IGrainCopyService {
 
     public getListBySubjectCopy = function(subjectCopy:ISubjectCopy, force:boolean=false):Promise<IGrainCopy[]> {
         var self = this,
-            deferred = this._$q.defer(),
-            request = {
+            deferred = this._$q.defer();
+        subjectCopy.offset = new Date().getTimezoneOffset();
+        var request = {
                 method: 'POST',
                 url: 'exercizer/grains-copy',
                 data: subjectCopy

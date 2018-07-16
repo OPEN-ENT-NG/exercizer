@@ -62,7 +62,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
             deferred = this._$q.defer(),
             request = {
                 method: 'GET',
-                url: isTeacher ? 'exercizer/subjects-scheduled' : 'exercizer/subjects-scheduled-by-subjects-copy'
+                url: isTeacher ? 'exercizer/subjects-scheduled' : ('exercizer/subjects-scheduled-by-subjects-copy/'+new Date().getTimezoneOffset())
             };
 
         if (this._listMappedById) {
