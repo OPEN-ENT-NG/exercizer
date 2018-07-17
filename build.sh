@@ -11,16 +11,34 @@ then
   export GROUP_GID=1000
 fi
 
+# options
+SPRINGBOARD="recette"
+for i in "$@"
+do
+case $i in
+    -s=*|--springboard=*)
+    SPRINGBOARD="${i#*=}"
+    shift
+    ;;
+    *)
+    ;;
+esac
+done
+
 clean () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" gradle gradle clean
 }
 
 buildNode () {
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm install && npm update entcore && node_modules/gulp/bin/gulp.js build"
+  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "npm install && node_modules/gulp/bin/gulp.js build"
 }
 
 buildGradle () {
   docker-compose run --rm -u "$USER_UID:$GROUP_GID" gradle gradle shadowJar install publishToMavenLocal
+}
+
+watch () {
+  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "node_modules/gulp/bin/gulp.js watch --springboard=/home/node/$SPRINGBOARD"
 }
 
 publish () {
@@ -49,6 +67,9 @@ do
     install)
       buildNode && buildGradle
       ;;
+    watch)
+      watch
+      ;;
     publish)
       publish
       ;;
@@ -59,4 +80,3 @@ do
     exit 1
   fi
 done
-
