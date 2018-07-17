@@ -257,7 +257,8 @@ export class ImportService implements IImportService {
             deferred.reject('exercizer.import.xml.empty');
         } else {
             if (mapGrainImg) {
-                var imgRegex = new RegExp("(?<=<img).*?(?=>)", 'g');
+                //only chrome --> var imgRegex = new RegExp("(?<=<img).*?(?=>)", 'g');
+                var imgRegex = new RegExp('\\<img [\\-a-z0-9%_@/.="A-Z\\s]+', 'g');
                 _.forEach(grains, function (grain) {
                     var grainImgs = mapGrainImg[grain.order_by];
                     if (_.size(grainImgs["concat_statement"]) > 0) {
@@ -300,8 +301,7 @@ export class ImportService implements IImportService {
                                     var search = '@@PLUGINFILE@@' + img.path + encodeURIComponent(img.name);
                                     var index = matched.indexOf(search);
                                     if (index > -1) {
-                                        return " src=\"" + img.link + "\"/";
-
+                                        return "<img src=\"" + img.link + "\"/";
                                     }
                                     return matched;
                                 });
@@ -360,7 +360,8 @@ export class ImportService implements IImportService {
 
         var countCorrect = 0;
         var fillTextCustomData = new FillTextCustomData();
-        var fillTextPattern = new RegExp("\\[\\[\\d+\\]\\]", 'g');
+        //only chrome -->  fillTextPattern = new RegExp("\\[\\[\\d+\\]\\]", 'g');
+        var fillTextPattern = new RegExp("(\\[\\[).*?(\\]\\])", 'g');
         var mapFillIdGroup = {};
         var answers = $.makeArray($(question).find((ddwtosGrainType) ? 'dragbox' : 'selectoption'));
         var generalOptions:string[] = [];
