@@ -1,8 +1,8 @@
 <!-- subject-copy-domino -->
 <div class="fallen dominos" style="margin-bottom: 0px">
     <div class="item" style="width: 100%; max-width: none;">
-        <section class="domino" data-ng-style="cantSart() ? { 'opacity': 0.5 } : ''">
-            <div class="top">
+        <section class="domino">
+            <div class="top" ng-class="{ 'divide-opacity': cantSart() }">
                 <img data-ng-src="[[getSubjectCopyPicture()]]" class="absolute" />
 
             </div>
@@ -17,7 +17,7 @@
 
                     <div class="ten cell">
 
-                        <div class="row">
+                        <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
                             <div class="cell title-icon">
                                 <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                             </div>
@@ -29,15 +29,15 @@
                                 <strong data-ng-switch-default >default</strong>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
                                 <div data-ng-show="isDueDateDisplayed()"><i18n>exercizer.domino.todelivered</i18n> <span  data-ng-bind="dueDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="dueDate | date:'HH:mm'"></span> </div>
                             <div data-ng-show="isSubmittedDateDisplayed()"><i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span></div>
                         </div>
-                        <div class="row">
+                        <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
                             <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em>
                         </div>
                         <div class="row">
-                            <div data-ng-if="tooLate()" class="alert no-margin cell">
+                            <div data-ng-if="tooLate()" class="alert no-margin cell" ng-class="{ 'divide-opacity': cantSart() }">
                                 <i class="timer-off"></i> &nbsp; <i18n>exercizer.lag</i18n> &nbsp;
                             </div>
                             <div data-ng-if="cantSart()" class="info no-margin cell">
