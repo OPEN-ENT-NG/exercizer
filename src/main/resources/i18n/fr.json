@@ -354,6 +354,7 @@
     "exercizer.export.title" : "Exporter le sujet",
     "exercizer.unsup.export.type1" : "Texte à trou (seulement pour le type saisie libre)",
     "exercizer.unsup.export.type2" : "Mise en ordre",
+    "exercizer.unsup.export.type3" : "Zone à remplir textuelle (seulement pour les types saisie libre et liste déroulante)",
     "exercizer.export.format" : "au format moodle",
     "exercizer.export.desc" : "Attention, le format moodle (.xml) ne prend pas en charge tous les types de questions, ceux listés ci-dessous ne seront pas exportés",
     "exercizer.export.action" : "Exporter",
