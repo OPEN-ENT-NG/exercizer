@@ -221,21 +221,24 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                 scope.saveCurrentCorrected = function(event) {
                     scope.newFiles = event.newFiles;
 
-                    if (scope.newFiles.length > 0) {
-                        var file = scope.newFiles[0];
-
-                        SubjectCopyService.addCorrectedFile(scope.selectedCopy.id, file).then(
-                            function (fileId) {
-                                scope.selectedCopy.corrected_metadata = {"filename":file.name};
-                                scope.selectedCopy.corrected_file_id = fileId;
-                                scope.selectedCopy.is_corrected = true;
-                                notify.info('exercizer.service.save.individual.corrected');
-                            },
-                            function (err) {
-                                notify.error(err);
-                            }
-                        );
-                    }
+                    setTimeout(() => {
+                        if (scope.newFiles.length > 0) {
+                            var file = scope.newFiles[0];
+                            SubjectCopyService.addCorrectedFile(scope.selectedCopy.id, file).then(
+                                function (fileId) {
+                                    scope.selectedCopy.corrected_metadata = {"filename":file.name};
+                                    scope.selectedCopy.corrected_file_id = fileId;
+                                    scope.selectedCopy.is_corrected = true;
+                                    notify.info('exercizer.service.save.individual.corrected');
+                                    scope.$apply();
+                                },
+                                function (err) {
+                                    notify.error(err);
+                                    scope.$apply();
+                                }
+                            );
+                        }
+                    }, 50);
                 };
 
                 scope.removeCurrentCorrected = function(copy) {
