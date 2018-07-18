@@ -148,7 +148,7 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                 scope.isDisplayed = false;
             };
 
-            scope.order = {};
+            scope.order = {field: 'owner_username'};
 
             scope.order.order = function(item){
                 if(scope.order.isGrain){
