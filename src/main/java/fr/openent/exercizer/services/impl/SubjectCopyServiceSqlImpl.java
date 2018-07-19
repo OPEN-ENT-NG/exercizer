@@ -217,9 +217,40 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     }
 
     @Override
-    public void exclude(final JsonArray ids, final Handler<Either<String, JsonObject>> handler) {
-        final String removeCopies = "DELETE FROM " + resourceTable + " AS sc WHERE sc.id IN " + Sql.listPrepared(ids.getList());
-        sql.prepared(removeCopies, new fr.wseduc.webutils.collections.JsonArray(ids.getList()), SqlResult.validRowsResultHandler(handler));
+    public void exclude(final JsonArray ids, final Handler<Either<String, JsonArray>> handler) {
+        final String find = "SELECT sc.owner as _id, sc.owner_username as name FROM " + resourceTable + " AS sc WHERE sc.id IN " + Sql.listPrepared(ids.getList());
+        sql.prepared(find, new fr.wseduc.webutils.collections.JsonArray(ids.getList()), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
+            @Override
+            public void handle(Either<String, JsonArray> event) {
+                if(event.isRight()){
+                    JsonArray copies = event.right().getValue();
+                    final JsonArray exclude =  new fr.wseduc.webutils.collections.JsonArray();
+                    final JsonArray values =  new fr.wseduc.webutils.collections.JsonArray();
+                    values.add(ids.getValue(0));
+                    values.addAll(ids);
+                    copies.forEach( o ->  exclude.add(((JsonObject)o)));
+
+                    final String updateAndRemove = "; UPDATE "+schema+ "subject_scheduled as ss SET scheduled_at = jsonb_set(scheduled_at::jsonb, " +
+                            " array['exclude'],(scheduled_at->'exclude')::jsonb || '"+exclude.toString()+"'::jsonb) " +
+                            "FROM ( SELECT subject_scheduled_id FROM "+resourceTable+" WHERE id = ?) a " +
+                            "WHERE ss.id = a.subject_scheduled_id; DELETE FROM " + resourceTable + " AS sc WHERE sc.id IN " + Sql.listPrepared(ids.getList());
+
+                    sql.prepared(updateAndRemove, values, SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
+                        @Override
+                        public void handle(Either<String, JsonArray> event) {
+                            if(event.isRight()){
+                                handler.handle(new Either.Right<>(exclude));
+                            }else{
+                                handler.handle(event);
+                            }
+                        }
+                    }));
+
+                }else{
+                    handler.handle(event);
+                }
+            }
+        }));
     }
 
     @Override

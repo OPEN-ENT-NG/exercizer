@@ -6,6 +6,7 @@ export const exclude = ng.directive('exclude', ['SubjectCopyService',(SubjectCop
         scope: { 
             isDisplayed: "=",
             subjectCopyList: "=",
+            selectedSubjectScheduled: "=",
             toasterDisplayed: "="
             
         },
@@ -19,9 +20,10 @@ export const exclude = ng.directive('exclude', ['SubjectCopyService',(SubjectCop
                 });
 
                 SubjectCopyService.excludeCopies(copyIds).then(
-                    function () {
+                    function (excludes) {
                         scope.close();
                         scope.toasterDisplayed.main = false;
+                        scope.selectedSubjectScheduled.scheduled_at.exclude = scope.selectedSubjectScheduled.scheduled_at.exclude.concat(excludes);
                         scope.subjectCopyList = _.reject(scope.subjectCopyList, (copy) => {
                             return copy.selected;
                         });                       

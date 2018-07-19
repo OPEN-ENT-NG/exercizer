@@ -1115,7 +1115,7 @@ public class SubjectCopyController extends ControllerHelper {
 		});
 	}
 
-	@Post("/subject-copy/exclude")
+	@Post("/subject-copy/action/exclude")
 	@ApiDoc("Exclude copies.")
 	@ResourceFilter(SubjectCopiesOwner.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
@@ -1131,17 +1131,7 @@ public class SubjectCopyController extends ControllerHelper {
 								badRequest(request);
 								return;
 							}
-
-							subjectCopyService.exclude(param.getJsonArray("ids"), new Handler<Either<String, JsonObject>>() {
-								@Override
-								public void handle(Either<String, JsonObject> event) {
-									if (event.isRight()) {
-										Renders.noContent(request);
-									} else {
-										renderError(request);
-									}
-								}
-							});
+							subjectCopyService.exclude(param.getJsonArray("ids"), arrayResponseHandler(request));
 						}
 					});
 				} else {

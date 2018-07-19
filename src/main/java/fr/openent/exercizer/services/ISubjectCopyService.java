@@ -79,7 +79,7 @@ public interface ISubjectCopyService {
 
     void getArchive(final List<String> ids, final Handler<Either<String, JsonArray>> handler);
 
-    void exclude(final JsonArray ids, final Handler<Either<String, JsonObject>> handler);
+    void exclude(final JsonArray ids, final Handler<Either<String, JsonArray>> handler);
 
     void getSubmittedBySubjectScheduled(final String scheduledId, final Handler<Either<String, JsonArray>> handler);
 
