@@ -1,7 +1,7 @@
 <article class="five cell left-magnet" style="height:270px">
     <h2 class="no-margin"><i18n>exercizer.schedule.info</i18n> "[[selectedSubjectScheduled.title]]"</h2>
     <div data-ng-if="option.editedDates && option.hasSubmitted" class="warning no-margin no-padding">&nbsp;<i18n>exercizer.schedule.rule.copies</i18n></div>
-    <div class="row vertical-spacing row-like-input">
+    <div class="row row-like-input" data-ng-class="{'vertical-spacing' : !(option.editedDates && option.hasBeenSarted) }">
         <div class="cell"><span><i18n>exercizer.scheduled.start</i18n>&nbsp;</span></div>
         <b ng-if="!option.editedDates || option.hasSubmitted">  [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.begin_date | date:'HH:mm']]</b>
         <div ng-if="option.editedDates && !option.hasSubmitted">
