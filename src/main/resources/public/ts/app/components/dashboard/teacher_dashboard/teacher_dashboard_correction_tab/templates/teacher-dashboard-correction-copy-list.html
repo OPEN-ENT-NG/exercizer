@@ -1,4 +1,4 @@
-<article class="five cell left-magnet" style="height:200px">
+<article class="five cell left-magnet" style="height:220px">
     <h2 class="no-margin"><i18n>exercizer.schedule.info</i18n> "[[selectedSubjectScheduled.title]]"</h2>
     <div data-ng-if="option.editedDates && option.hasBeenSarted" class="warning no-margin no-padding">&nbsp;<i18n>exercizer.schedule.rule.copies</i18n></div>
     <div class="row vertical-spacing row-like-input">
@@ -19,17 +19,19 @@
             <input class="one no-margin no-padding" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, selectedSubjectScheduled.due_date)"/>
         </div>
     </div>
-    <div class="cell right-magnet" data-ng-show="!option.editedDates">
-        <button class="flat-button" data-ng-click="option.showUnScheduled=true"><i18n>exercizer.unschedule</i18n></button>
-        <button data-ng-click="option.editedDates=true"> <i18n>edit</i18n></button>
-    </div>
-    <div class="cell right-magnet" data-ng-show="option.editedDates">
-        <button class="flat-button" data-ng-click="cancelDatesEditing()"><i18n>exercizer.cancel</i18n></button>
-        <button data-ng-click="option.edit=true"> <i18n>exercizer.validate</i18n></button>
+    <div class="row vertical-spacing row-like-input">
+        <div class="cell right-magnet" data-ng-show="!option.editedDates">
+            <button class="flat-button" data-ng-click="option.showUnScheduled=true"><i18n>exercizer.unschedule</i18n></button>
+            <button data-ng-click="option.editedDates=true"> <i18n>edit</i18n></button>
+        </div>
+        <div class="cell right-magnet" data-ng-show="option.editedDates">
+            <button class="flat-button" data-ng-click="cancelDatesEditing()"><i18n>exercizer.cancel</i18n></button>
+            <button data-ng-click="option.edit=true"> <i18n>exercizer.validate</i18n></button>
+        </div>
     </div>
 </article>
 
-<article class="six cell right-magnet" style="height:200px">
+<article class="six cell right-magnet" style="height:220px">
     <h2 class="block"> <i18n>exercizer.schedule.stats</i18n> "[[selectedSubjectScheduled.title]]"</h2>
     <div class="row vertical-spacing">
         <i18n>exercizer.schedule.stats.info1</i18n> [[score.nb]] <i18n>exercizer.schedule.stats.info2</i18n> : [[score.sum/score.nb | truncateNumber]] / [[selectedSubjectScheduled.max_score]]
@@ -37,8 +39,10 @@
     <div class="row vertical-spacing">
         [[numberCopySubmitted()]] <i18n>exercizer.total.made</i18n> [[subjectCopyList.length]] <i18n>exercizer.total.made2</i18n>
     </div>
-    <div class="cell right-magnet">
-        <button class="flat-button" data-ng-click="selectedSubjectScheduled.showStats=true"><i18n>exercizer.schedule.stats.more</i18n></button>
+    <div class="row vertical-spacing">
+        <div class="cell right-magnet">
+            <button class="flat-button" data-ng-click="selectedSubjectScheduled.showStats=true"><i18n>exercizer.schedule.stats.more</i18n></button>
+        </div>
     </div>
 </article>
 
