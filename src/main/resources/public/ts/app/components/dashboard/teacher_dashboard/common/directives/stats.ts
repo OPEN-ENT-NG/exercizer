@@ -203,8 +203,8 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                     }else{
                         scheduledGrains.forEach(grain => {csvStr+=";";})
                     }
-                    csvStr+= (copy.calculated_score != null ? copy.calculated_score : '')+";";
-                    csvStr+= (copy.final_score != null? copy.final_score : '')+";";
+                    csvStr+= (copy.calculated_score != null ? scope.formatScore(copy.calculated_score) : '')+";";
+                    csvStr+= (copy.final_score != null? scope.formatScore(copy.final_score) : '')+";";
                     csvStr+= (copy.comment != null ? copy.comment : '')+";";
                     csvStr+= '\r\n';
                 });
