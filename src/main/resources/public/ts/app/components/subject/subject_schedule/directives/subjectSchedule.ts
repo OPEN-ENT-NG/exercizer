@@ -62,13 +62,13 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                                     notify.info("exercizer.schedule.empty.group");
                                 } else {
                                     list.push(selectedItem);
-                                    scope.data.userList = _.sortBy(scope.data.userList, 'title');
+                                    scope.data.userList = _.sortBy(scope.data.userList, 'name');
                                 }
                             });
                         } else {
                             list.push(selectedItem);
                             scrollToUser(selectedItem['_id']);
-                            scope.data.userList = _.sortBy(scope.data.userList, 'title');
+                            scope.data.userList = _.sortBy(scope.data.userList, 'name');
                         }
                     } else {
                         console.error('item already in the list');
@@ -82,7 +82,8 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                             _.forEach(data, function (user) {
                                 scope.data.userList.push({
                                     _id: user['_id'],
-                                    title: user.name,
+                                    name: user.name,
+                                    profile: user.profiles[0],
                                     selected: false,
                                     exclude: false,
                                     groupId: groupId
@@ -153,13 +154,13 @@ export const subjectSchedule = ng.directive('subjectSchedule',
 
                            //ERASE same user in implict user (not from group)
                            scope.data.userList = _.reject(scope.data.userList, (user) => {
-                               return (user && !user.exclude && selectedItem.title === user.title);
+                               return (user && !user.exclude && selectedItem.name === user.name);
                            });
                        }
 
                         //mark same user of another group as exclude
                         _.forEach(scope.data.userList, (user) => {
-                            if (user && user.groupId && selectedItem.title === user.title) {
+                            if (user && user.groupId && selectedItem.name === user.name) {
                                 user.exclude = true;
                             }
                         });
@@ -180,7 +181,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         if(!searchTerm){
                             return true;
                         }
-                        return idiom.removeAccents(user.title).toLowerCase().indexOf(searchTerm) !== -1;
+                        return idiom.removeAccents(user.name).toLowerCase().indexOf(searchTerm) !== -1;
                     };
                 };
 
@@ -364,19 +365,21 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     angular.forEach(data.groupList, function (group) {
                         res.groupList.push({
                             _id: group['_id'],
-                            name: group.title
+                            name: group.name
                         })
                     });
                     angular.forEach(data.userList, function (user) {
                         if (user && user.groupId === undefined) {
                             res.userList.push({
                                 _id: user['_id'],
-                                name: user.title
+                                name: user.name,
+                                profile: user.profile
                             })
                         } else if (user && user.exclude) {
                             res.exclude.push({
                                 _id: user['_id'],
-                                name: user.title
+                                name: user.name,
+                                profile: user.profile
                             })
                         }
                     });
@@ -446,11 +449,11 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     GroupService.getList(subject).then(
                         function (data) {
                             angular.forEach(data.groups.visibles, function (group) {
-                                var obj = createObjectList(group.name, group.id, 'group');
+                                var obj = createObjectList(group.name, group.id, 'group', null);
                                 array.push(obj);
                             });
                             angular.forEach(data.users.visibles, function (user) {
-                                var obj = createObjectList(user.lastName + ' ' + user.firstName, user.id, 'user');
+                                var obj = createObjectList(user.lastName + ' ' + user.firstName, user.id, 'user', user.profile);
                                 array.push(obj);
                             })
                         }
@@ -458,13 +461,14 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     return array;
                 }
 
-                function createObjectList(name, id, groupOrUser) {
+                function createObjectList(name, id, groupOrUser, profile) {
                     return {
-                        title: name,
+                        name: name,
                         _id: id,
                         groupOrUser: groupOrUser,
+                        profile: profile,
                         toString: function () {
-                            return this.title;
+                            return this.name;
                         }
                     };
                 }
@@ -491,7 +495,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     }
                     
                     scope.search.found = _.filter(scope.data.lists, function(item) {
-                        let titleTest = idiom.removeAccents(item.title).toLowerCase();
+                        let titleTest = idiom.removeAccents(item.name).toLowerCase();
                         return titleTest.indexOf(searchTerm) !== -1;
                     });
                 };
