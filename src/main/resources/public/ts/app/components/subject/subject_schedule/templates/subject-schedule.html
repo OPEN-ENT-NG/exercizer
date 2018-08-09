@@ -43,41 +43,11 @@
                     </drop-down>
                 </div>
                 <div class="row">
-                    <div class="flex-row align-start vertical-spacing-twice">
-                        <div class="cell six horizontal-spacing">
-                            <h4><i18n>exercizer.scheduled.subject.group.add</i18n></h4>
-                            <div style="overflow-y: auto; max-height: 210px;">
-                                <contact-chip class="block relative removable" ng-class="{selected: group.selected}"
-                                    ng-model="group"
-                                    action="selectGroupItem(item)"
-                                    action-icon="removeItem(item)"
-                                    ng-repeat="group in data.groupList"
-                                    isgroup stickernotselected>
-                                </contact-chip>
-                                <div class="small-text" data-ng-if="data.groupList.length === 0">
-                                    <i18n>exercizer.scheduled.subject.group.empty</i18n>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cell six horizontal-spacing">
-                            <h4><i18n>exercizer.scheduled.subject.user.add</i18n></h4>
-                            <div class="small-text row" data-ng-if="data.userList.length > 0">
-                                <input type="text" class="six cell" ng-model="search.user" i18n-placeholder="exercizer.search" /><span class="one cell">&nbsp;</span><label>[[getTotalUser().ok]] <i18n>exercizer.users</i18n></label>
-                            </div>
-                            <div id="userScroll" style="overflow-y: auto; max-height: 170px;">
-                            <contact-chip id='user-[[user._id]]' class="block relative removable" ng-class="{selected: user.selected}"
-                                ng-if="!user.exclude"
-                                ng-model="user"
-                                action="removeItem(item)"
-                                ng-repeat="user in data.userList | filter:filterAllUser()"
-                                stickernotselected>
-                            </contact-chip>
-                                <div class="small-text" data-ng-if="data.userList.length === 0">
-                                    <i18n>exercizer.scheduled.subject.user.empty</i18n>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <groups-users-selector
+                        groups-list="data.groupList"
+                        users-list="data.userList"
+                        selector="selector">
+                    </groups-users-selector>
                 </div>
                 <div class="row vertical-spacing">
                     <button class="right-magnet cell" data-ng-click="lightbox.state = 'option'">

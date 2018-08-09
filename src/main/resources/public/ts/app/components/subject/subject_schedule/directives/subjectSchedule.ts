@@ -18,6 +18,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 scope.subject = null;
                 scope.isSimpleSubject = null;
                 scope.scheduleSubjectInProgress = false;
+                scope.selector = {};
 
                 /**
                  * RESET
@@ -39,7 +40,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         corrected_time: "00:00"
                     };
 
-                    scope.selectedGroup = false;
+                    scope.selector.selectedGroup = false;
 
                     scope.search = {};
                     scope.clearSearch();
@@ -102,87 +103,6 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 
                 scope.checkTime = function (time, def?) {
                     return time.match("^([01][0-9]|2[0-3]):[0-5][0-9]$") ? time : def ? "23:59" : "00:00";
-                };
-                
-                scope.selectGroupItem = function (selectedItem) {
-                    clearSelectedList(selectedItem);
-                    selectedItem.selected = !selectedItem.selected;
-                    scope.selectedGroup = selectedItem.selected;
-                    _.forEach(scope.data.userList, user => {
-                        if (user.groupId === selectedItem['_id']) user.selected = selectedItem.selected;
-                    });
-                };
-
-                scope.getTotalUser = function() {
-                    return (scope.data && scope.data.userList.length > 0) ? _.countBy(scope.data.userList, function(user) {
-                        return (user && user.exclude === true) ? 'exclude': 'ok';
-                    }) : {"ok":0};
-                };
-
-                scope.removeItem = function (selectedItem) {
-                    var list = (selectedItem.groupOrUser == 'group') ? scope.data.groupList : scope.data.userList;
-
-                    if (selectedItem.groupOrUser === 'group') {
-                        scope.data.userList = _.reject(scope.data.userList, (user) => {
-                            return (user && user.groupId && selectedItem['_id'] === user.groupId);
-                        });
-                    } else {
-                       if (selectedItem.groupId) {
-                           selectedItem.exclude = true;
-
-                           var isEmptyGroup = true;
-                           //check not empty group else erase the group
-                           _.forEach(scope.data.userList, (user) => {
-                               if (selectedItem.groupId === user.groupId && !user.exclude) {
-                                   isEmptyGroup = false;
-                                   return false;
-                               }
-                           });
-
-                           if (isEmptyGroup) {
-                               // delete group
-                               scope.data.groupList = _.reject(scope.data.groupList, (group) => {
-                                   return (group && selectedItem.groupId === group['_id']);
-                               });
-                               //delete members
-                               scope.data.userList = _.reject(scope.data.userList, (user) => {
-                                   return (user && user.groupId && selectedItem.groupId === user.groupId);
-                               });
-                           } else {
-                               scope.selectedGroup = true;
-                           }
-
-                           //ERASE same user in implict user (not from group)
-                           scope.data.userList = _.reject(scope.data.userList, (user) => {
-                               return (user && !user.exclude && selectedItem.name === user.name);
-                           });
-                       }
-
-                        //mark same user of another group as exclude
-                        _.forEach(scope.data.userList, (user) => {
-                            if (user && user.groupId && selectedItem.name === user.name) {
-                                user.exclude = true;
-                            }
-                        });
-                    }
-
-                    if (!selectedItem.exclude) {
-                        var index = list.indexOf(selectedItem);
-                        if (index !== -1) {
-                            list.splice(index, 1);
-                        }
-                    }
-                };
-
-                scope.filterAllUser = function () {
-                    return function (user) {
-                        var searchTerm =  idiom.removeAccents(scope.search.user).toLowerCase();
-
-                        if(!searchTerm){
-                            return true;
-                        }
-                        return idiom.removeAccents(user.name).toLowerCase().indexOf(searchTerm) !== -1;
-                    };
                 };
 
                 scope.scheduleSubject = function () {
@@ -477,13 +397,13 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     if (scope.search) {
                         scope.search.found = [];
                         scope.search.search = '';
-                        scope.search.user = '';
+                        scope.selector.search = '';
                     }
 
-                    if (scope.data && !scope.selectedGroup) {
+                    if (scope.data && !scope.selector.selectedGroup) {
                         clearSelectedList(undefined);
                     } else {
-                        scope.selectedGroup = false;
+                        scope.selector.selectedGroup = false;
                     }
                 };
 
