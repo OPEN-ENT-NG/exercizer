@@ -18,7 +18,9 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 scope.subject = null;
                 scope.isSimpleSubject = null;
                 scope.scheduleSubjectInProgress = false;
-                scope.selector = {};
+                scope.selector = {
+                    loading: false
+                };
 
                 /**
                  * RESET
@@ -50,7 +52,16 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                  * EVENT
                  */
 
-                scope.clickOnItem = function (selectedItem) {
+                scope.clickOnItem = async function (selectedItem) {
+                    if (scope.selector.loading)
+                        return;
+                    scope.selector.loading = true;
+                    scope.clearSearch();
+                    await addItemList(selectedItem);
+                    scope.selector.loading = false;
+                };
+
+                async function addItemList(selectedItem) {
                     var list = (selectedItem.groupOrUser == 'group') ? scope.data.groupList : scope.data.userList;
                     var index = list.indexOf(selectedItem);
                     if (index === -1) {
@@ -66,10 +77,20 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                                     scope.data.userList = _.sortBy(scope.data.userList, 'name');
                                 }
                             });
-                        } else {
+                        } 
+                        else if (selectedItem.groupOrUser == 'user') {
                             list.push(selectedItem);
                             scrollToUser(selectedItem['_id']);
                             scope.data.userList = _.sortBy(scope.data.userList, 'name');
+                        }
+                        else {
+                            var members = await GroupService.getMembersFromBookmark(selectedItem);
+                            await members.groups.forEach(async function(item) {
+                                await addItemList(_.findWhere(scope.data.lists, { _id: item.id }));
+                            });
+                            await members.users.forEach(async function (item) {
+                                await addItemList(_.findWhere(scope.data.lists, { _id: item.id }));
+                            });
                         }
                     } else {
                         console.error('item already in the list');
@@ -368,12 +389,16 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     var array = [];
                     GroupService.getList(subject).then(
                         function (data) {
+                            angular.forEach(data.bookmarks, function (group) {
+                                var obj = createObjectList(group.name, group.id, 'bookbark', null, null, true);
+                                array.push(obj);
+                            });
                             angular.forEach(data.groups.visibles, function (group) {
-                                var obj = createObjectList(group.name, group.id, 'group', null);
+                                var obj = createObjectList(group.name, group.id, 'group', null, group.structureName, false);
                                 array.push(obj);
                             });
                             angular.forEach(data.users.visibles, function (user) {
-                                var obj = createObjectList(user.lastName + ' ' + user.firstName, user.id, 'user', user.profile);
+                                var obj = createObjectList(user.lastName + ' ' + user.firstName, user.id, 'user', user.profile, null, false);
                                 array.push(obj);
                             })
                         }
@@ -381,12 +406,14 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     return array;
                 }
 
-                function createObjectList(name, id, groupOrUser, profile) {
+                function createObjectList(name, id, groupOrUser, profile, structureName, bookmark) {
                     return {
                         name: name,
                         _id: id,
                         groupOrUser: groupOrUser,
                         profile: profile,
+                        structureName: structureName,
+                        type: bookmark ? "sharebookmark" : null,
                         toString: function () {
                             return this.name;
                         }

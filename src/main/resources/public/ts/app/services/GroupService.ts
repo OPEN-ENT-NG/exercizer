@@ -1,8 +1,10 @@
-import { ng } from 'entcore';
+import { ng, _ } from 'entcore';
+import http from 'axios';
 
 export interface IGroupService {
     findMembers(id:string):Promise<any>;
     getList(subject): Promise<any>;
+    getMembersFromBookmark(bookmark) : Promise<any>
     getUserFromGroup(group) : Promise<any>;
     getClassFromStructures(structureId : any) : Promise<any>;
 }
@@ -66,18 +68,24 @@ export class GroupService implements IGroupService {
         return deferred.promise;
     }
 
-    public getList = function(subject): Promise<any> {
+    public getList = async function(subject): Promise<any> {
         var self = this,
             deferred = this._$q.defer();
         if(this._groupBySubjectId[subject.id]){
             deferred.resolve(this._groupBySubjectId[subject.id]);
         } else {
-                var request = {
-                    method: 'GET',
-                    url: 'exercizer/subject/share/json/'+subject.id
-                };
+            var response = await http.get('/directory/sharebookmark/all');
+            var bookmarks = _.map(response.data, function(bookmark) {
+                bookmark.type = 'sharebookmark';
+                return bookmark;
+            });
+            var request = {
+                method: 'GET',
+                url: 'exercizer/subject/share/json/'+subject.id
+            };
             this._$http(request).then(
                 function(res) {
+                    res.data.bookmarks = bookmarks;
                     self._groupBySubjectId[subject.id] = res.data;
                     deferred.resolve(res.data);
                 },
@@ -87,6 +95,10 @@ export class GroupService implements IGroupService {
             );
         }
         return deferred.promise;
+    };
+
+    public getMembersFromBookmark = async function(bookmark) : Promise<any> {
+        return (await http.get('/directory/sharebookmark/' + bookmark._id)).data;
     };
 
     public findMembers = function(id:string):Promise<any> {
