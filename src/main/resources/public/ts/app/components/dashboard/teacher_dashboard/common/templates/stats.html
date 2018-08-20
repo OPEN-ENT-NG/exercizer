@@ -8,7 +8,7 @@
         <table class="list-view infos">
             <thead class="display-table">
             <tr>
-                <th class="centered-text" ng-click="orderByField('owner_username')">
+                <th ng-click="orderByField('owner_username')">
                     <span translate content="exercizer.students" ></span>
                     <i class="sort" ng-if="order.field !== 'owner_username'"></i>
                     <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
