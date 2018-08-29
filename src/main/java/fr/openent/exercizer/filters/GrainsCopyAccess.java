@@ -25,6 +25,7 @@ public class GrainsCopyAccess implements ResourcesProvider {
         RequestUtils.bodyToJson(resourceRequest, new Handler<JsonObject>() {
             public void handle(JsonObject data) {
                 final Long id = data.getLong("id");
+                final String ownerId = data.getString("owner");
                 if (id == null) {
                     handler.handle(false);
                 } else {
@@ -36,7 +37,7 @@ public class GrainsCopyAccess implements ResourcesProvider {
                     values.add(id);
                     values.add(user.getUserId());
 
-                    if("Student".equalsIgnoreCase(user.getType())){
+                    if(ownerId.equals(user.getUserId())){
                         query += " AND sc.owner = ? AND NOW() at time zone 'utc' - (? * interval '1 minute') >= ss.begin_date";
                         values.add(data.getInteger("offset", 0));
                     }else {
