@@ -365,7 +365,7 @@ export class ImportService implements IImportService {
         var mapFillIdGroup = {};
         var answers = $.makeArray($(question).find((ddwtosGrainType) ? 'dragbox' : 'selectoption'));
         var generalOptions:string[] = [];
-
+        statement = statement.replace(/<.?fill-zone.?>/g, "");
         statement = statement.replace(fillTextPattern, function (matched) {
             var fillId = Number(matched.substring(2, matched.length - 2));
             _.forEach(answers, (answer, index) => {
