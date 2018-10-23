@@ -41,7 +41,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "_id": {
                 "type": "string"
@@ -56,7 +56,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "_id": {
                 "type": "string"
