@@ -144,7 +144,7 @@
     "exercizer.rank.desc" : "Glisser-déposer pour ordonner les questions",
     "exercizer.schedule" : "Distribuer",
     "exercizer.unschedule" : "Déprogrammer",
-    "exercizer.unschedule.confirm" : "Êtes-vous sûr de vouloir déprogrammer ce sujet ? Les élèves ne pourront plus y accéder.",
+    "exercizer.unschedule.confirm" : "Êtes-vous sûr de vouloir déprogrammer ce sujet ?    ATTENTION : Cette action est irréversible, les corrections déjà effectuées du sujet seront supprimées définitivement, les copies des élèves également.",
     "exercizer.unschedule.title" : "Confirmation de déprogrammation",
     "exercizer.update" : "Enregistrer",
     "exercizer.back" : "Retour",
