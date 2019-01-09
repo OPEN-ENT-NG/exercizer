@@ -22,11 +22,11 @@
     "exercizer.assigncopy.body.b" : "à rendre entre le",
     "exercizer.assigncopy.body.c" : "et le",
     "exercizer.unassigncopy.body" : "a déprogrammé le sujet",
-    // FIXME Sylvain enlevera ces traductions d'ici une à deux version, afin d'assure plus de fluidité dans les traductions
+
     "exercizer.modify.begin" : "a modifié la date de début du sujet",
     "exercizer.modify.due" : "a modifié la date de fin du sujet",
     "exercizer.modify.period" : "a modifié la période de distribution du sujet",
-    //fin des doublons a retirer
+
     "exercizer.begin.modified" : "a modifié la date de début du sujet",
     "exercizer.due.modified" : "a modifié la date de fin du sujet",
     "exercizer.period.modified" : "a modifié la période de distribution du sujet",
