@@ -22,7 +22,15 @@
     "exercizer.assigncopy.body.b" : "à rendre entre le",
     "exercizer.assigncopy.body.c" : "et le",
     "exercizer.unassigncopy.body" : "a déprogrammé le sujet",
+
     "exercizer.modify.begin" : "a modifié la date de début du sujet",
     "exercizer.modify.due" : "a modifié la date de fin du sujet",
-    "exercizer.modify.period" : "a modifié la période de distribution du sujet"
+    "exercizer.modify.period" : "a modifié la période de distribution du sujet",
+
+    "exercizer.begin.modified" : "a modifié la date de début du sujet",
+    "exercizer.due.modified" : "a modifié la date de fin du sujet",
+    "exercizer.period.modified" : "a modifié la période de distribution du sujet",
+    "exercizer.modifybegin" : "Modification de la date de début d'un sujet",
+    "exercizer.modifydue" : "Modification de la date de fin d'un sujet",
+    "exercizer.modifyperiod" : "Modification de la période de distribution d'un sujet"
 }
