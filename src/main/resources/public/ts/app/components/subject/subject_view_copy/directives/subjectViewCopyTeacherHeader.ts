@@ -3,7 +3,7 @@ import { _ } from 'entcore';
 import { ISubjectCopy } from '../../../../models/domain';
 
 export const subjectViewCopyTeacherHeader = ng.directive('subjectViewCopyTeacherHeader',
-    ['$location', 'SubjectCopyService', ($location, SubjectCopyService) => {
+    ['$location', '$timeout', 'SubjectCopyService', ($location, $timeout, SubjectCopyService) => {
         return {
             restrict: 'E',
             scope: {
@@ -57,13 +57,17 @@ export const subjectViewCopyTeacherHeader = ng.directive('subjectViewCopyTeacher
                 scope.redirectToNextCopy = function() {
                     template.close("main");
                     let index = findCopyIndexOfCurrentCopy() + 1;
-                    $location.path('/subject/copy/view/'+ scope.subjectScheduled.subject_id + '/' +  subjectCopyList[index].id + '/');
+                    $timeout(function(){
+                        $location.path('/subject/copy/view/'+ scope.subjectScheduled.subject_id + '/' +  subjectCopyList[index].id + '/');
+                    },50);
                 };
 
                 scope.redirectToPreviousCopy = function() {
                     template.close("main");
                     let index = findCopyIndexOfCurrentCopy() - 1;
-                    $location.path('/subject/copy/view/'+ scope.subjectScheduled.subject_id + '/' +  subjectCopyList[index].id + '/');
+                     $timeout(function(){
+                         $location.path('/subject/copy/view/'+ scope.subjectScheduled.subject_id + '/' +  subjectCopyList[index].id + '/');
+                     },50);
                 };
 
                 scope.hasNextCopy = function() {
