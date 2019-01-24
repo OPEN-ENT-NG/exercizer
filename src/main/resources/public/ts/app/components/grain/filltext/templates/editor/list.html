@@ -6,7 +6,7 @@
 
 <div class="options">
     <ul>
-        <li ng-repeat="option in displayState.editedTextZone.options"
+        <li ng-repeat="option in displayState.editedTextZone.options track by $index"
             ng-click="displayState.editedTextZone.answer = option;">
             <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
                 <i class="close" ng-click="removeOption(displayState.editedTextZone, option)"></i>

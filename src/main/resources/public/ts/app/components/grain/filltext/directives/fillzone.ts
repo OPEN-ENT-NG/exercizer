@@ -66,8 +66,11 @@ export const fillZone = ng.directive('fillZone',
 
                 scope.answer = ($item) => {
                     scope.$parent.removeAnswer(scope.optionData.zone);
-                    scope.optionData.zone.answer = $item;
-                    scope.$parent.usedAnswers.push($item);
+                    scope.optionData.zone.answer = $item.option;
+                    $item.zoneId = scope.optionData.zone.id;
+                    if ($item.option) {
+                        scope.$parent.usedAnswers.push($item);
+                    }
                     scope.$parent.updateGrainCopy();
                 };
             }

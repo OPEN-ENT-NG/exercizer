@@ -35,37 +35,72 @@ export const performFillText = ng.directive('performFillText',
                         var tmp = _.clone(scope.customData.options);
                         var secureLoop = 0;
                         if (tmp && tmp.length > 1) {
-                            while (scope.customData.options[0] === tmp[0]) {
+                            while (scope.customData.options[0] === tmp[0] && !(secureLoop === 5)) {
                                 scope.customData.options = _.shuffle(scope.customData.options);
-                                if (secureLoop === 5) return false;
                                 secureLoop++;
                             }
                         }
+
+                        scope.dragOptions = [];
+                        var i=0;
+
+                        _.forEach(scope.customData.options, function (option) {
+                            scope.dragOptions.push({id:i,option:option});
+                            i++;
+                        });
+
+                        //case of several fillZone in the same subject
+                        scope.usedAnswers = [];
+
+                        // init usedAnswers
+                        if (scope.customData.zones) {
+                            _.forEach(scope.customData.zones, function (zone) {
+                                if (zone.answer) {
+                                    for (let option of scope.dragOptions) {
+                                        if (option.option === zone.answer && option.zoneId === undefined) {
+                                            option.zoneId = zone.id;
+                                            scope.usedAnswers.push(option);
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+                        }
+
                     }
                 });
-                
-                scope.usedAnswers = [];
 
                 scope.updateGrainCopy = () => {
                     scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
-                };
-
-                scope.answer = (textZone, $item: string) => {
-                    scope.removeAnswer(textZone);
-                    textZone.answer = $item;
-                    scope.usedAnswers.push($item);
                 };
 
                 scope.removeAnswer = ($item: TextZone) => {
                     if (!$item.answer) {
                         return;
                     }
-                    var i = scope.usedAnswers.indexOf($item.answer);
+
+                    var i;
+
+                    _.forEach(scope.usedAnswers, function (opt, $index) {
+                        if (opt.zoneId === $item.id) {
+                           i = $index;
+                        }
+                    });
+                    
                     scope.usedAnswers.splice(i, 1);
                     $item.answer = '';
                 };
 
-                scope.availableOption = (option) => scope.usedAnswers.indexOf(option) === -1;
+                scope.availableOption = (option) => {
+                    var found = false;
+                    _.forEach(scope.usedAnswers, function (opt) {
+                        if (opt.id === option.id) {
+                            found = true;
+                        }
+                    });
+
+                    return !found;
+                }
             }
         };
     }]
