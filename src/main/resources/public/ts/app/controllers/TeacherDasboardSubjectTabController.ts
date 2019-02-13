@@ -30,7 +30,7 @@ class TeacherDashboardSubjectTabController {
 
         this._folderService.resolve().then(
             function() {
-                self._subjectService.resolve().then(
+                self._subjectService.resolve(true).then(
                     function() {
                         self._eventsHandler(self);
                     },

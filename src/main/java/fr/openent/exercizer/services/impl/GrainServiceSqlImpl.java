@@ -19,7 +19,6 @@
 
 package fr.openent.exercizer.services.impl;
 
-import fr.openent.exercizer.controllers.SubjectController;
 import fr.openent.exercizer.services.IGrainService;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.I18n;
@@ -51,7 +50,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
         s.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectId).add(resource.getLong("grainTypeId")).add(resource.getInteger("orderBy")).add(resource.getValue("grainData")));
 
         //required for replicate grain directly from the subject
-        updateMaxScore(s, subjectId);
+        updateMaxScoreAndDate(s, subjectId);
 
         sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
     }
@@ -69,7 +68,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
         s.prepared(updateGrainQuery, new fr.wseduc.webutils.collections.JsonArray().add(subjectId).add(resource.getLong("grainTypeId")).
                 add(resource.getInteger("orderBy")).add(resource.getValue("grainData")).add(id));
 
-        updateMaxScore(s, subjectId);
+        updateMaxScoreAndDate(s, subjectId);
 
         sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
     }
@@ -84,15 +83,15 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
         final SqlStatementsBuilder s = new SqlStatementsBuilder();
 
         s.prepared(query, new fr.wseduc.webutils.collections.JsonArray(grainIds));
-        updateMaxScore(s, subjectId);
+        updateMaxScoreAndDate(s, subjectId);
 
         sql.transaction(s.build(), SqlResult.validRowsResultHandler(1, handler));
     }
 
-    private void updateMaxScore(final SqlStatementsBuilder s, final Long subjectId) {
+    private void updateMaxScoreAndDate(final SqlStatementsBuilder s, final Long subjectId) {
         //update max score of subject
         String updateSubjectQuery = "UPDATE " + schema + "subject SET max_score=(SELECT sum(cast(g.grain_data::json->>'max_score' as double precision)) FROM " +
-                resourceTable + " as g WHERE g.subject_id=?) WHERE id=?";
+                resourceTable + " as g WHERE g.subject_id=?), modified = NOW() WHERE id=?";
         s.prepared(updateSubjectQuery, new fr.wseduc.webutils.collections.JsonArray().add(subjectId).add(subjectId));
     }
 
@@ -158,7 +157,7 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
             s.prepared(queryinsertGrain, values);
         }
 
-        updateMaxScore(s, subjectId);
+        updateMaxScoreAndDate(s, subjectId);
 
         sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
     }

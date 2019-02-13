@@ -188,6 +188,8 @@ export class SubjectService implements ISubjectService {
                     self._$http(request).then(
                         function(response) {
                             //var newSubject = SerializationHelper.toInstance(new Subject(), JSON.stringify(response.data));
+                            subject.modified = response.data.modified;
+                            
                             self._afterPullBack(subject);
                             deferred.resolve(subject);
                         },
