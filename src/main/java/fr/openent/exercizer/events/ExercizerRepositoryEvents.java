@@ -3,32 +3,91 @@ package fr.openent.exercizer.events;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.security.ActionType;
 import fr.wseduc.webutils.security.SecuredAction;
+import io.vertx.core.Vertx;
+import org.entcore.common.service.impl.SqlRepositoryEvents;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
-import org.entcore.common.user.RepositoryEvents;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ExercizerRepositoryEvents implements RepositoryEvents {
+public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
 
     private static final Logger log = LoggerFactory.getLogger(ExercizerRepositoryEvents.class);
     private Map<String, SecuredAction> securedActions;
     private String actionType;
 
-    public ExercizerRepositoryEvents(Map<String, SecuredAction> securedActions, String actionType) {
+    public ExercizerRepositoryEvents(Map<String, SecuredAction> securedActions, String actionType, Vertx vertx) {
+        super(vertx);
         this.securedActions = securedActions;
         this.actionType = actionType;
     }
 
     @Override
-    public void exportResources(String exportId, String userId, JsonArray groups, String exportPath, String locale, String host, Handler<Boolean> handler) {
+    public void exportResources(String exportId, String userId, JsonArray groups, String exportPath,
+                                String locale, String host, Handler<Boolean> handler) {
 
+            final HashMap<String,JsonArray> queries = new HashMap<String, JsonArray>();
+
+
+            final String folderTable = "exercizer.folder",
+                    subjectTable = "exercizer.subject",
+                    subjectScheduledTable = "exercizer.subject_scheduled",
+                    subjectCopyTable = "exercizer.subject_copy",
+                    subjectShareTable = "exercizer.subject_shares",
+                    grainTable = "exercizer.grain",
+                    membersTable = "exercizer.members";
+
+            JsonArray userIdParamTwice = new JsonArray().add(userId).add(userId);
+
+            String queryFolder =
+                    "SELECT DISTINCT fol.* " +
+                            "FROM " + folderTable + " fol " +
+                            "WHERE fol.owner = ? " +
+                            "OR fol.id IN (SELECT sub.folder_id FROM " + subjectTable + " sub " +
+                                            "WHERE sub.owner = ?)";
+            queries.put(folderTable,new SqlStatementsBuilder().prepared(queryFolder,userIdParamTwice).build());
+
+            String querySubject =
+                    "SELECT DISTINCT sub.* " +
+                            "FROM " + subjectTable + " sub " +
+                            "LEFT JOIN " + subjectScheduledTable + " subSche ON sub.id = subSche.subject_id " +
+                            "LEFT JOIN " +subjectCopyTable + " subCo ON subSche.id = subCo.subject_scheduled_id " +
+                            "LEFT JOIN " + subjectShareTable + " subSh ON sub.id = subSh.resource_id " +
+                            "LEFT JOIN " + membersTable + " mem ON subSh.member_id = mem.id " +
+                            "WHERE sub.owner = ? " +
+                            "OR subCo.owner = ? " +
+                            "OR mem.user_id = ? " +
+                            ((groups !=  null && !groups.isEmpty()) ? " OR mem.group_id IN " + Sql.listPrepared(groups.getList()) : "");
+            JsonArray params = new JsonArray().addAll(userIdParamTwice).add(userId).addAll(groups);
+            queries.put(subjectTable,new SqlStatementsBuilder().prepared(querySubject,params).build());
+
+            String queryGrain =
+                    "SELECT DISTINCT grain.* " +
+                            "FROM " + grainTable + " " +
+                            "WHERE grain.subject_id IN (" + querySubject.replace("*","id") + ")";
+            queries.put(grainTable,new SqlStatementsBuilder().prepared(queryGrain,params).build());
+
+            AtomicBoolean exported = new AtomicBoolean(false);
+
+            createExportDirectory(exportPath, locale, new Handler<String>() {
+                @Override
+                public void handle(String path) {
+                    if (path != null) {
+                        exportTables(queries, new JsonArray(), path, exported, handler);
+                    }
+                    else {
+                        handler.handle(exported.get());
+                    }
+                }
+            });
     }
 
     @Override
