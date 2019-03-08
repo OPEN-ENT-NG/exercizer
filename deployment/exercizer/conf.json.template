@@ -6,6 +6,7 @@
         "app-name" : "Exercices et évaluations",
     	"app-address" : "/exercizer",
     	"app-icon" : "exercizer-large",
+        "app-type" : "END_USER",
         "sql" : true,
         "mongodb" : false,
         "host": "${host}",
