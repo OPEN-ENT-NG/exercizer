@@ -149,6 +149,12 @@ class EditSimpleSubjectController {
         }
     };
 
+    public initTitle = function() {
+        if (this._subject.title === this._defaultTitle) {
+            this._subject.title = "";
+        }
+    };
+
     public downloadCorrectedFile = function() {
         window.location.href = '/exercizer/subject/simple/corrected/download/' + this._subject.id;
     };

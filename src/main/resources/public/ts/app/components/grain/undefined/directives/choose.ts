@@ -13,7 +13,7 @@ export const choose = ng.directive('choose',
                 
                 scope.displayNextStep = function(grainTypeId) {
                     scope.grain.grain_type_id = grainTypeId;
-                    scope.grain.grain_data.title = GrainTypeService.getById(grainTypeId).public_name;
+                    scope.grain.grain_data.title = "";
                     scope.$emit('E_UPDATE_GRAIN', scope.grain);
                 }
             }
