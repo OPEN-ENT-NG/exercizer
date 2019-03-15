@@ -11,10 +11,17 @@
             
         </div>
         <div class="cell eleven">
-            <input type="text" class="twelve cell"
+            <!--<input type="text" class="twelve cell"
                    data-ng-class="{'input-response-correct' : isCorrect[key] === true, 'input-response-incorrect' : isCorrect[key] === false}"
                    data-ng-model="filled_answer.text"
-                   i18n-placeholder="exercizer.grain.noanswer" disabled />
+                   i18n-placeholder="exercizer.grain.noanswer" disabled />-->
+            <div type="text" class="medium-importance" ng-if="filled_answer.text === ''">
+                <i18n>exercizer.grain.noanswer</i18n>
+            </div>
+            <div type="text" class="twelve cell medium-importance" ng-if="filled_answer.text !== ''"
+                   data-ng-class="{'input-response-correct' : isCorrect[key] === true, 'input-response-incorrect' : isCorrect[key] === false}">
+                [[ filled_answer.text ]]
+            </div>
         </div>
     </div>
     <grain-copy-footer data-grain-scheduled="grainScheduled"
