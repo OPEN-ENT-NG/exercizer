@@ -22,6 +22,7 @@ package fr.openent.exercizer.services.impl;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Either;
+import io.vertx.core.json.Json;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
@@ -482,5 +483,24 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	@Override
 	public void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler) {
 		super.getCorrectedDownloadInformation(id, null, handler);
+	}
+
+	@Override
+	public void setLastLibraryVisit(final String userId, final String displayName, final Handler<Either<String, JsonObject>> handler) {
+		final String query = "INSERT INTO exercizer.users (id, username, is_deleted, last_visit) " +
+				"VALUES (?, ?, 'f', NOW()) " +
+				"ON CONFLICT (id) DO UPDATE SET last_visit = EXCLUDED.last_visit";
+		JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(userId).add(displayName);
+		sql.prepared(query.toString(), params, SqlResult.validUniqueResultHandler(handler));
+	}
+
+	@Override
+	public void countNewSubjectInLibrary(final String userId, final Handler<Either<String, JsonObject>> handler) {
+		final String query = "SELECT COUNT(*) FROM exercizer.subject " +
+				"WHERE is_library_subject = 't' " +
+				"AND owner <> ? " +
+				"AND created > COALESCE((SELECT last_visit FROM exercizer.users WHERE id = ?), TIMESTAMP 'epoch')";
+		JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(userId).add(userId);
+		sql.prepared(query.toString(), params, SqlResult.validUniqueResultHandler(handler));
 	}
 }

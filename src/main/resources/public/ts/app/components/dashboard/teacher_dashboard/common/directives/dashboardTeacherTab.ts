@@ -1,7 +1,8 @@
 import { ng, notify, idiom } from 'entcore';
 import { ISubjectService } from '../../../../../services/SubjectService';
+import { ISubjectLibraryService } from '../../../../../services/SubjectLibraryService';
 
-export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$location', '$window', 'SubjectService', ($location, $window, SubjectService:ISubjectService) => {
+export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$location', '$window', 'SubjectService', 'SubjectLibraryService', ($location, $window, SubjectService:ISubjectService, SubjectLibraryService:ISubjectLibraryService) => {
     return {
         restrict: 'E',
         scope: {
@@ -103,6 +104,11 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
                         throw "tab "+scope.currentTab+"  missing"
                 }
             };
+
+            let unreadLibrarySubjects: Number = 0;
+            SubjectLibraryService.countNewSubjects().then((count: Number) => unreadLibrarySubjects = count);
+            scope.newLibrarySubjects = () => unreadLibrarySubjects;
+            scope.newLibrarySubjectsExist = () => unreadLibrarySubjects > 0;
         }
     };
 }]

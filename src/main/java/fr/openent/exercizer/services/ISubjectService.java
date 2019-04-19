@@ -82,4 +82,8 @@ public interface ISubjectService {
 	void unpublishLibrary(final Long  subjectId, final Handler<Either<String, JsonObject>> handler);
 
 	void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler);
+
+	void setLastLibraryVisit(final String userId, final String displayName, final Handler<Either<String, JsonObject>> handler);
+
+	void countNewSubjectInLibrary(final String userId, final Handler<Either<String, JsonObject>> handler);
 }

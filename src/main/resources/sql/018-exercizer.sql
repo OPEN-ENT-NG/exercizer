@@ -1,0 +1,2 @@
+ALTER TABLE exercizer.users
+ADD COLUMN last_visit TIMESTAMP DEFAULT TIMESTAMP 'epoch';

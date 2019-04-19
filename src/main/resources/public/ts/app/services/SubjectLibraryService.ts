@@ -8,6 +8,7 @@ export interface ISubjectLibraryService {
     publish(subject:ISubject, authorsContributors:string, subjectLessonTypeId:number, subjectLessonLevelId:number, subjectTagList:ISubjectTag[], file:any): Promise<boolean>;
     search(/*filters:{title:string/*, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): Promise<ISubject[]>;
     count(/*filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}*/): Promise<Number>;
+    countNewSubjects(): Promise<Number>;
     tmpSubjectForPreview:ISubject;
     unpublish(subjectId:number): Promise<boolean>;
 }
@@ -158,6 +159,23 @@ export class SubjectLibraryService implements ISubjectLibraryService {
             },
             function() {
                 deferred.reject('exercizer.error');
+            }
+        );
+
+        return deferred.promise;
+    };
+
+    public countNewSubjects = function(): Promise<Number> {
+        var deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/count-new-library-subject',
+                data: {}
+            };
+
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(parseInt(response.data.count));
             }
         );
 

@@ -233,6 +233,14 @@ public class SubjectController extends ControllerHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
+					subjectService.setLastLibraryVisit(user.getUserId(), user.getUsername(), new Handler<Either<String, JsonObject>>() {
+						@Override
+						public void handle(Either<String, JsonObject> either) {
+							if (either.isLeft()) {
+								log.error("Exercizer : could not save last visit in library for " + user.getUserId());
+							}
+						}
+					});
 					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject searchData) {
@@ -263,6 +271,26 @@ public class SubjectController extends ControllerHelper {
 							subjectService.countLibrarySubject(searchData, notEmptyResponseHandler(request));
 						}
 					});
+				}
+				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+
+			}
+		});
+	}
+
+
+	@Post("/count-new-library-subject")
+	@ApiDoc("Counts subject list for library since last visit.")
+	@SecuredAction(value = "", type = ActionType.AUTHENTICATED)
+	public void countNewLibrarySubject(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					subjectService.countNewSubjectInLibrary(user.getUserId(), notEmptyResponseHandler(request));
 				}
 				else {
 					log.debug("User not found in session.");
