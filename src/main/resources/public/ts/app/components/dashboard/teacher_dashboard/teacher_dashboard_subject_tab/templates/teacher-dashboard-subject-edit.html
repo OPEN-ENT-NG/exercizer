@@ -29,7 +29,7 @@
     <div data-ng-if="step == 'choose'" class="row">
         <div class="horizontal-spacing vertical-spacing block-container">
             <div class="flex-row justify-center twelve centered bottom-spacing-twice">
-                <button class="flat-button five button-li" data-ng-click="nextStep('simple')" style="float: none;">
+                <button class="flat-button five button-li" data-ng-click="nextStep('simple')" style="float: none; width: 46%;">
                     <span><i class="file-upload"></i></span>
                     <i18n>exercizer.choose.simple.button</i18n>
                 </button>
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="flex-row justify-center twelve centered bottom-spacing-twice">
-                <button class="flat-button five button-li" data-ng-click="nextStep('interactive')" style="float: none;">
+                <button class="flat-button five button-li" data-ng-click="nextStep('interactive')" style="float: none; width: 46%;">
                     <span><i class="file-interactive"></i></span>
                     <i18n>exercizer.choose.interactive.button</i18n>
                 </button>
@@ -53,6 +53,20 @@
                     </div>
                     <div class="tipbox-content">
                         <span class="small-text"><i18n>exercizer.choose.interactive</i18n></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-row justify-center twelve centered bottom-spacing-twice">
+                <button class="flat-button five button-li" data-ng-click="nextStep('library')" style="float: none; width: 46%;">
+                    <span><i class="import-file"></i></span>
+                    <i18n>exercizer.choose.library.button</i18n>
+                </button>
+                <div class="tipbox">
+                    <div>
+                        <i class="help sticker square-medium"></i>
+                    </div>
+                    <div class="tipbox-content">
+                        <span class="small-text"><i18n>exercizer.choose.library</i18n></span>
                     </div>
                 </div>
             </div>

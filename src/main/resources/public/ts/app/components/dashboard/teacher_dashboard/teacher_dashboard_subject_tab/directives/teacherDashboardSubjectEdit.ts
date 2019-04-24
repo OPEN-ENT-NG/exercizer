@@ -48,6 +48,13 @@ export const teacherDashboardSubjectEdit = ng.directive('teacherDashboardSubject
                 };
                 
                 scope.nextStep = function(type) {
+
+                    if (type === 'library') {
+                        scope.closeLightbox();
+                        $location.path('/dashboard/teacher/library');
+                        return;
+                    }
+
                     scope.step = "subject";
                     scope.subject.type = type;
                     scope.type = type;
