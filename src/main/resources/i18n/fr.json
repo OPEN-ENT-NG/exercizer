@@ -302,6 +302,7 @@
     "exercizer.instructer.toaster.copy" : "Copier",
     "exercizer.instructer.toaster.move" : "Déplacer",
     "exercizer.instructer.toaster.export" : "Exporter",
+    "exercizer.instructer.toaster.print" : "Imprimer",
     "exercizer.instructer.toaster.delete" : "Supprimer",
     "exercizer.service.check.download.copy" : "La sélection ne comporte pas de rendu",
     "exercizer.service.check.reminder" : "La sélection ne comporte pas de non-rendu",
@@ -425,6 +426,7 @@
     "exercizer.grain.type.multipleanswers" : "Réponses multiples",
     "exercizer.grain.type.qcm" : "QCM",
     "exercizer.grain.type.association" : "Association",
+    "exercizer.grain.type.order" : "Ordre",
     "exercizer.grain.type.orderby" : "Mise en ordre",
     "exercizer.grain.type.texttofill" : "Texte à trous",
     "exercizer.grain.type.areaselect" : "Zone à remplir (texte)",
@@ -482,5 +484,7 @@
     "exercizer.export.subject.title" : "Titre du sujet",
     "exercizer.export.subject.type" : "Type de sujet",
     "exercizer.export.subject.comment" : "Commentaire",
-    "exercizer.export.student.name" : "Nom de l'élève"
+    "exercizer.export.student.name" : "Nom de l'élève",
+    "exercizer.type" : "Type",
+    "exercizer.exercize" : "Exercice"
 }

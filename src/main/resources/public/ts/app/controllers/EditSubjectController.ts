@@ -6,7 +6,7 @@ import { angular } from 'entcore';
 import { $ } from 'entcore';
 import { _ } from 'entcore';
 
-class EditSubjectController {
+export class EditSubjectController {
 
     static $inject = [
         '$routeParams',
@@ -46,11 +46,11 @@ class EditSubjectController {
     constructor
     (
         private _$routeParams,
-        private _$sce,
+        protected _$sce,
         private _$scope,
         private _$location,
         private _subjectService:ISubjectService,
-        private _subjectScheduledService:ISubjectScheduledService,
+        protected _subjectScheduledService:ISubjectScheduledService,
         private _subjectCopyService:ISubjectCopyService,
         private _grainService:IGrainService,
         private _grainTypeService:IGrainTypeService,
@@ -359,7 +359,7 @@ class EditSubjectController {
 
     public foldAllGrain = function() {
         this.foldAllGrainWithoutScroll();
-        $('html, body').animate({ scrollTop: $('#edit-subject').offset().top - 100 }, 500);
+        $('html, body').animate({ scrollTop: $('#edit-subject').length ? $('#edit-subject').offset().top - 100 : 0 }, 500);
     };
 
     public foldAllGrainWithoutScroll = function() {

@@ -18,6 +18,7 @@ export interface ISubjectScheduledService {
     currentSubjectScheduledId:number;
     removeCorrectedFile(id): Promise<any>;
     addCorrectedFile(id, file): Promise<string>;
+    getBySubjectId(id:number):ISubjectScheduled;
 }
 
 export class SubjectScheduledService implements ISubjectScheduledService {
@@ -296,6 +297,18 @@ export class SubjectScheduledService implements ISubjectScheduledService {
             return this._listMappedById[id];
         }
     };
+
+    public getBySubjectId = function(id:number):ISubjectScheduled {
+        if (!angular.isUndefined(this._listMappedById)) {
+            var list:ISubjectScheduled[] = this.getList();
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].subject_id === id) {
+                    return list[i];
+                }
+            }
+            return undefined;
+        }
+    }
 
     get currentSubjectScheduledId():number {
         return this._currentSubjectScheduledId;

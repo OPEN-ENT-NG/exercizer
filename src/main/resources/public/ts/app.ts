@@ -192,6 +192,10 @@ routes.define(function($routeProvider){
         .when('/subject/edit/:subjectId/', {
             action: 'editSubject'
         })
+        .when('/subject/print/:subjectId', {
+            action: 'printSubject',
+            reloadOnSearch: false
+        })
         .when('/subject/edit/simple/:subjectId/', {
             action: 'editSimpleSubject'
         })

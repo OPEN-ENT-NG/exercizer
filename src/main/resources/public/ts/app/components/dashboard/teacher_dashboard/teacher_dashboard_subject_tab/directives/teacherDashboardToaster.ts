@@ -181,6 +181,17 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 }
                             },
                             {
+                                publicName : idiom.translate('exercizer.instructer.toaster.print'),
+                                actionOnClick : function(){
+                                    var subject = SubjectService.getById(scope.subjectList[0]);
+                                    scope.$emit('E_PRINT_SELECTED_SUBJECT', subject);
+                                    hide();
+                                },
+                                display : function(){
+                                    return scope.subjectList.length == 1 && scope.folderList.length == 0;
+                                }
+                            },
+                            {
                                 publicName : idiom.translate('exercizer.instructer.toaster.delete'),
                                 actionOnClick : function(){
                                     scope.$emit('E_REMOVE_SELECTED_FOLDER_SUBJECT');

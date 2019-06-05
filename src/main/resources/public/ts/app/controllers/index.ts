@@ -2,6 +2,7 @@ export * from './ArchiveViewSubjectCopyController';
 export * from './ExercizerController';
 export * from './EditSimpleSubjectController';
 export * from './EditSubjectController';
+export * from './PrintSubjectController';
 export * from './PerformSimpleSubjectCopyController';
 export * from './PerformSubjectCopyController';
 export * from './StudentDashboardController';

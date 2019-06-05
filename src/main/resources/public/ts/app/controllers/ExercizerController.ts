@@ -52,6 +52,10 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
                 template.open('main', '401-exercizer');
             }
         },
+        printSubject: function () {
+            $scope.isPrintPage = true;
+            template.open('main', 'print-subject');
+        },
         editSimpleSubject: function () {
             if (_userProfile === teacherProfile) {
                 template.open('main', 'edit-simple-subject');

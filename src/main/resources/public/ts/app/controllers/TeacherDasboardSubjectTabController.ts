@@ -125,6 +125,11 @@ class TeacherDashboardSubjectTabController {
             self._resetSelectedSubjectList();
         });
 
+        self._$scope.$on('E_PRINT_SELECTED_SUBJECT', function (event, subject) {
+            self._resetSelectedSubjectList();
+            window.open(`/exercizer#/subject/print/${subject.id}`, '_blank');
+        });
+
         self._$scope.$on('E_REMOVE_SELECTED_FOLDER_SUBJECT', function () {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_REMOVE_SELECTED_FOLDER_SUBJECT', self._selectedSubjectList, self._selectedFolderList);
             // reset list in confirm

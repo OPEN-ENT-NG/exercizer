@@ -9,11 +9,13 @@
 </head>
 
 <body class="exercizer">
-<portal>
 	<div data-ng-controller="ExercizerController">
-		<container template="main"></container>
+		<portal data-ng-if="!isPrintPage">
+			<container template="main"></container>
+		</portal>
+		<!-- No portal for printing -->
+		<container data-ng-if="isPrintPage" template="main"></container>
 	</div>
-</portal>
 </body>
 
 </html>
