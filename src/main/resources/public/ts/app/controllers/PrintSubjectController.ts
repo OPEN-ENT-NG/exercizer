@@ -3,6 +3,8 @@ import { ISubjectScheduled, IGrain } from '../models/domain';
 import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IGrainTypeService, IGrainService, IDragService } from '../services';
 import { EditSubjectController } from './EditSubjectController';
 
+declare var jQuery;
+
 class PrintSubjectController extends EditSubjectController {
 
     private _subjectScheduled: ISubjectScheduled;
@@ -37,13 +39,34 @@ class PrintSubjectController extends EditSubjectController {
         var self = this;
         this._subjectScheduledService.resolve(true).then(function() {
             self._subjectScheduled = self._subjectScheduledService.getBySubjectId(self.subject.id);
-            setTimeout(function(){
-                window.print();
-            }, 1000);
+            setTimeout(()=>{
+                const imgs = jQuery(document).find("img").toArray();
+                for(let img of imgs){
+                    img.onerror=(()=>{
+                        (img as any).error = true;
+                    })
+                }
+                const isComplete = (img)=>{
+                    return img.complete || (img.context && img.context.complete)
+                }
+                self.printed = false;
+                const it = setInterval(()=>{
+                    const pending = imgs.filter(img=>!(img as any).error && !isComplete(img));
+                    if(pending.length == 0){
+                        clearInterval(it);
+                        if(!self.printed){
+                            self.printed = true;
+                            window.print()
+                        }
+                    }
+                },100)
+            },1000)
         }, function(err) {
             notify.error(err);
         });
     }
+
+    private printed: boolean;
 
     // Grain type
 
@@ -176,7 +199,7 @@ class PrintSubjectController extends EditSubjectController {
     }
 
     public getScheduledDescription() {
-        return this._subjectScheduled.description;
+        return this._$sce.trustAsHtml(this.formatHtml(this._subjectScheduled.description));
     }
 
     public getScheduledDueDate() {
