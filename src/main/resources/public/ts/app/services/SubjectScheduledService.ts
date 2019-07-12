@@ -302,7 +302,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         if (!angular.isUndefined(this._listMappedById)) {
             var list:ISubjectScheduled[] = this.getList();
             for (var i = 0; i < list.length; i++) {
-                if (list[i].subject_id === id) {
+                if (list[i].subject_id == id) {
                     return list[i];
                 }
             }

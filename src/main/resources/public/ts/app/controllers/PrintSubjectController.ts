@@ -38,7 +38,7 @@ class PrintSubjectController extends EditSubjectController {
 
         var self = this;
         this._subjectScheduledService.resolve(true).then(function() {
-            self._subjectScheduled = self._subjectScheduledService.getBySubjectId(self.subject.id);
+            self._subjectScheduled = self._subjectScheduledService.getBySubjectId(_$routeParams['subjectId']);
             setTimeout(()=>{
                 const imgs = jQuery(document).find("img").toArray();
                 for(let img of imgs){
