@@ -1,5 +1,4 @@
 <div data-ng-controller="PrintSubjectController as printSubjectController" id="print-subject">
-
     <div class="row" data-ng-if="!printSubjectController.hasDataLoaded">
         <div class="info">
             <i18n>exercizer.loading</i18n>
@@ -9,10 +8,9 @@
     <div data-ng-if="printSubjectController.hasDataLoaded">
 
         <div class="row">
-            <h1 class="cell">
-                <span class="hover-orange">
-                    <i18n>exercizer.title</i18n>
-                </span> / <span class="hover-orange ">[[ printSubjectController.getSubjectTitle() ]]</span>
+            <h1 class="app-title">
+              <i class="exercizer"></i>
+              [[ printSubjectController.getSubjectTitle() ]]
             </h1>
         </div>
 
@@ -29,14 +27,10 @@
 
             <!-- Enoncé -->
             <div ng-if="printSubjectController.isStatement(grain)">
-                <article id="grain-edit-5">
+                <article id="print--exercizer__summary grain-edit-5">
                     <div>
-                        <h2 class="hover-orange">[[ printSubjectController.getGrainTitle(grain) ]]</h2>
-                        <hr>
-                        <b><u><i18n>exercizer.type</i18n>:</u></b>
-                        <i18n>exercizer.grain.type.statement</i18n></u></b>
-                        <hr>
-                        <b><u><i18n>exercizer.grain.type.statement</i18n>:</u></b>
+                        <h2>[[ printSubjectController.getGrainTitle(grain) ]]</h2>
+                        <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.statement</i18n></h3>
                         <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     </div>
                 </article>
@@ -46,136 +40,111 @@
             <!-- Réponse simple -->
             <div ng-if="printSubjectController.isSimpleAnswer(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="hover-orange">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <hr>
-                    <b><u><i18n>exercizer.type</i18n>:</u></b>
-                    <i18n>exercizer.grain.type.simpleanswer</i18n></u></b>
-                    <hr>
-                    <b><u><i18n>exercizer.grain.type.statement</i18n>:</u></b>
+                    <h2>[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.simpleanswer</i18n></h3>
+                    <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
-                    <hr>
-                    <b><u><i18n>exercizer.grain.filltext.editor.text.answer</i18n> :</u></b>
+                    <h4><i18n>exercizer.grain.filltext.editor.text.answer</i18n> :</h4>
                     <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                         <div>[[ printSubjectController.getCorrectAnswer(grain) ]]</div>
                     </div>
-                    <hr>
                     <div class="row">
                         <div class="cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__info">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div>[[ printSubjectController.getGrainExplanation(grain) ]]</div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="cell horizontal-spacing">
+                    <div class="row top-spacing-four">
+                        <div class="cell twelve horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="cell twelve print--exercizer__help">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div>[[ printSubjectController.getGrainHint(grain) ]]</div>
                             </div>
                         </div>
                     </div>
                 </article>
-                <br>
             </div>
 
             <!-- Réponse ouverte -->
-
             <div ng-if="printSubjectController.isOpenAnswer(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="hover-orange">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <hr>
-                    <b><u><i18n>exercizer.type</i18n>:</u></b>
-                    <i18n>exercizer.grain.type.openanswer</i18n></u></b>
-                    <hr>
-                    <b><u><i18n>exercizer.grain.type.statement</i18n>:</u></b>
+                    <h2>[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.openanswer</i18n></h3>
+                    <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
-                    <hr>
-                    <b><u><i18n>exercizer.exercize</i18n>:</u></b>
+                    <h4><i18n>exercizer.exercize</i18n>:</h4>
                     <div class="row">
-                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
+                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__info">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div>[[ printSubjectController.getGrainExplanation(grain) ]]</div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="cell horizontal-spacing">
+                    <div class="row top-spacing-four">
+                        <div class="twelve cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell  print--exercizer__help">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div class="">[[ printSubjectController.getGrainHint(grain) ]]</div>
                             </div>
                         </div>
                     </div>
                 </article>
-                <br>
             </div>
 
             <!-- Réponses multiples -->
             <div ng-if="printSubjectController.isMultipleAnswer(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="hover-orange">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <hr>
-                    <b><u><i18n>exercizer.type</i18n>:</u></b>
-                    <i18n>exercizer.grain.type.multipleanswers</i18n></u></b>
-                    <hr>
-                    <b><u><i18n>exercizer.grain.type.statement</i18n>:</u></b>
+                    <h2>[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.multipleanswers</i18n></h3>
+                    <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
-                    <hr>
-                    <b><u><i18n>exercizer.exercize</i18n>:</u></b>
-                    <i18n>exercizer.grain.asso.responses.header1</i18n> :
+                    <h4><i18n>exercizer.exercize</i18n>:</h4>
+                    <h4><i18n>exercizer.grain.asso.responses.header1</i18n> :</h4>
                     <div ng-repeat="answer in printSubjectController.getCorrectAnswers(grain)" contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                         <div class="">[[ answer.text ]]</div>
                     </div>
-                    <hr>
                     <div class="row">
-                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
+                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__info">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div>[[ printSubjectController.getGrainExplanation(grain) ]]</div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="cell horizontal-spacing">
+                    <div class="row top-spacing-four">
+                        <div class="twelve cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__help">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div class="">[[ printSubjectController.getGrainHint(grain) ]]</div>
                             </div>
                         </div>
                     </div>
                 </article>
-                <br>
             </div>
 
             <!-- QCM -->
             <div ng-if="printSubjectController.isQCM(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="hover-orange">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <hr>
-                    <b><u><i18n>exercizer.type</i18n>:</u></b>
-                    <i18n>exercizer.grain.type.qcm</i18n></u></b>
-                    <hr>
-                    <b><u><i18n>exercizer.grain.type.statement</i18n>:</u></b>
+                    <h2>[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.qcm</i18n></h3>
+                    <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
-                    <hr>
-                    <b><u><i18n>exercizer.exercize</i18n>:</u></b>
+                    <h4><i18n>exercizer.exercize</i18n>:</h4>
                     <div class="row">
                         <table class="twelve">
                             <thead>
@@ -201,44 +170,37 @@
                             </tbody>
                         </table>
                     </div>
-                    <hr>
-                    <div class="row">
+                    <div class="row top-spacing-four">
                         <div class="cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__info">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div>[[ printSubjectController.getGrainExplanation(grain) ]]</div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="cell horizontal-spacing">
+                    <div class="row top-spacing-four">
+                        <div class="cell twelve horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__help">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div class="">[[ printSubjectController.getGrainHint(grain) ]]</div>
                             </div>
                         </div>
                     </div>
                 </article>
-                <br>
             </div>
 
             <!-- Association -->
             <div ng-if="printSubjectController.isAssociation(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="hover-orange">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <hr>
-                    <b><u><i18n>exercizer.type</i18n>:</u></b>
-                    <i18n>exercizer.grain.type.association</i18n></u></b>
-                    <hr>
-                    <b><u><i18n>exercizer.grain.type.statement</i18n>:</u></b>
+                    <h2>[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.association</i18n></h3>
+                    <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
-                    <hr>
-                    <b><u><i18n>exercizer.exercize</i18n>:</u></b>
+                    <h4><i18n>exercizer.exercize</i18n>:</h4>
                     <div class="row">
                         <table class="twelve">
                             <thead>
@@ -263,23 +225,21 @@
                             </tbody>
                         </table>
                     </div>
-                    <hr>
                     <div class="row">
-                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
+                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__info">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div>[[ printSubjectController.getGrainExplanation(grain) ]]</div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="cell horizontal-spacing">
+                    <div class="row top-spacing-four">
+                        <div class="twelve cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__help">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div class="">[[ printSubjectController.getGrainHint(grain) ]]</div>
                             </div>
@@ -292,15 +252,11 @@
             <!-- Mise en ordre -->
             <div ng-if="printSubjectController.isOrderBy(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="hover-orange">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <hr>
-                    <b><u><i18n>exercizer.type</i18n>:</u></b>
-                    <i18n>exercizer.grain.type.orderby</i18n></u></b>
-                    <hr>
-                    <b><u><i18n>exercizer.grain.type.statement</i18n>:</u></b>
+                    <h2>[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.orderby</i18n></h3>
+                    <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
-                    <hr>
-                    <b><u><i18n>exercizer.exercize</i18n>:</u></b>
+                    <h4><i18n>exercizer.exercize</i18n>:</h4>
                     <div class="row">
                         <table class="twelve">
                             <thead>
@@ -325,23 +281,21 @@
                             </tbody>
                         </table>
                     </div>
-                    <hr>
                     <div class="row">
-                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
+                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__info">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div>[[ printSubjectController.getGrainExplanation(grain) ]]</div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="cell horizontal-spacing">
+                    <div class="row top-spacing-four">
+                        <div class="twelve cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__help">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div class="">[[ printSubjectController.getGrainHint(grain) ]]</div>
                             </div>
@@ -354,55 +308,44 @@
             <!-- Texte à trous -->
             <div ng-if="printSubjectController.isTextToFill(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="hover-orange">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <hr>
-                    <b><u><i18n>exercizer.type</i18n>:</u></b>
-                    <i18n>exercizer.grain.type.texttofill</i18n>, [[ printSubjectController.translate(printSubjectController.getGrainType(grain)) ]]</u></b>
-                    <hr>
-                    <b><u><i18n>exercizer.grain.type.statement</i18n>:</u></b>
+                    <h2>[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.texttofill</i18n>, [[ printSubjectController.translate(printSubjectController.getGrainType(grain)) ]]</h3>
+                    <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
-                    <hr>
-                    <b><u><i18n>exercizer.exercize</i18n>:</u></b>
+                    <h4><i18n>exercizer.exercize</i18n>:</h4>
                     <div ng-bind-html="printSubjectController.getHtmlContent(grain)" contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                     </div>
-                    <hr>
                     <div class="row">
-                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
+                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__info">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div>[[ printSubjectController.getGrainExplanation(grain) ]]</div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="cell horizontal-spacing">
+                    <div class="row top-spacing-four">
+                        <div class="twelve cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__help">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div class="">[[ printSubjectController.getGrainHint(grain) ]]</div>
                             </div>
                         </div>
                     </div>
                 </article>
-                <br>
             </div>
 
             <!-- Zone à remplir (texte) -->
             <div ng-if="printSubjectController.isAreaSelect(grain)" style="page-break-inside: avoid;">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="hover-orange">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <hr>
-                    <b><u><i18n>exercizer.type</i18n>:</u></b>
-                    <i18n>exercizer.grain.type.areaselect</i18n>, [[ printSubjectController.translate(printSubjectController.getGrainType(grain)) ]]</u></b>
-                    <hr>
-                    <b><u><i18n>exercizer.grain.type.statement</i18n>:</u></b>
+                    <h2>[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.areaselect</i18n>, [[ printSubjectController.translate(printSubjectController.getGrainType(grain)) ]]</h3>
+                    <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
-                    <hr>
-                    <b><u><i18n>exercizer.exercize</i18n>:</u></b>
+                    <h4><i18n>exercizer.exercize</i18n>:</h4>
                     <div class="row">
                         <div class="drawing-zone base-image">
                             <div class="image-container">
@@ -417,23 +360,21 @@
                             </article>
                         </div>
                     </div>
-                    <hr>
                     <div class="row">
-                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
+                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__info">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div>[[ printSubjectController.getGrainExplanation(grain) ]]</div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="cell horizontal-spacing">
+                    <div class="row top-spacing-four">
+                        <div class="twelve cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__help">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div class="">[[ printSubjectController.getGrainHint(grain) ]]</div>
                             </div>
@@ -446,15 +387,11 @@
             <!-- Zone à remplir (image) -->
             <div ng-if="printSubjectController.isAreaSelectImage(grain)" style="page-break-inside: avoid;">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="hover-orange">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <hr>
-                    <b><u><i18n>exercizer.type</i18n>:</u></b>
-                    <i18n>exercizer.grain.type.areaselectimage</i18n></u></b>
-                    <hr>
-                    <b><u><i18n>exercizer.grain.type.statement</i18n>:</u></b>
+                    <h2>[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.areaselectimage</i18n></h3>
+                    <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
-                    <hr>
-                    <b><u><i18n>exercizer.exercize</i18n>:</u></b>
+                    <h4><i18n>exercizer.exercize</i18n>:</h4>
                     <div class="row">
                         <div class="drawing-zone base-image">
                             <div class="image-container">
@@ -469,30 +406,27 @@
                             </article>
                         </div>
                     </div>
-                    <hr>
                     <div class="row">
-                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
+                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__info">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div>[[ printSubjectController.getGrainExplanation(grain) ]]</div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="cell horizontal-spacing">
+                    <div class="row top-spacing-four">
+                        <div class="twelve cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
-                        <div class="eleven cell">
+                        <div class="twelve cell print--exercizer__help">
                             <div contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                                 <div class="">[[ printSubjectController.getGrainHint(grain) ]]</div>
                             </div>
                         </div>
                     </div>
                 </article>
-                <br>
             </div>
         </div>
 </div>
