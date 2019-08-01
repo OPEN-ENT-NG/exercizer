@@ -91,6 +91,12 @@ import { openAnswerService } from './app/components/grain/open_answer/services/O
 
 import * as controllers from './app/controllers';
 
+ng.configs.push(ng.config(['libraryServiceProvider', function(libraryServiceProvider) {
+    libraryServiceProvider.setApplicationShareToLibraryEndpointFn(function(id: string) {
+        return `exercizer/subject/${id}/library`;
+    });
+}]));
+
 ng.directives.push(subjectCopyDomino);
 ng.directives.push(studentDashboardFinishSubjectCopyList);
 ng.directives.push(studentDashboardSubjectCopyList);
@@ -301,4 +307,4 @@ ng.onInit((module) => {
 
         };
     });
-})
+});
