@@ -137,7 +137,7 @@ class TeacherDashboardSubjectTabController {
 
         self._$scope.$on('E_EXPORT_SELECTED_SUBJECT', function (event, subject) {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EXPORT_SUBJECT', subject);
-        })
+        });
 
         self._$scope.$on('E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT', function () {
             // delete subject list

@@ -1,6 +1,6 @@
 import { ng, model, Behaviours, idiom } from 'entcore';
 
-export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', ['FolderService','SubjectService', (FolderService,SubjectService) => {
+export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', ['FolderService','SubjectService', 'libraryService', (FolderService,SubjectService, libraryService) => {
         return {
             restrict: 'E',
             scope : {},
@@ -130,8 +130,18 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                     scope.$emit('E_PUBLISH_SUBJECT', subject);
                                 },
                                 display : function(){
-                                    return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner');
+                                    return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner')&& !model.me.hasWorkflow(Behaviours.applicationsBehaviours.exercizer.rights.workflow.publish);
                                     //|| scope.lowerRight == 'manager');
+                                }
+                            },
+                            {
+                                publicName : idiom.translate('publish.in.bpr'),
+                                actionOnClick : function(){
+                                    var subject = SubjectService.getById(scope.subjectList[0]);
+                                    libraryService.share(subject.id);
+                                },
+                                display : function(){
+                                    return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner') && model.me.hasWorkflow(Behaviours.applicationsBehaviours.exercizer.rights.workflow.publish);
                                 }
                             },
                             {
