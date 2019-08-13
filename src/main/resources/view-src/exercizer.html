@@ -8,7 +8,7 @@
 	<script src="/exercizer/public/dist/application.js" type="text/javascript"></script>
 </head>
 
-<body class="exercizer">
+<body class="exercizer" library-root>
 	<div data-ng-controller="ExercizerController">
 		<portal data-ng-if="!isPrintPage">
 			<container template="main"></container>
@@ -16,6 +16,7 @@
 		<!-- No portal for printing -->
 		<container data-ng-if="isPrintPage" template="main"></container>
 	</div>
+	<library-publish></library-publish>
 </body>
 
 </html>

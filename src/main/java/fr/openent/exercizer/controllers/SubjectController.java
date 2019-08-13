@@ -368,9 +368,16 @@ public class SubjectController extends ControllerHelper {
 	@Post("/subject/:id/library")
 	@ApiDoc("Push the subject in the library.")
 	@ResourceFilter(ShareAndOwner.class)
-	@SecuredAction("exercizer.subject.publish")
+	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
 	public void publishToLibrary(final HttpServerRequest request) {
-		LibraryUtils.share(eb, request);
+		LibraryUtils.publish("Exercizer", eb, request);
+	}
+
+	@Get("/subject/publish")
+	@SecuredAction("exercizer.subject.publish")
+	public void publish(final HttpServerRequest request) {
+		// This route is used to create publish Workflow right, nothing to do
+		return;
 	}
 
 	@Put("/subject/share/resource/:id")

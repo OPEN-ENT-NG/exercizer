@@ -1,6 +1,8 @@
 import { ng, model, Behaviours, idiom } from 'entcore';
+import { LibraryService } from "entcore/types/src/ts/library/library.service";
+import { Subject } from "../../../../../models/domain";
 
-export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', ['FolderService','SubjectService', 'libraryService', (FolderService,SubjectService, libraryService) => {
+export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', ['FolderService','SubjectService', 'libraryService', (FolderService,SubjectService, libraryService: LibraryService<Subject>) => {
         return {
             restrict: 'E',
             scope : {},
@@ -135,10 +137,10 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 }
                             },
                             {
-                                publicName : idiom.translate('publish.in.bpr'),
+                                publicName : idiom.translate('bpr.publish'),
                                 actionOnClick : function(){
-                                    var subject = SubjectService.getById(scope.subjectList[0]);
-                                    libraryService.share(subject.id);
+                                    const subject: Subject = SubjectService.getById(scope.subjectList[0]);
+                                    libraryService.openPublishControllerWithResource(subject);
                                 },
                                 display : function(){
                                     return scope.subjectList.length == 1 && scope.folderList.length == 0 && ( scope.lowerRight == 'owner') && model.me.hasWorkflow(Behaviours.applicationsBehaviours.exercizer.rights.workflow.publish);

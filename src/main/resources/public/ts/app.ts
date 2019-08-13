@@ -21,7 +21,10 @@ import { teacherDashboardSubjectEdit } from './app/components/dashboard/teacher_
 import { teacherDashboardSubjectExport } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardSubjectExport';
 import { teacherDashboardSubjectList } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardSubjectList';
 import { teacherDashboardToaster } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardToaster';
-import { dashboardArchives, dashboardArchivesCopyList } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_archive/directives';
+import {
+    dashboardArchives,
+    dashboardArchivesCopyList
+} from './app/components/dashboard/teacher_dashboard/teacher_dashboard_archive/directives';
 import { folderNavContainer } from './app/components/folder/common/folder_nav/directives/folderNavContainer';
 import { folderNavItem } from './app/components/folder/common/folder_nav/directives/folderNavItem';
 import { editAssociation } from './app/components/grain/association/directives/editAssociation';
@@ -32,7 +35,7 @@ import { grainCopyFooter } from './app/components/grain/common/grain_copy/direct
 import { grainCopyGrainDocumentList } from './app/components/grain/common/grain_copy/directives/grainCopyGrainDocumentList';
 import { grainCopyHeader } from './app/components/grain/common/grain_copy/directives/grainCopyHeader';
 import { grainCopyStatement } from './app/components/grain/common/grain_copy/directives/grainCopyStatement';
-import { editFillText, performFillText, viewFillText, fillZone } from './app/components/grain/filltext/directives';
+import { editFillText, fillZone, performFillText, viewFillText } from './app/components/grain/filltext/directives';
 import { editMultipleAnswer } from './app/components/grain/multiple_answer/directives/editMultipleAnswer';
 import { performMultipleAnswer } from './app/components/grain/multiple_answer/directives/performMultipleAnswer';
 import { viewMultipleAnswer } from './app/components/grain/multiple_answer/directives/viewMultipleAnswer';
@@ -75,11 +78,26 @@ import { subjectViewCopyStudentHeader } from './app/components/subject/subject_v
 import { subjectViewCopyTeacherFooter } from './app/components/subject/subject_view_copy/directives/subjectViewCopyTeacherFooter';
 import { subjectViewCopyTeacherHeader } from './app/components/subject/subject_view_copy/directives/subjectViewCopyTeacherHeader';
 import { digitsInputRestrict } from './app/directives/input_restrictions/digitsInputRestrict';
-import { 
-    accessService, groupService, dateService, folderService, importService,
-    dragService, subjectService, subjectLibraryService, subjectLessonTypeService,
-    subjectCopyService, subjectLessonLevelService, subjectScheduledService, 
-    grainScheduledService, grainCopyService, grainService, grainTypeService, subjectTagService, archivesService, correctionService
+import {
+    accessService,
+    archivesService,
+    correctionService,
+    dateService,
+    dragService,
+    folderService,
+    grainCopyService,
+    grainScheduledService,
+    grainService,
+    grainTypeService,
+    groupService,
+    importService,
+    subjectCopyService,
+    subjectLessonLevelService,
+    subjectLessonTypeService,
+    subjectLibraryService,
+    subjectScheduledService,
+    subjectService,
+    subjectTagService
 } from './app/services';
 
 import { orderService } from './app/components/grain/order/services/OrderService';
@@ -90,11 +108,18 @@ import { qcmService } from './app/components/grain/qcm/services/QcmService';
 import { openAnswerService } from './app/components/grain/open_answer/services/OpenAnswerService';
 
 import * as controllers from './app/controllers';
+import { IdAndLibraryResourceInformation, LibraryServiceProvider } from 'entcore/types/src/ts/library/library.service';
+import { Subject } from './app/models/domain';
 
-ng.configs.push(ng.config(['libraryServiceProvider', function(libraryServiceProvider) {
-    libraryServiceProvider.setApplicationShareToLibraryEndpointFn(function(id: string) {
+ng.configs.push(ng.config(['libraryServiceProvider', function (libraryServiceProvider: LibraryServiceProvider<Subject>) {
+    libraryServiceProvider.setPublishUrlGetterFromId(function (id: string) {
         return `exercizer/subject/${id}/library`;
     });
+    libraryServiceProvider.setInvokableResourceInformationGetterFromResource(function () {
+        return function (resource: Subject): IdAndLibraryResourceInformation {
+            return {id: resource.id.toString(), resourceInformation: {title: resource.title, cover: resource.picture}};
+        }
+    })
 }]));
 
 ng.directives.push(subjectCopyDomino);
@@ -165,11 +190,11 @@ ng.services.push(associationService);
 ng.services.push(qcmService);
 ng.services.push(openAnswerService);
 ng.services.push(orderService);
-ng.services.push(dragService );
-ng.services.push(folderService );
-ng.services.push(dateService );
-ng.services.push(groupService );
-ng.services.push(accessService );
+ng.services.push(dragService);
+ng.services.push(folderService);
+ng.services.push(dateService);
+ng.services.push(groupService);
+ng.services.push(accessService);
 ng.services.push(archivesService);
 ng.services.push(correctionService);
 ng.services.push(importService);
@@ -177,11 +202,11 @@ ng.services.push(importService);
 /**
  * Controllers
  */
-for(let prop in controllers){
+for (let prop in controllers) {
     ng.controllers.push(controllers[prop]);
 }
 
-routes.define(function($routeProvider){
+routes.define(function ($routeProvider) {
     $routeProvider
         .when('/dashboard', {
             action: 'dashboard'
@@ -243,7 +268,7 @@ routes.define(function($routeProvider){
 });
 
 ng.onInit((module) => {
-    module.config(['$httpProvider', function($httpProvider) {
+    module.config(['$httpProvider', function ($httpProvider) {
         //initialize get if not there
         if (!$httpProvider.defaults.headers.get) {
             $httpProvider.defaults.headers.get = {};
@@ -264,42 +289,42 @@ ng.onInit((module) => {
      * Filters
      */
 
-    module.filter('orderObjectBy', function() {
-        return function(items, field, reverse) {
+    module.filter('orderObjectBy', function () {
+        return function (items, field, reverse) {
             var filtered = [];
-            angular.forEach(items, function(item) {
+            angular.forEach(items, function (item) {
                 filtered.push(item);
             });
             filtered.sort(function (a, b) {
                 return (a[field] > b[field] ? 1 : -1);
             });
-            if(reverse) filtered.reverse();
+            if (reverse) filtered.reverse();
             return filtered;
         };
     });
 
-    module.filter('filterIf', function() {
-        return function(i,b) {
-            if(b){
+    module.filter('filterIf', function () {
+        return function (i, b) {
+            if (b) {
                 return i;
             }
         };
     });
 
 
-    function floorFigure(figure : number, decimals : number){
+    function floorFigure(figure: number, decimals: number) {
         if (!decimals) decimals = 2;
-        var d = Math.pow(10,decimals);
-        return ((figure*d)/d).toFixed(decimals);
+        var d = Math.pow(10, decimals);
+        return ((figure * d) / d).toFixed(decimals);
     }
 
     module.filter('truncateNumber', function () {
         return function (item) {
-            if(item != 0 && !item){
+            if (item != 0 && !item) {
                 // if item is not a number return an empty string
                 return "-"
             } else {
-                if(parseFloat(item) == parseInt(item)){
+                if (parseFloat(item) == parseInt(item)) {
                     return item;
                 }
                 return floorFigure(parseFloat(item), 2);
