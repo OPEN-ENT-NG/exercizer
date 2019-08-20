@@ -8,6 +8,7 @@ declare var jQuery;
 class PrintSubjectController extends EditSubjectController {
 
     private _subjectScheduled: ISubjectScheduled;
+    private grainTypeService: IGrainTypeService;
 
     static $inject = [
         '$routeParams',
@@ -35,7 +36,7 @@ class PrintSubjectController extends EditSubjectController {
         _dragService:IDragService) {
 
         super(_$routeParams,_$sce,_$scope,_$location,_subjectService,_subjectScheduledService,_subjectCopyService,_grainService,_grainTypeService,_dragService);
-
+        this.grainTypeService = _grainTypeService;
         var self = this;
         this._subjectScheduledService.resolve(true).then(function() {
             self._subjectScheduled = self._subjectScheduledService.getBySubjectId(_$routeParams['subjectId']);
@@ -127,6 +128,10 @@ class PrintSubjectController extends EditSubjectController {
     public getGrainType(grain: IGrain) {
         var type = grain.grain_data.custom_data ? grain.grain_data.custom_data.answersType : "";
         return type === "text" ? "exercizer.grain.option1" : type === "list" ? "exercizer.grain.option2" : "exercizer.grain.option3";
+    }
+
+    public getGrainTypeOf(grain: IGrain) {
+        return this.grainTypeService.getById(grain.grain_type_id);
     }
 
     public getGrainScore(grain: IGrain) {
