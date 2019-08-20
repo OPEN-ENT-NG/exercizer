@@ -115,7 +115,7 @@
                     <div ng-repeat="answer in printSubjectController.getCorrectAnswers(grain)" contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                         <div class="">[[ answer.text ]]</div>
                     </div>
-                    <div class="row" data-ng-if="grainType.id > 5 && grainCopy.grain_copy_data.custom_copy_data.no_error_allowed">
+                    <div class="row" data-ng-if="printSubjectController.getGrainTypeOf(grain).id > 5 && grain.grain_data.custom_data.no_error_allowed">
                         <div class="warning"><i18n>exercizer.grain.no.error.allowed</i18n></div>
                     </div>
                     <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
