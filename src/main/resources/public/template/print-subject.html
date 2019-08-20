@@ -111,12 +111,12 @@
                     <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.multipleanswers</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
+                    <div class="row" data-ng-if="printSubjectController.getGrainTypeOf(grain).id > 5 && grain.grain_data.custom_data.no_error_allowed">
+                      <div class="warning"><i18n>exercizer.grain.no.error.allowed</i18n></div>
+                    </div>
                     <h4><i18n>exercizer.grain.asso.responses.header1</i18n> :</h4>
                     <div ng-repeat="answer in printSubjectController.getCorrectAnswers(grain)" contenteditable="false" class="drawing-zone" style="min-height: 25px;">
                         <div class="">[[ answer.text ]]</div>
-                    </div>
-                    <div class="row" data-ng-if="printSubjectController.getGrainTypeOf(grain).id > 5 && grain.grain_data.custom_data.no_error_allowed">
-                        <div class="warning"><i18n>exercizer.grain.no.error.allowed</i18n></div>
                     </div>
                     <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
                         <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
@@ -148,6 +148,9 @@
                     <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.qcm</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
+                    <div class="row" data-ng-if="printSubjectController.getGrainTypeOf(grain).id > 5 && grain.grain_data.custom_data.no_error_allowed">
+                      <div class="warning"><i18n>exercizer.grain.no.error.allowed</i18n></div>
+                    </div>
                     <div class="row">
                         <table class="twelve">
                           <thead>
@@ -205,6 +208,9 @@
                     <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.association</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
+                    <div class="row" data-ng-if="printSubjectController.getGrainTypeOf(grain).id > 5 && grain.grain_data.custom_data.no_error_allowed">
+                      <div class="warning"><i18n>exercizer.grain.no.error.allowed</i18n></div>
+                    </div>
                     <div class="row">
                         <table class="twelve">
                             <thead>
@@ -260,6 +266,9 @@
                     <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.orderby</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
+                    <div class="row" data-ng-if="printSubjectController.getGrainTypeOf(grain).id > 5 && grain.grain_data.custom_data.no_error_allowed">
+                      <div class="warning"><i18n>exercizer.grain.no.error.allowed</i18n></div>
+                    </div>
                     <div class="row">
                         <table class="twelve">
                             <thead>
