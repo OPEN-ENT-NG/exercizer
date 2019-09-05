@@ -486,5 +486,7 @@
     "exercizer.export.subject.comment" : "Commentaire",
     "exercizer.export.student.name" : "Nom de l'élève",
     "exercizer.type" : "Type",
-    "exercizer.exercize" : "Exercice"
+    "exercizer.exercize" : "Exercice",
+    "exercizer.scheduled.date.error": "La date de fin doit être postérieur à la date de début.",
+    "exercizer.scheduled.simple.date.error": "Les dates de fin et de publication du corrigé doivent être postérieurs à la date de début."
 }

@@ -11,7 +11,33 @@ export const subjectSchedule = ng.directive('subjectSchedule',
             scope: {},
             templateUrl: 'exercizer/public/ts/app/components/subject/subject_schedule/templates/subject-schedule.html',
             link: (scope:any) => {
-
+                scope.now = new Date();
+                const toMoment = (date:Date, time:string)=>{
+                    const formatted = moment(date).format("DD/MM/YYYY");
+                    return moment(`${formatted} ${time}`,["DD/MM/YYYY HH:mm"], true)
+                }
+                scope.isValidSubject = () =>{
+                    if(!scope.lightbox || scope.lightbox.state != 'option')return false;
+                    if(scope.isSimpleSubject) return scope.isValidSimpleSubject();
+                    else return scope.isValidComplexSubject();
+                }
+                scope.isValidComplexSubject = () =>{
+                    const begin = toMoment(scope.option.begin_date,scope.option.begin_time);
+                    const due = toMoment(scope.option.due_date,scope.option.due_time);
+                    return begin.isValid() 
+                            && due.isValid() 
+                            && begin.toDate() < due.toDate();
+                }
+                scope.isValidSimpleSubject = () =>{
+                    const begin = toMoment(scope.option.begin_date,scope.option.begin_time);
+                    const due = toMoment(scope.option.due_date,scope.option.due_time);
+                    const correct = toMoment(scope.option.corrected_date,scope.option.corrected_time);
+                    return begin.isValid() 
+                            && due.isValid() 
+                            && correct.isValid() 
+                            && begin.toDate() < due.toDate() 
+                            && due.toDate() <= correct.toDate();
+                }
                 /**
                  * INIT
                  */
