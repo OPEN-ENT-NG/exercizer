@@ -1,4 +1,4 @@
-import { ng, notify, idiom } from 'entcore';
+import { ng, notify, idiom, DatepickerDelegate } from 'entcore';
 import { moment } from 'entcore';
 import { _ } from 'entcore';
 import { $ } from 'entcore';
@@ -11,12 +11,25 @@ export const subjectSchedule = ng.directive('subjectSchedule',
             scope: {},
             templateUrl: 'exercizer/public/ts/app/components/subject/subject_schedule/templates/subject-schedule.html',
             link: (scope:any) => {
+                let dateModels = [];
+                scope.datePickerDelegate = {
+                    onDestroy(args){
+                        dateModels = dateModels.filter(test=>test!==args.ngModel);
+                    },
+                    onInit(args){
+                        dateModels.push(args.ngModel);
+                    },
+                    onValidationChange(){}
+                } as DatepickerDelegate;
                 scope.now = new Date();
                 const toMoment = (date:Date, time:string)=>{
                     const formatted = moment(date).format("DD/MM/YYYY");
                     return moment(`${formatted} ${time}`,["DD/MM/YYYY HH:mm"], true)
                 }
                 scope.isValidSubject = () =>{
+                    for(let modl of dateModels){
+                        if(modl.$invalid) return false;
+                    }
                     if(!scope.lightbox || scope.lightbox.state != 'option')return false;
                     if(scope.isSimpleSubject) return scope.isValidSimpleSubject();
                     else return scope.isValidComplexSubject();
