@@ -155,10 +155,10 @@
                         <table class="twelve">
                           <thead>
                             <tr>
-                                <th style="width:20%;">
+                                <th>
                                     <i18n>exercizer.grain.qcm.responses.header1</i18n>
                                 </th>
-                                <th style="width:70%;">
+                                <th>
                                     <i18n>exercizer.grain.qcm.responses.header2</i18n>
                                 </th>
                             </tr>
@@ -215,7 +215,7 @@
                         <table class="twelve">
                             <thead>
                                 <tr>
-                                    <th style="width:20%;">
+                                    <th>
                                         <i18n>exercizer.grain.asso.responses.header1</i18n>
                                     </th>
                                     <th>
@@ -225,11 +225,11 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="answer in printSubjectController.getCorrectAnswers(grain)">
-                                    <td>
+                                    <td style="width: 50%">
                                         <input disabled type="text" style="width: 100%; margin-bottom: 0px; border-bottom: 0px;" ng-value="answer.text_left" i18n-placeholder="exercizer.grain.qcm.answer.info">
                                     </td>
-                                    <td>
-                                        <input disabled type="text" style="width: 100%; margin-bottom: 0px; border-bottom: 0px;" ng-value="answer.text_right" i18n-placeholder="exercizer.grain.qcm.answer.info">
+                                    <td style="width: 50%">
+                                        <p class="no-margin" i18n-placeholder="exercizer.grain.qcm.answer.info">[[answer.text_right]]</p>
                                     </td>
                                 </tr>
                             </tbody>
