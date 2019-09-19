@@ -155,7 +155,7 @@
                         <table class="twelve">
                           <thead>
                             <tr>
-                                <th>
+                                <th style="width: 150px">
                                     <i18n>exercizer.grain.qcm.responses.header1</i18n>
                                 </th>
                                 <th>
@@ -172,7 +172,7 @@
                                         </label>
                                     </td>
                                     <td>
-                                        <input disabled type="text" style="width: 100%; margin-bottom: 0px; border-bottom: 0px;" ng-value="answer.text" i18n-placeholder="exercizer.grain.qcm.answer.info">
+                                        <p class="no-margin" i18n-placeholder="exercizer.grain.qcm.answer.info">[[answer.text]]</p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -273,7 +273,7 @@
                         <table class="twelve">
                             <thead>
                                 <tr>
-                                    <th style="width:20%;">
+                                    <th style="width:150px">
                                         <i18n>exercizer.grain.type.order</i18n>
                                     </th>
                                     <th>
@@ -287,7 +287,7 @@
                                         <input disabled type="text" style="width: 100%; margin-bottom: 0px; border-bottom: 0px;" ng-value="answer.order_by">
                                     </td>
                                     <td>
-                                        <input disabled type="text" style="width: 100%; margin-bottom: 0px; border-bottom: 0px;" ng-value="answer.text">
+                                        <p class="no-margin" i18n-placeholder="exercizer.grain.qcm.answer.info">[[answer.text]]</p>
                                     </td>
                                 </tr>
                             </tbody>
