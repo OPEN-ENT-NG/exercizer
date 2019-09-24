@@ -112,9 +112,6 @@ import { IdAndLibraryResourceInformation, LibraryServiceProvider } from 'entcore
 import { Subject } from './app/models/domain';
 
 ng.configs.push(ng.config(['libraryServiceProvider', function (libraryServiceProvider: LibraryServiceProvider<Subject>) {
-    libraryServiceProvider.setPublishUrlGetterFromId(function (id: string) {
-        return `exercizer/subject/${id}/library`;
-    });
     libraryServiceProvider.setInvokableResourceInformationGetterFromResource(function () {
         return function (resource: Subject): IdAndLibraryResourceInformation {
             return {id: resource.id.toString(), resourceInformation: {title: resource.title, cover: resource.picture}};
