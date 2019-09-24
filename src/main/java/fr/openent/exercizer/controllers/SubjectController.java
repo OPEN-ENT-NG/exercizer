@@ -43,7 +43,6 @@ import org.entcore.common.storage.Storage;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.entcore.common.utils.StringUtils;
-import org.entcore.common.appregistry.LibraryUtils;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.DecodeException;
@@ -363,14 +362,6 @@ public class SubjectController extends ControllerHelper {
 	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
 	public void shareRemove(final HttpServerRequest request) {
 		super.removeShare(request, false);
-	}
-
-	@Post("/subject/:id/library")
-	@ApiDoc("Push the subject in the library.")
-	@ResourceFilter(ShareAndOwner.class)
-	@SecuredAction(value = "exercizer.manager", type = ActionType.RESOURCE)
-	public void publishToLibrary(final HttpServerRequest request) {
-		LibraryUtils.publish("Exercizer", eb, request);
 	}
 
 	@Get("/subject/publish")
