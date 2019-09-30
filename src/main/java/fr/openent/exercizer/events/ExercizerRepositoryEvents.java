@@ -31,7 +31,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
     }
 
     @Override
-    public void exportResources(String exportId, String userId, JsonArray groups, String exportPath,
+    public void exportResources(JsonArray resourcesIds, String exportId, String userId, JsonArray groups, String exportPath,
                                 String locale, String host, Handler<Boolean> handler) {
 
             final HashMap<String,JsonArray> queries = new HashMap<String, JsonArray>();
@@ -46,6 +46,14 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                     membersTable = "exercizer.members";
 
             JsonArray userIdParamTwice = new JsonArray().add(userId).add(userId);
+            JsonArray resourcesIdsAndUserIdParamTwice = userIdParamTwice;
+            String resourcesList = "";
+
+            if(resourcesIds != null)
+            {
+                resourcesIdsAndUserIdParamTwice = new JsonArray().addAll(resourcesIds).addAll(userIdParamTwice);
+                resourcesList = Sql.listPrepared(resourcesIds);
+            }
 
             String queryFolder =
                     "SELECT DISTINCT fol.* " +
@@ -62,11 +70,13 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                             "LEFT JOIN " +subjectCopyTable + " subCo ON subSche.id = subCo.subject_scheduled_id " +
                             "LEFT JOIN " + subjectShareTable + " subSh ON sub.id = subSh.resource_id " +
                             "LEFT JOIN " + membersTable + " mem ON subSh.member_id = mem.id " +
-                            "WHERE sub.owner = ? " +
+                            "WHERE " +
+                            (resourcesIds != null ? ("sub.id IN " + resourcesList + " AND ") : "") +
+                            "(sub.owner = ? " +
                             "OR subCo.owner = ? " +
                             "OR mem.user_id = ? " +
-                            ((groups !=  null && !groups.isEmpty()) ? " OR mem.group_id IN " + Sql.listPrepared(groups.getList()) : "");
-            JsonArray params = new JsonArray().addAll(userIdParamTwice).add(userId).addAll(groups);
+                            ((groups !=  null && !groups.isEmpty()) ? " OR mem.group_id IN " + Sql.listPrepared(groups.getList()) : "") + ")";
+            JsonArray params = new JsonArray().addAll(resourcesIdsAndUserIdParamTwice).add(userId).addAll(groups);
             queries.put(subjectTable,new SqlStatementsBuilder().prepared(querySubject,params).build());
 
             String queryGrain =
