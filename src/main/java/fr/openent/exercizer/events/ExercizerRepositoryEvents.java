@@ -14,8 +14,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
@@ -98,6 +97,75 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                     }
                 }
             });
+    }
+
+    @Override
+    public void importResources(String importId, String userId, String username, String importPath, String locale, Handler<JsonObject> handler) {
+
+        // We first need to recreate members and users rows
+        SqlStatementsBuilder builder = new SqlStatementsBuilder();
+        builder.prepared("INSERT INTO exercizer.users (id, username) VALUES (?,?) ON CONFLICT DO NOTHING",
+                new JsonArray().add(userId).add(username));
+        builder.prepared("INSERT INTO exercizer.members (id, user_id) VALUES (?,?) ON CONFLICT DO NOTHING",
+                new JsonArray().add(userId).add(userId));
+
+        sql.transaction(builder.build(), message -> {
+            if ("ok".equals(message.body().getString("status"))) {
+
+                List<String> tables = new ArrayList<>(Arrays.asList("folder", "subject", "grain"));
+                Map<String,String> tablesWithId = new HashMap<>();
+                tablesWithId.put("folder", "DEFAULT");
+                tablesWithId.put("subject", "DEFAULT");
+                tablesWithId.put("grain", "DEFAULT");
+
+                importTables(importPath, "exercizer", tables, tablesWithId, userId, username, new SqlStatementsBuilder(), handler);
+            } else {
+                log.error(title	+ " : Failed to create users/members for import." + message.body().getString("message"));
+                handler.handle(new JsonObject().put("status", "error"));
+            }
+        });
+
+    }
+
+    @Override
+    public JsonArray transformResults(JsonArray fields, JsonArray results, String userId, String username, SqlStatementsBuilder builder, String table) {
+
+        final int index = fields.getList().indexOf("owner");
+        final int indexUsername = fields.getList().indexOf("owner_username");
+        results.forEach(res -> {
+            if (index != -1) {
+                ((JsonArray) res).getList().set(index, userId);
+            }
+            if (indexUsername != -1) {
+                ((JsonArray)res).getList().set(indexUsername,username);
+            }
+        });
+
+        // Re-orders items to avoid breaking foreign key constraint
+        if ("subject".equals(table) || "folder".equals(table)) {
+            final int indexId = fields.getList().indexOf("id");
+            final int parentId = fields.getList().indexOf("subject".equals(table) ? "original_subject_id" : "parent_folder_id");
+            label: for (int i = 0; i < results.size();) {
+                String parent = results.getJsonArray(i).getString(parentId);
+                if (parent != null) {
+                    for (int j = i; j < results.size(); j++) {
+                        String id = results.getJsonArray(j).getString(indexId);
+                        if (id.equals(parent)) {
+                            JsonArray tmp = results.getJsonArray(i);
+                            results.getList().set(i, results.getJsonArray(j));
+                            results.getList().set(j, tmp);
+                            continue label;
+                        }
+                    }
+                }
+                i++;
+            }
+        } else if ("grain".equals(table)) {
+            final int indexId = fields.getList().indexOf("id");
+            Collections.sort(results.getList(), (a,b) -> new JsonArray((List)a).getInteger(indexId).compareTo(new JsonArray((List)b).getInteger(indexId)));
+        }
+
+        return results;
     }
 
     @Override
