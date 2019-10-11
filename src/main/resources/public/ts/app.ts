@@ -108,13 +108,22 @@ import { qcmService } from './app/components/grain/qcm/services/QcmService';
 import { openAnswerService } from './app/components/grain/open_answer/services/OpenAnswerService';
 
 import * as controllers from './app/controllers';
-import { IdAndLibraryResourceInformation, LibraryServiceProvider } from 'entcore/types/src/ts/library/library.service';
+import { LibraryServiceProvider } from 'entcore/types/src/ts/library/library.service';
+import { IdAndLibraryResourceInformation } from 'entcore/types/src/ts/library/library.types';
+
 import { Subject } from './app/models/domain';
 
 ng.configs.push(ng.config(['libraryServiceProvider', function (libraryServiceProvider: LibraryServiceProvider<Subject>) {
     libraryServiceProvider.setInvokableResourceInformationGetterFromResource(function () {
         return function (resource: Subject): IdAndLibraryResourceInformation {
-            return {id: resource.id.toString(), resourceInformation: {title: resource.title, cover: resource.picture}};
+            return {
+                id: resource.id.toString(), 
+                resourceInformation: {
+                    title: resource.title,
+                    cover: resource.picture,
+                    application: 'Exercizer' ,
+                    pdfUri: `/exercizer#/subject/print/${resource.id}`
+                }};
         }
     })
 }]));
