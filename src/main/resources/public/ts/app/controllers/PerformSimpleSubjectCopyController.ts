@@ -19,6 +19,7 @@ class PerformSimpleSubjectCopyController {
     private _subjectCopy:ISubjectCopy;
     private _hasDataLoaded:boolean;
     private _isModalConfirmDisplayed:boolean;
+    private _file:any;
 
     constructor
     (
@@ -86,18 +87,18 @@ class PerformSimpleSubjectCopyController {
 
     public setCurrentFileName = function() {
         if (this.newFiles.length > 0) {
-            var file = this.newFiles[0];
-            this._subjectCopy.homework_metadata = {"filename":file.name};
+            this._file = this.newFiles[0];
+            this._subjectCopy.homework_metadata = {"filename":this._file .name};
         }
     };
 
     public saveStudentCopy = function() {
         this.closeConfirmModal();
-        if (!this.newFiles || this.newFiles.length === 0) {
+        if (!this._file) {
             notify.error('exercizer.simple.check');
         } else {
             var self = this;
-            var file = this.newFiles[0];
+            var file = this._file;
             this._subjectCopyService.persistSimpleCopy(this._subjectCopy.id, file).then(
                 function (fileId) {
                     self._subjectCopy.homework_metadata = {"filename":file.name};
@@ -111,7 +112,7 @@ class PerformSimpleSubjectCopyController {
     };
     
     public openConfirmModal = function() {
-        if (!this.newFiles || this.newFiles.length === 0) {
+        if (!this._file) {
             if (this._subjectCopy.homework_file_id === null) {
                 notify.error('exercizer.simple.check.renew');
             } else {
@@ -119,7 +120,7 @@ class PerformSimpleSubjectCopyController {
             }
         } else {
             this._isModalConfirmDisplayed = true;
-        }       
+        }
     };
 
     public closeConfirmModal = function() {
