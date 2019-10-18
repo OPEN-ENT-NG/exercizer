@@ -100,8 +100,9 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
     }
 
     @Override
-    public void importResources(String importId, String userId, String username, String importPath, String locale, Handler<JsonObject> handler) {
-
+    public void importResources(String importId, String userId, String userLogin, String username, String importPath, String locale,
+        Handler<JsonObject> handler)
+    {
         // We first need to recreate members and users rows
         SqlStatementsBuilder builder = new SqlStatementsBuilder();
         builder.prepared("INSERT INTO exercizer.users (id, username) VALUES (?,?) ON CONFLICT DO NOTHING",
