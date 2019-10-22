@@ -147,10 +147,10 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
             final int indexId = fields.getList().indexOf("id");
             final int parentId = fields.getList().indexOf("subject".equals(table) ? "original_subject_id" : "parent_folder_id");
             label: for (int i = 0; i < results.size();) {
-                String parent = results.getJsonArray(i).getString(parentId);
+                Integer parent = results.getJsonArray(i).getInteger(parentId);
                 if (parent != null) {
                     for (int j = i; j < results.size(); j++) {
-                        String id = results.getJsonArray(j).getString(indexId);
+                        Integer id = results.getJsonArray(j).getInteger(indexId);
                         if (id.equals(parent)) {
                             JsonArray tmp = results.getJsonArray(i);
                             results.getList().set(i, results.getJsonArray(j));
