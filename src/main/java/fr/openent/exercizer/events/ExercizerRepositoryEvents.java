@@ -27,6 +27,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
         super(vertx);
         this.securedActions = securedActions;
         this.actionType = actionType;
+        this.mainResourceName = "subject";
     }
 
     @Override
