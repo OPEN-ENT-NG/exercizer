@@ -11,6 +11,7 @@
         </div>
     </div>
 </div>
+
 <div class="row twelve cell tabs" style="min-height: 60px;">
     <div class="cell">
         <header class="horizontal-spacing"
@@ -26,6 +27,7 @@
             <i18n>exercizer.dashboard.instructer.tab2</i18n>
         </header>
         <header class="horizontal-spacing"
+                data-ng-show="showInternalLibrary()"
                 data-ng-click="switchTab('library')"
                 data-ng-class="{ selected: currentTab === 'library' }"
         >

@@ -1,4 +1,4 @@
-import { ng, notify, idiom } from 'entcore';
+import { ng, notify, idiom, model, Behaviours } from 'entcore';
 import { ISubjectService } from '../../../../../services/SubjectService';
 import { ISubjectLibraryService } from '../../../../../services/SubjectLibraryService';
 
@@ -104,6 +104,10 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
                         throw "tab "+scope.currentTab+"  missing"
                 }
             };
+
+            scope.showInternalLibrary = function():boolean {
+                return !model.me.hasWorkflow(Behaviours.applicationsBehaviours.exercizer.rights.workflow.publish);
+            }
 
             let unreadLibrarySubjects: Number = 0;
             SubjectLibraryService.countNewSubjects().then((count: Number) => unreadLibrarySubjects = count);
