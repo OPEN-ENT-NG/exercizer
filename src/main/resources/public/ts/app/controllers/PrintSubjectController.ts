@@ -222,7 +222,7 @@ class PrintSubjectController extends EditSubjectController {
             return template;
         }
         //template = this.replaceVideo(template);
-        template = this.replaceAudio(template);
+        //template = this.replaceAudio(template);
         template = this.resizeImages(template);
         template = this.replaceHref(template);
         return template;
