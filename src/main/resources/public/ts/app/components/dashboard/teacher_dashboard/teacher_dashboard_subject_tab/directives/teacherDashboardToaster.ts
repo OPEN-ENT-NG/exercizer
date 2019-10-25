@@ -106,6 +106,32 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 }
                             },
                             {
+                                publicName: idiom.translate("duplicate"),
+                                actionOnClick: function()
+                                {
+                                    var subject = SubjectService.getById(scope.subjectList[0]);
+                                    scope.$emit('E_DUPLICATE_SUBJECT', subject);
+                                },
+                                display : function()
+                                {
+                                    if(scope.folderList.length + scope.subjectList.length == 1)
+                                    {
+                                        // only one item
+                                        if(scope.subjectList.length == 1)
+                                        {
+                                            // is subject
+                                            var subject = SubjectService.getById(scope.subjectList[0]);
+                                            return (scope.lowerRight == 'owner' || scope.lowerRight == 'manager') && subject != null;
+                                        }
+                                        else
+                                            //is folder
+                                            return false;
+                                    }
+                                    else
+                                        return false;
+                                },
+                            },
+                            {
                                 publicName : idiom.translate('exercizer.instructer.toaster.share'),
                                 actionOnClick : function(){
                                     var subject = SubjectService.getById(scope.subjectList[0]);

@@ -1,6 +1,7 @@
 import { ng, notify } from 'entcore';
 import { IFolderService, ISubjectService } from '../services';
 import { angular } from 'entcore';
+import http from 'axios';
 
 class TeacherDashboardSubjectTabController {
 
@@ -137,6 +138,21 @@ class TeacherDashboardSubjectTabController {
 
         self._$scope.$on('E_EXPORT_SELECTED_SUBJECT', function (event, subject) {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EXPORT_SUBJECT', subject);
+        });
+
+        self._$scope.$on('E_DUPLICATE_SUBJECT', function (event, subject)
+        {
+            notify.info("duplicate.start");
+            http.post("/archive/duplicate", { application: "exercizer", resourceId: subject.id.toString() })
+                .then(function()
+                {
+                    notify.info("duplicate.done");
+                    self._subjectService.resolve(true);
+                })
+                .catch(function()
+                {
+                    notify.error("duplicate.error");
+                });
         });
 
         self._$scope.$on('E_CONFIRM_REMOVE_SELECTED_FOLDER_SUBJECT', function () {

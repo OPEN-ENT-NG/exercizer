@@ -102,7 +102,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
 
     @Override
     public void importResources(String importId, String userId, String userLogin, String username, String importPath, String locale,
-        Handler<JsonObject> handler)
+        boolean forceImportAsDuplication, Handler<JsonObject> handler)
     {
         // We first need to recreate members and users rows
         SqlStatementsBuilder builder = new SqlStatementsBuilder();
@@ -120,7 +120,8 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                 tablesWithId.put("subject", "DEFAULT");
                 tablesWithId.put("grain", "DEFAULT");
 
-                importTables(importPath, "exercizer", tables, tablesWithId, userId, username, new SqlStatementsBuilder(), handler);
+                importTables(importPath, "exercizer", tables, tablesWithId, userId, username, locale,
+                    new SqlStatementsBuilder(), forceImportAsDuplication, handler);
             } else {
                 log.error(title	+ " : Failed to create users/members for import." + message.body().getString("message"));
                 handler.handle(new JsonObject().put("status", "error"));
@@ -130,7 +131,8 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
     }
 
     @Override
-    public JsonArray transformResults(JsonArray fields, JsonArray results, String userId, String username, SqlStatementsBuilder builder, String table) {
+    public JsonArray transformResults(JsonArray fields, JsonArray results, String userId, String username, SqlStatementsBuilder builder,
+        String table, boolean forceImportAsDuplication, String duplicateSuffix) {
 
         final int index = fields.getList().indexOf("owner");
         final int indexUsername = fields.getList().indexOf("owner_username");
@@ -144,10 +146,22 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
         });
 
         // Re-orders items to avoid breaking foreign key constraint
-        if ("subject".equals(table) || "folder".equals(table)) {
+        if ("subject".equals(table) || "folder".equals(table))
+        {
             final int indexId = fields.getList().indexOf("id");
+            final int titleId = fields.getList().indexOf("title");
             final int parentId = fields.getList().indexOf("subject".equals(table) ? "original_subject_id" : "parent_folder_id");
-            label: for (int i = 0; i < results.size();) {
+
+            label: for (int i = 0; i < results.size();)
+            {
+                if(forceImportAsDuplication == true)
+                {
+                    JsonArray row = results.getJsonArray(i);
+
+                    if(titleId != -1)
+                        row.getList().set(titleId, row.getString(titleId) + duplicateSuffix);
+                }
+
                 Integer parent = results.getJsonArray(i).getInteger(parentId);
                 if (parent != null) {
                     for (int j = i; j < results.size(); j++) {
@@ -162,6 +176,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                 }
                 i++;
             }
+
         } else if ("grain".equals(table)) {
             final int indexId = fields.getList().indexOf("id");
             Collections.sort(results.getList(), (a,b) -> new JsonArray((List)a).getInteger(indexId).compareTo(new JsonArray((List)b).getInteger(indexId)));
