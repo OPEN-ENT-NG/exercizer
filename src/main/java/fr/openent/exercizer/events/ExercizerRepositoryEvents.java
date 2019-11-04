@@ -146,19 +146,19 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
         });
 
         // Re-orders items to avoid breaking foreign key constraint
-        if ("subject".equals(table) || "folder".equals(table))
-        {
-            final int indexId = fields.getList().indexOf("id");
+        final int indexId = fields.getList().indexOf("id");
+        Collections.sort(results.getList(), (a,b) -> new JsonArray((List)a).getInteger(indexId).compareTo(new JsonArray((List)b).getInteger(indexId)));
+
+        if ("subject".equals(table) || "folder".equals(table)) {
             final int titleId = fields.getList().indexOf("title");
             final int parentId = fields.getList().indexOf("subject".equals(table) ? "original_subject_id" : "parent_folder_id");
 
-            label: for (int i = 0; i < results.size();)
-            {
-                if(forceImportAsDuplication == true)
-                {
+            label:
+            for (int i = 0; i < results.size(); ) {
+                if (forceImportAsDuplication == true) {
                     JsonArray row = results.getJsonArray(i);
 
-                    if(titleId != -1)
+                    if (titleId != -1)
                         row.getList().set(titleId, row.getString(titleId) + duplicateSuffix);
                 }
 
@@ -176,10 +176,6 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                 }
                 i++;
             }
-
-        } else if ("grain".equals(table)) {
-            final int indexId = fields.getList().indexOf("id");
-            Collections.sort(results.getList(), (a,b) -> new JsonArray((List)a).getInteger(indexId).compareTo(new JsonArray((List)b).getInteger(indexId)));
         }
 
         return results;
