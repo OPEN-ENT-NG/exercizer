@@ -57,6 +57,7 @@ class ViewSubjectCopyController {
         this._grainCopyService = _grainCopyService;
         this._grainTypeService = _grainTypeService;
         this._hasDataLoaded = false;
+        this._isTeacher = false;
 
         var self = this,
             subjectId = _$routeParams['subjectId'],

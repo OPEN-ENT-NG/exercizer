@@ -7,7 +7,10 @@ export const grainCopyHeader = ng.directive('grainCopyHeader',
             restrict: 'E',
             scope : {
                 grainCopy: '=',
-                grainCopyList: '='
+                grainCopyList: '=',
+                isTeacher: '=?',
+                displayCorrection: '=?',
+                onDisplayCorrection: '&?'
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/common/grain_copy/templates/grain-copy-header.html',
             link:(scope:any) => {
@@ -18,6 +21,11 @@ export const grainCopyHeader = ng.directive('grainCopyHeader',
                 
                 scope.hasAnswerHint = function() {
                     return !angular.isUndefined(scope.grainCopy.grain_copy_data.answer_hint) && scope.grainCopy.grain_copy_data.answer_hint  !== null;
+                };
+
+                scope.displayCorrectAnswerButton = function() {
+                    return !scope.isTeacher && !angular.isUndefined(scope.grainCopy.final_score)
+                    && !angular.isUndefined(scope.displayCorrection) && (scope.grainCopy.final_score != scope.grainCopy.grain_copy_data.max_score);
                 };
                 
                 scope.toggleGrainCopyHint = function() {
