@@ -13,6 +13,11 @@ export const viewQcm = ng.directive('viewQcm',
             templateUrl: 'exercizer/public/ts/app/components/grain/qcm/templates/view-qcm.html',
             link: (scope:any) => {
 
+                scope.displayCorrection = false;
+                scope.doDisplayCorrection = function() {
+                    scope.displayCorrection = !scope.displayCorrection;
+                }
+
                 var result = QcmService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
                 scope.isCorrect = result.answers_result;
                 if (angular.isUndefined(scope.grainCopy.calculated_score) || scope.grainCopy.calculated_score === null) {

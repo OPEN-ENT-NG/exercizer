@@ -11,11 +11,21 @@
     <a class="comment right-magnet cell"
        style="margin: 0;"
        data-ng-click="toggleGrainCopyHint()"
-       data-ng-if="hasAnswerHint()">
+       data-ng-if="hasAnswerHint() && isTeacher">
         <i18n>exercizer.grain.help</i18n>&nbsp;&nbsp;
         <i data-ng-show="isAnswerHintFolded" data-tooltip="exercizer.unfold" class="down-open"></i>
         <i data-ng-hide="isAnswerHintFolded" data-tooltip="exercizer.fold" class="up-open"></i>
     </a>
+
+    <button class="cell right-magnet cancel"
+       style="margin: 0;"
+       data-ng-click="onDisplayCorrection()"
+       data-ng-if="displayCorrectAnswerButton()">
+        <i18n data-ng-if="!displayCorrection">exercizer.grain.display.correction</i18n>
+        <i18n data-ng-if="displayCorrection">exercizer.grain.undisplay.correction</i18n>
+        &nbsp;&nbsp;
+    </button>
+
 </div>
 
 <!-- grain copy hint -->
