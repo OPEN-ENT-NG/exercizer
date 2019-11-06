@@ -4,25 +4,18 @@
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     <div data-ng-show="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
         <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"
-             class="flex-row vertical-spacing"
+            class="flex-row vertical-spacing-twice horizontal-spacing-twice"
             data-ng-init="data.hover[key] = { bool : false }">
-            <div style="border-bottom: 1px solid" class="four cell flex-row align-center">[[filled_answer.text_left]]</div>
+            <div class="association__left five cell flex-row align-center justify-end">[[filled_answer.text_left]]</div>
             <div class="one cell">&nbsp;</div>
             <!-- dragdrop="dropTo(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key)"-->
             <div drop-item="dropTo($item, filled_answer, key)"
-                 class="five cell flex-row align-center justify-center"
-                 style="  border: 1px dashed;
-                             border-radius: 10px;
-                             text-align: center;
-                             min-height: 50px;
-                    "
+                 class="association__right six cell flex-row align-center justify-center"
                  data-ng-class="{'association-drop-hover'  : data.hover[key].bool == true}">
                 <span style="width: 80%">{{filled_answer.text_right}}</span>
+                <div class="cell" data-ng-click="deleteFilledAnswer(filled_answer)"><i class="close"></i></div>
             </div>
-            <div class="one cell">&nbsp;</div>
-            <div class="one cell" data-ng-click="deleteFilledAnswer(filled_answer)"><i class="close"></i></div>
-
         </div>
         <div class="row vertical-spacing">
             <div data-ng-repeat="possible_answer in possible_answer_left_list"
