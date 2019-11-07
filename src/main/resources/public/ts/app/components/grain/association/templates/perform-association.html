@@ -4,17 +4,17 @@
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     <div data-ng-show="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
         <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"
-            class="flex-row vertical-spacing-twice horizontal-spacing-twice"
+            class="association flex-row vertical-spacing-twice horizontal-spacing-twice"
             data-ng-init="data.hover[key] = { bool : false }">
-            <div class="association__left five cell flex-row align-center justify-end">[[filled_answer.text_left]]</div>
+            <div class="association__left five twelve-mobile cell flex-row align-center">[[filled_answer.text_left]]</div>
             <div class="one cell">&nbsp;</div>
             <!-- dragdrop="dropTo(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key)"-->
             <div drop-item="dropTo($item, filled_answer, key)"
-                 class="association__right six cell flex-row align-center justify-center"
+                 class="association__right six twelve-mobile cell flex-row align-center justify-center"
                  data-ng-class="{'association-drop-hover'  : data.hover[key].bool == true}">
-                <span style="width: 80%">{{filled_answer.text_right}}</span>
-                <div class="cell" data-ng-click="deleteFilledAnswer(filled_answer)"><i class="close"></i></div>
+                <p>{{filled_answer.text_right}}</p>
+                <div class="cell association__delete" data-ng-click="deleteFilledAnswer(filled_answer)"><i class="close"></i></div>
             </div>
         </div>
         <div class="row vertical-spacing">
@@ -40,7 +40,7 @@
                              min-height: 50px;
                     "
                  data-ng-class="{'association-drop-hover'  : data.hover[key].left == true}">
-                <span style="width: 80%">{{filled_answer.text_left}}</span>
+                <p>{{filled_answer.text_left}}</p>
             </div>
             <div class="one cell">&nbsp;</div>
             <div class="one cell" data-ng-click="deleteFilledAnswerLeft(filled_answer)"><i class="close"></i></div>
@@ -55,10 +55,10 @@
                              min-height: 50px;
                     "
                  data-ng-class="{'association-drop-hover'  : data.hover[key].right == true}">
-                <span style="width: 80%">{{filled_answer.text_right}}</span>
+                <p>{{filled_answer.text_right}}</p>
             </div>
             <div class="one cell">&nbsp;</div>
-            <div class="one cell" data-ng-click="deleteFilledAnswerRight(filled_answer)"><i class="close"></i></div>
+            <div class="one cell" data-ng-click="deleteFilledAnswerRight(filled_answer)"><i class="close "></i></div>
         </div>
     </div>
     <div class="row vertical-spacing">
