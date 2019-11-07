@@ -1,4 +1,4 @@
-<article class="five cell left-magnet" style="height:220px">
+<article class="five cell left-magnet twelve-mobile">
     <h2 class="no-margin"><i18n>exercizer.schedule.info</i18n> "[[selectedSubjectScheduled.title]]"</h2>
     <div data-ng-if="option.editedDates && option.hasBeenSarted" class="warning no-margin no-padding">&nbsp;<i18n>exercizer.schedule.rule.copies</i18n></div>
     <div class="row row-like-input" data-ng-class="{'vertical-spacing' : !(option.editedDates && option.hasBeenSarted) }">
@@ -31,7 +31,7 @@
     </div>
 </article>
 
-<article class="six cell right-magnet" style="height:220px">
+<article class="six cell right-magnet twelve-mobile">
     <h2 class="block"> <i18n>exercizer.schedule.stats</i18n> "[[selectedSubjectScheduled.title]]"</h2>
     <div class="row vertical-spacing">
         <i18n>exercizer.schedule.stats.info1</i18n> [[score.nb]] <i18n>exercizer.schedule.stats.info2</i18n> : [[score.sum/score.nb | truncateNumber]] / [[selectedSubjectScheduled.max_score]]
@@ -112,7 +112,7 @@
                </td>
                <td>
                     <div data-ng-show="copyStateBackGroundColorClass(copy)"
-                         style="border: 1px solid black;border-radius: 2px;color: white;text-align: center"
+                         style=";border-radius: 2px;color: white;text-align: center; padding: 5px;"
                          data-ng-class="copyStateBackGroundColorClass(copy)" >
                          [[copyStateText(copy)]]
                     </div>
