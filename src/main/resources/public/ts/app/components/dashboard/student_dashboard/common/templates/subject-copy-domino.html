@@ -2,26 +2,25 @@
 <div class="fallen dominos" style="margin-bottom: 0px">
     <div class="item" style="width: 100%; max-width: none;">
         <section class="domino">
+          <div class="due-date row" ng-class="{ 'divide-opacity': cantSart() }">
+              <div data-ng-show="isDueDateDisplayed()">
+                <i18n>exercizer.domino.todelivered</i18n> <span data-ng-bind="dueDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span data-ng-bind="dueDate | date:'HH:mm'"></span>
+              </div>
+              <div data-ng-show="isSubmittedDateDisplayed()">
+                <i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
+              </div>
+          </div>
             <div class="top" ng-class="{ 'divide-opacity': cantSart() }">
                 <img data-ng-src="[[getSubjectCopyPicture()]]" class="absolute" />
-
             </div>
 
             <div class="bottom" data-ng-class="copyStateBackGroundColorClass();">
-
-
                 <div class="content">
-                    <div class="right-magnet" data-ng-if="subjectScheduled.type === 'interactive'">
-                        <strong>[[subjectCopy.final_score | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]</strong>
-                    </div>
-
                     <div class="ten cell">
-
                         <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
                             <div class="cell title-icon">
                                 <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                             </div>
-
                             <div data-ng-switch="selectTitle()" class="custom-ellipsis">
                                 <strong data-ng-switch-when="perform" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                                 <strong data-ng-switch-when="view" data-ng-click="viewSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
@@ -29,12 +28,16 @@
                                 <strong data-ng-switch-default >default</strong>
                             </div>
                         </div>
+                        <!-- <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
+                            <div data-ng-show="isDueDateDisplayed()">
+                              <i18n>exercizer.domino.todelivered</i18n> <span data-ng-bind="dueDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span data-ng-bind="dueDate | date:'HH:mm'"></span>
+                            </div>
+                            <div data-ng-show="isSubmittedDateDisplayed()">
+                              <i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
+                            </div>
+                        </div> -->
                         <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
-                                <div data-ng-show="isDueDateDisplayed()"><i18n>exercizer.domino.todelivered</i18n> <span  data-ng-bind="dueDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="dueDate | date:'HH:mm'"></span> </div>
-                            <div data-ng-show="isSubmittedDateDisplayed()"><i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span></div>
-                        </div>
-                        <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
-                            <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em>
+                            <span>Par : <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em></span>
                         </div>
                         <div class="row">
                             <div data-ng-if="tooLate()" class="alert no-margin cell" ng-class="{ 'divide-opacity': cantSart() }">
@@ -44,9 +47,10 @@
                                 &nbsp;<i18n>exercizer.domino.access</i18n> <span  data-ng-bind="subjectScheduled.begin_date | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="subjectScheduled.begin_date | date:'HH:mm'"></span>&nbsp;&nbsp;
                             </div>
                         </div>
-
                     </div>
-
+                    <div data-ng-if="subjectScheduled.type === 'interactive'">
+                        <strong>[[subjectCopy.final_score | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]</strong>
+                    </div>
                     <div class="buttons">
                         <button class="flat-button"
                             data-ng-if="canShowGeneralCorrected()"
@@ -54,7 +58,6 @@
                             <i18n>exercizer.domino.corrected</i18n>
                             &nbsp; &nbsp; <i class="download"></i>
                         </button>
-
                         <button class="flat-button"
                             data-ng-if="canShowIndividualCorrected()"
                             data-ng-click="downloadCorrectedFile()">
@@ -62,9 +65,7 @@
                             &nbsp; &nbsp; <i class="download"></i>
                         </button>
                     </div>
-
                 </div>
-
             </div>
         </section>
     </div>  <!-- item -->
