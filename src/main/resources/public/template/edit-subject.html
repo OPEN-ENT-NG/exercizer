@@ -9,7 +9,7 @@
 
         <!-- TOP HEADER -->
         <div class="row">
-            <h1 class="cell">
+            <h1 class="cell twelve-mobile">
                 <span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / <span class="hover-orange" data-ng-click="" tooltip="[[editSubjectController.subject.title]]">[[ editSubjectController.subject.title | limitTo: 35  ]][[ editSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
 
@@ -79,13 +79,10 @@
                                             </div>
 
                                         </div>
-                                        <div class="eight cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;"
+                                        <div class="nine cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;"
                                              data-ng-click="editSubjectController.scrollToGrain(grain.id)">
-                                            [[ grain.grain_type_id > 3 ? editSubjectController.getCorrectOrder(grain) + ') ' : '' ]] 
+                                            [[ grain.grain_type_id > 3 ? editSubjectController.getCorrectOrder(grain) + ') ' : '' ]]
                                             [[editSubjectController.getGrainDisplayedName(grain) ]]
-                                        </div>
-                                        <div class="cell right-magnet">
-                                            <i class="drag-anchor"></i>
                                         </div>
                                     </li>
                                 </ul>
@@ -117,14 +114,15 @@
                             <div data-ng-if="grain.grain_type_id > 2">
 
                                 <!-- GRAIN TYPE ICON -->
-                                <div class="two cell">
+                                <div class="cell">
                                     <i class="doc-text"
                                        data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
                                        data-ng-if="grain.grain_type_id === 3">
                                     </i>
                                     <div data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
                                          data-ng-if="grain.grain_type_id > 3">
-                                        <div style="width: 20px; height:20px;" data-ng-include="editSubjectController.getGrainIllustrationURL(grain.grain_type_id)"></div>
+                                        <div style="display: inline-block; vertical-align: middle; width: 20px; height:20px;" data-ng-include="editSubjectController.getGrainIllustrationURL(grain.grain_type_id)"></div>
+                                        <small>[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]</small>
                                     </div>
                                 </div>
 
@@ -249,10 +247,10 @@
                         </div>
 
                         <!-- GRAIN SPECIFIC CONTENT FOR ALL GRAIN TYPE (folded) -->
-                        <div class="row" data-ng-if="(grain.grain_type_id < 3 || (grain.grain_type_id > 2 && editSubjectController.isGrainFolded(grain)))">
+                        <div class="row top-spacing-three" data-ng-if="(grain.grain_type_id < 3 || (grain.grain_type_id > 2 && editSubjectController.isGrainFolded(grain)))">
 
                             <!-- GRAIN SELECTION -->
-                            <div class="vertical-spacing" data-ng-class="(grain.grain_type_id > 1) ? 'one cell' : 'four cell'">
+                            <div class="top-spacing right-spacing cell">
                                 <input type="checkbox"
                                        data-ng-checked="editSubjectController.isGrainSelected(grain)"
                                        data-ng-click="editSubjectController.selectGrain(grain)" />
@@ -273,7 +271,7 @@
                                     </div>
                                 </div>
                                 <div data-ng-switch-default>
-                                    <h2 class="eleven cell vertical-spacing hover-orange" data-ng-click="editSubjectController.foldGrain(grain)">
+                                    <h2 class="hover-orange" data-ng-click="editSubjectController.foldGrain(grain)">
                                         [[ grain.grain_type_id > 3 ? editSubjectController.getCorrectOrder(grain) + ') ' : '' ]] [[ editSubjectController.getGrainDisplayedName(grain) ]]&nbsp;-&nbsp;[[ grain.grain_data.max_score ]]&nbsp;<i18n>exercizer.score</i18n>
                                     </h2>
                                 </div>
