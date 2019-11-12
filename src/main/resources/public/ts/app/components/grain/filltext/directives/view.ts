@@ -13,6 +13,12 @@ export const viewFillText = ng.directive('viewFillText',
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/filltext/templates/view.html',
             link: (scope: any) => {
+
+                scope.displayCorrection = false;
+                scope.doDisplayCorrection = function() {
+                    scope.displayCorrection = !scope.displayCorrection;
+                }
+
                 var result = automaticCorrection(scope.grainScheduled, scope.grainCopy);
                 scope.correction = result.answers_result.correction;
                 scope.customData = scope.grainCopy.grain_copy_data.custom_copy_data;

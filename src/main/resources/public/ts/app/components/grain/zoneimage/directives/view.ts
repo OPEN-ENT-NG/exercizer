@@ -16,6 +16,11 @@ export const viewZoneImage = ng.directive('viewZoneImage',
             link: (scope: any) => {
                 scope.grainCopy.grain_copy_data.custom_copy_data = new CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
 
+                scope.displayCorrection = false;
+                scope.doDisplayCorrection = function() {
+                    scope.displayCorrection = !scope.displayCorrection;
+                }
+
                 var result = automaticCorrection(scope.grainScheduled, scope.grainCopy);
                 scope.correction = result.answers_result.correction;
                 if (!scope.grainCopy.calculated_score) {

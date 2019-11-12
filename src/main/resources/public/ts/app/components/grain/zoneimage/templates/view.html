@@ -1,6 +1,6 @@
 <article id="[[grainCopy.id]]">
     <grain-copy-header data-grain-copy="grainCopy" data-grain-copy-list="grainCopyList"
-    data-is-teacher="isTeacher" data-display-correction="true"></grain-copy-header>
+    data-is-teacher="isTeacher" data-display-correction="displayCorrection" data-on-display-correction="doDisplayCorrection()"></grain-copy-header>
     <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
 
@@ -20,7 +20,8 @@
         </div>
     </div>
 
-    <grain-copy-footer data-grain-scheduled="grainScheduled"
+    <grain-copy-footer data-ng-if="!displayCorrection"
+                       data-grain-scheduled="grainScheduled"
                        data-grain-copy="grainCopy"
                        data-is-teacher="isTeacher">
     </grain-copy-footer>
