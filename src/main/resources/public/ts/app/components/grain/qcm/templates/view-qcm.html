@@ -15,7 +15,7 @@
             <div type="text" class="medium-importance" ng-if="filled_answer.text === ''">
                 <i18n>exercizer.grain.noanswer</i18n>
             </div>
-            <div type="text" class="twelve cell medium-importance" ng-if="filled_answer.text !== ''">
+            <div type="text" class="twelve cell medium-importance" ng-if="filled_answer.text !== ''"
                 [[ filled_answer.text ]]
             </div>
         </div>
@@ -31,23 +31,21 @@
     <article style="background-color: #daf2ef;" data-ng-if="displayCorrection">
         <i class="right-magnet close" data-ng-click="doDisplayCorrection()"></i>
         <h2><i18n>exercizer.grain.correction</i18n></h2>
-        <div>
-            <div class="row vertical-spacing" data-ng-repeat="(key,filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list track by $index">
-                <div class="cell">
-                    <label class="checkbox" style="line-height: 30px;">
-                        <input type="checkbox" data-ng-model="filled_answer.isChecked" data-ng-checked="isCorrect[key]" disabled />
-                        <span style="vertical-align:middle"></span>
-                    </label>
+        <div class="row vertical-spacing" data-ng-repeat="(key,filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list track by $index">
+            <div class="cell">
+                <label class="checkbox" style="line-height: 30px;">
+                    <input type="checkbox" data-ng-model="filled_answer.isChecked" data-ng-checked="isCorrect[key]" disabled />
+                    <span style="vertical-align:middle"></span>
+                </label>
 
+            </div>
+            <div class="cell eleven">
+                <div type="text" class="medium-importance" ng-if="filled_answer.text === ''">
+                     <i18n>exercizer.grain.noanswer</i18n>
                 </div>
-                <div class="cell eleven">
-                    <div type="text" class="medium-importance" ng-if="filled_answer.text === ''">
-                        <i18n>exercizer.grain.noanswer</i18n>
-                    </div>
-                    <div type="text" class="twelve cell medium-importance" ng-if="filled_answer.text !== ''"
-                        data-ng-class="{'input-response-correct' : isCorrect[key] === true, 'input-response-incorrect' : isCorrect[key] === false}">
-                        [[ filled_answer.text ]]
-                    </div>
+                <div type="text" class="twelve cell medium-importance" ng-if="filled_answer.text !== ''"
+                    data-ng-class="{'input-response-correct' : isCorrect[key] === true, 'input-response-incorrect' : isCorrect[key] === false}">
+                    [[ filled_answer.text ]]
                 </div>
             </div>
         </div>

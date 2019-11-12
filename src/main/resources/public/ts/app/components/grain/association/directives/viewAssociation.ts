@@ -14,6 +14,11 @@ export const viewAssociation  = ng.directive('viewAssociation',
             templateUrl: 'exercizer/public/ts/app/components/grain/association/templates/view-association.html',
             link: (scope:any) => {
 
+                scope.displayCorrection = false;
+                scope.doDisplayCorrection = function() {
+                    scope.displayCorrection = !scope.displayCorrection;
+                }
+
                 var result = AssociationService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
                 scope.isCorrect = result.answers_result;
                 if (angular.isUndefined(scope.grainCopy.calculated_score) || scope.grainCopy.calculated_score === null) {
