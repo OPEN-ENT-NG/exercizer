@@ -14,4 +14,14 @@
                        data-grain-copy="grainCopy"
                        data-is-teacher="isTeacher">
     </grain-copy-footer>
+
+    <article style="background-color: #daf2ef;" data-ng-if="displayCorrection">
+        <i class="right-magnet close" data-ng-click="doDisplayCorrection()"></i>
+        <h2><i18n>exercizer.grain.correction</i18n></h2>
+        <div class="row vertical-spacing">
+            <input type="text" class="twelve cell input-response-correct"
+                   data-ng-model="grainScheduled.grain_data.custom_data.correct_answer" disabled />
+        </div>
+    </article>
+
 </article>
