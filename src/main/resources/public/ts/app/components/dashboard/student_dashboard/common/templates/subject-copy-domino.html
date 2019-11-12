@@ -2,18 +2,9 @@
 <div class="fallen dominos" style="margin-bottom: 0px">
     <div class="item" style="width: 100%; max-width: none;">
         <section class="domino">
-          <div class="due-date row" ng-class="{ 'divide-opacity': cantSart() }">
-              <div data-ng-show="isDueDateDisplayed()">
-                <i18n>exercizer.domino.todelivered</i18n> <span data-ng-bind="dueDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span data-ng-bind="dueDate | date:'HH:mm'"></span>
-              </div>
-              <div data-ng-show="isSubmittedDateDisplayed()">
-                <i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
-              </div>
-          </div>
             <div class="top" ng-class="{ 'divide-opacity': cantSart() }">
                 <img data-ng-src="[[getSubjectCopyPicture()]]" class="absolute" />
             </div>
-
             <div class="bottom" data-ng-class="copyStateBackGroundColorClass();">
                 <div class="content">
                     <div class="ten cell">
@@ -39,6 +30,14 @@
                         <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
                             <span>Par : <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em></span>
                         </div>
+                        <div class="due-date row" ng-class="{ 'divide-opacity': cantSart() }">
+                            <div data-ng-show="isDueDateDisplayed()">
+                              <i18n>exercizer.domino.todelivered</i18n> <strong data-ng-bind="dueDate | date:'dd/MM/yyyy'"></strong> <i18n>exercizer.at</i18n> <span data-ng-bind="dueDate | date:'HH:mm'"></span>
+                            </div>
+                            <div data-ng-show="isSubmittedDateDisplayed()">
+                              <i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
+                            </div>
+                        </div>
                         <div class="row">
                             <div data-ng-if="tooLate()" class="alert no-margin cell" ng-class="{ 'divide-opacity': cantSart() }">
                                 <i class="timer-off"></i> &nbsp; <i18n>exercizer.lag</i18n> &nbsp;
@@ -49,7 +48,7 @@
                         </div>
                     </div>
                     <div data-ng-if="subjectScheduled.type === 'interactive'">
-                        <strong>[[subjectCopy.final_score | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]</strong>
+                        <strong class="score">[[subjectCopy.final_score | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]</strong>
                     </div>
                     <div class="buttons">
                         <button class="flat-button"
