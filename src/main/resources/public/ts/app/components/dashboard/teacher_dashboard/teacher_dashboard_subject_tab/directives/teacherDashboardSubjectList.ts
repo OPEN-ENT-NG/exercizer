@@ -165,8 +165,8 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
 
                 };
 
-                scope.clickCreateFolder = function () {
-                    scope.$emit('E_CREATE_FOLDER');
+                scope.clickCreateFolder = function (currentFolderId) {
+                    scope.$emit('E_CREATE_FOLDER', currentFolderId);
                 };
 
                 scope.addNewSubject = function(currentFolderId) {

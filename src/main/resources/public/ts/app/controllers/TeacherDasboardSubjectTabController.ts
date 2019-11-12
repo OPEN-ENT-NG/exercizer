@@ -88,8 +88,8 @@ class TeacherDashboardSubjectTabController {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_TOASTER',  self._selectedSubjectList, self._selectedFolderList);
         });
 
-        self._$scope.$on('E_CREATE_FOLDER', function () {
-            self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER', null);
+        self._$scope.$on('E_CREATE_FOLDER', function (event, currentFolderId) {
+            self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER', null, currentFolderId);
         });
 
         self._$scope.$on('E_SCHEDULE_SUBJECT', function (event, subject) {
@@ -107,7 +107,7 @@ class TeacherDashboardSubjectTabController {
         });
 
         self._$scope.$on('E_EDIT_FOLDER', function (event, folder) {
-            self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER', folder);
+            self._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER', folder, null);
             self._resetSelectedFolderList();
         });
 

@@ -33,7 +33,7 @@
                     </a>
                 </li>
             </ul>
-            <a class="classic-link" data-ng-click="clickCreateFolder()">
+            <a class="classic-link" data-ng-click="clickCreateFolder(currentFolderId)">
                 <i18n>exercizer.new.folder</i18n>
             </a>
         </nav>
@@ -68,11 +68,11 @@
         </div>
 
         <!-- empty -->
-        <div class="row" data-ng-show="subjectList().length === 0">
+        <div class="row" data-ng-show="subjectList().length === 0 && folderList().length === 0">
             <h2><i18n>exercizer.empty.subjects</i18n></h2>
         </div>
 
-        <div data-ng-show="subjectList().length > 0">
+        <div data-ng-show="subjectList().length > 0 || folderList().length > 0">
             <!-- domino part -->
             <div class="row" data-ng-show="displayList == 'domino'">
                 <div class="fallen dominos">

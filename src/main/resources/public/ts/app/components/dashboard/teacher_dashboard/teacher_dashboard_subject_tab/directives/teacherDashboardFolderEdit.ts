@@ -13,8 +13,9 @@ export const teacherDashboardFolderEdit = ng.directive('teacherDashboardFolderEd
                 scope.currentFolder = {};
 
                 // event to display model
-                scope.$on('E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER', function(event, folder) {
+                scope.$on('E_DISPLAY_DASHBOARD_MODAL_EDIT_FOLDER', function(event, folder, parentFolderId) {
                     scope.folder = folder;
+                    scope.parentFolderId = parentFolderId;
                     if(folder){
                         scope.state = 'edit';
                         scope.currentFolder = {};
@@ -35,6 +36,7 @@ export const teacherDashboardFolderEdit = ng.directive('teacherDashboardFolderEd
                         
                         if(scope.state === 'create'){
                             var folder = new Folder();
+                            folder.parent_folder_id = scope.parentFolderId;
                             folder.label = angular.copy(scope.currentFolder.label);
                             FolderService.persist(folder);
                         } else if(scope.state === 'edit'){
