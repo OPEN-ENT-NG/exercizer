@@ -7,6 +7,7 @@
     <div class="row">
         <div bind-html="grainCopy.grain_copy_data.custom_copy_data.htmlContent"></div>
     </div>
+    <br>
     
     <grain-copy-footer data-ng-if="!displayCorrection"
                        data-grain-scheduled="grainScheduled"
@@ -17,9 +18,7 @@
     <article style="background-color: #daf2ef;" data-ng-if="displayCorrection">
         <i class="right-magnet close" data-ng-click="doDisplayCorrection()"></i>
         <h2><i18n>exercizer.grain.correction</i18n></h2>
-        <correction-fill-text data-grain-scheduled="grainScheduled"
-                              data-grain-copy="grainCopy"
-                              data-is-teacher="isTeacher">
+        <correction-fill-text data-grain-scheduled="grainScheduled">
         </correction-fill-text>
     </article>
 
