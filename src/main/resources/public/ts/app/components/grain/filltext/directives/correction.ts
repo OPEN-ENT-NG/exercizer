@@ -1,5 +1,4 @@
 import { ng } from 'entcore';
-import { automaticCorrection } from '../../common/zonegrain/model';
 
 export const correctionFillText = ng.directive('correctionFillText',
     [() => {
@@ -7,8 +6,6 @@ export const correctionFillText = ng.directive('correctionFillText',
             restrict: 'E',
             scope: {
                 grainScheduled: '=',
-                grainCopy: '=',
-                isTeacher: '='
             },
             template: `
                 <div class="row">
@@ -17,24 +14,13 @@ export const correctionFillText = ng.directive('correctionFillText',
             `,
             link: (scope: any) => {
 
-                scope.displayCorrection = false;
-                scope.doDisplayCorrection = function() {
-                    scope.displayCorrection = !scope.displayCorrection;
-                }
-
-                var result = automaticCorrection(scope.grainScheduled, scope.grainCopy);
-                scope.correction = [];//result.answers_result.correction;
+                scope.correction = [];
                 scope.customData = scope.grainScheduled.grain_data.custom_data;
-                scope.customData.zones.forEach((textZone, i) => {
+                scope.customData.zones.forEach( _ => {
                     scope.correction.push(true);
                 });
 
-
-                scope.updateGrainCopy = function () {
-                    if (scope.isTeacher) {
-                        scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
-                    }
-                };
+                scope.updateGrainCopy = scope.$parent.updateGrainCopy;
             }
         };
     }]

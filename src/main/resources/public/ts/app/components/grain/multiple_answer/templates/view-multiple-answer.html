@@ -5,8 +5,8 @@
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list" class="row vertical-spacing">
         <input type="text" class="twelve cell"
-               data-ng-class="{'input-response-correct' : isCorrect[key], 'input-response-incorrect' : !isCorrect[key]}"
                data-ng-model="filled_answer.text"
+               data-ng-class="{'input-response-correct' : isCorrect[key], 'input-response-incorrect' : !isCorrect[key]}"
                i18n-placeholder="exercizer.grain.noanswer" disabled />
     </div>
     <grain-copy-footer data-ng-if="!displayCorrection"
@@ -14,4 +14,13 @@
                        data-grain-copy="grainCopy"
                        data-is-teacher="isTeacher">
     </grain-copy-footer>
+
+    <article style="background-color: #daf2ef;" data-ng-if="displayCorrection">
+        <i class="right-magnet close" data-ng-click="doDisplayCorrection()"></i>
+        <h2><i18n>exercizer.grain.correction</i18n></h2>
+        <div data-ng-repeat="correct_answer in grainScheduled.grain_data.custom_data.correct_answer_list" class="row vertical-spacing input-response-correct">
+            <input type="text" class="twelve cell" data-ng-model="correct_answer.text" disabled />
+        </div>
+    </article>
+
 </article>
