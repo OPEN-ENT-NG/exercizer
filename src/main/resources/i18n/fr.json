@@ -266,6 +266,7 @@
     "exercizer.domino.default.title" : "Titre",
     "exercizer.domino.modified" : "Modifié le",
     "exercizer.domino.due" : "Pour le",
+    "exercizer.domino.by" : "Par : ",
     "exercizer.total.made" : "élève(s) sur",
     "exercizer.total.made2": "ont rendu leur copie",
     "exercizer.started" : "commencé le",

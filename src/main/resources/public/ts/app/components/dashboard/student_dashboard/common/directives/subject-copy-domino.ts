@@ -60,9 +60,6 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                 scope.getSubjectScheduledTitle = function () {
                     return scope.subjectScheduled.title || idiom.translate("exercizer.domino.default.title");
                 };
-                scope.getSubjectScheduledOwner = function () {
-                    return scope.subjectScheduled.owner_username || '';
-                };
                 scope.getSubjectScheduledMaxScore = function () {
                     return scope.subjectScheduled.max_score || '0';
                 };

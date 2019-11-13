@@ -9,7 +9,7 @@
 
         <div class="row">
             <h1 class="cell">
-                <span class="hover-orange" data-ng-click="performSimpleSubjectCopyController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / <span class="hover-orange" data-ng-click="">[[ performSimpleSubjectCopyController.subjectScheduled.title | limitTo: 35  ]][[ performSimpleSubjectCopyController.subjectScheduled.title.length > 35 ? '...' : '']]</span>
+                <span class="zero-mobile"><span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span><span class="hover-orange" data-ng-click="">[[ performSimpleSubjectCopyController.subjectScheduled.title | limitTo: 35  ]][[ performSimpleSubjectCopyController.subjectScheduled.title.length > 35 ? '...' : '']]</span>
             </h1>
 
             <button class="right-magnet cell" data-ng-if="performSimpleSubjectCopyController.canHomeworkSubmit()" data-ng-click="performSimpleSubjectCopyController.openConfirmModal()">

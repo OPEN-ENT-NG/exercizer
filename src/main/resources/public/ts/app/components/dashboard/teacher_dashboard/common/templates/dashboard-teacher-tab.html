@@ -1,7 +1,7 @@
 <div class="row">
     <h1 class="cell">
-        <span class="hover-orange" data-ng-click="clickReturnExercizer()"><span class="hover-orange"><i18n>exercizer.title</i18n></span></span>
-        <span data-ng-click="clickReturnExercizerTab()"> / <span class="hover-orange">[[ getTab()]]</span></span>
+        <span class="zero-mobile"><span class="hover-orange" data-ng-click="clickReturnExercizer()"><span class="hover-orange"><i18n>exercizer.title</i18n></span></span>
+        / </span><span data-ng-click="clickReturnExercizerTab()"><span class="hover-orange">[[ getTab()]]</span></span>
         <span data-ng-click="" data-ng-if="selectedSubjectScheduled"> / <span class="hover-orange" tooltip="[[selectedSubjectScheduled.title]]">[[ selectedSubjectScheduled.title | limitTo: 35  ]][[ selectedSubjectScheduled.title.length > 35 ? '...' : '']]</span></span>
     </h1>
     <div class="cell right-magnet" data-ng-if="!selectedSubjectScheduled">
