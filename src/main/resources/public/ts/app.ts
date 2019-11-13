@@ -1,4 +1,4 @@
-import { ng, routes } from 'entcore';
+import { ng, routes, StrUtils } from 'entcore';
 
 import { subjectCopyDomino } from './app/components/dashboard/student_dashboard/common/directives/subject-copy-domino';
 import { studentDashboardFinishSubjectCopyList } from './app/components/dashboard/student_dashboard/student_dashboard_finish_subject_copy_list/directives/studentDashBoardFinishSubjectCopyList';
@@ -302,7 +302,25 @@ ng.onInit((module) => {
                 filtered.push(item);
             });
             filtered.sort(function (a, b) {
-                return (a[field] > b[field] ? 1 : -1);
+                let af = a[field];
+                let bf = b[field];
+                if(typeof af == "string" && typeof bf == "string")
+                {
+                    let afNoDiacritics = StrUtils.removeDiacritics(af);
+                    let bfNoDiacritics = StrUtils.removeDiacritics(bf);
+                    let afLower = afNoDiacritics.toLowerCase();
+                    let bfLower = bfNoDiacritics.toLowerCase();
+
+                    if(afLower == bfLower)
+                        if(afNoDiacritics == bfNoDiacritics)
+                            return af > bf ? 1 : -1;
+                        else
+                            return afNoDiacritics > bfNoDiacritics ? 1 : -1;
+                    else
+                        return afLower > bfLower ? 1 : -1;
+                }
+                else
+                    return (af > bf ? 1 : -1);
             });
             if (reverse) filtered.reverse();
             return filtered;
