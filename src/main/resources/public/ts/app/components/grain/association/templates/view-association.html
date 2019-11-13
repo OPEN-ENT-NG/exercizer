@@ -13,7 +13,7 @@
         <input type="text"
                class="six cell"
                data-ng-model="filled_answer.text_right"
-               style="[[ isCorrect[key] ? 'color: green; border: 1px solid green;' : 'color: red; border: 1px solid red;' ]]"
+               data-ng-class="{'input-response-correct' : isCorrect[key], 'input-response-incorrect' : !isCorrect[key]}"
                i18n-placeholder="exercizer.grain.noanswer"
                disabled/>
     </div>
@@ -32,10 +32,8 @@
                    disabled/>
             <div class="one cell">&nbsp;</div>
             <input type="text"
-                   class="six cell"
-                   data-ng-model="correct_answer.text_right"
-                   style="color: green; border: 1px solid green;"
-                   disabled/>
+                   class="six cell input-response-correct"
+                   data-ng-model="correct_answer.text_right" disabled/>
         </div>
     </article>
 
