@@ -24,4 +24,24 @@
                        data-grain-copy="grainCopy"
                        data-is-teacher="isTeacher">
     </grain-copy-footer>
+
+    <article style="background-color: #daf2ef;" data-ng-if="displayCorrection">
+        <i class="right-magnet close" data-ng-click="doDisplayCorrection()"></i>
+        <h2><i18n>exercizer.grain.correction</i18n></h2>
+        <div class="row">
+            <div class="drawing-zone base-image">
+                <div class="image-container">
+                    <img ng-src="[[grainScheduled.grain_data.custom_data.guideImage]]" />
+                </div>
+                <placed-block ng-repeat="textZone in grainScheduled.grain_data.custom_data.zones" style="padding:0;"
+                                x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
+                    <text-zone class="success">
+                        <span>[[textZone.answer]]</span>
+                    </text-zone>
+
+                </placed-block>
+            </div>
+        </div>
+    </article>
+
 </article>
