@@ -435,7 +435,18 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, pathPrefix + "grain", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							grainService.persist(resource, subjectId, notEmptyResponseHandler(request));
+							grainService.persist(resource, subjectId, new Handler<Either<String, JsonObject>>()
+							{
+								@Override
+								public void handle(Either<String, JsonObject> res)
+								{
+									Handler<Either<String, JsonObject>> hnd = notEmptyResponseHandler(request);
+									if(res.isLeft() == true)
+										hnd.handle(res);
+									else // Update the subject's modified date
+										subjectService.update(new JsonObject().put("id", subjectId), user, hnd);
+								}
+							});
 						}
 					});
 				}
@@ -468,7 +479,18 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, pathPrefix + "grain", new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							grainService.update(resource, grainId, subjectId, defaultResponseHandler(request));
+							grainService.update(resource, grainId, subjectId, new Handler<Either<String, JsonObject>>()
+							{
+								@Override
+								public void handle(Either<String, JsonObject> res)
+								{
+									Handler<Either<String, JsonObject>> hnd = defaultResponseHandler(request);
+									if(res.isLeft() == true)
+										hnd.handle(res);
+									else // Update the subject's modified date
+										subjectService.update(new JsonObject().put("id", subjectId), user, hnd);
+								}
+							});
 						}
 					});
 				}
