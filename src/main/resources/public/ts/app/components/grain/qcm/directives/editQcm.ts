@@ -22,8 +22,8 @@ export const editQcm = ng.directive('editQcm',
 
                 if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
                     scope.grain.grain_data.custom_data = new QcmCustomData();
-                    scope.addAnswer(true, idiom.translate('exercizer.grain.qcm.default1'));
-                    scope.addAnswer(false, idiom.translate('exercizer.grain.qcm.default2'));
+                    scope.addAnswer(true, '');
+                    scope.addAnswer(false, '');
                 }
 
                 scope.deleteAnswer = function(answer){
