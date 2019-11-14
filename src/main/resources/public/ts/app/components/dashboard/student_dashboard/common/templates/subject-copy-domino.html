@@ -20,17 +20,21 @@
                             </div>
                         </div>
                         <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
-                            <i18n>exercizer.domino.by</i18n><em class="high-importance"><a data-ng-href="/userbook/annuaire#[[subjectScheduled.owner]]">[[subjectScheduled.owner_username]]</a></em>
+                            <span>Par : <em class="high-importance">[[ getSubjectScheduledOwner() ]]</em></span>
                         </div>
                         <div class="due-date row" ng-class="{ 'divide-opacity': cantSart() }">
+                            <!-- Appliquer une class .delay quand le sujet est en retard -->
                             <div data-ng-show="isDueDateDisplayed()">
                               <i18n>exercizer.domino.todelivered</i18n> <strong data-ng-bind="dueDate | date:'dd/MM/yyyy'"></strong> <i18n>exercizer.at</i18n> <span data-ng-bind="dueDate | date:'HH:mm'"></span>
                             </div>
+
+                            <!-- Ici il faut remplacer isDueDateDisplayed() par ce bloc quand la condition est respecté -->
+                            <div data-ng-if="cantSart()">
+                              &nbsp;<i18n>exercizer.domino.access</i18n> <span data-ng-bind="subjectScheduled.begin_date | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="subjectScheduled.begin_date | date:'HH:mm'"></span>&nbsp;&nbsp;
+                            </div>
+
                             <div data-ng-show="isSubmittedDateDisplayed()">
                               <i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
-                            </div>
-                            <div>
-                              &nbsp;<i18n>exercizer.domino.access</i18n> <span data-ng-bind="subjectScheduled.begin_date | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="subjectScheduled.begin_date | date:'HH:mm'"></span>&nbsp;&nbsp;
                             </div>
                         </div>
                     </div>
