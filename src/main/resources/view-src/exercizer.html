@@ -19,13 +19,13 @@
 <body class="exercizer" library-root>
 	<div data-ng-controller="ExercizerController">
 		<portal data-ng-if="!isPrintPage">
-		<div class="row zero-desktop">
-			<app-title class="twelve">
-				<h1 class="cell right-spacing-twice" data-reload help-box-step="workspace.help.1" help-box-step-priority="-1">
-					<i class="storage"></i><i18n class="storage">exercizer.title</i18n>
-				</h1>
-			</app-title>
-		</div>
+			<div class="row zero-desktop">
+				<app-title class="twelve">
+					<h1 class="cell right-spacing-twice" data-reload help-box-step="workspace.help.1" help-box-step-priority="-1">
+						<i class="storage"></i><i18n class="storage">exercizer.title</i18n>
+					</h1>
+				</app-title>
+			</div>
 			<container template="main"></container>
 		</portal>
 		<!-- No portal for printing -->
