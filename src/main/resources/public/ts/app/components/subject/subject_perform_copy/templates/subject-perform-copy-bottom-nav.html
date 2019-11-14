@@ -3,7 +3,28 @@
        <i18n>exercizer.next</i18n>
     </button>
 
+    <button class="cell right-magnet" data-ng-if="canSubmit()" data-ng-click="redirectToDashboard(true)">
+        <i18n>exercizer.make.copy</i18n>
+    </button>
+
     <button class="cell right-magnet flat-button" data-ng-click="navigateToPrevious()" data-ng-if="hasPrevious()">
         <i18n>exercizer.previous</i18n>
     </button>
+
+    <lightbox data-show="isModalDisplayed" on-close="closeModal()">
+        <h2><i18n>exercizer.make.copy</i18n></h2>
+
+        <p><i18n>exercizer.make.copy.confirm</i18n> <em>[[ subjectScheduled.title ]]</em> <i18n>exercizer.to</i18n> <strong>[[ subjectScheduled.owner_username ]]</strong> ?</p>
+
+        <div class="info"><i18n>exercizer.make.copy.info</i18n></div>
+
+        <div class="warning" data-ng-if="subjectScheduled.is_one_shot_submit"><strong><i18n>exercizer.one.submit</i18n></strong></div>
+        <div class="warning" data-ng-if="!subjectScheduled.is_one_shot_submit"><strong><i18n>exercizer.several.submit</i18n></strong></div>
+
+        <div class="row">
+            <button data-ng-click="submitSubjectCopy()" class="cell right-magnet"><i18n>exercizer.make.copy</i18n></button>
+            <button data-ng-click="closeModal()" class="cell right-magnet cancel"><i18n>exercizer.cancel</i18n></button>
+        </div>
+    </lightbox>
+
 </div>
