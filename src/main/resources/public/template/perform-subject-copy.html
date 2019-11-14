@@ -42,7 +42,7 @@
                 <subject-perform-copy-display-current-grain-copy data-subject-scheduled="performSubjectCopyController.subjectScheduled" data-previewing="performSubjectCopyController.previewing" data-grain-copy-list="performSubjectCopyController.grainCopyList"></subject-perform-copy-display-current-grain-copy>
 
                 <!-- BOTTOM NAV -->
-                <subject-perform-copy-bottom-nav data-grain-copy-list="performSubjectCopyController.grainCopyList"></subject-perform-copy-bottom-nav>
+                <subject-perform-copy-bottom-nav data-grain-copy-list="performSubjectCopyController.grainCopyList" data-subject-copy="performSubjectCopyController.subjectCopy" data-subject-scheduled="performSubjectCopyController.subjectScheduled" is-can-submit="performSubjectCopyController.isCanSubmit"></subject-perform-copy-bottom-nav>
             </section>
         </div>
 
@@ -70,5 +70,5 @@
         <div class="warning"><i18n>exercizer.subject.empty</i18n></div>
     </div>
 
-    <div class="back-to-top zero-desktop" onclick='jQuery("html, body").animate({ scrollTop: "0px" }, 500);'></div>
+    <div class="back-to-top" onclick='jQuery("html, body").animate({ scrollTop: "0px" }, 500);'></div>
 </div>
