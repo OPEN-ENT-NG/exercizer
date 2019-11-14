@@ -33,7 +33,7 @@
             <!-- dragdrop="dropToLeft(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, false, true)" -->
             <div drop-item="dropToLeft($item, filled_answer, key, false, true)"
-                 class="three cell flex-row align-center justify-center"
+                 class="five cell flex-row align-center justify-center"
                  style="  border: 1px dashed;
                              border-radius: 10px;
                              text-align: center;
@@ -41,14 +41,13 @@
                     "
                  data-ng-class="{'association-drop-hover'  : data.hover[key].left == true}">
                 <p>{{filled_answer.text_left}}</p>
+                <div class="association__delete cell" data-ng-click="deleteFilledAnswerLeft(filled_answer)"><i class="close"></i></div>
             </div>
             <div class="one cell">&nbsp;</div>
-            <div class="one cell" data-ng-click="deleteFilledAnswerLeft(filled_answer)"><i class="close"></i></div>
-            <div class="two cell">&nbsp;</div>
             <!-- dragdrop="dropToRight(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, true, false)" -->
             <div drop-item="dropToRight($item, filled_answer, key, true, false)"
-                 class="three cell flex-row align-center justify-center"
+                 class="six cell flex-row align-center justify-center"
                  style="  border: 1px dashed;
                              border-radius: 10px;
                              text-align: center;
@@ -56,9 +55,8 @@
                     "
                  data-ng-class="{'association-drop-hover'  : data.hover[key].right == true}">
                 <p>{{filled_answer.text_right}}</p>
+                <div class="cell association__delete" data-ng-click="deleteFilledAnswerRight(filled_answer)"><i class="close "></i></div>
             </div>
-            <div class="one cell">&nbsp;</div>
-            <div class="one cell" data-ng-click="deleteFilledAnswerRight(filled_answer)"><i class="close "></i></div>
         </div>
     </div>
     <div class="row vertical-spacing">
