@@ -109,6 +109,8 @@ class ViewSubjectCopyController {
             this._grainScheduledList = CloneObjectHelper.clone(tmpPreviewData.grainScheduledList, true);
             this._grainCopyList = CloneObjectHelper.clone(tmpPreviewData.grainCopyList, true);
 
+            this._$scope.$emit('E_GRAIN_COPY_LIST', this._grainCopyList);
+
             subjectCopyService.tmpPreviewData = undefined;
 
             var self = this;
@@ -140,6 +142,7 @@ class ViewSubjectCopyController {
 
                                             if (!angular.isUndefined(grainCopyList)) {
                                                 self._grainCopyList = grainCopyList;
+                                                self._$scope.$emit('E_GRAIN_COPY_LIST', self._grainCopyList);
 
                                                 self._grainScheduledService.getListBySubjectScheduled(self._subjectScheduled).then(
                                                     function(grainScheduledList:IGrainScheduled[]) {

@@ -1,5 +1,6 @@
 {
     "exercizer.title" : "Exercices et évaluations",
+    "exercizer.title.short" : "Exercices",
     "exercizer.read": "Lecture",
     "exercizer.contrib": "Contribution",
     "exercizer.manager": "Gestion",

@@ -66,6 +66,7 @@ import { performZoneText } from './app/components/grain/zonetext/directives/perf
 import { viewZoneText } from './app/components/grain/zonetext/directives/view';
 import { stats } from './app/components/dashboard/teacher_dashboard/common/directives/stats';
 import { subjectCopyLeftNav } from './app/components/subject/common/subject_copy/directives/subjectCopyLeftNav';
+import { subjectCopyMobileLeftNav } from './app/components/subject/common/subject_copy/directives/subjectCopyMobileLeftNav';
 import { subjectEditSubjectList } from './app/components/subject/subject_edit/directives/subjectEditSubjectList';
 import { subjectPerformCopyBottomNav } from './app/components/subject/subject_perform_copy/directives/subjectPerformCopyBottomNav';
 import { subjectPerformCopyDisplayCurrentGrainCopy } from './app/components/subject/subject_perform_copy/directives/subjectPerformCopyDisplayCurrentGrainCopy';
@@ -162,6 +163,7 @@ ng.directives.push(editZoneImage, performZoneImage, viewZoneImage);
 ng.directives.push(editZoneText, performZoneText, viewZoneText);
 ng.directives.push(stats);
 ng.directives.push(subjectCopyLeftNav);
+ng.directives.push(subjectCopyMobileLeftNav);
 ng.directives.push(subjectEditSubjectList);
 ng.directives.push(subjectPerformCopyBottomNav);
 ng.directives.push(subjectPerformCopyDisplayCurrentGrainCopy);
