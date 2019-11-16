@@ -1,7 +1,8 @@
 import { ng, model, template } from 'entcore';
+import { IGrainCopy } from '../models/domain';
 
-export const exercizerController = ng.controller('ExercizerController', ['$scope', '$rootScope', 'model', 'route', '$route',
-    ($scope, $rootScope, model, route, $route) => {
+export const exercizerController = ng.controller('ExercizerController', ['$scope', '$rootScope', 'model', 'route', '$route', '$location',
+    ($scope, $rootScope, model, route, $route, $location) => {
 
     const teacherProfile = 'Teacher';
     const studentProfile = 'Student';
@@ -144,6 +145,22 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
             }
         },
     });
+
+    // Used by mobile left nav
+
+    $scope.redirectToDashBoard = function() {
+        $location.path('/dashboard');
+    };
+    $scope.$on('E_GRAIN_COPY_LIST', function($event, _grainCopyList: IGrainCopy[]) {
+        $scope.grainCopyList = _grainCopyList;
+    });
+    $scope.$on('E_CURRENT_GRAIN_COPY_CHANGE' , function(event, _grainCopy:IGrainCopy) {
+        $scope.currentGrainCopy = _grainCopy;
+    });
+    $scope.mobileLeftNavChange = function(_grainCopy: IGrainCopy) {
+        $scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGED', _grainCopy, $scope.grainCopyList);
+    }
+
 
     $route.reload();
 }]);

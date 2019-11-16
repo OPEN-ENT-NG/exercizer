@@ -126,6 +126,7 @@ class PerformSubjectCopyController {
                 });
 
                 self._grainCopyList = self._grainCopyService.createGrainCopyList(self._grainScheduledList);
+                self._$scope.$emit('E_GRAIN_COPY_LIST', self._grainCopyList);
                 angular.forEach(self._grainCopyList, function(grainCopy:IGrainCopy) {
                     grainCopy.id = Math.floor(Math.random() * (999999999 - 1)) + 1;
                     grainCopy.subject_copy_id = self._subjectCopy.id;
@@ -165,6 +166,7 @@ class PerformSubjectCopyController {
                                             self._subjectCopyService.checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId).then(function (isOk) {
                                                 self._isCanSubmit = isOk === true;
                                                 self._grainCopyList = grainCopyList;
+                                                self._$scope.$emit('E_GRAIN_COPY_LIST', self._grainCopyList);
                                                 self._eventsHandler(self);
                                                 self._hasDataLoaded = true;                                                
                                             });
@@ -228,6 +230,7 @@ class PerformSubjectCopyController {
         });
 
         self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
+            self._$scope.$emit('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
             self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
         });
 

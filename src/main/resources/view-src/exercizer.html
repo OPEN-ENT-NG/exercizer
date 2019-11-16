@@ -19,13 +19,19 @@
 <body class="exercizer" library-root>
 	<div data-ng-controller="ExercizerController">
 		<portal data-ng-if="!isPrintPage">
-			<div class="row zero-desktop">
-				<app-title class="twelve">
-					<h1 class="cell right-spacing-twice" data-reload help-box-step="workspace.help.1" help-box-step-priority="-1">
-						<i class="storage"></i><i18n class="storage">exercizer.title</i18n>
-					</h1>
-				</app-title>
-			</div>
+			<span class="zero-desktop">
+				<div class="row">
+					<app-title class="twelve">
+						<h1 class="cell right-spacing-twice" data-ng-click="redirectToDashBoard()" help-box-step="workspace.help.1" help-box-step-priority="-1">
+							<i class="storage"></i><i18n class="storage">exercizer.title.short</i18n>
+						</h1>
+					</app-title>
+				</div>
+				<subject-copy-mobile-left-nav data-current-grain-copy="currentGrainCopy"
+				                              data-grain-copy-list="grainCopyList"
+				                              data-grain-copy-change="mobileLeftNavChange(grainCopy)">
+				</subject-copy-mobile-left-nav>
+			</span>
 			<container template="main"></container>
 		</portal>
 		<!-- No portal for printing -->

@@ -1,0 +1,18 @@
+<section data-ng-if="showMobileNav" class="four twelve-mobile cell">
+    <nav class="vertical nav-droppable mobile-navigation" side-nav>
+        <ul>
+            <li data-ng-click="navigateTo()" data-ng-class="isSummarySelected() ? 'selected' : ''">
+                <a>
+                    <i18n>exercizer.summary</i18n>
+                </a>
+            </li>
+            <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false"
+                data-ng-click="navigateTo(grainCopy)"
+                data-ng-class="(currentGrainCopy.id === grainCopy.id) ? 'selected' : ''">
+                <a>
+                    [[ grainCopy.grain_type_id > 3 ? getCorrectOrder(grainCopy) + ') ' : '' ]] [[ getGrainCopyName(grainCopy) ]]
+                </a>
+            </li>
+        </ul>
+    </nav>
+</section>
