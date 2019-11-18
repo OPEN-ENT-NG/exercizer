@@ -750,7 +750,7 @@ body.exercizer {
       padding: 10px;
     }
     &__right {
-      border: 1px dashed $solid-grey;
+      border: 1px dashed $solid-grey!important;
       border-radius: 10px;
       text-align: center;
       min-height: 50px;
