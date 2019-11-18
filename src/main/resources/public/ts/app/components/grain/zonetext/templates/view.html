@@ -7,10 +7,11 @@
     <div class="row">
         <div class="drawing-zone base-image">
             <div class="image-container">
-                <img ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
+                <img id="bckgrnd" ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
             </div>
             <placed-block ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
-                            x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
+                            x="getResizedTextZone(textZone).x" y="getResizedTextZone(textZone).y" z="getResizedTextZone(textZone).z"
+                            w="getResizedTextZone(textZone).w">
                 <text-zone ng-class="{ success: correction[$index], error: !correction[$index] }">
                     <span>[[textZone.answer]]</span>
                 </text-zone>
@@ -31,10 +32,11 @@
         <div class="row">
             <div class="drawing-zone base-image">
                 <div class="image-container">
-                    <img ng-src="[[grainScheduled.grain_data.custom_data.guideImage]]" />
+                    <img id="bckgrnd" ng-src="[[grainScheduled.grain_data.custom_data.guideImage]]" />
                 </div>
                 <placed-block ng-repeat="textZone in grainScheduled.grain_data.custom_data.zones" style="padding:0;"
-                                x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
+                                x="getResizedTextZone(textZone).x" y="getResizedTextZone(textZone).y" z="getResizedTextZone(textZone).z"
+                                w="getResizedTextZone(textZone).w">
                     <text-zone class="success">
                         <span>[[textZone.answer]]</span>
                     </text-zone>

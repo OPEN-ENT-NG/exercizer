@@ -67,6 +67,20 @@ export const performZoneImage = ng.directive('performZoneImage',
                     $item.answer = '';
                     scope.updateGrainCopy();
                 };
+
+                $( "#bckgrnd" ).load(function() {
+                    scope.$apply();
+                });
+
+                scope.getResizedIconZone = function(iconZone: IconZone) {
+                    let img = $("#bckgrnd");
+                    let marginLeft = (img.outerWidth(true) - img.outerWidth()) / 2;
+                    return {
+                        x: iconZone.position.x * (img.width() / 760) + marginLeft,
+                        y: iconZone.position.y * (img.height() / 600),
+                        z: iconZone.position.z
+                    }
+                }
             }
         };
     }]

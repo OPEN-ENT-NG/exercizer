@@ -1,8 +1,8 @@
-import { ng } from 'entcore';
+import { ng, $ } from 'entcore';
 import { CustomData, TextZone } from '../models/CustomData';
 
 export const performZoneText = ng.directive('performZoneText',
-    [() => {
+    ['$timeout', ($timeout) => {
         return {
             restrict: 'E',
             scope: {
@@ -49,6 +49,24 @@ export const performZoneText = ng.directive('performZoneText',
                     scope.$apply();
                     scope.updateGrainCopy();
                 };
+
+                $( "#bckgrnd" ).load(function() {
+                    scope.apply();
+                });
+
+                scope.getResizedTextZone = function(textZone: TextZone) {
+                    let img = $("#bckgrnd");
+                    let marginLeft = (img.outerWidth(true) - img.outerWidth()) / 2;
+                    $("text-zone").css({
+                        width: 150 * (img.width() / 760)
+                    });
+                    return {
+                        x: textZone.position.x * (img.width() / 760) + marginLeft,
+                        y: textZone.position.y * (img.height() / 600),
+                        z: textZone.position.z,
+                        w: 150 * (img.width() / 760)
+                    }
+                }
             }
         };
     }]

@@ -6,10 +6,10 @@
     <div class="row">
         <div class="base-image drawing-zone">
             <div class="image-container">
-                <img ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
+                <img id="bckgrnd" ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
             </div>
             <placed-block ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
-                x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z">
+                x="getResizedIconZone(iconZone).x" y="getResizedIconZone(iconZone).y" z="getResizedIconZone(iconZone).z">
                 <image-zone class="drop-zone" drop-item="answer(iconZone, $item);" drag-item="iconZone">
                     <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" />
                 </image-zone>

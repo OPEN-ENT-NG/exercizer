@@ -1,6 +1,6 @@
-import { ng } from 'entcore';
+import { ng, $ } from 'entcore';
 import { automaticCorrection } from '../../common/zonegrain/model';
-import { CustomData } from '../models/CustomData';
+import { CustomData, TextZone } from '../models/CustomData';
 
 export const viewZoneText = ng.directive('viewZoneText',
     [() => {
@@ -33,6 +33,20 @@ export const viewZoneText = ng.directive('viewZoneText',
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     }
                 };
+
+                scope.getResizedTextZone = function(textZone: TextZone) {
+                    let img = $("#bckgrnd");
+                    let marginLeft = (img.outerWidth(true) - img.outerWidth()) / 2;
+                    $("text-zone").css({
+                        width: 150 * (img.width() / 760)
+                    });
+                    return {
+                        x: textZone.position.x * (img.width() / 760) + marginLeft,
+                        y: textZone.position.y * (img.height() / 600),
+                        z: textZone.position.z,
+                        w: 150 * (img.width() / 760)
+                    }
+                }
             }
         };
     }]
