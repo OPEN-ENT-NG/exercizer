@@ -7,11 +7,11 @@
     <div class="row">
         <div class="drawing-zone base-image">
             <div class="image-container">
-                <img ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
+                <img id="bckgrnd" ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
             </div>
 
             <placed-block ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
-                x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z">
+                x="getResizedIconZone(iconZone).x" y="getResizedIconZone(iconZone).y" z="getResizedIconZone(iconZone).z">
                 <image-zone ng-class="{ success: correction[$index], error: !correction[$index] }">
                     <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" drag-item="iconZone" />
                 </image-zone>
@@ -32,11 +32,11 @@
         <div class="row">
             <div class="drawing-zone base-image">
                 <div class="image-container">
-                    <img ng-src="[[grainScheduled.grain_data.custom_data.guideImage]]" />
+                    <img id="bckgrnd" ng-src="[[grainScheduled.grain_data.custom_data.guideImage]]" />
                 </div>
 
                 <placed-block ng-repeat="iconZone in grainScheduled.grain_data.custom_data.zones" style="padding:0;"
-                    x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z">
+                    x="getResizedIconZone(iconZone).x" y="getResizedIconZone(iconZone).y" z="getResizedIconZone(iconZone).z">
                     <image-zone class="success">
                         <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" drag-item="iconZone" />
                     </image-zone>

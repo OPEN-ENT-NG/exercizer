@@ -6,10 +6,11 @@
     <div class="row">
         <div class="base-image drawing-zone">
             <div class="image-container">
-                <img ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
+                <img id="bckgrnd" ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
             </div>
             <placed-block ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
-                x="textZone.position.x" y="textZone.position.y" z="textZone.position.z">
+                x="getResizedTextZone(textZone).x" y="getResizedTextZone(textZone).y" z="getResizedTextZone(textZone).z"
+                w="getResizedTextZone(textZone).w">
                 <text-zone>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'text'">
                         <input type="text" ng-model="textZone.answer" complete-change="updateGrainCopy();" />

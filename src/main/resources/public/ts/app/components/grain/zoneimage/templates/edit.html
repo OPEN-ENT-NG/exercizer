@@ -5,7 +5,7 @@
                 <image-select ng-model="grain.grain_data.custom_data.guideImage" ng-change="updateGrain();"></image-select>
             </div>
             <placed-block ng-repeat="iconZone in grain.grain_data.custom_data.zones" style="padding:0;"
-                            draggable x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z">
+                            draggable x="getResizedIconZone(iconZone).x" y="getResizedIconZone(iconZone).y" z="getResizedIconZone(iconZone).z">
                 <image-zone>
                     <i class="close" ng-click="removeZone(iconZone)"></i>
                     <img ng-src="[[iconZone.answer]]?thumbnail=120x120" />

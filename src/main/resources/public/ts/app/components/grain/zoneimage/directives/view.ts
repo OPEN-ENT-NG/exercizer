@@ -1,5 +1,5 @@
 import { ng } from 'entcore';
-import { CustomData } from '../models/CustomData';
+import { CustomData, IconZone } from '../models/CustomData';
 import { automaticCorrection } from '../../common/zonegrain/model';
 
 export const viewZoneImage = ng.directive('viewZoneImage',
@@ -33,6 +33,20 @@ export const viewZoneImage = ng.directive('viewZoneImage',
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     }
                 };
+
+                $( "#bckgrnd" ).load(function() {
+                    scope.$apply();
+                });
+
+                scope.getResizedIconZone = function(iconZone: IconZone) {
+                    let img = $("#bckgrnd");
+                    let marginLeft = (img.outerWidth(true) - img.outerWidth()) / 2;
+                    return {
+                        x: iconZone.position.x * (img.width() / 760) + marginLeft,
+                        y: iconZone.position.y * (img.height() / 600),
+                        z: iconZone.position.z
+                    }
+                }
             }
         };
     }]

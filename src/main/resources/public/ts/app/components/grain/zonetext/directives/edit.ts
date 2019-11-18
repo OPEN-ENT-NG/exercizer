@@ -1,6 +1,5 @@
-import { ng } from 'entcore';
+import { ng, $, _ } from 'entcore';
 import { TextZone, CustomData } from '../models/CustomData';
-import { _ } from 'entcore';
 
 export const editZoneText = ng.directive('editZoneText',
     [() => {
@@ -96,6 +95,16 @@ export const editZoneText = ng.directive('editZoneText',
                     }
                     scope.updateGrain();
                 };
+
+                scope.getResizedTextZone = function(textZone: TextZone) {
+                    let img = $("img.pick-file");
+                    let marginLeft = (img.outerWidth(true) - img.outerWidth()) / 2;
+                    return {
+                        x: textZone.position.x * (img.width() / 760) + marginLeft,
+                        y: textZone.position.y * (img.height() / 600),
+                        z: textZone.position.z
+                    }
+                }
             }
         };
     }]
