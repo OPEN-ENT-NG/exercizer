@@ -16,6 +16,7 @@ export const viewMultipleAnswer = ng.directive('viewMultipleAnswer',
                 scope.displayCorrection = false;
                 scope.doDisplayCorrection = function() {
                     scope.displayCorrection = !scope.displayCorrection;
+                    return scope.displayCorrection;
                 }
 
                 var result = MultipleAnswerService.automaticCorrection(scope.grainScheduled, scope.grainCopy);

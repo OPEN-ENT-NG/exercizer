@@ -16,6 +16,7 @@ export const viewOrder = ng.directive('viewOrder',
                 scope.displayCorrection = false;
                 scope.doDisplayCorrection = function() {
                     scope.displayCorrection = !scope.displayCorrection;
+                    return scope.displayCorrection;
                 }
 
                 var result = OrderService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
