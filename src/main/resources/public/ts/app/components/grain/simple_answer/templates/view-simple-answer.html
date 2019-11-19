@@ -9,12 +9,12 @@
                data-ng-model="grainCopy.grain_copy_data.custom_copy_data.filled_answer"
                i18n-placeholder="exercizer.grain.noanswer" disabled />
     </div>
+    <span id="[[ grainCopy.id ]]-correction"></span>
     <grain-copy-footer data-ng-if="!displayCorrection"
                        data-grain-scheduled="grainScheduled"
                        data-grain-copy="grainCopy"
                        data-is-teacher="isTeacher">
     </grain-copy-footer>
-
     <article class="grain-correction" data-ng-if="displayCorrection">
         <i class="right-magnet close" data-ng-click="doDisplayCorrection()"></i>
         <h2><i18n>exercizer.grain.correction</i18n></h2>

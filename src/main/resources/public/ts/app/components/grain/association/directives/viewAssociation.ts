@@ -17,6 +17,7 @@ export const viewAssociation  = ng.directive('viewAssociation',
                 scope.displayCorrection = false;
                 scope.doDisplayCorrection = function() {
                     scope.displayCorrection = !scope.displayCorrection;
+                    return scope.displayCorrection;
                 }
 
                 var result = AssociationService.automaticCorrection(scope.grainScheduled, scope.grainCopy);

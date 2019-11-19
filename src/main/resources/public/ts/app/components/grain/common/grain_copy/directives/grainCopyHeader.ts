@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, $ } from 'entcore';
 import { CorrectOrderHelper } from '../../../../../models/helpers';
 
 export const grainCopyHeader = ng.directive('grainCopyHeader',
@@ -33,6 +33,14 @@ export const grainCopyHeader = ng.directive('grainCopyHeader',
                 scope.getCorrectOrder = function() {
                     return CorrectOrderHelper.getCorrectOrder(scope.grainCopy, scope.grainCopyList);
                 };
+
+                scope.scrollAndDisplayCorrection = function () {
+                    if (scope.onDisplayCorrection()) {
+                        $("html, body").animate({
+                            scrollTop: $("#" + scope.grainCopy.id + "-correction").offset().top - $(".navbar").height() - 10
+                        }, 500);
+                    }
+                }
             }
         };
     }]

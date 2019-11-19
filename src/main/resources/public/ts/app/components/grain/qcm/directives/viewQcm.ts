@@ -16,6 +16,7 @@ export const viewQcm = ng.directive('viewQcm',
                 scope.displayCorrection = false;
                 scope.doDisplayCorrection = function() {
                     scope.displayCorrection = !scope.displayCorrection;
+                    return scope.displayCorrection;
                 }
 
                 var result = QcmService.automaticCorrection(scope.grainScheduled, scope.grainCopy);

@@ -17,6 +17,7 @@ export const viewFillText = ng.directive('viewFillText',
                 scope.displayCorrection = false;
                 scope.doDisplayCorrection = function() {
                     scope.displayCorrection = !scope.displayCorrection;
+                    return scope.displayCorrection;
                 }
 
                 var result = automaticCorrection(scope.grainScheduled, scope.grainCopy);

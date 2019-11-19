@@ -16,6 +16,7 @@ export const viewSimpleAnswer = ng.directive('viewSimpleAnswer',
                 scope.displayCorrection = false;
                 scope.doDisplayCorrection = function() {
                     scope.displayCorrection = !scope.displayCorrection;
+                    return scope.displayCorrection;
                 }
 
                 var result = SimpleAnswerService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
