@@ -91,7 +91,7 @@ body.exercizer {
       width: 100px;
       height: 100px;
     }
-    @media screen and (max-width: $tablette){
+    @media screen and (max-width: $wide-screen){
       width: 70px;
       height: 70px;
     }
@@ -203,7 +203,7 @@ body.exercizer {
         @media screen and (min-width: $wide-screen) {
           width: 100%;
         }
-        @media screen and (max-width: $tablette){
+        @media screen and (max-width: $wide-screen){
           margin-left: auto;
           margin-right: auto;
           display: block;
@@ -227,7 +227,7 @@ body.exercizer {
             }
             max-height: 100%;
             border: none;
-            @media screen and (max-width: $tablette){
+            @media screen and (max-width: $wide-screen){
               border-radius: 0;
               width: initial;
               margin-left: auto;
@@ -289,7 +289,7 @@ body.exercizer {
   }
   .eight-desktop {
     @media screen and (min-width: $wide-screen) {
-      width: 66,66667%;
+      width: 66.66667%;
     }
   }
   text-zone {
@@ -297,7 +297,7 @@ body.exercizer {
       width: 150px;
       height: 30px;
     }
-    @media screen and (max-width: $tablette) {
+    @media screen and (max-width: $wide-screen) {
       height: 25px;
     }
     background: #fff;
