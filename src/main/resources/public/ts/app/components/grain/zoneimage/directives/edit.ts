@@ -100,14 +100,6 @@ export const editZoneImage = ng.directive('editZoneImage',
 
                 scope.getResizedIconZone = function(iconZone: IconZone) {
                     let img = $("img.pick-file");
-                    if (!img.complete) {
-                        return {
-                            x: iconZone.position.x,
-                            y: iconZone.position.y,
-                            z: iconZone.position.z,
-                            w: 150
-                        }
-                    }
                     let marginLeft = (img.outerWidth(true) - img.outerWidth()) / 2;
                     return {
                         x: iconZone.position.x * (img.width() / 760) + marginLeft,
