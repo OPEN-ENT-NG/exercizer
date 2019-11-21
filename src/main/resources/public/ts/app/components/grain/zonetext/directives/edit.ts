@@ -98,14 +98,6 @@ export const editZoneText = ng.directive('editZoneText',
 
                 scope.getResizedTextZone = function(textZone: TextZone) {
                     let img = $("img.pick-file");
-                    if (!img.complete) {
-                        return {
-                            x: textZone.position.x,
-                            y: textZone.position.y,
-                            z: textZone.position.z,
-                            w: 150
-                        }
-                    }
                     let marginLeft = (img.outerWidth(true) - img.outerWidth()) / 2;
                     return {
                         x: textZone.position.x * (img.width() / 760) + marginLeft,

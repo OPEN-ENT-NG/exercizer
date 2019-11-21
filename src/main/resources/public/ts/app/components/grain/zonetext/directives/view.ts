@@ -37,14 +37,6 @@ export const viewZoneText = ng.directive('viewZoneText',
 
                 scope.getResizedTextZone = function(textZone: TextZone) {
                     let img = $("#bckgrnd");
-                    if (!img.complete) {
-                        return {
-                            x: textZone.position.x,
-                            y: textZone.position.y,
-                            z: textZone.position.z,
-                            w: 150
-                        }
-                    }
                     let marginLeft = (img.outerWidth(true) - img.outerWidth()) / 2;
                     $(".base-image > article > text-zone").css({
                         width: 150 * (img.width() / 760)
