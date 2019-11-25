@@ -189,6 +189,30 @@ export const performAssociation = ng.directive('performAssociation',
                         }
                     });
                 };
+
+                let _selectedanswer;
+
+                scope.showAnswers = function(ele, filled_answer) {
+                    scope.showAnswersMobile = true;
+                    $(ele.target).addClass('item-selected');
+                    _selectedanswer = filled_answer;
+                }
+
+                scope.selectAnswer = function(possible_answer) {
+                    scope.showAnswersMobile = false;
+                    _selectedanswer.text_right = possible_answer.text_right;
+                    $('.association__right').removeClass('item-selected');
+                    var indexToRemove = null;
+                    angular.forEach(scope.possible_answer_left_list, function(current_possible_left_answer, index){
+                        if(possible_answer.text_right == current_possible_left_answer.text_right){
+                            indexToRemove = index;
+                        }
+                    });
+                    if(indexToRemove !== null){
+                        scope.possible_answer_left_list.splice(indexToRemove, 1);
+                    }
+                    scope.$apply();
+                }
             }
         };
     }]
