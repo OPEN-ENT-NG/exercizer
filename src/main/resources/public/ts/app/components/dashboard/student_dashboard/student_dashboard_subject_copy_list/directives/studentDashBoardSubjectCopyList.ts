@@ -29,8 +29,9 @@ export const studentDashboardSubjectCopyList = ng.directive('studentDashboardSub
 
                     // Search
                     if (!scope.search) {
+                        var d = new Date();
                         scope.search = {
-                            beginDate: moment().startOf('week').add(1, 'week').toDate(),
+                            beginDate: moment( d.getMonth() < 8 ? (d.getFullYear()-1) : d.getFullYear() + '-' + '09-01').toDate(),
                             endDate: moment().add(3, 'month').toDate()
                         }
                     }
