@@ -36,6 +36,9 @@
                             <div data-ng-show="isSubmittedDateDisplayed()">
                               <i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
                             </div>
+                            <div class="row" data-ng-show="isSubmittedDateDisplayed()">
+                              <i18n>exercizer.corrected.available</i18n> <span  data-ng-bind="dueDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="dueDate | date:'HH:mm'"></span>
+                            </div>
                         </div>
                     </div>
                     <div data-ng-if="subjectScheduled.type === 'interactive'">
