@@ -38,6 +38,13 @@
             </section>
 
             <section class="nine cell main-col twelve-mobile">
+                <div class="info vertical-spacing-twice" 
+                data-ng-if="viewSubjectCopyController._isTeacher && !viewSubjectCopyController._previewing && !viewSubjectCopyController._previewingFromLibrary">
+                    <i18n>exercizer.correction.warning</i18n>
+                </div>
+            </section>
+
+            <section class="nine cell main-col twelve-mobile">
                 <!-- GRAIN COPY LIST -->
                 <subject-view-copy-grain-copy-list data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
                                                    data-subject-copy="viewSubjectCopyController.subjectCopy"

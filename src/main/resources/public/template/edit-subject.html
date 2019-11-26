@@ -226,9 +226,11 @@
 
                             <!-- GRAIN ANSWER HINT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                <div class="one cell vertical-spacing horizontal-spacing row" tooltip="exercizer.grain.help.tooltip">
-                                    <i class="help" id="surcharge-force-cursor-default"></i>
-                                    <i18n class="left-margin-5">exercizer.grain.help</i18n>
+                                <div class="one cell vertical-spacing horizontal-spacing row">
+                                    <span tooltip="exercizer.grain.help.tooltip">
+                                        <i class="help" id="surcharge-force-cursor-default"></i>
+                                        <i18n class="left-margin-5">exercizer.grain.help</i18n>
+                                    </span>
                                 </div>
                                 <div class="eleven cell">
                                     <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;"></textarea>
@@ -237,9 +239,11 @@
 
                             <!-- GRAIN ANSWER EXPLANATION -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                <div class="one cell vertical-spacing horizontal-spacing row" tooltip="exercizer.grain.explanation.tooltip">
-                                    <i class="info-pic"></i>
-                                    <i18n class="left-margin-5">exercizer.grain.explanation</i18n>
+                                <div class="one cell vertical-spacing horizontal-spacing row">
+                                    <span tooltip="exercizer.grain.explanation.tooltip">
+                                        <i class="info-pic"></i>
+                                        <i18n class="left-margin-5">exercizer.grain.explanation</i18n>
+                                    </span>
                                 </div>
                                 <div class="eleven cell">
                                     <textarea data-ng-model="grain.grain_data.answer_explanation" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;"></textarea>

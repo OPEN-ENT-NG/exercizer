@@ -499,5 +499,6 @@
     "exercizer.type" : "Type",
     "exercizer.exercize" : "Exercice",
     "exercizer.scheduled.date.error": "La date de fin doit être postérieur à la date de début.",
-    "exercizer.scheduled.simple.date.error": "Les dates de fin et de publication du corrigé doivent être postérieurs à la date de début."
+    "exercizer.scheduled.simple.date.error": "Les dates de fin et de publication du corrigé doivent être postérieurs à la date de début.",
+    "exercizer.correction.warning" : "Vos commentaires et les notes de l'élève ne lui seront accessibles qu'une fois la date et l'heure limites de rendu dépassées."
 }
