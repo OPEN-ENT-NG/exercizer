@@ -154,6 +154,9 @@
               <div class="cell" data-ng-show="toasterDisplayed.exclude">
                   <button data-ng-click="exclude()"><i18n>exercizer.exclude</i18n></button>
               </div>
+              <div class="cell" data-ng-if="atLeastOneUnsubmitted()">
+                <button data-ng-click="option.confirmSubmitted=true"><i18n>exercizer.consider.submitted</i18n></button>
+            </div>
           </div>
      </div>
 </section>
@@ -179,5 +182,21 @@
     <div class="cell right-magnet">
         <button class="flat-button" data-ng-click="option.edit=false"><i18n>cancel</i18n></button>
         <button data-ng-click="modifySchedule(); option.edit=false;"> <i18n>exercizer.validate</i18n></button>
+    </div>
+</lightbox>
+<lightbox show="option.confirmSubmitted" on-close="option.confirmSubmitted=false">
+    <h2><i18n>exercizer.consider.submitted</i18n></h2>
+    <p>
+        <span><i18n>exercizer.confirm.submitted1</i18n></span>
+        <span><i18n>exercizer.confirm.submitted2</i18n></span>
+        <ul>
+            <li data-ng-repeat="copy in subjectCopyList" ng-if="copy.selected && !copy.submitted_date">
+                [[ copy.owner_username ]]
+            </li>
+        </ul>
+    </p>
+    <div class="cell right-magnet">
+        <button class="flat-button" data-ng-click="option.confirmSubmitted=false"><i18n>cancel</i18n></button>
+        <button data-ng-click="considerAsSubmitted(); option.confirmSubmitted=false;"> <i18n>exercizer.validate</i18n></button>
     </div>
 </lightbox>

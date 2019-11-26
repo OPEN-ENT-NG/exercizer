@@ -32,5 +32,7 @@
     "exercizer.period.modified" : "a modifié la période de distribution du sujet",
     "exercizer.modifybegin" : "Modification de la date de début d'un sujet",
     "exercizer.modifydue" : "Modification de la date de fin d'un sujet",
-    "exercizer.modifyperiod" : "Modification de la période de distribution d'un sujet"
+    "exercizer.modifyperiod" : "Modification de la période de distribution d'un sujet",
+
+    "exercizer.timeline.consider.submitted" : "a considéré votre copie comme rendue pour le sujet "
 }

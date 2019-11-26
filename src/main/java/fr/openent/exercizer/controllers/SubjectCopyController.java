@@ -283,6 +283,22 @@ public class SubjectCopyController extends ControllerHelper {
 										} else {
 											subjectCopyService.submitCopy(resource.getLong("id"), offset,
 													notifyHandler(request, user, subjectCopy, CopyAction.SUBMITCOPY));
+
+
+											if("Teacher".equalsIgnoreCase(user.getType())) {
+												subjectScheduledService.getById(Long.toString(subjectCopy.getLong("subject_scheduled_id")),
+														user, r2 -> {
+															final JsonObject subjectScheduled = ResourceParser.beforeAny(r2.right().getValue());
+															final JsonObject params = new JsonObject()
+																	.put("username", user.getUsername())
+																	.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
+																	.put("subjectName", subjectScheduled.getString("title"))
+																	.put("uri", pathPrefix + "#" + "/subject/copy/view/" + subjectScheduled.getLong("subject_id"))
+																	.put("disableAntiFlood", true);
+															notification.notifyTimeline(request, "exercizer.considersubmitted", user,
+																	Arrays.asList(subjectCopy.getString("owner")), params);
+														});
+											}
 										}
 										break;
 									case CORRECTCOPY:
@@ -307,7 +323,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Put("/subject-copy/submit")
 	@ApiDoc("Acknowledge copy submission")
-	@ResourceFilter(SubjectCopyOwner.class)
+	@ResourceFilter(SubjectCopyCorrected.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void submitCopy(final HttpServerRequest request) {
 		writeCopy(request, CopyAction.SUBMITCOPY);
