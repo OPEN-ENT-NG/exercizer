@@ -381,7 +381,7 @@
     "exercizer.grain.document" : "Documents",
     "exercizer.grain.action" : "Action",
     "exercizer.grain.mode" : "Mode de correction",
-    "exercizer.grain.mode.option" : "erreur non autorisée",
+    "exercizer.grain.mode.option" : "Aucun point s'il y a une ou plusieurs erreurs dans les réponses.",
     "exercizer.grain.noanswer" : "Aucune réponse renseignée",
     "exercizer.grain.answer.info" : "Indiquez une réponse",
     "exercizer.grain.add.answer" : "Ajouter une réponse",
