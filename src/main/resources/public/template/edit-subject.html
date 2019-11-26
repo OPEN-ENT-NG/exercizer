@@ -224,23 +224,25 @@
 
                             <!-- GRAIN FOOTER -->
 
-                            <!-- GRAIN ANSWER EXPLANATION -->
+                            <!-- GRAIN ANSWER HINT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                <div class="one cell vertical-spacing horizontal-spacing">
-                                    <i class="info-pic" tooltip="exercizer.grain.explanation"></i>
+                                <div class="one cell vertical-spacing horizontal-spacing row" tooltip="exercizer.grain.help.tooltip">
+                                    <i class="help" id="surcharge-force-cursor-default"></i>
+                                    <i18n class="left-margin-5">exercizer.grain.help</i18n>
                                 </div>
                                 <div class="eleven cell">
-                                    <textarea data-ng-model="grain.grain_data.answer_explanation" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;" i18n-placeholder="exercizer.grain.explanation"></textarea>
+                                    <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;"></textarea>
                                 </div>
                             </div>
 
-                            <!-- GRAIN ANSWER HINT -->
+                            <!-- GRAIN ANSWER EXPLANATION -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                <div class="one cell vertical-spacing horizontal-spacing">
-                                    <i class="help" tooltip="exercizer.grain.help" id="surcharge-force-cursor-default"></i>
+                                <div class="one cell vertical-spacing horizontal-spacing row" tooltip="exercizer.grain.explanation.tooltip">
+                                    <i class="info-pic"></i>
+                                    <i18n class="left-margin-5">exercizer.grain.explanation</i18n>
                                 </div>
                                 <div class="eleven cell">
-                                    <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;" i18n-placeholder="exercizer.grain.help"></textarea>
+                                    <textarea data-ng-model="grain.grain_data.answer_explanation" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;"></textarea>
                                 </div>
                             </div>
 
