@@ -201,6 +201,31 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     scope.assignDisplayed=true;
                 };
 
+                scope.atLeastOneUnsubmitted = function(){
+                    let result: boolean = false;
+                    angular.forEach(scope.subjectCopyList, function(copy){
+                        if (copy.selected && !copy.submitted_date) {
+                            result = true;
+                            return;
+                        }
+                    });
+                    return result;
+                }
+
+                scope.considerAsSubmitted = function(){
+                    angular.forEach(scope.subjectCopyList, function(copy){
+                        if (copy.selected && !copy.submitted_date) {
+                            SubjectCopyService.submit(copy).then(
+                                function() {
+                                    window.location.reload();
+                                },
+                                function(err) {
+                                    notify.error(err);
+                                }
+                            );
+                        }
+                    });
+                }
 
                 /**
                  * DISPLAY
