@@ -293,7 +293,7 @@ public class SubjectCopyController extends ControllerHelper {
 																	.put("username", user.getUsername())
 																	.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 																	.put("subjectName", subjectScheduled.getString("title"))
-																	.put("uri", pathPrefix + "#" + "/subject/copy/view/" + subjectScheduled.getLong("subject_id"))
+																	.put("uri", pathPrefix + "#" + "/dashboard/student")
 																	.put("disableAntiFlood", true);
 															notification.notifyTimeline(request, "exercizer.considersubmitted", user,
 																	Arrays.asList(subjectCopy.getString("owner")), params);
