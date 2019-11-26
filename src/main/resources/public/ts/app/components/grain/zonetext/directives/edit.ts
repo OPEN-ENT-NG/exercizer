@@ -65,6 +65,12 @@ export const editZoneText = ng.directive('editZoneText',
                     scope.displayState.newOption = '';
                 };
 
+                scope.addOptionIfNotEmpty = (container: CustomData | TextZone) => {
+                    if (scope.displayState.newOption) {
+                        scope.addOption(container);
+                    }
+                };
+
                 scope.removeOption = (container: CustomData | TextZone, option: string) => {
                     let i = container.options.indexOf(option);
                     container.options.splice(i, 1);
