@@ -293,8 +293,8 @@ body.exercizer {
     }
   }
   text-zone {
+    width: 150px;
     @media screen and (min-width: $wide-screen) {
-      width: 150px;
       height: 30px;
     }
     @media screen and (max-width: $wide-screen) {

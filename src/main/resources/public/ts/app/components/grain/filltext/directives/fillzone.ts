@@ -15,7 +15,8 @@ export const fillZone = ng.directive('fillZone',
             '<input type="text" disabled placeholder="[[optionData.zone.answer]]" ng-if="optionData.mode === \'edit\'" />' +
             '<input type="text" ng-if="optionData.mode === \'perform-text\'" ng-model="optionData.zone.answer" />' +
             '<select ng-if="optionData.mode === \'perform-list\'" ng-options="o as o for o in optionData.zone.options" ng-model="optionData.zone.answer"></select>' +
-            '<div drag-item="optionData.zone" drop-item="answer($item)" ng-if="optionData.mode === \'perform-drag\'"><span>[[optionData.zone.answer]]</span></div>' +
+            '<div class="zero-mobile-fat-mobile" drag-item="optionData.zone" drop-item="answer($item)" ng-if="optionData.mode === \'perform-drag\'"><span>[[optionData.zone.answer]]</span></div>' +
+            '<div class="mobile-fat-mobile" drag-item="optionData.zone" drop-item="answer($item)" ng-click="showAnswers($event)" ng-if="optionData.mode === \'perform-drag\'"><span>[[optionData.zone.answer]]</span></div>' +
             '</text-zone>',
             link: function (scope, element, attributes) {
                 scope.removeFillZone = ($event) => {
@@ -63,6 +64,10 @@ export const fillZone = ng.directive('fillZone',
                 element.on('change', 'input, select', () => {
                     scope.$parent.updateGrainCopy();
                 });
+
+                scope.showAnswers = ($event) => {
+                    scope.$parent.showAnswers($event, scope.optionData.zone);
+                }
 
                 scope.answer = ($item) => {
                     scope.$parent.removeAnswer(scope.optionData.zone);
