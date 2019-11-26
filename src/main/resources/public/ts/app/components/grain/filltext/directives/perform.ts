@@ -101,6 +101,24 @@ export const performFillText = ng.directive('performFillText',
 
                     return !found;
                 }
+
+                let _selectedanswer;
+
+                scope.showAnswers = function(ele, text_zone) {
+                    scope.showAnswersMobile = true;
+                    $(ele.target).addClass('item-selected');
+                    _selectedanswer = text_zone;
+                }
+
+                scope.selectAnswer = function(option) {
+                    scope.removeAnswer(_selectedanswer);
+                    scope.showAnswersMobile = false;
+                    _selectedanswer.answer = option.option;
+                    option.zoneId = _selectedanswer.id;
+                    scope.usedAnswers.push(option);
+                    $('.item-selected').removeClass('item-selected');
+                    scope.updateGrainCopy();
+                }
             }
         };
     }]
