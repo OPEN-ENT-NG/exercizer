@@ -19,7 +19,7 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
 
                 // Date data
                 scope.today = new Date();
-                scope.dateAYearshAgo = moment(scope.today.getMonth() < 8 ? (scope.today.getFullYear()-1) : scope.today.getFullYear() + '-' + '09-01').toDate(),
+                scope.dateAYearshAgo = moment((scope.today.getMonth() < 8 ? (scope.today.getFullYear()-1) : scope.today.getFullYear()) + '-09-01').toDate();
                 scope.dateInAYears = moment().add('month', 3).toDate();
                 scope.search = {
                     groupList: [],

@@ -88,8 +88,18 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
                 }
             };
 
+            scope.option = {};
+
+            scope.switchMode = function () {
+                if (scope.option.mode == 'simple') {
+                    scope.option.mode = 'full';
+                } else {
+                    scope.option.mode = 'simple';
+                }
+            }
+
             scope.export = function () {
-                scope.$emit('E_EXPORT_STATS', scope.selectedSubjectScheduled);
+                scope.$emit('E_EXPORT_STATS', { subjectScheduled: scope.selectedSubjectScheduled, mode: scope.option.mode });
             }
 
             scope.getTab = function(){

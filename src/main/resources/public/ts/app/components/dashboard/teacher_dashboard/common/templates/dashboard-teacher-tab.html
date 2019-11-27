@@ -35,10 +35,33 @@
             <span class="badge" ng-if="newLibrarySubjectsExist()" style="background:orange; font-size: 1.1em">[[ newLibrarySubjects() ]]</span>
         </header>
     </div>
-    <button  data-ng-if="selectedSubjectScheduled.showStats" data-ng-click="export()" class="right-magnet">
+    <button  data-ng-if="selectedSubjectScheduled.showStats" data-ng-click="option.chooseExport=true; option.mode='simple'" class="right-magnet">
         <i18n>exercizer.export.action</i18n>
     </button>
     <button  data-ng-if="selectedSubjectScheduled" data-ng-click="clickReturnSubjectScheduledList()" class="right-magnet cancel">
           <i18n>exercizer.back</i18n>
      </button>
 </div>
+
+<lightbox show="option.chooseExport" on-close="option.chooseExport=false">
+    <h2><i18n>exercizer.export.lightbox.title</i18n></h2>
+    <p>
+        <span><i18n>exercizer.export.lightbox.question</i18n></span>
+        <ul>
+            <label class="checkbox top-spacing-twice aligned">
+                <input type="checkbox" ng-checked="option.mode == 'simple'" ng-click="switchMode(); $event.stopPropagation();" />
+                <span></span>
+                <span><i18n>exercizer.export.lightbox.choice1</i18n></span>
+            </label>
+            <label class="checkbox top-spacing-twice aligned">
+                <input type="checkbox" ng-checked="option.mode == 'full'" ng-click="switchMode(); $event.stopPropagation();" />
+                <span></span>
+                <span><i18n>exercizer.export.lightbox.choice2</i18n></span>
+            </label>
+        </ul>
+    </p>
+    <div class="cell right-magnet">
+        <button class="flat-button" data-ng-click="option.chooseExport=false"><i18n>cancel</i18n></button>
+        <button data-ng-click="export(); option.chooseExport=false;"> <i18n>exercizer.export.action</i18n></button>
+    </div>
+</lightbox>

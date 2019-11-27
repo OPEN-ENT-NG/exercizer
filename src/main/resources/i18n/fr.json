@@ -302,7 +302,7 @@
     "exercizer.copy.state.ongoing" : "En cours de correction",
     "exercizer.copy.state.submitted" : "Rendu",
     "exercizer.copy.state.started" : "Commencé",
-    "exercizer.export" : "export",
+    "exercizer.export" : "Export",
     "exercizer.instructer.toaster.property" : "Propriétés",
     "exercizer.instructer.toaster.share" : "Partager",
     "exercizer.instructer.toaster.schedule" : "Distribuer",
@@ -364,6 +364,10 @@
     "exercizer.export.format" : "au format moodle",
     "exercizer.export.desc" : "Attention, le format moodle (.xml) ne prend pas en charge tous les types de questions, ceux listés ci-dessous ne seront pas exportés",
     "exercizer.export.action" : "Exporter",
+    "exercizer.export.lightbox.title" : "Exporter les statistiques",
+    "exercizer.export.lightbox.question" : "Souhaitez-vous exporter :",
+    "exercizer.export.lightbox.choice1" : "Les scores automatiques, finaux et commentaires par élève - <em>format CSV</em>",
+    "exercizer.export.lightbox.choice2" : "Les réponses complètes (hors zones à remplir) par élève - <em>format CSV</em>",
     "exercizer.shared" : "Sujets partagés avec moi",
     "exercizer.close" : "Fermer",
     "exercizer.grain.zone" : "Zone à compléter",
@@ -500,5 +504,6 @@
     "exercizer.exercize" : "Exercice",
     "exercizer.scheduled.date.error": "La date de fin doit être postérieur à la date de début.",
     "exercizer.scheduled.simple.date.error": "Les dates de fin et de publication du corrigé doivent être postérieurs à la date de début.",
-    "exercizer.correction.warning" : "Vos commentaires et les notes de l'élève ne lui seront accessibles qu'une fois la date et l'heure limites de rendu dépassées."
+    "exercizer.correction.warning" : "Vos commentaires et les notes de l'élève ne lui seront accessibles qu'une fois la date et l'heure limites de rendu dépassées.",
+    "exercizer.question.type" : "Type de question"
 }
