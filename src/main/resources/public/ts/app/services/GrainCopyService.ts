@@ -142,6 +142,12 @@ export class GrainCopyService implements IGrainCopyService {
                     response.data.forEach(function (grainCopyObject) {
                         self._listMappedBySubjectCopyId[subjectCopy.id].push(self.instantiateGrainCopy(grainCopyObject));
                     });
+                    self._listMappedBySubjectCopyId[subjectCopy.id].sort((a:IGrainCopy, b:IGrainCopy) => {
+                        if (a.display_order && b.display_order) {
+                            return a.display_order - b.display_order;
+                        }
+                        return a.order_by - b.order_by;
+                    });
                     deferred.resolve(self._listMappedBySubjectCopyId[subjectCopy.id]);
                 },
                 function () {

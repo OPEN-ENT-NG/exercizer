@@ -165,7 +165,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
 
         let param = {subjectTitle: subjectScheduled.title, beginDate: subjectScheduled.begin_date, dueDate: subjectScheduled.due_date,
             estimatedDuration: subjectScheduled.estimated_duration, isOneShotSubmit: subjectScheduled.is_one_shot_submit,
-            scheduledAt:subjectScheduled.scheduled_at, grainsCustomCopyData: grainsCustomCopyData};
+            randomDisplay: subjectScheduled.random_display, scheduledAt:subjectScheduled.scheduled_at, grainsCustomCopyData: grainsCustomCopyData};
         
         let request = {
             method: 'POST',

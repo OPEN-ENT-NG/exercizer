@@ -8,6 +8,7 @@ export interface IGrainCopy {
     created:string;
     modified:string;
     order_by:number;
+    display_order:number;
     final_score:number;
     calculated_score:number;
     comment:string;
@@ -23,6 +24,7 @@ export class GrainCopy implements IGrainCopy {
     created:string;
     modified:string;
     order_by:number;
+    display_order:number;
     final_score:number;
     calculated_score:number;
     comment:string;
@@ -38,6 +40,7 @@ export class GrainCopy implements IGrainCopy {
         created?:string, 
         modified?:string, 
         order_by?:number, 
+        display_order?:number, 
         final_score?:number, 
         calculated_score?:number, 
         comment?:string, 
@@ -51,6 +54,7 @@ export class GrainCopy implements IGrainCopy {
         this.created = created;
         this.modified = modified;
         this.order_by = order_by;
+        this.display_order = display_order;
         this.final_score = final_score;
         this.calculated_score = calculated_score;
         this.comment = comment;

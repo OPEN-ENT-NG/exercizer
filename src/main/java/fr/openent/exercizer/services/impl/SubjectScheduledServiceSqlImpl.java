@@ -23,6 +23,8 @@ import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.http.Renders;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
@@ -33,9 +35,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements ISubjectScheduledService {
 	
@@ -172,7 +172,14 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 								createScheduledGrain(s, subjectScheduledId, fromSubjectId, grainJa, mapIdGrainCustomCopyData);
 								createSubjectsCopies(s, subjectScheduledId, usersJa);
 								createGrainCopies(s, subjectScheduledId);
-								sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
+								sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, done -> {
+									if (scheduledSubject.getBoolean("randomDisplay", false).booleanValue()) {
+										Future<Void> future = assignGrainCopiesRandomOrder(subjectScheduledId);
+										future.setHandler(h -> handler.handle(done));
+									} else {
+										handler.handle(done);
+									}
+								}));
 							} else {
 								log.error("failure to schedule subject : " + event.left().getValue());
 								handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
@@ -251,14 +258,16 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	private void createScheduledSubject(final SqlStatementsBuilder s, final Long subjectId, final Long scheduledSubjectId, final JsonObject scheduledSubject, UserInfos user) {
 
 		final String query = "INSERT INTO " + schema + "subject_scheduled (id, subject_id, title, description, picture, max_score, " +
-				"owner, owner_username, begin_date, due_date, estimated_duration, is_one_shot_submit, scheduled_at, type, is_notify, use_time, locale) " +
-				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?::json, s.type, ?, ?, ? FROM " + schema + "subject as s " +
+				"owner, owner_username, begin_date, due_date, estimated_duration, is_one_shot_submit, random_display, scheduled_at, type, is_notify, use_time, locale) " +
+				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?, ?::json, s.type, ?, ?, ? FROM " + schema + "subject as s " +
 				"WHERE s.id=? ";
 
 		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))
 				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("estimatedDuration", ""))
-				.add(scheduledSubject.getBoolean("isOneShotSubmit")).add(scheduledSubject.getJsonObject("scheduledAt"))
+				.add(scheduledSubject.getBoolean("isOneShotSubmit"))
+				.add(scheduledSubject.getBoolean("randomDisplay", false))
+				.add(scheduledSubject.getJsonObject("scheduledAt"))
 				.add(scheduledSubject.getBoolean("isNotify"))
 				.add(scheduledSubject.getBoolean("useTime", true))
 				.add(scheduledSubject.getString("locale"))
@@ -365,6 +374,53 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				"WHERE ss.id=?";
 
 		s.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId));
+	}
+
+	private Future<Void> assignGrainCopiesRandomOrder(final Long subjectScheduledId) {
+		Future<Void> result = Future.future();
+		final String query = "SELECT id FROM " + schema + "subject_copy WHERE subject_scheduled_id = ?";
+		sql.prepared(query, new JsonArray().add(subjectScheduledId), SqlResult.validResultHandler(event -> {
+			if (event.isRight()) {
+				final JsonArray subjectCopiesIds = event.right().getValue();
+				final List<Future> subjectList = new ArrayList<>();
+				subjectCopiesIds.forEach(subjectCopyId -> {
+					Future<Void> promise = Future.future();
+					subjectList.add(promise);
+					final String query2 = "SELECT id FROM " + schema + "grain_copy WHERE subject_copy_id = ? ORDER BY RANDOM ()";
+					sql.prepared(query2, new JsonArray().add(((JsonObject)subjectCopyId).getLong("id")), SqlResult.validResultHandler(event2 -> {
+						if (event2.isRight()) {
+							final JsonArray grainCopiesIds = event2.right().getValue();
+							Collections.shuffle(grainCopiesIds.getList());
+							final SqlStatementsBuilder s = new SqlStatementsBuilder();
+							for (int i = 1; i <= grainCopiesIds.size(); i++) {
+								Long grainCopyId = grainCopiesIds.getJsonObject(i-1).getLong("id");
+								final String query3 = "UPDATE " + schema + "grain_copy SET display_order = ? WHERE id = ?";
+								s.prepared(query3, new JsonArray().add(i).add(grainCopyId));
+							}
+							sql.transaction(s.build(), SqlResult.validResultHandler(handler -> {
+								if (handler.isRight()) {
+									promise.complete();
+								} else {
+									promise.fail(handler.left().getValue());
+								}
+							}));
+						} else {
+							promise.fail(event2.left().getValue());
+						}
+					}));
+				});
+				CompositeFuture.join(subjectList).setHandler(compositeFutureAsyncResult -> {
+					if (compositeFutureAsyncResult.succeeded()) {
+						result.complete();
+					} else {
+						result.fail(compositeFutureAsyncResult.cause());
+					}
+				});
+			} else {
+				result.fail(event.left().getValue());
+			}
+		}));
+		return result;
 	}
 
 	@Override

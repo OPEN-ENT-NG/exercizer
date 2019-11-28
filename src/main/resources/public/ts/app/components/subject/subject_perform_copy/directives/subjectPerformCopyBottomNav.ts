@@ -17,8 +17,11 @@ export const subjectPerformCopyBottomNav = ng.directive('subjectPerformCopyBotto
                 scope.currentGrainCopy = undefined;
                 scope.currentGrainCopyIndex = undefined;
                 
-                scope.grainCopyList = scope.grainCopyList.sort(function (grainCopyA:IGrainCopy, grainCopyB:IGrainCopy) {
-                    return (grainCopyA.order_by > grainCopyB.order_by ? 1 : -1);
+                scope.grainCopyList = scope.grainCopyList.sort((a:IGrainCopy, b:IGrainCopy) => {
+                    if (a.display_order && b.display_order) {
+                        return a.display_order - b.display_order;
+                    }
+                    return a.order_by - b.order_by;
                 });
 
                 scope.hasPrevious = function() {

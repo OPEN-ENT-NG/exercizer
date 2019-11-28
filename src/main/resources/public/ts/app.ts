@@ -306,6 +306,9 @@ ng.onInit((module) => {
             filtered.sort(function (a, b) {
                 let af = a[field];
                 let bf = b[field];
+                if (!af || !bf) {
+                    return 0;
+                }
                 if(typeof af == "string" && typeof bf == "string")
                 {
                     let afNoDiacritics = StrUtils.removeDiacritics(af);

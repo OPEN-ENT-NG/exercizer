@@ -18,6 +18,9 @@
     "isOneShotSubmit": {
       "type": "boolean"
     },
+    "randomDisplay": {
+      "type": "boolean"
+    },
     "scheduledAt": {
       "type": "object",
       "additionalProperties": false,

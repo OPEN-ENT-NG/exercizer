@@ -15,6 +15,7 @@ export interface ISubjectScheduled {
     estimated_duration:string;
     is_over:boolean;
     is_one_shot_submit:boolean;
+    random_display:boolean;
     has_automatic_display: boolean;
     is_deleted:boolean;
     scheduled_at : string[];
@@ -38,6 +39,7 @@ export class SubjectScheduled implements ISubjectScheduled {
     corrected_date:string;
     estimated_duration:string;
     is_over:boolean;
+    random_display:boolean;
     has_automatic_display: boolean;
     is_one_shot_submit:boolean;
     is_deleted:boolean;
@@ -62,6 +64,7 @@ export class SubjectScheduled implements ISubjectScheduled {
         estimated_duration?:string,        
         is_over?:boolean,
         has_automatic_display?:boolean,
+        random_display?:boolean,
         is_one_shot_submit?:boolean,
         is_deleted?:boolean,
         scheduled_at? : string[],
@@ -84,6 +87,7 @@ export class SubjectScheduled implements ISubjectScheduled {
         this.estimated_duration = estimated_duration;
         this.is_over = is_over;
         this.has_automatic_display = has_automatic_display;
+        this.random_display = random_display;
         this.is_one_shot_submit = is_one_shot_submit;
         this.is_deleted = is_deleted;
         this.scheduled_at = scheduled_at || [];

@@ -310,6 +310,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     subjectScheduled.estimated_duration = option.estimated_duration;
                     subjectScheduled.has_automatic_display = option.has_automatic_display;
                     subjectScheduled.is_one_shot_submit = !option.allow_students_to_update_copy;
+                    subjectScheduled.random_display = !!option.random_display;
                     subjectScheduled.scheduled_at = createSubjectScheduledAt(data);
 
                     GrainService.getListBySubject(subject).then(
