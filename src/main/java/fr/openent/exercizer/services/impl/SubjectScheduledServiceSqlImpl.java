@@ -260,7 +260,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		final String query = "INSERT INTO " + schema + "subject_scheduled (id, subject_id, title, description, picture, max_score, " +
 				"owner, owner_username, begin_date, due_date, estimated_duration, is_one_shot_submit, random_display, scheduled_at, type, is_notify, use_time, locale) " +
 				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?, ?::json, s.type, ?, ?, ? FROM " + schema + "subject as s " +
-				"WHERE s.id=? ";
+				"WHERE s.id=? RETURNING id";
 
 		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))
@@ -281,7 +281,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		final String query = "INSERT INTO " + schema + "subject_scheduled (id, subject_id, title, description, picture, " +
 				"owner, owner_username, begin_date, due_date, corrected_date, scheduled_at, type, is_notify, use_time, locale) " +
 				"SELECT ?, s.id, s.title, s.description, s.picture, ?, ?, ?::timestamp , ?::timestamp, ?::timestamp, ?::json, s.type, ?, ?, ? FROM " + schema + "subject as s " +
-				"WHERE s.id=? ";
+				"WHERE s.id=? RETURNING id";
 
 		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))

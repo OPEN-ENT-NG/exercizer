@@ -528,6 +528,9 @@ public class SubjectScheduledController extends ControllerHelper {
 						sendNotification(request, "assigncopy", user, recipientSet, "/dashboard/student", subjectName, scheduledSubject.getString("beginDate"), scheduledSubject.getString("dueDate"), null);
 					}
 
+					String result = event.right().getValue().toString();
+					request.response().putHeader("Content-Length", String.valueOf(result.length()));
+					request.response().write(result);
 					Renders.created(request);
 				} else {
 					renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error","exercizer.subject.scheduled.error"));

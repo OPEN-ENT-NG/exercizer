@@ -26,6 +26,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
     static $inject = [
         '$q',
         '$http',
+        '$location',
         'SubjectCopyService',
         'GrainService',
         'GrainScheduledService',
@@ -41,6 +42,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
     (
         private _$q,
         private _$http,
+        private _$location,
         private _subjectCopyService:ISubjectCopyService,
         private _grainService:IGrainService,
         private _grainScheduledService:IGrainScheduledService,
@@ -50,6 +52,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
     {
         this._$q = _$q;
         this._$http = _$http;
+        this._$location = _$location;
         this._subjectCopyService = _subjectCopyService;
         this._grainService = _grainService;
         this._grainScheduledService = _grainScheduledService;
@@ -177,6 +180,11 @@ export class SubjectScheduledService implements ISubjectScheduledService {
             function(response) {
                 delete self._listMappedById;
                 deferred.resolve();
+
+                let redirect: string = "/dashboard/teacher/correction/";
+                if(response.data != null && response.data.id != null)
+                    redirect += response.data.id;
+                self._$location.path(redirect);
             },
             function(e) {
                 if (e.status == 400) {
@@ -206,6 +214,11 @@ export class SubjectScheduledService implements ISubjectScheduledService {
             function(response) {
                 delete self._listMappedById;
                 deferred.resolve();
+
+                let redirect: string = "/dashboard/teacher/correction/";
+                if(response.data != null && response.data.id != null)
+                    redirect += response.data.id;
+                self._$location.path(redirect);
             },
             function(e) {
                 if (e.status == 400) {
