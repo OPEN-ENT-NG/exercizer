@@ -20,6 +20,7 @@ export const performFillText = ng.directive('performFillText',
                     //shuffle
                     if (scope.customData.answersType === 'list') {
                         _.forEach(scope.customData.zones, function (zone) {
+                            zone.options = zone.options.filter(option => option != null);
                             var tmp = _.clone(zone.options);
                             var secureLoop = 0;
 
