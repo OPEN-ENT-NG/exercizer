@@ -107,6 +107,7 @@ export const performFillText = ng.directive('performFillText',
 
                 scope.showAnswers = function(ele, text_zone) {
                     scope.showAnswersMobile = true;
+                    $('.item-selected').removeClass('item-selected');
                     $(ele.target).addClass('item-selected');
                     _selectedanswer = text_zone;
                 }
@@ -120,6 +121,11 @@ export const performFillText = ng.directive('performFillText',
                     $('.item-selected').removeClass('item-selected');
                     scope.updateGrainCopy();
                 }
+
+                $('body').on('click', event => {
+                    scope.showAnswersMobile = true;
+                    $('.item-selected').removeClass('item-selected');
+                });
             }
         };
     }]

@@ -194,8 +194,10 @@ export const performAssociation = ng.directive('performAssociation',
 
                 scope.showAnswers = function(ele, filled_answer) {
                     scope.showAnswersMobile = true;
+                    $('.association__right').removeClass('item-selected');
                     $(ele.target).addClass('item-selected');
                     _selectedanswer = filled_answer;
+                    ele.stopPropagation();
                 }
 
                 scope.selectAnswer = function(possible_answer) {
@@ -213,6 +215,14 @@ export const performAssociation = ng.directive('performAssociation',
                     }
                     scope.$apply();
                 }
+
+                $('body').on('click', event => {
+                    if (scope.showAnswersMobile && !$(event.target).hasClass('tap-tap') && !$(event.target).parents('.tap-tap').length) {
+                        scope.showAnswersMobile = false;
+                        $('.association__right').removeClass('item-selected');
+                        scope.$apply();
+                    }
+                });
             }
         };
     }]
