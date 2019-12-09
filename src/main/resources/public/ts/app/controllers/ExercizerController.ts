@@ -1,5 +1,6 @@
-import { ng, model, template } from 'entcore';
+import { ng, model, template, moment } from 'entcore';
 import { IGrainCopy } from '../models/domain';
+import http from 'axios';
 
 export const exercizerController = ng.controller('ExercizerController', ['$scope', '$rootScope', 'model', 'route', '$route', '$location',
     ($scope, $rootScope, model, route, $route, $location) => {
@@ -16,132 +17,204 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
         _userProfile = studentProfile;
     }
 
+    async function checkSystemDate():Promise<boolean> {
+        //check system time of user
+        let res:any = await http.get('/exercizer/now');
+        let nowServer = await res.data.date;
+        nowServer = moment(nowServer);
+        nowServer.set({minute: 0, second: 0, millisecond: 0});
+        let nowClient = moment();
+        nowClient.set({minute: 0, second: 0, millisecond: 0});
+        return (nowClient.isSame(nowServer)) ? true : false;
+    }
+
     route({
-        dashboard: function () {
-            if (_userProfile === teacherProfile) {
-                template.open('main', 'teacher-dashboard-subject-tab');
-            } else if (_userProfile === studentProfile) {
+        dashboard: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'teacher-dashboard-subject-tab');
+                } else if (_userProfile === studentProfile) {
+                    template.open('main', 'student-dashboard');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
+            } else {
+                template.open('main', '400-date-exercizer');
+            }
+        },
+        dashboardStudent: async function () {
+            if (await checkSystemDate()) {
+                _userProfile = studentProfile;
                 template.open('main', 'student-dashboard');
             } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
+            }
+        
+        },
+        dashboardTeacherCorrection: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'teacher-dashboard-correction-tab');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
+            } else {
+                template.open('main', '400-date-exercizer');
             }
         },
-        dashboardStudent: function () {
-            _userProfile = studentProfile;
-            template.open('main', 'student-dashboard');
-        },
-        dashboardTeacherCorrection: function () {
-            if (_userProfile === teacherProfile) {
-                template.open('main', 'teacher-dashboard-correction-tab');
+        dashboardTeacherLibrary: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'teacher-dashboard-library-tab');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
             } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
             }
         },
-        dashboardTeacherLibrary: function () {
-            if (_userProfile === teacherProfile) {
-                template.open('main', 'teacher-dashboard-library-tab');
+        editSubject: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'edit-subject');
+                } else if (_userProfile === studentProfile) {
+                    template.open('main', 'student-dashboard');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
             } else {
-                template.open('main', '401-exercizer');
-            }
-        },
-        editSubject: function () {
-            if (_userProfile === teacherProfile) {
-                template.open('main', 'edit-subject');
-            } else if (_userProfile === studentProfile) {
-                template.open('main', 'student-dashboard');
-            } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
             }
         },
         printSubject: function () {
             $scope.isPrintPage = true;
             template.open('main', 'print-subject');
         },
-        editSimpleSubject: function () {
-            if (_userProfile === teacherProfile) {
-                template.open('main', 'edit-simple-subject');
-            } else if (_userProfile === studentProfile) {
-                template.open('main', 'student-dashboard');
+        editSimpleSubject: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'edit-simple-subject');
+                } else if (_userProfile === studentProfile) {
+                    template.open('main', 'student-dashboard');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
             } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
             }
         },
-        previewPerformSubjectCopy: function () {
-            if (_userProfile === teacherProfile) {
-                template.open('main', 'perform-subject-copy');
-            } else if (_userProfile === studentProfile) {
-                template.open('main', 'student-dashboard');
+        previewPerformSubjectCopy: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'perform-subject-copy');
+                } else if (_userProfile === studentProfile) {
+                    template.open('main', 'student-dashboard');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
             } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
             }
         },
-        previewEditSubjectSimpleCopy: function () {
-            if (_userProfile === teacherProfile) {
-                template.open('main', 'edit-simple-subject');
-            } else if (_userProfile === studentProfile) {
-                template.open('main', 'student-dashboard');
+        previewEditSubjectSimpleCopy: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'edit-simple-subject');
+                } else if (_userProfile === studentProfile) {
+                    template.open('main', 'student-dashboard');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
             } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
             }
         },
-        performSubjectCopy: function () {
-            if (_userProfile === studentProfile) {
-                template.open('main', 'perform-subject-copy');
-            } else if (_userProfile === teacherProfile) {
-                template.open('main', 'perform-subject-copy');
+        performSubjectCopy: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === studentProfile) {
+                    template.open('main', 'perform-subject-copy');
+                } else if (_userProfile === teacherProfile) {
+                    template.open('main', 'perform-subject-copy');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
             } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
             }
         },
-        performSimpleSubjectCopy: function () {
-            if (_userProfile === studentProfile) {
-                template.open('main', 'perform-simple-subject-copy');
-            } else if (_userProfile === teacherProfile) {
-                template.open('main', 'perform-simple-subject-copy');
+        performSimpleSubjectCopy: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === studentProfile) {
+                    template.open('main', 'perform-simple-subject-copy');
+                } else if (_userProfile === teacherProfile) {
+                    template.open('main', 'perform-simple-subject-copy');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
             } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
             }
         },
-        previewViewSubjectCopy: function () {
-            if (_userProfile === teacherProfile) {
-                template.open('main', 'view-subject-copy');
-            } else if (_userProfile === studentProfile) {
-                template.open('main', 'student-dashboard');
+        previewViewSubjectCopy: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'view-subject-copy');
+                } else if (_userProfile === studentProfile) {
+                    template.open('main', 'student-dashboard');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
             } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
             }
         },
-        viewSubjectCopyAsTeacher: function () {
-            if (_userProfile === teacherProfile) {
-                template.open('main', 'view-subject-copy');
-            } else if (_userProfile === studentProfile) {
-                template.open('main', 'student-dashboard');
+        viewSubjectCopyAsTeacher: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'view-subject-copy');
+                } else if (_userProfile === studentProfile) {
+                    template.open('main', 'student-dashboard');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
             } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
             }
         },
-        viewSubjectCopy: function () {
-            if (_userProfile === studentProfile) {
-                template.open('main', 'view-subject-copy');
-            } else if (_userProfile === teacherProfile) {
-                //template.open('main', 'teacher-dashboard');
-                template.open('main', 'view-subject-copy');
+        viewSubjectCopy: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === studentProfile) {
+                    template.open('main', 'view-subject-copy');
+                } else if (_userProfile === teacherProfile) {
+                    //template.open('main', 'teacher-dashboard');
+                    template.open('main', 'view-subject-copy');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
             } else {
-                template.open('main', '401-exercizer');
+                template.open('main', '400-date-exercizer');
             }
         },
-        dashboardTeacherArchive: function () {
-            if(_userProfile === teacherProfile){
-                template.open('main', 'teacher-dashboard-archive');
-            }else {
-                template.open('main', '401-exercizer');
+        dashboardTeacherArchive: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'teacher-dashboard-archive');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
+            } else {
+                template.open('main', '400-date-exercizer');
             }
         },
-        dashboardTeacherArchiveCopy: function () {
-            if(_userProfile === teacherProfile){
-                template.open('main', 'archive-view-subject-copy');
-            }else {
-                template.open('main', '401-exercizer');
+        dashboardTeacherArchiveCopy: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'archive-view-subject-copy');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
+            } else {
+                template.open('main', '400-date-exercizer');
             }
         },
     });

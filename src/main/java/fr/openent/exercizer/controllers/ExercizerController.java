@@ -19,11 +19,16 @@
 
 package fr.openent.exercizer.controllers;
 
+import fr.wseduc.security.ActionType;
+import fr.wseduc.webutils.http.Renders;
+import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
 import io.vertx.core.http.HttpServerRequest;
 
 import fr.wseduc.rs.*;
 import fr.wseduc.security.SecuredAction;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 public class ExercizerController extends ControllerHelper {
 
@@ -31,6 +36,13 @@ public class ExercizerController extends ControllerHelper {
     @SecuredAction("exercizer.view")
     public void view(final HttpServerRequest request) {
         renderView(request);
+    }
+
+    @Get("/now")
+    @ApiDoc("Get now UTC from server")
+    @SecuredAction(value = "", type = ActionType.AUTHENTICATED)
+    public void now(final HttpServerRequest request) {
+        Renders.renderJson(request, new JsonObject().put("date", DateTime.now(DateTimeZone.UTC).toString()));
     }
 
 }
