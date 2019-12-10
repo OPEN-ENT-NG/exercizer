@@ -14,6 +14,7 @@ export interface ISubject {
     is_library_subject:boolean;
     is_deleted:boolean;
     type:string;
+    selected:boolean;
 }
 
 export class Subject implements ISubject {
@@ -33,6 +34,7 @@ export class Subject implements ISubject {
     is_library_subject:boolean;
     is_deleted:boolean;
     type:string;
+    selected: boolean;
 
     constructor
     (
@@ -50,7 +52,8 @@ export class Subject implements ISubject {
         authors_contributors?:string,
         is_library_subject?:boolean,
         is_deleted?:boolean,
-        type?:string
+        type?:string,
+        selected?:boolean
     )
     {
         this.id = id;
@@ -68,5 +71,6 @@ export class Subject implements ISubject {
         this.is_library_subject = is_library_subject;
         this.is_deleted = is_deleted;
         this.type = type;
+        this.selected = selected;
     }
 }

@@ -324,18 +324,7 @@ export class EditSubjectController {
     };
 
     public foldGrain = function(grain:IGrain) {
-        var grainIndexInSelection = this._selectedGrainList.indexOf(grain),
-            grainIndexInFoldedList = this._foldedGrainList.indexOf(grain);
-
-        if (grainIndexInSelection !== -1 && grainIndexInFoldedList === -1) {
-            this._selectedGrainList.splice(grainIndexInSelection, 1);
-
-            if (this._selectedGrainList.length > 1) {
-                this._selectedGrainList.sort(function(grainA:IGrain, grainB:IGrain) {
-                    return grainA.order_by > grainB.order_by;
-                });
-            }
-        }
+        var grainIndexInFoldedList = this._foldedGrainList.indexOf(grain);
 
         if (grainIndexInFoldedList !== -1) {
             this._foldedGrainList.splice(grainIndexInFoldedList, 1);

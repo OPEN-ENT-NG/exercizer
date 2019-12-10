@@ -167,7 +167,8 @@ class TeacherDashboardSubjectTabController {
                     }
                 );
                 self._resetSelectedSubjectList();
-            } else if (self._selectedFolderList.length >0) {
+            }
+            if (self._selectedFolderList.length >0) {
                 self._folderService.remove(self._selectedFolderList).then(
                     function (data) {
                         self._folderService.resolve().then(
@@ -207,7 +208,8 @@ class TeacherDashboardSubjectTabController {
                     }
                 );
                 self._resetSelectedSubjectList();
-            } else if (self._selectedFolderList.length > 0) {
+            }
+            if (self._selectedFolderList.length > 0) {
                 self._folderService.duplicate(folderParent, self._selectedFolderList).then(
                     function (data) {                       
                         self._folderService.resolve().then(
@@ -249,7 +251,8 @@ class TeacherDashboardSubjectTabController {
                     }
                 );
                 self._resetSelectedSubjectList();
-            } else if (self._selectedFolderList.length > 0) {
+            }
+            if (self._selectedFolderList.length > 0) {
                 // copy folder list
                 self._folderService.move(folderParent, self._selectedFolderList).then(
                     function (data) {

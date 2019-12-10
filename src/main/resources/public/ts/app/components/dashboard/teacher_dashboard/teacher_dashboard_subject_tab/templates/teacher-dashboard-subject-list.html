@@ -77,7 +77,12 @@
             <div class="row" data-ng-show="displayList == 'domino'">
                 <div class="fallen dominos">
                     <!-- folder part -->
-                    <div data-ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'label':false">
+                    <explorer
+                        ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'label':false"
+                        ng-model="folder.selected"
+                        ng-change="selectFolder(folder)"
+                        on-open="openFolder(folder)"
+                    >
                         <div class="item">
                             <section class="domino">
                                     <div class="top" style="padding-top : 10%;"
@@ -92,22 +97,25 @@
                                 <div class="bottom">
                                     <div class="content">
                                         <div class="cell">
-                                            <strong data-ng-click="clickOnFolderTitle(folder)">[[folder.label]]</strong>
+                                            <strong>[[folder.label]]</strong>
                                             <br />
                                             <br />
-                                        </div>
-                                        <div data-ng-show="canManageFolder()" class="bottom-locked eleven vertical-spacing-twice">
-                                            <input  type="checkbox" data-ng-model="folder.selected" class="right-magnet cell" data-ng-change="selectFolder(folder)"/>
                                         </div>
                                     </div>
                                 </div>
                             </section>
                         </div>
-                    </div>
+                    </explorer>
                     <!-- subject part -->
                     <!-- my subject -->
-                    <div data-ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'title':false">
-                        <div  class="item" >
+                    <explorer
+                        ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'title':false"
+                        ng-model="subject.selected"
+                        ng-change="selectSubject(subject)"
+                        on-open="openSubject(subject)"
+                        class="item"
+                    >
+                        <div>
                             <section class="domino">
                                 <div class="top"
                                      data-ng-if="display.tab == 'mySubject'"
@@ -128,7 +136,7 @@
                                                 <div class="cell title-icon">
                                                     <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                                                 </div>
-                                                <strong data-ng-click="clickOnSubjectTitle(subject)">[[ subject.title | limitTo: 35  ]][[ subject.title.length > 35 ? '...' : '']]</strong>
+                                                <strong>[[ subject.title | limitTo: 35  ]][[ subject.title.length > 35 ? '...' : '']]</strong>
                                             </div>
                                             <div class="row">
                                                 <span data-ng-if="subject.modified"><i18n>exercizer.domino.modified</i18n> [[subject.modified | date: 'dd/MM/yyyy']]</span>
@@ -138,9 +146,6 @@
                                             </div>
                                         </div>
                                         <div data-ng-show="canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
-                                            <div class="right-magnet cell">
-                                                <input type="checkbox" data-ng-model="subject.selected" data-ng-change="selectSubject(subject)"/>
-                                            </div>
                                             <div class="right-magnet cell" data-ng-show="subject.shared.length > 0"><i class="shared" style="position: inherit;   bottom: 0px;  right: 0px;"></i>
                                             </div>
                                         </div>
@@ -148,7 +153,7 @@
                                 </div>
                             </section>
                         </div>
-                    </div>
+                    </explorer>
 
                 </div>
             </div>
@@ -159,7 +164,12 @@
                     <thead>
                         <tr>
                             <th scope="col" class="icon">
-                                <input type="checkbox" data-ng-model="data.selectAll" data-ng-change="selectAllFn(data.selectAll)" />
+                                <input
+                                    type="checkbox"
+                                    ng-model="data.selectAll"
+                                    ng-click="$event.stopPropagation()"
+                                    ng-change="selectAllFn(data.selectAll)"
+                                />
                             </th>
                             <!-- icon folder -->
                             <th data-ng-if="display.tab == 'mySubject'"><i class="drag-anchor" ></i></th>
@@ -175,7 +185,12 @@
                     <!-- folder list-->
                         <tr data-ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'label':false">
                             <td>
-                                <input type="checkbox" data-ng-model="folder.selected" data-ng-change="selectFolder(folder)"/>
+                                <input
+                                    type="checkbox"
+                                    ng-model="folder.selected"
+                                    ng-click="$event.stopPropagation()"
+                                    ng-change="selectFolder(folder)"
+                                />
                             </td>
                             <td data-ng-if="display.tab == 'mySubject'"
                                 dragstart="drag(folder, $originalEvent)"
@@ -185,14 +200,19 @@
                                 <i class="folder"></i>
                             </td>
                             <td>
-                                <a data-ng-click="clickOnFolderTitle(folder)">[[folder.label]]</a>
+                                <a data-ng-click="openFolder(folder)">[[folder.label]]</a>
                             </td>
                             <td></td>
                         </tr>
                     <!-- subject  list -->
                         <tr data-ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'title':false">
                             <td>
-                                <input type="checkbox" data-ng-model="subject.selected" data-ng-change="selectSubject(subject)"/>
+                                <input
+                                    type="checkbox"
+                                    ng-model="subject.selected"
+                                    ng-click="$event.stopPropagation()"
+                                    ng-change="selectSubject(subject)"
+                                />
                             </td>
                             <td data-ng-if="display.tab == 'mySubject'"
                                 dragstart="drag(subject, $originalEvent)"
@@ -202,7 +222,7 @@
                                 <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                             </td>
                             <td>
-                                <a data-ng-click="clickOnSubjectTitle(subject)">[[subject.title]]</a>
+                                <a data-ng-click="openSubject(subject)">[[subject.title]]</a>
                             </td>
                             <td>
                                 <a>[[subject.owner_username]]</a>

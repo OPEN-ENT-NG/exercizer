@@ -111,7 +111,7 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                  * EVENT
                  */
 
-                scope.clickOnFolderTitle = function (folder) {
+                scope.openFolder = function (folder) {
                     scope.data.selectAll = false;
                     scope.setCurrentFolder(folder);
                 };
@@ -130,7 +130,8 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                     scope.currentFolderId = folder.id;
                 };
 
-                scope.clickOnSubjectTitle = function (subject) {
+                scope.openSubject = function (subject) {
+                    // This code is duplicated in teacherDashboardToaster.ts
                     if (subject.id) {
                         if ('simple' === subject.type) {
                             $location.path('/subject/edit/simple/' + subject.id);
@@ -155,12 +156,10 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                 };
 
                 scope.selectFolder = function (folder) {
-                    folder.selected = folder.selected ? true : false;
                     scope.$emit('E_SELECT_FOLDER', folder);
                 };
                 
                 scope.selectSubject = function (subject) {
-                    subject.selected = subject.selected ? true : false;
                     scope.$emit('E_SELECT_SUBJECT', subject);
 
                 };

@@ -2,7 +2,7 @@ import { ng, model, Behaviours, idiom } from 'entcore';
 import { LibraryService } from "entcore/types/src/ts/library/library.service";
 import { Subject } from "../../../../../models/domain";
 
-export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', ['FolderService','SubjectService', 'libraryService', (FolderService,SubjectService, libraryService: LibraryService<Subject>) => {
+export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', ['FolderService','SubjectService', 'libraryService', '$location', 'AccessService', (FolderService,SubjectService, libraryService: LibraryService<Subject>, $location, AccessService) => {
         return {
             restrict: 'E',
             scope : {},
@@ -26,7 +26,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
 
                         scope.$on('E_DISPLAY_DASHBOARD_TOASTER', function (event, subjectList, folderList) {
                             var length = subjectList.length + folderList.length;
-                            if (length === 0 || (subjectList.length > 0 && folderList.length > 0)) {
+                            if (length === 0) {
                                 hide();
                             } else{
                                 scope.isDisplayed = true;
@@ -74,6 +74,48 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                         }
 
                         scope.itemList = [
+                            {
+                                publicName : idiom.translate('exercizer.instructer.toaster.open'),
+                                actionOnClick : function()
+                                {
+                                    var subject;
+                                    if(scope.folderList.length == 1){
+                                        // folder is selected
+                                        subject = FolderService.folderById(scope.folderList[0]);
+                                    }
+                                    if(scope.subjectList.length == 1){
+                                        // subject is selected
+                                        subject = SubjectService.getById(scope.subjectList[0]);
+                                    }
+
+                                    // This code is duplicated in teacherDashboardSubjectList.ts
+                                    if (subject.id) {
+                                        if ('simple' === subject.type) {
+                                            $location.path('/subject/edit/simple/' + subject.id);
+                                        } else {
+                                            if (model.me.hasRight(subject, 'owner')) {
+                                                $location.path('/subject/edit/' + subject.id);
+                                            } else if (model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.manager)) {
+                                                $location.path('/subject/edit/' + subject.id);
+                                            } else if (model.me.hasRight(subject, Behaviours.applicationsBehaviours.exercizer.rights.resource.contrib)) {
+                                                $location.path('/subject/edit/' + subject.id);
+                                            } else {
+                                                AccessService.reader = true;
+                                                $location.path('/subject/copy/preview/perform/' + subject.id);
+                                            }
+                                        }
+                                    }
+                                },
+                                display : function()
+                                {
+                                    if(scope.folderList.length + scope.subjectList.length == 1){
+                                        // only one item
+                                        return true;
+                                    } else{
+                                        return false;
+                                    }
+                                }
+                            },
                             {
                                 publicName : idiom.translate('exercizer.instructer.toaster.property'),
                                 actionOnClick : function(){
@@ -178,7 +220,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                     scope.$emit('E_COPY_SELECTED_FOLDER_SUBJECT');
                                 },
                                 display : function(){
-                                    return (scope.subjectList.length > 0 && scope.folderList.length == 0) || (scope.subjectList.length == 0 && scope.folderList.length > 0);
+                                    return true;
                                 }
                             },
                             {
@@ -191,8 +233,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                         // is only folder
                                         return true;
                                     } else {
-                                        return scope.subjectList.length > 0 && scope.folderList.length == 0 &&
-                                            scope.lowerRight == 'owner';
+                                        return scope.lowerRight == 'owner';
                                     }
                                 }
                             },
@@ -240,8 +281,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                         // is only folder
                                         return true;
                                     } else {
-                                        return scope.subjectList.length > 0 && scope.folderList.length == 0 &&
-                                            (scope.lowerRight == 'manager' || scope.lowerRight == 'owner');
+                                        return (scope.lowerRight == 'manager' || scope.lowerRight == 'owner');
                                     }
                                 }
                             }

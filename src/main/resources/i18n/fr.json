@@ -304,6 +304,7 @@
     "exercizer.copy.state.submitted" : "Rendu",
     "exercizer.copy.state.started" : "Commencé",
     "exercizer.export" : "Export",
+    "exercizer.instructer.toaster.open" : "Ouvrir",
     "exercizer.instructer.toaster.property" : "Propriétés",
     "exercizer.instructer.toaster.share" : "Partager",
     "exercizer.instructer.toaster.schedule" : "Distribuer",
