@@ -1,0 +1,1 @@
+INSERT INTO exercizer.subject_lesson_type (label) VALUES ('exercizer.subject.lesson.type23');

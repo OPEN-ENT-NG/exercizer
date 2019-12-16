@@ -490,6 +490,7 @@
     "exercizer.subject.lesson.type20" : "Enseignement moral et civique",
     "exercizer.subject.lesson.type21" : "Droit",
     "exercizer.subject.lesson.type22" : "Autre",
+    "exercizer.subject.lesson.type23" : "Sciences Numériques et Technologie (SNT)",
     "exercizer.push.notif.assigncopy.body": "{0} vous a attribué le sujet {1} à rendre pour le {2}",
     "exercizer.push.notif.submitcopy.body": "{0} a rendu sa copie du sujet {1}",
     "exercizer.push.notif.correctcopy.body": "{0} a corrigé votre copie du sujet {1}",
