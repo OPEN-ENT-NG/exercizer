@@ -44,23 +44,62 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                     subjectShareTable = "exercizer.subject_shares",
                     grainTable = "exercizer.grain",
                     membersTable = "exercizer.members";
+            final boolean exportSubjectPathFolders = false;
 
             JsonArray userIdParamTwice = new JsonArray().add(userId).add(userId);
             JsonArray resourcesIdsAndUserIdParamTwice = userIdParamTwice;
             String resourcesList = "";
+            HashMap<String, JsonArray> fieldsToNull = new HashMap<String, JsonArray>();
 
             if(resourcesIds != null)
             {
                 resourcesIdsAndUserIdParamTwice = new JsonArray().addAll(resourcesIds).addAll(userIdParamTwice);
                 resourcesList = Sql.listPrepared(resourcesIds);
+                fieldsToNull.put(subjectTable, new JsonArray().add("folder_id"));
             }
 
             String queryFolder =
-                    "SELECT DISTINCT fol.* " +
-                            "FROM " + folderTable + " fol " +
-                            "WHERE fol.owner = ? " +
-                            "OR fol.id IN (SELECT sub.folder_id FROM " + subjectTable + " sub " +
-                                            "WHERE sub.owner = ?)";
+                "WITH RECURSIVE folder_path AS " +
+                "( " +
+                "  SELECT " +
+                "    S.id AS sid, S.owner, F.id AS fid, F.parent_folder_id " +
+                "  FROM " +
+                "    exercizer.folder F " +
+                "  INNER JOIN " +
+                "    exercizer.subject S ON (F.id = S.folder_id) " +
+                "UNION " +
+                "  SELECT " +
+                "    FP.sid, FP.owner, F.id, F.parent_folder_id " +
+                "  FROM " +
+                "    folder_path FP, exercizer.folder F " +
+                "  WHERE FP.parent_folder_id = F.id " +
+                ") " +
+                "SELECT DISTINCT " +
+                "  fol.*  " +
+                "FROM " +
+                "  exercizer.folder fol  " +
+                "WHERE " +
+                "  ( " +
+                "    fol.owner = ? " +
+                "    OR fol.id IN " +
+                "    ( " +
+                "      SELECT FP.fid " +
+                "      FROM folder_path FP  " +
+                "      WHERE FP.owner = ? " +
+                "    ) " +
+                "  ) " +
+                ( resourcesIds == null ? "" :
+                    exportSubjectPathFolders == true ?
+                    "  AND fol.id IN " +
+                    "  ( " +
+                    "    SELECT FP.fid " +
+                    "    FROM folder_path FP " +
+                    "    WHERE FP.sid IN " + resourcesList + " " +
+                    "  ) "
+                    :
+                    "AND 1 = 0"
+                );
+
             queries.put(folderTable,new SqlStatementsBuilder().prepared(queryFolder,userIdParamTwice).build());
 
             String querySubject =
@@ -91,7 +130,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                 @Override
                 public void handle(String path) {
                     if (path != null) {
-                        exportTables(queries, new JsonArray(), path, exported, handler);
+                        exportTables(queries, new JsonArray(), fieldsToNull, path, exported, handler);
                     }
                     else {
                         handler.handle(exported.get());
