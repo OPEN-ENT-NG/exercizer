@@ -14,6 +14,8 @@ export const correctionFillText = ng.directive('correctionFillText',
             `,
             link: (scope: any) => {
 
+                scope.isViewingCorrection = true;
+
                 scope.correction = [];
                 scope.customData = scope.grainScheduled.grain_data.custom_data;
                 scope.customData.zones.forEach( _ => {

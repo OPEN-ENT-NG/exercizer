@@ -41,6 +41,10 @@ export const fillZone = ng.directive('fillZone',
                     scope.optionData.isCorrect = scope.optionData.correction[index];
                 }
 
+                if (scope.$parent.isViewingCorrection) {
+                    scope.optionData.isCorrect = true;
+                }
+
                 setTimeout(() => {
                     scope.optionData.mode = 'view';
                     if (element.parents('edit-fill-text').length > 0) {
