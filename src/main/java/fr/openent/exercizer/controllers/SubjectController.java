@@ -441,10 +441,10 @@ public class SubjectController extends ControllerHelper {
 								public void handle(Either<String, JsonObject> res)
 								{
 									Handler<Either<String, JsonObject>> hnd = notEmptyResponseHandler(request);
-									if(res.isLeft() == true)
-										hnd.handle(res);
-									else // Update the subject's modified date
-										subjectService.update(new JsonObject().put("id", subjectId), user, hnd);
+									if (res.isRight()) {
+										subjectService.update(new JsonObject().put("id", subjectId), user, handler -> {});
+									}
+									hnd.handle(res);
 								}
 							});
 						}
@@ -485,10 +485,10 @@ public class SubjectController extends ControllerHelper {
 								public void handle(Either<String, JsonObject> res)
 								{
 									Handler<Either<String, JsonObject>> hnd = defaultResponseHandler(request);
-									if(res.isLeft() == true)
-										hnd.handle(res);
-									else // Update the subject's modified date
-										subjectService.update(new JsonObject().put("id", subjectId), user, hnd);
+									if (res.isRight()) {
+										subjectService.update(new JsonObject().put("id", subjectId), user, handler -> {});
+									}
+									hnd.handle(res);
 								}
 							});
 						}
