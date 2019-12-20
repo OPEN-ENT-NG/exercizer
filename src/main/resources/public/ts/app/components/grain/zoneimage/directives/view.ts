@@ -1,6 +1,7 @@
 import { ng, $ } from 'entcore';
 import { CustomData, IconZone } from '../models/CustomData';
 import { automaticCorrection } from '../../common/zonegrain/model';
+import { transformX, transformY } from '../../zonetext/directives/zoneCommon';
 
 export const viewZoneImage = ng.directive('viewZoneImage',
     [() => {
@@ -39,15 +40,15 @@ export const viewZoneImage = ng.directive('viewZoneImage',
                     scope.$apply();
                 });
 
-                scope.getResizedIconZone = function(iconZone: IconZone) {
-                    let img = $("#bckgrnd");
-                    let marginLeft = (img.outerWidth(true) - img.outerWidth()) / 2;
-                    return {
-                        x: iconZone.position.x * (img.width() / 760) + marginLeft,
-                        y: iconZone.position.y * (img.height() / 600),
-                        z: iconZone.position.z
-                    }
-                }
+                scope.getResizedIconZoneX = function(x: number, reverseTransform: boolean): number
+                {
+                    return transformX("#bckgrnd", x, reverseTransform);
+                };
+
+                scope.getResizedIconZoneY = function(y: number, reverseTransform: boolean): number
+                {
+                    return transformY("#bckgrnd", y, reverseTransform);
+                };
             }
         };
     }]

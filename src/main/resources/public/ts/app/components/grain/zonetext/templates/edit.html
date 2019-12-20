@@ -24,8 +24,10 @@
             <div class="image-container">
                 <image-select ng-model="grain.grain_data.custom_data.guideImage" ng-change="updateGrain();"></image-select>
             </div>
-            <placed-block ng-repeat="textZone in grain.grain_data.custom_data.zones" style="padding:0;"
-                            draggable x="getResizedTextZone(textZone).x" y="getResizedTextZone(textZone).y" z="getResizedTextZone(textZone).z">
+            <placed-block ng-repeat="textZone in grain.grain_data.custom_data.zones" style="padding:0;" draggable
+                            x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
+                            transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
+            >
                 <text-zone>
                     <i class="close" ng-click="removeZone(textZone)"></i>
                     <i class="edit" ng-click="editZone(textZone)"></i>

@@ -1,6 +1,7 @@
 import { ng, $ } from 'entcore';
 import { automaticCorrection } from '../../common/zonegrain/model';
 import { CustomData, TextZone } from '../models/CustomData';
+import { transformX, transformY, transformW } from './zoneCommon';
 
 export const viewZoneText = ng.directive('viewZoneText',
     [() => {
@@ -35,19 +36,24 @@ export const viewZoneText = ng.directive('viewZoneText',
                     }
                 };
 
-                scope.getResizedTextZone = function(textZone: TextZone) {
-                    let img = $("#bckgrnd");
-                    let marginLeft = (img.outerWidth(true) - img.outerWidth()) / 2;
+                scope.getResizedTextZoneX = function(x: number, reverseTransform: boolean): number
+                {
+                    return transformX("#bckgrnd", x, reverseTransform);
+                };
+
+                scope.getResizedTextZoneY = function(y: number, reverseTransform: boolean): number
+                {
+                    return transformY("#bckgrnd", y, reverseTransform);
+                };
+
+                scope.getResizedTextZoneW = function(w: number, reverseTransform: boolean): number
+                {
+                    let trans = transformW("#bckgrnd", w, reverseTransform);
                     $(".base-image > article > text-zone").css({
-                        width: 150 * (img.width() / 760)
+                        width: trans
                     });
-                    return {
-                        x: textZone.position.x * (img.width() / 760) + marginLeft,
-                        y: textZone.position.y * (img.height() / 600),
-                        z: textZone.position.z,
-                        w: 150 * (img.width() / 760)
-                    }
-                }
+                    return trans;
+                };
             }
         };
     }]
