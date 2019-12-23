@@ -456,21 +456,6 @@ export class SubjectCopyService implements ISubjectCopyService {
             default:
                 return null;
         }
-};
-
-    public copyStateBackGroundColorClass = function(copy){
-        switch (this.copyState(copy)){
-            case 'is_corrected':
-                return "background-color-corrected";
-            case 'is_correction_on_going':
-                return "background-color-is-correction-on-going";
-            case 'is_submitted':
-                return "background-color-is-submitted";
-            case 'has_been_started':
-                return "background-color-has-been-started";
-            default:
-                return null;
-        }
     };
 
     public copyStateText = function(copy){

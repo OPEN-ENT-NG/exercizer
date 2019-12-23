@@ -110,10 +110,6 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                     return SubjectCopyService.copyStateColorClass(scope.subjectCopy);
                 };
 
-                scope.copyStateBackGroundColorClass = function(){
-                    return SubjectCopyService.copyStateBackGroundColorClass(scope.subjectCopy);
-                };
-
                 scope.textBeforeTitle = function(){
                     return SubjectCopyService.copyStateText(scope.subjectCopy)?  SubjectCopyService.copyStateText(scope.subjectCopy) + " - " : "";
                 };

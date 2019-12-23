@@ -247,10 +247,6 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     return SubjectCopyService.copyStateText(copy);
                 };
 
-                scope.copyStateBackGroundColorClass = function(copy){
-                    return SubjectCopyService.copyStateBackGroundColorClass(copy);
-                };
-
                 scope.numberCopyNotCorrected = function(){
                     var res = 0;
                     angular.forEach(scope.subjectCopyList, function(copy){

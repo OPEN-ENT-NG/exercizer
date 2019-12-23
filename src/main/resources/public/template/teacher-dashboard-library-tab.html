@@ -106,7 +106,7 @@
                         data-ng-repeat="subject in teacherDashboardLibraryTabController.subjectList"
                         ng-model="subject.selected"
                         ng-change="teacherDashboardLibraryTabController.selectSubject(subject)"
-                        on-open="teacherDashboardLibraryTabController.previewSelectedSubject()"
+                        on-open="teacherDashboardLibraryTabController.previewSelectedSubject(subject)"
                     >
                         <div data-ng-if="teacherDashboardLibraryTabController.searchByFilters(subject)" class="item" style="width: 100%; max-width: none;">
                             <section class="domino">
