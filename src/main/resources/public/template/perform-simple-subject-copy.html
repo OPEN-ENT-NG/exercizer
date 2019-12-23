@@ -35,11 +35,11 @@
                         <h3><i18n>exercizer.simple.make.label</i18n></h3>
 
                         <div data-ng-if="performSimpleSubjectCopyController.canHomeworkSubmit()"
-                            class="twelve cell horizontal-spacing select-file input-block flex-row align-center" style="margin-top:5px;margin-bottom:5px">
+                            class="twelve cell horizontal-spacing select-file input-block align-center" style="margin-top:5px;margin-bottom:5px">
 
                             <div drop-files="performSimpleSubjectCopyController.newFiles"
                                 on-drop="performSimpleSubjectCopyController.setCurrentFileName()"
-                                class="droppable flex-row align-center seven">
+                                class="droppable flex-row align-center" style="width: 25%">
 
                                     <i ng-class="{'upload': !performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename, 'attachment': performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename}"
                                         class="horizontal-spacing medium-text"></i>
@@ -55,7 +55,7 @@
                                 <input type="file" style="z-index:-1" files-input-change="performSimpleSubjectCopyController.setCurrentFileName()"  ng-model="performSimpleSubjectCopyController.newFiles" />
                             </div>
                             &nbsp;&nbsp;
-                            <button class="file-button flat-button no-margin"><i18n ng-if="performSimpleSubjectCopyController.canHomeworkReplace()">exercizer.simple.upload.replace</i18n><i18n ng-if="!performSimpleSubjectCopyController.canHomeworkReplace()">exercizer.simple.upload.choose</i18n></button>
+                            <button class="file-button flat-button no-margin" style="width: 20%; margin-top: 25px !important"><i18n ng-if="performSimpleSubjectCopyController.canHomeworkReplace()">exercizer.simple.upload.replace</i18n><i18n ng-if="!performSimpleSubjectCopyController.canHomeworkReplace()">exercizer.simple.upload.choose</i18n></button>
                         </div>
                         <div data-ng-if="performSimpleSubjectCopyController.canHomeworkOnlyView()"
                             class="twelve cell"
