@@ -102,7 +102,12 @@
                 </h3>
 
                 <div class="fallen dominos">
-                    <div data-ng-repeat="subject in teacherDashboardLibraryTabController.subjectList">
+                    <explorer
+                        data-ng-repeat="subject in teacherDashboardLibraryTabController.subjectList"
+                        ng-model="subject.selected"
+                        ng-change="teacherDashboardLibraryTabController.selectSubject(subject)"
+                        on-open="teacherDashboardLibraryTabController.previewSelectedSubject()"
+                    >
                         <div data-ng-if="teacherDashboardLibraryTabController.searchByFilters(subject)" class="item" style="width: 100%; max-width: none;">
                             <section class="domino">
                                 <div class="top">
@@ -134,11 +139,6 @@
                                             <div class="cell" data-ng-if="subject.authors_contributors">
                                                 <em class="high-importance"><i18n>exercizer.library.row.contributor</i18n> : [[ subject.authors_contributors ]]</em>
                                             </div>
-                                            <div class="cell right-magnet">
-                                                <input type="checkbox"
-                                                       data-ng-checked="teacherDashboardLibraryTabController.isSubjectSelected(subject)"
-                                                       data-ng-click="teacherDashboardLibraryTabController.selectSubject(subject)" />
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -159,7 +159,6 @@
                         <button data-ng-click="teacherDashboardLibraryTabController.unpublish()" data-ng-show="teacherDashboardLibraryTabController.onlyOneOwnerSubjectIsSelected()"><i18n>exercizer.library.toaster.unpublish</i18n></button>
                         <button data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject()" data-ng-show="teacherDashboardLibraryTabController.onlyOneSubjectIsSelected()"><i18n>exercizer.library.toaster.preview</i18n></button>
                         <button data-ng-click="teacherDashboardLibraryTabController.displayModalCopyPaste()"><i18n>exercizer.library.toaster.copy</i18n></button>
-                        <button data-ng-click="teacherDashboardLibraryTabController.resetSelection()"><i18n>exercizer.cancel</i18n></button>
                     </div>
                 </div>
             </div>
