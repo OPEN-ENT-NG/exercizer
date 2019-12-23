@@ -41,7 +41,7 @@ export class EditSubjectController {
 
     // organizer
     private _isOrganizerFolded:boolean;
-    private _reOrderIterationCount:number;
+    private _reOrderTimeout:any;
 
     constructor
     (
@@ -82,7 +82,7 @@ export class EditSubjectController {
 
         // organizer
         this._isOrganizerFolded = false;
-        this._reOrderIterationCount = 0;
+        this._reOrderTimeout = null;
 
         _$scope.$root.$on('E_SUBJECTEDIT_DROPABLE_ACTIVATED', function(event, displayDropZone:boolean) {
             self._isDropableZone = displayDropZone;
@@ -363,29 +363,27 @@ export class EditSubjectController {
         this._$location.path('/subject/copy/preview/perform/' + this._subject.id + '/');
     };
 
-    public reOrder = function() {
-        if (this._reOrderIterationCount < this._grainList.length) {
+    public reOrder = function()
+    {
+        angular.forEach(this._grainList, function (grainItem) {
+            if (grainItem.order_by != parseFloat(grainItem.index) + 1) {
+                grainItem.order_by = parseFloat(grainItem.index) + 1;
+            }
+        });
 
-            angular.forEach(this._grainList, function (grainItem) {
-                if (grainItem.order_by != parseFloat(grainItem.index) + 1) {
-                    grainItem.order_by = parseFloat(grainItem.index) + 1;
-                }
-            });
-
-            this._reOrderIterationCount += 1;
-        }
-
-        if (this._reOrderIterationCount === this._grainList.length) {
-            this._reOrderIterationCount = 0;
-
+        if (this._reOrderTimeout == null)
+        {
             var self = this;
-
-            angular.forEach(this._grainList, function (grain:IGrain) {
-                if (!self.isGrainFolded(grain)) {
-                    self.foldGrain(grain);
-                }
-                self.updateGrain(grain);
-            });
+            this._reOrderTimeout = window.setTimeout(function()
+            {
+                angular.forEach(this._grainList, function (grain:IGrain) {
+                    if (!self.isGrainFolded(grain)) {
+                        self.foldGrain(grain);
+                    }
+                    self.updateGrain(grain);
+                });
+                self._reOrderTimeout = null;
+            }, 0);
         }
     };
 
