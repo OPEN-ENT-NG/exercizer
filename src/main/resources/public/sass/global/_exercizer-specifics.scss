@@ -901,4 +901,9 @@ body.exercizer {
   .left-margin-5 {
     margin-left: 5px;
   }
+  @media screen and (max-width: $fat-mobile) {
+   .text-zone-size {
+    font-size: 70%;
+   }
+  }
 }
