@@ -77,12 +77,16 @@
                         <input class="two cell" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, true)"/>
                     </div>
                     <div class="row vertical-spacing">
-                        <input type="checkbox" data-ng-model="option.allow_students_to_update_copy"/>
-                        <span><i18n>exercizer.scheduled.subject.improve</i18n></span>
+                        <label>
+                            <input type="checkbox" data-ng-model="option.allow_students_to_update_copy"/>
+                            <span style="height: unset;">&nbsp;<i18n>exercizer.scheduled.subject.improve</i18n></span>
+                        </label>
                     </div>
                     <div class="row vertical-spacing">
-                        <input type="checkbox" data-ng-model="option.random_display"/>
-                        <span><i18n>exercizer.scheduled.subject.random.display</i18n></span>
+                        <label>
+                            <input type="checkbox" data-ng-model="option.random_display"/>
+                            <span style="height: unset;">&nbsp;<i18n>exercizer.scheduled.subject.random.display</i18n></span>
+                        </label>
                     </div>
                     <!--
                     <div class="row vertical-spacing">
