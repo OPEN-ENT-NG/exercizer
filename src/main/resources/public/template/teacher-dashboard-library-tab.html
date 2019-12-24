@@ -115,29 +115,31 @@
                                 </div>
                                 <div class="bottom">
                                     <div class="content">
-                                        <div class="row custom-ellipsis">
-                                            <div class="cell title-icon">
-                                                <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
+                                        <div class="cell">
+                                            <div class="row custom-ellipsis">
+                                                <div class="cell title-icon">
+                                                    <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
+                                                </div>
+                                                <strong data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)">[[ subject.title ]]</strong>
                                             </div>
-                                            <strong data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)">[[ subject.title ]]</strong>
-                                        </div>
-                                        <div class="row">
-                                            <div class="cell">
-                                                [[ teacherDashboardLibraryTabController.getSubjectLessonType(subject).label ]]&nbsp;/&nbsp;<em><i18n>exercizer.library.row.level</i18n> [[ teacherDashboardLibraryTabController.getSubjectLessonLevel(subject).label ]]</em>
+                                            <div class="row primary-color">
+                                                <div class="cell">
+                                                    [[ teacherDashboardLibraryTabController.getSubjectLessonType(subject).label ]]&nbsp;/&nbsp;<em><i18n>exercizer.library.row.level</i18n> [[ teacherDashboardLibraryTabController.getSubjectLessonLevel(subject).label ]]</em>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="subject-library-tag" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.getSubjectTags(subject)" data-ng-click="teacherDashboardLibraryTabController.selectSubjectTag(subjectTag)">
-                                                [[ subjectTag.label ]]
+                                            <div class="row">
+                                                <div class="subject-library-tag" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.getSubjectTags(subject)" data-ng-click="teacherDashboardLibraryTabController.selectSubjectTag(subjectTag)">
+                                                    [[ subjectTag.label ]]
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <i18n>exercizer.library.row.owner</i18n> [[ subject.owner_username ]] <i18n>exercizer.library.row.owner2</i18n> [[ subject.created | date: 'dd/MM/yyyy' ]]
-                                        </div>
+                                            <div class="row primary-color">
+                                                <i18n>exercizer.library.row.owner</i18n> [[ subject.owner_username ]] <i18n>exercizer.library.row.owner2</i18n> [[ subject.created | date: 'dd/MM/yyyy' ]]
+                                            </div>
 
-                                        <div class="bottom-locked eleven vertical-spacing-tripple">
-                                            <div class="cell" data-ng-if="subject.authors_contributors">
-                                                <em class="high-importance"><i18n>exercizer.library.row.contributor</i18n> : [[ subject.authors_contributors ]]</em>
+                                            <div class="bottom-locked eleven vertical-spacing-tripple">
+                                                <div class="cell" data-ng-if="subject.authors_contributors">
+                                                    <em class="high-importance"><i18n>exercizer.library.row.contributor</i18n> : [[ subject.authors_contributors ]]</em>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
