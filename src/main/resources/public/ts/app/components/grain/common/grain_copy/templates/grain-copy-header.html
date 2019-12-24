@@ -11,7 +11,7 @@
     <a class="comment right-magnet cell"
        style="margin: 0;"
        data-ng-click="toggleGrainCopyHint()"
-       data-ng-if="hasAnswerHint() && isTeacher">
+       data-ng-if="hasAnswerHint() && displayHint">
         <i18n>exercizer.grain.help</i18n>&nbsp;&nbsp;
         <i data-ng-show="isAnswerHintFolded" data-tooltip="exercizer.unfold" class="down-open"></i>
         <i data-ng-hide="isAnswerHintFolded" data-tooltip="exercizer.fold" class="up-open"></i>

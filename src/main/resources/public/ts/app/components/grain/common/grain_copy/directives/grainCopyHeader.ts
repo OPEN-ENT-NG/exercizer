@@ -10,7 +10,8 @@ export const grainCopyHeader = ng.directive('grainCopyHeader',
                 grainCopyList: '=',
                 isTeacher: '=?',
                 displayCorrection: '=?',
-                onDisplayCorrection: '&?'
+                onDisplayCorrection: '&?',
+                displayHint: '=',
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/common/grain_copy/templates/grain-copy-header.html',
             link:(scope:any) => {
