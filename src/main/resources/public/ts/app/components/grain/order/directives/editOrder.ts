@@ -24,8 +24,8 @@ export const editOrder = ng.directive('editOrder',
 
                 if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
                     scope.grain.grain_data.custom_data = new OrderCustomData();
-                    scope.addAnswer( idiom.translate('exercizer.grain.order.default1'));
-                    scope.addAnswer( idiom.translate('exercizer.grain.order.default2'));
+                    scope.addAnswer( idiom.translate(''));
+                    scope.addAnswer( idiom.translate(''));
                 }
 
                 scope.deleteAnswer = function(answer){

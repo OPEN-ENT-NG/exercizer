@@ -21,8 +21,8 @@ export const editMultipleAnswer = ng.directive('editMultipleAnswer',
 
                 if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
                     scope.grain.grain_data.custom_data = new MultipleAnswerCustomData();
-                    scope.addAnswer( idiom.translate('exercizer.grain.manswer.default1'));
-                    scope.addAnswer( idiom.translate('exercizer.grain.manswer.default2'));
+                    scope.addAnswer( idiom.translate(''));
+                    scope.addAnswer( idiom.translate(''));
                 }
 
                 scope.deleteAnswer = function(answer){
