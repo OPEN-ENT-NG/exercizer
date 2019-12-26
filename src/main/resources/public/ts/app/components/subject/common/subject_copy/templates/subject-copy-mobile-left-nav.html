@@ -6,7 +6,7 @@
                     <i18n>exercizer.summary</i18n>
                 </a>
             </li>
-            <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false"
+            <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false | orderObjectBy:'display_order':false"
                 data-ng-click="navigateTo(grainCopy)"
                 data-ng-class="(currentGrainCopy.id === grainCopy.id) ? 'selected' : ''">
                 <a>
