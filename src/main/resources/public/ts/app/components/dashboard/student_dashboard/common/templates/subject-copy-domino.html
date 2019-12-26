@@ -22,7 +22,7 @@
                         <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
                             <i18n>exercizer.domino.by</i18n><em class="high-importance"><a data-ng-href="/userbook/annuaire#[[subjectScheduled.owner]]">[[subjectScheduled.owner_username]]</a></em>
                         </div>
-                        <div class="due-date row" ng-class="{ 'divide-opacity': cantSart() }">
+                        <div class="due-date row" ng-class="{ 'divide-opacity': cantSart(), 'delay': tooLate() }">
                             <!-- Appliquer une class .delay quand le sujet est en retard -->
                             <div data-ng-show="isDueDateDisplayed()">
                               <i18n>exercizer.domino.todelivered</i18n> <strong data-ng-bind="dueDate | date:'dd/MM/yyyy'"></strong> <i18n>exercizer.at</i18n> <span data-ng-bind="dueDate | date:'HH:mm'"></span>

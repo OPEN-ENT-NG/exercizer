@@ -524,7 +524,7 @@ body.exercizer {
       margin-right: 5px;
       vertical-align: middle;
     }
-    .delay {
+    &.delay {
       color: $red;
       &::before {
         @include fonticon;
