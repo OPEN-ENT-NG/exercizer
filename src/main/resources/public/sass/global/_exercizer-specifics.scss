@@ -906,4 +906,8 @@ body.exercizer {
     font-size: 70%;
    }
   }
+  textarea:focus {
+    border-bottom:2px solid #FF8500;
+    outline:0
+   }
 }
