@@ -351,6 +351,13 @@ class TeacherDashboardLibraryTabController {
 
     public displayModalCopyPaste = function() {
         this._$scope.$broadcast('E_DISPLAY_DASHBOARD_MODAL_COPY_PASTE', this._selectedSubjectList, [], true);
+        var that = this;
+        this._$scope.$on('E_CONFIRM_COPY_PASTE',  function(event) {
+            that._selectedSubjectList.forEach(subject => {
+                subject.selected = false;
+            });
+            that._selectedSubjectList = [];
+        });
     };
 
     private _copyPastSelectedSubjectList = function(parentFolder) {

@@ -54,6 +54,10 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
 
                 };
 
+                scope.checkboxClick = function(item) {
+                    item.selected = !item.selected;
+                }
+
                 function createListAutoComplete() {
                     var array = [];
                     angular.forEach(scope.subjectList(), function (value) {
