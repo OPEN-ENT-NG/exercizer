@@ -70,7 +70,9 @@ class SubjectCopyListController {
             let subjectScheduled = this.getSubjectScheduledById(subjectCopy.subject_scheduled_id);
             if (subjectScheduled) {
                 return moment().week() >= moment(subjectScheduled.due_date).week()
-                    && moment().year() >= moment(subjectScheduled.due_date).year()
+                    && (moment().year() >= moment(subjectScheduled.due_date).year() ||
+                    (moment().month() == 11 && moment().week() == 1 &&
+                    moment().year() == (moment(subjectScheduled.due_date).year() -1) ));
             }
         }.bind(this));
     };
