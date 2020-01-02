@@ -721,6 +721,11 @@ body.exercizer {
   .small-cell {
     width: 10px;
   }
+  @media screen and (max-width: $wide-screen) {
+    .cell-initial-float {
+      float: initial;
+    }
+  }
   th.nav {
     border-left: 1px solid;
     border-right: 1px solid;
