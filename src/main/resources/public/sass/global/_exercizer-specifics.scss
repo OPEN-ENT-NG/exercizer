@@ -333,6 +333,7 @@ body.exercizer {
     }
     input[type=text] {
       box-sizing: border-box;
+      padding-left: 1px;
     }
     input[type=text]:focus {
       border-bottom: 1px solid $orange;
