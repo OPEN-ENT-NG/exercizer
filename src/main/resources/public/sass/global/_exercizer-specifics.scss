@@ -909,5 +909,16 @@ body.exercizer {
   textarea:focus {
     border-bottom:2px solid #FF8500;
     outline:0
-   }
+  }
+  @media screen and (max-width: $wide-screen) {
+    .rigid-grid>.twelve {
+      width: auto;
+    }
+    .simple-drop {
+      width: 105% !important;
+    }
+    .simple-button {
+      width: inherit !important;
+    }
+  }
 }
