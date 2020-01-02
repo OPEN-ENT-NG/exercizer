@@ -227,6 +227,7 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                     return a.order_by - b.order_by;
                 });
                 var csvStr = "\ufeff";
+                var noAnswerTranslated = scope.translate('exercizer.grain.noanswer');
                 var i=0;
                 csvStr+= ";";
                 scheduledGrains.forEach(grain => {
@@ -248,30 +249,30 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                                 csvStr+="\"";
                                 switch(grainCopy.grain_type_id) {
                                     case 4: { // Simple answer
-                                        csvStr+= grainCopy.grain_copy_data.custom_copy_data.filled_answer;
+                                        csvStr+= grainCopy.grain_copy_data.custom_copy_data.filled_answer || noAnswerTranslated;
                                         break;
                                     }
                                     case 5: { // Open answer
-                                        csvStr+= grainCopy.grain_copy_data.custom_copy_data.filled_answer.replace(regexp, '');
+                                        csvStr+= (grainCopy.grain_copy_data.custom_copy_data.filled_answer || noAnswerTranslated).replace(regexp, '');
                                         break;
                                     }
                                     case 6: { // Multiple answser
                                         grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.forEach(elem => {
-                                            csvStr+= elem.text + '\r\n';
+                                            csvStr+= (elem.text || noAnswerTranslated) + '\r\n';
                                         });
                                         break;
                                     }
                                     case 7: { // QCM
                                         grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.forEach(elem => {
                                             if (elem.isChecked) {
-                                                csvStr+= elem.text + '\r\n';
+                                                csvStr+= (elem.text || noAnswerTranslated) + '\r\n';
                                             }
                                         });
                                         break;
                                     }
                                     case 8: { // Association
                                         grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.forEach(elem => {
-                                            csvStr+= elem.text_left + " : " + elem.text_right + '\r\n';
+                                            csvStr+= elem.text_left + " : " + (elem.text_right || noAnswerTranslated) + '\r\n';
                                         });
                                         break;
                                     }
@@ -280,7 +281,7 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                                             var answer = grainCopy.grain_copy_data.custom_copy_data.filled_answer_list.find(elem => {
                                                 return elem.order_by == i;
                                             });
-                                            csvStr+= answer.text + '\r\n';
+                                            csvStr+= (answer.text || noAnswerTranslated) + '\r\n';
                                         }
                                         break;
                                     }
@@ -289,7 +290,7 @@ export const stats = ng.directive('stats', ['GrainCopyService', 'GrainScheduledS
                                             var zone = grainCopy.grain_copy_data.custom_copy_data.zones.find(elem => {
                                                 return elem.id == i;
                                             });
-                                            csvStr+= zone.answer + '\r\n';
+                                            csvStr+= (zone.answer || noAnswerTranslated) + '\r\n';
                                         }
                                         break;
                                     }
