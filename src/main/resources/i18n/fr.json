@@ -508,7 +508,7 @@
     "exercizer.export.student.name" : "Nom de l'élève",
     "exercizer.type" : "Type",
     "exercizer.exercize" : "Exercice",
-    "exercizer.scheduled.date.error": "La date de fin doit être postérieur à la date de début.",
+    "exercizer.scheduled.date.error": "La date de fin doit être postérieure à la date de début.",
     "exercizer.scheduled.simple.date.error": "La date de publication du corrigé doit être postérieure à la date de fin et la date de fin doit être postérieure à la date de début.",
     "exercizer.correction.warning" : "Vos commentaires et les notes de l'élève ne lui seront accessibles qu'une fois la date et l'heure limites de rendu dépassées.",
     "exercizer.question.type" : "Type de question",
