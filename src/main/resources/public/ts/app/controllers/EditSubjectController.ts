@@ -395,6 +395,10 @@ export class EditSubjectController {
         $('html, body').animate({ scrollTop: $(`#grain-edit-${grain_id}`).offset().top - 70 }, 500);
     }
 
+    public checkboxClick = function(grain:IGrain) {
+        grain.selected = !grain.selected;
+    }
+
     /**
      *  TOASTER
      */
