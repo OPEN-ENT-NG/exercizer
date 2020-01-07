@@ -137,6 +137,7 @@ body.exercizer {
       position: absolute;
       top: 0;
       left: 0;
+      opacity: 0.3;
     }
     i.close {
       position: absolute;
@@ -356,7 +357,7 @@ body.exercizer {
       border-left: 0;
     }
     &.success {
-        background: rgba($green, 0.3);
+        background: $green;
         color: #fff;
         border-left: 0;
     }
