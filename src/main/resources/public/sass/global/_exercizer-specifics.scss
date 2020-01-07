@@ -127,6 +127,7 @@ body.exercizer {
       position: absolute;
       top: 0;
       left: 0;
+      opacity: 0.3;
     }
     &.success::after {
       content: " ";
@@ -352,7 +353,7 @@ body.exercizer {
       transition: background 250ms ease;
     }
     &.error {
-      background: rgba($red, 0.3);
+      background: $red;
       color: #e8e8e8;
       border-left: 0;
     }

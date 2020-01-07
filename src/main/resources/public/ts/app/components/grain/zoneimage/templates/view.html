@@ -14,7 +14,7 @@
                             x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z"
                             transform-x="getResizedIconZoneX" transform-y="getResizedIconZoneY"
             >
-                <image-zone ng-class="{ success: correction[$index], error: !correction[$index] }">
+                <image-zone ng-class="{ success: correction[$index], error: !correction[$index] }" style="padding:0;">
                     <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" drag-item="iconZone" />
                 </image-zone>
 
