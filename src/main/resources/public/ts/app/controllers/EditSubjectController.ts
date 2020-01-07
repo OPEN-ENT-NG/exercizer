@@ -376,7 +376,7 @@ export class EditSubjectController {
             var self = this;
             this._reOrderTimeout = window.setTimeout(function()
             {
-                angular.forEach(this._grainList, function (grain:IGrain) {
+                angular.forEach(self._grainList, function (grain:IGrain) {
                     if (!self.isGrainFolded(grain)) {
                         self.foldGrain(grain);
                     }
