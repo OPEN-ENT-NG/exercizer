@@ -766,13 +766,13 @@ body.exercizer {
       border-radius: 10px;
       text-align: center;
       min-height: 50px;
+      display: flex;
+      justify-content: space-between;
       .close {
-        padding: 15px;
+        padding-right: 15px;
       }
     }
     &__delete {
-      padding: 15px;
-      position: absolute;
       right: 0;
     }
   }
