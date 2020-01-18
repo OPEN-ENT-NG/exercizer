@@ -380,6 +380,11 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                 scope.openArchive = function () {
                     $location.path('/dashboard/teacher/archive');
                 }
+
+                scope.displayLibraryIncentive = function () {
+                    return model.me.hasWorkflow(Behaviours.applicationsBehaviours.exercizer.rights.workflow.publish) &&
+                    scope.subjectList().filter(subject => subject.owner.userId == model.me.userId).length >= 5;
+                }
             }
         };
     }]
