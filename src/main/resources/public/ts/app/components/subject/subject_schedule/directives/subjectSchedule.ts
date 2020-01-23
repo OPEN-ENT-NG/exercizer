@@ -68,11 +68,12 @@ export const subjectSchedule = ng.directive('subjectSchedule',
 
                 function reset() {
                     scope.lightbox = {
-                        state: 'assignSubject',
+                        state: 'type',
                         isDisplayed : false
                     };
                     scope.data = {groupList:[],userList:[],exclude:[]};
                     scope.option = {
+                        mode: "classic",
                         begin_date: new Date(),
                         due_date: DateService.addDays(new Date, 7),
                         corrected_date: DateService.addDays(new Date, 8),
@@ -303,13 +304,23 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 function scheduleSubject(subject, option, data) {
                     var deferred = $q.defer(),
                         subjectScheduled = SubjectScheduledService.createFromSubject(subject);
-                    subjectScheduled.begin_date = moment(option.begin_date).hours(14).minutes(0).seconds(0)
+                    subjectScheduled.is_training_mode = option.mode == 'training';
+                    if (subjectScheduled.is_training_mode) {
+                        subjectScheduled.is_one_shot_submit = false;
+                        subjectScheduled.is_training_permitted = false;
+                        subjectScheduled.begin_date = moment(new Date(0))
+                        .toISOString().replace(/T..:../, "T00:00");
+                    subjectScheduled.due_date = moment(new Date(0))
+                        .toISOString().replace(/T..:../, "T00:00");
+                    } else {
+                        subjectScheduled.begin_date = moment(option.begin_date).hours(14).minutes(0).seconds(0)
                         .toISOString().replace(/T..:../, "T"+option.begin_time);
-                    subjectScheduled.due_date = moment(option.due_date).hours(14).minutes(0).seconds(0)
+                        subjectScheduled.due_date = moment(option.due_date).hours(14).minutes(0).seconds(0)
                         .toISOString().replace(/T..:../, "T"+option.due_time);
+                        subjectScheduled.is_one_shot_submit = !option.allow_students_to_update_copy;
+                        subjectScheduled.is_training_permitted = !option.forbid_training;
+                    }
                     subjectScheduled.estimated_duration = option.estimated_duration;
-                    subjectScheduled.has_automatic_display = option.has_automatic_display;
-                    subjectScheduled.is_one_shot_submit = !option.allow_students_to_update_copy;
                     subjectScheduled.random_display = !!option.random_display;
                     subjectScheduled.scheduled_at = createSubjectScheduledAt(data);
 
@@ -489,10 +500,21 @@ export const subjectSchedule = ng.directive('subjectSchedule',
 
                 scope.confirmation = function () {
                     if(scope.option){
-                        return idiom.translate('exercizer.schedule.confirm').replace(/\{0\}/g, $filter('date')(scope.option.begin_date, 'dd/MM/yyyy'))
-                            .replace(/\{1\}/g, $filter('date')(scope.option.begin_time, 'HH:mm'))
-                            .replace(/\{2\}/g, $filter('date')(scope.option.due_date, 'dd/MM/yyyy'))
-                            .replace(/\{3\}/g, $filter('date')(scope.option.due_time, 'HH:mm'));
+                        if (scope.option.mode == 'classic') {
+                            return idiom.translate('exercizer.schedule.confirm').replace(/\{0\}/g, $filter('date')(scope.option.begin_date, 'dd/MM/yyyy'))
+                                .replace(/\{1\}/g, $filter('date')(scope.option.begin_time, 'HH:mm'))
+                                .replace(/\{2\}/g, $filter('date')(scope.option.due_date, 'dd/MM/yyyy'))
+                                .replace(/\{3\}/g, $filter('date')(scope.option.due_time, 'HH:mm'));
+                        } else {
+                            return idiom.translate('exercizer.schedule.confirm.training');
+                        }
+                    }
+                }
+                scope.switchMode = function () {
+                    if (scope.option.mode == 'classic') {
+                        scope.option.mode = 'training';
+                    } else {
+                        scope.option.mode = 'classic';
                     }
                 }
             }

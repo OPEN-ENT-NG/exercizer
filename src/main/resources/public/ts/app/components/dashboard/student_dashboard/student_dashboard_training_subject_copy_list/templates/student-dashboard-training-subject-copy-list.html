@@ -1,0 +1,38 @@
+<!-- filter -->
+<div data-ng-controller="SubjectCopyListController as subjectCopyListController">
+
+    <div class="row">
+
+        <label class="chip"
+        data-ng-click="clickFilter('is_done')"
+        data-ng-class="filerIsSelected('is_done')">
+            <span><i18n>exercizer.dashboard.learner.tab3.sub.filter1</i18n></span>
+        </label>
+
+        <label class="chip"
+        data-ng-click="clickFilter('is_on_going')"
+        data-ng-class="filerIsSelected('is_on_going')">
+            <span><i18n>exercizer.dashboard.learner.tab3.sub.filter2</i18n></span>
+        </label>
+
+        <label class="chip"
+        data-ng-click="clickFilter('is_sided')"
+        data-ng-class="filerIsSelected('is_sided')">
+            <span><i18n>exercizer.dashboard.learner.tab3.sub.filter3</i18n></span>
+        </label>
+
+    </div>
+
+    <div class="row vertical-spacing">
+        <input type="text" data-ng-model="search.text" i18n-placeholder="exercizer.search" class="six twelve-mobile cell">
+    </div>
+
+    <!-- list -->
+    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopyTraining(search.filter)) | orderBy:'modified':true">
+        <subject-copy-domino subject-copy="subjectCopy" subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
+    </div>
+    <article data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
+        <img height="150" src="exercizer/public/assets/img/nothing.svg"/>
+        <h4><i18n>exercizer.dashboard.learner.finish.empty</i18n></h4>
+    </article>
+</div>

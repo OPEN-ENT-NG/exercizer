@@ -119,7 +119,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
     @Override
     public void list(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
 		final String query = "SELECT * " +
-				" FROM " + resourceTable + " AS ss WHERE ss.owner = ? AND ss.is_archived = false";
+				" FROM " + resourceTable + " AS ss WHERE ss.owner = ? AND ss.is_archived = false AND ss.is_training_mode = false";
 		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
     }
 
@@ -258,8 +258,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	private void createScheduledSubject(final SqlStatementsBuilder s, final Long subjectId, final Long scheduledSubjectId, final JsonObject scheduledSubject, UserInfos user) {
 
 		final String query = "INSERT INTO " + schema + "subject_scheduled (id, subject_id, title, description, picture, max_score, " +
-				"owner, owner_username, begin_date, due_date, estimated_duration, is_one_shot_submit, random_display, scheduled_at, type, is_notify, use_time, locale) " +
-				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?, ?::json, s.type, ?, ?, ? FROM " + schema + "subject as s " +
+				"owner, owner_username, begin_date, due_date, estimated_duration, is_one_shot_submit, random_display, is_training_mode, is_training_permitted, scheduled_at, type, is_notify, use_time, locale) " +
+				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?, ?, ?, ?::json, s.type, ?, ?, ? FROM " + schema + "subject as s " +
 				"WHERE s.id=? RETURNING id";
 
 		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
@@ -267,6 +267,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("estimatedDuration", ""))
 				.add(scheduledSubject.getBoolean("isOneShotSubmit"))
 				.add(scheduledSubject.getBoolean("randomDisplay", false))
+				.add(scheduledSubject.getBoolean("isTrainingMode", false))
+				.add(scheduledSubject.getBoolean("isTrainingPermitted", false))
 				.add(scheduledSubject.getJsonObject("scheduledAt"))
 				.add(scheduledSubject.getBoolean("isNotify"))
 				.add(scheduledSubject.getBoolean("useTime", true))

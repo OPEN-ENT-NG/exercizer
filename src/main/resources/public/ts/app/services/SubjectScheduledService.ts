@@ -164,10 +164,12 @@ export class SubjectScheduledService implements ISubjectScheduledService {
 
     public schedule = function(subjectScheduled:ISubjectScheduled, grainsCustomCopyData:IGrainCustomCopy[]):Promise<ISubjectScheduled> {
         var self = this,
-            deferred = this._$q.defer();
+            deferred = this._$q.defer(),
+            doRedirect = !subjectScheduled.is_training_mode;
 
         let param = {subjectTitle: subjectScheduled.title, beginDate: subjectScheduled.begin_date, dueDate: subjectScheduled.due_date,
             estimatedDuration: subjectScheduled.estimated_duration, isOneShotSubmit: subjectScheduled.is_one_shot_submit,
+            isTrainingMode: subjectScheduled.is_training_mode, isTrainingPermitted: subjectScheduled.is_training_permitted,
             randomDisplay: subjectScheduled.random_display, scheduledAt:subjectScheduled.scheduled_at, grainsCustomCopyData: grainsCustomCopyData};
         
         let request = {
@@ -181,10 +183,12 @@ export class SubjectScheduledService implements ISubjectScheduledService {
                 delete self._listMappedById;
                 deferred.resolve();
 
-                let redirect: string = "/dashboard/teacher/correction/";
-                if(response.data != null && response.data.id != null)
-                    redirect += response.data.id;
-                self._$location.path(redirect);
+                if (doRedirect) {
+                    let redirect: string = "/dashboard/teacher/correction/";
+                    if(response.data != null && response.data.id != null)
+                        redirect += response.data.id;
+                    self._$location.path(redirect);
+                }
             },
             function(e) {
                 if (e.status == 400) {
