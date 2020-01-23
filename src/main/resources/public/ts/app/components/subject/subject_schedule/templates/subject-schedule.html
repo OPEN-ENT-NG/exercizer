@@ -6,6 +6,13 @@
             <nav class="vertical">
                 <ul>
                     <li>
+                        <a  data-ng-class="{'selected' : lightbox.state == 'type'}"
+                            data-ng-click="lightbox.state='type'">
+                            <i18n>exercizer.scheduled.subject.type</i18n>
+                        </a>
+
+                    </li>
+                    <li>
                         <a  data-ng-class="{'selected' : lightbox.state == 'assignSubject'}"
                             data-ng-click="lightbox.state='assignSubject'">
                             <i18n>exercizer.scheduled.subject.to</i18n>
@@ -30,6 +37,39 @@
             </nav>
         </div>
         <div class="nine cell">
+            <div data-ng-show="lightbox.state == 'type'">
+                <div class="row">
+                    <h4><i18n>exercizer.scheduled.subject.type.title</i18n></h4>
+                </div>
+                <div class="row vertical-spacing">
+                    <label>
+                        <input type="checkbox" data-ng-checked="option.mode == 'classic'" data-ng-click="switchMode(); $event.stopPropagation();"/>
+                        <span style="height: unset;">&nbsp;<i18n>exercizer.scheduled.subject.type.choice.classic</i18n></span>
+                    </label>
+                    <span class="tipbox up left-margin-5">
+                        <i class="help square-medium"></i>
+                        <div class="tipbox-content">
+                            <span class="small-text">
+                                <i18n>exercizer.scheduled.subject.type.classic.tooltip</i18n>
+                            </span>
+                        </div>
+                    </span>
+                </div>
+                <div class="row vertical-spacing">
+                    <label>
+                        <input type="checkbox" data-ng-checked="option.mode == 'training'" data-ng-click="switchMode(); $event.stopPropagation();"/>
+                        <span style="height: unset;">&nbsp;<i18n>exercizer.scheduled.subject.type.choice.training</i18n></span>
+                    </label>
+                    <span class="tipbox up left-margin-5">
+                        <i class="help square-medium"></i>
+                        <div class="tipbox-content">
+                            <span class="small-text">
+                                <i18n>exercizer.scheduled.subject.type.training.tooltip</i18n>
+                            </span>
+                        </div>
+                    </span>
+                </div>
+            </div>
             <div data-ng-show="lightbox.state == 'assignSubject'">
                 <div class="row">
                     <h4><i18n>exercizer.scheduled.subject.search</i18n></h4>
@@ -64,19 +104,19 @@
                     <h4><i18n>exercizer.scheduled.subject.option</i18n></h4>
                 </div>
                 <div data-ng-if="!isSimpleSubject && lightbox.isDisplayed">
-                    <div class="row">
+                    <div class="row" data-ng-show="option.mode == 'classic'">
                         <div class="six cell"><span> <i18n>exercizer.scheduled.subject.start</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.begin_date" min-date="now"  class="three cell" date-picker-delegate="datePickerDelegate"></date-picker>
                         <div class="one cell">&nbsp;</div>
                         <input class="two cell"  type="text" data-ng-model="option.begin_time" data-ng-blur="option.begin_time = checkTime(option.begin_time)"/>
                     </div>
-                    <div class="row">
+                    <div class="row" data-ng-show="option.mode == 'classic'">
                         <div class="six cell"><span> <i18n>exercizer.scheduled.subject.end</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.due_date" min-date="option.begin_date" class="three cell" date-picker-delegate="datePickerDelegate"></date-picker>
                         <div class="one cell">&nbsp;</div>
                         <input class="two cell" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, true)"/>
                     </div>
-                    <div class="row vertical-spacing">
+                    <div class="row vertical-spacing" data-ng-show="option.mode == 'classic'">
                         <label>
                             <input type="checkbox" data-ng-model="option.allow_students_to_update_copy"/>
                             <span style="height: unset;">&nbsp;<i18n>exercizer.scheduled.subject.improve</i18n></span>
@@ -87,6 +127,20 @@
                             <input type="checkbox" data-ng-model="option.random_display"/>
                             <span style="height: unset;">&nbsp;<i18n>exercizer.scheduled.subject.random.display</i18n></span>
                         </label>
+                    </div>
+                    <div class="row vertical-spacing" data-ng-show="option.mode == 'classic'">
+                        <label>
+                            <input type="checkbox" data-ng-model="option.forbid_training"/>
+                            <span style="height: unset;">&nbsp;<i18n>exercizer.scheduled.subject.forbid.training</i18n></span>
+                        </label>
+                        <span class="tipbox up left-margin-5">
+                            <i class="help square-medium"></i>
+                            <div class="tipbox-content">
+                                <span class="small-text">
+                                    <i18n>exercizer.scheduled.subject.forbid.training.tooltip</i18n>
+                                </span>
+                            </div>
+                        </span>
                     </div>
                     <!--
                     <div class="row vertical-spacing">

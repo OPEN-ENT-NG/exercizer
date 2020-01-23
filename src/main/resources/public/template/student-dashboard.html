@@ -21,6 +21,10 @@
                     data-ng-click="data.tabSelected = 'finishSubjectCopyList'">
                 <i18n>exercizer.dashboard.learner.tab2</i18n>
             </header>
+            <header data-ng-class="{'selected': data.tabSelected == 'trainingSubjectCopyList'}"
+                    data-ng-click="data.tabSelected = 'trainingSubjectCopyList'">
+                <i18n>exercizer.dashboard.learner.tab3</i18n>
+            </header>
         </div>
     </div>
     <div class="vertical-spacing">
@@ -33,6 +37,9 @@
         </div>
         <div ng-switch-when="finishSubjectCopyList">
             <student-dashboard-finish-subject-copy-list></student-dashboard-finish-subject-copy-list>
+        </div>
+        <div ng-switch-when="trainingSubjectCopyList">
+            <student-dashboard-training-subject-copy-list></student-dashboard-training-subject-copy-list>
         </div>
         <div ng-switch-default>Default</div>
     </div>

@@ -18,6 +18,12 @@
     "isOneShotSubmit": {
       "type": "boolean"
     },
+    "isTrainingMode": {
+      "type": "boolean"
+    },
+    "isTrainingPermitted": {
+      "type": "boolean"
+    },
     "randomDisplay": {
       "type": "boolean"
     },
