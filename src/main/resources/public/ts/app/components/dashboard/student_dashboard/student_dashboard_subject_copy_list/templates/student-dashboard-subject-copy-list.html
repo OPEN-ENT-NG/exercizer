@@ -8,7 +8,7 @@
       </div>
 
       <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
-        <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyListController.orderByDueDate(subjectCopyListController.scheduledThisWeek(subjectCopyList)) | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_1) | filter: subjectCopyListController.filterOnSubjectCopyNotStartedOrStarted()) | orderBy:'modified':true">
+        <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyListController.orderByDueDate(subjectCopyListController.scheduledThisWeek(subjectCopyList)) | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_1) | filter: subjectCopyListController.filterOnSubjectCopyTraining(null,true) | filter: subjectCopyListController.filterOnSubjectCopyNotStartedOrStarted()) | orderBy:'modified':true">
           <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
           </div>
           <div data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
@@ -36,7 +36,7 @@
             </label>
         </div>
         <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
-            <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyListController.orderByDueDate(subjectCopyList) | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_2) | filter: subjectCopyListController.filterOnSubjectCopyNotStartedOrStarted() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate)) | orderBy:'modified':true">
+            <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyListController.orderByDueDate(subjectCopyList) | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_2) | filter: subjectCopyListController.filterOnSubjectCopyTraining(null,true) | filter: subjectCopyListController.filterOnSubjectCopyNotStartedOrStarted() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate)) | orderBy:'modified':true">
                 <subject-copy-domino subject-copy = "subjectCopy" subject-scheduled = "subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
             </div>
 

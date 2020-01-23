@@ -20,6 +20,8 @@ export interface ISubjectScheduled {
     is_deleted:boolean;
     scheduled_at : string[];
     type:string;
+    is_training_mode: boolean;
+    is_training_permitted: boolean;
 }
 
 export class SubjectScheduled implements ISubjectScheduled {
@@ -45,6 +47,8 @@ export class SubjectScheduled implements ISubjectScheduled {
     is_deleted:boolean;
     scheduled_at: string[];
     type:string;
+    is_training_mode: boolean;
+    is_training_permitted: boolean;
     
     constructor
     (
@@ -68,7 +72,9 @@ export class SubjectScheduled implements ISubjectScheduled {
         is_one_shot_submit?:boolean,
         is_deleted?:boolean,
         scheduled_at? : string[],
-        type?:string
+        type?:string,
+        is_training_mode?: boolean,
+        is_training_permitted?: boolean
     )
     {
         this.id = id;
@@ -92,5 +98,7 @@ export class SubjectScheduled implements ISubjectScheduled {
         this.is_deleted = is_deleted;
         this.scheduled_at = scheduled_at || [];
         this.type = type;
+        this.is_training_mode = is_training_mode;
+        this.is_training_permitted = is_training_permitted;
     }
 }
