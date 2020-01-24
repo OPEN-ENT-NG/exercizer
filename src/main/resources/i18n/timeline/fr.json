@@ -22,6 +22,9 @@
     "exercizer.assigncopy.body.b" : "à rendre entre le",
     "exercizer.assigncopy.body.c" : "et le",
     "exercizer.unassigncopy.body" : "a déprogrammé le sujet",
+    "exercizer.assigntraining.body" : "Vous avez",
+    "exercizer.assigntraining.body.b" : "un nouveau sujet d'entraînement",
+    "exercizer.assigntraining.body.c" : "disponible dans vos sujets \"Mis de côté\"",
 
     "exercizer.modify.begin" : "a modifié la date de début du sujet",
     "exercizer.modify.due" : "a modifié la date de fin du sujet",
