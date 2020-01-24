@@ -14,6 +14,9 @@
     },
     "offset":{
       "type": "number"
+    },
+    "isTrainingPermitted": {
+      "type": "boolean"
     }
   },
   "required": [

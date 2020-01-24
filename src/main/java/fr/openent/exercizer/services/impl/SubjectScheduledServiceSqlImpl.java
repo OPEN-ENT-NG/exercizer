@@ -463,20 +463,24 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	}
 
 	@Override
-	public void modify(final String id, JsonObject fiedls, final Handler<Either<String, JsonObject>> handler) {
+	public void modify(final String id, JsonObject fields, final Handler<Either<String, JsonObject>> handler) {
 		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 		String query = "UPDATE " + resourceTable + " SET modified = NOW()";
-		if(fiedls.containsKey("beginDate")){
+		if(fields.containsKey("beginDate")){
 			query += ", begin_date = ?";
-			values.add(fiedls.getString("beginDate"));
+			values.add(fields.getString("beginDate"));
 		}
-		if(fiedls.containsKey("dueDate")){
+		if(fields.containsKey("dueDate")){
 			query += ", due_date = ?";
-			values.add(fiedls.getString("dueDate"));
+			values.add(fields.getString("dueDate"));
 		}
-		if(fiedls.containsKey("correctedDate")){
+		if(fields.containsKey("correctedDate")){
 			query += ", corrected_date = ?";
-			values.add(fiedls.getString("correctedDate"));
+			values.add(fields.getString("correctedDate"));
+		}
+		if(fields.containsKey("isTrainingPermitted")){
+			query += ", is_training_permitted = ?";
+			values.add(fields.getBoolean("isTrainingPermitted"));
 		}
 
 		query += " WHERE id = ? ";
