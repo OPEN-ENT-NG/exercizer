@@ -20,6 +20,14 @@
         </div>
     </div>
     <div class="row vertical-spacing row-like-input">
+        <div class="cell" style="font-style: italic;" ng-if="selectedSubjectScheduled.is_training_permitted && !option.editedDates"><span><i18n>exercizer.scheduled.subject.training.authorized</i18n> &nbsp;</span></div>
+        <div class="cell" style="font-style: italic;" ng-if="!selectedSubjectScheduled.is_training_permitted && !option.editedDates"><span><i18n>exercizer.scheduled.subject.training.unauthorized</i18n> &nbsp;</span></div>
+        <label ng-if="option.editedDates">
+            <input type="checkbox" ng-checked="!selectedSubjectScheduled.is_training_permitted" ng-click="forbidTraining($event)"/>
+            <span style="height: unset;">&nbsp;<i18n>exercizer.scheduled.subject.training.forbid</i18n></span>
+        </label>
+    </div>
+    <div class="row vertical-spacing row-like-input">
         <div class="cell right-magnet" data-ng-show="!option.editedDates">
             <button class="flat-button" data-ng-click="option.showUnScheduled=true"><i18n>exercizer.unschedule</i18n></button>
             <button data-ng-click="option.editedDates=true"> <i18n>edit</i18n></button>

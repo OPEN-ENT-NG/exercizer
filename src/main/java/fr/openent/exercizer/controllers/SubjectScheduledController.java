@@ -331,6 +331,9 @@ public class SubjectScheduledController extends ControllerHelper {
 		if(scheduledSubject.getString("corrected_date") != null && newCorrectedDate != null){
 			fields.put("correctedDate", values.getString("correctedDate"));
 		}
+		if(values.containsKey("isTrainingPermitted")){
+			fields.put("isTrainingPermitted", values.getBoolean("isTrainingPermitted"));
+		}
 		subjectScheduledService.modify(subjectId, fields, new Handler<Either<String, JsonObject>>() {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
