@@ -240,7 +240,8 @@ export class SubjectScheduledService implements ISubjectScheduledService {
             deferred = this._$q.defer();
 
         let param = {beginDate: subjectScheduled.begin_date, dueDate: subjectScheduled.due_date,
-            correctedDate: subjectScheduled.corrected_date, offset:new Date().getTimezoneOffset()};
+            correctedDate: subjectScheduled.corrected_date, offset:new Date().getTimezoneOffset(),
+            isTrainingPermitted: subjectScheduled.is_training_permitted};
 
         let request = {
             method: 'POST',

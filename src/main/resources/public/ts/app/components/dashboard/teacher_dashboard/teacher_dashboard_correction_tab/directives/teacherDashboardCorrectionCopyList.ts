@@ -171,6 +171,11 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     return time.match("^([01][0-9]|2[0-3]):[0-5][0-9]$") ? time : $filter('date')(def, 'HH:mm');
                 }
 
+                scope.forbidTraining = function($event) {
+                    scope.selectedSubjectScheduled.is_training_permitted = !scope.selectedSubjectScheduled.is_training_permitted;
+                    $event.stopPropagation();
+                }
+
                 scope.cancelDatesEditing = function () {
                     scope.option.editedDates = false;
                     scope.option.begin_date = new Date(scope.selectedSubjectScheduled.begin_date);
@@ -185,7 +190,8 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                         begin_date:moment(scope.option.begin_date).hours(14).minutes(0).seconds(0)
                             .toISOString().replace(/T..:../, "T"+scope.option.begin_time),
                         due_date:moment(scope.option.due_date).hours(14).minutes(0).seconds(0)
-                            .toISOString().replace(/T..:../, "T"+scope.option.due_time)
+                            .toISOString().replace(/T..:../, "T"+scope.option.due_time),
+                        is_training_permitted: scope.selectedSubjectScheduled.is_training_permitted
                     };
                     SubjectScheduledService.modifySchedule(subjectScheduled).then(
                         function() {
