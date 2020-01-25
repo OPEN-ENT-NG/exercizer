@@ -7,7 +7,7 @@
             </div>
             <div class="bottom">
                 <div class="content">
-                    <div class="ten cell twelve-mobile">
+                    <div class="cell twelve-mobile" style="width: 80%">
                         <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
                             <div class="cell title-icon">
                                 <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
@@ -57,6 +57,19 @@
                             <i18n>exercizer.domino.individual.corrected</i18n>
                             &nbsp; &nbsp; <i class="download"></i>
                         </button>
+                    </div>
+                    <div class="right-glider"
+                    data-ng-class="{'green': subjectScheduled.is_training_permitted, 'grey': !subjectScheduled.is_training_permitted }"
+                    data-ng-if="canShowTrainingOption()">
+                        <span>&#60;</span>
+                        <a data-ng-if="canCreateTraining()" data-ng-click="createTrainingCopy()">
+                            <i18n>exercizer.scheduled.subject.training.get.part1</i18n>
+                            <i18n>exercizer.scheduled.subject.training.get.part2</i18n>
+                        </a>
+                        <a style="cursor: initial" data-ng-if="!canCreateTraining()">
+                            <i18n>exercizer.scheduled.subject.training.get.unavailable.part1</i18n>
+                            <i18n>exercizer.scheduled.subject.training.get.unavailable.part2</i18n>
+                        </a>
                     </div>
                 </div>
             </div>

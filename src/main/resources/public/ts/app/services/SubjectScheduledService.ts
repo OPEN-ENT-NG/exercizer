@@ -161,6 +161,22 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
+    public createTrainingCopy = function(id): Promise<any>  {
+        var deferred = this._$q.defer(), request = {
+            method: 'POST',
+            url: 'exercizer/subject-scheduled/create-training-copy/' + id
+        };
+
+        this._$http(request).then(function(response){
+                deferred.resolve();
+            },
+            function() {
+                deferred.reject("exercizer.error");
+            }
+        );
+        return deferred.promise;
+    };
+
 
     public schedule = function(subjectScheduled:ISubjectScheduled, grainsCustomCopyData:IGrainCustomCopy[]):Promise<ISubjectScheduled> {
         var self = this,

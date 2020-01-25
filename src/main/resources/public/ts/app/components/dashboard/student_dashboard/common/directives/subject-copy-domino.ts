@@ -1,7 +1,7 @@
-import { ng, idiom, skin } from 'entcore'
+import { ng, idiom, skin, notify } from 'entcore'
 
-export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService', '$location', 'SubjectScheduledService','SubjectCopyService',
-    (DateService, $location, SubjectScheduledService, SubjectCopyService) => {
+export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService', '$location', '$timeout', 'SubjectScheduledService','SubjectCopyService',
+    (DateService, $location, $timeout, SubjectScheduledService, SubjectCopyService) => {
         return {
             restrict: 'E',
             scope: {
@@ -147,7 +147,24 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                     return  DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.corrected_date), true);
                 };
 
+                scope.canShowTrainingOption = function() {
+                    return scope.subjectCopy.submitted_date && !scope.subjectCopy.is_training_copy;
+                };
 
+                scope.canCreateTraining = function() {
+                    return scope.subjectScheduled.is_training_permitted && canShowCorrected();
+                }
+
+                scope.createTrainingCopy = function() {
+                    SubjectScheduledService.createTrainingCopy(scope.subjectScheduled.id).then(function () {
+                        notify.info("exercizer.notify.create.training.success");
+                        $timeout(function(){
+                            window.location.reload();
+                        },3000);
+                    }, function (err) {
+                        notify.error("exercizer.error");
+                    });
+                }
 
             }
         }

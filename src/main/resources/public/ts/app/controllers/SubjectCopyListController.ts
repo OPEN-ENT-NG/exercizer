@@ -118,18 +118,21 @@ class SubjectCopyListController {
         }
     };
 
-    public filterOnSubjectCopyTraining(filter, invert = false) {
+    public filterOnSubjectCopyTraining() {
+        return subjectCopy => !subjectCopy.is_training_copy;
+    }
+
+
+    public filterOnSubjectCopyTrainingState(filter) {
         var self = this;
         return function (subjectCopy) {
-            var subjectScheduled = self._subjectScheduledService.getById(subjectCopy.subject_scheduled_id);
-            var isSubjectCopyTraining = subjectScheduled && subjectScheduled.is_training_mode;
             var res = false;
             if (filter && !angular.isUndefined(filter) && filter !== null && filter.length !== 0) {
                 if (filter.includes('is_done')) {
                     res = res || !!subjectCopy.submitted_date;
                 }
                 if (filter.includes('is_on_going')) {
-                    res = res || (!!subjectCopy.submitted_date && subjectCopy.has_been_started);
+                    res = res || (!subjectCopy.submitted_date && subjectCopy.has_been_started);
                 }
                 if (filter.includes('is_sided')) {
                     res = res || (!subjectCopy.submitted_date && !subjectCopy.has_been_started);
@@ -137,7 +140,7 @@ class SubjectCopyListController {
             } else {
                 res = true;
             }
-            return (res && isSubjectCopyTraining) != invert;
+            return res && subjectCopy.is_training_copy;
         }
     }
 
