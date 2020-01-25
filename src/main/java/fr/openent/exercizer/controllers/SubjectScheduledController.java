@@ -951,4 +951,22 @@ public class SubjectScheduledController extends ControllerHelper {
 			}
 		});
 	}
+
+	@Post("/subject-scheduled/create-training-copy/:id")
+	@SecuredAction(value = "", type = ActionType.AUTHENTICATED)
+	public void createTrainingCopy(final HttpServerRequest request) {
+		final String id = request.params().get("id");
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					subjectScheduledService.createTrainingCopy(id, user, defaultResponseHandler(request));
+				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+
+			}
+		});
+	}
 }

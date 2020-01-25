@@ -564,6 +564,39 @@ body.exercizer {
   .dominos .item .domino .score {
     font-size: 20px;
   }
+  .dominos .item .domino .right-glider {
+    font-size: 2em;
+    color: white;
+    height: 100%;
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    transition: width 1s ease;
+    width: 1%;
+    &:hover {
+      width: 14%;
+    }
+    &.green {
+      background-color: rgb(114,187,83);
+    }
+    &.grey {
+      background-color: rgb(170,170,170);
+    }
+    span {
+      top: 40%;
+      position: relative;
+    }
+    a {
+      font-size: large;
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      color: white;
+      > i18n {
+        white-space: nowrap;
+      }
+    }
+  }
   .color-corrected {
     color: $green;
   }

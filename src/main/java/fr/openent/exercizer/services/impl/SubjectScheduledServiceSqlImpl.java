@@ -150,6 +150,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 
 		final Long fromSubjectId = scheduledSubject.getLong("subjectId");
 		final JsonArray usersJa = scheduledSubject.getJsonArray("users");
+		final Boolean is_training_mode = scheduledSubject.getBoolean("isTrainingMode", false);
 
 		//to prevent modification of the model and data migration, temporarily, we recovered grains of subject to associate custom data copies.
 		// in the next refactor step, grain entry can directly contain custom_data for copies of grain
@@ -170,8 +171,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 
 								createScheduledSubject(s, fromSubjectId, subjectScheduledId, scheduledSubject, user);
 								createScheduledGrain(s, subjectScheduledId, fromSubjectId, grainJa, mapIdGrainCustomCopyData);
-								createSubjectsCopies(s, subjectScheduledId, usersJa);
-								createGrainCopies(s, subjectScheduledId);
+								createSubjectsCopies(s, is_training_mode.booleanValue(), subjectScheduledId, usersJa);
+								createGrainCopies(s, is_training_mode.booleanValue(), subjectScheduledId);
 								sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, done -> {
 									if (scheduledSubject.getBoolean("randomDisplay", false).booleanValue()) {
 										Future<Void> future = assignGrainCopiesRandomOrder(subjectScheduledId);
@@ -212,7 +213,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 					final SqlStatementsBuilder s = new SqlStatementsBuilder();
 
 					createSimpleScheduledSubject(s, fromSubjectId, subjectScheduledId, scheduledSubject, user);
-					createSubjectsCopies(s, subjectScheduledId, usersJa);
+					createSubjectsCopies(s, false, subjectScheduledId, usersJa);
 
 					sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
 				} else {
@@ -263,8 +264,12 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				"WHERE s.id=? RETURNING id";
 
 		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
-		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))
-				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("estimatedDuration", ""))
+		values.add(scheduledSubjectId)
+				.add(user.getUserId())
+				.add(user.getUsername())
+				.add(scheduledSubject.getValue("beginDate"))
+				.add(scheduledSubject.getValue("dueDate"))
+				.add(scheduledSubject.getString("estimatedDuration", ""))
 				.add(scheduledSubject.getBoolean("isOneShotSubmit"))
 				.add(scheduledSubject.getBoolean("randomDisplay", false))
 				.add(scheduledSubject.getBoolean("isTrainingMode", false))
@@ -320,9 +325,9 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	}
 
 
-	private void createSubjectsCopies(final SqlStatementsBuilder s, final Long subjectScheduledId, JsonArray users) {
+	private void createSubjectsCopies(final SqlStatementsBuilder s, final boolean is_training, final Long subjectScheduledId, JsonArray users) {
 		final String initMergeUserQuery = "SELECT ";
-		final String initSubjectCopyQuery = "INSERT INTO " + schema + "subject_copy (subject_scheduled_id, owner, owner_username) VALUES ";
+		final String initSubjectCopyQuery = "INSERT INTO " + schema + "subject_copy (subject_scheduled_id, owner, owner_username, is_training_copy) VALUES ";
 
 		//init query
 		StringBuilder mergeUserQuery = new StringBuilder(initMergeUserQuery);
@@ -353,8 +358,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 			mergeUserQuery.append(schema).append("merge_users(?,?),");
 			mergeUserValues.add(joUser.getString("_id")).add(joUser.getString("name"));
 
-			bulkInsertSubjectCopy.append("(?,?,?),");
-			subjectCopyValues.add(subjectScheduledId).add(joUser.getString("_id")).add(joUser.getString("name"));
+			bulkInsertSubjectCopy.append("(?,?,?,?),");
+			subjectCopyValues.add(subjectScheduledId).add(joUser.getString("_id")).add(joUser.getString("name")).add(is_training);
 			batch++;
 		}
 
@@ -368,14 +373,14 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		}
 	}
 
-	private void createGrainCopies(final SqlStatementsBuilder s, final Long subjectScheduledId) {
+	private void createGrainCopies(final SqlStatementsBuilder s, final boolean is_training, final Long subjectScheduledId) {
 		final String query = "INSERT INTO " + schema + "grain_copy (subject_copy_id, grain_type_id, grain_scheduled_id, order_by, grain_copy_data) " +
 				"SELECT sc.id, gs.grain_type_id, gs.id, gs.order_by, Coalesce(gs.grain_custom_data, gs.grain_data) " +
 				"FROM " + schema +"grain_scheduled AS gs INNER JOIN " + schema + "subject_scheduled AS ss ON (ss.id=gs.subject_scheduled_id) " +
 				"    INNER JOIN " + schema + "subject_copy AS sc ON (ss.id=sc.subject_scheduled_id) " +
-				"WHERE ss.id=?";
+				"WHERE ss.id=? AND sc.is_training_copy = ?";
 
-		s.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId));
+		s.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId).add(is_training));
 	}
 
 	private Future<Void> assignGrainCopiesRandomOrder(final Long subjectScheduledId) {
@@ -487,5 +492,22 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		values.add(id);
 
 		sql.prepared(query, values, SqlResult.validUniqueResultHandler(handler));
+	}
+
+	@Override
+	public void createTrainingCopy(final String subjectScheduledId, UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		final Long longSubjectScheduledId;
+		try {
+			 longSubjectScheduledId = Long.parseLong(subjectScheduledId);
+		} catch (NumberFormatException nfe) {
+			log.error("Failure to create training copy : " + nfe.getMessage());
+			handler.handle(new Either.Left<>(nfe.getMessage()));
+			return;
+		}
+		final SqlStatementsBuilder s = new SqlStatementsBuilder();
+		JsonArray users = new JsonArray().add(new JsonObject().put("_id", user.getUserId()).put("name", user.getUsername()));
+		createSubjectsCopies(s, true, longSubjectScheduledId, users);
+		createGrainCopies(s, true, longSubjectScheduledId);
+		sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
 	}
 }
