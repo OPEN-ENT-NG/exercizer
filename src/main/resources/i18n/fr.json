@@ -114,6 +114,10 @@
     "exercizer.scheduled.subject.training.authorized" : "Les élèves peuvent récupérer ce sujet pour s'entraîner",
     "exercizer.scheduled.subject.training.unauthorized" : "Les élèves ne peuvent pas récupérer ce sujet pour s'entraîner",
     "exercizer.scheduled.subject.training.forbid" : "Interdir l'entrainement des élèves sur ce sujet",
+    "exercizer.scheduled.subject.training.get.part1" : "Récupérer le sujet",
+    "exercizer.scheduled.subject.training.get.part2" : "pour entraînement",
+    "exercizer.scheduled.subject.training.get.unavailable.part1" : "Sujet non disponible",
+    "exercizer.scheduled.subject.training.get.unavailable.part2" : "à l'entrainement",
     "exercizer.check.title" : "Veuillez renseigner un titre.",
     "exercizer.import.check.file" : "Veuillez sélectionner un fichier à importer.",
     "exercizer.import.choose" : "Parcourir",
@@ -528,5 +532,6 @@
     "exercizer.scheduled.simple.date.error": "La date de publication du corrigé doit être postérieure à la date de fin et la date de fin doit être postérieure à la date de début.",
     "exercizer.correction.warning" : "Vos commentaires et les notes de l'élève ne lui seront accessibles qu'une fois la date et l'heure limites de rendu dépassées.",
     "exercizer.question.type" : "Type de question",
-    "exercizer.error.date" : "L'horloge de votre système est réglée sur une mauvaise date. Veuillez corriger votre horloge système pour pouvoir accéder à l'application."
+    "exercizer.error.date" : "L'horloge de votre système est réglée sur une mauvaise date. Veuillez corriger votre horloge système pour pouvoir accéder à l'application.",
+    "exercizer.notify.create.training.success": "Le sujet a bien été récupéré pour entraînement"
 }

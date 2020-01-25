@@ -98,4 +98,6 @@ public interface ISubjectScheduledService {
     void getListForExport(final UserInfos user, final List<String> ids, final Handler<Either<String, JsonArray>> handler);
 
     void modify(final String id, JsonObject fiedls, final Handler<Either<String, JsonObject>> handler);
+
+    void createTrainingCopy(final String subjectScheduledId, UserInfos user, final Handler<Either<String, JsonObject>> handler);
 }
