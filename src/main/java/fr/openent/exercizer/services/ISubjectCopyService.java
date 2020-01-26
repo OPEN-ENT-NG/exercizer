@@ -83,4 +83,6 @@ public interface ISubjectCopyService {
 
     void getSubmittedBySubjectScheduled(final String scheduledId, final Handler<Either<String, JsonArray>> handler);
 
+    void subjectCopyTrainingExists(UserInfos user, final String subjectScheduledId, Handler<Either<String, Boolean>> handler);
+
 }

@@ -429,22 +429,38 @@ export class SubjectCopyService implements ISubjectCopyService {
 
     public copyState = function(copy){
         //simple subject : status to "is corrected" if the copy has been submitted
-        if(copy.is_corrected && copy.submitted_date){
-            return 'is_corrected';
-        } else if(copy.is_correction_on_going){
-            return 'is_correction_on_going';
-        } else if(copy.submitted_date){
-            return 'is_submitted';
-        } else if(copy.has_been_started){
-            return 'has_been_started'
+        if (copy.is_training_copy) {
+            if (copy.submitted_date) {
+                return 'is_done';
+            } else if (!copy.submitted_date && copy.has_been_started) {
+                return 'is_on_going';
+            } else {
+                return 'is_sided';
+            }
         } else {
-            return null;
+            if(copy.is_corrected && copy.submitted_date){
+                return 'is_corrected';
+            } else if(copy.is_correction_on_going){
+                return 'is_correction_on_going';
+            } else if(copy.submitted_date){
+                return 'is_submitted';
+            } else if(copy.has_been_started){
+                return 'has_been_started'
+            } else {
+                return null;
+            }
         }
     };
 
 
     public copyStateColorClass = function(copy){
         switch (this.copyState(copy)){
+            case 'is_done':
+                return 'color-training-done';
+            case 'is_on_going':
+                return 'color-training-on-going';
+            case 'is_sided':
+                return 'color-training-sided';
             case 'is_corrected':
                 return "color-corrected";
             case 'is_correction_on_going':
@@ -460,6 +476,12 @@ export class SubjectCopyService implements ISubjectCopyService {
 
     public copyStateText = function(copy){
         switch (this.copyState(copy)){
+            case 'is_done':
+                return idiom.translate("exercizer.copy.state.training.done");
+            case 'is_on_going':
+                return idiom.translate("exercizer.copy.state.training.ongoing");
+            case 'is_sided':
+                return idiom.translate("exercizer.copy.state.training.sided");
             case 'is_corrected':
                 return idiom.translate("exercizer.copy.state.corrected");
             case 'is_correction_on_going':

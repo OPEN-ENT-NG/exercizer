@@ -6,6 +6,7 @@ export const performSummary = ng.directive('performSummary',
             restrict: 'E',
             scope: {
                 subjectScheduled: '=',
+                subjectCopy : '=',
                 previewing: '='
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/undefined/templates/perform-summary.html',

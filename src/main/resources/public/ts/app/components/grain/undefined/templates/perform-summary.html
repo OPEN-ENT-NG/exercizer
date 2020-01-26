@@ -1,4 +1,4 @@
-<div style="margin: -10px 0 20px">
+<div style="margin: -10px 0 20px" data-ng-show="!subjectScheduled.is_training_mode">
   <div class="info row vertical-spacing" data-ng-show="!subjectScheduled.is_one_shot_submit"><i18n>exercizer.several.submit</i18n></div>
   <div class="warning row vertical-spacing" data-ng-show="subjectScheduled.is_one_shot_submit"><i18n>exercizer.one.submit</i18n></div>
 </div>
@@ -12,21 +12,26 @@
         </div>
     </div>
     <div data-ng-if="!previewing">
-        <div class="row vertical-spacing" data-ng-show="canShowFuturSubmitLabel()"><strong><i18n>exercizer.future.info</i18n> [[ subjectScheduled.begin_date | date: 'dd/MM/yyyy'  ]] <i18n>exercizer.at</i18n> [[subjectScheduled.due_date | date: 'HH:mm' ]]</strong></div>
-        <div class="row vertical-spacing">
-          <div>
-            <i18n>exercizer.summary.date</i18n> <strong>[[ !subjectScheduled.due_date ? ': ' + translate('exercizer.summary.nodate') : subjectScheduled.due_date | date:'dd/MM/yyyy' + ' ' +translate('exercizer.at') +' '+(subjectScheduled.due_date | date:'HH:mm')]]</strong>
+        <div data-ng-if="!subjectCopy.is_training_copy">
+          <div class="row vertical-spacing" data-ng-show="canShowFuturSubmitLabel()"><strong><i18n>exercizer.future.info</i18n> [[ subjectScheduled.begin_date | date: 'dd/MM/yyyy'  ]] <i18n>exercizer.at</i18n> [[subjectScheduled.due_date | date: 'HH:mm' ]]</strong></div>
+          <div class="row vertical-spacing">
+            <div>
+              <i18n>exercizer.summary.date</i18n> <strong>[[ !subjectScheduled.due_date ? ': ' + translate('exercizer.summary.nodate') : subjectScheduled.due_date | date:'dd/MM/yyyy' + ' ' +translate('exercizer.at') +' '+(subjectScheduled.due_date | date:'HH:mm')]]</strong>
+            </div>
+            <div data-ng-if="subjectScheduled.random_display">
+              <i18n>exercizer.summary.random</i18n>
+            </div>
+            <div data-ng-if="subjectScheduled.estimated_duration">
+              <i18n>exercizer.summary.make</i18n> : <strong>[[ subjectScheduled.estimated_duration + ' ' + translate('exercizer.minute') ]]</strong>
+            </div>
           </div>
-          <div data-ng-if="subjectScheduled.random_display">
-            <i18n>exercizer.summary.random</i18n>
-          </div>
-          <div data-ng-if="subjectScheduled.estimated_duration">
-            <i18n>exercizer.summary.make</i18n> : <strong>[[ subjectScheduled.estimated_duration + ' ' + translate('exercizer.minute') ]]</strong>
+
+          <div class="row vertical-spacing">
+              [[subjectScheduled.description]]
           </div>
         </div>
-
-        <div class="row vertical-spacing">
-            [[subjectScheduled.description]]
+        <div data-ng-if="subjectCopy.is_training_copy">
+            <i18n>exercizer.summary.training</i18n>
         </div>
     </div>
 </article>

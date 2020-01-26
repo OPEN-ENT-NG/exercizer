@@ -16,6 +16,13 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                  */
 
                 scope.selectTitle = function(){
+                    if (scope.subjectCopy.is_training_copy) {
+                        if (scope.subjectCopy.submitted_date) {
+                            return 'training';
+                        } else {
+                            return 'perform';
+                        }
+                    }
                     if (scope.subjectScheduled.type === 'simple') {
                         if(!DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.begin_date), true))
                             return 'text'
@@ -162,7 +169,7 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                             window.location.reload();
                         },3000);
                     }, function (err) {
-                        notify.error("exercizer.error");
+                        notify.error(err);
                     });
                 }
 

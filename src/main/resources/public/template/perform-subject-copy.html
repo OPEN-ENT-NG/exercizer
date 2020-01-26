@@ -25,7 +25,7 @@
             </subject-perform-copy-student-header>
         </div>
 
-        <div class="row" data-ng-if="!performSubjectCopyController.isCanSubmit">
+        <div class="row" data-ng-if="!performSubjectCopyController.isCanSubmit && !performSubjectCopyController.subjectCopy.is_training_copy">
             <div class="info"><i18n>exercizer.check.corrected</i18n></div>
         </div>
 
@@ -39,7 +39,10 @@
 
             <section class="nine cell main-col twelve-mobile">
                 <!-- CURRENT GRAIN COPY DISPLAYED -->
-                <subject-perform-copy-display-current-grain-copy data-subject-scheduled="performSubjectCopyController.subjectScheduled" data-previewing="performSubjectCopyController.previewing" data-grain-copy-list="performSubjectCopyController.grainCopyList"></subject-perform-copy-display-current-grain-copy>
+                <subject-perform-copy-display-current-grain-copy data-subject-scheduled="performSubjectCopyController.subjectScheduled"
+                                                                 data-subject-copy="performSubjectCopyController.subjectCopy"
+                                                                 data-previewing="performSubjectCopyController.previewing"
+                                                                 data-grain-copy-list="performSubjectCopyController.grainCopyList"></subject-perform-copy-display-current-grain-copy>
 
                 <!-- BOTTOM NAV -->
                 <subject-perform-copy-bottom-nav data-grain-copy-list="performSubjectCopyController.grainCopyList" data-subject-copy="performSubjectCopyController.subjectCopy" data-subject-scheduled="performSubjectCopyController.subjectScheduled" is-can-submit="performSubjectCopyController.isCanSubmit"></subject-perform-copy-bottom-nav>
