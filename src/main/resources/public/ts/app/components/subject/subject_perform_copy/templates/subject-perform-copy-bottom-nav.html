@@ -3,8 +3,12 @@
        <i18n>exercizer.next</i18n>
     </button>
 
-    <button class="cell right-magnet" data-ng-if="canSubmit()" data-ng-click="redirectToDashboard(true)">
+    <button class="cell right-magnet" data-ng-if="canSubmit() && !subjectCopy.is_training_copy" data-ng-click="redirectToDashboard(true)">
         <i18n>exercizer.make.copy</i18n>
+    </button>
+
+    <button class="cell right-magnet" data-ng-if="!hasNext() && subjectCopy.is_training_copy">
+        <i18n>exercizer.copy.see.final.score</i18n>
     </button>
 
     <button class="cell right-magnet flat-button" data-ng-click="navigateToPrevious()" data-ng-if="hasPrevious()">

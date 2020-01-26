@@ -259,4 +259,17 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
 
         sql.prepared(query, new JsonArray().add(scheduledId), SqlResult.validResultHandler(handler));
     }
+
+    @Override
+    public void subjectCopyTrainingExists(UserInfos user, final String subjectScheduledId, Handler<Either<String, Boolean>> handler) {
+        final String query = "SELECT (COUNT(*) > 0) AS exists FROM " + resourceTable + " WHERE is_training_copy AND owner = ? AND subject_scheduled_id = ?";
+        sql.prepared(query, new JsonArray().add(user.getUserId()).add(subjectScheduledId), SqlResult.validUniqueResultHandler(result -> {
+            if (result.isRight()) {
+                handler.handle(new Either.Right<>(result.right().getValue().getBoolean("exists")));
+            } else {
+                handler.handle(new Either.Left<>(result.left().getValue()));
+            }
+        }));
+
+    }
 }

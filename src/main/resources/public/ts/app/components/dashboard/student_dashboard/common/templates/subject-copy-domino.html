@@ -16,13 +16,14 @@
                                 <strong data-ng-switch-when="perform" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                                 <strong data-ng-switch-when="view" data-ng-click="viewSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                                 <strong data-ng-switch-when="text" ><span class="token" data-ng-class="copyStateColorClass()">[[textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong data-ng-switch-when="training"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                                 <strong data-ng-switch-default >default</strong>
                             </div>
                         </div>
                         <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
                             <i18n>exercizer.domino.by</i18n><em class="high-importance"><a data-ng-href="/userbook/annuaire#[[subjectScheduled.owner]]">[[subjectScheduled.owner_username]]</a></em>
                         </div>
-                        <div class="due-date row" ng-class="{ 'divide-opacity': cantSart(), 'delay': tooLate() }">
+                        <div class="due-date row" data-ng-if="!subjectCopy.is_training_copy" ng-class="{ 'divide-opacity': cantSart(), 'delay': tooLate() }">
                             <!-- Appliquer une class .delay quand le sujet est en retard -->
                             <div data-ng-show="isDueDateDisplayed()">
                               <i18n>exercizer.domino.todelivered</i18n> <strong data-ng-bind="dueDate | date:'dd/MM/yyyy'"></strong> <i18n>exercizer.at</i18n> <span data-ng-bind="dueDate | date:'HH:mm'"></span>
@@ -38,6 +39,15 @@
                             </div>
                             <div class="row" data-ng-show="isSubmittedDateDisplayed()">
                               <i18n>exercizer.corrected.available</i18n> <span  data-ng-bind="dueDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="dueDate | date:'HH:mm'"></span>
+                            </div>
+                        </div>
+                        <div class="row italic-text" data-ng-if="subjectCopy.is_training_copy">
+                            <br>
+                            <div class="row" data-ng-show="isSubmittedDateDisplayed()">
+                              <i18n>exercizer.copy.last.training</i18n> <span data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
+                            </div>
+                            <div class="row" data-ng-show="!isSubmittedDateDisplayed()">
+                              <i18n>exercizer.copy.no.score.yet</i18n>
                             </div>
                         </div>
                     </div>

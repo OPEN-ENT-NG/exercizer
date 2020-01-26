@@ -597,16 +597,16 @@ body.exercizer {
       }
     }
   }
-  .color-corrected {
+  .color-corrected, .color-training-done {
     color: $green;
   }
-  .color-is-correction-on-going {
+  .color-is-correction-on-going, .color-training-sided {
     color: $purple;
   }
   .color-is-submitted {
     color: $cyan;
   }
-  .color-has-been-started{
+  .color-has-been-started, .color-training-on-going {
     color: $orange;
   }
   .input-response-correct,

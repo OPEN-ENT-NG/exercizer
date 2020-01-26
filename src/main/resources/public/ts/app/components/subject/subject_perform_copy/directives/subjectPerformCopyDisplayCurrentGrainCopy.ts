@@ -8,6 +8,7 @@ export const subjectPerformCopyDisplayCurrentGrainCopy = ng.directive('subjectPe
             restrict: 'E',
             scope : {
                 subjectScheduled : '=',
+                subjectCopy : '=',
                 previewing: '=',
                 grainCopyList: '='
             },

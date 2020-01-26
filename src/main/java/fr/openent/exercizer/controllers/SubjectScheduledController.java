@@ -960,12 +960,21 @@ public class SubjectScheduledController extends ControllerHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				if (user != null) {
-					subjectScheduledService.createTrainingCopy(id, user, defaultResponseHandler(request));
+					subjectCopyService.subjectCopyTrainingExists(user, id, result -> {
+						if (result.isLeft()) {
+							renderError(request);
+						} else {
+							if (result.right().getValue()) {
+								forbidden(request);
+							} else {
+								subjectScheduledService.createTrainingCopy(id, user, defaultResponseHandler(request));
+							}
+						}
+					});
 				} else {
 					log.debug("User not found in session.");
 					unauthorized(request);
 				}
-
 			}
 		});
 	}
