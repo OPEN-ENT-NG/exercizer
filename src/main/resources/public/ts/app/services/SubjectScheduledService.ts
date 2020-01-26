@@ -170,8 +170,12 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         this._$http(request).then(function(response){
                 deferred.resolve();
             },
-            function() {
-                deferred.reject("exercizer.error");
+            function(error) {
+                if (error.status == 403) {
+                    deferred.reject("exercizer.subject.training.already.exists");
+                } else {
+                    deferred.reject("exercizer.error");
+                }
             }
         );
         return deferred.promise;

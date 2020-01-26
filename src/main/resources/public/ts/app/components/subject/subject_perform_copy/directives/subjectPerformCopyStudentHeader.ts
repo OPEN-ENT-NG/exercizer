@@ -18,6 +18,7 @@ export const subjectPerformCopyStudentHeader = ng.directive('subjectPerformCopyS
                     if (submit) {
                         scope.isModalDisplayed = true;
                     } else {
+                        scope.subjectCopy.has_been_started = true;
                         $location.path('/dashboard');
                     }
                 };                    
