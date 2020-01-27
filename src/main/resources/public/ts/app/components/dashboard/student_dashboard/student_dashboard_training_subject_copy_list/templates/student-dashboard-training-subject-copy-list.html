@@ -28,7 +28,7 @@
     </div>
 
     <!-- list -->
-    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopyTrainingState(search.filter)) | orderBy:'modified':true">
+    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopyTrainingState(search.filter)) | orderBy:subjectTrainingComparator:true">
         <subject-copy-domino subject-copy="subjectCopy" subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
     </div>
     <article data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
