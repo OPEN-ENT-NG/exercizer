@@ -141,15 +141,15 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
 
                 scope.canShowGeneralCorrected = function() {
                     //if corrected date has passed and subject scheduled corrected exist
-                    return  (scope.subjectScheduled.type !== 'simple') ? false : canShowCorrected() && this.subjectScheduled.corrected_file_id !== null;
+                    return  (scope.subjectScheduled.type !== 'simple') ? false : scope.canShowCorrected() && this.subjectScheduled.corrected_file_id !== null;
                 };
 
                 scope.canShowIndividualCorrected = function(){
                     //if corrected date has passed and subject copy corrected exist
-                    return  (scope.subjectScheduled.type !== 'simple') ? false : canShowCorrected() && this.subjectCopy.corrected_file_id !== null;
+                    return  (scope.subjectScheduled.type !== 'simple') ? false : scope.canShowCorrected() && this.subjectCopy.corrected_file_id !== null;
                 };
 
-                function canShowCorrected() {
+                scope.canShowCorrected = function() {
                     //if corrected date has passed
                     return  DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.corrected_date), true);
                 };
@@ -159,7 +159,11 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                 };
 
                 scope.canCreateTraining = function() {
-                    return scope.subjectScheduled.is_training_permitted && canShowCorrected();
+                    return scope.subjectScheduled.is_training_permitted && (scope.subjectCopy.is_corrected || (scope.subjectScheduled.corrected_date && scope.canShowCorrected()));
+                }
+
+                scope.canSoonCreateTraining = function() {
+                    return scope.subjectScheduled.is_training_permitted && !(scope.subjectCopy.is_corrected || (scope.subjectScheduled.corrected_date && scope.canShowCorrected()));
                 }
 
                 scope.createTrainingCopy = function() {
