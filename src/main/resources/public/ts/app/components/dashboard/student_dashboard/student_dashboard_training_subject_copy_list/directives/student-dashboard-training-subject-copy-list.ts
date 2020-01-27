@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, moment } from 'entcore';
 
 export const studentDashboardTrainingSubjectCopyList = ng.directive('studentDashboardTrainingSubjectCopyList',
     ['DateService', 'SubjectCopyService', 'SubjectScheduledService', '$location',
@@ -32,6 +32,21 @@ export const studentDashboardTrainingSubjectCopyList = ng.directive('studentDash
                     scope.filerIsSelected = function(filter){
                         return scope.search.filter.indexOf(filter) !== -1 ? 'selected' : '';
                     };
+
+                    function subjectTrainingTypeIndicator(subjectCopy) {
+                        if (subjectCopy.submitted_date) {
+                            return 2; // 'is_done';
+                        } else if (!subjectCopy.submitted_date && subjectCopy.has_been_started) {
+                            return 3; // 'is_on_going';
+                        } else {
+                            return 1; // 'is_sided';
+                        }
+                    };
+
+                    scope.subjectTrainingComparator = function(subjectCopy) {
+                        var indicator = subjectTrainingTypeIndicator(subjectCopy);
+                        return indicator * moment(subjectCopy.modified).unix();
+                      };
                 }
             }
         }
