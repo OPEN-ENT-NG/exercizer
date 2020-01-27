@@ -32,7 +32,20 @@
         <subject-copy-domino subject-copy="subjectCopy" subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
     </div>
     <article data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
-        <img height="150" src="exercizer/public/assets/img/nothing.svg"/>
-        <h4><i18n>exercizer.dashboard.learner.finish.empty</i18n></h4>
+        <div data-ng-show="getEmptyScreen() == 'is_sided'">
+            <img height="150" src="exercizer/public/assets/img/training-empty-sided.svg"/>
+            <h4><i18n>exercizer.dashboard.learner.training.empty.sided</i18n></h4>
+        </div>
+        <div data-ng-show="getEmptyScreen() == 'is_on_going'">
+            <img height="150" src="exercizer/public/assets/img/training-empty-ongoing.svg"/>
+            <h4>
+                <i18n ng-if="search.filter.length == 1">exercizer.dashboard.learner.training.empty.ongoing</i18n>
+                <i18n ng-if="search.filter.length != 1">exercizer.dashboard.learner.finish.empty</i18n>
+            </h4>
+        </div>
+        <div data-ng-show="getEmptyScreen() == 'is_done'">
+            <img height="150" src="exercizer/public/assets/img/nothing.svg"/>
+            <h4><i18n>exercizer.dashboard.learner.training.empty.done</i18n></h4>
+        </div>
     </article>
 </div>
