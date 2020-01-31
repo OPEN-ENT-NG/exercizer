@@ -22,6 +22,7 @@ export interface IGrainCopyService {
     instantiateGrainCopy(grainCopyObject:any): IGrainCopy;
     createGrainCopyList(grainScheduledList:IGrainScheduled[]):IGrainCopy[];
     getListByNotCorrectedSubjectCopies(subjectCopyList:ISubjectCopy[], isOneShotSubmit:boolean):ISubjectCopy[];
+    getById(id:number):IGrainCopy;
 }
 
 export class GrainCopyService implements IGrainCopyService {

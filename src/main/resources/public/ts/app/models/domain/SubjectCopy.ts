@@ -15,6 +15,7 @@ export interface ISubjectCopy {
     is_deleted:boolean;
     offset:number;
     is_training_copy:boolean;
+    current_grain_id:number;
 }
 
 export class SubjectCopy implements  ISubjectCopy {
@@ -35,6 +36,7 @@ export class SubjectCopy implements  ISubjectCopy {
     is_deleted: boolean;
     offset:number;
     is_training_copy:boolean;
+    current_grain_id:number;
     dueDate: string;
     _homework_metadata: any;
 
@@ -70,7 +72,8 @@ export class SubjectCopy implements  ISubjectCopy {
             is_corrected: this.is_corrected,
             is_deleted: this.is_deleted,
             offset: this.offset,
-            is_training_copy: this.is_training_copy
+            is_training_copy: this.is_training_copy,
+            current_grain_id: this.current_grain_id
         }
     }
 
@@ -90,7 +93,8 @@ export class SubjectCopy implements  ISubjectCopy {
         is_correction_on_going?:boolean,
         is_corrected?:boolean,
         is_deleted?:boolean,
-        is_training_copy?:boolean
+        is_training_copy?:boolean,
+        current_grain_id?:number
     )
     {
         this.id = id;
@@ -108,5 +112,6 @@ export class SubjectCopy implements  ISubjectCopy {
         this.is_corrected = is_corrected;
         this.is_deleted = is_deleted;
         this.is_training_copy = is_training_copy;
+        this.current_grain_id = current_grain_id;
     }
 }
