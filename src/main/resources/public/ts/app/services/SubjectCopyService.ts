@@ -23,6 +23,7 @@ export interface ISubjectCopyService {
     excludeCopies(copyIds:number[]): Promise<{}[]>;
     getListBySubjectScheduled(subjectScheduled : ISubjectScheduled): ISubjectCopy[];
     checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId:number):Promise<boolean>;
+    setCurrentGrain(subjectCopyId:number, grainCopyId: number): Promise<any>;
     
 }
 
@@ -165,6 +166,25 @@ export class SubjectCopyService implements ISubjectCopyService {
             );
         return deferred.promise;
     };
+
+    public setCurrentGrain = function(subjectCopyId:number, grainCopyId: number): Promise<any> {
+        var deferred = this._$q.defer(),
+            request = {
+                method: 'POST',
+                url: 'exercizer/subject-copy/' + subjectCopyId + '/last-grain/' + grainCopyId,
+                data: {}
+            };
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(true);
+            },
+            function(e) {
+                deferred.reject('exercizer.error');
+            }
+        );
+        return deferred.promise;
+    }
+
 
     public persist = function(subjectCopy:ISubjectCopy):Promise<ISubjectCopy> {
         var self = this,

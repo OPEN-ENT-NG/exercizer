@@ -7,7 +7,8 @@ export const subjectPerformCopyStudentHeader = ng.directive('subjectPerformCopyS
             scope: {
                 subjectScheduled: '=',
                 subjectCopy: '=',
-                isCanSubmit: '='
+                isCanSubmit: '=',
+                currentGrainCopy: '='
             },
             templateUrl: 'exercizer/public/ts/app/components/subject/subject_perform_copy/templates/subject-perform-copy-student-header.html',
             link:(scope:any) => {
@@ -15,13 +16,21 @@ export const subjectPerformCopyStudentHeader = ng.directive('subjectPerformCopyS
                 scope.isModalDisplayed = false;
 
                 scope.redirectToDashboard = function(submit:boolean) {
+                    if (scope.subjectCopy.is_training_copy) {
+                        scope.saveCurrentGrain();
+                    }
                     if (submit) {
                         scope.isModalDisplayed = true;
                     } else {
                         scope.subjectCopy.has_been_started = true;
                         $location.path('/dashboard');
                     }
-                };                    
+                };              
+                
+                scope.saveCurrentGrain = function() {
+                    scope.subjectCopy.current_grain_id = scope.currentGrainCopy ? scope.currentGrainCopy.id : -1;
+                    scope.$emit('E_SUBJECT_COPY_LATER', scope.subjectCopy.id, scope.subjectCopy.current_grain_id);
+                }
 
                 scope.canSubmit = function(){
                     //it's possible to submit if the begin date is passed even if due date is exceeded (Unless it has already submit)

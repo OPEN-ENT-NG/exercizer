@@ -21,7 +21,9 @@
         <!-- HEADER -->
         <div data-ng-if="!performSubjectCopyController.previewing">
             <subject-perform-copy-student-header data-subject-scheduled="performSubjectCopyController.subjectScheduled"
-                                                 data-subject-copy="performSubjectCopyController.subjectCopy" is-can-submit="performSubjectCopyController.isCanSubmit">
+                                                 data-subject-copy="performSubjectCopyController.subjectCopy"
+                                                 daya-is-can-submit="performSubjectCopyController.isCanSubmit"
+                                                 data-current-grain-copy="performSubjectCopyController.currentGrainCopy">
             </subject-perform-copy-student-header>
         </div>
 
@@ -42,10 +44,17 @@
                 <subject-perform-copy-display-current-grain-copy data-subject-scheduled="performSubjectCopyController.subjectScheduled"
                                                                  data-subject-copy="performSubjectCopyController.subjectCopy"
                                                                  data-previewing="performSubjectCopyController.previewing"
-                                                                 data-grain-copy-list="performSubjectCopyController.grainCopyList"></subject-perform-copy-display-current-grain-copy>
+                                                                 data-grain-copy-list="performSubjectCopyController.grainCopyList"
+                                                                 data-current-grain-copy="performSubjectCopyController.currentGrainCopy">
+                </subject-perform-copy-display-current-grain-copy>
 
                 <!-- BOTTOM NAV -->
-                <subject-perform-copy-bottom-nav data-grain-copy-list="performSubjectCopyController.grainCopyList" data-subject-copy="performSubjectCopyController.subjectCopy" data-subject-scheduled="performSubjectCopyController.subjectScheduled" is-can-submit="performSubjectCopyController.isCanSubmit"></subject-perform-copy-bottom-nav>
+                <subject-perform-copy-bottom-nav data-grain-copy-list="performSubjectCopyController.grainCopyList"
+                                                 data-subject-copy="performSubjectCopyController.subjectCopy"
+                                                 data-subject-scheduled="performSubjectCopyController.subjectScheduled"
+                                                 data-is-can-submit="performSubjectCopyController.isCanSubmit"
+                                                 data-current-grain-copy="performSubjectCopyController.currentGrainCopy">
+                </subject-perform-copy-bottom-nav>
             </section>
         </div>
     </div>
