@@ -345,6 +345,24 @@ public class SubjectCopyController extends ControllerHelper {
 		writeCopy(request, CopyAction.REPORTCOPY);
 	}
 
+	@Post("/subject-copy/:id/last-grain/:grainCopyId")
+	@ResourceFilter(SubjectCopyCorrected.class)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
+	public void setCurrentGrain(final HttpServerRequest request) {
+		final String subjectCopyId = request.params().get("id");
+		final String grainCopyId = request.params().get("grainCopyId");
+		if (!StringUtils.isEmpty(grainCopyId)) {
+			subjectCopyService.setCurrentGrain(subjectCopyId, grainCopyId, result -> {
+				if (result.isLeft()) {
+					renderError(request);
+				} else {
+					Renders.ok(request);
+				}
+			});
+		}
+	}
+
+
 	@Get("/subject-copy/check/no-corrected/:id")
     @ApiDoc("Check subject copy status.")
 	@SecuredAction(value = "check.corrected", type = ActionType.AUTHENTICATED)

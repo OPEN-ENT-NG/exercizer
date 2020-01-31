@@ -32,6 +32,7 @@ class PerformSubjectCopyController {
     private _previewFromReader:boolean;
     private _hasDataLoaded:boolean;
     private _isCanSubmit:boolean;
+    private _currentGrainCopy:IGrainCopy;
 
     constructor
     (
@@ -164,6 +165,11 @@ class PerformSubjectCopyController {
 
                                         if (!angular.isUndefined(grainCopyList)) {
                                             self._subjectCopyService.checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId).then(function (isOk) {
+                                                if (self._subjectCopy.current_grain_id) {
+                                                    var currentGrainCopy = grainCopyList.find(grainCopy => grainCopy.id == self._subjectCopy.current_grain_id);
+                                                    self._currentGrainCopy = currentGrainCopy;
+                                                    self._currentGrainCopyChanged(currentGrainCopy);
+                                                }
                                                 self._isCanSubmit = isOk === true;
                                                 self._grainCopyList = grainCopyList;
                                                 self._$scope.$emit('E_GRAIN_COPY_LIST', self._grainCopyList);
@@ -200,6 +206,11 @@ class PerformSubjectCopyController {
         );
     }
 
+    private _currentGrainCopyChanged(grainCopy:IGrainCopy) {
+        this._$scope.$emit('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
+        this._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
+    }
+
     private _eventsHandler = function(self) {
 
         function _updateLocalGrainCopyList(grainCopy:IGrainCopy) {
@@ -230,8 +241,8 @@ class PerformSubjectCopyController {
         });
 
         self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
-            self._$scope.$emit('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
-            self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
+            self._currentGrainCopy = grainCopy;
+            self._currentGrainCopyChanged(grainCopy);
         });
 
         self._$scope.$on('E_SUBJECT_COPY_SUBMITTED', function(event, subjectCopy:ISubjectCopy) {
@@ -253,6 +264,10 @@ class PerformSubjectCopyController {
                     );
                 }
             });
+        });
+
+        self._$scope.$on('E_SUBJECT_COPY_LATER', function(event, subjectCopyId:number, grainCopyId: number) {
+            self._subjectCopyService.setCurrentGrain(subjectCopyId, grainCopyId).then(() => {}, err => notify.error(err));
         });
 
         // init
@@ -297,6 +312,14 @@ class PerformSubjectCopyController {
     get isCanSubmit():boolean {
         return this._isCanSubmit;
     }
+
+    get currentGrainCopy():IGrainCopy {
+        return this._currentGrainCopy;
+    }
+
+    /*set currentGrainCopy(grainCopy:IGrainCopy) {
+        this._currentGrainCopy = grainCopy;
+    }*/
 }
 
 export const performSubjectCopyController = ng.controller('PerformSubjectCopyController', PerformSubjectCopyController);

@@ -28,41 +28,41 @@ import io.vertx.core.json.JsonObject;
 import java.util.List;
 
 public interface ISubjectCopyService {
-    enum FileType  {
+    enum FileType {
         CORRECTED,
         HOMEWORK
     }
 
-	void submitCopy(final long id, int timezoneOffset, final Handler<Either<String, JsonObject>> handler);
+    void submitCopy(final long id, int timezoneOffset, final Handler<Either<String, JsonObject>> handler);
 
-		/**
-     *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+    /**
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
     /**
-     *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
-    
+
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     void list(final UserInfos user, final Handler<Either<String, JsonArray>> handler);
-    
+
     /**
-     *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     void listBySubjectScheduled(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
-    
+
     /**
-     *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     void listBySubjectScheduledList(final UserInfos user, final Handler<Either<String, JsonArray>> handler);
 
     /**
-     *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
-     */    
+     * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
+     */
     void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
     void getDownloadInformation(final List<String> ids, final Handler<Either<String, JsonArray>> handler);
@@ -85,4 +85,5 @@ public interface ISubjectCopyService {
 
     void subjectCopyTrainingExists(UserInfos user, final String subjectScheduledId, Handler<Either<String, Boolean>> handler);
 
+    void setCurrentGrain(final String subjectCopyId, final String grainCopyId, Handler<Either<String, JsonObject>> handler);
 }

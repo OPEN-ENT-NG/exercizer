@@ -270,6 +270,37 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
                 handler.handle(new Either.Left<>(result.left().getValue()));
             }
         }));
+    }
 
+    @Override
+    public void setCurrentGrain(final String subjectCopyId, final String grainCopyId, Handler<Either<String, JsonObject>> handler) {
+        if ("-1".equals(grainCopyId)) {
+            updateCurrentGrainId(subjectCopyId, null, handler);
+            return;
+        }
+        final String query = "SELECT subject_copy_id::text AS \"subjectCopyId\" FROM exercizer.grain_copy WHERE id = ?";
+        sql.prepared(query, new JsonArray().add(grainCopyId), SqlResult.validUniqueResultHandler(result -> {
+            if (result.isRight()) {
+                final String res = result.right().getValue().getString("subjectCopyId");
+                if (!res.equals(subjectCopyId)) {
+                    handler.handle(new Either.Left<>("Wrong grain_copy id"));
+                } else {
+                    updateCurrentGrainId(subjectCopyId, grainCopyId, handler);
+                }
+            } else {
+                handler.handle(new Either.Left<>(result.left().getValue()));
+            }
+        }));
+    }
+
+    private void updateCurrentGrainId(final String subjectCopyId, final String grainCopyId, Handler<Either<String, JsonObject>> handler) {
+        final String updateQuery = "UPDATE " + resourceTable + " SET current_grain_id = ? WHERE id = ?";
+        JsonArray params = new JsonArray();
+        if (grainCopyId != null) {
+            params.add(grainCopyId).add(subjectCopyId);
+        } else {
+            params.addNull().add(subjectCopyId);
+        }
+        sql.prepared(updateQuery, params, SqlResult.validRowsResultHandler(handler));
     }
 }
