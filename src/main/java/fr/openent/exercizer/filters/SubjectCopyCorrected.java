@@ -40,8 +40,9 @@ public class SubjectCopyCorrected implements ResourcesProvider {
 
                 String query = "SELECT COUNT(sc.id) FROM " +
                         conf.getSchema() + "subject_scheduled as ss INNER JOIN " + conf.getSchema() + "subject_copy sc ON ss.id = sc.subject_scheduled_id " +
-                        "WHERE "+("Student".equalsIgnoreCase(user.getType()) ? "sc.owner = ?" : "ss.owner = ?")+" AND sc.id = ? ";
+                        "WHERE (sc.owner = ? OR ss.owner = ?) AND sc.id = ? ";
                 JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+                values.add(user.getUserId());
                 values.add(user.getUserId());
                 values.add(Sql.parseId(id));
 
