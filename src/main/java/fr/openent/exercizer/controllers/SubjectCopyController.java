@@ -158,7 +158,7 @@ public class SubjectCopyController extends ControllerHelper {
 		SUBMITCOPY(Arrays.asList("id", "offset")),
 		CORRECTCOPY(Arrays.asList("id", "subject_copy_id", "calculated_score", "final_score", "comment", "is_corrected")),
 		ASSIGNCOPY(Arrays.asList("id")),
-		REPORTCOPY(Arrays.asList("id", "subject_copy_id", "calculated_score", "final_score", "comment"));
+		REPORTCOPY(Arrays.asList("id", "subject_copy_id", "calculated_score", "final_score", "comment", "has_been_started"));
 
 		private final List<String> fields;
 

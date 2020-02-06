@@ -16,7 +16,7 @@
                                 <strong data-ng-switch-when="perform" data-ng-click="performSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                                 <strong data-ng-switch-when="view" data-ng-click="viewSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                                 <strong data-ng-switch-when="text" ><span class="token" data-ng-class="copyStateColorClass()">[[textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
-                                <strong data-ng-switch-when="training"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong data-ng-switch-when="training" data-ng-click="viewSubjectCopyFinalScore(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                                 <strong data-ng-switch-default >default</strong>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <div data-ng-if="subjectScheduled.type === 'interactive'">
-                        <strong class="score">[[subjectCopy.final_score | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]</strong>
+                        <strong class="score">[[(subjectCopy.is_training_copy ? subjectCopy.calculated_score : subjectCopy.final_score) | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]</strong>
                     </div>
                     <div class="buttons">
                         <button class="flat-button"

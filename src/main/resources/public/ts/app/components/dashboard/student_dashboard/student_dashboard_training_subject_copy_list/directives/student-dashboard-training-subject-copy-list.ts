@@ -34,10 +34,10 @@ export const studentDashboardTrainingSubjectCopyList = ng.directive('studentDash
                     };
 
                     function subjectTrainingTypeIndicator(subjectCopy) {
-                        if (subjectCopy.submitted_date) {
-                            return 2; // 'is_done';
-                        } else if (subjectCopy.has_been_started) {
+                        if (subjectCopy.has_been_started) {
                             return 3; // 'is_on_going';
+                        } else if (subjectCopy.submitted_date) {
+                            return 2; // 'is_done';
                         } else {
                             return 1; // 'is_sided';
                         }
