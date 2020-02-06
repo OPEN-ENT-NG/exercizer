@@ -200,6 +200,19 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
                 template.open('main', '400-date-exercizer');
             }
         },
+        viewSubjectCopyFinalScore: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === studentProfile) {
+                    template.open('main', 'subject-copy-final-score');
+                } else if (_userProfile === teacherProfile) {
+                    template.open('main', 'subject-copy-final-score');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
+            } else {
+                template.open('main', '400-date-exercizer');
+            }
+        },
         dashboardTeacherArchive: async function () {
             if (await checkSystemDate()) {
                 if (_userProfile === teacherProfile) {

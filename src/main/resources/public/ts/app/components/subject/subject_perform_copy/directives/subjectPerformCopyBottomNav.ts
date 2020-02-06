@@ -10,8 +10,7 @@ export const subjectPerformCopyBottomNav = ng.directive('subjectPerformCopyBotto
                 'subjectScheduled': '=',
                 'subjectCopy': '=',
                 'grainCopyList': '=',
-                'isCanSubmit': '=',
-                'currentGrainCopy': '='
+                'isCanSubmit': '='
             },
             templateUrl: 'exercizer/public/ts/app/components/subject/subject_perform_copy/templates/subject-perform-copy-bottom-nav.html',
             link:(scope:any) => {

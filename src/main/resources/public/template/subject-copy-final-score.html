@@ -1,0 +1,62 @@
+<div data-ng-controller="SubjectCopyFinalScoreController as subjectCopyFinalScoreController">
+    <div class="row">
+        <h1 class="cell twelve-mobile">
+            <span class="zero-mobile">
+                <span class="hover-orange" data-ng-click="subjectCopyFinalScoreController.redirectToDashboard()">
+                    <i18n>exercizer.training.subject</i18n>
+                </span> / 
+            </span>
+            <span class="hover-orange">[[ subjectCopyFinalScoreController.subjectScheduled.title | limitTo: 35  ]][[ subjectCopyFinalScoreController.subjectScheduled.title.length > 35 ? '...' : '']]
+            </span> / <span class="hover-orange" ><i18n>exercizer.copy.final.score</i18n></span>
+        </h1>
+    </div>
+    <div class="row" data-ng-hide="subjectCopyFinalScoreController.hasDataLoaded">
+        <div class="info">exercizer.loading</div>
+    </div>
+    <div class="row">
+        <button class="right-magnet cell" data-ng-click="">
+            <i18n>exercizer.retry</i18n>
+        </button>
+    </div>
+    <div data-ng-if="subjectCopyFinalScoreController.hasDataLoaded && subjectCopyFinalScoreController.grainCopyList.length > 0">
+        <div class="row">
+            <section class="cell main-col" style="width: 100%">
+                <article class="centered-text padding-top-70">
+                    <img height="180" src="exercizer/public/assets/img/final-score.svg"/>
+                    <div class="row padding-top-50">
+                        <h1><i18n>exercizer.final.score</i18n> : <span style="font-size: 50px"><span class="final-score">[[ subjectCopyFinalScoreController.subjectCopy.calculated_score ]]</span> <i18n>exercizer.on</i18n> [[ subjectCopyFinalScoreController.subjectScheduled.max_score ]] <i18n>exercizer.score</i18n> !</span></h1>
+                        <button class="right-magnet cell final-score-button" data-ng-click="">
+                            <i18n>exercizer.see.copy.details</i18n>
+                        </button>
+                    </div>
+                    <div class='final-score-list'>
+                        <div>
+                            <ul>
+                                <li data-ng-repeat="grainCopy in subjectCopyFinalScoreController.grainCopyList | orderObjectBy:'order_by':false | orderObjectBy:'display_order':false" data-ng-if="grainCopy.grain_type_id > 3" style="box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
+                                    <a>
+                                        [[ subjectCopyFinalScoreController.getCorrectOrder(grainCopy) + ') ' ]] [[ subjectCopyFinalScoreController.getGrainCopyName(grainCopy) ]]
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li data-ng-repeat="grainCopy in subjectCopyFinalScoreController.grainCopyList | orderObjectBy:'order_by':false | orderObjectBy:'display_order':false" data-ng-if="grainCopy.grain_type_id > 3">
+                                    <a>
+                                        <span class="final-score">[[ grainCopy.calculated_score ]]</span> / [[ grainCopy.grain_copy_data.max_score ]] <i18n>exercizer.score</i18n>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+                <!-- GRAIN COPY LIST -->
+                <!--
+                <subject-view-copy-grain-copy-list data-subject-scheduled="subjectCopyFinalScoreController.subjectScheduled"
+                                                   data-subject-copy="subjectCopyFinalScoreController.subjectCopy"
+                                                   data-grain-scheduled-list="subjectCopyFinalScoreController.grainScheduledList"
+                                                   data-grain-copy-list="subjectCopyFinalScoreController.grainCopyList">
+                </subject-view-copy-grain-copy-list>
+                -->
+            </section>
+        </div>
+    </div>
+</div>

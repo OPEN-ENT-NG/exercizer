@@ -1,4 +1,5 @@
 export * from './ArchiveViewSubjectCopyController';
+export * from './SubjectCopyFinalScoreController';
 export * from './ExercizerController';
 export * from './EditSimpleSubjectController';
 export * from './EditSubjectController';
