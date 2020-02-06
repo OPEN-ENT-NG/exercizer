@@ -263,6 +263,9 @@ routes.define(function ($routeProvider) {
         .when('/subject/copy/view/:subjectCopyId/', {
             action: 'viewSubjectCopy'
         })
+        .when('/subject/copy/view/final-score/:subjectCopyId/', {
+            action: 'viewSubjectCopyFinalScore'
+        })
         .when('/subject/copy/view/:subjectId/:subjectCopyId/', {
             action: 'viewSubjectCopyAsTeacher'
         })

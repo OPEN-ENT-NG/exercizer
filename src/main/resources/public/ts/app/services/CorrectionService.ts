@@ -68,6 +68,28 @@ export class CorrectionService implements ICorrectionService {
         )
     }
 
+    public automaticCorrectionForTraining = function (subjectCopy:ISubjectCopy, subjectScheduled:ISubjectScheduled) {
+        var promises = [];
+        var deferred = this._$q.defer();
+        this._grainScheduledService.getListBySubjectScheduled(subjectScheduled).then((grainScheduledList: IGrainScheduled[]) => {
+            this._grainCopyService.getListBySubjectCopy(subjectCopy, true).then((grainCopyList: IGrainCopy[]) => {
+                var score = 0;
+                grainCopyList.forEach((grain) => {
+                    let grainScore = this.genericCorrection(grainScheduledList.find((grainScheduled) => {return grainScheduled.id === grain.grain_scheduled_id}), grain);
+                    grain.calculated_score = grainScore;
+                    promises.push(this._grainCopyService.update(grain));
+                    score =+ grainScore;
+                });
+                subjectCopy.calculated_score = score;
+                promises.push(this._subjectCopyService.update(subjectCopy));
+                this._$q.all(promises).then(data => {
+                    deferred.resolve(subjectCopy);
+                }, () => { deferred.reject('exercizer.error'); });
+            }, () => { deferred.reject('exercizer.error'); });
+        }, () => { deferred.reject('exercizer.error'); });
+        return deferred.promise;
+    }
+
     public  grainsCorrection = function (grainCopyList: IGrainCopy[], grainScheduledList: IGrainScheduled[]) {
         grainCopyList.forEach((grain) => {
             grain.calculated_score = this.genericCorrection(grainScheduledList.find((grainScheduled) => {return grainScheduled.id === grain.grain_scheduled_id}), grain);

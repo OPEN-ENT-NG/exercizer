@@ -1,7 +1,7 @@
 import { ng, model, Behaviours, notify } from 'entcore';
 import { IGrainCopy, ISubject, IGrain, IGrainScheduled, ISubjectScheduled, ISubjectCopy } from '../models/domain';
 import { 
-    ISubjectService, ISubjectLibraryService, ISubjectCopyService, 
+    ISubjectService, ISubjectLibraryService, ISubjectCopyService, ICorrectionService,
     IGrainCopyService, IGrainService, IGrainScheduledService, ISubjectScheduledService, IGrainTypeService, IAccessService 
 } from '../services';
 import { angular } from 'entcore';
@@ -20,7 +20,8 @@ class PerformSubjectCopyController {
         'GrainScheduledService',
         'GrainCopyService',
         'GrainTypeService',
-        'AccessService'
+        'AccessService',
+        'CorrectionService'
     ];
 
     private _subjectScheduled:ISubjectScheduled;
@@ -47,7 +48,8 @@ class PerformSubjectCopyController {
         private _grainScheduledService:IGrainScheduledService,
         private _grainCopyService:IGrainCopyService,
         private _grainTypeService:IGrainTypeService,
-        private _accessService:IAccessService
+        private _accessService:IAccessService,
+        private _correctionService:ICorrectionService,
     ) {
         this._$scope = _$scope;
         this._$location = _$location;
@@ -58,6 +60,7 @@ class PerformSubjectCopyController {
         this._grainScheduledService = _grainScheduledService;
         this._grainCopyService = _grainCopyService;
         this._accessService = _accessService;
+        this._correctionService = _correctionService;
         this._hasDataLoaded = false;
         this._isCanSubmit = true;
 
@@ -256,7 +259,14 @@ class PerformSubjectCopyController {
                     subjectCopy.submitted_date = new Date().toISOString();
                     self._subjectCopyService.submit(subjectCopy).then(
                         function (subjectCopy:ISubjectCopy) {
-                            self._$scope.$broadcast('E_SUBMIT_SUBJECT_COPY');
+                            if (subjectCopy.is_training_copy) {
+                                let subjectScheduled = self._subjectScheduledService.getById(subjectCopy.subject_scheduled_id);
+                                self._correctionService.automaticCorrectionForTraining(subjectCopy, subjectScheduled).then((subjectCopy:ISubjectCopy) => {
+                                    self._$scope.$broadcast('E_SUBMIT_SUBJECT_COPY');
+                                }, (err) => { notify.error(err); });
+                            } else {
+                                self._$scope.$broadcast('E_SUBMIT_SUBJECT_COPY');
+                            }
                         },
                         function (err) {
                             notify.error(err);
@@ -316,10 +326,6 @@ class PerformSubjectCopyController {
     get currentGrainCopy():IGrainCopy {
         return this._currentGrainCopy;
     }
-
-    /*set currentGrainCopy(grainCopy:IGrainCopy) {
-        this._currentGrainCopy = grainCopy;
-    }*/
 }
 
 export const performSubjectCopyController = ng.controller('PerformSubjectCopyController', PerformSubjectCopyController);
