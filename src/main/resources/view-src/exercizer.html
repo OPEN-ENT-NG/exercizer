@@ -13,10 +13,22 @@
 		margin: 1.5cm;
 		}
 	}
+	@supports (-webkit-overflow-scrolling: touch) {
+		html {
+			overflow: hidden;
+			height: 100%;
+			position: fixed;
+		}
+		body {
+			overflow: auto;
+			height: 100%;
+			position: relative;
+		}
+	}
 	</style>
 </head>
 
-<body class="exercizer" library-root>
+<body class="exercizer" library-root data-overflow="auto">
 	<div data-ng-controller="ExercizerController">
 		<portal data-ng-if="!isPrintPage">
 			<span class="zero-desktop">
