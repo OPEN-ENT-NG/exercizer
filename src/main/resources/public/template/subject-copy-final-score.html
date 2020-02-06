@@ -14,7 +14,7 @@
         <div class="info">exercizer.loading</div>
     </div>
     <div class="row">
-        <button class="right-magnet cell" data-ng-click="">
+        <button class="right-magnet cell" data-ng-click="subjectCopyFinalScoreController.retrySubjectCopy()">
             <i18n>exercizer.retry</i18n>
         </button>
     </div>
@@ -25,7 +25,7 @@
                     <img height="180" src="exercizer/public/assets/img/final-score.svg"/>
                     <div class="row padding-top-50">
                         <h1><i18n>exercizer.final.score</i18n> : <span style="font-size: 50px"><span class="final-score">[[ subjectCopyFinalScoreController.subjectCopy.calculated_score ]]</span> <i18n>exercizer.on</i18n> [[ subjectCopyFinalScoreController.subjectScheduled.max_score ]] <i18n>exercizer.score</i18n> !</span></h1>
-                        <button class="right-magnet cell final-score-button" data-ng-click="">
+                        <button class="right-magnet cell final-score-button" data-ng-click="subjectCopyFinalScoreController.viewSubjectCopy()">
                             <i18n>exercizer.see.copy.details</i18n>
                         </button>
                     </div>
@@ -48,14 +48,6 @@
                         </div>
                     </div>
                 </article>
-                <!-- GRAIN COPY LIST -->
-                <!--
-                <subject-view-copy-grain-copy-list data-subject-scheduled="subjectCopyFinalScoreController.subjectScheduled"
-                                                   data-subject-copy="subjectCopyFinalScoreController.subjectCopy"
-                                                   data-grain-scheduled-list="subjectCopyFinalScoreController.grainScheduledList"
-                                                   data-grain-copy-list="subjectCopyFinalScoreController.grainCopyList">
-                </subject-view-copy-grain-copy-list>
-                -->
             </section>
         </div>
     </div>

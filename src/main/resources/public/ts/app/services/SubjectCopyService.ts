@@ -450,10 +450,10 @@ export class SubjectCopyService implements ISubjectCopyService {
     public copyState = function(copy){
         //simple subject : status to "is corrected" if the copy has been submitted
         if (copy.is_training_copy) {
-            if (copy.submitted_date) {
-                return 'is_done';
-            } else if (!copy.submitted_date && copy.has_been_started) {
+            if (copy.has_been_started) {
                 return 'is_on_going';
+            } else if (copy.submitted_date) {
+                return 'is_done';
             } else {
                 return 'is_sided';
             }

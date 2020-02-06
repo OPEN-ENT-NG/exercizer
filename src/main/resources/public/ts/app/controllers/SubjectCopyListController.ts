@@ -129,10 +129,10 @@ class SubjectCopyListController {
             var res = false;
             if (filter && !angular.isUndefined(filter) && filter !== null && filter.length !== 0) {
                 if (filter.includes('is_done')) {
-                    res = res || !!subjectCopy.submitted_date;
+                    res = res || !!subjectCopy.submitted_date && !subjectCopy.has_been_started;
                 }
                 if (filter.includes('is_on_going')) {
-                    res = res || (!subjectCopy.submitted_date && subjectCopy.has_been_started);
+                    res = res || subjectCopy.has_been_started;
                 }
                 if (filter.includes('is_sided')) {
                     res = res || (!subjectCopy.submitted_date && !subjectCopy.has_been_started);

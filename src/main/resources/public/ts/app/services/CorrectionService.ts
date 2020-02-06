@@ -81,6 +81,7 @@ export class CorrectionService implements ICorrectionService {
                     score =+ grainScore;
                 });
                 subjectCopy.calculated_score = score;
+                subjectCopy.has_been_started = false;
                 promises.push(this._subjectCopyService.update(subjectCopy));
                 this._$q.all(promises).then(data => {
                     deferred.resolve(subjectCopy);
