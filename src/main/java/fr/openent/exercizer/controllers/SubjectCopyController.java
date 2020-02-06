@@ -339,7 +339,7 @@ public class SubjectCopyController extends ControllerHelper {
 
 	@Put("/subject-copy/report")
 	@ApiDoc("Report copy final_score and general comment")
-	@ResourceFilter(SubjectScheduledOwnerForSubjectCopy.class)
+	@ResourceFilter(SubjectCopyCorrected.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void reportCopy(final HttpServerRequest request) {
 		writeCopy(request, CopyAction.REPORTCOPY);
@@ -459,7 +459,7 @@ public class SubjectCopyController extends ControllerHelper {
 	public enum grainCopyMode {
 		// For student copy completion
 		PERFORM(
-				Arrays.asList("id", "subject_copy_id", "grain_copy_data"),
+				Arrays.asList("id", "subject_copy_id", "calculated_score", "grain_copy_data"),
 				"has_been_started"
 				),
 		// For teacher copy correction

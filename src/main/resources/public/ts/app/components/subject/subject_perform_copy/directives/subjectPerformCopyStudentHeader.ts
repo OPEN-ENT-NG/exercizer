@@ -52,7 +52,11 @@ export const subjectPerformCopyStudentHeader = ng.directive('subjectPerformCopyS
                 };
                 
                 scope.$on('E_SUBMIT_SUBJECT_COPY', function() {
-                    $location.path('/dashboard');
+                    if (scope.subjectCopy.is_training_copy) {
+                        $location.path(`/subject/copy/view/final-score/${scope.subjectCopy.id}/`);
+                    } else {
+                        $location.path('/dashboard');
+                    }
                 })
             }
         };
