@@ -78,7 +78,7 @@ class SubjectCopyFinalScoreController {
                     function() {
                         self._subjectCopy = self._subjectCopyService.getById(subjectCopyId);
 
-                        if (!angular.isUndefined(self._subjectCopy)) {
+                        if (!angular.isUndefined(self._subjectCopy) || !self._subjectCopy.is_training_copy || !self._subjectCopy.submitted_date) {
 
                             self._subjectScheduled = self._subjectScheduledService.getById(self._subjectCopy.subject_scheduled_id);
 
@@ -248,8 +248,21 @@ class SubjectCopyFinalScoreController {
     };
 
     public getCorrectOrder = function(grainCopy:IGrainCopy) {
-        return CorrectOrderHelper.getCorrectOrder(grainCopy, this._subjectCopy);
+        return CorrectOrderHelper.getCorrectOrder(grainCopy, this._grainCopyList);
     };
+
+    public viewSubjectCopy() {
+        this._$location.path(`/subject/copy/view/${this._subjectCopy.id}`);
+    }
+
+    public retrySubjectCopy() {
+        this._subjectCopy.has_been_started = true;
+        this._subjectCopyService.update(this._subjectCopy).then(success => {
+            this._$location.path(`/subject/copy/perform/${this._subjectCopy.id}`);
+        }, err => {
+            notify.error(err);
+        });
+    }
 
     get subjectScheduled():ISubjectScheduled {
         return this._subjectScheduled;

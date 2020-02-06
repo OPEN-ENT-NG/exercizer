@@ -17,10 +17,10 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
 
                 scope.selectTitle = function(){
                     if (scope.subjectCopy.is_training_copy) {
-                        if (scope.subjectCopy.submitted_date) {
-                            return 'training';
-                        } else {
+                        if (scope.subjectCopy.has_been_started || !scope.subjectCopy.submitted_date) {
                             return 'perform';
+                        } else {
+                            return 'training';
                         }
                     }
                     if (scope.subjectScheduled.type === 'simple') {
@@ -46,6 +46,10 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
 
                 scope.viewSubjectCopy = function (subjectCopyId) {
                     $location.path('/subject/copy/view/' + subjectCopyId);
+                };
+
+                scope.viewSubjectCopyFinalScore = function (subjectCopyId) {
+                    $location.path('/subject/copy/view/final-score/' + subjectCopyId);
                 };
 
                 /**
