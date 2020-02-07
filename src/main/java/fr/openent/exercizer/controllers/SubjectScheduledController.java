@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.controllers;
 
+import fr.openent.exercizer.filters.SubjectCopyTraining;
 import fr.openent.exercizer.filters.SubjectsScheduledOwner;
 import fr.openent.exercizer.filters.SubjectScheduledCorrected;
 import fr.openent.exercizer.filters.SubjectScheduledOwner;
@@ -903,7 +904,7 @@ public class SubjectScheduledController extends ControllerHelper {
 	@Get("/archive/subjects-scheduled/export-csv")
 	@ResourceFilter(SubjectsScheduledOwner.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
-	public void exportArchiedSubjectScheduled(final HttpServerRequest request){
+	public void exportArchivedSubjectScheduled(final HttpServerRequest request){
 		final List<String> ids = request.params().getAll("id");
 
 		if (ids == null || ids.isEmpty()) {
@@ -953,6 +954,7 @@ public class SubjectScheduledController extends ControllerHelper {
 	}
 
 	@Post("/subject-scheduled/create-training-copy/:id")
+	@ResourceFilter(SubjectCopyTraining.class)
 	@SecuredAction(value = "", type = ActionType.AUTHENTICATED)
 	public void createTrainingCopy(final HttpServerRequest request) {
 		final String id = request.params().get("id");
