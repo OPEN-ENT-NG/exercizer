@@ -19,10 +19,7 @@
 
 package fr.openent.exercizer.controllers;
 
-import fr.openent.exercizer.filters.SubjectCopyTraining;
-import fr.openent.exercizer.filters.SubjectsScheduledOwner;
-import fr.openent.exercizer.filters.SubjectScheduledCorrected;
-import fr.openent.exercizer.filters.SubjectScheduledOwner;
+import fr.openent.exercizer.filters.*;
 import fr.openent.exercizer.services.ISubjectCopyService;
 import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.openent.exercizer.services.impl.SubjectCopyServiceSqlImpl;
@@ -955,7 +952,7 @@ public class SubjectScheduledController extends ControllerHelper {
 
 	@Post("/subject-scheduled/create-training-copy/:id")
 	@ResourceFilter(SubjectCopyTraining.class)
-	@SecuredAction(value = "", type = ActionType.AUTHENTICATED)
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void createTrainingCopy(final HttpServerRequest request) {
 		final String id = request.params().get("id");
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
@@ -974,6 +971,25 @@ public class SubjectScheduledController extends ControllerHelper {
 						}
 					});
 				} else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Post("/subject-scheduled/:subject-scheduled-id/subject-copy/:id/recreate-grains")
+	@ResourceFilter(SubjectCopyOwner.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void recreateGrainCopies(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+                    final String subjectCopyId = request.params().get("id");
+                    final String subjectScheduledId = request.params().get("subject-scheduled-id");
+                    subjectScheduledService.recreateGrainCopies(subjectScheduledId, subjectCopyId, defaultResponseHandler(request));
+                } else {
 					log.debug("User not found in session.");
 					unauthorized(request);
 				}
