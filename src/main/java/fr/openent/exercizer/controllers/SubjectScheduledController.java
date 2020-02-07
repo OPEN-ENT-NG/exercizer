@@ -978,7 +978,7 @@ public class SubjectScheduledController extends ControllerHelper {
 		});
 	}
 
-	@Post("/subject-scheduled/:subject-scheduled-id/subject-copy/:id/recreate-grains")
+	@Post("/subject-scheduled/:subjectScheduledId/subject-copy/:id/recreate-grains")
 	@ResourceFilter(SubjectCopyOwner.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void recreateGrainCopies(final HttpServerRequest request) {
@@ -987,7 +987,7 @@ public class SubjectScheduledController extends ControllerHelper {
 			public void handle(final UserInfos user) {
 				if (user != null) {
                     final String subjectCopyId = request.params().get("id");
-                    final String subjectScheduledId = request.params().get("subject-scheduled-id");
+                    final String subjectScheduledId = request.params().get("subjectScheduledId");
                     subjectScheduledService.recreateGrainCopies(subjectScheduledId, subjectCopyId, defaultResponseHandler(request));
                 } else {
 					log.debug("User not found in session.");
