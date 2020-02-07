@@ -43,27 +43,35 @@ public class SubjectCopyOwner implements ResourcesProvider {
 
 		RequestUtils.bodyToJson(resourceRequest, new Handler<JsonObject>() {
 			public void handle(JsonObject data) {
-				final Long id = data.getLong("id");
-				if (id == null) {
-					handler.handle(false);
+				final Long lid = data != null ? data.getLong("id") : null;
+				final String id;
+				if (lid == null) {
+					id = resourceRequest.params().get("id");
+					if (id == null) {
+						handler.handle(false);
+						return;
+					}
 				} else {
-					resourceRequest.pause();
-
-					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_copy sc WHERE sc.id = ? AND sc.owner = ?";
-					JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
-					values.add(id);
-					values.add(user.getUserId());
-
-					Sql.getInstance().prepared(query, values, new Handler<Message<JsonObject>>() {
-						@Override
-						public void handle(Message<JsonObject> message) {
-							resourceRequest.resume();
-							Long count = SqlResult.countResult(message);
-							handler.handle(count != null && count > 0);
-						}
-					});
+					id = lid.toString();
 				}
+
+				resourceRequest.pause();
+
+				String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_copy sc WHERE sc.id = ? AND sc.owner = ?";
+				JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+				values.add(id);
+				values.add(user.getUserId());
+
+				Sql.getInstance().prepared(query, values, new Handler<Message<JsonObject>>() {
+					@Override
+					public void handle(Message<JsonObject> message) {
+						resourceRequest.resume();
+						Long count = SqlResult.countResult(message);
+						handler.handle(count != null && count > 0);
+					}
+				});
 			}
+
 		});
 	}
 }
