@@ -425,7 +425,7 @@ export class SubjectCopyService implements ISubjectCopyService {
         }, err => {
             deferred.reject('exercizer.error');
         });
-        return deferred;
+        return deferred.promise;
     };
 
     public addToCache = function(subjectCopyRaw: any): void {

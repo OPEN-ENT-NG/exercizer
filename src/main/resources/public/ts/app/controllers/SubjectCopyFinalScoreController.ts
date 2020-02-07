@@ -1,6 +1,6 @@
 import { ng, notify } from 'entcore';
 import { IGrainCopy, IGrainScheduled, ISubjectScheduled, ISubjectCopy } from '../models/domain';
-import { ISubjectCopyService, ISubjectScheduledService, IGrainCopyService, IGrainScheduledService} from '../services';
+import { ISubjectCopyService, ISubjectScheduledService, IGrainCopyService, IGrainScheduledService, IGrainTypeService} from '../services';
 import { CloneObjectHelper, CorrectOrderHelper } from '../models/helpers';
 
 class SubjectCopyFinalScoreController {
@@ -12,6 +12,7 @@ class SubjectCopyFinalScoreController {
         'SubjectCopyService',
         'GrainScheduledService',
         'GrainCopyService',
+        'GrainTypeService'
     ];
 
     private _subjectScheduled:ISubjectScheduled;
@@ -31,12 +32,14 @@ class SubjectCopyFinalScoreController {
         private _subjectCopyService:ISubjectCopyService,
         private _grainScheduledService:IGrainScheduledService,
         private _grainCopyService:IGrainCopyService,
+        private _grainTypeService:IGrainTypeService
     ) {
         this._$location = _$location;
         this._subjectScheduledService = _subjectScheduledService;
         this._subjectCopyService =_subjectCopyService;
         this._grainScheduledService = _grainScheduledService;
         this._grainCopyService = _grainCopyService;
+        this._grainTypeService = this._grainTypeService;
         this._hasDataLoaded = false;
         this._isTeacher = false;
 
@@ -58,7 +61,8 @@ class SubjectCopyFinalScoreController {
                     function() {
                         self._subjectCopy = self._subjectCopyService.getById(subjectCopyId);
 
-                        if (!angular.isUndefined(self._subjectCopy) || !self._subjectCopy.is_training_copy || !self._subjectCopy.submitted_date) {
+                        if (!angular.isUndefined(self._subjectCopy) || !self._subjectCopy.is_training_copy ||
+                        self._subjectCopy.has_been_started || !self._subjectCopy.submitted_date) {
 
                             self._subjectScheduled = self._subjectScheduledService.getById(self._subjectCopy.subject_scheduled_id);
 
