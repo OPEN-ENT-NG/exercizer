@@ -33,14 +33,14 @@
                         <div>
                             <ul>
                                 <li data-ng-repeat="grainCopy in subjectCopyFinalScoreController.grainCopyList | orderObjectBy:'order_by':false | orderObjectBy:'display_order':false" data-ng-if="grainCopy.grain_type_id > 3" style="box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
-                                    <a>
-                                        [[ subjectCopyFinalScoreController.getCorrectOrder(grainCopy) + ') ' ]] [[ subjectCopyFinalScoreController.getGrainCopyName(grainCopy) ]]
+                                    <a style="top: 15px">
+                                        [[ subjectCopyFinalScoreController.getCorrectOrder(grainCopy) + ') ' ]] [[ subjectCopyFinalScoreController.getGrainCopyName(grainCopy) | limitTo: 50 ]][[ subjectCopyFinalScoreController.getGrainCopyName(grainCopy).length > 50 ? '...' : '']]
                                     </a>
                                 </li>
                             </ul>
                             <ul>
                                 <li data-ng-repeat="grainCopy in subjectCopyFinalScoreController.grainCopyList | orderObjectBy:'order_by':false | orderObjectBy:'display_order':false" data-ng-if="grainCopy.grain_type_id > 3">
-                                    <a>
+                                    <a style="top: 25px">
                                         <span class="final-score">[[ grainCopy.calculated_score ]]</span> / [[ grainCopy.grain_copy_data.max_score ]] <i18n>exercizer.score</i18n>
                                     </a>
                                 </li>
