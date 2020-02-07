@@ -552,5 +552,7 @@
     "exercizer.drop.help": "Glissez-déposez un fichier depuis votre appareil ou cliquez sur parcourir",
     "exercizer.drop.help2": "Déposez le fichier",
     "exercizer.notify.create.training.success": "Le sujet a bien été récupéré pour entraînement",
-    "exercizer.subject.training.already.exists": "Ce sujet est déjà présent dans vos copies d'entraînement"
+    "exercizer.subject.training.already.exists": "Ce sujet est déjà présent dans vos copies d'entraînement",
+    "exercizer.final.score.questions": "Questions",
+    "exercizer.final.score.score": "Score"
 }
