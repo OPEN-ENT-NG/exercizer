@@ -24,6 +24,7 @@ export interface ISubjectCopyService {
     getListBySubjectScheduled(subjectScheduled : ISubjectScheduled): ISubjectCopy[];
     checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId:number):Promise<boolean>;
     setCurrentGrain(subjectCopyId:number, grainCopyId: number): Promise<any>;
+    retry(subjectCopy:ISubjectCopy, grainCopyList:IGrainCopy[]): Promise<ISubjectCopy>;
     
 }
 
@@ -394,6 +395,37 @@ export class SubjectCopyService implements ISubjectCopyService {
 
     public correct = function(subjectCopy:ISubjectCopy):Promise<ISubjectCopy> {
         return this.write(subjectCopy, '/correct');
+    };
+
+    private recreateGrainCopies = function(subjectScheduledId:string, subjectCopyId:string):Promise<any> {
+        var deferred = this._$q.defer(), request = {
+            method: 'POST',
+            url: `exercizer/subject-scheduled/${subjectScheduledId}/subject-copy/${subjectCopyId}/recreate-grains`,
+            data: {}
+        };
+        
+        this._$http(request).then(function(response){
+                deferred.resolve();
+            },
+            function() {
+                deferred.reject("exercizer.error");
+            }
+        );
+        return deferred.promise;
+    }
+
+    public retry = function(subjectCopy:ISubjectCopy, grainCopyList:IGrainCopy[]):Promise<ISubjectCopy> {
+        let promises = [];
+        var deferred = this._$q.defer();
+        promises.push(this.update(subjectCopy));
+        promises.push(this.setCurrentGrain(subjectCopy.id, -1));
+        promises.push(this.recreateGrainCopies(subjectCopy.subject_scheduled_id, subjectCopy.id));
+        this._$q.all(promises).then(success => {
+            deferred.resolve(subjectCopy);
+        }, err => {
+            deferred.reject('exercizer.error');
+        });
+        return deferred;
     };
 
     public addToCache = function(subjectCopyRaw: any): void {
