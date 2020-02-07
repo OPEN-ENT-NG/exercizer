@@ -550,5 +550,7 @@
     "exercizer.question.type" : "Type de question",
     "exercizer.error.date" : "L'horloge de votre système est réglée sur une mauvaise date. Veuillez corriger votre horloge système pour pouvoir accéder à l'application.",
     "exercizer.notify.create.training.success": "Le sujet a bien été récupéré pour entraînement",
-    "exercizer.subject.training.already.exists": "Ce sujet est déjà présent dans vos copies d'entraînement"
+    "exercizer.subject.training.already.exists": "Ce sujet est déjà présent dans vos copies d'entraînement",
+    "exercizer.final.score.questions": "Questions",
+    "exercizer.final.score.score": "Score"
 }
