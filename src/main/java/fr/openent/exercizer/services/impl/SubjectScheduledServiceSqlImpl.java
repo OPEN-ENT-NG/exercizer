@@ -172,7 +172,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 								createScheduledSubject(s, fromSubjectId, subjectScheduledId, scheduledSubject, user);
 								createScheduledGrain(s, subjectScheduledId, fromSubjectId, grainJa, mapIdGrainCustomCopyData);
 								createSubjectsCopies(s, is_training_mode.booleanValue(), subjectScheduledId, usersJa);
-								createGrainCopies(s, is_training_mode.booleanValue(), subjectScheduledId);
+								createGrainCopies(s, is_training_mode.booleanValue(), subjectScheduledId, null);
 								sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, done -> {
 									if (scheduledSubject.getBoolean("randomDisplay", false).booleanValue()) {
 										Future<Void> future = assignGrainCopiesRandomOrder(subjectScheduledId);
@@ -373,14 +373,21 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		}
 	}
 
-	private void createGrainCopies(final SqlStatementsBuilder s, final boolean is_training, final Long subjectScheduledId) {
-		final String query = "INSERT INTO " + schema + "grain_copy (subject_copy_id, grain_type_id, grain_scheduled_id, order_by, grain_copy_data) " +
+	private void createGrainCopies(final SqlStatementsBuilder s, final boolean is_training,
+								   final Long subjectScheduledId, final Long subjectCopyId) {
+		String query = "INSERT INTO " + schema + "grain_copy (subject_copy_id, grain_type_id, grain_scheduled_id, order_by, grain_copy_data) " +
 				"SELECT sc.id, gs.grain_type_id, gs.id, gs.order_by, Coalesce(gs.grain_custom_data, gs.grain_data) " +
 				"FROM " + schema +"grain_scheduled AS gs INNER JOIN " + schema + "subject_scheduled AS ss ON (ss.id=gs.subject_scheduled_id) " +
 				"    INNER JOIN " + schema + "subject_copy AS sc ON (ss.id=sc.subject_scheduled_id) " +
 				"WHERE ss.id=? AND sc.is_training_copy = ?";
+		JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId).add(is_training);
 
-		s.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId).add(is_training));
+		if (subjectCopyId != null) {
+			query += " AND sc.id = ?";
+			params.add(subjectCopyId);
+		}
+
+		s.prepared(query, params);
 	}
 
 	private Future<Void> assignGrainCopiesRandomOrder(final Long subjectScheduledId) {
@@ -507,7 +514,32 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		final SqlStatementsBuilder s = new SqlStatementsBuilder();
 		JsonArray users = new JsonArray().add(new JsonObject().put("_id", user.getUserId()).put("name", user.getUsername()));
 		createSubjectsCopies(s, true, longSubjectScheduledId, users);
-		createGrainCopies(s, true, longSubjectScheduledId);
+		createGrainCopies(s, true, longSubjectScheduledId, null);
 		sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
 	}
+
+	@Override
+	public void recreateGrainCopies(final String subjectScheduledId, final String subjectCopyId, final Handler<Either<String, JsonObject>> handler) {
+		final Long longSubjectScheduledId;
+		final Long longSubjectCopyId;
+		try {
+			longSubjectScheduledId = Long.parseLong(subjectScheduledId);
+			longSubjectCopyId = Long.parseLong(subjectCopyId);
+		} catch (NumberFormatException nfe) {
+			log.error("Failure to recreate grain copies : " + nfe.getMessage());
+			handler.handle(new Either.Left<>(nfe.getMessage()));
+			return;
+		}
+		final String query = "DELETE FROM " + schema + "grain_copy WHERE subject_copy_id = ?";
+		sql.prepared(query, new JsonArray().add(longSubjectCopyId), SqlResult.validRowsResultHandler(message -> {
+			if (message.isRight()) {
+				final SqlStatementsBuilder s = new SqlStatementsBuilder();
+				createGrainCopies(s, true, longSubjectScheduledId, longSubjectCopyId);
+				sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
+			} else {
+				handler.handle(new Either.Left<>(message.left().getValue()));
+			}
+		}));
+	}
+
 }
