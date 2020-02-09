@@ -61,8 +61,8 @@ class SubjectCopyFinalScoreController {
                     function() {
                         self._subjectCopy = self._subjectCopyService.getById(subjectCopyId);
 
-                        if (!angular.isUndefined(self._subjectCopy) || !self._subjectCopy.is_training_copy ||
-                        self._subjectCopy.has_been_started || !self._subjectCopy.submitted_date) {
+                        if (!angular.isUndefined(self._subjectCopy) && self._subjectCopy.is_training_copy &&
+                        !self._subjectCopy.has_been_started && self._subjectCopy.submitted_date) {
 
                             self._subjectScheduled = self._subjectScheduledService.getById(self._subjectCopy.subject_scheduled_id);
 
@@ -124,23 +124,27 @@ class SubjectCopyFinalScoreController {
             var grainType = this._grainTypeService.getById(grainCopy.grain_type_id);
             return grainType.public_name;
         }
-    };
+    }
 
     public getCorrectOrder = function(grainCopy:IGrainCopy) {
         return CorrectOrderHelper.getCorrectOrder(grainCopy, this._grainCopyList);
-    };
+    }
 
-    public viewSubjectCopy() {
+    public viewSubjectCopy = function() {
         this._$location.path(`/subject/copy/view/${this._subjectCopy.id}`);
     }
 
-    public retrySubjectCopy() {
+    public retrySubjectCopy = function() {
         this._subjectCopy.has_been_started = true;
         this._subjectCopyService.retry(this._subjectCopy, this._grainCopyList).then(success => {
             this._$location.path(`/subject/copy/perform/${this._subjectCopy.id}`);
         }, err => {
             notify.error(err);
         });
+    }
+
+    public redirectToTrainingSubjects = function() {
+        this._$location.path('/dashboard/student').search({tab: 'training'});
     }
 
     get subjectScheduled():ISubjectScheduled {

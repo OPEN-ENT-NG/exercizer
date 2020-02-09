@@ -1,13 +1,15 @@
 <div class="row">
     <h1 class="cell">
-        <span class="zero-mobile"><span class="hover-orange" data-ng-click="redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span><span tooltip="[[subjectScheduled.title]]">[[ subjectScheduled.title | limitTo: 35  ]][[ subjectScheduled.title.length > 35 ? '...' : '']]</span>
+        <span class="zero-mobile"><span class="hover-orange" data-ng-if="!subjectCopy.is_training_copy" data-ng-click="redirectToDashboard()"><i18n>exercizer.title</i18n></span>
+        <span class="hover-orange" data-ng-if="subjectCopy.is_training_copy" data-ng-click="redirectToTrainingSubjects()"><i18n>exercizer.training.subject</i18n></span> / </span>
+        <span tooltip="[[subjectScheduled.title]]">[[ subjectScheduled.title | limitTo: 35  ]][[ subjectScheduled.title.length > 35 ? '...' : '']]</span>
     </h1>
 </div>
 <div class="row">
-    <h2 class="cell">
+    <h2 data-ng-if="!subjectCopy.is_training_copy" class="cell">
         <strong><i18n>exercizer.copy.from</i18n> [[ subjectCopy.owner_username ]]</strong>
     </h2>
-    <button class="cell right-magnet cancel" data-ng-click="redirectToDashboard()">
+    <button class="cell right-magnet cancel" data-ng-click="redirectToSubjects()">
         <i18n>exercizer.back.subject</i18n>
     </button>
 </div>

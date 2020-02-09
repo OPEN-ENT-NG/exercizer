@@ -2,7 +2,7 @@ import { ng, routes, StrUtils } from 'entcore';
 
 import { subjectCopyDomino } from './app/components/dashboard/student_dashboard/common/directives/subject-copy-domino';
 import { studentDashboardFinishSubjectCopyList } from './app/components/dashboard/student_dashboard/student_dashboard_finish_subject_copy_list/directives/studentDashBoardFinishSubjectCopyList';
-import { studentDashboardTrainingSubjectCopyList } from './app/components/dashboard/student_dashboard/student_dashboard_training_subject_copy_list/directives/student-dashboard-training-subject-copy-list';
+import { studentDashboardTrainingSubjectCopyList } from './app/components/dashboard/student_dashboard/student_dashboard_training_subject_copy_list/directives/studentDashboardTrainingSubjectCopyList';
 import { studentDashboardSubjectCopyList } from './app/components/dashboard/student_dashboard/student_dashboard_subject_copy_list/directives/studentDashBoardSubjectCopyList';
 import { dashboardTeacherTab } from './app/components/dashboard/teacher_dashboard/common/directives/dashboardTeacherTab';
 import { reminders } from './app/components/dashboard/teacher_dashboard/common/directives/reminders';
