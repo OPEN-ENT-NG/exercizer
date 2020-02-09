@@ -69,6 +69,14 @@
                         </div>
                     </span>
                 </div>
+                <div class="row vertical-spacing">
+                    <button class="right-magnet cell" data-ng-click="lightbox.state = 'assignSubject'">
+                        <i18n>exercizer.next</i18n>
+                    </button>
+                    <button class="cancel right-magnet cell" data-ng-click="hide()">
+                        <i18n>exercizer.cancel</i18n>
+                    </button>
+                </div>
             </div>
             <div data-ng-show="lightbox.state == 'assignSubject'">
                 <div class="row">
@@ -93,8 +101,8 @@
                     <button class="right-magnet cell" data-ng-click="lightbox.state = 'option'">
                         <i18n>exercizer.next</i18n>
                     </button>
-                    <button class="cancel right-magnet cell" data-ng-click="hide()">
-                        <i18n>exercizer.cancel</i18n>
+                    <button class="flat-button right-magnet cell" data-ng-click="lightbox.state = 'type'">
+                        <i18n>exercizer.previous</i18n>
                     </button>
                 </div>
             </div>
