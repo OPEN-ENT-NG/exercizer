@@ -2,11 +2,11 @@
     <div class="row">
         <h1 class="cell twelve-mobile">
             <span class="zero-mobile">
-                <span class="hover-orange" data-ng-click="subjectCopyFinalScoreController.redirectToDashboard()">
+                <span class="hover-orange" data-ng-click="subjectCopyFinalScoreController.redirectToTrainingSubjects()">
                     <i18n>exercizer.training.subject</i18n>
                 </span> / 
             </span>
-            <span class="hover-orange">[[ subjectCopyFinalScoreController.subjectScheduled.title | limitTo: 35  ]][[ subjectCopyFinalScoreController.subjectScheduled.title.length > 35 ? '...' : '']]
+            <span class="hover-orange" data-ng-click="subjectCopyFinalScoreController.viewSubjectCopy()">[[ subjectCopyFinalScoreController.subjectScheduled.title | limitTo: 35  ]][[ subjectCopyFinalScoreController.subjectScheduled.title.length > 35 ? '...' : '']]
             </span> / <span class="hover-orange" ><i18n>exercizer.copy.final.score</i18n></span>
         </h1>
     </div>

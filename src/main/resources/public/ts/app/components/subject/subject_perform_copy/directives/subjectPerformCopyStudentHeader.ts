@@ -26,6 +26,10 @@ export const subjectPerformCopyStudentHeader = ng.directive('subjectPerformCopyS
                         $location.path('/dashboard');
                     }
                 };              
+
+                scope.redirectToTrainingSubjects = function() {
+                    $location.path('/dashboard/student').search({tab: 'training'});
+                }
                 
                 scope.saveCurrentGrain = function() {
                     scope.subjectCopy.current_grain_id = scope.currentGrainCopy ? scope.currentGrainCopy.id : -1;

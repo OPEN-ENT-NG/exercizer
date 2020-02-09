@@ -24,7 +24,18 @@ class StudentDashboardController {
         this._$scope = $scope;
         this._subjectCopyService = SubjectCopyService;
         this._$window = $window;
-        //this._subjectCopyService.loadSubjectCopyList();
+
+        this._$scope.data = {
+            tabSelected: 'subjectCopyList'
+        };
+
+        if (this._$location.$$search.tab) {
+            if (this._$location.$$search.tab == 'training') {
+                this._$scope.data.tabSelected = 'trainingSubjectCopyList';
+            }
+            delete this._$location.$$search.tab;
+            this._$location.$$compose();
+        }
     }
 
     public switchToTeacherView(){
