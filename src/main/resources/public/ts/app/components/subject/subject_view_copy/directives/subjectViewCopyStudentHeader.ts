@@ -13,6 +13,16 @@ export const subjectViewCopyStudentHeader = ng.directive('subjectViewCopyStudent
                 scope.redirectToDashboard = function() {
                     $location.path('/dashboard');
                 };
+                scope.redirectToTrainingSubjects = function() {
+                    $location.path('/dashboard/student').search({tab: 'training'});
+                };
+                scope.redirectToSubjects = function() {
+                    if (scope.subjectCopy.is_training_copy) {
+                        scope.redirectToTrainingSubjects();
+                    } else {
+                        scope.redirectToDashboard();
+                    }
+                }
             }
         };
     }]

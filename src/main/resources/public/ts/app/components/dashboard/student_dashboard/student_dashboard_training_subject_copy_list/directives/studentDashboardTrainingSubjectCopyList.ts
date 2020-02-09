@@ -10,8 +10,17 @@ export const studentDashboardTrainingSubjectCopyList = ng.directive('studentDash
                 templateUrl: 'exercizer/public/ts/app/components/dashboard/student_dashboard/student_dashboard_training_subject_copy_list/templates/student-dashboard-training-subject-copy-list.html',
                 link: (scope:any) => {
 
-                    // Subject data
-                    scope.subjectCopyList = SubjectCopyService.getList();
+                    // Get data
+                    scope.subjectCopyList = [];
+                    SubjectCopyService.resolve(false).then(
+                        function () {
+                            scope.subjectCopyList = SubjectCopyService.getList();
+                        }
+                    );
+                    SubjectScheduledService.resolve(false).then(
+                        function(){
+                        }
+                    );
 
                     //search
                     if(!scope.search){
