@@ -1,8 +1,9 @@
 import { ng } from 'entcore';
+import { ISubjectCopyService } from '../../../../../services';
 import { StringISOHelper, ScoreHelper } from '../../../../../models/helpers';
 
 export const grainCopyFooter = ng.directive('grainCopyFooter',
-    [() => {
+    ['SubjectCopyService', (SubjectCopyService:ISubjectCopyService) => {
         return {
             restrict: 'E',
             scope : {
@@ -34,6 +35,11 @@ export const grainCopyFooter = ng.directive('grainCopyFooter',
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     }
                 };
+
+                scope.isTrainingGrain = function() {
+                    let subjectCopy = SubjectCopyService.getById(scope.grainCopy.subject_copy_id);
+                    return subjectCopy && subjectCopy.is_training_copy;
+                }
 
                 scope.formatNumber = function(score:number): any {
                     return ScoreHelper.format(score)
