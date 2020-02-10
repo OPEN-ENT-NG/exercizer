@@ -172,10 +172,11 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
 
                 scope.createTrainingCopy = function() {
                     SubjectScheduledService.createTrainingCopy(scope.subjectScheduled.id).then(function () {
-                        notify.info("exercizer.notify.create.training.success");
-                        $timeout(function(){
-                            window.location.reload();
-                        },3000);
+                        SubjectCopyService.resolve_force(false).then(function () {
+                            notify.info("exercizer.notify.create.training.success");
+                        }), function (err) {
+                            notify.error(err);
+                        }
                     }, function (err) {
                         notify.error(err);
                     });
