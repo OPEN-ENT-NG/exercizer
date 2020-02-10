@@ -981,6 +981,12 @@ body.exercizer {
       width: inherit !important;
     }
   }
+  .article-edit {
+    &.selected {
+      color: unset;
+      background: white;
+    }
+  }
   .padding-top-50 {
     padding-top: 50px;
   }
