@@ -137,7 +137,11 @@ class SubjectCopyFinalScoreController {
     public retrySubjectCopy = function() {
         this._subjectCopy.has_been_started = true;
         this._subjectCopyService.retry(this._subjectCopy, this._grainCopyList).then(success => {
-            this._$location.path(`/subject/copy/perform/${this._subjectCopy.id}`);
+            this._grainCopyService.getListBySubjectCopy(this._subjectCopy, true).then(booleanRes => {
+                this._$location.path(`/subject/copy/perform/${this._subjectCopy.id}`);
+            }, err => {
+                notify.error(err);
+            });
         }, err => {
             notify.error(err);
         });
