@@ -573,8 +573,14 @@ body.exercizer {
     right: 0;
     transition: width 1s ease;
     width: 1%;
+    min-width: 13px;
     &:hover {
-      width: 14%;
+      @media screen and (max-width: $tablette) {
+        width: 140px
+      }
+      @media screen and (min-width: $tablette) {
+        width: 250px;
+      }
     }
     &.green {
       background-color: rgb(114,187,83);
@@ -589,11 +595,23 @@ body.exercizer {
     a {
       font-size: large;
       position: absolute;
-      top: 50px;
-      left: 50px;
       color: white;
-      > i18n {
-        white-space: nowrap;
+      @media screen and (max-width: $tablette) {
+        display: block;
+        left: 35px;
+        @media screen and (max-width: $fat-mobile) {
+          top: 50px;
+        }
+        @media screen and (min-width: $fat-mobile) {
+          top: 35px;
+        }
+      }
+      @media screen and (min-width: $tablette) {
+        left: 50px;
+        top: 50px;
+        > i18n {
+          white-space: nowrap;
+        }
       }
     }
   }

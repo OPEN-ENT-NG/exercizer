@@ -120,10 +120,13 @@
     "exercizer.scheduled.subject.training.forbid" : "Interdir l'entrainement des élèves sur ce sujet",
     "exercizer.scheduled.subject.training.get.part1" : "Récupérer le sujet",
     "exercizer.scheduled.subject.training.get.part2" : "pour entraînement",
+    "exercizer.scheduled.subject.training.get.full" : "Récupérer le sujet pour entraînement",
     "exercizer.scheduled.subject.training.get.unavailable.part1" : "Sujet non disponible",
-    "exercizer.scheduled.subject.training.get.unavailable.part2" : "à l'entrainement",
+    "exercizer.scheduled.subject.training.get.unavailable.part2" : "à l'entraînement",
+    "exercizer.scheduled.subject.training.get.unavailable.full" : "Sujet non disponible à l'entraînement",
     "exercizer.scheduled.subject.training.get.soon.part1" : "Sujet bientôt disponible",
-    "exercizer.scheduled.subject.training.get.soon.part2" : "à l'entrainement",
+    "exercizer.scheduled.subject.training.get.soon.part2" : "à l'entraînement",
+    "exercizer.scheduled.subject.training.get.soon.full" : "Sujet bientôt disponible à l'entraînement",
     "exercizer.check.title" : "Veuillez renseigner un titre.",
     "exercizer.import.check.file" : "Veuillez sélectionner un fichier à importer.",
     "exercizer.import.choose" : "Parcourir",
@@ -552,5 +555,5 @@
     "exercizer.notify.create.training.success": "Le sujet a bien été récupéré pour entraînement",
     "exercizer.subject.training.already.exists": "Ce sujet est déjà présent dans vos copies d'entraînement",
     "exercizer.final.score.questions": "Questions",
-    "exercizer.final.score.score": "Score"
+    "exercizer.final.score.score": "Questions"
 }

@@ -73,16 +73,19 @@
                     data-ng-if="canShowTrainingOption()">
                         <span>&#60;</span>
                         <a data-ng-if="canCreateTraining()" data-ng-click="createTrainingCopy()">
-                            <i18n>exercizer.scheduled.subject.training.get.part1</i18n>
-                            <i18n>exercizer.scheduled.subject.training.get.part2</i18n>
+                            <i18n class="zero-desktop">exercizer.scheduled.subject.training.get.full</i18n>
+                            <i18n class="only-desktop">exercizer.scheduled.subject.training.get.part1</i18n>
+                            <i18n class="only-desktop">exercizer.scheduled.subject.training.get.part2</i18n>
                         </a>
                         <a style="cursor: initial" data-ng-if="!subjectScheduled.is_training_permitted">
-                            <i18n>exercizer.scheduled.subject.training.get.unavailable.part1</i18n>
-                            <i18n>exercizer.scheduled.subject.training.get.unavailable.part2</i18n>
+                            <i18n class="zero-desktop">exercizer.scheduled.subject.training.get.unavailable.full</i18n>
+                            <i18n class="only-desktop">exercizer.scheduled.subject.training.get.unavailable.part1</i18n>
+                            <i18n class="only-desktop">exercizer.scheduled.subject.training.get.unavailable.part2</i18n>
                         </a>
                         <a style="cursor: initial" data-ng-if="canSoonCreateTraining()">
-                            <i18n>exercizer.scheduled.subject.training.get.soon.part1</i18n>
-                            <i18n>exercizer.scheduled.subject.training.get.soon.part2</i18n>
+                            <i18n class="zero-desktop">exercizer.scheduled.subject.training.get.soon.full</i18n>
+                            <i18n class="only-desktop">exercizer.scheduled.subject.training.get.soon.part1</i18n>
+                            <i18n class="only-desktop">exercizer.scheduled.subject.training.get.soon.part2</i18n>
                         </a>
                     </div>
                 </div>
