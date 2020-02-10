@@ -44,10 +44,10 @@
                 <div class="row vertical-spacing">
                     <strong><i18n>exercizer.auto.score</i18n> :</strong>&nbsp;[[ formatNumber(grainCopy.calculated_score) ]]&nbsp;<i18n>exercizer.on</i18n>&nbsp;[[ grainScheduled.grain_data.max_score ]] <i18n>exercizer.score</i18n>
                 </div>
-                <div class="row vertical-spacing" data-ng-if="isTeacher">
+                <div class="row vertical-spacing" data-ng-if="isTeacher && !isTrainingGrain()">
                     <strong><i18n>exercizer.final.score</i18n> :</strong>&nbsp;<input type="text" data-ng-model="grainCopy.final_score" value="[[ grainCopy.final_score ]]" complete-change="updateGrainCopy()" style="width:50px;" />&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] <i18n>exercizer.score</i18n>
                 </div>
-                <div class="row vertical-spacing" data-ng-if="!isTeacher">
+                <div class="row vertical-spacing" data-ng-if="!isTeacher && !isTrainingGrain()">
                     <strong><i18n>exercizer.final.score</i18n> :</strong>&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;<i18n>exercizer.on</i18n>&nbsp;[[ grainScheduled.grain_data.max_score ]] <i18n>exercizer.score</i18n>
                 </div>
             </div>
