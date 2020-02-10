@@ -78,7 +78,7 @@ export class CorrectionService implements ICorrectionService {
                     let grainScore = this.genericCorrection(grainScheduledList.find((grainScheduled) => {return grainScheduled.id === grain.grain_scheduled_id}), grain);
                     grain.calculated_score = grainScore;
                     promises.push(this._grainCopyService.update(grain));
-                    score =+ grainScore;
+                    score += grainScore;
                 });
                 subjectCopy.calculated_score = score;
                 subjectCopy.has_been_started = false;
