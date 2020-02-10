@@ -164,7 +164,8 @@ export class SubjectScheduledService implements ISubjectScheduledService {
     public createTrainingCopy = function(id): Promise<any>  {
         var deferred = this._$q.defer(), request = {
             method: 'POST',
-            url: 'exercizer/subject-scheduled/create-training-copy/' + id
+            url: 'exercizer/subject-scheduled/create-training-copy/' + id,
+            data: {}
         };
 
         this._$http(request).then(function(response){
