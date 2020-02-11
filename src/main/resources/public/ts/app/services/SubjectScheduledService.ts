@@ -256,13 +256,13 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
-    public modifySchedule =  function(subjectScheduled:ISubjectScheduled):Promise<ISubjectScheduled> {
+    public modifySchedule =  function(subjectScheduled:ISubjectScheduled, notify: boolean = true):Promise<ISubjectScheduled> {
         var self = this,
             deferred = this._$q.defer();
 
         let param = {beginDate: subjectScheduled.begin_date, dueDate: subjectScheduled.due_date,
             correctedDate: subjectScheduled.corrected_date, offset:new Date().getTimezoneOffset(),
-            isTrainingPermitted: subjectScheduled.is_training_permitted};
+            isTrainingPermitted: subjectScheduled.is_training_permitted, notify: notify};
 
         let request = {
             method: 'POST',
