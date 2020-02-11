@@ -20,7 +20,8 @@ export const viewAssociation  = ng.directive('viewAssociation',
                 }
                 scope.displayCorrectAnswerButton = function() {
                     return !scope.isTeacher && !angular.isUndefined(scope.grainCopy.final_score)
-                    && !angular.isUndefined(scope.displayCorrection) && (scope.grainCopy.final_score != scope.grainCopy.grain_copy_data.max_score);
+                    && !angular.isUndefined(scope.displayCorrection) && ((scope.grainCopy.final_score == null) || 
+                    (scope.grainCopy.final_score < scope.grainCopy.grain_copy_data.max_score));
                 };
 
                 var result = AssociationService.automaticCorrection(scope.grainScheduled, scope.grainCopy);

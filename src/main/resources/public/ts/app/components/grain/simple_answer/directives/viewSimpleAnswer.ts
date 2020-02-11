@@ -19,7 +19,8 @@ export const viewSimpleAnswer = ng.directive('viewSimpleAnswer',
                 }
                 scope.displayCorrectAnswerButton = function() {
                     return !scope.isTeacher && !angular.isUndefined(scope.grainCopy.final_score)
-                    && !angular.isUndefined(scope.displayCorrection) && (scope.grainCopy.final_score != scope.grainCopy.grain_copy_data.max_score);
+                    && !angular.isUndefined(scope.displayCorrection) && ((scope.grainCopy.final_score == null) || 
+                    (scope.grainCopy.final_score < scope.grainCopy.grain_copy_data.max_score));
                 };
 
                 var result = SimpleAnswerService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
