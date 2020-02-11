@@ -39,7 +39,7 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                 function init(subjectScheduled){
                     SubjectCopyService.resolveBySubjectScheduled_force(subjectScheduled).then(
                         function () {
-                            scope.subjectCopyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                            scope.subjectCopyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled).filter(copy => !copy.is_training_copy);
                             scope.subjectCopyList.forEach(copy => {
                                 if(copy.is_corrected){
                                     scope.score.sum += copy.final_score;
@@ -184,7 +184,20 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                     scope.option.due_time = $filter('date')(scope.selectedSubjectScheduled.due_date, 'HH:mm');
                 }
 
-                scope.modifySchedule = function () {
+                scope.checkDatesModified = function() {
+                    var newBeginDate = moment(scope.option.begin_date).hours(14).minutes(0).seconds(0)
+                    .toISOString().replace(/T..:../, "T"+scope.option.begin_time);
+                    var newDueDate = moment(scope.option.due_date).hours(14).minutes(0).seconds(0)
+                    .toISOString().replace(/T..:../, "T"+scope.option.due_time);
+                    if (!newBeginDate.startsWith(scope.selectedSubjectScheduled.begin_date) ||
+                    !newDueDate.startsWith(scope.selectedSubjectScheduled.due_date)) {
+                        scope.option.edit = true;
+                    } else {
+                        scope.modifySchedule(false);
+                    }
+                }
+
+                scope.modifySchedule = function (reload: boolean = true) {
                     var subjectScheduled = {
                         id:scope.selectedSubjectScheduled.id,
                         begin_date:moment(scope.option.begin_date).hours(14).minutes(0).seconds(0)
@@ -193,9 +206,13 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                             .toISOString().replace(/T..:../, "T"+scope.option.due_time),
                         is_training_permitted: scope.selectedSubjectScheduled.is_training_permitted
                     };
-                    SubjectScheduledService.modifySchedule(subjectScheduled).then(
+                    SubjectScheduledService.modifySchedule(subjectScheduled, reload).then(
                         function() {
-                            window.location.reload();
+                            if (reload) {
+                                window.location.reload();
+                            } else {
+                                scope.option.editedDates = false;
+                            }
                         },
                         function(err) {
                             notify.error(err);
