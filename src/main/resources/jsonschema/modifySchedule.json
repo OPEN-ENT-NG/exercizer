@@ -17,6 +17,9 @@
     },
     "isTrainingPermitted": {
       "type": "boolean"
+    },
+    "notify":{
+      "type": "boolean"
     }
   },
   "required": [

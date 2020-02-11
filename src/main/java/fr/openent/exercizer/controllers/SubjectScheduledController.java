@@ -249,6 +249,8 @@ public class SubjectScheduledController extends ControllerHelper {
 								return;
 							}
 
+							final Boolean notify = body.getBoolean("notify");
+
 							subjectScheduledService.getById(subjectId, user, new Handler<Either<String, JsonObject>>() {
 								@Override
 								public void handle(Either<String, JsonObject> event) {
@@ -282,13 +284,13 @@ public class SubjectScheduledController extends ControllerHelper {
 																badRequest(request, "exercizer.schedule.rule.copies");
 																return;
 															}
-															checkAndModifySchedule(request, subjectId, scheduledSubject, newDates, body, true, user);
+															checkAndModifySchedule(request, subjectId, scheduledSubject, newDates, body, true, user, notify);
 														}
 													}
 												});
 
 										}else {
-											checkAndModifySchedule(request, subjectId, scheduledSubject, newDates, body, false, user);
+											checkAndModifySchedule(request, subjectId, scheduledSubject, newDates, body, false, user, notify);
 										}
 									}
 								}
@@ -304,7 +306,7 @@ public class SubjectScheduledController extends ControllerHelper {
 	}
 
 	private void checkAndModifySchedule(final HttpServerRequest request, final String subjectId, final JsonObject scheduledSubject,
-											  final Map<String, Date> newDates, JsonObject values, boolean changeBegin , UserInfos user){
+											  final Map<String, Date> newDates, JsonObject values, boolean changeBegin , UserInfos user, boolean notify){
 		Date beginDate = newDates.get("beginDate");
 		Date newDueDate = newDates.get("dueDate");
 		Date newCorrectedDate = newDates.get("correctedDate");
@@ -336,7 +338,7 @@ public class SubjectScheduledController extends ControllerHelper {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
-					if (scheduledSubject.getBoolean("is_notify")){
+					if (scheduledSubject.getBoolean("is_notify") && notify){
 						String notification = changeBegin ? "modifybegin" : null;
 						if(fields.containsKey("dueDate"))
 							notification = notification != null ? "modifyperiod" : "modifydue";
