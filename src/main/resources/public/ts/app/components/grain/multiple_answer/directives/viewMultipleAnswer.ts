@@ -16,8 +16,11 @@ export const viewMultipleAnswer = ng.directive('viewMultipleAnswer',
                 scope.displayCorrection = false;
                 scope.doDisplayCorrection = function() {
                     scope.displayCorrection = !scope.displayCorrection;
-                    return scope.displayCorrection;
                 }
+                scope.displayCorrectAnswerButton = function() {
+                    return !scope.isTeacher && !angular.isUndefined(scope.grainCopy.final_score)
+                    && !angular.isUndefined(scope.displayCorrection) && (scope.grainCopy.final_score != scope.grainCopy.grain_copy_data.max_score);
+                };
 
                 var result = MultipleAnswerService.automaticCorrection(scope.grainScheduled, scope.grainCopy);
                 scope.isCorrect = result.answers_result;

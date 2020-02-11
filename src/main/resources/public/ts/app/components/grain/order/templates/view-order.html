@@ -1,6 +1,5 @@
 <article id="[[ grainCopy.id ]]">
-    <grain-copy-header data-grain-copy="grainCopy" data-grain-copy-list="grainCopyList"
-    data-is-teacher="isTeacher" data-display-correction="displayCorrection" data-on-display-correction="doDisplayCorrection()"></grain-copy-header>
+    <grain-copy-header data-grain-copy="grainCopy" data-grain-copy-list="grainCopyList" data-is-teacher="isTeacher"></grain-copy-header>
     <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     <div data-ng-repeat="filled_answer in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list | orderObjectBy:'order_by':false" class="row vertical-spacing">
@@ -11,7 +10,15 @@
                data-ng-model="filled_answer.text"
                i18n-placeholder="exercizer.grain.noanswer" disabled />
     </div>
-    <span id="[[ grainCopy.id ]]-correction"></span>
+    <div class="row" style="padding-bottom: 10px;">
+        <button class="cell right-magnet cancel"
+            style="margin: 0;"
+            data-ng-click="doDisplayCorrection()"
+            data-ng-if="displayCorrectAnswerButton()">
+            <i18n data-ng-if="!displayCorrection">exercizer.grain.display.correction</i18n>
+            <i18n data-ng-if="displayCorrection">exercizer.grain.undisplay.correction</i18n>
+        </button>
+    </div>
     <grain-copy-footer data-ng-if="!displayCorrection"
                        data-grain-scheduled="grainScheduled"
                        data-grain-copy="grainCopy"
