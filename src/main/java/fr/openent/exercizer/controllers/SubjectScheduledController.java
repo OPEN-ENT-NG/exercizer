@@ -529,7 +529,8 @@ public class SubjectScheduledController extends ControllerHelper {
 						final String subjectName = scheduledSubject.getString("subjectTitle");
 						final List<String> recipientSet = new ArrayList<String>(userIds);
 						final String notificationName = scheduledSubject.getBoolean("isTrainingMode", false) ? "assigntraining" : "assigncopy";
-						sendNotification(request, notificationName, user, recipientSet, "/dashboard/student", subjectName, scheduledSubject.getString("beginDate"), scheduledSubject.getString("dueDate"), null);
+						final String relativeUri = scheduledSubject.getBoolean("isTrainingMode", false) ? "/dashboard/student?tab=training" : "/dashboard/student";
+						sendNotification(request, notificationName, user, recipientSet, relativeUri, subjectName, scheduledSubject.getString("beginDate"), scheduledSubject.getString("dueDate"), null);
 					}
 
 					String result = event.right().getValue().toString();
