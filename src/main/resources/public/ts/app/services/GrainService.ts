@@ -44,6 +44,7 @@ export class GrainService implements IGrainService {
         if (angular.isUndefined(grain.order_by)) {
             grain = this._setOrderToGrain(grain);
         }
+        var ix = this._listMappedBySubjectId[grain.subject_id].push(grain);
 
         var body = {"grainTypeId": grain.grain_type_id, "orderBy": grain.order_by,"grainData": grain.grain_data};
 
@@ -62,11 +63,10 @@ export class GrainService implements IGrainService {
                     self._listMappedBySubjectId[grain.subject_id] = [];
                 }
 
-                self._listMappedBySubjectId[grain.subject_id].push(grain);
-
                 deferred.resolve(grain);
             },
             function () {
+                self._listMappedBySubjectId[grain.subject_id].splice(ix, 1)
                 deferred.reject('exercizer.error')
             }
         );
