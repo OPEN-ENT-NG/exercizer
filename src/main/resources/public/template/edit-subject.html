@@ -288,7 +288,7 @@
                             </div>
                             <!-- GRAIN CONTENT (folded) -->
                             <div data-ng-switch="grain.grain_type_id">
-                                <div data-ng-switch-when="1">
+                                <div data-ng-switch-when="1" ng-if="grain.id != null">
                                     <choose data-grain="grain"></choose>
                                 </div>
                                 <div data-ng-switch-when="2">
