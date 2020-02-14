@@ -1,4 +1,4 @@
-import { ng, notify, idiom, DatepickerDelegate } from 'entcore';
+import { ng, notify, idiom, DatepickerDelegate, Me } from 'entcore';
 import { moment } from 'entcore';
 import { _ } from 'entcore';
 import { $ } from 'entcore';
@@ -395,7 +395,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                                     scope.subject = subject;
                                     reset();
                                     scope.lightbox.isDisplayed = true;
-                                    scope.data.lists = createLists(subject);
+                                    scope.data.lists = createLists(subject, null);
                                 } else {
                                     notify.info('exercizer.service.check.schedule');
                                 }
@@ -408,7 +408,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         scope.subject = subject;
                         reset();
                         scope.lightbox.isDisplayed = true;
-                        scope.data.lists = createLists(subject);
+                        scope.data.lists = createLists(subject, null);
                     }
                 });
 
@@ -436,9 +436,9 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     });
                 }
 
-                function createLists(subject) {
+                function createLists(subject, startSearch) {
                     var array = [];
-                    GroupService.getList(subject).then(
+                    GroupService.getList(subject, startSearch, (startSearch != null)).then(
                         function (data) {
                             angular.forEach(data.bookmarks, function (group) {
                                 var obj = createObjectList(group.name, group.id, 'bookbark', null, null, true);
@@ -485,14 +485,27 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     }
                 };
 
+                var searchCache = {};
+
                 scope.updateFoundUsersGroups = function() {
                     var searchTerm =  idiom.removeAccents(scope.search.search).toLowerCase();
                         
                     if(!searchTerm){
                         return [];
                     }
+
+                    var startSearch = Me.session.functions.ADMIN_LOCAL ? searchTerm.substr(0, 3) : '';
+                    var list;
+                    if (startSearch.length == 3) {
+                        if (!searchCache[startSearch]) {
+                            searchCache[startSearch] = createLists(scope.subject, startSearch);
+                        }
+                        list = searchCache[startSearch];
+                    } else {
+                        list = scope.data.lists;
+                    }
                     
-                    scope.search.found = _.filter(scope.data.lists, function(item) {
+                    scope.search.found = _.filter(list, function(item) {
                         let titleTest = idiom.removeAccents(item.name).toLowerCase();
                         return titleTest.indexOf(searchTerm) !== -1;
                     });

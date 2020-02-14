@@ -3,7 +3,7 @@ import http from 'axios';
 
 export interface IGroupService {
     findMembers(id:string):Promise<any>;
-    getList(subject): Promise<any>;
+    getList(subject, startSearch, forceReload): Promise<any>;
     getMembersFromBookmark(bookmark) : Promise<any>
     getUserFromGroup(group) : Promise<any>;
     getClassFromStructures(structureId : any) : Promise<any>;
@@ -68,10 +68,10 @@ export class GroupService implements IGroupService {
         return deferred.promise;
     }
 
-    public getList = async function(subject): Promise<any> {
+    public getList = async function(subject, startSearch, forceReload = false): Promise<any> {
         var self = this,
             deferred = this._$q.defer();
-        if(this._groupBySubjectId[subject.id]){
+        if(this._groupBySubjectId[subject.id] && !forceReload){
             deferred.resolve(this._groupBySubjectId[subject.id]);
         } else {
             var response = await http.get('/directory/sharebookmark/all');
@@ -79,9 +79,13 @@ export class GroupService implements IGroupService {
                 bookmark.type = 'sharebookmark';
                 return bookmark;
             });
+            var url = 'exercizer/subject/share/json/'+subject.id;
+            if (startSearch) {
+                url += '?search=' + startSearch;
+            }
             var request = {
                 method: 'GET',
-                url: 'exercizer/subject/share/json/'+subject.id
+                url: url
             };
             this._$http(request).then(
                 function(res) {
