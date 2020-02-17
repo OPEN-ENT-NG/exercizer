@@ -50,6 +50,9 @@
                                         class="no-margin"
                                         style="width: 100%!important; border: none;"
                                         i18n-placeholder="exercizer.simple.upload.drag" />
+                                    <i ng-class="{
+                                        loaded: performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename}">
+                                    </i>
                             </div>
                             <div class="hidden-content">
                                 <input type="file" style="z-index:-1" files-input-change="performSimpleSubjectCopyController.setCurrentFileName()"  ng-model="performSimpleSubjectCopyController.newFiles" />
