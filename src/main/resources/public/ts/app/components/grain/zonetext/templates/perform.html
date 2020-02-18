@@ -13,7 +13,6 @@
             <placed-block ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
                 x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
                 transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
-                w="getResizedTextZoneW(150, false)"
             >
                 <text-zone>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'text'">
