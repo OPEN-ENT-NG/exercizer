@@ -11,7 +11,7 @@
             <placed-block ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
                             x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
                             transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
-                            w="getResizedTextZoneW(150, false)"
+                            ng-click="openTextZone($event)"
             >
                 <text-zone ng-class="{ success: correction[$index], error: !correction[$index] }">
                     <span class="text-zone-size">[[textZone.answer]]</span>
@@ -45,7 +45,7 @@
                 <placed-block ng-repeat="textZone in grainScheduled.grain_data.custom_data.zones" style="padding:0;"
                                 x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
                                 transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
-                                w="getResizedTextZoneW(150, false)"
+                                ng-click="openTextZone($event)"
                 >
                     <text-zone class="success">
                         <span class="text-zone-size">[[textZone.answer]]</span>
