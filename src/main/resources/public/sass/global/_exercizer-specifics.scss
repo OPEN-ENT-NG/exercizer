@@ -314,31 +314,69 @@ body.exercizer {
       width: 66.66667%;
     }
   }
+  article {
+    transition: z-index 0s .35s;
+  }
+  article.textZoneOpen
+  {
+    z-index: 1000 !important;
+    transition: z-index 0s;
+    text-zone
+    {
+      max-width: 450px;
+      max-height: 300px;
+      transition: all 250ms ease, max-width .15s 0s ease-in, max-height .15s .15s ease-out;
+      span
+      {
+        white-space: normal;
+        max-height: 300px;
+        transition: max-height .15s .15s ease-out;
+      }
+    }
+  }
   text-zone {
-    width: 150px;
+    max-width: 150px;
     @media screen and (min-width: $wide-screen) {
-      height: 30px;
+      max-height: 30px;
     }
     @media screen and (max-width: $wide-screen) {
-      height: 25px;
+      max-height: 25px;
     }
     background: #fff;
     margin: 5px;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.25);
-    padding: 5px;
+    padding: 5px 15px;
     color: #666;
     display: inline-block;
     position: relative;
-    padding-left: 15px;
     box-sizing: border-box;
     line-height: 20px;
-    transition: all 250ms ease;
+    transition: all 250ms ease, max-width .15s .15s ease-out, max-height .15s 0s ease-in;
     span {
       overflow: hidden;
       display: block;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      padding-right: 31px;
+      padding-right: 1em;
+      position: relative;
+      max-height: 20px;
+      background: inherit;
+      transition: max-height .15s 0s ease-in;
+      &::before
+      {
+        content: "...";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+      &::after
+      {
+        content: "";
+        position: absolute;
+        right: 0;
+        width: 1em;
+        height: 1em;
+        margin-top: .2em;
+        background: inherit;
+      }
     }
     &.selected {
       background: $primary;
@@ -374,11 +412,13 @@ body.exercizer {
     }
     &.error {
       background: $red;
+      border-color: $red;
       color: #e8e8e8;
       border-left: 0;
     }
     &.success {
         background: $green;
+        border-color: $green;
         color: #fff;
         border-left: 0;
     }
