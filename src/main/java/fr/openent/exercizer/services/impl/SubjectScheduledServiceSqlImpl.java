@@ -530,16 +530,11 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 			handler.handle(new Either.Left<>(nfe.getMessage()));
 			return;
 		}
+		final SqlStatementsBuilder s = new SqlStatementsBuilder();
 		final String query = "DELETE FROM " + schema + "grain_copy WHERE subject_copy_id = ?";
-		sql.prepared(query, new JsonArray().add(longSubjectCopyId), SqlResult.validRowsResultHandler(message -> {
-			if (message.isRight()) {
-				final SqlStatementsBuilder s = new SqlStatementsBuilder();
-				createGrainCopies(s, true, longSubjectScheduledId, longSubjectCopyId);
-				sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
-			} else {
-				handler.handle(new Either.Left<>(message.left().getValue()));
-			}
-		}));
+		s.prepared(query, new JsonArray().add(longSubjectCopyId));
+		createGrainCopies(s, true, longSubjectScheduledId, longSubjectCopyId);
+		sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
 	}
 
 }
