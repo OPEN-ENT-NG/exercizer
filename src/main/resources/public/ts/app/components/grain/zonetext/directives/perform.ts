@@ -26,9 +26,14 @@ export const performZoneText = ng.directive('performZoneText',
                     scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                 };
 
-                scope.answer = (textZone, $item: string) => {
+                scope.answer = (textZone: TextZone, $item: string | TextZone) => {
                     scope.removeAnswer(textZone);
-                    textZone.answer = $item;
+                    if (typeof $item == 'string') {
+                        textZone.answer = $item;
+                    } else {
+                        textZone.answer = $item.answer;
+                        $item.answer = '';
+                    }
                     scope.usedAnswers.push($item);
                     scope.updateGrainCopy();
                 };
