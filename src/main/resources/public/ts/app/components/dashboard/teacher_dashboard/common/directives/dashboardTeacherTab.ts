@@ -29,7 +29,11 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
                         $location.path('/dashboard/teacher/correction/');
                         break;
                     case 'library':
-                        $location.path('/dashboard/teacher/library');
+                        if (scope.showInternalLibrary()) {
+                            $location.path('/dashboard/teacher/library');
+                        } else {
+                            scope.rediectToExternalLibrary();
+                        }
                         break;
                     default:
                         throw 'tab ' + newTab + ' missing'
@@ -117,6 +121,12 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
 
             scope.showInternalLibrary = function():boolean {
                 return !model.me.hasWorkflow(Behaviours.applicationsBehaviours.exercizer.rights.workflow.publish);
+            }
+
+            scope.rediectToExternalLibrary = function() {
+                SubjectLibraryService.externalLibraryUrl().then((url: string) => {
+                    window.location.href = `${url}?platformURL=${encodeURIComponent($location.host())}`;
+                }, err => notify.error(err));
             }
 
             let unreadLibrarySubjects: Number = 0;

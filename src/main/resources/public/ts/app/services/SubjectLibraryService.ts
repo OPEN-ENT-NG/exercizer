@@ -11,6 +11,7 @@ export interface ISubjectLibraryService {
     countNewSubjects(): Promise<Number>;
     tmpSubjectForPreview:ISubject;
     unpublish(subjectId:number): Promise<boolean>;
+    externalLibraryUrl(): Promise<string>;
 }
 
 export class SubjectLibraryService implements ISubjectLibraryService {
@@ -181,6 +182,30 @@ export class SubjectLibraryService implements ISubjectLibraryService {
 
         return deferred.promise;
     };
+
+    public externalLibraryUrl = function(): Promise<string> {
+        var deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: '/exercizer/conf/public'
+            };
+
+        this._$http(request).then(
+            function(response) {
+                if (response.data.libraryHost) {
+                    deferred.resolve(response.data.libraryHost);
+                } else {
+                    deferred.reject('exercizer.error');
+                }
+            },
+            function() {
+                deferred.reject('exercizer.error');
+            }
+        );
+
+        return deferred.promise;
+    }
+
 
     private _buildRequestData(filters:{title:string, subjectLessonType:ISubjectLessonType, subjectLessonLevel:ISubjectLessonLevel, subjectTagList:ISubjectTag[]}) {
         var requestData = {};
