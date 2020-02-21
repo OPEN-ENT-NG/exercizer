@@ -114,6 +114,16 @@ export const editZoneText = ng.directive('editZoneText',
                 {
                     return transformY(selector, y, reverseTransform);
                 }
+
+                scope.previousOpen = null;
+                scope.openTextZone = function($event): void
+                {
+                    console.log($event.currentTarget);
+                    $event.currentTarget.classList.add("textZoneOpen");
+                    if(scope.previousOpen != null)
+                        scope.previousOpen.classList.remove("textZoneOpen");
+                    scope.previousOpen = $event.currentTarget == scope.previousOpen ? null : $event.currentTarget;
+                }
             }
         };
     }]
