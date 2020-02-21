@@ -27,6 +27,7 @@
             <placed-block ng-repeat="textZone in grain.grain_data.custom_data.zones" style="padding:0;" draggable
                             x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
                             transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
+                            ng-click="openTextZone($event)"
             >
                 <text-zone>
                     <i class="close" ng-click="removeZone(textZone)"></i>
