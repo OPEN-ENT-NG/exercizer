@@ -22,18 +22,20 @@
     <article class="six cell twelve-mobile right-magnet">
         <h2 class="row"><i18n>exercizer.dashboard.learner.tab1.sub.header2</i18n></h2>
 
-        <div class="row">
-            <input type="text" data-ng-model="search.text_2" i18n-placeholder="exercizer.search" class="four cell twelve-mobile">
+        <div class="mobile-row">
+            <div class="row">
+                <input type="text" data-ng-model="search.text_2" i18n-placeholder="exercizer.search" class="four cell twelve-mobile">
 
-            <date-picker data-ng-model="search.endDate" class="three cell right-magnet"></date-picker>
-            <label class="cell right-magnet">
-                &nbsp;&nbsp;&nbsp;<i18n>exercizer.date.to</i18n>
-            </label>
+                <date-picker data-ng-model="search.endDate" class="three cell right-magnet"></date-picker>
+                <label class="cell right-magnet" style="padding-left:15px; padding-right:10px">
+                    &nbsp;&nbsp;&nbsp;<i18n>exercizer.date.to</i18n>
+                </label>
 
-            <date-picker data-ng-model="search.beginDate" class="three cell right-magnet"></date-picker>
-            <label class="cell right-magnet">
-                <i18n>exercizer.date.from</i18n>
-            </label>
+                <date-picker data-ng-model="search.beginDate" class="three cell right-magnet"></date-picker>
+                <label class="cell right-magnet" style="padding-right:15px">
+                    <i18n>exercizer.date.from</i18n>
+                </label>
+            </div>
         </div>
         <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
             <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyListController.orderByDueDate(subjectCopyList) | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_2) | filter: subjectCopyListController.filterOnSubjectCopyTraining() | filter: subjectCopyListController.filterOnSubjectCopyNotStartedOrStarted() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate)) | orderBy:'modified':true">

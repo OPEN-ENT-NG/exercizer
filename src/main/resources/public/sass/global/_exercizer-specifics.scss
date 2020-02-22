@@ -1116,4 +1116,13 @@ body.exercizer {
     padding-right: 5px;
     color: #46bfaf;
   }
+
+  @media screen and (max-width: $tablette) {
+    .mobile-row {
+      @include row;
+      > div > input {
+        padding: 0;
+      }
+    }
+   }
 }
