@@ -2,18 +2,19 @@
     <input type="text" class="two cell" data-ng-model="search.text.title" i18n-placeholder="exercizer.search">
 </div>
 
-<div class="cell" style="margin-top: 10px;">
-    <label class="two cell">
-        <i18n>exercizer.date.from</i18n>
-    </label>
-    <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
-</div>
-
-<div class="cell" style="margin-top: 10px;">
-    <label class="two cell">
-        <i18n>exercizer.date.to</i18n>
-    </label>
-    <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
+<div class="mobile-row">
+    <div class="cell" style="margin-top: 10px;">
+        <label class="two cell">
+            <i18n>exercizer.date.from</i18n>
+        </label>
+        <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
+    </div>
+    <div class="cell" style="margin-top: 10px;">
+        <label class="two cell">
+            <i18n>exercizer.date.to</i18n>
+        </label>
+        <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
+    </div>
 </div>
 
         <div class="row" data-ng-show="filteredSubjectScheduledList.length == 0 && search.text.title">
