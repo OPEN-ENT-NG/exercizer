@@ -18,6 +18,11 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
     }
 
     async function checkSystemDate():Promise<boolean> {
+        //check if we should check user's timezone
+        let shouldCheck = await http.get('/exercizer/conf/public');
+        if (shouldCheck.data['disable-timezone-check']) {
+            return true;
+        }
         //check system time of user
         let res:any = await http.get('/exercizer/now');
         let nowServer = await res.data.date;
