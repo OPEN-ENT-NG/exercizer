@@ -22,7 +22,7 @@ let addEditorOption = () => {
 
                     let el = $(
                         instance.compile(
-                            $('<span><fill-zone zone-id="' + zone.id + '"></fill-zone>&nbsp;</span>')[0].outerHTML
+                            $('<span contenteditable="false"><fill-zone zone-id="' + zone.id + '"></fill-zone>&nbsp;</span>')[0].outerHTML
                         )(scope)
                     );
 
