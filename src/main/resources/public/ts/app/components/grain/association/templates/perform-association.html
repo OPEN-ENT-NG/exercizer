@@ -11,12 +11,12 @@
             <!-- dragdrop="dropTo(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key)"-->
             <div drop-item="dropTo($item, filled_answer, key)"
-                 class="association__right six twelve-mobile cell flex-row align-center justify-center zero-mobile-fat-mobile"
+                 class="association__right six twelve-mobile cell flex-row align-center justify-center no-responsive"
                  data-ng-class="{'association-drop-hover'  : data.hover[key].bool == true}">
                 <p>{{filled_answer.text_right}}</p>
                 <div class="cell association__delete" data-ng-click="deleteFilledAnswer(filled_answer)" style="padding: 0px"><i class="close"></i></div>
             </div>
-            <div class="association__right six twelve-mobile cell flex-row align-center justify-center mobile-fat-mobile"
+            <div class="association__right six twelve-mobile cell flex-row align-center justify-center no-desktop"
                  data-ng-class="{'association-drop-hover'  : data.hover[key].bool == true}"
                  data-ng-click="showAnswers($event, filled_answer)">
                 <p style="width: 75%">{{filled_answer.text_right}}</p>
@@ -73,7 +73,7 @@
             [[possible_answer.item]]
         </div>
     </div>
-    <div class="mobile-fat-mobile tap-tap" data-ng-if="showAnswersMobile">
+    <div class="no-desktop tap-tap" data-ng-if="showAnswersMobile">
         <div data-ng-repeat="possible_answer in possible_answer_left_list" data-ng-click="selectAnswer(possible_answer)"
             class="tap-tap__item">
            <!-- dragstart="drag(possible_answer, $originalEvent)" -->
