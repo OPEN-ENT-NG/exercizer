@@ -130,7 +130,9 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
             }
 
             let unreadLibrarySubjects: Number = 0;
-            SubjectLibraryService.countNewSubjects().then((count: Number) => unreadLibrarySubjects = count);
+            if (scope.showInternalLibrary()) {
+                SubjectLibraryService.countNewSubjects().then((count: Number) => unreadLibrarySubjects = count);
+            }
             scope.newLibrarySubjects = () => unreadLibrarySubjects;
             scope.newLibrarySubjectsExist = () => unreadLibrarySubjects > 0;
         }
