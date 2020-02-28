@@ -6,7 +6,7 @@
     <div class="row">
         <div bind-html="grainCopy.grain_copy_data.custom_copy_data.htmlContent"></div>
 
-        <div class="options zero-mobile-fat-mobile" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
+        <div class="options no-responsive" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
             <ul>
                 <li 
                     drag-item="option"
@@ -15,7 +15,7 @@
                 </li>
             </ul>
         </div>
-        <div class="mobile-fat-mobile tap-tap" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag' && showAnswersMobile">
+        <div class="no-desktop tap-tap" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag' && showAnswersMobile">
             <div class="tap-tap__item" ng-repeat="option in dragOptions | filter:availableOption track by $index " data-ng-click="selectAnswer(option)">
                 [[option.option]]
             </div>
