@@ -1124,5 +1124,17 @@ body.exercizer {
         padding: 0;
       }
     }
-   }
+  }
+
+  .no-responsive {
+    @include responsive-only {
+      display: none !important;
+    }
+  }
+
+  .no-desktop {
+    @include desktop-only {
+      display: none !important;
+    }
+  }
 }
