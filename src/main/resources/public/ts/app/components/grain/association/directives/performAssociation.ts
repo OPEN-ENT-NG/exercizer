@@ -201,6 +201,7 @@ export const performAssociation = ng.directive('performAssociation',
                 }
 
                 scope.selectAnswer = function(possible_answer) {
+                    scope.deleteFilledAnswer(_selectedanswer);
                     scope.showAnswersMobile = false;
                     _selectedanswer.text_right = possible_answer.text_right;
                     $('.association__right').removeClass('item-selected');
