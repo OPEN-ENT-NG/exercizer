@@ -2,6 +2,7 @@ package fr.openent.exercizer.filters;
 
 import fr.wseduc.webutils.http.Binding;
 import fr.wseduc.webutils.request.RequestUtils;
+import io.vertx.core.Future;
 import org.entcore.common.http.filter.ResourcesProvider;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlConf;
@@ -22,20 +23,11 @@ public class SubjectCopyCorrected implements ResourcesProvider {
 
         final SqlConf conf = SqlConfs.getConf(binding.getServiceMethod().substring(0, binding.getServiceMethod().indexOf('|')));
 
-        RequestUtils.bodyToJson(resourceRequest, new Handler<JsonObject>() {
-            public void handle(JsonObject data) {
-                final Long lid = data != null ? data.getLong("id") : null;
-                final String id;
-                if (lid == null) {
-                    id = resourceRequest.params().get("id");
-                    if (id == null) {
-                        handler.handle(false);
-                        return;
-                    }
-                } else {
-                    id = lid.toString();
-                }
+        Future<String> promise = Future.future();
 
+        promise.setHandler(asyncResult -> {
+            if (asyncResult.succeeded() && asyncResult.result() != null) {
+                final String id = asyncResult.result();
                 resourceRequest.pause();
 
                 String query = "SELECT COUNT(sc.id) FROM " +
@@ -54,7 +46,22 @@ public class SubjectCopyCorrected implements ResourcesProvider {
                         handler.handle(count != null && count > 0);
                     }
                 });
+            } else {
+                handler.handle(false);
             }
         });
+
+        String id = resourceRequest.params().get("id");
+        if (id == null) {
+            RequestUtils.bodyToJson(resourceRequest, new Handler<JsonObject>() {
+                public void handle(JsonObject data) {
+                    final Long lid = data != null ? data.getLong("id") : null;
+                    promise.complete(lid != null ? lid.toString() : null);
+                }
+            });
+        } else {
+            promise.complete(id);
+        }
+
     }
 }
