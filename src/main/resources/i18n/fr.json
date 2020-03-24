@@ -512,5 +512,7 @@
     "exercizer.scheduled.simple.date.error": "La date de publication du corrigé doit être postérieure à la date de fin et la date de fin doit être postérieure à la date de début.",
     "exercizer.correction.warning" : "Vos commentaires et les notes de l'élève ne lui seront accessibles qu'une fois la date et l'heure limites de rendu dépassées.",
     "exercizer.question.type" : "Type de question",
-    "exercizer.error.date" : "L'horloge de votre système est réglée sur une mauvaise date. Veuillez corriger votre horloge système pour pouvoir accéder à l'application."
+    "exercizer.error.date" : "L'horloge de votre système est réglée sur une mauvaise date. Veuillez corriger votre horloge système pour pouvoir accéder à l'application.",
+    "exercizer.drop.help": "Glissez-déposez un fichier depuis votre appareil ou cliquez sur parcourir",
+    "exercizer.drop.help2": "Déposez le fichier"
 }
