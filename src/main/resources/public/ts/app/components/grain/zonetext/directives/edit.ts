@@ -103,14 +103,16 @@ export const editZoneText = ng.directive('editZoneText',
                     scope.updateGrain();
                 };
 
+                let selector = `#${scope.grain.id}-bckgrnd > div > img.pick-file`;
+
                 scope.getResizedTextZoneX = function(x: number, reverseTransform: boolean): number
                 {
-                    return transformX("img.pick-file", x, reverseTransform);
+                    return transformX(selector, x, reverseTransform);
                 }
 
                 scope.getResizedTextZoneY = function(y: number, reverseTransform: boolean): number
                 {
-                    return transformY("img.pick-file", y, reverseTransform);
+                    return transformY(selector, y, reverseTransform);
                 }
             }
         };

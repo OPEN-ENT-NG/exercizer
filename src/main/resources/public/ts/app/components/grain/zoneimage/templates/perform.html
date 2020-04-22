@@ -7,7 +7,7 @@
         <div class="base-image drawing-zone">
             <div class="image-container">
                 <div>
-                    <img id="bckgrnd" ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
+                    <img id="[[ grainCopy.id ]]-bckgrnd" ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
                 </div>
             </div>
             <placed-block ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"

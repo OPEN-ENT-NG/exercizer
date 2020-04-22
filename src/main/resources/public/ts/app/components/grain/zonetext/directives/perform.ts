@@ -51,23 +51,25 @@ export const performZoneText = ng.directive('performZoneText',
                     scope.updateGrainCopy();
                 };
 
-                $( "#bckgrnd" ).load(function() {
+                let selector = `#${scope.grainCopy.id}-bckgrnd`;
+
+                $(selector).load(function() {
                     scope.apply();
                 });
 
                 scope.getResizedTextZoneX = function(x: number, reverseTransform: boolean): number
                 {
-                    return transformX("#bckgrnd", x, reverseTransform);
+                    return transformX(selector, x, reverseTransform);
                 };
 
                 scope.getResizedTextZoneY = function(y: number, reverseTransform: boolean): number
                 {
-                    return transformY("#bckgrnd", y, reverseTransform);
+                    return transformY(selector, y, reverseTransform);
                 };
 
                 scope.getResizedTextZoneW = function(w: number, reverseTransform: boolean): number
                 {
-                    let trans = transformW("#bckgrnd", w, reverseTransform);
+                    let trans = transformW(selector, w, reverseTransform);
                     $(".base-image > article > text-zone").css({
                         width: trans
                     });
