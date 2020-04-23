@@ -827,8 +827,7 @@ body.exercizer {
     float:left;
     tbody {
       max-height:450px;
-      overflow:auto;
-      overflow-x:hidden;
+      overflow:hidden;
       display:block;
     }
   }
