@@ -30,7 +30,7 @@
             </thead>
             <tbody id="infos">
             <tr data-ng-repeat="copy in subjectCopyList | filter:filterOwner | orderBy:order.order:order.desc" class="display-table hover-hidden">
-                <td>
+                <td class="cell-ellipsis">
                     <span>[[copy.owner_username]]</span>
                     <span>[[getGrains(copy.id).length()]]</span>
                 </td>
