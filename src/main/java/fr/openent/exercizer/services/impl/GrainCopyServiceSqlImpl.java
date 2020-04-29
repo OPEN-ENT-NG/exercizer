@@ -84,7 +84,7 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
 		s.prepared(
 				"UPDATE "+schema+"subject_copy SET " +
 						"modified=NOW(), " +
-						"final_score=(select sum(final_score) from "+schema+"grain_copy where subject_copy_id = ?), " +
+						"final_score = CASE WHEN is_corrected THEN (select sum(final_score) from "+schema+"grain_copy where subject_copy_id = ?) ELSE NULL END, " +
 						"calculated_score=(select sum(calculated_score) from "+schema+"grain_copy where subject_copy_id = ?), "
 						+ subjectiCopyState+ "=true WHERE id = ? RETURNING *",
 				new fr.wseduc.webutils.collections.JsonArray().add(resource.getLong("subject_copy_id"))
