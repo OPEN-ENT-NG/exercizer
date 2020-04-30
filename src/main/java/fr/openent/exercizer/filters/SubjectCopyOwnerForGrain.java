@@ -51,7 +51,10 @@ public class SubjectCopyOwnerForGrain implements ResourcesProvider {
 
 					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_copy sc " +
 							"INNER JOIN " + conf.getSchema() + "grain_copy gc ON sc.id = gc.subject_copy_id " +
-							"WHERE gc.id = ? AND sc.owner = ?";
+							"INNER JOIN " + conf.getSchema() + "subject_scheduled ss ON ss.id = sc.subject_scheduled_id " +
+							"WHERE gc.id = ? AND sc.owner = ? "+
+							"AND (ss.is_one_shot_submit IS FALSE OR (ss.is_one_shot_submit IS TRUE AND sc.submitted_date IS NULL)) " +
+							"AND sc.is_correction_on_going IS FALSE AND sc.is_corrected IS FALSE AND NOW() < ss.due_date ";
 					JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 					values.add(id);
 					values.add(user.getUserId());
