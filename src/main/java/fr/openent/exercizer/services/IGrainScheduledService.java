@@ -38,4 +38,6 @@ public interface IGrainScheduledService {
      */
     void list(final JsonObject resource, final Handler<Either<String, JsonArray>> handler);
 
+    void canListGrains(final Integer subjectScheduledId, final UserInfos user, final Handler<Boolean> handler);
+
 }

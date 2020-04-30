@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.services.impl;
 
+import org.entcore.common.sql.SqlResult;
 import org.entcore.common.user.UserInfos;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
@@ -34,6 +35,18 @@ public class GrainScheduledServiceSqlImpl extends AbstractExercizerServiceSqlImp
         super("exercizer", "grain_scheduled");
     }
 
+    @Override
+    public void canListGrains(final Integer subjectScheduledId, final UserInfos user, final Handler<Boolean> handler){
+        final String query = "SELECT COUNT(*) FROM exercizer.subject_scheduled ss " +
+        "WHERE ss.id = ? AND (ss.owner = ? OR  EXISTS ( " +
+        "SELECT id FROM exercizer.subject_copy sc WHERE sc.owner = ? AND ss.id = sc.subject_scheduled_id AND ss.due_date < NOW()" +
+        "))";
+        final JsonArray values = new JsonArray().add(subjectScheduledId).add(user.getUserId()).add(user.getUserId());
+    	sql.prepared(query, values, message -> {
+            Long count = SqlResult.countResult(message);
+			handler.handle(count != null && count > 0);
+        }); 
+    }
     /**
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
