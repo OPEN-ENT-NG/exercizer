@@ -70,9 +70,8 @@ export class GrainScheduledService implements IGrainScheduledService {
         var self = this,
             deferred = this._$q.defer(),
             request = {
-                method: 'POST',
-                url: 'exercizer/grains-scheduled',
-                data: subjectScheduled
+                method: 'GET',
+                url: 'exercizer/grains-scheduled/'+subjectScheduled.id,
             };
 
         if (!angular.isUndefined(self._listMappedBySubjectScheduledId[subjectScheduled.id])) {
