@@ -82,11 +82,6 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 
 		builder.prepared(query,values);
 
-		//Mark as corrected all copies
-		final String queryCopies = "UPDATE " + schema + "subject_copy SET is_corrected=true, modified = NOW() WHERE subject_scheduled_id = ?";
-
-		builder.prepared(queryCopies, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)));
-
 		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
 
 	}

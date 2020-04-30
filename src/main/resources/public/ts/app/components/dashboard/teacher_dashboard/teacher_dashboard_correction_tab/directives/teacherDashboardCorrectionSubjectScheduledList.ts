@@ -146,7 +146,8 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
 
                 scope.stateTextSubjectScheduled = function(subjectScheduled){
                     var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
-                    if(isListCopyCorrected(list)){
+                    if(isListCopyCorrected(list) &&
+                        (!subjectScheduled.corrected_date || (new Date() > new Date(subjectScheduled.corrected_date)))){
                         return idiom.translate("exercizer.copy.state.corrected");
                     } else{
                         return idiom.translate("exercizer.copy.state.notcorrected");
@@ -155,7 +156,8 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
 
                 scope.stateSubjectScheduled = function(subjectScheduled){
                     var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
-                    if(isListCopyCorrected(list)){
+                    if(isListCopyCorrected(list) &&
+                        (!subjectScheduled.corrected_date || (new Date() > new Date(subjectScheduled.corrected_date)))){
                         return "is_corrected";
                     } else{
                         return "is_not_corrected";

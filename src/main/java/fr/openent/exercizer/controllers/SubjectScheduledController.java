@@ -770,44 +770,17 @@ public class SubjectScheduledController extends ControllerHelper {
 	                    @Override
 	                    public void handle(Either<String, JsonObject> event) {
 		                    if (event.isRight()) {
-			                    subjectScheduledService.getMember(id, new Handler<Either<String, JsonArray>>() {
-				                    @Override
-				                    public void handle(Either<String, JsonArray> event) {
-					                    if (event.isRight()) {
-						                    Renders.renderJson(request, new fr.wseduc.webutils.collections.JsonObject().put("fileId", fileId));
-
-						                    final JsonArray members = event.right().getValue();
-						                    final List<String> recipientSet = new ArrayList<String>();
-
-						                    for (Object member : members) {
-							                    if (!(member instanceof JsonObject)) continue;
-							                    recipientSet.add(((JsonObject)member).getString("owner"));
-						                    }
-
-						                    JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
-						                    params.put("uri", pathPrefix + "#/dashboard/student");
-						                    params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
-						                    params.put("username", user.getUsername());
-						                    params.put("subjectName", subjectTitle);
-						                    params.put("resourceUri", params.getString("uri"));
-						                    params.put("pushNotif", PushNotificationUtils.getNotification(request, "correcthomework", params));
-						                    notification.notifyTimeline(request, "exercizer.correcthomework", user, recipientSet, id, params);
-
-											if (!StringUtils.isEmpty(existingFileId)) {
-												storage.removeFile(existingFileId, new Handler<JsonObject>() {
-													@Override
-													public void handle(JsonObject event) {
-														if ("error".equals(event.getString("status"))) {
-															log.warn("Fail to delete file due to : " + event.getString("message"));
-														}
-													}
-												});
+								Renders.renderJson(request, new fr.wseduc.webutils.collections.JsonObject().put("fileId", fileId));
+								if (!StringUtils.isEmpty(existingFileId)) {
+									storage.removeFile(existingFileId, new Handler<JsonObject>() {
+										@Override
+										public void handle(JsonObject event) {
+											if ("error".equals(event.getString("status"))) {
+												log.warn("Fail to delete file due to : " + event.getString("message"));
 											}
-					                    } else {
-						                    Renders.badRequest(request, event.left().getValue());
-					                    }
-				                    }
-			                    });
+										}
+									});
+								}
 		                    } else {
 			                    Renders.badRequest(request, event.left().getValue());
 		                    }
