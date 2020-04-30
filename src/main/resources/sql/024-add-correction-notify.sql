@@ -1,0 +1,1 @@
+ALTER TABLE exercizer.subject_scheduled ADD COLUMN correction_notify BOOLEAN DEFAULT FALSE;
