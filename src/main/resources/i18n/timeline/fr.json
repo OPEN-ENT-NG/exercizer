@@ -25,6 +25,7 @@
     "exercizer.assigntraining.body" : "Vous avez",
     "exercizer.assigntraining.body.b" : "un nouveau sujet d'entraînement",
     "exercizer.assigntraining.body.c" : "disponible dans vos sujets \"Mis de côté\"",
+	"exercizer.assigntraining" : "Assignation de sujet d'entraînement",
 
     "exercizer.modify.begin" : "a modifié la date de début du sujet",
     "exercizer.modify.due" : "a modifié la date de fin du sujet",
@@ -37,5 +38,6 @@
     "exercizer.modifydue" : "Modification de la date de fin d'un sujet",
     "exercizer.modifyperiod" : "Modification de la période de distribution d'un sujet",
 
-    "exercizer.timeline.consider.submitted" : "a considéré votre copie comme rendue pour le sujet "
+    "exercizer.timeline.consider.submitted" : "a considéré votre copie comme rendue pour le sujet ",
+	"exercizer.considersubmitted" : "Copie considérée rendue"
 }
