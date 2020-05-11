@@ -44,6 +44,7 @@ public class SubjectCopyOwnerForGrain implements ResourcesProvider {
 		RequestUtils.bodyToJson(resourceRequest, new Handler<JsonObject>() {
 			public void handle(JsonObject data) {
 				final Long id = data.getLong("id");
+				final Long subjectCopyId = data.getLong("subject_copy_id");
 				if (id == null) {
 					handler.handle(false);
 				} else {
@@ -52,12 +53,13 @@ public class SubjectCopyOwnerForGrain implements ResourcesProvider {
 					String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_copy sc " +
 							"INNER JOIN " + conf.getSchema() + "grain_copy gc ON sc.id = gc.subject_copy_id " +
 							"INNER JOIN " + conf.getSchema() + "subject_scheduled ss ON ss.id = sc.subject_scheduled_id " +
-							"WHERE gc.id = ? AND sc.owner = ? "+
+							"WHERE gc.id = ? AND sc.owner = ? AND sc.id = ? "+
 							"AND (ss.is_one_shot_submit IS FALSE OR (ss.is_one_shot_submit IS TRUE AND sc.submitted_date IS NULL)) " +
 							"AND sc.is_correction_on_going IS FALSE AND sc.is_corrected IS FALSE AND NOW() < ss.due_date ";
 					JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 					values.add(id);
 					values.add(user.getUserId());
+					values.add(subjectCopyId);
 
 					Sql.getInstance().prepared(query, values, new Handler<Message<JsonObject>>() {
 						@Override
