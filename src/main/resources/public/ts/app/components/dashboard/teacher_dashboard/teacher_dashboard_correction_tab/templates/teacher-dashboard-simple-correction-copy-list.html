@@ -228,7 +228,7 @@
     <h2><i18n>exercizer.unschedule.title</i18n></h2>
     <p><i18n>exercizer.unschedule.confirm</i18n></p>
     <div class="row">
-        <button data-ng-click="unScheduled(); " class="right-magnet"><i18n>exercizer.unschedule</i18n></button>
+        <button data-ng-click="unScheduled(); " data-ng-disabled="option.unScheduledDisabled" class="right-magnet"><i18n>exercizer.unschedule</i18n></button>
         <button data-ng-click="option.showUnScheduled=false" class="cancel right-magnet"><i18n>exercizer.cancel</i18n></button>
     </div>
 </lightbox>

@@ -258,7 +258,9 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                 };
 
                 scope.unScheduled = function() {
+                    scope.option.unScheduledDisabled = true
                     SubjectScheduledService.unScheduled(scope.selectedSubjectScheduled).then(function () {
+                        scope.option.unScheduledDisabled = false
                         notify.info("exercizer.service.unschedule");
                         scope.option.showUnScheduled=false;
                         window.location.reload();
