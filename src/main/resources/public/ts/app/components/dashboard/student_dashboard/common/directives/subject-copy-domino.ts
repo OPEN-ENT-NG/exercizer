@@ -162,12 +162,16 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                     return scope.subjectCopy.submitted_date && !scope.subjectCopy.is_training_copy;
                 };
 
+                scope.isDueDateAfter = function() {
+                    return DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.due_date), true);
+                }
+
                 scope.canCreateTraining = function() {
-                    return scope.subjectScheduled.is_training_permitted && (scope.subjectCopy.is_corrected || (scope.subjectScheduled.corrected_date && scope.canShowCorrected()));
+                    return scope.subjectScheduled.is_training_permitted && scope.subjectCopy.is_corrected && scope.isDueDateAfter();
                 }
 
                 scope.canSoonCreateTraining = function() {
-                    return scope.subjectScheduled.is_training_permitted && !(scope.subjectCopy.is_corrected || (scope.subjectScheduled.corrected_date && scope.canShowCorrected()));
+                    return scope.subjectScheduled.is_training_permitted && !(scope.subjectCopy.is_corrected && scope.isDueDateAfter());
                 }
 
                 scope.createTrainingCopy = function() {
