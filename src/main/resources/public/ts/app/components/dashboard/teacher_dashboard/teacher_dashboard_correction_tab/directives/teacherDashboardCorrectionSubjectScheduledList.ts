@@ -115,10 +115,10 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                 };
 
                 scope.numberOfCopySubmitted = function (subjectScheduled){
-                    var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled),
-                        res = 0;
+                    var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                    var res = 0;
                     angular.forEach(list, function(copy){
-                        if(copy.submitted_date){
+                        if(copy.submitted_date && !copy.is_training_copy){
                             res++
                         }
                     });
@@ -127,14 +127,20 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
 
                 scope.numberOfCopy = function (subjectScheduled){
                     var list = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
-                    return list.length;
+                    var res = 0;
+                    angular.forEach(list, function(copy){
+                        if(!copy.is_training_copy){
+                            res++
+                        }
+                    });
+                    return res;
                 };
 
                 function isListCopyCorrected(list){
                     if(list){
                         var res = true;
                         angular.forEach(list, function(copy){
-                            if(!copy.is_corrected){
+                            if(!copy.is_training_copy && !copy.is_corrected){
                                 res = false
                             }
                         });
