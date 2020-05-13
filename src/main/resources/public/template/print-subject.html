@@ -360,10 +360,11 @@
                         <div class="drawing-zone base-image">
                             <div class="image-container">
                                 <div>
-                                    <img style="max-width: 760px; max-height: 600px;" ng-src="[[ printSubjectController.getImage(grain) ]]">
+                                    <img style="max-width: 760px; max-height: 600px;" id="[[ grain.id ]]-bckgrnd" ng-src="[[ printSubjectController.getImage(grain) ]]">
                                 </div>
                             </div>
-                            <article ng-repeat="zone in printSubjectController.getZones(grain)" draggable="false" style="padding: 0px; position: absolute;" ng-style="{ 'left' : zone.position.x+'px', 'top' : zone.position.y+'px', 'z-index' : zone.position.z }">
+                            <article ng-repeat="zone in printSubjectController.getZones(grain)" draggable="false" style="padding: 0px; position: absolute;"
+                            ng-style="{ 'left' : printSubjectController.transformX(grain,zone.position.x,false)+'px', 'top' : printSubjectController.transformY(grain,zone.position.y,false)+'px', 'z-index' : zone.position.z }">
                                 <text-zone class="">
                                     <span class="">[[ zone.answer ]]</span>
                                 </text-zone>
@@ -405,12 +406,13 @@
                         <div class="drawing-zone base-image">
                             <div class="image-container">
                                 <div>
-                                    <img style="max-width: 760px; max-height: 600px;" ng-src="[[ printSubjectController.getImage(grain) ]]">
+                                    <img style="max-width: 760px; max-height: 600px;" id="[[ grain.id ]]-bckgrnd" ng-src="[[ printSubjectController.getImage(grain) ]]">
                                 </div>
                             </div>
-                            <article ng-repeat="zone in printSubjectController.getZones(grain)" draggable="false" style="padding: 0px; position: absolute;" ng-style="{ 'left' : zone.position.x+'px', 'top' : zone.position.y+'px', 'z-index' : zone.position.z }">
+                            <article ng-repeat="zone in printSubjectController.getZones(grain)" draggable="false" style="padding: 0px; position: absolute;"
+                            ng-style="{ 'left' : printSubjectController.transformX(grain,zone.position.x,false)+'px', 'top' : printSubjectController.transformY(grain,zone.position.y,false)+'px', 'z-index' : zone.position.z }">
                                 <image-zone>
-                                    <img ng-src="[[ zone.answer ]]">
+                                    <img style="max-width: 100px; max-height: 100px;" ng-src="[[ zone.answer ]]">
                                 </image-zone>
                             </article>
                         </div>

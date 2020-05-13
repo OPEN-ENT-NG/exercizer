@@ -87,11 +87,11 @@ body.exercizer {
     cursor: move;
   }
   image-zone {
-    @media screen and (min-width: $wide-screen) {
+    @media screen and (min-width: $wide-screen), print {
       width: 100px;
       height: 100px;
     }
-    @media screen and (max-width: $wide-screen){
+    @media screen and (max-width: $wide-screen), print {
       width: 70px;
       height: 70px;
     }
@@ -172,7 +172,7 @@ body.exercizer {
     }
   }
   .base-image {
-    @media screen and (min-width: $wide-screen) {
+    @media screen and (min-width: $wide-screen), print {
       width: 760px;
       height: 600px;
     }
@@ -202,10 +202,10 @@ body.exercizer {
       border: 1px dashed transparent;
       border-radius: 5px;
       > img {
-        @media screen and (min-width: $wide-screen) {
+        @media screen and (min-width: $wide-screen), print {
           width: 100%;
         }
-        @media screen and (max-width: $wide-screen){
+        @media screen and (max-width: $wide-screen), print {
           margin-left: auto;
           margin-right: auto;
           display: block;
@@ -224,12 +224,12 @@ body.exercizer {
           display: flex;
           align-items: center;
           > img {
-            @media screen and (min-width: $wide-screen) {
+            @media screen and (min-width: $wide-screen), print {
               width: 100%;
             }
             max-height: 100%;
             border: none;
-            @media screen and (max-width: $wide-screen){
+            @media screen and (max-width: $wide-screen), print {
               border-radius: 0;
               width: initial;
               margin-left: auto;
@@ -245,12 +245,12 @@ body.exercizer {
         display: flex;
         align-items: center;
         > img {
-          @media screen and (min-width: $wide-screen) {
+          @media screen and (min-width: $wide-screen), print {
             width: 100%;
           }
           max-height: 100%;
           border: none;
-          @media screen and (max-width: $wide-screen){
+          @media screen and (max-width: $wide-screen), print {
             border-radius: 0;
             width: initial;
             margin-left: auto;
@@ -310,7 +310,7 @@ body.exercizer {
     width: auto;
   }
   .eight-desktop {
-    @media screen and (min-width: $wide-screen) {
+    @media screen and (min-width: $wide-screen), print {
       width: 66.66667%;
     }
   }
@@ -337,11 +337,11 @@ body.exercizer {
   text-zone {
     max-width: 150px;
     min-width: 150px;
-    @media screen and (min-width: $wide-screen) {
+    @media screen and (min-width: $wide-screen), print {
       max-height: 30px;
       min-height: 30px;
     }
-    @media screen and (max-width: $wide-screen) {
+    @media screen and (max-width: $wide-screen), print {
       max-height: 25px;
       min-height: 25px;
     }
@@ -617,10 +617,10 @@ body.exercizer {
     width: 1%;
     min-width: 13px;
     &:hover {
-      @media screen and (max-width: $tablette) {
+      @media screen and (max-width: $tablette), print {
         width: 140px
       }
-      @media screen and (min-width: $tablette) {
+      @media screen and (min-width: $tablette), print {
         width: 250px;
       }
     }
@@ -638,17 +638,17 @@ body.exercizer {
       font-size: large;
       position: absolute;
       color: white;
-      @media screen and (max-width: $tablette) {
+      @media screen and (max-width: $tablette), print {
         display: block;
         left: 35px;
-        @media screen and (max-width: $fat-mobile) {
+        @media screen and (max-width: $fat-mobile), print {
           top: 50px;
         }
-        @media screen and (min-width: $fat-mobile) {
+        @media screen and (min-width: $fat-mobile), print {
           top: 35px;
         }
       }
-      @media screen and (min-width: $tablette) {
+      @media screen and (min-width: $tablette), print {
         left: 50px;
         top: 50px;
         > i18n {
@@ -835,7 +835,7 @@ body.exercizer {
   .small-cell {
     width: 10px;
   }
-  @media screen and (max-width: $wide-screen) {
+  @media screen and (max-width: $wide-screen), print {
     .cell-initial-float {
       float: initial;
     }
@@ -969,7 +969,7 @@ body.exercizer {
       background-color: rgba(black, 0.025);
     }
   }
-  @media screen and (max-width: $tablette) {
+  @media screen and (max-width: $tablette), print {
     .main-col {
       padding-left: 0!important;
     }
@@ -984,7 +984,7 @@ body.exercizer {
       margin-right: 0!important;
     }
   }
-  @media screen and (max-width: $fat-mobile) {
+  @media screen and (max-width: $fat-mobile), print {
     .association {
       flex-direction: column;
       padding: 10px;
@@ -1021,7 +1021,7 @@ body.exercizer {
   .left-margin-5 {
     margin-left: 5px;
   }
-  @media screen and (max-width: $fat-mobile) {
+  @media screen and (max-width: $fat-mobile), print {
    .text-zone-size {
     font-size: 70%;
    }
@@ -1030,7 +1030,7 @@ body.exercizer {
     border:2px solid #FF8500;
     outline:0
   }
-  @media screen and (max-width: $wide-screen) {
+  @media screen and (max-width: $wide-screen), print {
     .rigid-grid>.twelve {
       width: auto;
     }
@@ -1117,7 +1117,7 @@ body.exercizer {
     color: #46bfaf;
   }
 
-  @media screen and (max-width: $tablette) {
+  @media screen and (max-width: $tablette), print {
     .mobile-row {
       @include row;
       > div > input {

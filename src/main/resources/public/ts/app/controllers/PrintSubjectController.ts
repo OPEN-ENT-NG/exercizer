@@ -2,6 +2,8 @@ import { ng, notify, skin, _ } from 'entcore';
 import { ISubjectScheduled, IGrain } from '../models/domain';
 import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IGrainTypeService, IGrainService, IDragService } from '../services';
 import { EditSubjectController } from './EditSubjectController';
+import { transformX, transformY } from '../components/grain/zonetext/directives/zoneCommon';
+
 
 declare var jQuery;
 
@@ -22,6 +24,19 @@ class PrintSubjectController extends EditSubjectController {
         'GrainTypeService',
         'DragService'
     ];
+
+    private safeApply = function (fn?) {
+        try {
+            const phase = this._$scope.$root && this._$scope.$root.$$phase;
+            if (phase == '$apply' || phase == '$digest') {
+                if (fn && (typeof (fn) === 'function')) {
+                    fn();
+                }
+            } else {
+                this._$scope.$apply(fn);
+            }
+        } catch (e) { }
+    };
 
     constructor(
         _$routeParams,
@@ -56,6 +71,7 @@ class PrintSubjectController extends EditSubjectController {
                     if(pending.length == 0){
                         clearInterval(it);
                         if(!self.printed){
+                            self.safeApply();
                             self.printed = true;
                             window.print()
                         }
@@ -216,6 +232,10 @@ class PrintSubjectController extends EditSubjectController {
     public getScheduledEstimationDuration() {
         return this._subjectScheduled.estimated_duration;
     }
+
+    public transformX(grain: IGrain, x: number, reverseTransform: boolean) { return transformX(`#${grain.id}-bckgrnd`, x, reverseTransform); }
+
+    public transformY(grain: IGrain, y: number, reverseTransform: boolean) { return transformY(`#${grain.id}-bckgrnd`, y, reverseTransform); }
 
     private formatHtml(template: string) {
         if (!template) {
