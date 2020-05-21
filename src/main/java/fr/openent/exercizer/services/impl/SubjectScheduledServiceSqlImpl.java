@@ -395,13 +395,29 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				subjectCopiesIds.forEach(subjectCopyId -> {
 					Future<Void> promise = Future.future();
 					subjectList.add(promise);
-					final String query2 = "SELECT id FROM " + schema + "grain_copy WHERE subject_copy_id = ? ORDER BY RANDOM ()";
+					final String query2 = "SELECT id FROM " + schema + "grain_copy WHERE subject_copy_id = ? order by order_by, id";
 					sql.prepared(query2, new JsonArray().add(((JsonObject)subjectCopyId).getLong("id")), SqlResult.validResultHandler(event2 -> {
 						if (event2.isRight()) {
 							final JsonArray grainCopiesIds = event2.right().getValue();
-							Collections.shuffle(grainCopiesIds.getList());
+							final List copy = new ArrayList(grainCopiesIds.getList());
+							final int listSize = copy.size();
+							boolean notShuffle = true;
+							int countCheck = 10;
+
+							while(notShuffle) {
+								Collections.shuffle(grainCopiesIds.getList());
+								//test shuffle no same origin
+								int matches = 0;
+								for (int i = 0; i < listSize; i++) {
+									if (grainCopiesIds.getList().get(i).equals(copy.get(i))) matches++;
+								}
+
+								if (matches != listSize || countCheck == 0) notShuffle = false;
+								countCheck--;
+							}
+
 							final SqlStatementsBuilder s = new SqlStatementsBuilder();
-							for (int i = 1; i <= grainCopiesIds.size(); i++) {
+							for (int i = 1; i <= listSize; i++) {
 								Long grainCopyId = grainCopiesIds.getJsonObject(i-1).getLong("id");
 								final String query3 = "UPDATE " + schema + "grain_copy SET display_order = ? WHERE id = ?";
 								s.prepared(query3, new JsonArray().add(i).add(grainCopyId));
