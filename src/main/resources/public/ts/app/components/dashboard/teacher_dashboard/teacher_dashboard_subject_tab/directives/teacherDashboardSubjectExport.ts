@@ -19,7 +19,7 @@ export const teacherDashboardSubjectExport = ng.directive('teacherDashboardSubje
 
 
                 scope.exportMoodle = function(subjectCopy) {
-                    window.location.href = '/exercizer/subject/export-moodle/' + scope.subject.id + '/'+ scope.subject.title;
+                    window.location.href = '/exercizer/subject/export-moodle/' + scope.subject.id + '/'+ scope.subject.title.replace(/[^a-zA-Z0-9]/g, '');
                     scope.hide();
                 };
 
