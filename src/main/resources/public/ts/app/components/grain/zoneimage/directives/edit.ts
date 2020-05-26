@@ -99,15 +99,15 @@ export const editZoneImage = ng.directive('editZoneImage',
                     scope.updateGrain();
                 };
 
-                let selector = `#${scope.grain.id}-bckgrnd > div > img.pick-file`;
-
                 scope.getResizedIconZoneX = function(x: number, reverseTransform: boolean): number
                 {
+                    let selector = `#${scope.grain.id}-bckgrnd > div > img.pick-file`;
                     return transformX(selector, x, reverseTransform);
                 };
 
                 scope.getResizedIconZoneY = function(y: number, reverseTransform: boolean): number
                 {
+                    let selector = `#${scope.grain.id}-bckgrnd > div > img.pick-file`;
                     return transformY(selector, y, reverseTransform);
                 };
             }
