@@ -41,18 +41,19 @@ export const viewZoneImage = ng.directive('viewZoneImage',
                 };
 
                 let selector = `#${scope.grainCopy.id}-bckgrnd`;
-
                 $(selector).load(function() {
                     scope.$apply();
                 });
 
                 scope.getResizedIconZoneX = function(x: number, reverseTransform: boolean): number
                 {
+                    let selector = `#${scope.grainCopy.id}-bckgrnd`;
                     return transformX(selector, x, reverseTransform);
                 };
 
                 scope.getResizedIconZoneY = function(y: number, reverseTransform: boolean): number
                 {
+                    let selector = `#${scope.grainCopy.id}-bckgrnd`;
                     return transformY(selector, y, reverseTransform);
                 };
             }
