@@ -12,15 +12,26 @@ export const performZoneImage = ng.directive('performZoneImage',
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/zoneimage/templates/perform.html',
             link: (scope: any) => {
+
+                scope.usedAnswers = {};
+
                 scope.$watch("grainCopy",function(newValue,oldValue) {
                     scope.init();
                 });
 
                 scope.init = () => {
                     scope.grainCopy.grain_copy_data.custom_copy_data = new CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
+                    if (!scope.usedAnswers[scope.grainCopy.id]) {
+                        scope.usedAnswers[scope.grainCopy.id] = [];
+                        if (scope.grainCopy.grain_copy_data.custom_copy_data.zones) {
+                            scope.grainCopy.grain_copy_data.custom_copy_data.zones.forEach((option) => {
+                                if (option.answer && option.answer.length > 0) {
+                                    scope.usedAnswers[scope.grainCopy.id].push(option.answer);
+                                }
+                            });
+                        }
+                    }
                 };
-
-                scope.usedAnswers = [];
                 
                 scope.availableAnswers = () => {
                     let returnArray = [];
@@ -30,7 +41,7 @@ export const performZoneImage = ng.directive('performZoneImage',
                         ).length;
 
                         let foundMatch = _.filter(returnArray, (o) => o === option).length;
-                        let foundUsed = _.filter(scope.usedAnswers, (o) => o === option).length;
+                        let foundUsed = _.filter(scope.usedAnswers[scope.grainCopy.id], (o) => o === option).length;
 
                         if(foundUsed + foundMatch < totalMatch){
                             returnArray.push(option);
@@ -54,7 +65,7 @@ export const performZoneImage = ng.directive('performZoneImage',
 
                     scope.removeAnswer(iconZone);
                     iconZone.answer = $item as string;
-                    scope.usedAnswers.push($item);
+                    scope.usedAnswers[scope.grainCopy.id].push($item);
                     scope.updateGrainCopy();
                 };
 
@@ -62,8 +73,8 @@ export const performZoneImage = ng.directive('performZoneImage',
                     if (!$item.answer) {
                         return;
                     }
-                    var i = scope.usedAnswers.indexOf($item.answer);
-                    scope.usedAnswers.splice(i, 1);
+                    var i = scope.usedAnswers[scope.grainCopy.id].indexOf($item.answer);
+                    scope.usedAnswers[scope.grainCopy.id].splice(i, 1);
                     $item.answer = '';
                     scope.updateGrainCopy();
                 };
