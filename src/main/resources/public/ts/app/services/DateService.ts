@@ -1,4 +1,4 @@
-import { ng } from 'entcore';
+import { ng, moment } from 'entcore';
 
 export interface IDateService {
     addDays(date, days);
@@ -56,7 +56,7 @@ export class DateService implements IDateService {
     }
 
     public isoToDate(iso) {
-        return new Date(iso);
+        return moment(iso).toDate();
     }
 }
 
