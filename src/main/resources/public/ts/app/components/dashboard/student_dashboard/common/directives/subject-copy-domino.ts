@@ -35,8 +35,20 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                         return 'text'
                     }
                 };
-
+                scope.isPerformDisabled = () => {
+                    if (scope.subjectCopy.dueDate && scope.subjectCopy.submitted_date) {
+                        const dueDate = new Date(scope.subjectCopy.dueDate)
+                        const now = new Date();
+                        if(dueDate <= now) return true;
+                    }
+                    return false;
+                }
                 scope.performSubjectCopy = function (subjectCopyId) {
+                    if (scope.subjectCopy.dueDate && scope.subjectCopy.submitted_date) {
+                        const dueDate = new Date(scope.subjectCopy.dueDate)
+                        const now = new Date();
+                        if(dueDate <= now) return;
+                    }
                     if (scope.subjectScheduled.type === 'simple') {
                         $location.path('/subject/copy/perform/simple/' + subjectCopyId);
                     } else {
