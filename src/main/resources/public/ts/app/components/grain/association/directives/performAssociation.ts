@@ -214,6 +214,7 @@ export const performAssociation = ng.directive('performAssociation',
                     if(indexToRemove !== null){
                         scope.possible_answer_left_list.splice(indexToRemove, 1);
                     }
+                    scope.updateGrainCopy();
                     scope.$apply();
                 }
 
