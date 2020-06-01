@@ -198,6 +198,10 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                     });
                 }
 
+                scope.getCorrectedAvailable = function() {
+                    return scope.subjectScheduled.corrected_date || scope.subjectScheduled.due_date;
+                }
+
             }
         }
     }

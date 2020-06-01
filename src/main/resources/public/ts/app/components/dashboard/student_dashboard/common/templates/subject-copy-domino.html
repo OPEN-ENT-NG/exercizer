@@ -38,7 +38,7 @@
                               <i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
                             </div>
                             <div class="row" data-ng-show="isSubmittedDateDisplayed()">
-                              <i18n>exercizer.corrected.available</i18n> <span  data-ng-bind="dueDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="dueDate | date:'HH:mm'"></span>
+                              <i18n>exercizer.corrected.available</i18n> <span  data-ng-bind="getCorrectedAvailable() | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="getCorrectedAvailable() | date:'HH:mm'"></span>
                             </div>
                         </div>
                         <div class="row italic-text" data-ng-if="subjectCopy.is_training_copy">
