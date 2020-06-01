@@ -26,7 +26,7 @@
         <div class="warning" data-ng-if="!subjectScheduled.is_one_shot_submit"><strong><i18n>exercizer.several.submit</i18n></strong></div>
 
         <div class="row">
-            <button data-ng-click="submitSubjectCopy()" class="cell right-magnet"><i18n>exercizer.make.copy</i18n></button>
+            <button data-ng-click="submitSubjectCopy()" data-ng-disabled="submitButtonDisabled" class="cell right-magnet"><i18n>exercizer.make.copy</i18n></button>
             <button data-ng-click="closeModal()" class="cell right-magnet cancel"><i18n>exercizer.cancel</i18n></button>
         </div>
     </lightbox>

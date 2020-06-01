@@ -254,6 +254,7 @@ class PerformSubjectCopyController {
                 if (isOk !== true) {
                     self._isCanSubmit = false;
                     notify.error("exercizer.check.corrected");
+                    self._$scope.$broadcast('E_SUBMIT_SUBJECT_ERROR');
                 } else {
                     var subjectCopy:ISubjectCopy = self._subjectCopyService.getById(selfSubjectCopy.id);
                     subjectCopy.submitted_date = new Date().toISOString();
@@ -263,13 +264,17 @@ class PerformSubjectCopyController {
                                 let subjectScheduled = self._subjectScheduledService.getById(subjectCopy.subject_scheduled_id);
                                 self._correctionService.automaticCorrectionForTraining(subjectCopy, subjectScheduled).then((subjectCopy:ISubjectCopy) => {
                                     self._$scope.$broadcast('E_SUBMIT_SUBJECT_COPY');
-                                }, (err) => { notify.error(err); });
+                                }, (err) => {
+                                    notify.error(err);
+                                    self._$scope.$broadcast('E_SUBMIT_SUBJECT_ERROR');
+                                });
                             } else {
                                 self._$scope.$broadcast('E_SUBMIT_SUBJECT_COPY');
                             }
                         },
                         function (err) {
                             notify.error(err);
+                            self._$scope.$broadcast('E_SUBMIT_SUBJECT_ERROR');
                         }
                     );
                 }

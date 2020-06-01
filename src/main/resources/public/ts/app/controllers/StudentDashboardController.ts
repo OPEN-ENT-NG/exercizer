@@ -33,6 +33,9 @@ class StudentDashboardController {
             if (this._$location.$$search.tab == 'training') {
                 this._$scope.data.tabSelected = 'trainingSubjectCopyList';
             }
+            if (this._$location.$$search.tab == 'finished') {
+                this._$scope.data.tabSelected = 'finishSubjectCopyList';
+            }
             delete this._$location.$$search.tab;
             this._$location.$$compose();
         }

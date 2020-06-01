@@ -96,7 +96,21 @@ export const subjectPerformCopyBottomNav = ng.directive('subjectPerformCopyBotto
 
                 scope.submitSubjectCopy = function() {
                     scope.$emit('E_SUBJECT_COPY_SUBMITTED', scope.subjectCopy);
+                    scope.submitButtonDisabled = true;
                 };
+
+                scope.$on('E_SUBMIT_SUBJECT_COPY', function() {
+                    scope.submitButtonDisabled = false;
+                    if (scope.subjectCopy.is_training_copy) {
+                        $location.path(`/subject/copy/view/final-score/${scope.subjectCopy.id}/`);
+                    } else {
+                        $location.path('/dashboard').search({tab: 'finished'});
+                    }
+                });
+
+                scope.$on('E_SUBMIT_SUBJECT_ERROR', function() {
+                    scope.submitButtonDisabled = false;
+                });
             }
         };
     }]
