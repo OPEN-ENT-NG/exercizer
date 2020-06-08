@@ -610,7 +610,7 @@ body.exercizer {
     font-size: 2em;
     color: white;
     height: 100%;
-    padding: 10px;
+    padding: 0 10px;
     position: absolute;
     right: 0;
     transition: width 1s ease;
@@ -625,10 +625,10 @@ body.exercizer {
       }
     }
     &.green {
-      background-color: rgb(114,187,83);
+      background-color: $green;
     }
     &.grey {
-      background-color: rgb(170,170,170);
+      background-color: $grey;
     }
     span {
       top: 40%;
