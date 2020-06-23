@@ -26,6 +26,7 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
 
                         break;
                     case 'correction':
+                        scope.selectedSubjectScheduled = null;
                         $location.path('/dashboard/teacher/correction/');
                         break;
                     case 'library':
