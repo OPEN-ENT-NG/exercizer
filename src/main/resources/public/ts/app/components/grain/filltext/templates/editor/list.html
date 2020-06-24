@@ -15,7 +15,7 @@
         </li>
     </ul>
     <div class="row add-option">
-        <input type="text" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(grain.grain_data.custom_data)" />
+        <input type="text" maxlength="40"  ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(grain.grain_data.custom_data)" />
         <button ng-disabled="!displayState.newOption" ng-click="addOption(displayState.editedTextZone)">+</button>
     </div>
 </div>
