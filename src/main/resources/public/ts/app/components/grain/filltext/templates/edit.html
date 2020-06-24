@@ -25,7 +25,7 @@
     <div class="options" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
         <ul>
             <li ng-repeat="option in grain.grain_data.custom_data.options track by $index">
-                <text-zone>
+                <text-zone style="max-width:unset">
                     <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
                     <span>[[option]]</span>
                 </text-zone>

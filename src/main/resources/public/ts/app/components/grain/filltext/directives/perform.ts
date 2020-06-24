@@ -117,9 +117,18 @@ export const performFillText = ng.directive('performFillText',
                     scope.showAnswersMobile = false;
                     _selectedanswer.answer = option.option;
                     option.zoneId = _selectedanswer.id;
+                    $("fill-zone[zone-id='" + option.zoneId  + "'] > text-zone").width(getTextWidth(_selectedanswer.answer, '14px Roboto'));
                     scope.usedAnswers.push(option);
                     $('.item-selected').removeClass('item-selected');
                     scope.updateGrainCopy();
+                }
+
+                function getTextWidth(text, font) {
+                    var canvas:any = document.createElement("canvas");
+                    var context:any = canvas.getContext("2d");
+                    context.font = font;
+                    var metrics = context.measureText(text);
+                    return metrics.width;
                 }
 
                 $('body').on('click', event => {
