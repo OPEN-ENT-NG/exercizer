@@ -249,7 +249,7 @@ class PerformSubjectCopyController {
         });
 
         self._$scope.$on('E_SUBJECT_COPY_SUBMITTED', function(event, subjectCopy:ISubjectCopy) {
-            let selfSubjectCopy:ISubjectCopy = subjectCopy;
+            let selfSubjectCopy:any = subjectCopy;
             self._subjectCopyService.checkIsNotCorrectionOnGoingOrCorrected(subjectCopy.id).then(function (isOk) {
                 if (isOk !== true) {
                     self._isCanSubmit = false;
@@ -259,7 +259,8 @@ class PerformSubjectCopyController {
                     var subjectCopy:ISubjectCopy = self._subjectCopyService.getById(selfSubjectCopy.id);
                     subjectCopy.submitted_date = new Date().toISOString();
                     self._subjectCopyService.submit(subjectCopy).then(
-                        function (subjectCopy:ISubjectCopy) {
+                        function (subjectCopy:any) {
+                            subjectCopy.dueDate = selfSubjectCopy.dueDate;
                             if (subjectCopy.is_training_copy) {
                                 let subjectScheduled = self._subjectScheduledService.getById(subjectCopy.subject_scheduled_id);
                                 self._correctionService.automaticCorrectionForTraining(subjectCopy, subjectScheduled).then((subjectCopy:ISubjectCopy) => {
