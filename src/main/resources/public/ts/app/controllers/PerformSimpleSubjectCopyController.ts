@@ -104,7 +104,7 @@ class PerformSimpleSubjectCopyController {
                     self._subjectCopy.homework_metadata = {"filename":file.name};
                     self._subjectCopy.homework_file_id = fileId;
                     self._subjectCopy.submitted_date = new Date();
-                    self.redirectToDashboard();
+                    self._$location.path('/dashboard').search({tab: 'finished'});
                 }, function (err) {
                     notify.error(err);
                 });
