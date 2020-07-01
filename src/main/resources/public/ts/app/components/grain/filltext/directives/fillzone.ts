@@ -77,7 +77,6 @@ export const fillZone = ng.directive('fillZone',
                 scope.answer = ($item) => {
                     scope.$parent.removeAnswer(scope.optionData.zone);
                     scope.optionData.zone.answer = $item.option;
-                    $("fill-zone[zone-id='" + scope.optionData.zone.id  + "'] > text-zone").width(getTextWidth($item.option, '16px Roboto'));
                     $item.zoneId = scope.optionData.zone.id;
                     if ($item.option) {
                         scope.$parent.usedAnswers.push($item);
@@ -85,13 +84,6 @@ export const fillZone = ng.directive('fillZone',
                     scope.$parent.updateGrainCopy();
                 };
 
-                function getTextWidth(text, font) {
-                    var canvas:any = document.createElement("canvas");
-                    var context:any = canvas.getContext("2d");
-                    context.font = font;
-                    var metrics = context.measureText(text);
-                    return metrics.width;
-                }
             }
         }
     }]

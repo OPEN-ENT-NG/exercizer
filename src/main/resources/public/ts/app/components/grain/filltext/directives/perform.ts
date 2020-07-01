@@ -13,6 +13,10 @@ export const performFillText = ng.directive('performFillText',
             templateUrl: 'exercizer/public/ts/app/components/grain/filltext/templates/perform.html',
             link: (scope: any) => {
                 scope.$watch(function () {
+                    if (scope.customData && scope.customData.answersType === 'drag') {
+                        //adapt the width of the textzone
+                        $("fill-zone > text-zone").each(function() {$(this).width(getTextWidth($(this)[0].innerText, $(this).css('font')));});
+                    }
                     return scope.grainCopy;
                 }, function () {
                     scope.grainCopy.grain_copy_data.custom_copy_data = new CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
@@ -117,7 +121,6 @@ export const performFillText = ng.directive('performFillText',
                     scope.showAnswersMobile = false;
                     _selectedanswer.answer = option.option;
                     option.zoneId = _selectedanswer.id;
-                    $("fill-zone[zone-id='" + option.zoneId  + "'] > text-zone").width(getTextWidth(_selectedanswer.answer, '14px Roboto'));
                     scope.usedAnswers.push(option);
                     $('.item-selected').removeClass('item-selected');
                     scope.updateGrainCopy();
