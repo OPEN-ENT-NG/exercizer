@@ -14,6 +14,8 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
 
                 scope.$watch('selectedSubjectScheduled', function(newValue, oldValue) {
                     if(scope.selectedSubjectScheduled){
+                        scope.order.field = 'owner_username';
+                        scope.order.desc = false;
                         init(scope.selectedSubjectScheduled);
                         /**
                          * INIT
@@ -25,8 +27,6 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
 
                         resetDisplay();
 
-                        scope.order.field = 'owner_username';
-                        scope.order.desc = false;
                         scope.option = {
                             begin_date: new Date(scope.selectedSubjectScheduled.begin_date),
                             due_date: new Date(scope.selectedSubjectScheduled.due_date),
@@ -47,6 +47,16 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                                 }
                             });
                             CorrectionService.automaticCorrection(scope.subjectCopyList, scope.selectedSubjectScheduled);
+
+                            try {
+                                let sortField = window.localStorage.getItem('exercizer' + scope.selectedSubjectScheduled.id + '.sortcache');
+                                let descSortField = window.localStorage.getItem('exercizer' + scope.selectedSubjectScheduled.id + '.sortcache.asc') == "false";
+
+                                if (sortField) {
+                                    scope.order.field = sortField;
+                                    scope.order.desc = descSortField;
+                                }
+                            } catch (e) { }
                         }
                     );
 
@@ -356,6 +366,11 @@ export const teacherDashboardCorrectionCopyList = ng.directive('teacherDashboard
                         scope.order.desc = false;
                         scope.order.field = fieldName;
                     }
+
+                    try {
+                        window.localStorage.setItem('exercizer' + scope.selectedSubjectScheduled.id + '.sortcache', fieldName);
+                        window.localStorage.setItem('exercizer' + scope.selectedSubjectScheduled.id + '.sortcache.asc', scope.order.desc ? "false" : "true");
+                    } catch (e) { }
                 };
             }
         };
