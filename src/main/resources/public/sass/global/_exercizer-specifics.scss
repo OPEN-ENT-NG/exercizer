@@ -855,6 +855,9 @@ body.exercizer {
     width:100%;
     table-layout:fixed;
   }
+  editor > textarea {
+    font-family: monospace;
+  }
   textarea {
     background-color: white;
     border: 1px solid rgba(black, 0.1);
