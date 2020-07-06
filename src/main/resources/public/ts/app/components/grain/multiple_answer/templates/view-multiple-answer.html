@@ -3,10 +3,11 @@
     <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list" class="row vertical-spacing">
-        <input type="text" class="twelve cell"
-               data-ng-model="filled_answer.text"
-               data-ng-class="{'input-response-correct' : isCorrect[key], 'input-response-incorrect' : !isCorrect[key]}"
-               i18n-placeholder="exercizer.grain.noanswer" disabled />
+        <div class="twelve cell"
+             data-ng-class="{'input-response-correct' : isCorrect[key], 'input-response-incorrect' : !isCorrect[key]}">
+            [[filled_answer.text]]
+            <i18n data-ng-if="!filled_answer.text">exercizer.grain.noanswer</i18n>
+        </div>
     </div>
     <div class="row" style="padding-bottom: 10px;">
         <button class="cell right-magnet cancel"
