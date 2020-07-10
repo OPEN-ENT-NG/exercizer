@@ -129,7 +129,6 @@ ng.configs.push(ng.config(['libraryServiceProvider', function (libraryServicePro
         }
     })
 }]));
-
 ng.directives.push(subjectCopyDomino);
 ng.directives.push(studentDashboardFinishSubjectCopyList);
 ng.directives.push(studentDashboardTrainingSubjectCopyList);

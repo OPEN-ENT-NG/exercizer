@@ -402,6 +402,14 @@ export class EditSubjectController {
     /**
      *  TOASTER
      */
+    public shouldSelect = function(e){
+        const hasAscendant = jQuery(e.target).closest('[stop-child-propagation]').length>0;
+        const hasAttribute = !!jQuery(e.target).attr('stop-child-propagation');
+        if(hasAscendant || hasAttribute){
+            return false;
+        }
+        return true;
+    }
 
     public selectGrain = function(grain:IGrain) {
         var grainIndex = this._selectedGrainList.indexOf(grain);

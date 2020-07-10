@@ -1,8 +1,8 @@
 <div class="eight cell vertical-spacing">
-    <a class="comment" data-ng-click="displayNextStep(3)">
+    <a class="comment" data-ng-click="displayNextStep(3);$event.stopPropagation();">
         <i18n>exercizer.statement</i18n>&nbsp;&nbsp;<i class="doc-text"></i>
     </a>
-    <a class="comment" style="margin-left:10px;" data-ng-click="displayNextStep(2)">
+    <a class="comment" style="margin-left:10px;" data-ng-click="displayNextStep(2);$event.stopPropagation();">
         <i18n>exercizer.question</i18n>&nbsp;&nbsp;<i class="help"></i>
     </a>
 </div>

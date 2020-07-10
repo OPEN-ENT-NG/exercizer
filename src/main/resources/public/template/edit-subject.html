@@ -105,6 +105,7 @@
                         ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false" id="grain-edit-[[grain.id]]"
                         ng-model="grain.selected"
                         ng-change="editSubjectController.selectGrain(grain)"
+                        should-select="editSubjectController.shouldSelect($event)"
                         class="select-border article-edit"
                     >
 
@@ -141,7 +142,7 @@
                         </div>
 
                         <!-- GRAIN SPECIFIC CONTENT FOR EXERCISE GRAIN TYPE (not folded) -->
-                        <div
+                        <div  stop-child-propagation
                             class="row"
                             ng-if="(grain.grain_type_id > 2 && !editSubjectController.isGrainFolded(grain))"
                         >
@@ -154,7 +155,7 @@
                             </div>
 
                             <!-- GRAIN STATEMENT -->
-                            <div class="row" data-ng-if="grain.grain_type_id > 3">
+                            <div class="row" data-ng-if="grain.grain_type_id > 3" stop-child-propagation>
                                 <label><i18n>exercizer.statement</i18n> :</label>
                                 <!--<editor data-ng-model="grain.grain_data.statement" inline class="small-editor"></editor>-->
                                 <custom-editor text="grain.grain_data.statement" grain="grain"></custom-editor>
@@ -267,7 +268,7 @@
                         </div>
 
                         <!-- GRAIN SPECIFIC CONTENT FOR ALL GRAIN TYPE (folded) -->
-                        <div
+                        <div  stop-child-propagation
                             class="row top-spacing-three"
                             ng-if="(grain.grain_type_id < 3 || (grain.grain_type_id > 2 && editSubjectController.isGrainFolded(grain)))"
                         >
