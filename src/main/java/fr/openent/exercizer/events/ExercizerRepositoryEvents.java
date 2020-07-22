@@ -4,6 +4,7 @@ import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.security.ActionType;
 import fr.wseduc.webutils.security.SecuredAction;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.DeliveryOptions;
 import org.entcore.common.service.impl.SqlRepositoryEvents;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
@@ -245,7 +246,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
             builder.prepared("UPDATE exercizer.subject_scheduled SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.getList()), userIds);
             builder.prepared("UPDATE exercizer.subject_copy SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.getList()), userIds);
 
-            Sql.getInstance().transaction(builder.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
+            Sql.getInstance().transaction(builder.build(), new DeliveryOptions().setSendTimeout(90000l), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
                 @Override
                 public void handle(Either<String, JsonObject> event) {
                     if (event.isRight()) {
