@@ -19,22 +19,42 @@
 
 package fr.openent.exercizer.controllers;
 
+import fr.openent.exercizer.Exercizer;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.webutils.http.Renders;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.controller.ControllerHelper;
 import io.vertx.core.http.HttpServerRequest;
 
 import fr.wseduc.rs.*;
 import fr.wseduc.security.SecuredAction;
+import org.entcore.common.events.EventStore;
+import org.entcore.common.events.EventStoreFactory;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.vertx.java.core.http.RouteMatcher;
+
+import java.util.Map;
 
 public class ExercizerController extends ControllerHelper {
+
+    private enum ExercizerEvent {
+        ACCESS
+    }
+
+    private EventStore eventStore;
+
+    public void init(Vertx vertx, JsonObject config, RouteMatcher rm,
+                     Map<String, fr.wseduc.webutils.security.SecuredAction> securedActions) {
+        super.init(vertx, config, rm, securedActions);
+        eventStore = EventStoreFactory.getFactory().getEventStore(Exercizer.class.getSimpleName());
+    }
 
     @Get("")
     @SecuredAction("exercizer.view")
     public void view(final HttpServerRequest request) {
+        eventStore.createAndStoreEvent(ExercizerEvent.ACCESS.name(), request);
         renderView(request);
     }
 
