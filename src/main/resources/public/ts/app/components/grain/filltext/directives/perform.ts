@@ -15,7 +15,7 @@ export const performFillText = ng.directive('performFillText',
                 scope.$watch(function () {
                     if (scope.customData && scope.customData.answersType === 'drag') {
                         //adapt the width of the textzone
-                        $("fill-zone > text-zone").each(function() {$(this).width(getTextWidth($(this)[0].innerText, $(this).css('font')));});
+                        $("fill-zone > text-zone").each(function() {$(this).width(getTextWidth(($(this)[0] as any).innerText, $(this).css('font')));});
                     }
                     return scope.grainCopy;
                 }, function () {

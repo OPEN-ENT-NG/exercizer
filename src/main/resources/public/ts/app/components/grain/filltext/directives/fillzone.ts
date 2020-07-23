@@ -17,7 +17,7 @@ export const fillZone = ng.directive('fillZone',
             '<input type="text" maxlength="40" ng-if="optionData.mode === \'perform-text\'" ng-model="optionData.zone.answer" />' +
             '<select ng-if="optionData.mode === \'perform-list\'" ng-options="o as o for o in optionData.zone.options" ng-model="optionData.zone.answer"></select>' +
             '<div class="no-responsive" drag-item="optionData.zone" drop-item="answer($item)" ng-if="optionData.mode === \'perform-drag\'"><div>[[optionData.zone.answer]]</div></div>' +
-            '<div class="mobile-fat-mobile" drag-item="optionData.zone" drop-item="answer($item)" ng-click="showAnswers($event)" ng-if="optionData.mode === \'perform-drag\'"><div>[[optionData.zone.answer]]</div></div>' +
+            '<div class="no-desktop" drag-item="optionData.zone" drop-item="answer($item)" ng-click="showAnswers($event)" ng-if="optionData.mode === \'perform-drag\'"><div>[[optionData.zone.answer]]</div></div>' +
             '</text-zone>',
             link: function (scope, element, attributes) {
                 scope.removeFillZone = ($event) => {
