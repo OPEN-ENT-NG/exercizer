@@ -225,6 +225,10 @@ class PrintSubjectController extends EditSubjectController {
         return this._$sce.trustAsHtml(this.formatHtml(this._subjectScheduled.description));
     }
 
+    public getSubjectDescription() {
+        return this._$sce.trustAsHtml(this.formatHtml(this.subject.description));
+    }
+
     public getScheduledDueDate() {
         return this._subjectScheduled.due_date;
     }

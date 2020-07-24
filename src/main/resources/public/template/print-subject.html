@@ -22,6 +22,12 @@
                 <div class="row vertical-spacing" ng-bind-html="printSubjectController.getScheduledDescription()"></div>
             </div>
         </article>
+        <article ng-if="!printSubjectController.isScheduled()" class="grain-perform">
+            <h2 class="row"><i18n>exercizer.summary</i18n></h2>
+            <div>
+                <div class="row vertical-spacing" ng-bind-html="printSubjectController.getSubjectDescription()"></div>
+            </div>
+        </article>
 
         <div ng-repeat="grain in printSubjectController.grainList | orderBy:'order_by'">
 
