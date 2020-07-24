@@ -133,11 +133,6 @@ export const performFillText = ng.directive('performFillText',
                     var metrics = context.measureText(text);
                     return metrics.width;
                 }
-
-                $('body').on('click', event => {
-                    scope.showAnswersMobile = true;
-                    $('.item-selected').removeClass('item-selected');
-                });
             }
         };
     }]
