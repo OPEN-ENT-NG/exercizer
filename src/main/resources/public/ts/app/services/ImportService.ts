@@ -182,11 +182,18 @@ export class ImportService implements IImportService {
     private parseImage = function(num:any, imgs:any, imgB64:any, fileName:String, type:string, path:String="") {
         if (imgB64 && imgB64.length > 0) {
             var arrayBuff = this._base64ToArrayBuffer(imgB64);
-            var extFile = fileName.split(".", 2);
-            if (extFile.length === 2) {
-                var blob = new Blob([arrayBuff], {type: "image/" + extFile[1]});
-                imgs[type][num] = {blob: blob, name: fileName, type: type, path: path};
+            var extFile = fileName.split(".");
+            var ext = "";
+            var name = fileName;
+            if (extFile.length === 1) {
+                //default png
+                ext = "png";
+                name += ".png";
+            } else {
+                ext = extFile[extFile.length-1];
             }
+            var blob = new Blob([arrayBuff], {type: "image/" + ext});
+            imgs[type][num] = {blob: blob, name: name, type: type, path: path};
         }
     };
 
