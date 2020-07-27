@@ -82,8 +82,9 @@
                         ng-model="folder.selected"
                         ng-change="selectFolder(folder)"
                         on-open="openFolder(folder)"
+                        class="item"
                     >
-                        <div class="item">
+                        <div>
                             <section class="domino">
                                     <div class="top"
                                      dragstart="drag(folder, $originalEvent)"
@@ -98,8 +99,6 @@
                                     <div class="content">
                                         <div class="cell">
                                             <strong>[[folder.label]]</strong>
-                                            <br />
-                                            <br />
                                         </div>
                                     </div>
                                 </div>
