@@ -608,6 +608,7 @@ body.exercizer {
     font-size: 20px;
   }
   .dominos .item .domino .right-glider {
+    overflow: hidden;
     font-size: 2em;
     color: white;
     height: 100%;
@@ -617,28 +618,12 @@ body.exercizer {
     transition: width 1s ease;
     width: 1%;
     min-width: 13px;
-    &:hover {
-      @media screen and (max-width: $tablette), print {
-        width: 140px
-      }
-      @media screen and (min-width: $tablette), print {
-        width: 250px;
-      }
-    }
-    &.green {
-      background-color: $green;
-    }
-    &.grey {
-      background-color: $grey;
-    }
-    span {
-      top: 40%;
-      position: relative;
-    }
     a {
       font-size: large;
       position: absolute;
       color: white;
+      opacity: 0;
+      transition: opacity 0.5s ease-in 0s;
       @media screen and (max-width: $tablette), print {
         display: block;
         left: 35px;
@@ -651,11 +636,34 @@ body.exercizer {
       }
       @media screen and (min-width: $tablette), print {
         left: 50px;
-        top: 50px;
+        top: 40px;
         > i18n {
           white-space: nowrap;
         }
       }
+    }
+    span {color: white!important}
+    &:hover {
+      @media screen and (max-width: $tablette), print {
+        width: 140px
+      }
+      @media screen and (min-width: $tablette), print {
+        width: 250px;
+      }
+      a {
+        opacity: 1;
+        transition: all 1s ease-in 0s;
+      }
+    }
+    &.green {
+      background-color: $green;
+    }
+    &.grey {
+      background-color: $grey;
+    }
+    span {
+      top: 40%;
+      position: relative;
     }
   }
   .color-corrected, .color-training-done {
