@@ -870,6 +870,9 @@ body.exercizer {
     background-color: white;
     border: 1px solid rgba(black, 0.1);
     font-family: sans-serif;
+    &[disabled] {
+      color: $darkest-grey;
+    }
   }
   .good-answer {
     color: $green;
