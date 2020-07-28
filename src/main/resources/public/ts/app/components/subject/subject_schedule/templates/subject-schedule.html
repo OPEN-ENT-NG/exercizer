@@ -167,19 +167,19 @@
                 </div>
                 <div data-ng-if="isSimpleSubject && lightbox.isDisplayed">
                     <div class="row">
-                        <div class="six cell"><span><i18n>exercizer.scheduled.subject.start</i18n> :&nbsp;</span></div>
+                        <div class="seven cell"><span><i18n>exercizer.scheduled.subject.start</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.begin_date"  min-date="now" class="three cell" date-picker-delegate="datePickerDelegate"></date-picker>
                         <div class="one cell">&nbsp;</div>
                         <input class="two cell" type="text" data-ng-model="option.begin_time" data-ng-blur="option.begin_time = checkTime(option.begin_time)"/>
                     </div>
                     <div class="row">
-                        <div class="six cell"><span><i18n>exercizer.scheduled.subject.end</i18n> :&nbsp;</span></div>
+                        <div class="seven cell"><span><i18n>exercizer.scheduled.subject.end</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.due_date" min-date="option.begin_date" class="three cell" date-picker-delegate="datePickerDelegate"></date-picker>
                         <div class="one cell">&nbsp;</div>
                         <input class="two cell" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, true)"/>
                     </div>
                     <div class="row">
-                        <div class="six cell"><span><i18n>exercizer.scheduled.simple.subject.corrected</i18n> :&nbsp;</span></div>
+                        <div class="seven cell"><span><i18n>exercizer.scheduled.simple.subject.corrected</i18n> :&nbsp;</span></div>
                         <date-picker ng-model="option.corrected_date" min-date="option.due_date" class="three cell" date-picker-delegate="datePickerDelegate"></date-picker>
                         <div class="one cell">&nbsp;</div>
                         <input class="two cell" type="text" data-ng-model="option.corrected_time" data-ng-blur="option.corrected_time = checkTime(option.corrected_time)"/>
