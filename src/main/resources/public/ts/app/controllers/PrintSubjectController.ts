@@ -218,7 +218,7 @@ class PrintSubjectController extends EditSubjectController {
     }
 
     public getImage(grain: IGrain) {
-        return (grain.grain_data.custom_data && grain.grain_data.custom_data._guideImage) || skin.basePath + 'img/illustrations/image-default.svg';
+        return (grain.grain_data.custom_data && grain.grain_data.custom_data._guideImage) || skin.basePath + 'img/illustrations/exercizer.svg';
     }
 
     public getScheduledDescription() {

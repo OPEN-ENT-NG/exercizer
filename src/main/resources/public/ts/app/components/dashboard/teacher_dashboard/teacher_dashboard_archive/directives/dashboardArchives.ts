@@ -25,7 +25,7 @@ export const dashboardArchives = ng.directive('dashboardArchives', [ '$location'
 
 
                 scope.getSubjectScheduledPicture = function (subjectScheduled) {
-                    return subjectScheduled.picture || skin.basePath + 'img/illustrations/image-default.svg';
+                    return subjectScheduled.picture || skin.basePath + 'img/illustrations/exercizer.svg';
                 };
 
 

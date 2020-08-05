@@ -111,7 +111,7 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                  * GET subject Scheduled information
                  */
                 scope.getSubjectScheduledPicture = function (subjectScheduled) {
-                    return subjectScheduled.picture || skin.basePath + 'img/illustrations/image-default.svg';
+                    return subjectScheduled.picture || skin.basePath + 'img/illustrations/exercizer.svg';
                 };
 
                 scope.numberOfCopySubmitted = function (subjectScheduled){

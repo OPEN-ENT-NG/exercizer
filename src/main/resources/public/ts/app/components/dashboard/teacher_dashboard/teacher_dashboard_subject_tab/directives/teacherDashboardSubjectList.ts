@@ -107,7 +107,7 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                 };
 
                 scope.getSubjectPicture = function (subject) {
-                    var defaultPicture = skin.basePath + 'img/illustrations/image-default.svg';
+                    var defaultPicture = skin.basePath + 'img/illustrations/exercizer.svg';
                     return subject.picture || defaultPicture;
                 };
 

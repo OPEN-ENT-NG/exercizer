@@ -69,7 +69,7 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                  */
 
                 scope.getSubjectCopyPicture = function () {
-                    return scope.subjectScheduled.picture || skin.basePath + 'img/illustrations/image-default.svg';
+                    return scope.subjectScheduled.picture || skin.basePath + 'img/illustrations/exercizer.svg';
                 };
 
                 scope.getSubjectCopySubmittedDate = function () {

@@ -49,7 +49,7 @@ export class CustomData implements CustomData {
     }
 
     get guideImage(): string {
-        return this._guideImage || skin.basePath + 'img/illustrations/image-default.svg';
+        return this._guideImage || skin.basePath + 'img/illustrations/exercizer.svg';
     }
 
     set guideImage(value: string) {
