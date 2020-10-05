@@ -23,3 +23,5 @@ privateConfig.js
 **/view
 bower_components
 rev-manifest.json
+gradle/
+gradlew*
