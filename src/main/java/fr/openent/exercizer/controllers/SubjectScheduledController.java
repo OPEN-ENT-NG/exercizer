@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.controllers;
 
+import fr.openent.exercizer.Exercizer;
 import fr.openent.exercizer.filters.*;
 import fr.openent.exercizer.services.ISubjectCopyService;
 import fr.openent.exercizer.services.ISubjectScheduledService;
@@ -34,6 +35,9 @@ import fr.wseduc.webutils.I18n;
 import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
+import org.entcore.common.events.EventHelper;
+import org.entcore.common.events.EventStore;
+import org.entcore.common.events.EventStoreFactory;
 import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.http.filter.sql.ShareAndOwner;
 import org.entcore.common.storage.Storage;
@@ -55,10 +59,11 @@ import static org.entcore.common.http.response.DefaultResponseHandler.*;
 
 
 public class SubjectScheduledController extends ControllerHelper {
-
+	static final String RESOURCE_NAME = "exercice_distribution";
 	private final ISubjectScheduledService subjectScheduledService;
 	private final ISubjectCopyService subjectCopyService;
 	private final Storage storage;
+	private final EventHelper eventHelper;
 	private enum ScheduledType  {
 		SIMPLE,
 		INTERACTIVE
@@ -68,6 +73,8 @@ public class SubjectScheduledController extends ControllerHelper {
 		this.subjectScheduledService = new SubjectScheduledServiceSqlImpl();
 		this.subjectCopyService = new SubjectCopyServiceSqlImpl();
 		this.storage = storage;
+		final EventStore eventStore = EventStoreFactory.getFactory().getEventStore(Exercizer.class.getSimpleName());
+		this.eventHelper = new EventHelper(eventStore);
 	}
 
 	@Post("/schedule-subject/:id")
@@ -537,6 +544,7 @@ public class SubjectScheduledController extends ControllerHelper {
 					request.response().putHeader("Content-Length", String.valueOf(result.length()));
 					request.response().write(result);
 					Renders.created(request);
+					eventHelper.onCreateResource(request, RESOURCE_NAME);
 				} else {
 					renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error","exercizer.subject.scheduled.error"));
 				}

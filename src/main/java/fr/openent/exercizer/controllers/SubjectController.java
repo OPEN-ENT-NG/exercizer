@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.controllers;
 
+import fr.openent.exercizer.Exercizer;
 import fr.openent.exercizer.exporter.ImagesToBase64;
 import fr.openent.exercizer.exporter.SubjectExporter;
 import fr.openent.exercizer.filters.MassOwnerOnly;
@@ -36,6 +37,9 @@ import fr.wseduc.webutils.I18n;
 import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
+import org.entcore.common.events.EventHelper;
+import org.entcore.common.events.EventStore;
+import org.entcore.common.events.EventStoreFactory;
 import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.http.filter.sql.OwnerOnly;
 import org.entcore.common.http.filter.sql.ShareAndOwner;
@@ -55,16 +59,20 @@ import java.util.List;
 import static org.entcore.common.http.response.DefaultResponseHandler.*;
 
 public class SubjectController extends ControllerHelper {
-
+	static final String INTERACTIVE_RESOURCE_NAME = "exercice_interactive";
+	static final String SIMPLE_RESOURCE_NAME = "exercice_assignment";
 	private final ISubjectService subjectService;
 	private final IGrainService grainService;
 	private static final I18n i18n = I18n.getInstance();
 	private final Storage storage;
+	private final EventHelper eventHelper;
 
 	public SubjectController(final Storage storage) {
 		this.subjectService = new SubjectServiceSqlImpl();
 		this.grainService = new GrainServiceSqlImpl();
 		this.storage = storage;
+		final EventStore eventStore = EventStoreFactory.getFactory().getEventStore(Exercizer.class.getSimpleName());
+		this.eventHelper = new EventHelper(eventStore);
 	}
 
     @Post("/canSchedule")
@@ -83,7 +91,10 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							subjectService.persist(resource, user, notEmptyResponseHandler(request));
+							final Handler<Either<String, JsonObject>> handler = notEmptyResponseHandler(request);
+							final String type = resource.getString("type");
+							final String name = ("interactive".equals(type))? INTERACTIVE_RESOURCE_NAME : SIMPLE_RESOURCE_NAME;
+							subjectService.persist(resource, user, eventHelper.onCreateResource(request, name, handler));
 						}
 					});
 				}
