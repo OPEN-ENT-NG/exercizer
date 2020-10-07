@@ -29,6 +29,7 @@ import io.vertx.core.http.HttpServerRequest;
 
 import fr.wseduc.rs.*;
 import fr.wseduc.security.SecuredAction;
+import org.entcore.common.events.EventHelper;
 import org.entcore.common.events.EventStore;
 import org.entcore.common.events.EventStoreFactory;
 import org.joda.time.DateTime;
@@ -38,24 +39,16 @@ import org.vertx.java.core.http.RouteMatcher;
 import java.util.Map;
 
 public class ExercizerController extends ControllerHelper {
-
-    private enum ExercizerEvent {
-        ACCESS
+    private final EventHelper eventHelper;
+    public ExercizerController(){
+        final EventStore eventStore = EventStoreFactory.getFactory().getEventStore(Exercizer.class.getSimpleName());
+        this.eventHelper = new EventHelper(eventStore);
     }
-
-    private EventStore eventStore;
-
-    public void init(Vertx vertx, JsonObject config, RouteMatcher rm,
-                     Map<String, fr.wseduc.webutils.security.SecuredAction> securedActions) {
-        super.init(vertx, config, rm, securedActions);
-        eventStore = EventStoreFactory.getFactory().getEventStore(Exercizer.class.getSimpleName());
-    }
-
     @Get("")
     @SecuredAction("exercizer.view")
     public void view(final HttpServerRequest request) {
-        eventStore.createAndStoreEvent(ExercizerEvent.ACCESS.name(), request);
         renderView(request);
+        eventHelper.onAccess(request);
     }
 
     @Get("/now")
