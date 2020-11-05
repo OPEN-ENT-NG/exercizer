@@ -30,10 +30,10 @@
                     <div class="two cell clip height-two">
                         <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="editSimpleSubjectController.readOnly">
                                 <img ng-src="[[editSimpleSubjectController.subject.picture]]" ng-if="editSimpleSubjectController.subject.picture" class="absolute" />
-                                <img skin-src="/img/illustrations/collaborativeeditor-default.png" ng-if="!editSimpleSubjectController.subject.picture" class="absolute" />
+                                <img skin-src="/img/illustrations/exercizer.svg" ng-if="!editSimpleSubjectController.subject.picture" class="absolute" />
                         </div>
                         <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="!editSimpleSubjectController.readOnly">
-                            <image-select readonly="editSimpleSubjectController.readOnly" ng-change="editSimpleSubjectController.saveSubjectProperties()"  data-ng-model="editSimpleSubjectController.subject.picture" default="/img/illustrations/collaborativeeditor-default.png"></image-select>
+                            <image-select readonly="editSimpleSubjectController.readOnly" ng-change="editSimpleSubjectController.saveSubjectProperties()"  data-ng-model="editSimpleSubjectController.subject.picture" default="/img/illustrations/exercizer.svg"></image-select>
                         </div>
                     </div>
                     <div class="margin-two height-three">
