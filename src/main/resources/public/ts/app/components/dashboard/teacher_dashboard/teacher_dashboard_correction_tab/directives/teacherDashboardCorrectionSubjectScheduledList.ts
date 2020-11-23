@@ -1,6 +1,6 @@
 import { ng, skin, idiom, notify } from 'entcore';
 import { moment } from 'entcore';
-import { ISubjectScheduled, Subject } from '../../../../../models/domain';
+import { ISubjectScheduled, Subject, ISubjectCopy } from '../../../../../models/domain';
 
 export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teacherDashboardCorrectionSubjectScheduledList', 
     ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService','SubjectCopyService','$location','$route', 
@@ -262,13 +262,18 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                         }
                     }
                 };
-
+                const getModifiedDate = (copy: ISubjectCopy) => {
+                    if(!copy.modifiedDate){
+                        copy.modifiedDate = DateService.isoToDate(copy.modified);
+                    }
+                    return copy.modifiedDate;
+                }
                 scope.orderByCopyListModificationDate = function(subjectScheduled){
-                    var copyList = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
-                    var lastUpdateCopy:any;
-                    angular.forEach(copyList, function(copy){
+                    const copyList:ISubjectCopy[] = SubjectCopyService.getListBySubjectScheduled(subjectScheduled);
+                    let lastUpdateCopy:ISubjectCopy;
+                    angular.forEach(copyList, function(copy:ISubjectCopy){
                         if(lastUpdateCopy){
-                            if(DateService.compare_after(DateService.isoToDate(copy.modified), DateService.isoToDate(lastUpdateCopy))){
+                            if(DateService.compare_after(getModifiedDate(copy), getModifiedDate(lastUpdateCopy))){
                                 lastUpdateCopy = copy;
                             }
                         } else{

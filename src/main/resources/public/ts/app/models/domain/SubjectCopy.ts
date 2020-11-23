@@ -16,6 +16,7 @@ export interface ISubjectCopy {
     offset:number;
     is_training_copy:boolean;
     current_grain_id:number;
+    modifiedDate?: Date;
 }
 
 export class SubjectCopy implements  ISubjectCopy {
