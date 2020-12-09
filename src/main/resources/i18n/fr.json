@@ -560,5 +560,9 @@
     "exercizer.final.score.questions": "Questions",
     "exercizer.final.score.score": "Score",
     "exercizer.library.prompt.title": "Exercices",
-    "exercizer.copies.yet.to.correct": "Il reste <strong>{{number}}</strong> copie(s) à corriger"
+    "exercizer.copies.yet.to.correct": "Il reste <strong>{{number}}</strong> copie(s) à corriger",
+    "exercizer.subject.navigation.title": "Sujet non enregistré",
+    "exercizer.subject.navigation.body": "Certaines modifications n'ont pas été enregistrées. Souhaitez-vous les conserver ?",
+    "exercizer.navigation.error": "Un problème technique est survenu",
+    "exercizer.navigation.success": "Enregistrement effectué"
 }

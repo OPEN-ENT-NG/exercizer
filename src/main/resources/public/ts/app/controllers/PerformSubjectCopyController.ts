@@ -1,12 +1,13 @@
-import { ng, model, Behaviours, notify } from 'entcore';
+import { ng, model, Behaviours, notify, ObjectGuard, navigationGuardService, IObjectGuardDelegate } from 'entcore';
 import { IGrainCopy, ISubject, IGrain, IGrainScheduled, ISubjectScheduled, ISubjectCopy } from '../models/domain';
 import { 
     ISubjectService, ISubjectLibraryService, ISubjectCopyService, ICorrectionService,
     IGrainCopyService, IGrainService, IGrainScheduledService, ISubjectScheduledService, IGrainTypeService, IAccessService 
 } from '../services';
 import { angular } from 'entcore';
+import * as rx from 'rxjs';
 
-class PerformSubjectCopyController {
+class PerformSubjectCopyController implements IObjectGuardDelegate {
 
     static $inject = [
         '$routeParams',
@@ -34,6 +35,12 @@ class PerformSubjectCopyController {
     private _hasDataLoaded:boolean;
     private _isCanSubmit:boolean;
     private _currentGrainCopy:IGrainCopy;
+    private _dirty = false;
+    private _dirtyGrain: IGrainCopy;
+    private _grainStreams = new Map<number, rx.Subject<IGrainCopy>>();
+    private _subscriptions = new Array<rx.Subscription>();
+    public shouldShowNavigationAlert:boolean;
+    public saving = false;
 
     constructor
     (
@@ -63,6 +70,16 @@ class PerformSubjectCopyController {
         this._correctionService = _correctionService;
         this._hasDataLoaded = false;
         this._isCanSubmit = true;
+        //init guard
+        const guard = new ObjectGuard(()=>this); 
+        const guardId = navigationGuardService.registerIndependantGuard(guard);
+        _$scope.$on('$destroy', () => {
+            navigationGuardService.unregisterIndependantGuard(guardId);            
+            this._subscriptions.forEach((value)=>{
+                value.unsubscribe();
+            })
+        })
+        //
 
         var self = this,
             subjectId = _$routeParams['subjectId'],
@@ -101,6 +118,35 @@ class PerformSubjectCopyController {
             }
         }
 
+    }
+
+    guardObjectIsDirty(): boolean {
+        return this._dirty;
+    }
+
+    guardObjectReset(): void {
+        this._dirty = false;
+    }
+
+    guardOnUserConfirmNavigate(canNavigate:boolean):void{
+        if(!canNavigate && this._dirty && this._dirtyGrain){
+            this.shouldShowNavigationAlert = true;
+        }
+    }
+
+    closeNavigationAlert():void{
+        this.shouldShowNavigationAlert = false;
+    }
+
+    saveDirtySubject():void{
+        this._handleUpdateGrainCopy(this._dirtyGrain, (event)=>{
+            if(event.ok){
+                notify.success("exercizer.navigation.success");
+            }else{
+                notify.error("exercizer.navigation.error");
+            }
+            this.closeNavigationAlert();
+        });
     }
 
     private _preview(subject:ISubject) {
@@ -213,33 +259,50 @@ class PerformSubjectCopyController {
         this._$scope.$emit('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
         this._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
     }
-
-    private _eventsHandler = function(self) {
-
-        function _updateLocalGrainCopyList(grainCopy:IGrainCopy) {
-            var grainCopyIndex = self._grainCopyList.indexOf(grainCopy);
-
-            if (grainCopyIndex !== -1) {
-                self._grainCopyList[grainCopyIndex] = grainCopy;
+    private _handleUpdateGrainCopy(grainCopy:IGrainCopy, onSave?:({ok:boolean, grain: IGrain})=>void) {
+        this._dirty = true;
+        this._dirtyGrain = grainCopy;
+        this.saving = true;
+        this._grainCopyService.update(grainCopy).then(
+            () => {
+                this._dirty = false;
+                this.saving = false;
+                onSave && onSave({ok:true, grain: grainCopy});
+                this._updateLocalGrainCopyList(grainCopy);
+            },
+            (err) => {
+                notify.error(err);
+                this.saving = false;
+                onSave && onSave({ok:false, grain: grainCopy});
             }
-        }
+        );
+    }
+    private _updateLocalGrainCopyList(grainCopy:IGrainCopy) {
+        var grainCopyIndex = this._grainCopyList.indexOf(grainCopy);
 
-        function _handleUpdateGrainCopy(grainCopy:IGrainCopy) {
-            self._grainCopyService.update(grainCopy).then(
-                function() {
-                    _updateLocalGrainCopyList(grainCopy);
-                },
-                function(err) {
-                    notify.error(err);
-                }
-            );
+        if (grainCopyIndex !== -1) {
+            this._grainCopyList[grainCopyIndex] = grainCopy;
         }
+    }
 
+    private _eventsHandler = function(self:PerformSubjectCopyController) {
+        const getDebouncedGrainStream = (grain:IGrainCopy) => {
+            if(!self._grainStreams.has(grain.id)){
+                const observable = new rx.Subject<IGrainCopy>();
+                self._grainStreams.set(grain.id, observable);
+                self._subscriptions.push(observable.debounceTime(200).subscribe((grain)=>{
+                    self._handleUpdateGrainCopy(grain);
+                }));
+            }
+            return self._grainStreams.get(grain.id);
+        }
         self._$scope.$on('E_UPDATE_GRAIN_COPY', function(event, grainCopy:IGrainCopy) {
             if (!self._previewing) {
-                _handleUpdateGrainCopy(grainCopy);
+                //debounce
+                //self._handleUpdateGrainCopy(grainCopy);
+                getDebouncedGrainStream(grainCopy).next(grainCopy);
             } else {
-                _updateLocalGrainCopyList(grainCopy);
+                self._updateLocalGrainCopyList(grainCopy);
             }
         });
 

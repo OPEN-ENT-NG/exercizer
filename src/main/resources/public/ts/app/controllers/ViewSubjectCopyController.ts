@@ -1,12 +1,13 @@
-import { ng, notify, idiom } from 'entcore';
+import { ng, notify, idiom, IObjectGuardDelegate, ObjectGuard, navigationGuardService } from 'entcore';
 import { IGrainCopy, IGrainScheduled, ISubjectScheduled, ISubjectCopy } from '../models/domain';
 import { 
     ISubjectService, ISubjectLibraryService, ISubjectCopyService, ISubjectScheduledService, 
     IGrainCopyService, IGrainScheduledService, IGrainTypeService, IAccessService, IDateService, SubjectCopyService
 } from '../services';
 import { CloneObjectHelper } from '../models/helpers';
+import * as rx from 'rxjs';
 
-class ViewSubjectCopyController {
+class ViewSubjectCopyController implements IObjectGuardDelegate {
 
     static $inject = [
         '$routeParams',
@@ -31,6 +32,12 @@ class ViewSubjectCopyController {
     private _previewing:boolean;
     private _previewingFromLibrary:boolean;
     private _hasDataLoaded:boolean;
+    private _dirty = false;
+    private _dirtyCopy: ISubjectCopy;
+    private _subjectStreams = new Map<number, rx.Subject<{subject: ISubjectCopy, redirect:boolean}>>();
+    private _subscriptions = new Array<rx.Subscription>();
+    public shouldShowNavigationAlert:boolean;
+    public saving = false;
 
     constructor
     (
@@ -58,7 +65,16 @@ class ViewSubjectCopyController {
         this._grainTypeService = _grainTypeService;
         this._hasDataLoaded = false;
         this._isTeacher = false;
-
+        //init guard
+        const guard = new ObjectGuard(()=>this); 
+        const guardId = navigationGuardService.registerIndependantGuard(guard);
+        _$scope.$on('$destroy', () => {
+            navigationGuardService.unregisterIndependantGuard(guardId);
+            this._subscriptions.forEach((value)=>{
+                value.unsubscribe();
+            })
+        })
+        //
         var self = this,
             subjectId = _$routeParams['subjectId'],
             subjectCopyId = _$routeParams['subjectCopyId'];
@@ -93,6 +109,35 @@ class ViewSubjectCopyController {
             }
         }
 
+    }
+
+    guardObjectIsDirty(): boolean {
+        return this._dirty;
+    }
+
+    guardObjectReset(): void {
+        this._dirty = false;
+    }
+
+    guardOnUserConfirmNavigate(canNavigate:boolean):void{
+        if(!canNavigate && this._dirty && this._dirtyCopy){
+            this.shouldShowNavigationAlert = true;
+        }
+    }
+
+    closeNavigationAlert():void{
+        this.shouldShowNavigationAlert = false;
+    }
+
+    saveDirtySubject():void{
+        this._handleUpdateSubjectCopy(this._dirtyCopy, false, (event)=>{
+            if(event.ok){
+                notify.success("exercizer.navigation.success");
+            }else{
+                notify.error("exercizer.navigation.error");
+            }
+            this.closeNavigationAlert();
+        });
     }
 
     private _preview(subjectId:number) {
@@ -193,31 +238,53 @@ class ViewSubjectCopyController {
             }
         );
     }
-
-    private _eventsHandler = function(self) {
-
-        function _calculateScores() {
-            var calculatedScore:number = 0,
-                finalScore:number = 0;
-
-            angular.forEach(self._grainCopyList, function(grainCopy:IGrainCopy) {
-                
-                if(!angular.isUndefined(grainCopy.calculated_score) && grainCopy.calculated_score !== null) {
-                    calculatedScore += parseFloat(grainCopy.calculated_score.toString());
-
-                    if (angular.isUndefined(grainCopy.final_score) || grainCopy.final_score === null) {
-                        finalScore += parseFloat(grainCopy.calculated_score.toString());
-                        grainCopy.final_score = grainCopy.calculated_score;
-                    } else {
-                        finalScore += parseFloat(grainCopy.final_score.toString());
-                    }
-                }
-            });
-
-            self._subjectCopy.calculated_score = calculatedScore;
-            self._subjectCopy.final_score = finalScore;
+    private _handleUpdateSubjectCopy(subjectCopy:ISubjectCopy, redirect:boolean, onSave?:({ok:boolean, subject: ISubjectCopy})=>void) {
+        this._dirty = true;
+        this._dirtyCopy = subjectCopy;
+        this.saving = true;
+        this._calculateScores();
+        let success = (subjectCopy:ISubjectCopy) => {
+            this.saving = false;
+            this._dirty = false;
+            this._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
+            this._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
+            onSave && onSave({ok:true, subject: subjectCopy});
+        };
+        let error = (err) => {
+            this.saving = false;
+            notify.error(err);
+            onSave && onSave({ok:true, subject: subjectCopy});
         }
+        if (subjectCopy.is_corrected) {
+            this._subjectCopyService.correct(subjectCopy).then(success, error);
+        } else {
+            this._subjectCopyService.update(subjectCopy).then(success, error);
+        }
+    }
 
+    private _calculateScores() {
+        var calculatedScore:number = 0,
+            finalScore:number = 0;
+
+        angular.forEach(this._grainCopyList, function(grainCopy:IGrainCopy) {
+            
+            if(!angular.isUndefined(grainCopy.calculated_score) && grainCopy.calculated_score !== null) {
+                calculatedScore += parseFloat(grainCopy.calculated_score.toString());
+
+                if (angular.isUndefined(grainCopy.final_score) || grainCopy.final_score === null) {
+                    finalScore += parseFloat(grainCopy.calculated_score.toString());
+                    grainCopy.final_score = grainCopy.calculated_score;
+                } else {
+                    finalScore += parseFloat(grainCopy.final_score.toString());
+                }
+            }
+        });
+
+        this._subjectCopy.calculated_score = calculatedScore;
+        this._subjectCopy.final_score = finalScore;
+    }
+
+    private _eventsHandler = function(self:ViewSubjectCopyController) {
         function _updateLocalGrainCopyList(grainCopy:IGrainCopy) {
             var grainCopyIndex = self._grainCopyList.indexOf(grainCopy);
 
@@ -226,27 +293,13 @@ class ViewSubjectCopyController {
             }
         }
 
-        function _handleUpdateSubjectCopy(subjectCopy:ISubjectCopy, redirect:boolean) {
-            _calculateScores();
-            let success = function(subjectCopy:ISubjectCopy) {
-                self._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
-                self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
-            };
-            let error = function(err) {
-                notify.error(err);
-            }
-            if (subjectCopy.is_corrected) {
-                self._subjectCopyService.correct(subjectCopy).then(success, error);
-            } else {
-                self._subjectCopyService.update(subjectCopy).then(success, error);
-            }
-        }
+
 
         function _handleUpdateGrainCopy(grainCopy:IGrainCopy) {
             self._grainCopyService.correct(grainCopy).then(
                 function() {
                     _updateLocalGrainCopyList(grainCopy);
-                    _calculateScores();
+                    self._calculateScores();
                 },
                 function(err) {
                     notify.error(err);
@@ -264,23 +317,35 @@ class ViewSubjectCopyController {
                 self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy);
             } else {
                 _updateLocalGrainCopyList(grainCopy);
-                _calculateScores();
+                self._calculateScores();
             }
         });
 
         self._$scope.$on('E_CURRENT_GRAIN_COPY_CHANGED', function(event, grainCopy:IGrainCopy) {
-                _calculateScores();
+            self._calculateScores();
         });
 
+        const getDebouncedSubjectCopytream = (subject:ISubjectCopy) => {
+            if(!self._subjectStreams.has(subject.id)){
+                const observable = new rx.Subject<{subject: ISubjectCopy, redirect:boolean}>();
+                self._subjectStreams.set(subject.id, observable);
+                self._subscriptions.push(observable.debounceTime(200).subscribe((event)=>{
+                    self._handleUpdateSubjectCopy(event.subject, event.redirect);
+                }));
+            }
+            return self._subjectStreams.get(subject.id);
+        }
         /**
          * this event is call when a subject copy is updated
          * - viewSummery.ts
          */
         self._$scope.$on('E_UPDATE_SUBJECT_COPY', function(event, subjectCopy:ISubjectCopy, redirect:boolean) {
             if (!self._previewing  && self._isTeacher) {
-                _handleUpdateSubjectCopy(subjectCopy, redirect);
+                //use debounce
+                //self._handleUpdateSubjectCopy(subjectCopy, redirect);
+                getDebouncedSubjectCopytream(subjectCopy).next({subject: subjectCopy, redirect})
             } else if (self._previewing && self._isTeacher) {
-               _calculateScores();
+                self._calculateScores();
                 self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
             }
         });

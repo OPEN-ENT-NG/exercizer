@@ -4,6 +4,7 @@ import {automaticCorrection} from "../components/grain/common/zonegrain/model";
 
 export interface ICorrectionService {
     automaticCorrection(subjectCopyList:ISubjectCopy[], subjectScheduled:ISubjectScheduled): void;
+    automaticCorrectionForTraining(subjectCopy:ISubjectCopy, subjectScheduled:ISubjectScheduled):Promise<ISubjectCopy>;
 }
 
 export class CorrectionService implements ICorrectionService {

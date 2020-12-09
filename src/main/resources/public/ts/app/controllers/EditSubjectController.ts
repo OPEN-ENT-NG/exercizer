@@ -1,12 +1,13 @@
-import { ng, idiom, notify } from 'entcore';
+import { ng, idiom, notify, IObjectGuardDelegate, navigationGuardService, ObjectGuard } from 'entcore';
 import { ISubject, IGrain, IGrainDocument, GrainData, GrainDocument, Grain } from '../models/domain';
 import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IGrainTypeService, IGrainService, IDragService } from '../services';
 import { StringISOHelper, CorrectOrderHelper } from '../models/helpers';
 import { angular } from 'entcore';
 import { $ } from 'entcore';
 import { _ } from 'entcore';
+import * as rx from 'rxjs';
 
-export class EditSubjectController {
+export class EditSubjectController implements IObjectGuardDelegate {
 
     static $inject = [
         '$routeParams',
@@ -42,6 +43,12 @@ export class EditSubjectController {
     // organizer
     private _isOrganizerFolded:boolean;
     private _reOrderTimeout:any;
+    private _dirty: "add" | "update" = null;
+    private _dirtyGrain:IGrain;
+    private _grainStreams = new Map<number, rx.Subject<IGrain>>();
+    private _subscriptions = new Array<rx.Subscription>();
+    public shouldShowNavigationAlert:boolean;
+    public saving = false;
 
     constructor
     (
@@ -83,14 +90,32 @@ export class EditSubjectController {
         // organizer
         this._isOrganizerFolded = false;
         this._reOrderTimeout = null;
-
+        //init guard
+        const guard = new ObjectGuard(()=>this); 
+        const guardId = navigationGuardService.registerIndependantGuard(guard);
+        _$scope.$on('$destroy', () => {
+            navigationGuardService.unregisterIndependantGuard(guardId);
+            this._subscriptions.forEach((value)=>{
+                value.unsubscribe();
+            })
+        })
+        //
         _$scope.$root.$on('E_SUBJECTEDIT_DROPABLE_ACTIVATED', function(event, displayDropZone:boolean) {
             self._isDropableZone = displayDropZone;
         });
 
         var self = this,
             subjectId = _$routeParams['subjectId'];
-
+        const getDebouncedGrainStream = (grain:IGrain) => {
+            if(!this._grainStreams.has(grain.id)){
+                const observable = new rx.Subject<IGrain>();
+                this._grainStreams.set(grain.id, observable);
+                this._subscriptions.push(observable.debounceTime(200).subscribe((grain)=>{
+                    this.updateGrain(grain);
+                }));
+            }
+            return this._grainStreams.get(grain.id);
+        }
         this._subjectService.resolve().then(function() {
             self._subject = self._subjectService.getById(subjectId);
 
@@ -105,7 +130,9 @@ export class EditSubjectController {
                         self.foldAllGrain();
 
                         self._$scope.$on('E_UPDATE_GRAIN', function(event, grain:IGrain) {
-                            self.updateGrain(grain);
+                            //use debounce to reduce queries
+                            //self.updateGrain(grain);
+                            getDebouncedGrainStream(grain).next(grain);
                         });
 
                         self._hasDataLoaded = true;
@@ -118,6 +145,46 @@ export class EditSubjectController {
         }, function(err) {
             notify.error(err);
         });
+    }
+
+    guardObjectIsDirty(): boolean {
+        return !!this._dirty;
+    }
+    
+    guardObjectReset(): void {
+        this._dirty = null;
+    }
+
+    guardOnUserConfirmNavigate(canNavigate:boolean):void{
+        if(!canNavigate && this._dirty && this._dirtyGrain){
+            this.shouldShowNavigationAlert = true;
+        }
+    }
+
+    closeNavigationAlert():void{
+        this.shouldShowNavigationAlert = false;
+    }
+
+    saveDirtySubject():void{
+        if(this._dirty == "add"){
+            this.addGrain((ok)=>{
+                if(ok){
+                    notify.success("exercizer.navigation.success");
+                }else{
+                    notify.error("exercizer.navigation.error");
+                }
+                this.closeNavigationAlert();
+            });
+        }else if(this._dirty == "update") {
+            this.updateGrain(this._dirtyGrain, (event)=>{
+                if(event.ok){
+                    notify.success("exercizer.navigation.success");
+                }else{
+                    notify.error("exercizer.navigation.error");
+                }
+                this.closeNavigationAlert();
+            })
+        }
     }
 
     /**
@@ -163,7 +230,7 @@ export class EditSubjectController {
     };
 
     public dropTo = function($item) {
-        var self = this;
+        var self:EditSubjectController = this;
 
         this._grainService.duplicate($item, this._subject).then(
             function(grainDuplicated) {
@@ -202,26 +269,31 @@ export class EditSubjectController {
      *  GRAIN
      */
 
-    public addGrain = function() {
-        var self = this,
+    public addGrain = function(onSave?:(ok:boolean)=>void) {
+        var self:EditSubjectController = this,
             newGrain = new Grain();
 
         newGrain.subject_id = this.subject.id;
         newGrain.grain_data = new GrainData();
         newGrain.grain_type_id = 1;
         newGrain.grain_data.title = this._grainTypeService.getById(newGrain.grain_type_id).public_name;
-
+        self._dirty = "add";
         this._grainService.persist(newGrain).then(
             function () {
+                self._dirty = null;
+                onSave && onSave(true);
             },
             function (err) {
                 notify.error(err);
+                onSave && onSave(false);
             }
         );
     };
 
-    public updateGrain = function(grain:IGrain) {
-        var self = this;
+    public updateGrain = function(grain:IGrain, onSave?:({ok:boolean, grain: IGrain})=>void) {
+        var self:EditSubjectController = this;
+        self._dirty = "update";
+        self._dirtyGrain = grain;
 
         if (grain.grain_type_id > 3) {
 
@@ -234,7 +306,7 @@ export class EditSubjectController {
 
         } else if (grain.grain_type_id === 3) {
 
-            this._trustedHtmlStatementMap[grain.id] = undefined;
+            self._trustedHtmlStatementMap[grain.id] = undefined;
 
             /*if (angular.isUndefined(this._trustedHtmlStatementMap[grain.id]) && grain.grain_data.custom_data) {
              this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
@@ -243,12 +315,17 @@ export class EditSubjectController {
              }*/
             //this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
         }
-
-        this._grainService.update(grain).then(
+        self.saving = true;
+        self._grainService.update(grain).then(
             function() {
+                self._dirty = null;
+                self.saving = false;
+                onSave && onSave({ok:true, grain: grain});
             },
             function(err) {
                 notify.error(err);
+                self.saving = false;
+                onSave && onSave({ok:false, grain: grain});
             }
         );
     };
@@ -373,7 +450,7 @@ export class EditSubjectController {
 
         if (this._reOrderTimeout == null)
         {
-            var self = this;
+            var self:EditSubjectController = this;
             this._reOrderTimeout = window.setTimeout(function()
             {
                 angular.forEach(self._grainList, function (grain:IGrain) {
@@ -432,7 +509,7 @@ export class EditSubjectController {
     };
 
     public duplicateSelectedGrainList = function() {
-        var self = this;
+        var self:EditSubjectController = this;
 
         this._grainService.duplicateIntoSubject(this._selectedGrainList, this._subject.id).then(
             function() {
@@ -459,7 +536,7 @@ export class EditSubjectController {
     };
 
     public removeSelectedGrainList = function() {
-        var self = this;
+        var self:EditSubjectController = this;
 
         this._grainService.removeList(this._selectedGrainList, this._subject).then(
             function() {
