@@ -7,6 +7,12 @@ import { $ } from 'entcore';
 import { _ } from 'entcore';
 import * as rx from 'rxjs';
 
+type IGrainTask = {
+    operation: "add" | "update",
+    grain: IGrain,
+    done: "waiting" | "success" | "failed"
+}
+
 export class EditSubjectController implements IObjectGuardDelegate {
 
     static $inject = [
@@ -43,8 +49,9 @@ export class EditSubjectController implements IObjectGuardDelegate {
     // organizer
     private _isOrganizerFolded:boolean;
     private _reOrderTimeout:any;
-    private _dirty: "add" | "update" = null;
-    private _dirtyGrain:IGrain;
+    private _lockTasks = false;
+    private _pendingTasks:IGrainTask[] = [];
+    private _updateGrainError = new rx.Subject<string>();
     private _grainStreams = new Map<number, rx.Subject<IGrain>>();
     private _subscriptions = new Array<rx.Subscription>();
     public shouldShowNavigationAlert:boolean;
@@ -103,7 +110,9 @@ export class EditSubjectController implements IObjectGuardDelegate {
         _$scope.$root.$on('E_SUBJECTEDIT_DROPABLE_ACTIVATED', function(event, displayDropZone:boolean) {
             self._isDropableZone = displayDropZone;
         });
-
+        this._subscriptions.push(this._updateGrainError.debounceTime(500).subscribe((err)=>{
+            notify.error(err);
+        }));
         var self = this,
             subjectId = _$routeParams['subjectId'];
         const getDebouncedGrainStream = (grain:IGrain) => {
@@ -148,42 +157,66 @@ export class EditSubjectController implements IObjectGuardDelegate {
     }
 
     guardObjectIsDirty(): boolean {
-        return !!this._dirty;
+        return this._pendingTasks.length > 0;
     }
     
     guardObjectReset(): void {
-        this._dirty = null;
+        this._pendingTasks = [];
     }
 
     guardOnUserConfirmNavigate(canNavigate:boolean):void{
-        if(!canNavigate && this._dirty && this._dirtyGrain){
-            this.shouldShowNavigationAlert = true;
-        }
+        setTimeout(()=>{
+            if(!canNavigate && this._pendingTasks.length > 0){
+                this.shouldShowNavigationAlert = true;
+                this._$scope.$apply();
+                //keep open at least 750ms
+                setTimeout(() => {
+                    this.saveDirtySubject();
+                    this._$scope.$apply();
+                }, 750)
+            }
+        });
     }
 
     closeNavigationAlert():void{
         this.shouldShowNavigationAlert = false;
     }
 
+    canCloseNavigationAlert():boolean{
+        return !this.shouldShowNavigationAlert;
+    }
+
     saveDirtySubject():void{
-        if(this._dirty == "add"){
-            this.addGrain((ok)=>{
-                if(ok){
-                    notify.success("exercizer.navigation.success");
-                }else{
+        this._lockTasks = true;
+        const tryFinish = () => {
+            const pending = this._pendingTasks.filter(t => t.done == "waiting");
+            if(pending.length == 0){
+                const failed = this._pendingTasks.filter(t => t.done == "failed");
+                if(failed.length > 0){
                     notify.error("exercizer.navigation.error");
+                }else{
+                    notify.success("exercizer.navigation.success");
                 }
                 this.closeNavigationAlert();
-            });
-        }else if(this._dirty == "update") {
-            this.updateGrain(this._dirtyGrain, (event)=>{
-                if(event.ok){
-                    notify.success("exercizer.navigation.success");
-                }else{
-                    notify.error("exercizer.navigation.error");
-                }
-                this.closeNavigationAlert();
-            })
+                this._pendingTasks = [];
+                this._lockTasks = false;
+            }
+        }
+        for(const task of this._pendingTasks){
+            if(task.operation == "add"){
+                this.addGrain((ok)=>{
+                    task.done = ok?"success":"failed";
+                    tryFinish();
+                });
+            }else if(task.operation == "update") {
+                this.updateGrain(task.grain, (event)=>{
+                    task.done = event.ok?"success":"failed";
+                    tryFinish();
+                })
+            } else {
+                task.done = "success";
+                tryFinish();
+            }
         }
     }
 
@@ -277,10 +310,13 @@ export class EditSubjectController implements IObjectGuardDelegate {
         newGrain.grain_data = new GrainData();
         newGrain.grain_type_id = 1;
         newGrain.grain_data.title = this._grainTypeService.getById(newGrain.grain_type_id).public_name;
-        self._dirty = "add";
+        const task : IGrainTask = {done: "waiting", grain: newGrain, operation: "add"}; 
+        if(!self._lockTasks){
+            self._pendingTasks.push(task);
+        }
         this._grainService.persist(newGrain).then(
             function () {
-                self._dirty = null;
+                self._pendingTasks = self._pendingTasks.filter(t=> t!== task);
                 onSave && onSave(true);
             },
             function (err) {
@@ -289,11 +325,13 @@ export class EditSubjectController implements IObjectGuardDelegate {
             }
         );
     };
-
+    
     public updateGrain = function(grain:IGrain, onSave?:({ok:boolean, grain: IGrain})=>void) {
         var self:EditSubjectController = this;
-        self._dirty = "update";
-        self._dirtyGrain = grain;
+        const task : IGrainTask = {done: "waiting", grain: grain, operation: "update"}; 
+        if(!self._lockTasks){
+            self._pendingTasks.push(task);
+        }
 
         if (grain.grain_type_id > 3) {
 
@@ -318,12 +356,12 @@ export class EditSubjectController implements IObjectGuardDelegate {
         self.saving = true;
         self._grainService.update(grain).then(
             function() {
-                self._dirty = null;
+                self._pendingTasks = self._pendingTasks.filter(t=> t!== task);
                 self.saving = false;
                 onSave && onSave({ok:true, grain: grain});
             },
             function(err) {
-                notify.error(err);
+                self._updateGrainError.next(err);
                 self.saving = false;
                 onSave && onSave({ok:false, grain: grain});
             }

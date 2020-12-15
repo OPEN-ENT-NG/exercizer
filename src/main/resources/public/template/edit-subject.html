@@ -352,15 +352,10 @@
         <!-- SCHEDULE SUBJECT MODAL -->
         <subject-schedule></subject-schedule>
     </div>
+    <lightbox class="alertchange" data-show="editSubjectController.shouldShowNavigationAlert" data-delegate-close="editSubjectController.canCloseNavigationAlert()" data-tiny="true">
+        <p class="centered-text"><i18n>exercizer.subject.navigation.saving</i18n></p>
+        <div class="row centered-text bottom-spacing-three">
+            <i class="loading"></i>
+        </div>
+    </lightbox>
 </div>
-<lightbox data-show="editSubjectController.shouldShowNavigationAlert" data-on-close="editSubjectController.closeNavigationAlert()">
-    <h2><i18n>exercizer.subject.navigation.title</i18n></h2>
-    <p><i18n>exercizer.subject.navigation.body</i18n></p>
-    <div class="row">
-        <button data-ng-click="editSubjectController.saveDirtySubject()" class="cell right-magnet" ng-disabled="editSubjectController.saving">
-            <i18n>exercizer.update</i18n>
-            <i class="spinner horizontal-spacing-twice right-magnet" ng-if="editSubjectController.saving"></i>
-        </button>
-        <button data-ng-click="editSubjectController.closeNavigationAlert()" class="cell right-magnet cancel" ng-disabled="editSubjectController.saving"><i18n>exercizer.cancel</i18n></button>
-    </div>
-</lightbox>

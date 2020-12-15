@@ -7,6 +7,13 @@ import {
 import { CloneObjectHelper } from '../models/helpers';
 import * as rx from 'rxjs';
 
+type ISubjectCopyTask = {
+    operation: "add" | "update",
+    subjectCopy: ISubjectCopy,
+    grainCopy: IGrainCopy,
+    done: "waiting" | "success" | "failed"
+}
+
 class ViewSubjectCopyController implements IObjectGuardDelegate {
 
     static $inject = [
@@ -32,8 +39,8 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
     private _previewing:boolean;
     private _previewingFromLibrary:boolean;
     private _hasDataLoaded:boolean;
-    private _dirty = false;
-    private _dirtyCopy: ISubjectCopy;
+    private _lockTasks = false;
+    private _pendingTasks:ISubjectCopyTask[] = [];
     private _subjectStreams = new Map<number, rx.Subject<{subject: ISubjectCopy, redirect:boolean}>>();
     private _subscriptions = new Array<rx.Subscription>();
     public shouldShowNavigationAlert:boolean;
@@ -112,32 +119,64 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
     }
 
     guardObjectIsDirty(): boolean {
-        return this._dirty;
+        return this._pendingTasks.length > 0;
     }
 
     guardObjectReset(): void {
-        this._dirty = false;
+        this._pendingTasks = [];
     }
 
     guardOnUserConfirmNavigate(canNavigate:boolean):void{
-        if(!canNavigate && this._dirty && this._dirtyCopy){
-            this.shouldShowNavigationAlert = true;
-        }
+        setTimeout(()=>{
+            if(!canNavigate && this._pendingTasks.length > 0){
+                this.shouldShowNavigationAlert = true;
+                this._$scope.$apply();
+                //keep open at least 750ms
+                setTimeout(() => {
+                    this.saveDirtySubject();
+                    this._$scope.$apply();
+                }, 750)
+            }
+        });
     }
 
     closeNavigationAlert():void{
         this.shouldShowNavigationAlert = false;
     }
 
+    canCloseNavigationAlert():boolean{
+        return !this.shouldShowNavigationAlert;
+    }
+
     saveDirtySubject():void{
-        this._handleUpdateSubjectCopy(this._dirtyCopy, false, (event)=>{
-            if(event.ok){
-                notify.success("exercizer.navigation.success");
-            }else{
-                notify.error("exercizer.navigation.error");
+        this._lockTasks = true;
+        const tryFinish = () => {
+            const pending = this._pendingTasks.filter(t => t.done == "waiting");
+            if(pending.length == 0){
+                const failed = this._pendingTasks.filter(t => t.done == "failed");
+                if(failed.length > 0){
+                    notify.error("exercizer.navigation.error");
+                }else{
+                    notify.success("exercizer.navigation.success");
+                }
+                this.closeNavigationAlert();
+                this._pendingTasks = [];
+                this._lockTasks = false;
             }
-            this.closeNavigationAlert();
-        });
+        }
+        for(const task of this._pendingTasks){
+            if(task.subjectCopy){
+                this._handleUpdateSubjectCopy(task.subjectCopy, false, (event)=>{
+                    task.done = event.ok?"success":"failed";
+                    tryFinish();
+                });
+            }else{
+                this._handleUpdateGrainCopy(task.grainCopy, (ok)=>{
+                    task.done = ok?"success":"failed";
+                    tryFinish();
+                });
+            }
+        }
     }
 
     private _preview(subjectId:number) {
@@ -239,13 +278,15 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
         );
     }
     private _handleUpdateSubjectCopy(subjectCopy:ISubjectCopy, redirect:boolean, onSave?:({ok:boolean, subject: ISubjectCopy})=>void) {
-        this._dirty = true;
-        this._dirtyCopy = subjectCopy;
+        const task : ISubjectCopyTask = {done: "waiting", subjectCopy: subjectCopy, operation: "update", grainCopy:null}; 
+        if(!this._lockTasks){
+            this._pendingTasks.push(task);
+        }
         this.saving = true;
         this._calculateScores();
         let success = (subjectCopy:ISubjectCopy) => {
             this.saving = false;
-            this._dirty = false;
+            this._pendingTasks = this._pendingTasks.filter(t=> t!== task);
             this._subjectCopy = CloneObjectHelper.clone(subjectCopy, true);
             this._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
             onSave && onSave({ok:true, subject: subjectCopy});
@@ -284,39 +325,45 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
         this._subjectCopy.final_score = finalScore;
     }
 
-    private _eventsHandler = function(self:ViewSubjectCopyController) {
-        function _updateLocalGrainCopyList(grainCopy:IGrainCopy) {
-            var grainCopyIndex = self._grainCopyList.indexOf(grainCopy);
+    private _updateLocalGrainCopyList = function (grainCopy:IGrainCopy) {
+        const self = this;
+        var grainCopyIndex = self._grainCopyList.indexOf(grainCopy);
 
-            if (grainCopyIndex !== -1) {
-                self._grainCopyList[grainCopyIndex] = grainCopy;
+        if (grainCopyIndex !== -1) {
+            self._grainCopyList[grainCopyIndex] = grainCopy;
+        }
+    }
+
+    private _handleUpdateGrainCopy = function(grainCopy:IGrainCopy, onSave?:(ok:boolean)=>void) {
+        const self = this;
+        const task : ISubjectCopyTask = {done: "waiting", grainCopy: grainCopy, operation: "update", subjectCopy:null}; 
+        if(!self._lockTasks){
+            self._pendingTasks.push(task);
+        }
+        self._grainCopyService.correct(grainCopy).then(
+            function() {
+                onSave && onSave(true);
+                self._updateLocalGrainCopyList(grainCopy);
+                self._calculateScores();
+                self._pendingTasks = self._pendingTasks.filter(t=> t!== task);
+            },
+            function(err) {
+                onSave && onSave(false);
+                notify.error(err);
             }
-        }
-
-
-
-        function _handleUpdateGrainCopy(grainCopy:IGrainCopy) {
-            self._grainCopyService.correct(grainCopy).then(
-                function() {
-                    _updateLocalGrainCopyList(grainCopy);
-                    self._calculateScores();
-                },
-                function(err) {
-                    notify.error(err);
-                }
-            );
-        }
-
+        );
+    }
+    private _eventsHandler = function(self:ViewSubjectCopyController) {    
         /**
          * this event is call when a grain copy is updated
          * - from grainCopyFooter.ts
          */
         self._$scope.$on('E_UPDATE_GRAIN_COPY', function(event, grainCopy:IGrainCopy) {
             if (!self._previewing && self._isTeacher) {
-                _handleUpdateGrainCopy(grainCopy);
+                self._handleUpdateGrainCopy(grainCopy);
                 self._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGED', grainCopy);
             } else {
-                _updateLocalGrainCopyList(grainCopy);
+                self._updateLocalGrainCopyList(grainCopy);
                 self._calculateScores();
             }
         });

@@ -90,16 +90,11 @@
 
         <div class="warning"><i18n>exercizer.subject.empty</i18n></div>
     </div>
+    <lightbox class="alertchange" data-show="viewSubjectCopyController.shouldShowNavigationAlert" data-delegate-close="viewSubjectCopyController.canCloseNavigationAlert()" data-tiny="true">
+        <p class="centered-text"><i18n>exercizer.subject.navigation.saving</i18n></p>
+        <div class="row centered-text bottom-spacing-three">
+            <i class="loading"></i>
+        </div>
+    </lightbox>
 
 </div>
-<lightbox data-show="viewSubjectCopyController.shouldShowNavigationAlert" data-on-close="viewSubjectCopyController.closeNavigationAlert()">
-    <h2><i18n>exercizer.subject.navigation.title</i18n></h2>
-    <p><i18n>exercizer.subject.navigation.body</i18n></p>
-    <div class="row">
-        <button data-ng-click="viewSubjectCopyController.saveDirtySubject()" class="cell right-magnet" ng-disabled="viewSubjectCopyController.saving">
-            <i18n>exercizer.update</i18n>
-            <i class="spinner horizontal-spacing-twice right-magnet" ng-if="viewSubjectCopyController.saving"></i>
-        </button>
-        <button data-ng-click="viewSubjectCopyController.closeNavigationAlert()" class="cell right-magnet cancel" ng-disabled="viewSubjectCopyController.saving"><i18n>exercizer.cancel</i18n></button>
-    </div>
-</lightbox>

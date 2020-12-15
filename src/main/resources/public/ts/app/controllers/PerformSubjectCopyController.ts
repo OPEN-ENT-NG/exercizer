@@ -7,6 +7,12 @@ import {
 import { angular } from 'entcore';
 import * as rx from 'rxjs';
 
+type IGrainCopyTask = {
+    operation: "add" | "update",
+    grain: IGrainCopy,
+    done: "waiting" | "success" | "failed"
+}
+
 class PerformSubjectCopyController implements IObjectGuardDelegate {
 
     static $inject = [
@@ -35,8 +41,8 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
     private _hasDataLoaded:boolean;
     private _isCanSubmit:boolean;
     private _currentGrainCopy:IGrainCopy;
-    private _dirty = false;
-    private _dirtyGrain: IGrainCopy;
+    private _lockTasks = false;
+    private _pendingTasks:IGrainCopyTask[] = [];
     private _grainStreams = new Map<number, rx.Subject<IGrainCopy>>();
     private _subscriptions = new Array<rx.Subscription>();
     public shouldShowNavigationAlert:boolean;
@@ -121,32 +127,57 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
     }
 
     guardObjectIsDirty(): boolean {
-        return this._dirty;
+        return this._pendingTasks.length > 0;
     }
 
     guardObjectReset(): void {
-        this._dirty = false;
+        this._pendingTasks = [];
     }
 
     guardOnUserConfirmNavigate(canNavigate:boolean):void{
-        if(!canNavigate && this._dirty && this._dirtyGrain){
-            this.shouldShowNavigationAlert = true;
-        }
+        setTimeout(()=>{
+            if(!canNavigate && this._pendingTasks.length > 0){
+                this.shouldShowNavigationAlert = true;
+                this._$scope.$apply();
+                //keep open at least 750ms
+                setTimeout(() => {
+                    this.saveDirtySubject();
+                    this._$scope.$apply();
+                }, 750)
+            }
+        });
     }
 
     closeNavigationAlert():void{
         this.shouldShowNavigationAlert = false;
     }
 
+    canCloseNavigationAlert():boolean{
+        return !this.shouldShowNavigationAlert;
+    }
+
     saveDirtySubject():void{
-        this._handleUpdateGrainCopy(this._dirtyGrain, (event)=>{
-            if(event.ok){
-                notify.success("exercizer.navigation.success");
-            }else{
-                notify.error("exercizer.navigation.error");
+        this._lockTasks = true;
+        const tryFinish = () => {
+            const pending = this._pendingTasks.filter(t => t.done == "waiting");
+            if(pending.length == 0){
+                const failed = this._pendingTasks.filter(t => t.done == "failed");
+                if(failed.length > 0){
+                    notify.error("exercizer.navigation.error");
+                }else{
+                    notify.success("exercizer.navigation.success");
+                }
+                this.closeNavigationAlert();
+                this._pendingTasks = [];
+                this._lockTasks = false;
             }
-            this.closeNavigationAlert();
-        });
+        }
+        for(const task of this._pendingTasks){
+            this._handleUpdateGrainCopy(task.grain, (event)=>{
+                task.done = event.ok?"success":"failed";
+                tryFinish();
+            });
+        }
     }
 
     private _preview(subject:ISubject) {
@@ -260,12 +291,14 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
         this._$scope.$broadcast('E_CURRENT_GRAIN_COPY_CHANGE', grainCopy);
     }
     private _handleUpdateGrainCopy(grainCopy:IGrainCopy, onSave?:({ok:boolean, grain: IGrain})=>void) {
-        this._dirty = true;
-        this._dirtyGrain = grainCopy;
+        const task : IGrainCopyTask = {done: "waiting", grain: grainCopy, operation: "update"}; 
+        if(!this._lockTasks){
+            this._pendingTasks.push(task);
+        }
         this.saving = true;
         this._grainCopyService.update(grainCopy).then(
             () => {
-                this._dirty = false;
+                this._pendingTasks = this._pendingTasks.filter(t=> t!== task);
                 this.saving = false;
                 onSave && onSave({ok:true, grain: grainCopy});
                 this._updateLocalGrainCopyList(grainCopy);
