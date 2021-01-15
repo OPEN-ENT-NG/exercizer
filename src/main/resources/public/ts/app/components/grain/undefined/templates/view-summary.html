@@ -11,7 +11,7 @@
         <i18n>exercizer.summary.comment</i18n> :
     </h2>
     <div class="row" data-ng-if="isTeacher">
-        <textarea data-ng-model="subjectCopy.comment" complete-change="updateSubjectCopy()" style="height: 80px;" i18n-placeholder="exercizer.summary.comment.info"></textarea>
+        <textarea  track-input-event="subjectCopy.getTracker()" data-ng-model="subjectCopy.comment" complete-change="updateSubjectCopy()" style="height: 80px;" i18n-placeholder="exercizer.summary.comment.info"></textarea>
     </div>
     <div class="row" data-ng-if="!isTeacher">
         <textarea data-ng-model="subjectCopy.comment" style="height: 80px;" i18n-placeholder="exercizer.summary.nocomment" disabled></textarea>

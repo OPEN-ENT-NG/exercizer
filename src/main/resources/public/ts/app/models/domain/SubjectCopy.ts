@@ -1,3 +1,5 @@
+import { EditTrackingEvent, trackingService } from "entcore";
+
 export interface ISubjectCopy {
     id:number;
     subject_scheduled_id:number;
@@ -17,6 +19,7 @@ export interface ISubjectCopy {
     is_training_copy:boolean;
     current_grain_id:number;
     modifiedDate?: Date;
+    getTracker():EditTrackingEvent;
 }
 
 export class SubjectCopy implements  ISubjectCopy {
@@ -40,6 +43,7 @@ export class SubjectCopy implements  ISubjectCopy {
     current_grain_id:number;
     dueDate: string;
     _homework_metadata: any;
+    tracker: EditTrackingEvent;
 
     set homework_metadata(thing){
 
@@ -114,5 +118,13 @@ export class SubjectCopy implements  ISubjectCopy {
         this.is_deleted = is_deleted;
         this.is_training_copy = is_training_copy;
         this.current_grain_id = current_grain_id;
+    }
+    
+    getTracker():EditTrackingEvent{
+        if(!this.tracker){
+            const id = this.id? this.id+'' : null;
+            this.tracker = trackingService.trackEdition({resourceId:id,resourceUri:`/exercizer/subject-copy/simple/${id || 'new'}`})
+        }
+        return this.tracker;
     }
 }

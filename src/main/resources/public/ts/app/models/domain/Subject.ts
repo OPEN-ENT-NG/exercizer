@@ -1,4 +1,4 @@
-import { EditTrackingEvent } from "entcore";
+import { EditTrackingEvent, trackingService } from "entcore";
 
 export interface ISubject {
     id:number;
@@ -17,7 +17,7 @@ export interface ISubject {
     is_deleted:boolean;
     type:string;
     selected:boolean;
-    tracker?:EditTrackingEvent;
+    getTracker():EditTrackingEvent
 }
 
 export class Subject implements ISubject {
@@ -76,5 +76,13 @@ export class Subject implements ISubject {
         this.is_deleted = is_deleted;
         this.type = type;
         this.selected = selected;
+    }
+    
+    getTracker():EditTrackingEvent{
+        if(!this.tracker){
+            const id = this.id? this.id+'' : null;
+            this.tracker = trackingService.trackEdition({resourceId:id,resourceUri:`/exercizer/subject/simple/${id || 'new'}`})
+        }
+        return this.tracker;
     }
 }

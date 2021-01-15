@@ -11,8 +11,8 @@
                 </div>
                 <div class="margin-two height-three">
                     <div class="twelve cell horizontal-spacing">
-                        <input type="text" maxlength="200" data-ng-model="subject.title" class="twelve cell" i18n-placeholder="exercizer.subject.title">
-                        <textarea data-ng-model="subject.description" class="twelve cell" i18n-placeholder="exercizer.subject.desc"></textarea>
+                        <input track-input-event="subject.getTracker()" type="text" maxlength="200" data-ng-model="subject.title" class="twelve cell" i18n-placeholder="exercizer.subject.title">
+                        <textarea track-input-event="subject.getTracker()" data-ng-model="subject.description" class="twelve cell" i18n-placeholder="exercizer.subject.desc"></textarea>
                     </div>
                     <div class="twelve cell horizontal-spacing vertical-spacing">
                         <button data-ng-click="saveSubjectProperties()" class="right-magnet">

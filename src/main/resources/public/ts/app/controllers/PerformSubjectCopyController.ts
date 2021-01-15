@@ -43,6 +43,7 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
     private _currentGrainCopy:IGrainCopy;
     private _lockTasks = false;
     private _pendingTasks:IGrainCopyTask[] = [];
+    private _pendingEdit:IGrainCopy[] = [];
     private _grainStreams = new Map<number, rx.Subject<IGrainCopy>>();
     private _subscriptions = new Array<rx.Subscription>();
     public shouldShowNavigationAlert:boolean;
@@ -127,11 +128,13 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
     }
 
     guardObjectIsDirty(): boolean {
-        return this._pendingTasks.length > 0;
+        this._pendingEdit = this.grainCopyList.filter((e)=>e.getTracker().status=='editing');
+        return this._pendingTasks.length > 0 || this._pendingEdit.length > 0;
     }
 
     guardObjectReset(): void {
         this._pendingTasks = [];
+        this._pendingEdit = []
     }
 
     guardOnUserConfirmNavigate(canNavigate:boolean):void{
@@ -145,6 +148,16 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
                     this._$scope.$apply();
                 }, 750)
             }
+            let done = 0;
+            for(const grain of this._pendingEdit){
+                this._handleUpdateGrainCopy(grain, (ok)=>{
+                    done++;
+                    if(done == this._pendingEdit.length){
+                        notify.success("exercizer.navigation.success");
+                    }
+                });
+            }
+            this._pendingEdit = [];
         });
     }
 

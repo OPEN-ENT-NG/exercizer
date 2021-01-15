@@ -51,6 +51,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
     private _reOrderTimeout:any;
     private _lockTasks = false;
     private _pendingTasks:IGrainTask[] = [];
+    private _pendingEdit:IGrain[] = [];
     private _updateGrainError = new rx.Subject<string>();
     private _grainStreams = new Map<number, rx.Subject<IGrain>>();
     private _subscriptions = new Array<rx.Subscription>();
@@ -157,19 +158,17 @@ export class EditSubjectController implements IObjectGuardDelegate {
     }
 
     getTracker():EditTrackingEvent{
-        if(!this.subject.tracker){
-            const id = this.subject.id? this.subject.id+'' : null;
-            this.subject.tracker = trackingService.trackEdition({resourceId:id,resourceUri:`/exercizer/subject/simple/${id || 'new'}`})
-        }
-        return this.subject.tracker;
+        return this.subject.getTracker();
     }
 
     guardObjectIsDirty(): boolean {
-        return this._pendingTasks.length > 0;
+        this._pendingEdit = this.grainList.filter((e)=>e.getTracker().status=='editing');
+        return this._pendingTasks.length > 0 || this._pendingEdit.length > 0;
     }
     
     guardObjectReset(): void {
         this._pendingTasks = [];
+        this._pendingEdit = []
     }
 
     guardOnUserConfirmNavigate(canNavigate:boolean):void{
@@ -183,6 +182,16 @@ export class EditSubjectController implements IObjectGuardDelegate {
                     this._$scope.$apply();
                 }, 750)
             }
+            let done = 0;
+            for(const grain of this._pendingEdit){
+                this.updateGrain(grain, (ok)=>{
+                    done++;
+                    if(done == this._pendingEdit.length){
+                        notify.success("exercizer.navigation.success");
+                    }
+                });
+            }
+            this._pendingEdit = [];
         });
     }
 

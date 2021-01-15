@@ -87,11 +87,7 @@ class EditSimpleSubjectController {
     }
 
     getTracker():EditTrackingEvent{
-        if(!this.subject.tracker){
-            const id = this.subject.id? this.subject.id+'' : null;
-            this.subject.tracker = trackingService.trackEdition({resourceId:id,resourceUri:`/exercizer/subject/simple/${id || 'new'}`})
-        }
-        return this.subject.tracker;
+        return this.subject.getTracker();
     }
 
     private _previewFromLibrary(subject:ISubject) {
@@ -137,15 +133,15 @@ class EditSimpleSubjectController {
         }
     };
 
-    private createSubject = function() {
+    private createSubject = () => {
         var self = this;
         this.getTracker().onStop();
         self._subjectService.persist(this._subject).then(function (subject) {
             self._subject = subject;
-            this.getTracker().onFinish(true);
+            self.getTracker().onFinish(true);
         }, function (err) {
             notify.error(err);
-            this.getTracker().onFinish(false);
+            self.getTracker().onFinish(false);
         });
     };
 
