@@ -1,4 +1,4 @@
-import { ng, idiom, model, Behaviours, notify } from 'entcore';
+import { ng, idiom, model, Behaviours, notify, EditTrackingEvent, trackingService } from 'entcore';
 import { angular } from 'entcore';
 import { ISubject, IFolder, Subject, ISubjectScheduled } from '../models/domain';
 import { ISubjectService, ISubjectLibraryService } from '../services';
@@ -86,6 +86,14 @@ class EditSimpleSubjectController {
         }
     }
 
+    getTracker():EditTrackingEvent{
+        if(!this.subject.tracker){
+            const id = this.subject.id? this.subject.id+'' : null;
+            this.subject.tracker = trackingService.trackEdition({resourceId:id,resourceUri:`/exercizer/subject/simple/${id || 'new'}`})
+        }
+        return this.subject.tracker;
+    }
+
     private _previewFromLibrary(subject:ISubject) {
         var self = this;
         self._readOnly = true;
@@ -131,20 +139,27 @@ class EditSimpleSubjectController {
 
     private createSubject = function() {
         var self = this;
+        this.getTracker().onStop();
         self._subjectService.persist(this._subject).then(function (subject) {
             self._subject = subject;
+            this.getTracker().onFinish(true);
         }, function (err) {
             notify.error(err);
+            this.getTracker().onFinish(false);
         });
     };
 
-    public saveSubjectProperties = function() {
+    public saveSubjectProperties = () => {
         if (this._subject.id) {
             if (!this._subject.title || this._subject.title.length === 0) {
                 this._subject.title = this._defaultTitle;
             }
-            this._subjectService.update(this._subject).then(function () {}, function (err) {
+            this.getTracker().onStop();
+            this._subjectService.update(this._subject, undefined).then( () => {
+                this.getTracker().onFinish(true);
+            },  (err) => {
                 notify.error(err);
+                this.getTracker().onFinish(false);
             });
         }
     };

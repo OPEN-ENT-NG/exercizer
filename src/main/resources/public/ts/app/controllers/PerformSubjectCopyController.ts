@@ -296,17 +296,20 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
             this._pendingTasks.push(task);
         }
         this.saving = true;
+        grainCopy.getTracker().onStop();
         this._grainCopyService.update(grainCopy).then(
             () => {
                 this._pendingTasks = this._pendingTasks.filter(t=> t!== task);
                 this.saving = false;
                 onSave && onSave({ok:true, grain: grainCopy});
                 this._updateLocalGrainCopyList(grainCopy);
+                grainCopy.getTracker().onFinish(true);
             },
             (err) => {
                 notify.error(err);
                 this.saving = false;
                 onSave && onSave({ok:false, grain: grainCopy});
+                grainCopy.getTracker().onFinish(false);
             }
         );
     }

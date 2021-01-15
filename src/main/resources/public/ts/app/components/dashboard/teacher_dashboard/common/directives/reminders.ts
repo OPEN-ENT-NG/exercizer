@@ -1,4 +1,4 @@
-import { ng, notify } from 'entcore';
+import { EditTrackingEvent, ng, notify, trackingService } from 'entcore';
 
 export const reminders = ng.directive('reminders', ['SubjectCopyService',(SubjectCopyService) => {
     return {
@@ -19,31 +19,37 @@ export const reminders = ng.directive('reminders', ['SubjectCopyService',(Subjec
             });
             
             resetRemind();
-
+            let tracker: EditTrackingEvent;
             function resetRemind() {
                 scope.remind = {                           
                     step:'choose',
                     subject:'',
-                    body:''
+                    body:'',
                 };
+                const id = scope.selectedSubjectScheduled? scope.selectedSubjectScheduled.id : 'custom';
+                tracker = trackingService.trackEdition({resourceId: id, resourceUri: `/exercizer/reminder/${id}`})
             };
-
+            scope.getTracker = function(){
+                return tracker;
+            }
             scope.sendReminder = function() {
                 var copyIds = [];
-
                 angular.forEach(scope.reminderCopies, function(copy){
                     copyIds.push(copy.id);
                 });
 
                 if (scope.remind.step === 'auto') {
+                    tracker && tracker.onStop();
                     SubjectCopyService.remindAutomaticCopies(copyIds, scope.selectedSubjectScheduled.id).then(
                         function () {
+                            tracker && tracker.onFinish(true);
                             resetRemind();
                             scope.isDisplayed = false;
                             notify.info('exercizer.reminder.sent');
                         },
                         function (err) {
                             notify.error(err);
+                            tracker && tracker.onFinish(false);
                         }
                     );
                 } else {
@@ -52,13 +58,16 @@ export const reminders = ng.directive('reminders', ['SubjectCopyService',(Subjec
                     } else if (!scope.remind.body || scope.remind.body === '') {
                         notify.error('exercizer.reminder.check.body');
                     } else {
+                        tracker && tracker.onStop();
                         SubjectCopyService.remindCustomCopies(copyIds, scope.remind.subject, scope.remind.body).then(
                             function () {
+                                tracker && tracker.onFinish(true);
                                 resetRemind();
                                 scope.isDisplayed = false;
                                 notify.info('exercizer.reminder.sent');
                             },
                             function (err) {
+                                tracker && tracker.onFinish(false);
                                 notify.error(err);
                             }
                         );

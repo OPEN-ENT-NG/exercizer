@@ -1,4 +1,4 @@
-import { ng, idiom, notify, IObjectGuardDelegate, navigationGuardService, ObjectGuard } from 'entcore';
+import { ng, idiom, notify, IObjectGuardDelegate, navigationGuardService, ObjectGuard, EditTrackingEvent, trackingService } from 'entcore';
 import { ISubject, IGrain, IGrainDocument, GrainData, GrainDocument, Grain } from '../models/domain';
 import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IGrainTypeService, IGrainService, IDragService } from '../services';
 import { StringISOHelper, CorrectOrderHelper } from '../models/helpers';
@@ -154,6 +154,14 @@ export class EditSubjectController implements IObjectGuardDelegate {
         }, function(err) {
             notify.error(err);
         });
+    }
+
+    getTracker():EditTrackingEvent{
+        if(!this.subject.tracker){
+            const id = this.subject.id? this.subject.id+'' : null;
+            this.subject.tracker = trackingService.trackEdition({resourceId:id,resourceUri:`/exercizer/subject/simple/${id || 'new'}`})
+        }
+        return this.subject.tracker;
     }
 
     guardObjectIsDirty(): boolean {
@@ -314,14 +322,17 @@ export class EditSubjectController implements IObjectGuardDelegate {
         if(!self._lockTasks){
             self._pendingTasks.push(task);
         }
+        newGrain.getTracker().onStop();
         this._grainService.persist(newGrain).then(
             function () {
                 self._pendingTasks = self._pendingTasks.filter(t=> t!== task);
                 onSave && onSave(true);
+                newGrain.getTracker().onFinish(true);
             },
             function (err) {
                 notify.error(err);
                 onSave && onSave(false);
+                newGrain.getTracker().onFinish(false);
             }
         );
     };
@@ -354,16 +365,19 @@ export class EditSubjectController implements IObjectGuardDelegate {
             //this._trustedHtmlStatementMap[grain.id] = this._$sce.trustAsHtml(grain.grain_data.custom_data.statement);
         }
         self.saving = true;
+        grain.getTracker().onStop();
         self._grainService.update(grain).then(
             function() {
                 self._pendingTasks = self._pendingTasks.filter(t=> t!== task);
                 self.saving = false;
                 onSave && onSave({ok:true, grain: grain});
+                grain.getTracker().onFinish(true);
             },
             function(err) {
                 self._updateGrainError.next(err);
                 self.saving = false;
                 onSave && onSave({ok:false, grain: grain});
+                grain.getTracker().onFinish(false);
             }
         );
     };

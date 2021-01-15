@@ -8,7 +8,8 @@ export const customEditor = ng.directive('customEditor',
             replace : true,
             scope : {
                 text :"=",
-                grain : "="
+                grain : "=",
+                trackInputEvent: "="
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/common/editor/editor.html',
             link:(scope:any, element) => {

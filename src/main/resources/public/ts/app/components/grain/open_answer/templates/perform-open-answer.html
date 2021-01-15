@@ -3,6 +3,6 @@
     <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     <div class="row vertical-spacing">
-        <editor data-ng-model="grainCopy.grain_copy_data.custom_copy_data.filled_answer"></editor>
+        <editor data-ng-model="grainCopy.grain_copy_data.custom_copy_data.filled_answer" track-input-event="grainCopy.getTracker()"></editor>
     </div>
 </article>

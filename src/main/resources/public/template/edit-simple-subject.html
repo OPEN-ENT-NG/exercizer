@@ -45,7 +45,7 @@
                         <div class="twelve cell horizontal-spacing vertical-spacing">
                             <h3><i18n>exercizer.simple.edit.description</i18n></h3>
                             <div data-ng-if="editSimpleSubjectController.readOnly"  style="word-wrap: break-word;" bind-html="editSimpleSubjectController.subject.description"></div>
-                            <editor data-ng-if="!editSimpleSubjectController.readOnly"  on-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.description"></editor>
+                            <editor data-ng-if="!editSimpleSubjectController.readOnly"  on-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.description" track-input-event="editSimpleSubjectController.getTracker()"></editor>
                         </div>
                         <div data-ng-if="editSimpleSubjectController.subject.corrected_file_id" class="twelve cell horizontal-spacing vertical-spacing">
                             <h3><i18n>exercizer.simple.edit.corrected</i18n></h3>

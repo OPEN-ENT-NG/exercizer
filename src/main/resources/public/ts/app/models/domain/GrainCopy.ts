@@ -1,3 +1,4 @@
+import { EditTrackingEvent, trackingService } from 'entcore';
 import { IGrainCopyData } from './GrainCopyData';
 
 export interface IGrainCopy {
@@ -13,6 +14,7 @@ export interface IGrainCopy {
     calculated_score:number;
     comment:string;
     grain_copy_data:IGrainCopyData;
+    getTracker(): EditTrackingEvent;
 }
 
 export class GrainCopy implements IGrainCopy {
@@ -29,6 +31,7 @@ export class GrainCopy implements IGrainCopy {
     calculated_score:number;
     comment:string;
     grain_copy_data:IGrainCopyData;
+    tracker?: EditTrackingEvent;
 
 
     constructor
@@ -59,5 +62,13 @@ export class GrainCopy implements IGrainCopy {
         this.calculated_score = calculated_score;
         this.comment = comment;
         this.grain_copy_data = grain_copy_data;
+    }
+
+    getTracker():EditTrackingEvent{
+        if(!this.tracker){
+            const id = this.id? this.id+'':null;
+            this.tracker = trackingService.trackEdition({resourceId:id, resourceUri:`/exercizer/${this.subject_copy_id}/grain-copy/${this.id}`})
+        }
+        return this.tracker;
     }
 }

@@ -8,6 +8,6 @@
 </div>
 
 <div class="row vertical-spacing">
-    <editor data-ng-model="grain.grain_data.custom_data.statement" on-change="updateGrain()"></editor>
+    <editor data-ng-model="grain.grain_data.custom_data.statement" on-change="updateGrain()" track-input-event="grain.getTracker()"></editor>
 </div>
 

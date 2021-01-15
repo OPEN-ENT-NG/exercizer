@@ -1,3 +1,5 @@
+import { EditTrackingEvent } from "entcore";
+
 export interface ISubject {
     id:number;
     folder_id:number;
@@ -15,6 +17,7 @@ export interface ISubject {
     is_deleted:boolean;
     type:string;
     selected:boolean;
+    tracker?:EditTrackingEvent;
 }
 
 export class Subject implements ISubject {
@@ -35,6 +38,7 @@ export class Subject implements ISubject {
     is_deleted:boolean;
     type:string;
     selected: boolean;
+    tracker: EditTrackingEvent;
 
     constructor
     (

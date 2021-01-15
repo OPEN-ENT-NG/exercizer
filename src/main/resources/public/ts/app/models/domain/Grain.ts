@@ -1,3 +1,4 @@
+import { EditTrackingEvent, trackingService } from 'entcore';
 import { IGrainData } from './GrainData';
 
 export interface IGrain {
@@ -9,6 +10,7 @@ export interface IGrain {
     order_by: number;
     grain_data: IGrainData;
     selected: boolean;
+    getTracker(): EditTrackingEvent;
 }
 
 export class Grain implements IGrain {
@@ -21,6 +23,7 @@ export class Grain implements IGrain {
     order_by: number;
     grain_data: IGrainData;
     selected: boolean;
+    tracker?: EditTrackingEvent;
 
     constructor
     (
@@ -42,5 +45,13 @@ export class Grain implements IGrain {
         this.order_by = order_by;
         this.grain_data = grain_data;
         this.selected = selected;
+    }
+
+    getTracker():EditTrackingEvent{
+        if(!this.tracker){
+            const id = this.id? this.id+'':null;
+            this.tracker = trackingService.trackEdition({resourceId:id, resourceUri:`/exercizer/${this.subject_id}/grain/${this.id}`})
+        }
+        return this.tracker;
     }
 }
