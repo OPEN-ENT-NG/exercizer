@@ -213,6 +213,7 @@ public class SubjectCopyController extends ControllerHelper {
 			final JsonObject subjectCopy, final CopyAction copyAction) {
 		final String subjectCopyId = Long.toString(subjectCopy.getLong("id"));
 		final String subjectScheduleId = Long.toString(subjectCopy.getLong("subject_scheduled_id"));
+		final Boolean isTrainingCopy = subjectCopy.getBoolean("is_training_copy");
 		return new Handler<Either<String, JsonObject>>() {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
@@ -220,31 +221,33 @@ public class SubjectCopyController extends ControllerHelper {
 					badRequest(request, event.left().getValue());
 					return;
 				}
-				subjectScheduledService.getById(subjectScheduleId, user, new Handler<Either<String,JsonObject>>() {
-					@Override
-					public void handle(Either<String, JsonObject> r) {
-						final JsonObject subjectSchedule  = ResourceParser.beforeAny(r.right().getValue());
-						subjectService.getById(Long.toString(subjectSchedule.getLong("subject_id")), user, new Handler<Either<String,JsonObject>>() {
-							@Override
-							public void handle(Either<String, JsonObject> r) {
-								final JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
-								String recipient = "";
-								String url = "";
-								switch (copyAction) {
-									case SUBMITCOPY: recipient = subjectSchedule.getString("owner"); url = "/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId; break;
-									case CORRECTCOPY: recipient = subjectCopy.getString("owner");  url = "/subject/copy/view/"+ subjectCopyId; break;
-									case ASSIGNCOPY: recipient = subjectCopy.getString("owner");  url = "/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId; break;
+				if (!isTrainingCopy.booleanValue()) {
+					subjectScheduledService.getById(subjectScheduleId, user, new Handler<Either<String,JsonObject>>() {
+						@Override
+						public void handle(Either<String, JsonObject> r) {
+							final JsonObject subjectSchedule  = ResourceParser.beforeAny(r.right().getValue());
+							subjectService.getById(Long.toString(subjectSchedule.getLong("subject_id")), user, new Handler<Either<String,JsonObject>>() {
+								@Override
+								public void handle(Either<String, JsonObject> r) {
+									final JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
+									String recipient = "";
+									String url = "";
+									switch (copyAction) {
+										case SUBMITCOPY: recipient = subjectSchedule.getString("owner"); url = "/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId; break;
+										case CORRECTCOPY: recipient = subjectCopy.getString("owner");  url = "/subject/copy/view/"+ subjectCopyId; break;
+										case ASSIGNCOPY: recipient = subjectCopy.getString("owner");  url = "/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId; break;
+									}
+									sendNotification(request,  copyAction.name().toLowerCase(), user,
+											Arrays.asList(recipient),
+											url,
+											subject.getString("title"),
+											null,
+											subjectCopyId);
 								}
-								sendNotification(request,  copyAction.name().toLowerCase(), user,
-										Arrays.asList(recipient),
-										url,
-										subject.getString("title"),
-										null,
-										subjectCopyId);
-							}
-						});
-					}
-				});
+							});
+						}
+					});
+				}
 				renderJson(request, event.right().getValue(), 200);
 			}
 		};
