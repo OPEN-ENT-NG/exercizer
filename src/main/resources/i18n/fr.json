@@ -117,7 +117,7 @@
     "exercizer.scheduled.simple.subject.corrected" : "Date de publication du corrigé",
     "exercizer.scheduled.subject.training.authorized" : "Les élèves peuvent récupérer ce sujet pour s'entraîner",
     "exercizer.scheduled.subject.training.unauthorized" : "Les élèves ne peuvent pas récupérer ce sujet pour s'entraîner",
-    "exercizer.scheduled.subject.training.forbid" : "Interdir l'entrainement des élèves sur ce sujet",
+    "exercizer.scheduled.subject.training.forbid" : "Interdire l'entrainement des élèves sur ce sujet",
     "exercizer.scheduled.subject.training.get.part1" : "Récupérer le sujet",
     "exercizer.scheduled.subject.training.get.part2" : "pour entraînement",
     "exercizer.scheduled.subject.training.get.full" : "Récupérer le sujet pour entraînement",
