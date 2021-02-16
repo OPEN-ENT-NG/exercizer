@@ -558,5 +558,6 @@
     "exercizer.subject.training.already.exists": "Ce sujet est déjà présent dans vos copies d'entraînement",
     "exercizer.final.score.questions": "Questions",
     "exercizer.final.score.score": "Score",
-    "exercizer.library.prompt.title": "Exercices"
+    "exercizer.library.prompt.title": "Exercices",
+    "exercizer.copies.yet.to.correct": "Il reste <strong>{{number}}</strong> copie(s) à corriger"
 }

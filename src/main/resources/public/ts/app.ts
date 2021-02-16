@@ -77,8 +77,7 @@ import { subjectSchedule } from './app/components/subject/subject_schedule/direc
 import { subjectViewCopyGrainCopyList } from './app/components/subject/subject_view_copy/directives/subjectViewCopyGrainCopyList';
 import { subjectViewCopyPreviewHeader } from './app/components/subject/subject_view_copy/directives/subjectViewCopyPreviewHeader';
 import { subjectViewCopyStudentHeader } from './app/components/subject/subject_view_copy/directives/subjectViewCopyStudentHeader';
-import { subjectViewCopyTeacherFooter } from './app/components/subject/subject_view_copy/directives/subjectViewCopyTeacherFooter';
-import { subjectViewCopyTeacherHeader } from './app/components/subject/subject_view_copy/directives/subjectViewCopyTeacherHeader';
+import { subjectViewCopyTeacherActions } from './app/components/subject/subject_view_copy/directives/subjectViewCopyTeacherActions';
 import { digitsInputRestrict } from './app/directives/input_restrictions/digitsInputRestrict';
 import {
     accessService,
@@ -174,8 +173,7 @@ ng.directives.push(subjectSchedule);
 ng.directives.push(subjectViewCopyGrainCopyList);
 ng.directives.push(subjectViewCopyPreviewHeader);
 ng.directives.push(subjectViewCopyStudentHeader);
-ng.directives.push(subjectViewCopyTeacherFooter);
-ng.directives.push(subjectViewCopyTeacherHeader);
+ng.directives.push(subjectViewCopyTeacherActions);
 ng.directives.push(digitsInputRestrict);
 
 /**

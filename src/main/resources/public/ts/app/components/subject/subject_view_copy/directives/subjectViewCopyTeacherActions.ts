@@ -1,16 +1,17 @@
-import { ng, template } from 'entcore';
+import { ng, template, idiom } from 'entcore';
 import { _ } from 'entcore';
 import { ISubjectCopy } from '../../../../models/domain';
 
-export const subjectViewCopyTeacherHeader = ng.directive('subjectViewCopyTeacherHeader',
+export const subjectViewCopyTeacherActions = ng.directive('subjectViewCopyTeacherActions',
     ['$location', '$timeout', 'SubjectCopyService', ($location, $timeout, SubjectCopyService) => {
         return {
             restrict: 'E',
             scope: {
                 subjectScheduled: '=',
-                subjectCopy: '='                   
+                subjectCopy: '=',
+                header: '='
             },
-            templateUrl: 'exercizer/public/ts/app/components/subject/subject_view_copy/templates/subject-view-copy-teacher-header.html',
+            templateUrl: 'exercizer/public/ts/app/components/subject/subject_view_copy/templates/subject-view-copy-teacher-actions.html',
             link:(scope:any) => {
                 var subjectCopyList:ISubjectCopy[] =
                     _.chain(SubjectCopyService.getListBySubjectScheduled(scope.subjectScheduled)).filter(function (subjectCopy) {
@@ -19,12 +20,21 @@ export const subjectViewCopyTeacherHeader = ng.directive('subjectViewCopyTeacher
                     }).sortBy( function(subjectCopy) {
                     return subjectCopy.owner_username;
                 }).value();
+
+                var copiesYetToCorrect = _.filter(subjectCopyList, function (subjectCopy) {
+                    return !subjectCopy.is_corrected;
+                }).length || 0;
+
+                scope.copiesYetToCorrectDisplay = function() {
+                    return idiom.translate("exercizer.copies.yet.to.correct").replace('{{number}}', `${copiesYetToCorrect}`);
+                }
                 
                 scope.redirectToDashboard = function(isCorrected:boolean) {
                     if (isCorrected) {
                         var copy = SubjectCopyService.getById(scope.subjectCopy.id);
                         copy.is_correction_on_going = true;
                         copy.is_corrected = true;
+                        scope.copiesYetToCorrect--;
                         scope.$emit('E_UPDATE_SUBJECT_COPY', copy, false);
 
                     } else {
@@ -76,6 +86,10 @@ export const subjectViewCopyTeacherHeader = ng.directive('subjectViewCopyTeacher
 
                 scope.hasPreviousCopy = function() {
                     return scope.subjectCopy.id !== subjectCopyList[0].id;
+                }
+
+                scope.isHeader = function() {
+                    return scope.header;
                 }
             }
         };

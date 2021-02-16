@@ -1140,6 +1140,12 @@ body.exercizer {
     }
   }
 
+  @media screen and (min-width: $wide-screen), print {
+    .desktop-three {
+      width: 25%;
+    }
+  }
+
   .no-responsive {
     @include responsive-only {
       display: none !important;
