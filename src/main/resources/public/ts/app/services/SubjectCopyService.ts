@@ -1,4 +1,4 @@
-import { ng, idiom } from 'entcore';
+import { ng, idiom, moment } from 'entcore';
 import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainCopy, IGrainScheduled, ISubjectCopy, ISubjectScheduled, SubjectCopy } from '../models/domain';
 import { _ } from 'entcore';
@@ -594,6 +594,25 @@ export class SubjectCopyService implements ISubjectCopyService {
         } else{
             return false
         }
+    };
+
+    public orderBy = function (item, field){
+        if(field === 'submitted_date' && item.submitted_date){
+            return moment(item.submitted_date);
+        } else if (field === 'state') {
+            let res = this.copyStateText(item);
+            return (res === '' ? undefined : res);
+        }
+
+        if(field.indexOf('.') >= 0){
+            var splitted_field = field.split('.')
+            var sortValue = item
+            for(var i = 0; i < splitted_field.length; i++){
+                sortValue = (typeof sortValue === 'undefined' || sortValue === null) ? undefined : sortValue[splitted_field[i]]
+            }
+            return sortValue
+        } else
+            return (item[field]) ? item[field] : undefined;
     };
 
 

@@ -13,28 +13,44 @@ export const subjectViewCopyTeacherActions = ng.directive('subjectViewCopyTeache
             },
             templateUrl: 'exercizer/public/ts/app/components/subject/subject_view_copy/templates/subject-view-copy-teacher-actions.html',
             link:(scope:any) => {
+
+                var sortField = window.localStorage.getItem('exercizer' + scope.subjectScheduled.id + '.sortcache');
+                var descSortField = window.localStorage.getItem('exercizer' + scope.subjectScheduled.id + '.sortcache.asc') == "false";
+
                 var subjectCopyList:ISubjectCopy[] =
                     _.chain(SubjectCopyService.getListBySubjectScheduled(scope.subjectScheduled)).filter(function (subjectCopy) {
                         //filter only copy has submitted or due_date is past
                         return SubjectCopyService.canCorrectACopyAsTeacher(scope.subjectScheduled, subjectCopy);
                     }).sortBy( function(subjectCopy) {
-                    return subjectCopy.owner_username;
-                }).value();
-
-                var copiesYetToCorrect = _.filter(subjectCopyList, function (subjectCopy) {
-                    return !subjectCopy.is_corrected;
-                }).length || 0;
-
-                scope.copiesYetToCorrectDisplay = function() {
-                    return idiom.translate("exercizer.copies.yet.to.correct").replace('{{number}}', `${copiesYetToCorrect}`);
+                        if (sortField) {
+                            return SubjectCopyService.orderBy(subjectCopy, sortField);
+                        }
+                        else {
+                            return subjectCopy.owner_username;
+                        }
+                    }).value();
+                if (descSortField) {
+                    subjectCopyList = subjectCopyList.reverse()
                 }
+
+                var copiesYetToCorrect = 0;
+                _.each(subjectCopyList, function(subjectCopy, index) {
+                    if (SubjectCopyService.copyState(subjectCopy) != 'is_corrected') {
+                        copiesYetToCorrect++;
+                    }
+                });
+                var setCopiesYetToCorrectDisplay = function() {
+                    scope.copiesYetToCorrectDisplay = idiom.translate("exercizer.copies.yet.to.correct").replace('{{number}}', `${copiesYetToCorrect}`);
+                }
+                setCopiesYetToCorrectDisplay();
                 
                 scope.redirectToDashboard = function(isCorrected:boolean) {
                     if (isCorrected) {
                         var copy = SubjectCopyService.getById(scope.subjectCopy.id);
                         copy.is_correction_on_going = true;
                         copy.is_corrected = true;
-                        scope.copiesYetToCorrect--;
+                        copiesYetToCorrect--;
+                        setCopiesYetToCorrectDisplay();
                         scope.$emit('E_UPDATE_SUBJECT_COPY', copy, false);
 
                     } else {
