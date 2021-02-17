@@ -6,7 +6,8 @@
             <nav class="vertical">
                 <ul>
                     <li>
-                        <a  data-ng-class="{'selected' : lightbox.state == 'type'}"
+                        <a  data-ng-hide="isSimpleSubject"
+                            data-ng-class="{'selected' : lightbox.state == 'type'}"
                             data-ng-click="lightbox.state='type'">
                             <i18n>exercizer.scheduled.subject.type</i18n>
                         </a>
@@ -101,8 +102,11 @@
                     <button class="right-magnet cell" data-ng-click="lightbox.state = 'option'">
                         <i18n>exercizer.next</i18n>
                     </button>
-                    <button class="flat-button right-magnet cell" data-ng-click="lightbox.state = 'type'">
+                    <button class="flat-button right-magnet cell" data-ng-click="lightbox.state = 'type'" data-ng-hide="isSimpleSubject">
                         <i18n>exercizer.previous</i18n>
+                    </button>
+                    <button class="cancel right-magnet cell" data-ng-click="hide()" data-ng-show="isSimpleSubject">
+                        <i18n>exercizer.cancel</i18n>
                     </button>
                 </div>
             </div>

@@ -68,7 +68,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
 
                 function reset() {
                     scope.lightbox = {
-                        state: 'type',
+                        state: scope.isSimpleSubject ? 'assignSubject' : 'type',
                         isDisplayed : false
                     };
                     scope.data = {groupList:[],userList:[],exclude:[]};
