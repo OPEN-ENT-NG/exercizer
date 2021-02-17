@@ -55,10 +55,8 @@ class SubjectCopyListController {
             var subjectScheduled = self.getSubjectScheduledById(subjectCopy.subject_scheduled_id);
             if (subjectScheduled) {
                 var dueDate = self._dateService.isoToDate(subjectScheduled.due_date);
-                if (!begin || !end) {
-                    throw "begin or end date in params missing"
-                }
-                return self._dateService.compare_after(dueDate, begin, true) && self._dateService.compare_after(end, dueDate, true);
+                return (!begin || self._dateService.compare_after(dueDate, begin, true)) &&
+                    (!end || self._dateService.compare_after(end, dueDate, true));
             } else {
                 return false;
             }

@@ -30,8 +30,7 @@ export const studentDashboardSubjectCopyList = ng.directive('studentDashboardSub
                     // Search
                     if (!scope.search) {
                         scope.search = {
-                            beginDate: moment().startOf('week').add(1, 'week').toDate(),
-                            endDate: moment().add(3, 'month').toDate()
+                            beginDate: moment().startOf('week').add(1, 'week').toDate()
                         }
                     }
                 }
