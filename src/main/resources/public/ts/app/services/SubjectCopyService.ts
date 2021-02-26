@@ -3,6 +3,15 @@ import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainCopy, IGrainScheduled, ISubjectCopy, ISubjectScheduled, SubjectCopy } from '../models/domain';
 import { _ } from 'entcore';
 
+function cleanBeforeSave(subject: ISubjectCopy|ISubjectScheduled):ISubjectCopy|ISubjectScheduled{
+    const copy:any = {...subject}
+    if(copy.owner && copy.owner.userId){
+        copy.owner = copy.owner.userId;
+    }
+    delete copy["tracker"];
+    return copy;
+}
+
 export interface ISubjectCopyService {
     resolve(isTeacher:boolean): Promise<boolean>;
     persist(subjectCopy:ISubjectCopy):Promise<ISubjectCopy>;
@@ -147,7 +156,7 @@ export class SubjectCopyService implements ISubjectCopyService {
             request = {
                 method: 'POST',
                 url: 'exercizer/subjects-copy-by-subject-scheduled/' + subjectScheduled.id,
-                data : subjectScheduled
+                data : cleanBeforeSave(subjectScheduled)
             };
             this._$http(request).then(
                 function(response) {
@@ -193,7 +202,7 @@ export class SubjectCopyService implements ISubjectCopyService {
             request = {
                 method: 'POST',
                 url: 'exercizer/subject-copy/' + subjectCopy.subject_scheduled_id,
-                data: subjectCopy
+                data: cleanBeforeSave(subjectCopy)
             };
         this._$http(request).then(
             function(response) {
@@ -367,7 +376,7 @@ export class SubjectCopyService implements ISubjectCopyService {
             request = {
                 method: 'PUT',
                 url: 'exercizer/subject-copy' + action,
-                data: subjectCopy
+                data: cleanBeforeSave(subjectCopy)
             };
         
             this._$http(request).then(

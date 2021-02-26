@@ -1,9 +1,18 @@
 import { IGrain, ISubject, Grain, GrainData } from '../models/domain';
 import { SerializationHelper, CloneObjectHelper } from '../models/helpers';
-import { IGrainService } from './GrainService';
 import { IGrainTypeService } from './GrainTypeService';
 import { ng, idiom } from 'entcore';
 import { _ } from 'entcore';
+import { IGrainData } from '../models/domain';
+
+function cleanBeforeSave(subject: IGrain|ISubject|IGrainData):ISubject|IGrain|IGrainData{
+    const copy:any = {...subject}
+    if(copy.owner && copy.owner.userId){
+        copy.owner = copy.owner.userId;
+    }
+    delete copy["tracker"];
+    return copy;
+}
 
 export interface IGrainService {
     persist(grain:IGrain): Promise<IGrain>;
@@ -46,7 +55,7 @@ export class GrainService implements IGrainService {
         }
         var ix = this._listMappedBySubjectId[grain.subject_id].push(grain);
 
-        var body = {"grainTypeId": grain.grain_type_id, "orderBy": grain.order_by,"grainData": grain.grain_data};
+        var body = {"grainTypeId": grain.grain_type_id, "orderBy": grain.order_by,"grainData": cleanBeforeSave(grain.grain_data)};
 
         var request = {
             method: 'POST',
@@ -78,7 +87,7 @@ export class GrainService implements IGrainService {
         var self = this,
             deferred = this._$q.defer();
 
-        var body = {"grainTypeId": grain.grain_type_id, "orderBy": grain.order_by,"grainData": grain.grain_data};
+        var body = {"grainTypeId": grain.grain_type_id, "orderBy": grain.order_by,"grainData": cleanBeforeSave(grain.grain_data)};
 
         var request = {
             method: 'PUT',
@@ -202,7 +211,7 @@ export class GrainService implements IGrainService {
             request = {
                 method: 'POST',
                 url: !subject.is_library_subject ? 'exercizer/grains/' + subject.id : 'exercizer/subject-library-grains',
-                data: subject
+                data: cleanBeforeSave(subject)
             };
 
         if (!angular.isUndefined(this._listMappedBySubjectId[subject.id])) {

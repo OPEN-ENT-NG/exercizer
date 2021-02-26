@@ -3,6 +3,15 @@ import { ISubject, IGrain, IFolder, Subject } from '../models/domain';
 import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainService } from './GrainService';
 
+function cleanBeforeSave(subject: ISubject|IGrain):ISubject|IGrain{
+    const copy:any = {...subject}
+    if(copy.owner && copy.owner.userId){
+        copy.owner = copy.owner.userId;
+    }
+    delete copy["tracker"];
+    return copy;
+}
+
 export interface ISubjectService {
     resolve(force?:boolean): Promise<boolean>;
     persist(subject: ISubject): Promise<ISubject>;
@@ -77,7 +86,7 @@ export class SubjectService implements ISubjectService {
             request = {
                 method: 'POST',
                 url: 'exercizer/subject',
-                data: subject
+                data: cleanBeforeSave(subject)
             };
 
         if (!this._listMappedById) {
@@ -142,7 +151,7 @@ export class SubjectService implements ISubjectService {
             request = {
                 method: 'POST',
                 url: 'exercizer/subject/import',
-                data: {subject:subject, grains:grains}
+                data: {subject:cleanBeforeSave(subject), grains:grains.map(g=>cleanBeforeSave(g))}
             };
 
         if (!this._listMappedById) {
@@ -170,7 +179,7 @@ export class SubjectService implements ISubjectService {
             request = {
                 method: 'PUT',
                 url: 'exercizer/subject/' + subject.id,
-                data: subject
+                data: cleanBeforeSave(subject)
             };
 
         this._grainService.getListBySubject(subject).then(

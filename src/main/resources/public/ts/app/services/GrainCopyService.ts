@@ -13,6 +13,16 @@ import { CustomData as FillTextCustomData } from '../components/grain/filltext/m
 import { CustomData as ZoneTextCustomData } from '../components/grain/zonetext/models/CustomData';
 import { CustomData as ZoneImageCustomData } from '../components/grain/zoneimage/models/CustomData';
 
+function cleanBeforeSave(subject: IGrainCopy|ISubjectCopy):ISubjectCopy|IGrainCopy{
+    const copy:any = {...subject}
+    if(copy.owner && copy.owner.userId){
+        copy.owner = copy.owner.userId;
+    }
+    delete copy["tracker"];
+    return copy;
+}
+    
+
 export interface IGrainCopyService {
     persist(grainCopy:IGrainCopy, subjectScheduled):Promise<IGrainCopy>;
     update(grainCopy:IGrainCopy):Promise<IGrainCopy>;
@@ -52,7 +62,7 @@ export class GrainCopyService implements IGrainCopyService {
         var request = {
             method: 'POST',
             url: 'exercizer/grain-copy/' + subjectScheduled.id,
-            data: grainCopy
+            data: cleanBeforeSave(grainCopy)
         };
 
         this._$http(request).then(
@@ -75,7 +85,7 @@ export class GrainCopyService implements IGrainCopyService {
         var self = this,
             deferred = this._$q.defer();
 
-        var grainCopyObject = angular.copy(grainCopy);
+        var grainCopyObject:any = cleanBeforeSave(angular.copy(grainCopy));
         grainCopyObject.grain_copy_data = JSON.stringify(grainCopyObject.grain_copy_data);
 
         var request = {
@@ -131,7 +141,7 @@ export class GrainCopyService implements IGrainCopyService {
         var request = {
                 method: 'POST',
                 url: 'exercizer/grains-copy',
-                data: subjectCopy
+                data: cleanBeforeSave(subjectCopy)
             };
 
         if (this._listMappedBySubjectCopyId[subjectCopy.id] && !force) {
