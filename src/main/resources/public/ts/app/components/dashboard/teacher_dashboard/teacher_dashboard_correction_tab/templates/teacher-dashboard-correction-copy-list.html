@@ -75,7 +75,7 @@
      <table class="list-view">
           <thead>
           <tr>
-               <th class="one centered-text" ><input type="checkbox" data-ng-model="selectAll" data-ng-click="clickSelectAll(selectAll)"/></th>
+               <th class="one centered-text" ><input type="checkbox" data-ng-model="selectAll" data-ng-change="clickSelectAll(selectAll)"/></th>
                <th scope="col" ng-click="orderByField('owner_username')">
                     <span translate content="exercizer.copy.from" ></span>
                     <i class="sort" ng-if="order.field !== 'owner_username'"></i>
@@ -111,7 +111,7 @@
           <tbody>
           <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc">
                <td class="centered-text">
-                    <input type="checkbox" data-ng-model="copy.selected" data-ng-click="selectCopy()"/>
+                    <input type="checkbox" data-ng-model="copy.selected" data-ng-change="selectCopy()"/>
                </td>
                <td data-ng-switch="selectTitle(copy)">
                     <span data-ng-switch-when="text">[[copy.owner_username]]</span>
