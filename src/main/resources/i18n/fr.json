@@ -565,5 +565,7 @@
     "exercizer.subject.navigation.title": "Sujet non enregistré",
     "exercizer.subject.navigation.body": "Certaines modifications n'ont pas été enregistrées. Souhaitez-vous les conserver ?",
     "exercizer.navigation.error": "Un problème technique est survenu",
-    "exercizer.navigation.success": "Enregistrement effectué"
+    "exercizer.navigation.success": "Enregistrement effectué",
+    "exercizer.grain.accent.warning": "Lors de la correction automatique, les majuscules, les espaces et les accents seront ignorés.",
+    "exercizer.grain.accent.warning.option1": "En mode saisie libre, lors de la correction automatique, les majuscules, les espaces et les accents seront ignorés."
 }
