@@ -223,7 +223,19 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
 
     @Override
     public void deleteGroups(JsonArray groups) {
-        if(groups == null || groups.size() == 0){
+        if(groups == null)
+        {
+            log.warn("[ExercizerRepositoryEvents][deleteGroups] groups is empty");
+            return;
+        }
+
+		for(int i = groups.size(); i-- > 0;)
+		{
+			if(groups.hasNull(i))
+			groups.remove(i);
+		}
+        if(groups.size() == 0)
+        {
             log.warn("[ExercizerRepositoryEvents][deleteGroups] groups is empty");
             return;
         }
@@ -263,7 +275,17 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
     @Override
     public void deleteUsers(JsonArray users) {
 
-        if(users == null || users.size() == 0){
+        if(users == null){
+            log.warn("[ExercizerRepositoryEvents][deleteUsers] users is empty");
+            return;
+        }
+		for(int i = users.size(); i-- > 0;)
+		{
+			if(users.hasNull(i))
+				users.remove(i);
+		}
+        if(users.size() == 0)
+        {
             log.warn("[ExercizerRepositoryEvents][deleteUsers] users is empty");
             return;
         }
