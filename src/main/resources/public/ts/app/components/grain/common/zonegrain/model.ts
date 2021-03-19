@@ -1,5 +1,6 @@
 ﻿import { _ } from 'entcore';
 import { IGrainCopy, IGrainScheduled } from '../../../../models/domain';
+import { CompareStringHelper } from '../../../../models/helpers';
 
 export interface Zone {
     answer: string
@@ -18,7 +19,7 @@ export function automaticCorrection(grainScheduled: IGrainScheduled, grainCopy: 
     var textZonesCorrection = [];
     customData.zones.forEach((textZone, i) => {
         textZonesCorrection.push(
-            textZone.answer && textZone.answer.toLowerCase() === customCopyData.zones[i].answer.toLowerCase()
+            textZone.answer && CompareStringHelper.compare(textZone.answer, customCopyData.zones[i].answer)
         );
     });
 
