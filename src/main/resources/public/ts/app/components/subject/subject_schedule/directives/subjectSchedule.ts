@@ -436,9 +436,9 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     });
                 }
 
-                function createLists(subject, startSearch) {
+                async function createLists(subject, startSearch) {
                     var array = [];
-                    GroupService.getList(subject, startSearch, (startSearch != null)).then(
+                    await GroupService.getList(subject, startSearch, (startSearch != null)).then(
                         function (data) {
                             angular.forEach(data.bookmarks, function (group) {
                                 var obj = createObjectList(group.name, group.id, 'bookbark', null, null, true);
@@ -487,7 +487,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
 
                 var searchCache = {};
 
-                scope.updateFoundUsersGroups = function() {
+                scope.updateFoundUsersGroups = async function() {
                     var searchTerm =  idiom.removeAccents(scope.search.search).toLowerCase();
                         
                     if(!searchTerm){
@@ -496,9 +496,11 @@ export const subjectSchedule = ng.directive('subjectSchedule',
 
                     var startSearch = Me.session.functions.ADMIN_LOCAL ? searchTerm.substr(0, 3) : '';
                     var list;
+                    var doApply = false;
                     if (startSearch.length == 3) {
                         if (!searchCache[startSearch]) {
-                            searchCache[startSearch] = createLists(scope.subject, startSearch);
+                            searchCache[startSearch] = await createLists(scope.subject, startSearch);
+                            doApply = true;
                         }
                         list = searchCache[startSearch];
                     } else {
@@ -509,6 +511,9 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         let titleTest = idiom.removeAccents(item.name).toLowerCase();
                         return titleTest.indexOf(searchTerm) !== -1;
                     });
+
+                    if(doApply == true)
+                        scope.$apply();
                 };
 
                 scope.confirmation = function () {
