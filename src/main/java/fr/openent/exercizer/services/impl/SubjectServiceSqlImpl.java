@@ -117,13 +117,10 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	}
 
 	public void removeSubjectsAndGrains(SqlStatementsBuilder builder, final UserInfos user, JsonArray subjectIds) {
-		final String subjectsQuery = "UPDATE " + resourceTable + " SET folder_id=null, is_deleted=true, owner=?, owner_username=?, modified=NOW() WHERE id IN " +
+		final String subjectsQuery = "UPDATE " + resourceTable + " SET folder_id=null, is_deleted=true, modified=NOW() WHERE id IN " +
 				Sql.listPrepared(subjectIds.getList());
 
 		final JsonArray subjectsValues = new fr.wseduc.webutils.collections.JsonArray();
-
-		subjectsValues.add(user.getUserId());
-		subjectsValues.add(user.getUsername());
 
 		for (int i=0;i<subjectIds.size();i++) {
 			subjectsValues.add(subjectIds.getValue(i));
