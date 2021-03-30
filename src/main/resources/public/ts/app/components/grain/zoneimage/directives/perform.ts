@@ -79,11 +79,6 @@ export const performZoneImage = ng.directive('performZoneImage',
                     scope.updateGrainCopy();
                 };
 
-                let selector = `#${scope.grainCopy.id}-bckgrnd`;
-                $(selector).load(function() {
-                    scope.$apply();
-                });
-
                 scope.getResizedIconZoneX = function(x: number, reverseTransform: boolean): number
                 {
                     let selector = `#${scope.grainCopy.id}-bckgrnd`;
