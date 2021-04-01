@@ -386,16 +386,16 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                  */
 
                     // event to display model
-                scope.$on("E_DISPLAY_MODAL_SCHEDULE_SUBJECT", function (event, subject) {
+                scope.$on("E_DISPLAY_MODAL_SCHEDULE_SUBJECT", async function (event, subject) {
                     scope.isSimpleSubject = 'simple' === subject.type;
                     if (!scope.isSimpleSubject) {
                         GrainService.getListBySubject(subject).then(
-                            function (grainList:IGrain[]) {
+                            async function (grainList:IGrain[]) {
                                 if (grainList.length > 0) {
                                     scope.subject = subject;
                                     reset();
                                     scope.lightbox.isDisplayed = true;
-                                    scope.data.lists = createLists(subject, null);
+                                    scope.data.lists = await createLists(subject, null);
                                 } else {
                                     notify.info('exercizer.service.check.schedule');
                                 }
@@ -408,7 +408,7 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                         scope.subject = subject;
                         reset();
                         scope.lightbox.isDisplayed = true;
-                        scope.data.lists = createLists(subject, null);
+                        scope.data.lists = await createLists(subject, null);
                     }
                 });
 
