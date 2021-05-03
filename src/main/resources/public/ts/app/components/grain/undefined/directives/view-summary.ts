@@ -20,6 +20,10 @@ export const viewSummary = ng.directive('viewSummary',
                 scope.updateSubjectCopy = function() {
                     scope.$emit('E_UPDATE_SUBJECT_COPY', scope.subjectCopy, false);
                 };
+                //generate the final score the first time
+                if(typeof scope.subjectCopy.final_score != "number"){
+                    scope.updateSubjectCopy();
+                }
             }
         };
     }]

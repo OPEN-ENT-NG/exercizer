@@ -27,7 +27,7 @@ export const viewFillText = ng.directive('viewFillText',
                 var result = automaticCorrection(scope.grainScheduled, scope.grainCopy);
                 scope.correction = result.answers_result.correction;
                 scope.customData = scope.grainCopy.grain_copy_data.custom_copy_data;
-                if (!scope.grainCopy.calculated_score) {
+                if (!scope.grainCopy.calculated_score && scope.grainCopy.calculated_score != result.calculated_score) {
                     scope.grainCopy.calculated_score = result.calculated_score;
                     scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                 }

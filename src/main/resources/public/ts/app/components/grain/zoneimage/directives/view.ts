@@ -29,7 +29,7 @@ export const viewZoneImage = ng.directive('viewZoneImage',
 
                 var result = automaticCorrection(scope.grainScheduled, scope.grainCopy);
                 scope.correction = result.answers_result.correction;
-                if (!scope.grainCopy.calculated_score) {
+                if (!scope.grainCopy.calculated_score && scope.grainCopy.calculated_score != result.calculated_score) {
                     scope.grainCopy.calculated_score = result.calculated_score;
                     scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                 }
