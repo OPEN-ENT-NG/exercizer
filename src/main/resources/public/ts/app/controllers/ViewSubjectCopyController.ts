@@ -46,6 +46,7 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
     private _subscriptions = new Array<rx.Subscription>();
     public shouldShowNavigationAlert:boolean;
     public saving = false;
+    private _previewMode = false;
 
     constructor
     (
@@ -81,12 +82,13 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
             this._subscriptions.forEach((value)=>{
                 value.unsubscribe();
             })
+            this._subscriptions = []
         })
         //
         var self = this,
             subjectId = _$routeParams['subjectId'],
             subjectCopyId = _$routeParams['subjectCopyId'];
-
+        this._previewMode = ((this._$location && this._$location.url())+"").indexOf("preview") > -1;
         if (!angular.isUndefined(subjectId)) {
             this._subjectService.getByIdEvenDeleted(subjectId).then(function(subject) {
                 if (angular.isUndefined(subject)) {
@@ -120,7 +122,12 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
     }
 
     guardObjectIsDirty(): boolean {
-        this._pendingEdit = this.grainCopyList.filter((e)=>e.getTracker().status=='editing');
+        //if preview => do not try to save
+        if(this._previewMode){
+            console.debug("preview mode skip save: ", this._previewMode);
+            return false;
+        }
+        this._pendingEdit = (this.grainCopyList || []).filter((e)=>e.getTracker().status=='editing');
         return this._pendingTasks.length > 0 || this._pendingEdit.length>0;
     }
 

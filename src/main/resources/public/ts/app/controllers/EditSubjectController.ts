@@ -106,6 +106,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
             this._subscriptions.forEach((value)=>{
                 value.unsubscribe();
             })
+            this._subscriptions = []
         })
         //
         _$scope.$root.$on('E_SUBJECTEDIT_DROPABLE_ACTIVATED', function(event, displayDropZone:boolean) {

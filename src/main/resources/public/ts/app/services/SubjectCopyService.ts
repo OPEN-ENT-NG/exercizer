@@ -626,7 +626,7 @@ export class SubjectCopyService implements ISubjectCopyService {
 
 
     public getById = function(id:number):ISubjectCopy {
-        return this._listMappedById[id];
+        return this._listMappedById && this._listMappedById[id];
     };
 
     get tmpPreviewData():{subjectScheduled:ISubjectScheduled; subjectCopy:ISubjectCopy; grainScheduledList:IGrainScheduled[]; grainCopyList:IGrainCopy[]} {
