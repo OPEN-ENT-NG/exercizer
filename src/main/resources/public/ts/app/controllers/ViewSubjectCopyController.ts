@@ -358,7 +358,7 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
     }
 
     private _handleUpdateGrainCopy = function(grainCopy:IGrainCopy, onSave?:(ok:boolean)=>void) {
-        const self = this;
+        const self = this as ViewSubjectCopyController;
         const task : ISubjectCopyTask = {done: "waiting", grainCopy: grainCopy, operation: "update", subjectCopy:null}; 
         if(!self._lockTasks){
             self._pendingTasks.push(task);
@@ -366,6 +366,7 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
         grainCopy.getTracker().onStop();
         self._grainCopyService.correct(grainCopy).then(
             function() {
+                self._$scope.$emit('E_UPDATE_SUBJECT_COPY', self.subjectCopy, false);
                 onSave && onSave(true);
                 self._updateLocalGrainCopyList(grainCopy);
                 self._calculateScores();
