@@ -378,7 +378,7 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
         grainCopy.getTracker().onStop();
         self._grainCopyService.correct(grainCopy).then(
             function() {
-                self._$scope.$emit('E_UPDATE_SUBJECT_COPY', self.subjectCopy, false);
+                self._$scope.$emit('E_UPDATE_SUBJECT_COPY_NO_DEBOUNCE', self.subjectCopy, false);
                 onSave && onSave(true);
                 self._updateLocalGrainCopyList(grainCopy);
                 self._calculateScores();
@@ -431,6 +431,17 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
                 //self._handleUpdateSubjectCopy(subjectCopy, redirect);
                 getDebouncedSubjectCopytream(subjectCopy).next({subject: subjectCopy, redirect})
             } else if (self._previewing && self._isTeacher) {
+                self._calculateScores();
+                self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
+            }
+        });
+        //save without debounce
+        self._$scope.$on('E_UPDATE_SUBJECT_COPY_NO_DEBOUNCE', function (event, subjectCopy, redirect) {
+            if (!self._previewing && self._isTeacher) {
+                //use debounce
+                self._handleUpdateSubjectCopy(subjectCopy, redirect);
+            }
+            else if (self._previewing && self._isTeacher) {
                 self._calculateScores();
                 self._$scope.$broadcast('E_SUBJECT_COPY_UPDATED', redirect);
             }
