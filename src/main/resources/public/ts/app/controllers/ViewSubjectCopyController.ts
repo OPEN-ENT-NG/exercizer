@@ -138,6 +138,12 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
 
     guardOnUserConfirmNavigate(canNavigate:boolean):void{
         setTimeout(()=>{
+            //if pending task already done => display notification
+            if(!canNavigate && this._pendingTasks.length == 0 && this._pendingEdit.length == 0){
+                notify.success("exercizer.navigation.success");
+                return;
+            }
+            //else perfom tasks
             if(!canNavigate && this._pendingTasks.length > 0){
                 this.shouldShowNavigationAlert = true;
                 this._$scope.$apply();
