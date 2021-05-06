@@ -27,10 +27,10 @@
         <tbody>
         <tr data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
             <td>
-                <input type="text" style="width: 100%;" data-ng-model="answer.text_left" complete-change="updateGrain()" value="[[ answer.text_left ]]" i18n-placeholder="exercizer.grain.answer.info" />
+                <input type="text" style="width: 100%;" data-ng-model="answer.text_left" ng-change="updateGrain()" value="[[ answer.text_left ]]" i18n-placeholder="exercizer.grain.answer.info" />
             </td>
             <td>
-                <input type="text" style="width: 100%;" data-ng-model="answer.text_right" complete-change="updateGrain()" value="[[ answer.text_right ]]" i18n-placeholder="exercizer.grain.asso.right" />
+                <input type="text" style="width: 100%;" data-ng-model="answer.text_right" ng-change="updateGrain()" value="[[ answer.text_right ]]" i18n-placeholder="exercizer.grain.asso.right" />
             </td>
             <td style="text-align: right">
                 <i class="close" data-ng-click="deleteAnswer(answer)"></i>

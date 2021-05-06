@@ -149,9 +149,9 @@
 
                             <!-- TITLE & SCORE -->
                             <div class="row vertical-spacing" data-ng-if="grain.grain_type_id > 3">
-                                <input type="text" class="eight cell" data-ng-model="grain.grain_data.title" complete-change="editSubjectController.updateGrain(grain)" value="[[ grain.grain_data.title ]]" i18n-placeholder="exercizer.grain.title" maxlength="255"/>
+                                <input type="text" class="eight cell" data-ng-model="grain.grain_data.title" ng-change="editSubjectController.updateGrainDebounced(grain)" value="[[ grain.grain_data.title ]]" i18n-placeholder="exercizer.grain.title" maxlength="255"/>
                                 <em class="high-importance cell right-magnet">&nbsp;<i18n>exercizer.score</i18n></em>
-                                <input type="text" class="cell right-magnet" style="width: 50px;" data-ng-model="grain.grain_data.max_score" complete-change="editSubjectController.updateGrain(grain)" i18n-placeholder="exercizer.grain.scoring" />
+                                <input type="text" class="cell right-magnet" style="width: 50px;" data-ng-model="grain.grain_data.max_score" ng-change="editSubjectController.updateGrainDebounced(grain)" i18n-placeholder="exercizer.grain.scoring" />
                             </div>
 
                             <!-- GRAIN STATEMENT -->
@@ -245,7 +245,7 @@
                                     <em><i18n>exercizer.grain.help.tooltip</i18n></em>
                                 </div>
                                 <div class="eleven cell">
-                                    <textarea data-ng-model="grain.grain_data.answer_hint" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;"></textarea>
+                                    <textarea data-ng-model="grain.grain_data.answer_hint" ng-change="editSubjectController.updateGrainDebounced(grain)" style="height: 40px;"></textarea>
                                 </div>
                             </div>
 
@@ -261,7 +261,7 @@
                                     <em><i18n>exercizer.grain.explanation.tooltip</i18n></em>
                                 </div>
                                 <div class="eleven cell">
-                                    <textarea data-ng-model="grain.grain_data.answer_explanation" complete-change="editSubjectController.updateGrain(grain)" style="height: 40px;"></textarea>
+                                    <textarea data-ng-model="grain.grain_data.answer_explanation" ng-change="editSubjectController.updateGrainDebounced(grain)" style="height: 40px;"></textarea>
                                 </div>
                             </div>
 

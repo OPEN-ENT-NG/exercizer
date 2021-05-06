@@ -57,7 +57,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
     private _subscriptions = new Array<rx.Subscription>();
     public shouldShowNavigationAlert:boolean;
     public saving = false;
-
+    private _getDebouncedGrain : (grain:IGrain) => rx.Subject<IGrain>;
     constructor
     (
         private _$routeParams,
@@ -121,12 +121,13 @@ export class EditSubjectController implements IObjectGuardDelegate {
             if(!this._grainStreams.has(grain.id)){
                 const observable = new rx.Subject<IGrain>();
                 this._grainStreams.set(grain.id, observable);
-                this._subscriptions.push(observable.debounceTime(200).subscribe((grain)=>{
+                this._subscriptions.push(observable.debounceTime(500).subscribe((grain)=>{
                     this.updateGrain(grain);
                 }));
             }
             return this._grainStreams.get(grain.id);
         }
+        this._getDebouncedGrain = getDebouncedGrainStream;
         this._subjectService.resolve().then(function() {
             self._subject = self._subjectService.getById(subjectId);
 
@@ -183,21 +184,30 @@ export class EditSubjectController implements IObjectGuardDelegate {
                     this._$scope.$apply();
                 }, 750)
             }
-            let done = 0;
-            for(const grain of this._pendingEdit){
-                this.updateGrain(grain, (ok)=>{
-                    done++;
-                    if(done == this._pendingEdit.length){
-                        notify.success("exercizer.navigation.success");
-                    }
-                });
+            if(!canNavigate && this._pendingEdit.length > 0){
+                this.shouldShowNavigationAlert = true;
+                this._$scope.$apply();
+                let done = 0;
+                const count = this._pendingEdit.length;
+                for(const grain of this._pendingEdit){
+                    this.updateGrain(grain, (ok)=>{
+                        done++;
+                        if(done == count && this._pendingTasks.length == 0){
+                            notify.success("exercizer.navigation.success");
+                            this.closeNavigationAlert();
+                        }
+                    });
+                }
+                this._pendingEdit = [];
             }
-            this._pendingEdit = [];
         });
     }
 
     closeNavigationAlert():void{
         this.shouldShowNavigationAlert = false;
+        setTimeout(()=>{
+            this._$scope.$apply();
+        })
     }
 
     canCloseNavigationAlert():boolean{
@@ -218,6 +228,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
                 this.closeNavigationAlert();
                 this._pendingTasks = [];
                 this._lockTasks = false;
+                this._$scope.$apply();
             }
         }
         for(const task of this._pendingTasks){
@@ -236,6 +247,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
                 tryFinish();
             }
         }
+        tryFinish();
     }
 
     /**
@@ -346,7 +358,11 @@ export class EditSubjectController implements IObjectGuardDelegate {
             }
         );
     };
-    
+    public updateGrainDebounced = function(grain:IGrain) {
+        var self:EditSubjectController = this;
+        self._getDebouncedGrain(grain).next(grain);
+    }
+
     public updateGrain = function(grain:IGrain, onSave?:({ok:boolean, grain: IGrain})=>void) {
         var self:EditSubjectController = this;
         const task : IGrainTask = {done: "waiting", grain: grain, operation: "update"}; 

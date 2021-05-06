@@ -147,21 +147,31 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
                     this._$scope.$apply();
                 }, 750)
             }
-            let done = 0;
-            for(const grain of this._pendingEdit){
-                this._handleUpdateGrainCopy(grain, (ok)=>{
-                    done++;
-                    if(done == this._pendingEdit.length){
-                        notify.success("exercizer.navigation.success");
-                    }
-                });
+            if(!canNavigate && this._pendingEdit.length > 0){
+                this.shouldShowNavigationAlert = true;
+                this._$scope.$apply();
+                let done = 0;
+                const count = this._pendingEdit.length;
+                for(const grain of this._pendingEdit){
+                    this._handleUpdateGrainCopy(grain, (ok)=>{
+                        done++;
+                        if(done == count){
+                            notify.success("exercizer.navigation.success");
+                            this.closeNavigationAlert();
+                            this._$scope.$apply();
+                        }
+                    });
+                }
+                this._pendingEdit = [];
             }
-            this._pendingEdit = [];
         });
     }
 
     closeNavigationAlert():void{
         this.shouldShowNavigationAlert = false;
+        setTimeout(()=>{
+            this._$scope.$apply();
+        })
     }
 
     canCloseNavigationAlert():boolean{
@@ -182,6 +192,7 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
                 this.closeNavigationAlert();
                 this._pendingTasks = [];
                 this._lockTasks = false;
+                this._$scope.$apply();
             }
         }
         for(const task of this._pendingTasks){
@@ -197,6 +208,7 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
                 });
             }
         }
+        tryFinish();
     }
 
     private _preview(subjectId:number) {
@@ -403,7 +415,7 @@ class ViewSubjectCopyController implements IObjectGuardDelegate {
             if(!self._subjectStreams.has(subject.id)){
                 const observable = new rx.Subject<{subject: ISubjectCopy, redirect:boolean}>();
                 self._subjectStreams.set(subject.id, observable);
-                self._subscriptions.push(observable.debounceTime(200).subscribe((event)=>{
+                self._subscriptions.push(observable.debounceTime(500).subscribe((event)=>{
                     self._handleUpdateSubjectCopy(event.subject, event.redirect);
                 }));
             }
