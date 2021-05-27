@@ -153,7 +153,7 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
             }
             //else perfom tasks
             if(!canNavigate && this._pendingTasks.length > 0){
-                this.shouldShowNavigationAlert = true;
+                this.shouldShowNavigationAlert = false;
                 this._$scope.$apply();
                 //keep open at least 750ms
                 setTimeout(() => {
@@ -162,7 +162,7 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
                 }, 750)
             }
             if(!canNavigate && this._pendingEdit.length > 0){
-                this.shouldShowNavigationAlert = true;
+                this.shouldShowNavigationAlert = false;
                 this._$scope.$apply();
                 let done = 0;
                 const count = this._pendingEdit.length;
