@@ -53,7 +53,10 @@
 			<container template="main"></container>
 		</portal>
 		<!-- No portal for printing -->
-		<container data-ng-if="isPrintPage" template="main"></container>
+		<div data-ng-if="isPrintPage">
+			<portal-styles></portal-styles>
+			<container template="main"></container>
+		</div>
 	</div>
 	<library-publish></library-publish>
 </body>
