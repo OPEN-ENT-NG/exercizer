@@ -32,8 +32,8 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
     }
 
     @Override
-    public void exportResources(JsonArray resourcesIds, String exportId, String userId, JsonArray groups, String exportPath,
-                                String locale, String host, Handler<Boolean> handler) {
+    public void exportResources(JsonArray resourcesIds, boolean exportDocuments, boolean exportSharedResources, String exportId, String userId,
+                                JsonArray groups, String exportPath, String locale, String host, Handler<Boolean> handler) {
 
             final HashMap<String,JsonArray> queries = new HashMap<String, JsonArray>();
 
@@ -109,6 +109,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                             "LEFT JOIN " + subjectScheduledTable + " subSche ON sub.id = subSche.subject_id " +
                             "LEFT JOIN " +subjectCopyTable + " subCo ON subSche.id = subCo.subject_scheduled_id " +
                             "LEFT JOIN " + subjectShareTable + " subSh ON sub.id = subSh.resource_id " +
+                            (exportSharedResources == true ? "" : "AND 1 = 0 ") +
                             "LEFT JOIN " + membersTable + " mem ON subSh.member_id = mem.id " +
                             "WHERE " +
                             (resourcesIds != null ? ("sub.id IN " + resourcesList + " AND ") : "") +
@@ -131,7 +132,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                 @Override
                 public void handle(String path) {
                     if (path != null) {
-                        exportTables(queries, new JsonArray(), fieldsToNull, path, exported, handler);
+                        exportTables(queries, new JsonArray(), fieldsToNull, exportDocuments, path, exported, handler);
                     }
                     else {
                         handler.handle(exported.get());

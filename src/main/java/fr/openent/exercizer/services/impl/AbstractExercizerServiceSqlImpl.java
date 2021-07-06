@@ -239,9 +239,10 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
      */
     protected void list(final JsonArray filters, final List<String> groupsAndUserIds, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
         StringBuilder query = new StringBuilder();
+        StringBuilder select = new StringBuilder();
         JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
 
-        query.append("SELECT r.*,")
+        select.append("SELECT r.*,")
                 .append(" json_agg(row_to_json(row(rs.member_id,rs.action)::")
                 .append(schema)
                 .append("share_tuple)) AS shared,")
@@ -256,21 +257,34 @@ abstract class AbstractExercizerServiceSqlImpl extends SqlCrudService {
                 .append(schema)
                 .append("members as m ON (rs.member_id = m.id AND m.group_id IS NOT NULL)");
 
-        query.append(" WHERE (rs.member_id IN ").append(Sql.listPrepared((groupsAndUserIds.toArray())));
-        for (String groupOrUser : groupsAndUserIds) {
-            values.add(groupOrUser);
-        }
-
-        query.append(" OR r.owner = ?) ");
+        // Select all resources owned by the user
+        query.append(select.toString());
+        query.append(" WHERE r.owner = ? ");
         values.add(user.getUserId());
-
         if (filters.size() > 0 ) {
             for (Object filter : filters) {
                 query.append(" AND ").append(filter.toString());
             }
         }
+        query.append(" GROUP BY r.id");
 
-        query.append(" GROUP BY r.id").append(" ORDER BY r.id");
+        // Select all resources shared to the user
+        query.append(" UNION ALL ");
+        query.append(select.toString());
+        query.append(" WHERE r.owner != ? ");
+        values.add(user.getUserId());
+        query.append(" AND rs.member_id IN ").append(Sql.listPrepared((groupsAndUserIds.toArray())));
+        for (String groupOrUser : groupsAndUserIds) {
+            values.add(groupOrUser);
+        }
+        if (filters.size() > 0 ) {
+            for (Object filter : filters) {
+                query.append(" AND ").append(filter.toString());
+            }
+        }
+        query.append(" GROUP BY r.id");
+
+        query.append(" ORDER BY id");
 
         sql.prepared(query.toString(), values, SqlResult.parseShared(handler));
     }
