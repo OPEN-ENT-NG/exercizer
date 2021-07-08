@@ -1048,6 +1048,22 @@ body.exercizer {
     .rigid-grid>.twelve {
       width: auto;
     }
+    .rigid-grid {
+      > .margin-one,
+      > .margin-two,
+      > .margin-three,
+      > .margin-four,
+      > .margin-five,
+      > .margin-six,
+      > .margin-seven,
+      > .margin-eight,
+      > .margin-nine,
+      > .margin-ten,
+      > .margin-eleven,
+      > .margin-twelve {
+        margin: 0;
+      }
+    }
     .simple-drop {
       width: 105% !important;
     }
