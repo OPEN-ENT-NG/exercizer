@@ -1,3 +1,3 @@
-CREATE INDEX ON subject (owner);
+CREATE INDEX ON exercizer.subject (owner);
 
-CREATE INDEX ON subject_shares (resource_id);
+CREATE INDEX ON exercizer.subject_shares (resource_id);
