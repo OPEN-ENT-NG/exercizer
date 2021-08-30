@@ -107,17 +107,15 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                     "SELECT DISTINCT sub.* " +
                             "FROM " + subjectTable + " sub " +
                             "LEFT JOIN " + subjectScheduledTable + " subSche ON sub.id = subSche.subject_id " +
-                            "LEFT JOIN " +subjectCopyTable + " subCo ON subSche.id = subCo.subject_scheduled_id " +
                             "LEFT JOIN " + subjectShareTable + " subSh ON sub.id = subSh.resource_id " +
                             (exportSharedResources == true ? "" : "AND 1 = 0 ") +
                             "LEFT JOIN " + membersTable + " mem ON subSh.member_id = mem.id " +
                             "WHERE " +
                             (resourcesIds != null ? ("sub.id IN " + resourcesList + " AND ") : "") +
                             "(sub.owner = ? " +
-                            "OR subCo.owner = ? " +
                             "OR mem.user_id = ? " +
                             ((groups !=  null && !groups.isEmpty()) ? " OR mem.group_id IN " + Sql.listPrepared(groups.getList()) : "") + ")";
-            JsonArray params = new JsonArray().addAll(resourcesIdsAndUserIdParamTwice).add(userId).addAll(groups);
+            JsonArray params = new JsonArray().addAll(resourcesIdsAndUserIdParamTwice).addAll(groups);
             queries.put(subjectTable,new SqlStatementsBuilder().prepared(querySubject,params).build());
 
             String queryGrain =
