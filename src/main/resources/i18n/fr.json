@@ -567,5 +567,9 @@
     "exercizer.navigation.error": "Un problème technique est survenu",
     "exercizer.navigation.success": "Enregistrement effectué",
     "exercizer.grain.accent.warning": "Lors de la correction automatique, les majuscules, les espaces et les accents seront ignorés.",
-    "exercizer.grain.accent.warning.option1": "En mode saisie libre, lors de la correction automatique, les majuscules, les espaces et les accents seront ignorés."
+    "exercizer.grain.accent.warning.option1": "En mode saisie libre, lors de la correction automatique, les majuscules, les espaces et les accents seront ignorés.",
+    "exercizer.limit.exceed": "La taille du fichier ne peut pas dépasser 100mo.",
+    "exercizer.notify.file.loading": "Envoi du fichier en cours...",
+    "exercizer.notify.file.sent": "Votre devoir a bien été déposé.",
+    "exercizer.notify.file.weight": "Votre fichier dépasse la taille de fichier maximale."
 }

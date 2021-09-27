@@ -88,7 +88,7 @@ class PerformSimpleSubjectCopyController {
     public setCurrentFileName = function() {
         if (this.newFiles.length > 0) {
             this._file = this.newFiles[0];
-            this._subjectCopy.homework_metadata = {"filename":this._file .name};
+            this._subjectCopy.homework_metadata = {"filename":this._file.name};
         }
     };
 
@@ -99,12 +99,17 @@ class PerformSimpleSubjectCopyController {
         } else {
             var self = this;
             var file = this._file;
+
+            notify.info('exercizer.notify.file.loading', false);
+
             this._subjectCopyService.persistSimpleCopy(this._subjectCopy.id, file).then(
                 function (fileId) {
                     self._subjectCopy.homework_metadata = {"filename":file.name};
                     self._subjectCopy.homework_file_id = fileId;
                     self._subjectCopy.submitted_date = new Date();
                     self._$location.path('/dashboard').search({tab: 'finished'});
+                    notify.close();
+                    notify.success('exercizer.notify.file.sent');
                 }, function (err) {
                     notify.error(err);
                 });

@@ -1,4 +1,4 @@
-import { ng, idiom, moment } from 'entcore';
+import { ng, idiom, moment, notify } from 'entcore';
 import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainCopy, IGrainScheduled, ISubjectCopy, ISubjectScheduled, SubjectCopy } from '../models/domain';
 import { _ } from 'entcore';
@@ -224,7 +224,7 @@ export class SubjectCopyService implements ISubjectCopyService {
         var formData = new FormData();
         formData.append('file', file);
         
-        var deferred = this._$q.defer();         ;
+        var deferred = this._$q.defer();
 
         this._$http.put('exercizer/subject-copy/simple/submit/' + id + '/' + new Date().getTimezoneOffset(), formData, {
             withCredentials: false,
@@ -237,11 +237,18 @@ export class SubjectCopyService implements ISubjectCopyService {
             },
             responseType: 'json'
 
-        }).then(function(response){
+        }).then(
+            function(response){
                 deferred.resolve(response.data.fileId);
             },
             function(e) {
-                deferred.reject(e.data.error);
+                notify.close();
+                
+                if (e.status === 413) {
+                    notify.error('exercizer.notify.file.weight');
+                } else {
+                    deferred.reject(e.data.error);
+                }
             }
         );
         return deferred.promise;
