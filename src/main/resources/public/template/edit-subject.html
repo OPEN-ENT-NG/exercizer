@@ -287,7 +287,7 @@
                                 <div data-ng-switch-when="3">
                                     <h2 data-ng-click="editSubjectController.foldGrain(grain); $event.stopPropagation()" class="hover-orange">[[ grain.grain_data.title || editSubjectController.translate('exercizer.statement') ]]</h2>
                                     <div style="max-height : 100px; word-wrap: break-word; overflow: hidden; text-overflow: ellipsis;">
-                                        <div data-ng-click="editSubjectController.foldGrain(grain); $event.stopPropagation()" class="eleven cell vertical-spacing" data-ng-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
+                                        <div data-ng-click="editSubjectController.foldGrain(grain); $event.stopPropagation()" class="eleven cell vertical-spacing" data-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
                                     </div>
                                 </div>
                                 <div data-ng-switch-default>
