@@ -50,9 +50,19 @@ export const performZoneText = ng.directive('performZoneText',
 
                 scope.availableOption = (option) => scope.usedAnswers.indexOf(option) === -1;
 
-                scope.apply = () => {
+                scope.apply = function (fn) {
                     //workaround for AngularJs bug https://github.com/angular/angular.js/issues/7692
-                    scope.$apply();
+                    //  Note 2022-03: since upgrade to v1.7.9, calling scope.$apply() seems to be throwing an error
+                    //scope.$apply();
+                    //  => use the "safeApply" tip instead.
+                    var phase = scope.$root.$$phase;
+                    if(phase == '$apply' || phase == '$digest') {
+                        if(fn && (typeof(fn) === 'function')) {
+                            fn();
+                        }
+                    } else {
+                        scope.$apply(fn);
+                    }
                     scope.updateGrainCopy();
                 };
 
