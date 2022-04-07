@@ -4,7 +4,7 @@
 
 * Développeur(s) : OPEN DIGITAL EDUCATION
 
-* Financeur(s) :  Région Hauts-de-France (ex Picardie),Département Seine et Marne
+* Financeur(s) :  Région Hauts-de-France (ex Picardie), Département Seine et Marne
 	
 
 * Description : "Exercices et évaluation " est une application d'édition, de conception, de partage  et d'administration d'exercices interactifs
