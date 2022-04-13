@@ -502,6 +502,13 @@ export class EditSubjectController implements IObjectGuardDelegate {
         return CorrectOrderHelper.getCorrectOrder(grain, this._grainList);
     };
 
+    public getScoringCSS(grain:IGrain) {
+        return {
+            'color': grain.grain_data.max_score > 0 ? 'inherit' : '#FF8D2E',
+            'border-bottom': `2px solid ${grain.grain_data.max_score > 0 ? '#6FBE2E' : '#FF8D2E'}`,
+            'box-shadow': 'none'
+        }
+    }
 
     /**
      * ORGANIZER

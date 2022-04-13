@@ -150,8 +150,10 @@
                             <!-- TITLE & SCORE -->
                             <div class="row vertical-spacing" data-ng-if="grain.grain_type_id > 3">
                                 <input type="text" class="eight cell" data-ng-model="grain.grain_data.title" ng-change="editSubjectController.updateGrainDebounced(grain)" value="[[ grain.grain_data.title ]]" i18n-placeholder="exercizer.grain.title" maxlength="255"/>
-                                <em class="high-importance cell right-magnet">&nbsp;<i18n>exercizer.score</i18n></em>
-                                <input type="text" class="cell right-magnet" style="width: 50px;" data-ng-model="grain.grain_data.max_score" ng-change="editSubjectController.updateGrainDebounced(grain)" i18n-placeholder="exercizer.grain.scoring" />
+                                <span class="cell right-magnet">&nbsp;<i18n>exercizer.score</i18n></span>
+                                <input type="text" class="high-importance cell right-magnet centered-text"
+                                       data-ng-style="editSubjectController.getScoringCSS(grain)"
+                                       style="width: 50px;" data-ng-model="grain.grain_data.max_score" ng-change="editSubjectController.updateGrainDebounced(grain)" i18n-placeholder="exercizer.grain.scoring" />
                             </div>
 
                             <!-- GRAIN STATEMENT -->
