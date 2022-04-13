@@ -1,19 +1,21 @@
 <h2 class="float-title zero-mobile">
     <i18n>exercizer.preview.navigation</i18n>
 </h2>
-<floating-navigation class="zero-mobile">
-    <ul>
-        <li data-ng-click="navigateTo()" data-ng-class="(!currentGrainCopy) ? 'selected' : ''">
-            <a>
-                <i18n>exercizer.summary</i18n>
-            </a>
-        </li>
-        <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false | orderObjectBy:'display_order':false"
-        data-ng-click="navigateTo(grainCopy)"
-        data-ng-class="(currentGrainCopy.id === grainCopy.id) ? 'selected' : ''">
-            <a>
-                [[ grainCopy.grain_type_id > 3 ? getCorrectOrder(grainCopy) + ') ' : '' ]] [[ getGrainCopyName(grainCopy) ]]
-            </a>
-        </li>
-    </ul>
-</floating-navigation>
+<nav class="hash-magnet floating-navigation vertical floating zero-mobile">
+    <div class="content">
+        <ul>
+            <li data-ng-click="navigateTo()" data-ng-class="(!currentGrainCopy) ? 'selected' : ''">
+                <a>
+                    <i18n>exercizer.summary</i18n>
+                </a>
+            </li>
+            <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false | orderObjectBy:'display_order':false"
+            data-ng-click="navigateTo(grainCopy)"
+            data-ng-class="(currentGrainCopy.id === grainCopy.id) ? 'selected' : ''">
+                <a>
+                    [[ grainCopy.grain_type_id > 3 ? getCorrectOrder(grainCopy) + ') ' : '' ]] [[ getGrainCopyName(grainCopy) ]]
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
