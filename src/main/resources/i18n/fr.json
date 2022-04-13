@@ -250,6 +250,7 @@
     "exercizer.duplicate" : "Dupliquer",
     "exercizer.grain.title" : "Titre de la question",
     "exercizer.score" : "point(s)",
+    "exercizer.score.total" : "Total de points",
     "exercizer.see.copy.details" : "Voir le détail de ma copie",
     "exercizer.grain.scoring" : "Pondération",
     "exercizer.grain.doc" : "Ajouter un document",

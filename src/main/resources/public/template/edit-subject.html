@@ -45,9 +45,9 @@
                         </div>
 
                         <div data-ng-hide="editSubjectController.organizerFolded">
-                            <div class="row">
-                                <div class="cell" style="width:60%">
-                                    <em><i18n>exercizer.rank.desc</i18n></em>
+                            <div class="row bottom-spacing-three">
+                                <div class="cell">
+                                    <i18n>exercizer.score.total</i18n>&nbsp;:&nbsp;<b>[[editSubjectController.computedMaxScore]]</b>
                                 </div>
                                 <a class="comment right-magnet cell" style="margin-right:10px;" data-ng-click="editSubjectController.foldAllGrain()">
                                     <i18n>exercizer.fold.all</i18n>&nbsp;&nbsp;<i class="up-open"></i>

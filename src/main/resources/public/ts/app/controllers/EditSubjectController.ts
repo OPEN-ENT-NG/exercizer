@@ -13,6 +13,12 @@ type IGrainTask = {
     done: "waiting" | "success" | "failed"
 }
 
+// Utility function for computing scores
+function sanitizeScore( value:any ): number {
+    value = angular.isUndefined(value) ? 0 : parseFloat(parseFloat(String(value).replace(',', '.')).toFixed(2));
+    return isNaN(value) ? 0 : value;
+}
+
 export class EditSubjectController implements IObjectGuardDelegate {
 
     static $inject = [
@@ -382,8 +388,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
             grain.grain_data.statement = StringISOHelper.toISO(grain.grain_data.statement);
             grain.grain_data.answer_explanation = StringISOHelper.toISO(grain.grain_data.answer_explanation);
             grain.grain_data.answer_hint = StringISOHelper.toISO(grain.grain_data.answer_hint);
-            grain.grain_data.max_score = angular.isUndefined(grain.grain_data.max_score) ? 0 : parseFloat(parseFloat(String(grain.grain_data.max_score).replace(',', '.')).toFixed(2));
-            if (isNaN(grain.grain_data.max_score)) grain.grain_data.max_score = 0;
+            grain.grain_data.max_score = sanitizeScore(grain.grain_data.max_score);
 
         } else if (grain.grain_type_id === 3) {
 
@@ -694,6 +699,16 @@ export class EditSubjectController implements IObjectGuardDelegate {
 
     get isDropableZone():boolean {
         return this._isDropableZone;
+    }
+
+    public get computedMaxScore() {
+        let total:number = 0;
+        angular.forEach(this._grainList, function(grain:IGrain) {
+            if (grain.grain_type_id > 3) {
+                total += sanitizeScore(grain.grain_data.max_score);
+            }
+        }, this);
+        return total;
     }
 }
 
