@@ -10,15 +10,19 @@
         <!-- TOP HEADER -->
         <div class="row">
             <h1 class="cell twelve-mobile">
-                <span class="no-responsive"><span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span><span class="hover-orange" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
+                <i class="exercizer-large"></i>
+                <span class="no-responsive"><span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
+                <span class="hover-orange" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
             <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly && editSimpleSubjectController.subject.id" data-ng-click="editSimpleSubjectController.scheduleSubject()">
+                <i class="distribute"></i>
                 <i18n>exercizer.schedule</i18n>
             </button>
             <button class="right-magnet cell" data-ng-click="editSimpleSubjectController.displayModalCopyPaste()" data-ng-if="editSimpleSubjectController.previewingFromLibrary">
                 <i18n>exercizer.copy.from.library</i18n>
             </button>
             <button class="right-magnet cell flat-button" data-ng-click="editSimpleSubjectController.redirectToDashboard()">
+                <i class="left"></i>
                 <i18n ng-if="editSimpleSubjectController.previewingFromLibrary">exercizer.back.library</i18n>
                 <i18n ng-if="!editSimpleSubjectController.previewingFromLibrary">exercizer.back.subject</i18n>
             </button>
