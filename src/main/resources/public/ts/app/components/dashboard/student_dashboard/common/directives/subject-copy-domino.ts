@@ -36,7 +36,7 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                     }
                 };
                 scope.isPerformDisabled = () => {
-                    if (scope.subjectCopy.dueDate && scope.subjectCopy.submitted_date) {
+                    if (!scope.subjectCopy.is_training_copy && scope.subjectCopy.dueDate && scope.subjectCopy.submitted_date) {
                         const dueDate = new Date(scope.subjectCopy.dueDate)
                         const now = new Date();
                         if(dueDate <= now) return true;
@@ -44,7 +44,7 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                     return false;
                 }
                 scope.performSubjectCopy = function (subjectCopyId) {
-                    if (scope.subjectCopy.dueDate && scope.subjectCopy.submitted_date) {
+                    if (!scope.subjectCopy.is_training_copy && scope.subjectCopy.dueDate && scope.subjectCopy.submitted_date) {
                         const dueDate = new Date(scope.subjectCopy.dueDate)
                         const now = new Date();
                         if(dueDate <= now) return;
