@@ -10,18 +10,23 @@
         <!-- TOP HEADER -->
         <div class="row">
             <h1 class="cell twelve-mobile">
-                <span class="no-responsive"><span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span><span class="hover-orange" data-ng-click="" tooltip="[[editSubjectController.subject.title]]">[[ editSubjectController.subject.title | limitTo: 35  ]][[ editSubjectController.subject.title.length > 35 ? '...' : '']]</span>
+                <i class="exercizer"></i>
+                <span class="no-responsive"><span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
+                <span class="hover-orange" data-ng-click="" tooltip="[[editSubjectController.subject.title]]">[[ editSubjectController.subject.title | limitTo: 35  ]][[ editSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
 
             <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
+                <i class="distribute"></i>
                 <i18n>exercizer.schedule</i18n>
             </button>
 
             <button class="flat-button right-magnet cell" data-ng-click="editSubjectController.previewPerformSubjectCopy()">
-                <i18n>exercizer.preview</i18n>&nbsp;&nbsp;<i class="eye"></i>
+                <i class="eye"></i>
+                <i18n>exercizer.preview</i18n>
             </button>
 
             <button class="right-magnet cell flat-button" data-ng-click="editSubjectController.redirectToDashboard()">
+                <i class="left"></i>
                 <i18n>exercizer.back.subject</i18n>
             </button>
         </div>
