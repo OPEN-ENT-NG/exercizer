@@ -1,8 +1,9 @@
 <div data-ng-controller="TeacherDashboardArchiveController as archiveController">
     <div class="row">
         <h1 class="cell">
-            <span class="no-responsive"><span class="hover-orange" data-ng-click="archiveController.clickReturnExercizer()"><span class="hover-orange"><i18n>exercizer.title</i18n></span></span>
-            / </span><span data-ng-click="archiveController.clickReturnArchive()"><span class="hover-orange"><i18n>exercizer.archive</i18n></i></span></span>
+            <i class="exercizer"></i>
+            <span class="no-responsive"><span class="hover-orange" data-ng-click="archiveController.clickReturnExercizer()"><span class="hover-orange"><i18n>exercizer.title</i18n></span></span> / </span>
+            <span data-ng-click="archiveController.clickReturnArchive()"><span class="hover-orange"><i18n>exercizer.archive</i18n></i></span></span>
             <span data-ng-click="" data-ng-if="selectedSubjectScheduled"> / <span class="hover-orange">[[ archiveController.getSubjectSelectedTitle()]]</span></span>
         </h1>
     </div>
