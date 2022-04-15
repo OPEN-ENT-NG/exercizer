@@ -1,14 +1,15 @@
 <div class="row">
     <h1 class="cell">
-        <span class="no-responsive"><span class="hover-orange" data-ng-click="clickReturnExercizer()"><span class="hover-orange"><i18n>exercizer.title</i18n></span></span>
-        / </span><span data-ng-click="clickReturnExercizerTab()"><span class="hover-orange">[[ getTab()]]</span></span>
+        <i class="exercizer"></i>
+        <span class="no-responsive"><span class="hover-orange" data-ng-click="clickReturnExercizer()"><span class="hover-orange"><i18n>exercizer.title</i18n></span></span> / </span>
+        <span data-ng-click="clickReturnExercizerTab()"><span class="hover-orange">[[ getTab()]]</span></span>
         <span data-ng-click="" data-ng-if="selectedSubjectScheduled"> / <span class="hover-orange" tooltip="[[selectedSubjectScheduled.title]]">[[ selectedSubjectScheduled.title | limitTo: 35  ]][[ selectedSubjectScheduled.title.length > 35 ? '...' : '']]</span></span>
     </h1>
     <div class="cell right-magnet" data-ng-if="!selectedSubjectScheduled">
-        <div class="label-badge" style="padding: 5px 10px 5px 10px;" data-ng-click="switchToStudentView()">
-            <span class="cell"><i18n>exercizer.switch.learner</i18n></span>
-            <i role="close" class="right-magnet"></i>
-        </div>
+        <button class="label-badge" data-ng-click="switchToStudentView()">
+            <i class="switch"></i>
+            <i18n>exercizer.switch.learner</i18n>
+        </button>
     </div>
 </div>
 
