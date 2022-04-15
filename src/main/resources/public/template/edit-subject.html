@@ -144,18 +144,20 @@
                         </div>
 
                         <!-- GRAIN SPECIFIC CONTENT FOR EXERCISE GRAIN TYPE (not folded) -->
-                        <div  stop-child-propagation
+                        <div stop-child-propagation
                             class="row"
                             ng-if="(grain.grain_type_id > 2 && !editSubjectController.isGrainFolded(grain))"
                         >
 
                             <!-- TITLE & SCORE -->
-                            <div class="row vertical-spacing" data-ng-if="grain.grain_type_id > 3">
-                                <input type="text" class="eight cell" data-ng-model="grain.grain_data.title" ng-change="editSubjectController.updateGrainDebounced(grain)" value="[[ grain.grain_data.title ]]" i18n-placeholder="exercizer.grain.title" maxlength="255"/>
-                                <span class="cell right-magnet">&nbsp;<i18n>exercizer.score</i18n></span>
-                                <input type="text" class="high-importance cell right-magnet centered-text"
+                            <div class="flex align-items-center justify-space-between m-16 gap-64" data-ng-if="grain.grain_type_id > 3">
+                                <input type="text" class="form-control eight cell" data-ng-model="grain.grain_data.title" ng-change="editSubjectController.updateGrainDebounced(grain)" value="[[ grain.grain_data.title ]]" i18n-placeholder="exercizer.grain.title" maxlength="255"/>
+                                <div>
+                                    <span class="cell right-magnet">&nbsp;<i18n>exercizer.score</i18n></span>
+                                    <input type="text" class="mb-0 high-importance cell right-magnet centered-text"
                                        data-ng-style="editSubjectController.getScoringCSS(grain)"
                                        style="width: 50px;" data-ng-model="grain.grain_data.max_score" ng-change="editSubjectController.updateGrainDebounced(grain)" i18n-placeholder="exercizer.grain.scoring" />
+                                </div>
                             </div>
 
                             <!-- GRAIN STATEMENT -->
@@ -237,37 +239,39 @@
 
                             <!-- GRAIN FOOTER -->
 
-                            <!-- GRAIN ANSWER HINT -->
-                            <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                <div class="one cell vertical-spacing horizontal-spacing row">
-                                    <span>
-                                        <i class="help" id="surcharge-force-cursor-default"></i>
-                                        <i18n class="left-margin-5">exercizer.grain.help</i18n>
-                                    </span>
+                            <section class="grid grid-2">
+                                <!-- GRAIN ANSWER HINT -->
+                                <div class="row" data-ng-if="grain.grain_type_id > 3">
+                                    <div class="one cell vertical-spacing horizontal-spacing row">
+                                        <span>
+                                            <i class="help" id="surcharge-force-cursor-default"></i>
+                                            <i18n class="left-margin-5">exercizer.grain.help</i18n>
+                                        </span>
+                                    </div>
+                                    <div class="cell horizontal-spacing row">
+                                        <em><i18n>exercizer.grain.help.tooltip</i18n></em>
+                                    </div>
+                                    <div class="eleven cell">
+                                        <textarea data-ng-model="grain.grain_data.answer_hint" rows="1" data-min-rows="1" ng-change="editSubjectController.updateGrainDebounced(grain)" class="form-control auto-expand"></textarea>
+                                    </div>
                                 </div>
-                                <div class="cell horizontal-spacing row">
-                                    <em><i18n>exercizer.grain.help.tooltip</i18n></em>
-                                </div>
-                                <div class="eleven cell">
-                                    <textarea data-ng-model="grain.grain_data.answer_hint" ng-change="editSubjectController.updateGrainDebounced(grain)" style="height: 40px;"></textarea>
-                                </div>
-                            </div>
 
-                            <!-- GRAIN ANSWER EXPLANATION -->
-                            <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                <div class="one cell vertical-spacing horizontal-spacing row">
-                                    <span>
-                                        <i class="info-pic"></i>
-                                        <i18n class="left-margin-5">exercizer.grain.explanation</i18n>
-                                    </span>
+                                <!-- GRAIN ANSWER EXPLANATION -->
+                                <div class="row" data-ng-if="grain.grain_type_id > 3">
+                                    <div class="one cell vertical-spacing horizontal-spacing row">
+                                        <span>
+                                            <i class="info-pic"></i>
+                                            <i18n class="left-margin-5">exercizer.grain.explanation</i18n>
+                                        </span>
+                                    </div>
+                                    <div class="cell horizontal-spacing row">
+                                        <em><i18n>exercizer.grain.explanation.tooltip</i18n></em>
+                                    </div>
+                                    <div class="eleven cell">
+                                        <textarea data-ng-model="grain.grain_data.answer_explanation" ng-change="editSubjectController.updateGrainDebounced(grain)" class="form-control"></textarea>
+                                    </div>
                                 </div>
-                                <div class="cell horizontal-spacing row">
-                                    <em><i18n>exercizer.grain.explanation.tooltip</i18n></em>
-                                </div>
-                                <div class="eleven cell">
-                                    <textarea data-ng-model="grain.grain_data.answer_explanation" ng-change="editSubjectController.updateGrainDebounced(grain)" style="height: 40px;"></textarea>
-                                </div>
-                            </div>
+                            </section>
 
                         </div>
 
