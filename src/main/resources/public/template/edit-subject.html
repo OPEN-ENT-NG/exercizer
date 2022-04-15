@@ -38,9 +38,9 @@
                 <nav class="hash-magnet floating-navigation">
 
                     <!-- ORGANIZER -->
-                    <article class="xrczr-sumary">
-                        <div class="row" >
-                            <h2 class="cell"><i18n>exercizer.rank</i18n></h2>
+                    <article>
+                        <div class="row mb-4" >
+                            <header class="cell hover-orange" data-ng-click="editSubjectController.foldOrganizer()"><i18n>exercizer.rank</i18n></header>
 
                             <!-- grain toggle icon -->
                             <div class="cell right-magnet">
@@ -50,7 +50,7 @@
                         </div>
 
                         <div data-ng-hide="editSubjectController.organizerFolded">
-                            <div class="row bottom-spacing-three">
+                            <div class="row mb-16">
                                 <div class="cell">
                                     <i18n>exercizer.score.total</i18n>&nbsp;:&nbsp;<b>[[editSubjectController.computedMaxScore]]</b>
                                 </div>
@@ -93,7 +93,7 @@
                     </article>
 
                     <!-- SUBJECT LIST -->
-                    <subject-edit-subject-list is-organizer-folded="editSubjectController.organizerFolded"></subject-edit-subject-list>
+                    <subject-edit-subject-list is-spreaded="editSubjectController.organizerFolded"></subject-edit-subject-list>
                 </nav>
             </aside>
 

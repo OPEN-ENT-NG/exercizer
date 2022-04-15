@@ -10,7 +10,7 @@ export const subjectEditSubjectList = ng.directive('subjectEditSubjectList',
             return {
                 restrict: 'E',
                 scope: {
-                    'isOrganizerFolded': '='
+                    spreaded: '=?isSpreaded'
                 },
                 templateUrl: 'exercizer/public/ts/app/components/subject/subject_edit/templates/subject-edit-subject-list.html',
                 link: (scope:any, element:any) => {
@@ -35,12 +35,6 @@ export const subjectEditSubjectList = ng.directive('subjectEditSubjectList',
                     };
 
                     scope.grainList = [];
-                    scope.$watch('isOrganizerFolded', function (newValue, oldValue) {
-                        scope.isFolded = !scope.isOrganizerFolded;
-                    });
-
-                    scope.isFolded = !scope.isOrganizerFolded;
-
                     
                     scope.subjectList = function () {
                         return SubjectService.getList();
@@ -60,8 +54,7 @@ export const subjectEditSubjectList = ng.directive('subjectEditSubjectList',
                     };
 
                     scope.toggle = function () {
-                        scope.isFolded = !scope.isFolded;
-                        scope.isOrganizerFolded = !scope.isFolded;
+                        scope.spreaded = !scope.spreaded;
                     };
                     
 
