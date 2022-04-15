@@ -474,6 +474,7 @@
     "exercizer.minute" : "minute(s)",
     "exercizer.subject.search" : "Réutiliser des questions",
     "exercizer.subject.search.info" : "Gagner du temps en récupérant des questions déjà créées",
+    "exercizer.subject.search.placeholder" : "Rechercher dans un autre sujet",
     "exercizer.make.copy" : "Rendre la copie",
     "exercizer.make.copy.confirm" : "Voulez-vous vraiment rendre votre copie du sujet",
     "exercizer.make.copy.info" : "Vérifiez bien que toutes les questions soient remplies avant de rendre votre copie.",
