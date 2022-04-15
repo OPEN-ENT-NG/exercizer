@@ -10,7 +10,7 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
             selectedSubjectScheduled : "="
         },
         templateUrl: 'exercizer/public/ts/app/components/dashboard/teacher_dashboard/common/templates/dashboard-teacher-tab.html',
-        link: (scope:any) => {
+        link: async (scope:any) => {
 
             scope.switchTab = function (newTab) {
                 switch (newTab){
@@ -30,11 +30,7 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
                         $location.path('/dashboard/teacher/correction/');
                         break;
                     case 'library':
-                        if (scope.showInternalLibrary()) {
-                            $location.path('/dashboard/teacher/library');
-                        } else {
-                            scope.rediectToExternalLibrary();
-                        }
+                        scope.rediectToExternalLibrary();
                         break;
                     default:
                         throw 'tab ' + newTab + ' missing'
@@ -120,22 +116,14 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
                 }
             };
 
-            scope.showInternalLibrary = function():boolean {
-                return !model.me.hasWorkflow(Behaviours.applicationsBehaviours.exercizer.rights.workflow.publish);
-            }
-
+            const externalLibraryUrl = await SubjectLibraryService.externalLibraryUrl();
             scope.rediectToExternalLibrary = function() {
-                SubjectLibraryService.externalLibraryUrl().then((url: string) => {
-                    window.location.href = `${url}?platformURL=${encodeURIComponent($location.host())}`;
-                }, err => notify.error(err));
+                window.location.href = `${externalLibraryUrl}?platformURL=${encodeURIComponent($location.host())}`;
             }
 
-            let unreadLibrarySubjects: Number = 0;
-            if (scope.showInternalLibrary()) {
-                SubjectLibraryService.countNewSubjects().then((count: Number) => unreadLibrarySubjects = count);
+            scope.showLibraryTag = function():boolean {
+                return externalLibraryUrl && model.me.hasWorkflow(Behaviours.applicationsBehaviours.exercizer.rights.workflow.publish);
             }
-            scope.newLibrarySubjects = () => unreadLibrarySubjects;
-            scope.newLibrarySubjectsExist = () => unreadLibrarySubjects > 0;
         }
     };
 }]

@@ -28,11 +28,11 @@
             <i18n>exercizer.dashboard.instructer.tab2</i18n>
         </header>
         <header class="horizontal-spacing"
+                data-ng-if="showLibraryTag()"
                 data-ng-click="switchTab('library')"
                 data-ng-class="{ selected: currentTab === 'library' }"
         >
             <i18n>exercizer.dashboard.instructer.tab3</i18n>
-            <span class="badge" ng-if="newLibrarySubjectsExist()" style="background:orange; font-size: 1.1em">[[ newLibrarySubjects() ]]</span>
         </header>
     </div>
     <button  data-ng-if="selectedSubjectScheduled.showStats" data-ng-click="option.chooseExport=true; option.mode='simple'" class="right-magnet">
