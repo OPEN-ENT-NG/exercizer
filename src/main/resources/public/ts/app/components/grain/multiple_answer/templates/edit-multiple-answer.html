@@ -5,8 +5,8 @@
 </div>
 
 <div class="row vertical-spacing">
-    <div data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
-        <input type="text" class="eleven cell" data-ng-model="answer.text" ng-change="updateGrain()" value="[[ answer.text ]]" i18n-placeholder="exercizer.grain.answer.info" />
+    <div data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index" class="flex align-items-center justify-space-between m-16 gap-16" style="max-width: 460px">
+        <input type="text" class="form-control eleven cell" data-ng-model="answer.text" ng-change="updateGrain()" value="[[ answer.text ]]" i18n-placeholder="exercizer.grain.answer.info" />
         <div class="cell right-magnet" data-ng-click="deleteAnswer(answer)"><i class="close"></i></div>
     </div>
 
