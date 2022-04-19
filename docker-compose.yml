@@ -13,4 +13,5 @@ node:
     - ./:/home/node/app
     - ~/.npm:/.npm
     - ../recette:/home/node/recette # TODO : rendre générique pour appliquer à tous les springboards 
+    - ../paris:/home/node/paris
 
