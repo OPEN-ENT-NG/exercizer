@@ -15,7 +15,7 @@
                 <span class="hover-orange" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
             <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly && editSimpleSubjectController.subject.id" data-ng-click="editSimpleSubjectController.scheduleSubject()">
-                <i class="distribute"></i>
+                <svg class="icon-send" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#send"></use></svg>
                 <i18n>exercizer.schedule</i18n>
             </button>
             <button class="right-magnet cell" data-ng-click="editSimpleSubjectController.displayModalCopyPaste()" data-ng-if="editSimpleSubjectController.previewingFromLibrary">
