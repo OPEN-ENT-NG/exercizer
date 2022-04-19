@@ -100,7 +100,16 @@
             <!-- GRAIN LIST -->
             <!-- dragdrop="editSubjectController.dropTo($originalEvent)" -->
             <section class="eight-desktop cell droppable drop-zone cell-initial-float" ng-attr-style="[[editSubjectController.isDropableZone ? 'border-width: 2px;' : 'border-width: 0px;']]" drop-item="editSubjectController.dropTo($item)">
-
+                <!--LOADER-->
+                <article class="flex-row empty-state align-center p-0" ng-if="false && editSubjectController.isEmptyStateVisible()">
+                    <img src="exercizer/public/assets/img/subject-emptyscreen.svg" class="ml-24"/>
+                    <p class="text-body-common text-preline ml-32"><i18n>exercizer.subject.emptyscreen</i18n></p>
+                </article>
+                <!--EMPTY STATE-->
+                <article class="flex-row empty-state align-center justify-center" ng-if="true || editSubjectController.isLoaderVisible()">
+                    <i class="loading fs-4"></i>
+                </article>
+                <!--GRAIN LIST-->
                 <div class="row">
 
                     <article explorer
