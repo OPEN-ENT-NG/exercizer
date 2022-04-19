@@ -63,6 +63,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
     private _subscriptions = new Array<rx.Subscription>();
     public shouldShowNavigationAlert:boolean;
     public saving = false;
+    private state: "loading" | "loaded" = "loading"
     private _getDebouncedGrain : (grain:IGrain) => rx.Subject<IGrain>;
     constructor
     (
@@ -142,6 +143,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
             } else {
                 self._grainService.getListBySubject(self._subject).then(
                     function (grainList) {
+                        self.state = "loaded";
                         self._grainList = grainList;
                         self._selectedGrainList = [];
                         self._foldedGrainList = [];
@@ -163,6 +165,14 @@ export class EditSubjectController implements IObjectGuardDelegate {
         }, function(err) {
             notify.error(err);
         });
+    }
+
+    isEmptyStateVisible(){
+        return this.state == "loaded" && this.grainList.length == 0;
+    }
+
+    isLoaderVisible(){
+        return this.state == "loading";
     }
 
     getTracker():EditTrackingEvent{

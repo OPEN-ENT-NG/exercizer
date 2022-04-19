@@ -575,5 +575,6 @@
     "exercizer.limit.exceed": "La taille du fichier ne peut pas dépasser 100mo.",
     "exercizer.notify.file.loading": "Envoi du fichier en cours...",
     "exercizer.notify.file.sent": "Votre devoir a bien été déposé.",
-    "exercizer.notify.file.weight": "Votre fichier dépasse la taille de fichier maximale."
+    "exercizer.notify.file.weight": "Votre fichier dépasse la taille de fichier maximale.",
+    "exercizer.subject.emptyscreen": "C’est vide par içi !\nAjoutez le premier élément à votre sujet interactif"
 }
