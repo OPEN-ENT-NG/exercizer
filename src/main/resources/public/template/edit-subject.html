@@ -16,7 +16,7 @@
             </h1>
 
             <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
-                <i class="distribute"></i>
+                <svg class="icon-send" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#send"></use></svg>
                 <i18n>exercizer.schedule</i18n>
             </button>
 
@@ -154,7 +154,7 @@
                                 <input type="text" class="form-control eight cell" data-ng-model="grain.grain_data.title" ng-change="editSubjectController.updateGrainDebounced(grain)" value="[[ grain.grain_data.title ]]" i18n-placeholder="exercizer.grain.title" maxlength="255"/>
                                 <div>
                                     <span class="cell right-magnet">&nbsp;<i18n>exercizer.score</i18n></span>
-                                    <input type="text" class="mb-0 high-importance cell right-magnet centered-text"
+                                    <input type="text" class="score mb-0 high-importance cell right-magnet centered-text"
                                        data-ng-style="editSubjectController.getScoringCSS(grain)"
                                        style="width: 50px;" data-ng-model="grain.grain_data.max_score" ng-change="editSubjectController.updateGrainDebounced(grain)" i18n-placeholder="exercizer.grain.scoring" />
                                 </div>
