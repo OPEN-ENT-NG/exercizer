@@ -106,17 +106,16 @@
                     <i class="sort-asc" ng-if="order.field === 'final_score' && !order.desc"></i>
                     <i class="sort-desc" ng-if="order.field === 'final_score' && order.desc"></i>
                </th>
+               <th></th>
           </tr>
-          </thead>
+          </thead> 
           <tbody>
           <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc">
                <td class="centered-text">
                     <input type="checkbox" data-ng-model="copy.selected" data-ng-change="selectCopy()"/>
                </td>
-               <td data-ng-switch="selectTitle(copy)">
-                    <span data-ng-switch-when="text">[[copy.owner_username]]</span>
-                    <span data-ng-switch-when="correction" data-ng-click="clickOnCopy(copy)" class="hover-orange">[[copy.owner_username]]</span>
-                    <span data-ng-switch-default>Default</span>
+               <td>
+                    <span>[[copy.owner_username]]</span>
                </td>
                <td>
                     <div data-ng-show="copyStateColorClass(copy)"
@@ -144,6 +143,12 @@
                <td>
                     <span>[[copy.final_score  | truncateNumber]] / [[selectedSubjectScheduled.max_score]]</span>
                </td>
+
+                <td data-ng-switch="selectTitle(copy)">
+                    <button data-ng-switch-when="correction" data-ng-click="clickOnCopy(copy)" class="flat-button no-margin">
+                        <i class="eye"></i> <i18n>exercizer.see.copy</i18n>
+                    </button>
+                </td>
           </tr>
           </tbody>
      </table>
