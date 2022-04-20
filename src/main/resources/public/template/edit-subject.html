@@ -284,12 +284,20 @@
                             </section>
 
                             <!-- GRAIN IN-PLACE TOASTER ACTIONS -->
-                            <section class="grid grid-2">
+                            <section class="in-place-toaster">
                                 <div class="row">
-                                    <div class="cell">
-                                        <button ng-if="grain.grain_type_id>1"
-                                                data-ng-click="editSubjectController.duplicate(grain)"><i18n>exercizer.duplicate</i18n></button>
-                                        <button data-ng-click="editSubjectController.displayModalRemove(grain)"><i18n>exercizer.remove</i18n></button>
+                                    <div class="cell right-magnet">
+                                        <button class="btns btns-tertiary flex-row align-center text-body-common m-0 p-8"
+                                                ng-if="grain.grain_type_id>1"
+                                                data-ng-click="editSubjectController.duplicate(grain)">
+                                            <svg class="icon-copy mr-8" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#copy"></use></svg>
+                                            <i18n>exercizer.duplicate</i18n>
+                                        </button>
+                                        <button class="btns btns-tertiary flex-row align-center text-body-common m-0 p-8"
+                                                data-ng-click="editSubjectController.displayModalRemove(grain)">
+                                            <svg class="icon-delete mr-8" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
+                                            <i18n>exercizer.remove</i18n>
+                                        </button>
                                     </div>
                                 </div>
                             </section>
