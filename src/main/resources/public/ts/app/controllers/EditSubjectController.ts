@@ -600,12 +600,9 @@ export class EditSubjectController implements IObjectGuardDelegate {
         }
     };
 
-    public isGrainSelected = function(grain:IGrain) {
-        return this._selectedGrainList.indexOf(grain) !== -1;
-    };
-
-    public duplicateSelectedGrainList = function() {
+    public duplicate = function(grain:IGrain) {
         var self:EditSubjectController = this;
+        this.selectGrain( grain );
 
         this._grainService.duplicateIntoSubject(this._selectedGrainList, this._subject.id).then(
             function() {
@@ -636,8 +633,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
 
         this._grainService.removeList(this._selectedGrainList, this._subject).then(
             function() {
-                self._selectedGrainList = [];
-                self._isModalRemoveSelectedGrainListDisplayed = false;
+                self.closeModalRemove();
             },
             function(err) {
                 notify.error(err);
@@ -645,20 +641,14 @@ export class EditSubjectController implements IObjectGuardDelegate {
         );
     };
 
-    public displayModalRemoveSelectedGrainList = function() {
+    public displayModalRemove = function( grain:IGrain ) {
+        this.selectGrain( grain );
         this._isModalRemoveSelectedGrainListDisplayed = true;
     };
 
-    public closeModalRemoveSelectedGrainList = function() {
-        this._isModalRemoveSelectedGrainListDisplayed = false;
-    };
-
-    public resetSelection = function() {
+    public closeModalRemove = function() {
         this._selectedGrainList = [];
-    };
-
-    public isToasterDisplayed = function() {
-        return this._selectedGrainList.length > 0;
+        this._isModalRemoveSelectedGrainListDisplayed = false;
     };
 
     /**
