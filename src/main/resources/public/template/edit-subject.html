@@ -103,7 +103,7 @@
                 <!--LOADER-->
                 <article class="flex-row empty-state align-center p-0" ng-if="editSubjectController.isEmptyStateVisible()">
                     <img src="exercizer/public/assets/img/subject-emptyscreen.svg" class="ml-24"/>
-                    <p class="text-body-common text-preline ml-32"><i18n>exercizer.subject.emptyscreen</i18n></p>
+                    <p class="text-body text-preline ml-32"><i18n>exercizer.subject.emptyscreen</i18n></p>
                 </article>
                 <!--EMPTY STATE-->
                 <article class="flex-row empty-state align-center justify-center" ng-if="editSubjectController.isLoaderVisible()">
@@ -112,19 +112,15 @@
                 <!--GRAIN LIST-->
                 <div class="row">
 
-                    <article
+                    <article explorer class="select-border article-edit" 
+                        ng-class="{'p-0 border-0 overflow-hidden': editSubjectController.isChooseStep(grain)}"
                         ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false" id="grain-edit-[[grain.id]]"
-                        class="select-border article-edit"
                     >
 
                         <!-- GRAIN HEADER -->
                         <div class="row">
 
                             <!-- TEXT HEADER -->
-                            <div class="cell" data-ng-if="grain.grain_type_id < 3">
-                                <em class="high-importance">[[ grain.grain_data.title ]]</em>
-                            </div>
-
                             <div data-ng-if="grain.grain_type_id > 2">
 
                                 <!-- GRAIN TYPE ICON -->
@@ -269,13 +265,33 @@
                                 </div>
                             </section>
 
-                            <!-- GRAIN CONTENT (initially folded) -->
-                            <section class="grid grid-2" data-ng-switch="grain.grain_type_id">
-                                <div data-ng-switch-when="1" ng-if="grain.id != null">
-                                    <choose data-grain="grain"></choose>
+                            <!-- GRAIN IN-PLACE TOASTER ACTIONS -->
+                            <section class="grid grid-2">
+                                <div class="row">
+                                    <div class="cell">
+                                        <button data-ng-click="editSubjectController.duplicate(grain)"><i18n>exercizer.duplicate</i18n></button>
+                                        <button data-ng-click="editSubjectController.displayModalRemove(grain)"><i18n>exercizer.remove</i18n></button>
+                                    </div>
                                 </div>
+                            </section>
+
+                        </div>
+
+                        <!-- GRAIN SPECIFIC CONTENT FOR ALL GRAIN TYPE (folded) -->
+                        <div  stop-child-propagation class="row"
+                            ng-if="(grain.grain_type_id < 3 || (grain.grain_type_id > 2 && editSubjectController.isGrainFolded(grain)))"
+                        >
+                            <!-- GRAIN CONTENT (folded) -->
+                            <div data-ng-switch="grain.grain_type_id">
+                                <!--data-ng-switch-when="1" is not used anymore-->
                                 <div data-ng-switch-when="2">
                                     <choose-answer data-grain="grain"></choose-answer>
+                                    <div class="bg-lightest-grey flex-row justify-end">
+                                        <a class="btns btns-flat-primary flex-row align-center text-body px-24 gap-8" data-ng-click="editSubjectController.removeGrain(grain)">
+                                            <svg class="icon-trash" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#trash"></use></svg>
+                                            <i18n>exercizer.remove</i18n>
+                                        </a>
+                                    </div>
                                 </div>
                             </section>
 
@@ -305,12 +321,12 @@
 
                 <!-- ADD GRAIN -->
                 <div class="flex-row align-center p-0">
-                    <a class="btns btns-primary flex-row align-center text-body-common px-24 mr-16" data-ng-click="editSubjectController.addGrainWithType(3)">
-                        <svg class="icon-plus mr-8" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
+                    <a class="btns btns-primary flex-row align-center text-body px-24 mr-16" data-ng-click="editSubjectController.addGrainWithType(3)">
+                        <svg class="icon-plus mr-8" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
                         <i18n>exercizer.statement.new</i18n>
                     </a>
-                    <a class="btns btns-primary flex-row align-center text-body-common px-24" data-ng-click="editSubjectController.addGrainWithType(2)">
-                        <svg class="icon-text mr-8" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
+                    <a class="btns btns-primary flex-row align-center text-body px-24" data-ng-click="editSubjectController.addGrainWithType(2)">
+                        <svg class="icon-text mr-8" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
                         <i18n>exercizer.question.new</i18n>
                     </a>
                 </div>

@@ -1,5 +1,5 @@
 import { ng, idiom, notify, IObjectGuardDelegate, navigationGuardService, ObjectGuard, EditTrackingEvent, trackingService } from 'entcore';
-import { ISubject, IGrain, IGrainDocument, GrainData, GrainDocument, Grain } from '../models/domain';
+import { ISubject, IGrain, IGrainDocument, GrainData, GrainDocument, Grain, IGrainType } from '../models/domain';
 import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IGrainTypeService, IGrainService, IDragService } from '../services';
 import { StringISOHelper, CorrectOrderHelper } from '../models/helpers';
 import { angular } from 'entcore';
@@ -347,7 +347,10 @@ export class EditSubjectController implements IObjectGuardDelegate {
         )
     };*/
 
-    /*
+    public isChooseStep = function(grain:IGrain){
+        return grain.grain_type_id == 2;
+    }
+    /**
      *  GRAIN
      */
 
@@ -598,6 +601,15 @@ export class EditSubjectController implements IObjectGuardDelegate {
                 notify.error(err);
             }
         );
+    };
+
+    public removeGrain = async function(grain:IGrain) {
+        const self:EditSubjectController = this;
+        try{
+            await self._grainService.removeList([grain], self._subject);
+        }catch(e){
+            notify.error(e);
+        }
     };
 
     public removeSelectedGrainList = function() {
