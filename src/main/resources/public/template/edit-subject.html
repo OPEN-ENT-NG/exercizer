@@ -239,35 +239,31 @@
 
                             <!-- GRAIN FOOTER -->
 
-                            <section class="grid grid-2">
+                            <section class="grid grid-2 gap-24">
                                 <!-- GRAIN ANSWER HINT -->
                                 <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                    <div class="one cell vertical-spacing horizontal-spacing row">
-                                        <span>
-                                            <i class="help" id="surcharge-force-cursor-default"></i>
-                                            <i18n class="left-margin-5">exercizer.grain.help</i18n>
-                                        </span>
+                                    <label class="form-label flex align-items-center m-8 gap-8">
+                                        <svg class="icon-help" width="22" height="22"><use href="exercizer/public/assets/icons/icons.svg#help"></use></svg>
+                                        <i18n>exercizer.grain.help</i18n>
+                                    </label>
+                                    <div class="cell row">
+                                        <em class="form-info"><i18n>exercizer.grain.help.tooltip</i18n></em>
                                     </div>
-                                    <div class="cell horizontal-spacing row">
-                                        <em><i18n>exercizer.grain.help.tooltip</i18n></em>
-                                    </div>
-                                    <div class="eleven cell">
+                                    <div class="twelve cell">
                                         <textarea data-ng-model="grain.grain_data.answer_hint" rows="1" data-min-rows="1" ng-change="editSubjectController.updateGrainDebounced(grain)" class="form-control auto-expand"></textarea>
                                     </div>
                                 </div>
 
                                 <!-- GRAIN ANSWER EXPLANATION -->
                                 <div class="row" data-ng-if="grain.grain_type_id > 3">
-                                    <div class="one cell vertical-spacing horizontal-spacing row">
-                                        <span>
-                                            <i class="info-pic"></i>
-                                            <i18n class="left-margin-5">exercizer.grain.explanation</i18n>
-                                        </span>
+                                    <label class="form-label flex align-items-center m-8 gap-8">
+                                        <svg class="icon-info" width="22" height="22"><use href="exercizer/public/assets/icons/icons.svg#info"></use></svg>
+                                        <i18n>exercizer.grain.explanation</i18n>
+                                    </label>
+                                    <div class="cell row">
+                                        <em class="form-info"><i18n>exercizer.grain.explanation.tooltip</i18n></em>
                                     </div>
-                                    <div class="cell horizontal-spacing row">
-                                        <em><i18n>exercizer.grain.explanation.tooltip</i18n></em>
-                                    </div>
-                                    <div class="eleven cell">
+                                    <div class="twelve cell">
                                         <textarea data-ng-model="grain.grain_data.answer_explanation" ng-change="editSubjectController.updateGrainDebounced(grain)" class="form-control"></textarea>
                                     </div>
                                 </div>
