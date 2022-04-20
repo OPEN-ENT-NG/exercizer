@@ -22,7 +22,7 @@ export const editQcm = ng.directive('editQcm',
 
                 if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
                     scope.grain.grain_data.custom_data = new QcmCustomData();
-                    scope.addAnswer(true, '');
+                    scope.addAnswer(false, '');
                     scope.addAnswer(false, '');
                 }
 
