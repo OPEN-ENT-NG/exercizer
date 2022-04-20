@@ -1,6 +1,6 @@
 <ul>
     <folder-nav-item
-            data-ng-repeat="item in folderList | orderObjectBy:'label':false| filterIf:display.children"
+            data-ng-repeat="item in folderList | orderObjectBy:'modified':true| filterIf:display.children"
             item = "item"
             is-root = "isRoot"
             parent-id="parentId"
