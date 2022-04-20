@@ -18,7 +18,7 @@
                         <i data-ng-click="display.mySubjectSubFolder = !display.mySubjectSubFolder" class="arrow"></i>
                         <span data-ng-click="goToRoot(); display.tab = 'mySubject'" ><i18n>exercizer.dashboard.learner.tab1</i18n></span>
                     </a>
-                    <div data-ng-repeat="item in  folderList() | orderObjectBy:'label':false | filterIf:display.mySubjectSubFolder" >
+                    <div data-ng-repeat="item in  folderList() | orderObjectBy:'modified':true | filterIf:display.mySubjectSubFolder" >
                         <folder-nav-item item="item"
                                          is-root="true"
                                          parent-id="parentId"
@@ -78,7 +78,7 @@
                 <div class="fallen dominos">
                     <!-- folder part -->
                     <explorer
-                        ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'label':false"
+                        ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'modified':true"
                         ng-model="folder.selected"
                         ng-change="selectFolder(folder)"
                         on-open="openFolder(folder)"
@@ -108,7 +108,7 @@
                     <!-- subject part -->
                     <!-- my subject -->
                     <explorer
-                        ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'title':false"
+                        ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'modified':true"
                         ng-model="subject.selected"
                         ng-change="selectSubject(subject)"
                         on-open="openSubject(subject)"
@@ -182,7 +182,7 @@
                     </thead>
                     <tbody>
                     <!-- folder list-->
-                        <tr data-ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'label':false">
+                        <tr data-ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'modified':true">
                             <td>
                                 <input
                                     type="checkbox"
@@ -204,7 +204,7 @@
                             <td></td>
                         </tr>
                     <!-- subject  list -->
-                        <tr data-ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'title':false">
+                        <tr data-ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'modified':true">
                             <td>
                                 <input
                                     type="checkbox"
