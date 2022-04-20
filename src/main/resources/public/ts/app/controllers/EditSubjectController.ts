@@ -38,7 +38,6 @@ export class EditSubjectController implements IObjectGuardDelegate {
     private _subject:ISubject;
     private _grainList:IGrain[];
     private _selectedGrainList:IGrain[];
-    private _foldedGrainList:IGrain[];
     private _hasDataLoaded:boolean;
 
     // statement trusted html
@@ -146,8 +145,6 @@ export class EditSubjectController implements IObjectGuardDelegate {
                         self.state = "loaded";
                         self._grainList = grainList;
                         self._selectedGrainList = [];
-                        self._foldedGrainList = [];
-                        self.foldAllGrain();
 
                         self._$scope.$on('E_UPDATE_GRAIN', function(event, grain:IGrain) {
                             //use debounce to reduce queries
@@ -272,7 +269,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
         tryFinish();
     }
 
-    /**
+    /*
      * COMMON
      */
 
@@ -350,7 +347,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
         )
     };*/
 
-    /**
+    /*
      *  GRAIN
      */
 
@@ -505,20 +502,6 @@ export class EditSubjectController implements IObjectGuardDelegate {
         this._isModalRemoveGrainDocumentDisplayed = false;
     };
 
-    public foldGrain = function(grain:IGrain) {
-        var grainIndexInFoldedList = this._foldedGrainList.indexOf(grain);
-
-        if (grainIndexInFoldedList !== -1) {
-            this._foldedGrainList.splice(grainIndexInFoldedList, 1);
-        } else {
-            this._foldedGrainList.push(grain);
-        }
-    };
-
-    public isGrainFolded = function(grain:IGrain) {
-        return this._foldedGrainList.indexOf(grain) !== -1;
-    };
-
     public getCorrectOrder(grain:IGrain) {
         return CorrectOrderHelper.getCorrectOrder(grain, this._grainList);
     };
@@ -531,23 +514,9 @@ export class EditSubjectController implements IObjectGuardDelegate {
         }
     }
 
-    /**
+    /*
      * ORGANIZER
      */
-
-    public foldAllGrain = function() {
-        this.foldAllGrainWithoutScroll();
-        $('html, body').animate({ scrollTop: $('#edit-subject').length ? $('#edit-subject').offset().top - 100 : 0 }, 500);
-    };
-
-    public foldAllGrainWithoutScroll = function() {
-        angular.forEach(this._grainList, function(grain:IGrain) {
-            if (!this.isGrainFolded(grain)) {
-                this.foldGrain(grain);
-            }
-        }, this);
-    }
-
     public previewPerformSubjectCopy = function() {
         this._$location.path('/subject/copy/preview/perform/' + this._subject.id + '/');
     };
@@ -566,9 +535,6 @@ export class EditSubjectController implements IObjectGuardDelegate {
             this._reOrderTimeout = window.setTimeout(function()
             {
                 angular.forEach(self._grainList, function (grain:IGrain) {
-                    if (!self.isGrainFolded(grain)) {
-                        self.foldGrain(grain);
-                    }
                     self.updateGrain(grain);
                 });
                 self._reOrderTimeout = null;
@@ -588,18 +554,9 @@ export class EditSubjectController implements IObjectGuardDelegate {
         grain.selected = !grain.selected;
     }
 
-    /**
+    /*
      *  TOASTER
      */
-    public shouldSelect = function(e){
-        const hasAscendant = jQuery(e.target).closest('[stop-child-propagation]').length>0;
-        const hasAttribute = !!jQuery(e.target).attr('stop-child-propagation');
-        if(hasAscendant || hasAttribute){
-            return false;
-        }
-        return true;
-    }
-
     public selectGrain = function(grain:IGrain) {
         var grainIndex = this._selectedGrainList.indexOf(grain);
 
@@ -626,7 +583,6 @@ export class EditSubjectController implements IObjectGuardDelegate {
                 self._grainService.getListBySubject(self._subject).then(
                     function(grainList) {
                         self._grainList = grainList;
-                        self.foldAllGrainWithoutScroll();
                         var grainIdToScroll=0;
                         _.forEach(grainList, function (grain) {
                            if (grain.id > grainIdToScroll) grainIdToScroll = grain.id;
@@ -667,7 +623,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
         this._isModalRemoveSelectedGrainListDisplayed = false;
     };
 
-    /**
+    /*
      *  GETTER
      */
 
