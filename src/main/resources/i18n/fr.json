@@ -250,7 +250,7 @@
     "exercizer.cancel" : "Annuler",
     "exercizer.remove" : "Supprimer",
     "exercizer.duplicate" : "Dupliquer",
-    "exercizer.grain.title" : "Titre de la question",
+    "exercizer.grain.title" : "Saisissez le titre de la question",
     "exercizer.score" : "point(s)",
     "exercizer.score.total" : "Total de points",
     "exercizer.see.copy" : "Voir la copie",
