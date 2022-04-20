@@ -265,25 +265,11 @@
                                 </div>
                             </section>
 
-                            <!-- GRAIN IN-PLACE TOASTER ACTIONS -->
-                            <section class="grid grid-2">
-                                <div class="row">
-                                    <div class="cell">
-                                        <button data-ng-click="editSubjectController.duplicate(grain)"><i18n>exercizer.duplicate</i18n></button>
-                                        <button data-ng-click="editSubjectController.displayModalRemove(grain)"><i18n>exercizer.remove</i18n></button>
-                                    </div>
+                            <!-- GRAIN CONTENT (initially folded) -->
+                            <section data-ng-switch="grain.grain_type_id" ng-class="{'grid grid-2': !editSubjectController.isChooseStep(grain)}">
+                                <div data-ng-switch-when="1" ng-if="grain.id != null">
+                                    <choose data-grain="grain"></choose>
                                 </div>
-                            </section>
-
-                        </div>
-
-                        <!-- GRAIN SPECIFIC CONTENT FOR ALL GRAIN TYPE (folded) -->
-                        <div  stop-child-propagation class="row"
-                            ng-if="(grain.grain_type_id < 3 || (grain.grain_type_id > 2 && editSubjectController.isGrainFolded(grain)))"
-                        >
-                            <!-- GRAIN CONTENT (folded) -->
-                            <div data-ng-switch="grain.grain_type_id">
-                                <!--data-ng-switch-when="1" is not used anymore-->
                                 <div data-ng-switch-when="2">
                                     <choose-answer data-grain="grain"></choose-answer>
                                     <div class="bg-lightest-grey flex-row justify-end">
@@ -296,7 +282,7 @@
                             </section>
 
                             <!-- GRAIN IN-PLACE TOASTER ACTIONS -->
-                            <section class="in-place-toaster">
+                            <section class="in-place-toaster" data-ng-if="grain.grain_type_id > 2">
                                 <div class="row">
                                     <div class="cell right-magnet">
                                         <button class="btns btns-tertiary flex-row align-center text-body-common m-0 p-8"
