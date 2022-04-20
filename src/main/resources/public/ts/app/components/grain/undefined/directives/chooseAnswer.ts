@@ -1,4 +1,5 @@
 import { ng } from 'entcore';
+import { IGrainType } from '../../../../models/domain/GrainType';
 import { IGrainTypeService } from '../../../../services';
 
 export const chooseAnswer = ng.directive('chooseAnswer',
@@ -13,8 +14,8 @@ export const chooseAnswer = ng.directive('chooseAnswer',
 
                 scope.grainTypeList = GrainTypeService.getList();
 
-                scope.getGrainIllustrationURL = function(grainTypeId:number) {
-                    return GrainTypeService.getIllustrationURL(grainTypeId);
+                scope.getGrainIllustrationURL = function(grainType:IGrainType) {
+                    return `exercizer/public/assets/icons/illustrations.svg#${grainType.name}`
                 };
 
                 scope.displayNextStep = function(grainTypeId:number) {

@@ -1,9 +1,6 @@
-<div class="eleven cell">
-    <div class="row">
-        <div data-ng-repeat="grainType in grainTypeList | filter:{'is_in_list':true}">
-            <div class="two cell vertical-spacing" style="width:75px; height:75px;" data-tooltip="[[ grainType.public_name ]]" data-ng-click="displayNextStep(grainType.id);$event.stopPropagation();">
-                <div data-ng-include="getGrainIllustrationURL(grainType.id)" style="height: 100%"></div>
-            </div>
-        </div>
+<div class="flex-row justify-around f-wrap mobile-justify-center p-24">
+    <div class="flex-row f-column align-center answer-choice" data-ng-repeat="grainType in grainTypeList | filter:{'is_in_list':true}" data-ng-click="displayNextStep(grainType.id);$event.stopPropagation();">
+        <svg class="mb-4" width="70" height="70"><use ng-attr-href="[[getGrainIllustrationURL(grainType)]]" href=""></use></svg>
+        <span class="text-small text-bold text-center"><i18n>[[grainType.public_name]]</i18n></span>
     </div>
 </div>
