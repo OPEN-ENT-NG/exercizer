@@ -78,6 +78,9 @@ import { subjectViewCopyGrainCopyList } from './app/components/subject/subject_v
 import { subjectViewCopyPreviewHeader } from './app/components/subject/subject_view_copy/directives/subjectViewCopyPreviewHeader';
 import { subjectViewCopyStudentHeader } from './app/components/subject/subject_view_copy/directives/subjectViewCopyStudentHeader';
 import { subjectViewCopyTeacherActions } from './app/components/subject/subject_view_copy/directives/subjectViewCopyTeacherActions';
+// Messages Component
+import { messageInfo } from './app/directives/messages/directives/messageInfo';
+
 import { digitsInputRestrict } from './app/directives/input_restrictions/digitsInputRestrict';
 import {
     accessService,
@@ -113,7 +116,6 @@ import { LibraryServiceProvider } from 'entcore/types/src/ts/library/library.ser
 import { IdAndLibraryResourceInformation } from 'entcore/types/src/ts/library/library.types';
 
 import { Subject } from './app/models/domain';
-
 ng.configs.push(ng.config(['libraryServiceProvider', function (libraryServiceProvider: LibraryServiceProvider<Subject>) {
     libraryServiceProvider.setInvokableResourceInformationGetterFromResource(function () {
         return function (resource: Subject): IdAndLibraryResourceInformation {
@@ -175,6 +177,7 @@ ng.directives.push(subjectViewCopyPreviewHeader);
 ng.directives.push(subjectViewCopyStudentHeader);
 ng.directives.push(subjectViewCopyTeacherActions);
 ng.directives.push(digitsInputRestrict);
+ng.directives.push(messageInfo);
 
 /**
  * Services
