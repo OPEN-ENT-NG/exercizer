@@ -150,7 +150,7 @@
                         >
 
                             <!-- TITLE & SCORE -->
-                            <div class="flex align-items-center justify-space-between m-16 gap-64" data-ng-if="grain.grain_type_id > 3">
+                            <div class="flex align-items-center justify-space-between m-16 gap-32" data-ng-if="grain.grain_type_id > 3">
                                 <input type="text" class="form-control eight cell" data-ng-model="grain.grain_data.title" ng-change="editSubjectController.updateGrainDebounced(grain)" value="[[ grain.grain_data.title ]]" i18n-placeholder="exercizer.grain.title" maxlength="255"/>
                                 <div>
                                     <span class="cell right-magnet">&nbsp;<i18n>exercizer.score</i18n></span>
