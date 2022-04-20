@@ -118,7 +118,10 @@
         <h2><i18n>exercizer.grain.zone</i18n></h2>
         <form>
             <div class="row">
-                <input type="text" ng-model="displayState.editedTextZone.answer" required class="twelve cell" i18n-placeholder="Réponse" />
+                <input type="text" maxlength="40" ng-model="displayState.editedTextZone.answer" required class="twelve cell" i18n-placeholder="Réponse" />
+            </div>
+            <div class="row">
+                <em><i18n>exercizer.grain.zonetxt.limit</i18n></em>
             </div>
             <div class="row">
                 <button class="right-magnet" ng-if="!displayState.editedTextZone.position" ng-click="addZone()">
