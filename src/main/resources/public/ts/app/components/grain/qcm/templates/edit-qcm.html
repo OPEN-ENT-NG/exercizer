@@ -23,7 +23,7 @@
         <tr data-ng-repeat="answer in grain.grain_data.custom_data.correct_answer_list track by $index">
             <td>
                 <label>
-                    <input type="checkbox" data-ng-model="answer.isChecked" data-ng-change="updateGrain()" />
+                    <input type="checkbox" data-ng-model="answer.isChecked" data-ng-change="updateGrain()" data-ng-disabled="!answer.text"/>
                     <span></span>
                 </label>
             </td>
