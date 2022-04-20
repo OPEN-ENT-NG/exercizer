@@ -105,9 +105,6 @@
 
                     <article explorer
                         ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false" id="grain-edit-[[grain.id]]"
-                        ng-model="grain.selected"
-                        ng-change="editSubjectController.selectGrain(grain)"
-                        should-select="editSubjectController.shouldSelect($event)"
                         class="select-border article-edit"
                     >
 
@@ -273,6 +270,16 @@
                                 </div>
                             </section>
 
+                            <!-- GRAIN IN-PLACE TOASTER ACTIONS -->
+                            <section class="grid grid-2">
+                                <div class="row">
+                                    <div class="cell">
+                                        <button data-ng-click="editSubjectController.duplicate(grain)"><i18n>exercizer.duplicate</i18n></button>
+                                        <button data-ng-click="editSubjectController.displayModalRemove(grain)"><i18n>exercizer.remove</i18n></button>
+                                    </div>
+                                </div>
+                            </section>
+
                         </div>
 
                         <!-- GRAIN SPECIFIC CONTENT FOR ALL GRAIN TYPE (folded) -->
@@ -280,10 +287,6 @@
                             class="row top-spacing-three"
                             ng-if="(grain.grain_type_id < 3 || (grain.grain_type_id > 2 && editSubjectController.isGrainFolded(grain)))"
                         >
-                            <!-- GRAIN SELECTION -->
-                            <div class="top-spacing right-spacing cell">
-                                <input type="checkbox" data-ng-checked="editSubjectController.isGrainSelected(grain)" data-ng-click="editSubjectController.selectGrain(grain)">
-                            </div>
                             <!-- GRAIN CONTENT (folded) -->
                             <div data-ng-switch="grain.grain_type_id">
                                 <div data-ng-switch-when="1" ng-if="grain.id != null">
@@ -334,18 +337,6 @@
                 <button data-ng-click="editSubjectController.closeModalRemoveGrainDocument()" class="cell right-magnet cancel"><i18n>exercizer.cancel</i18n></button>
             </div>
         </lightbox>
-
-        <!-- TOASTER -->
-        <section class="toggle-buttons" data-ng-show="editSubjectController.isToasterDisplayed()">
-            <div class="toggle">
-                <div class="row">
-                    <div class="cell">
-                        <button data-ng-click="editSubjectController.duplicateSelectedGrainList()"><i18n>exercizer.duplicate</i18n></button>
-                        <button data-ng-click="editSubjectController.displayModalRemoveSelectedGrainList()"><i18n>exercizer.remove</i18n></button>
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <!-- REMOVE SELECTED GRAIN LIST MODAL -->
         <lightbox data-show="editSubjectController.isModalRemoveSelectedGrainListDisplayed" data-on-close="editSubjectController.closeModalRemoveSelectedGrainList()">
