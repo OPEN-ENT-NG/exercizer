@@ -112,7 +112,7 @@
                 <!--GRAIN LIST-->
                 <div class="row">
 
-                    <article explorer
+                    <article
                         ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false" id="grain-edit-[[grain.id]]"
                         class="select-border article-edit"
                     >
@@ -140,11 +140,6 @@
                                     </div>
                                 </div>
 
-                                <!-- GRAIN FOLD -->
-                                <div class="cell right-magnet" data-ng-click="editSubjectController.foldGrain(grain); $event.stopPropagation()">
-                                    <i data-ng-show="editSubjectController.isGrainFolded(grain)" data-tooltip="exercizer.unfold" class="down-open"></i>
-                                    <i data-ng-hide="editSubjectController.isGrainFolded(grain)" data-tooltip="exercizer.fold" class="up-open"></i>
-                                </div>
                             </div>
 
                         </div>
@@ -152,7 +147,6 @@
                         <!-- GRAIN SPECIFIC CONTENT FOR EXERCISE GRAIN TYPE (not folded) -->
                         <div stop-child-propagation
                             class="row"
-                            ng-if="(grain.grain_type_id > 2 && !editSubjectController.isGrainFolded(grain))"
                         >
 
                             <!-- TITLE & SCORE -->
@@ -279,43 +273,26 @@
                                 </div>
                             </section>
 
-                            <!-- GRAIN IN-PLACE TOASTER ACTIONS -->
-                            <section class="grid grid-2">
-                                <div class="row">
-                                    <div class="cell">
-                                        <button data-ng-click="editSubjectController.duplicate(grain)"><i18n>exercizer.duplicate</i18n></button>
-                                        <button data-ng-click="editSubjectController.displayModalRemove(grain)"><i18n>exercizer.remove</i18n></button>
-                                    </div>
-                                </div>
-                            </section>
-
-                        </div>
-
-                        <!-- GRAIN SPECIFIC CONTENT FOR ALL GRAIN TYPE (folded) -->
-                        <div  stop-child-propagation
-                            class="row top-spacing-three"
-                            ng-if="(grain.grain_type_id < 3 || (grain.grain_type_id > 2 && editSubjectController.isGrainFolded(grain)))"
-                        >
-                            <!-- GRAIN CONTENT (folded) -->
-                            <div data-ng-switch="grain.grain_type_id">
+                            <!-- GRAIN CONTENT (initially folded) -->
+                            <section class="grid grid-2" data-ng-switch="grain.grain_type_id">
                                 <div data-ng-switch-when="1" ng-if="grain.id != null">
                                     <choose data-grain="grain"></choose>
                                 </div>
                                 <div data-ng-switch-when="2">
                                     <choose-answer data-grain="grain"></choose-answer>
                                 </div>
-                                <div data-ng-switch-when="3">
-                                    <h2 data-ng-click="editSubjectController.foldGrain(grain); $event.stopPropagation()" class="hover-orange">[[ grain.grain_data.title || editSubjectController.translate('exercizer.statement') ]]</h2>
-                                    <div style="max-height : 100px; word-wrap: break-word; overflow: hidden; text-overflow: ellipsis;">
-                                        <div data-ng-click="editSubjectController.foldGrain(grain); $event.stopPropagation()" class="eleven cell vertical-spacing" data-bind-html="editSubjectController.getStatementTrustedHtml(grain)"></div>
+                            </section>
+
+                            <!-- GRAIN IN-PLACE TOASTER ACTIONS -->
+                            <section class="grid grid-2">
+                                <div class="row">
+                                    <div class="cell">
+                                        <button ng-if="grain.grain_type_id>1"
+                                                data-ng-click="editSubjectController.duplicate(grain)"><i18n>exercizer.duplicate</i18n></button>
+                                        <button data-ng-click="editSubjectController.displayModalRemove(grain)"><i18n>exercizer.remove</i18n></button>
                                     </div>
                                 </div>
-                                <div data-ng-switch-default>
-                                    <h2 class="hover-orange" data-ng-click="editSubjectController.foldGrain(grain); $event.stopPropagation()">
-                                        [[ grain.grain_type_id > 3 ? editSubjectController.getCorrectOrder(grain) + ') ' : '' ]] [[ editSubjectController.getGrainDisplayedName(grain) ]]&nbsp;-&nbsp;[[ grain.grain_data.max_score ]]&nbsp;<i18n>exercizer.score</i18n>
-                                    </h2>
-                                </div>
-                            </div>
+                            </section>
 
                         </div>
 
