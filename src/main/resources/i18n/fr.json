@@ -170,6 +170,8 @@
     "exercizer.rank" : "Résumé",
     "exercizer.statement" : "Énoncé",
     "exercizer.question" : "Question",
+    "exercizer.statement.new" : "Nouvel énoncé",
+    "exercizer.question.new" : "Nouvelle question",
     "exercizer.fold" : "Plier",
     "exercizer.fold.all" : "Tout plier",
     "exercizer.unfold" : "Déplier",
