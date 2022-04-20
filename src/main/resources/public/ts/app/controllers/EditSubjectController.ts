@@ -354,14 +354,20 @@ export class EditSubjectController implements IObjectGuardDelegate {
      *  GRAIN
      */
 
-    public addGrain = function(onSave?:(ok:boolean)=>void) {
-        var self:EditSubjectController = this,
-            newGrain = new Grain();
+    public addGrainWithType = function(grainType?:number) {
+        const self:EditSubjectController = this;
+        self.addGrain(()=>{}, grainType);
+    }
 
+    public addGrain = function(onSave?:(ok:boolean)=>void, grainType?:number) {
+        const self:EditSubjectController = this,
+            newGrain = new Grain();
+        //new grain
         newGrain.subject_id = this.subject.id;
         newGrain.grain_data = new GrainData();
-        newGrain.grain_type_id = 1;
+        newGrain.grain_type_id = grainType || 1;
         newGrain.grain_data.title = this._grainTypeService.getById(newGrain.grain_type_id).public_name;
+        //track task
         const task : IGrainTask = {done: "waiting", grain: newGrain, operation: "add"}; 
         if(!self._lockTasks){
             self._pendingTasks.push(task);
