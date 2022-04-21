@@ -4,7 +4,7 @@
     <article>
       <h2 class="row" style="color: firebrick;"><i18n>exercizer.dashboard.learner.tab1.sub.header1</i18n></h2>
       <div class="row">
-        <input type="text" data-ng-model="search.text_1" i18n-placeholder="exercizer.search" class="form-control cell twelve">
+        <input type="text" data-ng-model="search.text_1" i18n-placeholder="exercizer.search" class="cell twelve">
       </div>
 
       <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
@@ -24,17 +24,17 @@
 
         <div class="mobile-row">
             <div class="flex align-items-center justify-space-between gap-16">
-                <input type="text" data-ng-model="search.text_2" i18n-placeholder="exercizer.search" class="form-control three cell twelve-mobile">
+                <input type="text" data-ng-model="search.text_2" i18n-placeholder="exercizer.search" class="three cell twelve-mobile">
 
                 <label class="cell right-magnet">
                   <i18n>exercizer.date.from</i18n>
                 </label>
-                <date-picker data-ng-model="search.beginDate" class="form-control three cell right-magnet"></date-picker>
+                <date-picker data-ng-model="search.beginDate" class="three cell right-magnet"></date-picker>
               
                 <label class="cell right-magnet">
                   <i18n>exercizer.date.to</i18n>
                 </label>
-                <date-picker  e-picker data-ng-model="search.endDate" class="form-control three cell right-magnet"></date-picker>
+                <date-picker  e-picker data-ng-model="search.endDate" class="three cell right-magnet"></date-picker>
             </div>
         </div>
         <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
