@@ -1,4 +1,5 @@
 import { ng, idiom } from 'entcore';
+import { Grain } from '../../../../models/domain/Grain';
 import { QcmCustomData } from '../models/QcmCustomData';
 
 export const editQcm = ng.directive('editQcm',
@@ -17,7 +18,6 @@ export const editQcm = ng.directive('editQcm',
                         text : text
                     };
                     scope.grain.grain_data.custom_data.correct_answer_list.push(newAnswer);
-                    scope.$emit('E_UPDATE_GRAIN', scope.grain);
                 };
 
                 if (angular.isUndefined(scope.grain.grain_data.custom_data)) {
@@ -31,12 +31,19 @@ export const editQcm = ng.directive('editQcm',
                     if (index !== -1) {
                         scope.grain.grain_data.custom_data.correct_answer_list.splice(index, 1);
                     }
-                    scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                    _updateGrain(scope.grain);
                 };
 
                 scope.updateGrain = function() {
-                    scope.$emit('E_UPDATE_GRAIN', scope.grain);
+                    _updateGrain(scope.grain);
                 };
+
+                const _updateGrain = (grain) => {
+                    let savedGrain = new Grain();
+                    savedGrain = angular.copy(grain, savedGrain);
+                    savedGrain.grain_data.custom_data.correct_answer_list = savedGrain.grain_data.custom_data.correct_answer_list.filter(answer => !!answer.text);
+                    scope.$emit('E_UPDATE_GRAIN', savedGrain);
+                }
             }
         };
     }]
