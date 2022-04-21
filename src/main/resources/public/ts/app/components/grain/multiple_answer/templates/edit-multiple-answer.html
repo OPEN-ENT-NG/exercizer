@@ -2,6 +2,9 @@
     <span class="row"><i18n>exercizer.grain.mode</i18n> :&nbsp;</span>
     <input type="checkbox" data-ng-model="grain.grain_data.custom_data.no_error_allowed" data-ng-change="updateGrain()" />
     <span><i18n>exercizer.grain.mode.option</i18n></span>
+    <message-info status="info">
+        <i18n>exercizer.grain.accent.warning</i18n>
+    </message-info>
 </div>
 
 <div class="row vertical-spacing">
@@ -11,9 +14,9 @@
     </div>
 
     <div class="row vertical-spacing">
-        <button data-ng-click="addAnswer()" class="twelve cell flat-button">
+        <button data-ng-click="addAnswer()" class="btns btns-tertiary text-body-common flex align-items-center gap-8 px-0 m-0">
+            <svg class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
             <i18n>exercizer.grain.add.answer</i18n>
         </button>
     </div>
 </div>
-
