@@ -1,4 +1,5 @@
 import { ng, idiom } from 'entcore';
+import { IGrain } from '../../../../models/domain';
 import { AssociationCustomData } from '../models/AssociationCustomData';
 
 export const editAssociation = ng.directive('editAssociation',
@@ -35,6 +36,7 @@ export const editAssociation = ng.directive('editAssociation',
                 };
 
                 scope.updateGrain = function() {
+                    const grain: IGrain = scope.grain;
                     scope.$emit('E_UPDATE_GRAIN', scope.grain);
                 };
             }

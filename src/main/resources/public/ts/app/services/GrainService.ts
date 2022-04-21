@@ -84,12 +84,12 @@ export class GrainService implements IGrainService {
     };
 
     public update = function (grain:IGrain):Promise<IGrain> {
-        var self = this,
+        const self = this,
             deferred = this._$q.defer();
+        const grain_data =  grain.cleanBeforeUpdate();
+        const body = {"grainTypeId": grain.grain_type_id, "orderBy": grain.order_by,"grainData": cleanBeforeSave(grain_data)};
 
-        var body = {"grainTypeId": grain.grain_type_id, "orderBy": grain.order_by,"grainData": cleanBeforeSave(grain.grain_data)};
-
-        var request = {
+        const request = {
             method: 'PUT',
             url: 'exercizer/subject/' + grain.subject_id + '/grain/' + grain.id,
             data: body
