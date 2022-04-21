@@ -581,5 +581,7 @@
     "exercizer.notify.file.loading": "Envoi du fichier en cours...",
     "exercizer.notify.file.sent": "Votre devoir a bien été déposé.",
     "exercizer.notify.file.weight": "Votre fichier dépasse la taille de fichier maximale.",
-    "exercizer.subject.emptyscreen": "C’est vide par içi !\nAjoutez le premier élément à votre sujet interactif"
+    "exercizer.subject.emptyscreen": "C’est vide par içi !\nAjoutez le premier élément à votre sujet interactif",
+    "exercizer.grain.openanswer.info": "La correction automatique n’est pas disponible pour les réponses ouvertes.",
+    "exercizer.grain.statement.placeholder" : "Ajouter ici les consignes, le descriptif, l’énoncé de la question"
 }

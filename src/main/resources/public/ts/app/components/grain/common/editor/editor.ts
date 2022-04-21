@@ -9,7 +9,8 @@ export const customEditor = ng.directive('customEditor',
             scope : {
                 text :"=",
                 grain : "=",
-                trackInputEvent: "="
+                trackInputEvent: "=",
+                placeholder: "@?"
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/common/editor/editor.html',
             link:(scope:any, element) => {
