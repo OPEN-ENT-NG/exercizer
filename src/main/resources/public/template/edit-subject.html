@@ -164,6 +164,7 @@
                             </div>
 
                             <!-- GRAIN DOCUMENT LIST -->
+                            <!-- Deprecated, but kept for retor-compability with existing grains having documents. -->
                             <div class="row" data-ng-show="grain.grain_data.document_list.length > 0" data-ng-if="grain.grain_type_id > 3">
                                 <table class="twelve">
                                     <thead>
@@ -187,15 +188,6 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                            </div>
-
-                            <!-- ADD GRAIN DOCUMENT BUTTON -->
-                            <div class="row" data-ng-if="grain.grain_type_id > 3" style="text-align: center">
-                                <nav class="vertical" style="padding: 0px !important;">
-                                    <a class="classic-link" data-ng-click="editSubjectController.displayModalAddGrainDocument(grain)">
-                                        <i18n>exercizer.grain.doc</i18n>
-                                    </a>
-                                </nav>
                             </div>
 
                             <!-- SWITCH GRAIN -->
@@ -319,13 +311,6 @@
 
             </section>
         </div>
-
-        <!-- ADD GRAIN DOCUMENT MODAL -->
-        <lightbox data-show="editSubjectController.isModalAddGrainDocumentDisplayed" data-on-close="editSubjectController.closeModalAddGrainDocument()">
-            <div ng-if="editSubjectController.isModalAddGrainDocumentDisplayed">
-                <media-library data-ng-model="mediaLibraryItem" visibility="'protected'" file-format="'any'" data-ng-change="editSubjectController.addGrainDocument(mediaLibraryItem)"></media-library>
-            </div>
-        </lightbox>
 
         <!-- REMOVE GRAIN DOCUMENT MODAL -->
         <lightbox data-show="editSubjectController.isModalRemoveGrainDocumentDisplayed" data-on-close="editSubjectController.closeModalRemoveGrainDocument()">
