@@ -132,7 +132,7 @@
                                     <div data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
                                          data-ng-if="grain.grain_type_id > 3">
                                         <div style="display: inline-block; vertical-align: middle; width: 20px; height:20px;" data-ng-include="editSubjectController.getGrainIllustrationURL(grain.grain_type_id)"></div>
-                                        <small>[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]</small>
+                                        <small class="text-medium">[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]</small>
                                     </div>
                                 </div>
 
@@ -149,7 +149,7 @@
                             <div class="flex align-items-center justify-space-between m-16 gap-32" data-ng-if="grain.grain_type_id > 3">
                                 <input type="text" class="eight cell" data-ng-model="grain.grain_data.title" ng-change="editSubjectController.updateGrainDebounced(grain)" value="[[ grain.grain_data.title ]]" i18n-placeholder="exercizer.grain.title" maxlength="255"/>
                                 <div>
-                                    <span class="cell right-magnet">&nbsp;<i18n>exercizer.score</i18n></span>
+                                    <span class="cell right-magnet text-body">&nbsp;<i18n>exercizer.score</i18n></span>
                                     <input type="text" class="score mb-0 high-importance cell right-magnet centered-text"
                                        data-ng-style="editSubjectController.getScoringCSS(grain)"
                                        style="width: 50px;" data-ng-model="grain.grain_data.max_score" ng-change="editSubjectController.updateGrainDebounced(grain)" i18n-placeholder="exercizer.grain.scoring" />
