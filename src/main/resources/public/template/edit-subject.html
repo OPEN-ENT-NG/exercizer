@@ -156,11 +156,16 @@
                                 </div>
                             </div>
 
+                            <!-- GRAIN INFO/WARNING -->
+                            <div class="row" data-ng-if="grain.grain_type_id == 5" stop-child-propagation>
+                                <message-info status="info"><i18n>exercizer.grain.openanswer.info</i18n></message-info>
+                            </div>
+
                             <!-- GRAIN STATEMENT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3" stop-child-propagation>
                                 <!-- <label><i18n>exercizer.statement</i18n> :</label> -->
                                 <!--<editor data-ng-model="grain.grain_data.statement" inline class="small-editor"></editor>-->
-                                <custom-editor text="grain.grain_data.statement" grain="grain" track-input-event="grain.getTracker()"></custom-editor>
+                                <custom-editor placeholder="[['exercizer.grain.statement.placeholder'|i18n]]" text="grain.grain_data.statement" grain="grain" track-input-event="grain.getTracker()"></custom-editor>
                             </div>
 
                             <!-- GRAIN DOCUMENT LIST -->
