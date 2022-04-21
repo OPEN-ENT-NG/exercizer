@@ -449,6 +449,7 @@
     "exercizer.grain.manswer.default1" : "Réponse 1",
     "exercizer.grain.manswer.default2" : "Réponse 2",
     "exercizer.grain.oanswer.info" : "Réponse - champ réservé à l'élève",
+    "exercizer.grain.order.answers" : "Réponses",
     "exercizer.grain.order.default1" : "Réponse 1",
     "exercizer.grain.order.default2" : "Réponse 2",
     "exercizer.grain.order.warning" : "L'ordre des réponses sera mélangé pour les élèves.",
