@@ -44,7 +44,6 @@ export class EditSubjectController implements IObjectGuardDelegate {
     private _trustedHtmlStatementMap:{[grainId:number]:string};
 
     // modal
-    private _isModalAddGrainDocumentDisplayed:boolean;
     private _isDropableZone:boolean;
     private _isModalRemoveGrainDocumentDisplayed:boolean;
     private _isModalRemoveSelectedGrainListDisplayed:boolean;
@@ -96,7 +95,6 @@ export class EditSubjectController implements IObjectGuardDelegate {
         // modal
         this._isModalRemoveSelectedGrainListDisplayed = false;
         this._isDropableZone = false;
-        this._isModalAddGrainDocumentDisplayed = false;
         this._isModalRemoveGrainDocumentDisplayed = false;
         this._currentGrainForAction = undefined;
         this._currentGrainDocumentToRemove = undefined;
@@ -435,6 +433,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
         );
     };
 
+/* @deprecated WB-446
     public addGrainDocument = function(mediaLibraryItem:any) {
         var grainDocument = new GrainDocument(),
             self = this;
@@ -456,23 +455,13 @@ export class EditSubjectController implements IObjectGuardDelegate {
         this._grainService.update(this._currentGrainForAction).then(
             function() {
                 self._currentGrainForAction = undefined;
-                self._isModalAddGrainDocumentDisplayed = false;
             },
             function(err) {
                 notify.error(err);
             }
         );
     };
-
-    public displayModalAddGrainDocument = function(grain:IGrain) {
-        this._currentGrainForAction = grain;
-        this._isModalAddGrainDocumentDisplayed = true;
-    };
-
-    public closeModalAddGrainDocument = function() {
-        this._currentGrainForAction = undefined;
-        this._isModalAddGrainDocumentDisplayed = false;
-    };
+*/
 
     public removeGrainDocument = function() {
         var grainDocumentIndex = this._currentGrainForAction.grain_data.document_list.indexOf(this._currentGrainDocumentToRemove),
@@ -649,10 +638,6 @@ export class EditSubjectController implements IObjectGuardDelegate {
 
     get hasDataLoaded():boolean {
         return this._hasDataLoaded;
-    }
-
-    get isModalAddGrainDocumentDisplayed():boolean {
-        return this._isModalAddGrainDocumentDisplayed;
     }
 
     get isModalRemoveGrainDocumentDisplayed():boolean {
