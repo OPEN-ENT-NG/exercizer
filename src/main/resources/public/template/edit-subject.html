@@ -147,7 +147,7 @@
 
                             <!-- TITLE & SCORE -->
                             <div class="flex align-items-center justify-space-between m-16 gap-32" data-ng-if="grain.grain_type_id > 3">
-                                <input type="text" class="form-control eight cell" data-ng-model="grain.grain_data.title" ng-change="editSubjectController.updateGrainDebounced(grain)" value="[[ grain.grain_data.title ]]" i18n-placeholder="exercizer.grain.title" maxlength="255"/>
+                                <input type="text" class="eight cell" data-ng-model="grain.grain_data.title" ng-change="editSubjectController.updateGrainDebounced(grain)" value="[[ grain.grain_data.title ]]" i18n-placeholder="exercizer.grain.title" maxlength="255"/>
                                 <div>
                                     <span class="cell right-magnet">&nbsp;<i18n>exercizer.score</i18n></span>
                                     <input type="text" class="score mb-0 high-importance cell right-magnet centered-text"
@@ -238,7 +238,7 @@
                                         <em class="form-info"><i18n>exercizer.grain.help.tooltip</i18n></em>
                                     </div>
                                     <div class="twelve cell">
-                                        <textarea data-ng-model="grain.grain_data.answer_hint" rows="1" data-min-rows="1" ng-change="editSubjectController.updateGrainDebounced(grain)" class="form-control auto-expand"></textarea>
+                                        <textarea auto-expand data-ng-model="grain.grain_data.answer_hint" rows="1" data-min-rows="1" ng-change="editSubjectController.updateGrainDebounced(grain)" class="auto-expand"></textarea>
                                     </div>
                                 </div>
 
@@ -252,7 +252,7 @@
                                         <em class="form-info"><i18n>exercizer.grain.explanation.tooltip</i18n></em>
                                     </div>
                                     <div class="twelve cell">
-                                        <textarea data-ng-model="grain.grain_data.answer_explanation" ng-change="editSubjectController.updateGrainDebounced(grain)" class="form-control"></textarea>
+                                        <textarea auto-expand data-ng-model="grain.grain_data.answer_explanation" ng-change="editSubjectController.updateGrainDebounced(grain)" class="auto-expand"></textarea>
                                     </div>
                                 </div>
                             </section>
@@ -277,15 +277,15 @@
                             <section class="in-place-toaster" data-ng-if="grain.grain_type_id > 2">
                                 <div class="row">
                                     <div class="cell right-magnet">
-                                        <button class="btns btns-tertiary flex-row align-center text-body-common m-0 p-8"
+                                        <button class="btns btns-tertiary flex-row align-center text-body-common m-0 p-8 gap-8"
                                                 ng-if="grain.grain_type_id>1"
                                                 data-ng-click="editSubjectController.duplicate(grain)">
-                                            <svg class="icon-copy mr-8" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#copy"></use></svg>
+                                            <svg class="icon-copy" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#copy"></use></svg>
                                             <i18n>exercizer.duplicate</i18n>
                                         </button>
-                                        <button class="btns btns-tertiary flex-row align-center text-body-common m-0 p-8"
+                                        <button class="btns btns-tertiary flex-row align-center text-body-common m-0 p-8 gap-8"
                                                 data-ng-click="editSubjectController.displayModalRemove(grain)">
-                                            <svg class="icon-delete mr-8" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
+                                            <svg class="icon-delete" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
                                             <i18n>exercizer.remove</i18n>
                                         </button>
                                     </div>
@@ -299,12 +299,12 @@
 
                 <!-- ADD GRAIN -->
                 <div class="flex-row align-center p-0">
-                    <a class="btns btns-primary flex-row align-center text-body px-24 mr-16" data-ng-click="editSubjectController.addGrainWithType(3)">
-                        <svg class="icon-plus mr-8" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
+                    <a class="btns btns-primary flex-row align-center text-body px-24 mr-16 gap-8" data-ng-click="editSubjectController.addGrainWithType(3)">
+                        <svg class="icon-plus" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
                         <i18n>exercizer.statement.new</i18n>
                     </a>
-                    <a class="btns btns-primary flex-row align-center text-body px-24" data-ng-click="editSubjectController.addGrainWithType(2)">
-                        <svg class="icon-text mr-8" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
+                    <a class="btns btns-primary flex-row align-center text-body px-24 gap-8" data-ng-click="editSubjectController.addGrainWithType(2)">
+                        <svg class="icon-text" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
                         <i18n>exercizer.question.new</i18n>
                     </a>
                 </div>

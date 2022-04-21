@@ -80,6 +80,7 @@ import { subjectViewCopyStudentHeader } from './app/components/subject/subject_v
 import { subjectViewCopyTeacherActions } from './app/components/subject/subject_view_copy/directives/subjectViewCopyTeacherActions';
 // Messages Component
 import { messageInfo } from './app/directives/messages/directives/messageInfo';
+import { autoExpand } from './app/directives/autoexpand/autoExpand';
 
 import { digitsInputRestrict } from './app/directives/input_restrictions/digitsInputRestrict';
 import {
@@ -178,6 +179,7 @@ ng.directives.push(subjectViewCopyStudentHeader);
 ng.directives.push(subjectViewCopyTeacherActions);
 ng.directives.push(digitsInputRestrict);
 ng.directives.push(messageInfo);
+ng.directives.push(autoExpand);
 
 /**
  * Services
