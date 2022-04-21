@@ -14,13 +14,13 @@
                  class="association__right six twelve-mobile cell flex-row align-center justify-center no-responsive"
                  data-ng-class="{'association-drop-hover'  : data.hover[key].bool == true}">
                 <p>{{filled_answer.text_right}}</p>
-                <div class="cell association__delete" data-ng-click="deleteFilledAnswer(filled_answer)" style="padding: 0px"><i class="close"></i></div>
+                <div class="cell association__delete" data-ng-click="deleteFilledAnswer(filled_answer)" style="padding: 0px"><svg class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg></div>
             </div>
             <div class="association__right six twelve-mobile cell flex-row align-center justify-center no-desktop"
                  data-ng-class="{'association-drop-hover'  : data.hover[key].bool == true}"
                  data-ng-click="showAnswers($event, filled_answer)">
                 <p style="width: 75%">{{filled_answer.text_right}}</p>
-                <div class="cell association__delete" data-ng-click="deleteFilledAnswer(filled_answer)" style="padding: 0px"><i class="close"></i></div>
+                <div class="cell association__delete" data-ng-click="deleteFilledAnswer(filled_answer)" style="padding: 0px"><svg class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg></div>
             </div>
         </div>
         <div class="row vertical-spacing no-responsive">
@@ -47,7 +47,7 @@
                     "
                  data-ng-class="{'association-drop-hover'  : data.hover[key].left == true}">
                 <p>{{filled_answer.text_left}}</p>
-                <div class="association__delete cell" data-ng-click="deleteFilledAnswerLeft(filled_answer)"><i class="close"></i></div>
+                <div class="association__delete cell" data-ng-click="deleteFilledAnswerLeft(filled_answer)"><svg class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg></div>
             </div>
             <div class="one cell">&nbsp;</div>
             <!-- dragdrop="dropToRight(filled_answer, $originalEvent)"
