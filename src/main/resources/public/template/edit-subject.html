@@ -107,7 +107,7 @@
                 </article>
                 <!--EMPTY STATE-->
                 <article class="flex-row empty-state align-center justify-center" ng-if="editSubjectController.isLoaderVisible()">
-                    <i class="loading fs-4"></i>
+                    <i class="loading fs-3"></i>
                 </article>
                 <!--GRAIN LIST-->
                 <div class="row">
@@ -158,7 +158,7 @@
 
                             <!-- GRAIN STATEMENT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3" stop-child-propagation>
-                                <label><i18n>exercizer.statement</i18n> :</label>
+                                <!-- <label><i18n>exercizer.statement</i18n> :</label> -->
                                 <!--<editor data-ng-model="grain.grain_data.statement" inline class="small-editor"></editor>-->
                                 <custom-editor text="grain.grain_data.statement" grain="grain" track-input-event="grain.getTracker()"></custom-editor>
                             </div>
