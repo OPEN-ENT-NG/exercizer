@@ -223,6 +223,9 @@ routes.define(function ($routeProvider) {
         .when('/dashboard', {
             action: 'dashboard'
         })
+        .when('/dashboard/teacher', {
+            action: 'dashboardTeacher'
+        })
         .when('/dashboard/student', {
             action: 'dashboardStudent'
         })

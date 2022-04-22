@@ -42,7 +42,7 @@ class StudentDashboardController {
     }
 
     public switchToTeacherView(){
-        this._$location.path('/dashboard');
+        this._$location.path('/dashboard/teacher');
         var self = this;
         setTimeout(
             function(){
