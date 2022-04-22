@@ -10,9 +10,11 @@ export const autoExpand = ng.directive('autoExpand',
                 element[0].addEventListener('focus', () => {
                     let calc = element[0].scrollHeight / 16;
                     
-                    if (element[0].value === '') element[0].setAttribute("rows", "1");
-    
-                    element[0].setAttribute('rows', parseInt(String(calc)));
+                    if (element[0].value.length === 0) {
+                        element[0].setAttribute("rows", "1");
+                    } else {
+                        element[0].setAttribute('rows', parseInt(String(calc)));
+                    }
                 }, { once: true })
 
                 function handleAutoExand () {
