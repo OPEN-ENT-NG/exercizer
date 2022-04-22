@@ -36,13 +36,23 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
     route({
         dashboard: async function () {
             if (await checkSystemDate()) {
-                if (_userProfile === teacherProfile) {
-                    template.open('main', 'teacher-dashboard-subject-tab');
-                } else if (_userProfile === studentProfile) {
+                if (_userProfile === studentProfile ||
+                    (model.me.profiles && 
+                    model.me.profiles.includes('Student') &&
+                    canAccessTeacherProfile)) {
                     template.open('main', 'student-dashboard');
+                } else if (_userProfile === teacherProfile) {
+                    template.open('main', 'teacher-dashboard-subject-tab');
                 } else {
                     template.open('main', '401-exercizer');
                 }
+            } else {
+                template.open('main', '400-date-exercizer');
+            }
+        },
+        dashboardTeacher: async function() {
+            if (await checkSystemDate()) {
+                template.open('main', 'teacher-dashboard-subject-tab');
             } else {
                 template.open('main', '400-date-exercizer');
             }
