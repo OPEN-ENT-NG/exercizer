@@ -415,7 +415,7 @@
     "exercizer.shared" : "Sujets partagés avec moi",
     "exercizer.close" : "Fermer",
     "exercizer.grain.zone" : "Zone à compléter",
-    "exercizer.grain.zone.add":  "Ajouter une zone à compléter",
+    "exercizer.grain.zone.add":  "Ajouter une réponse",
     "exercizer.grain.types" : "Types de réponses",
     "exercizer.grain.option1" : "Saisie libre",
     "exercizer.grain.option2" : "Liste déroulante",
