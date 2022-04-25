@@ -1,24 +1,37 @@
 <div class="row">
-    <div class="row">
-        <div class="drawing-zone base-image">
-            <div class="image-container">
-                <image-select ng-model="grain.grain_data.custom_data.guideImage" ng-change="updateGrain();" id="[[ grain.id ]]-bckgrnd"></image-select>
-            </div>
-            <placed-block ng-repeat="iconZone in grain.grain_data.custom_data.zones" style="padding:0;" draggable
-                            x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z"
-                            transform-x="getResizedIconZoneX" transform-y="getResizedIconZoneY"
-            >
-                <image-zone>
-                    <i class="close" ng-click="removeZone(iconZone)"></i>
-                    <img ng-src="[[iconZone.answer]]?thumbnail=120x120" />
-                    <div class="actions" ng-click="editZone(iconZone)">
-                        <i class="edit"></i> <i18n>exercizer.edit</i18n>
-                    </div>
-                </image-zone>
+    <section class="zone-image">
+        <div class="row">
+            <div class="drawing-zone base-image">
+                <div class="image-container">
+                    <image-select ng-model="grain.grain_data.custom_data.guideImage" ng-change="updateGrain();" id="[[ grain.id ]]-bckgrnd"></image-select>
+                </div>
+                <placed-block ng-repeat="iconZone in grain.grain_data.custom_data.zones" style="padding:0;" draggable
+                                x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z"
+                                transform-x="getResizedIconZoneX" transform-y="getResizedIconZoneY"
+                >
+                    <image-zone>
+                        <i class="close" ng-click="removeZone(iconZone)"></i>
+                        <img ng-src="[[iconZone.answer]]?thumbnail=120x120" />
+                        <div class="actions" ng-click="editZone(iconZone)">
+                            <i class="edit"></i> <i18n>exercizer.edit</i18n>
+                        </div>
+                    </image-zone>
 
-            </placed-block>
+                </placed-block>
+            </div>
         </div>
-    </div>
+        <div class="select-zone gap-8">
+            <button ng-click="displayState.pickOption = true" class="btns btns-secondary flex-inline gap-8"><svg class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg><i18n>exercizer.grain.add.answer</i18n></button>
+            <button class="cancel flat-button flex-inline gap-8" ng-click="displayState.changeBackground = true"><svg class="icon-edit" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg><i18n>exercizer.grain.background</i18n></button>
+            <div class="options">
+                <image-zone ng-repeat="option in grain.grain_data.custom_data.options track by $index">
+                    <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                    <img ng-src="[[option]]?thumbnail=120x120" />
+                </image-zone>
+            </div>
+        </div>
+    </section>
+
     <lightbox show="displayState.changeBackground" on-close="displayState.changeBackground = false">
         <div ng-if="displayState.changeBackground">
             <media-library ng-model="grain.grain_data.custom_data.guideImageFile" ng-change="displayState.changeBackground = false; updateGrain();" file-format="'img'"></media-library>
@@ -45,19 +58,4 @@
             <media-library ng-model="displayState.newOption" file-format="'img'" ng-change="addOption(grain.grain_data.custom_data); displayState.pickOption = false"></media-library>
         </div>
     </lightbox>
-    <div class="row">
-        <label><strong><i18n>exercizer.grain.zoneimg.advisable</i18n></strong></label>
-    </div>
-    <div class="row vertical-spacing">
-        <button class="cancel" ng-click="displayState.changeBackground = true"><i18n>exercizer.grain.background</i18n></button>
-    </div>
-    <div class="row options">
-        <image-zone ng-repeat="option in grain.grain_data.custom_data.options track by $index">
-            <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
-            <img ng-src="[[option]]?thumbnail=120x120" />
-        </image-zone>
-        <image-zone ng-click="displayState.pickOption = true">
-            <button class="add-answer"><i18n>exercizer.grain.add.answer</i18n></button>
-        </image-zone>
-    </div>
 </div>
