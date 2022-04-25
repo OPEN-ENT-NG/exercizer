@@ -1,13 +1,13 @@
 <div class="row">
     <input 
-           class="twelve cell"
+           class="twelve cell m-16"
            type="text" 
            i18n-placeholder="exercizer.grain.type.statement"
            ng-change="updateGrain()" 
            ng-model="grain.grain_data.title" />
 </div>
 
-<div class="row vertical-spacing">
-    <editor data-ng-model="grain.grain_data.custom_data.statement" on-change="updateGrain()" track-input-event="grain.getTracker()"></editor>
+<div class="row">
+    <editor class="m-0" data-ng-model="grain.grain_data.custom_data.statement" on-change="updateGrain()" track-input-event="grain.getTracker()"></editor>
 </div>
 

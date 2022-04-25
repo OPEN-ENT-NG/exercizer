@@ -125,10 +125,11 @@
 
                                 <!-- GRAIN TYPE ICON -->
                                 <div class="cell">
-                                    <i class="doc-text"
-                                       data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
-                                       data-ng-if="grain.grain_type_id === 3">
-                                    </i>
+                                    <div data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
+                                         data-ng-if="grain.grain_type_id === 3">
+                                         <i class="doc-text"></i>
+                                        <small class="text-medium">[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]</small>
+                                    </div>
                                     <div data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
                                          data-ng-if="grain.grain_type_id > 3">
                                         <div style="display: inline-block; vertical-align: middle; width: 20px; height:20px;" data-ng-include="editSubjectController.getGrainIllustrationURL(grain.grain_type_id)"></div>
