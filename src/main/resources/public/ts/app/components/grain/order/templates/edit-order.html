@@ -25,9 +25,9 @@
             data-ng-change="reOrder()"
             data-ng-model="answer.index">
             <div class="edit-order-index">[[ answer.order_by ]]</div>
-            <input type="text" class="nine cell" data-ng-model="answer.text" ng-change="updateGrain()" value="[[ answer.text ]]" i18n-placeholder="exercizer.grain.answer.info" />
+            <input type="text" class="cell" data-ng-model="answer.text" ng-change="updateGrain()" value="[[ answer.text ]]" i18n-placeholder="exercizer.grain.answer.info" />
             <div class="cell right-magnet edit-order-delete" data-ng-click="deleteAnswer(answer)">
-                <svg class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
+                <svg class="icon-close" width="22" height="22"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
             </div>
         </li>
     </ul>
