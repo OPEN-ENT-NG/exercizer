@@ -31,10 +31,10 @@
             </button>
         </div>
 
-        <div class="row">
+        <div class="grid grid-layout-2">
 
             <!-- LEFT STICKY NAV -->
-            <aside class="four cell vertical only-large-desktop sticky-nav">
+            <aside class="vertical only-large-desktop sticky-nav">
                 <nav class="hash-magnet floating-navigation">
 
                     <!-- ORGANIZER -->
@@ -51,8 +51,8 @@
 
                         <div data-ng-hide="editSubjectController.organizerFolded">
                             <div class="row mb-16">
-                                <div class="cell">
-                                    <i18n>exercizer.score.total</i18n>&nbsp;:&nbsp;<b>[[editSubjectController.computedMaxScore]]</b>
+                                <div class="cell fs-3 flex-inline gap-12">
+                                    <i18n>exercizer.score.total</i18n><strong>[[editSubjectController.computedMaxScore]]</strong>
                                 </div>
                             </div>
 
@@ -99,7 +99,7 @@
 
             <!-- GRAIN LIST -->
             <!-- dragdrop="editSubjectController.dropTo($originalEvent)" -->
-            <section class="eight-desktop cell droppable drop-zone cell-initial-float" ng-attr-style="[[editSubjectController.isDropableZone ? 'border-width: 2px;' : 'border-width: 0px;']]" drop-item="editSubjectController.dropTo($item)">
+            <section class="droppable drop-zone cell-initial-float" ng-attr-style="[[editSubjectController.isDropableZone ? 'border-width: 2px;' : 'border-width: 0px;']]" drop-item="editSubjectController.dropTo($item)">
                 <!--LOADER-->
                 <article class="flex-row empty-state align-center p-0" ng-if="editSubjectController.isEmptyStateVisible()">
                     <img src="exercizer/public/assets/img/subject-emptyscreen.svg" class="ml-24"/>
@@ -232,7 +232,7 @@
 
                             <!-- GRAIN FOOTER -->
 
-                            <section class="grid grid-2 gap-24">
+                            <section class="grid grid-2 gap-24 mt-24">
                                 <!-- GRAIN ANSWER HINT -->
                                 <div class="row" data-ng-if="grain.grain_type_id > 3">
                                     <label class="form-label flex align-items-center m-8 gap-8">
