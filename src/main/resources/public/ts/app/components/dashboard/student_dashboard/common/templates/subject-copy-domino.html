@@ -52,7 +52,18 @@
                         </div>
                     </div>
                     <div data-ng-if="subjectScheduled.type === 'interactive'">
-                        <strong class="score">[[(subjectCopy.is_training_copy ? subjectCopy.calculated_score : subjectCopy.final_score) | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]</strong>
+                        <strong 
+                            data-ng-if="!subjectCopy.is_corrected" 
+                            class="score"
+                        >
+                            - / [[getSubjectScheduledMaxScore()]]
+                        </strong>
+                        <strong 
+                            data-ng-if="subjectCopy.is_corrected"
+                            class="score"
+                        >
+                            [[(subjectCopy.is_training_copy ? subjectCopy.calculated_score : subjectCopy.final_score) | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]
+                        </strong>
                     </div>
                     <div class="buttons">
                         <button class="flat-button"
