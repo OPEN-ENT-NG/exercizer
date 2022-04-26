@@ -1,27 +1,19 @@
 <div class="row">
     <div class="row">
-        <h3><i18n>exercizer.grain.types</i18n></h3>
+        <div class="row mb-8"><strong><i18n>exercizer.grain.types</i18n></strong></div>
         <div class="row">
-            <form>
-                <input type="radio" name="answerType"
-                       ng-model="grain.grain_data.custom_data.answersType"
-                       ng-change="switchTo('text')" value="text" />
-                <i18n>exercizer.grain.option1</i18n>
-                <input type="radio" name="answerType"
-                       ng-model="grain.grain_data.custom_data.answersType"
-                       ng-change="switchTo('list')" value="list" />
-                <i18n>exercizer.grain.option2</i18n>
-                <input type="radio" name="answerType"
-                       ng-model="grain.grain_data.custom_data.answersType"
-                       ng-change="switchTo('drag')" value="drag" />
-                <i18n>exercizer.grain.option3</i18n>
-            </form>
+            <select ng-model="grain.grain_data.custom_data.answersType"
+                    ng-change="switchTo(grain.grain_data.custom_data.answersType)">
+                <option value="text">[['exercizer.grain.option1'|i18n]]</option>
+                <option value="list">[['exercizer.grain.option2'|i18n]]</option>
+                <option value="drag">[['exercizer.grain.option3'|i18n]]</option>
+            </select>
         </div>
-        <message-info status="info">
+        <message-info status="info" ng-if="grain.grain_data.custom_data.answersType=='text'">
             <i18n>exercizer.grain.accent.warning</i18n>
         </message-info>
     </div>
-    <section class="zone-image">
+    <section class="zone-image mb-16">
         <div class="row">
             <div class="drawing-zone base-image">
                 <div class="image-container">
@@ -55,12 +47,16 @@
     <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'list'" on-close="displayState.editZone = false">
         <h2><i18n>exercizer.grain.responses</i18n></h2>
 
-        <div class="info row">
-           <i18n>exercizer.grain.responses.info</i18n>
-        </div>
+        <message-info status="info"><i18n>exercizer.grain.responses.info</i18n></message-info>
 
-        <div class="options">
-            <ul>
+        <div class="options lightbox">
+            <label for="fill-text-input" class="form-label mb-8 block"><i18n>exercizer.grain.zone.add</i18n></label>
+            <div class="add-option flex">
+                <input type="text" maxlength="40" id="fill-text-input" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(grain.grain_data.custom_data)" />
+                <button ng-disabled="!displayState.newOption" ng-click="addOption(displayState.editedTextZone)"><svg ng-click="editZone(textZone)" class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg></button>
+            </div>
+            <em class="form-info mt-12 block right-text"><i18n>exercizer.grain.zonetxt.limit</i18n></em>
+            <ul class="gap-12">
                 <li ng-repeat="option in displayState.editedTextZone.options"
                 ng-click="displayState.editedTextZone.answer = option;">
                     <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
@@ -70,10 +66,6 @@
                     
                 </li>
             </ul>
-            <div class="row add-option">
-                <input type="text" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(grain.grain_data.custom_data)" />
-                <button ng-disabled="!displayState.newOption" ng-click="addOption(displayState.editedTextZone)">+</button>
-            </div>
         </div>
         
         <div class="row">
@@ -130,7 +122,7 @@
                 <input type="text" maxlength="40" ng-model="displayState.editedTextZone.answer" required class="twelve cell" i18n-placeholder="Réponse" />
             </div>
             <div class="row">
-                <em class="form-info mt-12 block"><i18n>exercizer.grain.zonetxt.limit</i18n></em>
+                <em class="form-info m-12 block right-text"><i18n>exercizer.grain.zonetxt.limit</i18n></em>
             </div>
             <div class="row">
                 <button class="right-magnet" ng-if="!displayState.editedTextZone.position" ng-click="addZone()">
@@ -145,7 +137,7 @@
             </div>
         </form>
     </lightbox>
-    <div class="options" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
+    <div class="options center" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
         <ul>
             <li 
                 ng-repeat="option in grain.grain_data.custom_data.options">
