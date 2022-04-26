@@ -2,8 +2,8 @@
     <div class="row">
         <div class="row mb-8"><strong><i18n>exercizer.grain.types</i18n></strong></div>
         <div class="row">
-            <select ng-model="grain.grain_data.custom_data.answersType"
-                    ng-change="switchTo(grain.grain_data.custom_data.answersType)">
+            <select ng-model="answersType"
+                    ng-change="switchTo(answersType)">
                 <option value="text">[['exercizer.grain.option1'|i18n]]</option>
                 <option value="list">[['exercizer.grain.option2'|i18n]]</option>
                 <option value="drag">[['exercizer.grain.option3'|i18n]]</option>
@@ -13,6 +13,23 @@
             <i18n>exercizer.grain.accent.warning</i18n>
         </message-info>
     </div>
+    <lightbox show="boxOnChange.isVisible" on-close="boxOnChange.dismiss()">
+        <span class="fs-5 flex gap-8">
+            <svg class="icon-alert fill-warning" width="24" height="24"><use href='exercizer/public/assets/icons/icons.svg#alert'></use></svg>
+            <strong><i18n>exercizer.grain.filltext.onchange.title</i18n></strong>
+        </span>
+        <div class="row">
+            <p><i18n>exercizer.grain.filltext.onchange.text</i18n></p>
+        </div>
+        <div class="row">
+            <button class="right-magnet" ng-click="boxOnChange.confirm()">
+                <i18n>confirm</i18n>
+            </button>
+            <button class="cancel right-magnet" ng-click="boxOnChange.cancel()" type="button">
+                <i18n>cancel</i18n>
+            </button>
+        </div>
+    </lightbox>
     <div class="row mb-8"><small><em><i18n>exercizer.grain.filltext.help</i18n></em></small></div>
     <div class="row">
         <editor class="fill-text" ng-model="grain.grain_data.custom_data.htmlContent" inline track-input-event="grain.getTracker()"></editor>
