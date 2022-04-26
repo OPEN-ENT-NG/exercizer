@@ -447,7 +447,7 @@
     "exercizer.grain.asso.placeholder" : "Indiquez la réponse associée ici",
     "exercizer.grain.asso.add" : "Ajouter une association",
     "exercizer.grain.filltext.editor.text.answer" : "Réponse",
-    "exercizer.grain.filltext.help" : "Sélectionner le texte puis cliquer sur le crayon orange pour ajouter une réponse.",
+    "exercizer.grain.filltext.help" : "Cliquez sur le crayon orange pour ajouter une réponse lors de la saisie du texte.",
     "exercizer.grain.manswer.default1" : "Réponse 1",
     "exercizer.grain.manswer.default2" : "Réponse 2",
     "exercizer.grain.oanswer.info" : "Réponse - champ réservé à l'élève",
