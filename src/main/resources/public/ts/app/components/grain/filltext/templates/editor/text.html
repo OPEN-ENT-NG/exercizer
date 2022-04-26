@@ -1,16 +1,18 @@
 ﻿<h2><i18n>exercizer.grain.zone</i18n></h2>
 <form>
+    <label for="fill-text-input" class="form-label mb-8 block"><i18n>exercizer.grain.zone.add</i18n></label>
     <div class="row">
         <input type="text" maxlength="40" ng-model="displayState.editedTextZone.answer" required class="twelve cell" i18n-placeholder="exercizer.grain.filltext.editor.text.answer" />
     </div>
-    <div class="row">
+    <em class="form-info mt-12 block right-text"><i18n>exercizer.grain.zonetxt.limit</i18n></em>
+    <div class="row mt-16">
         <button class="right-magnet" ng-if="displayState.editedTextZone.id === undefined" ng-click="addElement(addZone());">
             <i18n>add</i18n>
         </button>
-        <button class="right-magnet" ng-if="displayState.editedTextZone.id !== undefined" ng-click="displayState.editZone = false; updateGrain()">
+        <button class="right-magnet mb-0" ng-if="displayState.editedTextZone.id !== undefined" ng-click="displayState.editZone = false; updateGrain()">
             <i18n>edit</i18n>
         </button>
-        <button class="cancel right-magnet" ng-click="displayState.editZone = false" type="button">
+        <button class="cancel right-magnet mb-0" ng-click="displayState.editZone = false" type="button">
             <i18n>cancel</i18n>
         </button>
     </div>

@@ -17,7 +17,7 @@
     <div class="row">
         <editor class="fill-text" ng-model="grain.grain_data.custom_data.htmlContent" inline track-input-event="grain.getTracker()"></editor>
     </div>
-    <div class="options" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
+    <div class="options center" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
         <ul>
             <li ng-repeat="option in grain.grain_data.custom_data.options track by $index">
                 <text-zone style="max-width:unset">
