@@ -1,27 +1,19 @@
 <div class="row">
     <div class="row">
-        <h3><i18n>exercizer.grain.types</i18n></h3>
+        <div class="row mb-8"><strong><i18n>exercizer.grain.types</i18n></strong></div>
         <div class="row">
-            <form>
-                <input type="radio" name="answerType"
-                       ng-model="grain.grain_data.custom_data.answersType"
-                       ng-change="switchTo('text')" value="text" />
-                <i18n>exercizer.grain.option1</i18n>
-                <input type="radio" name="answerType"
-                       ng-model="grain.grain_data.custom_data.answersType"
-                       ng-change="switchTo('list')" value="list" />
-                <i18n>exercizer.grain.option2</i18n>
-                <input type="radio" name="answerType"
-                       ng-model="grain.grain_data.custom_data.answersType"
-                       ng-change="switchTo('drag')" value="drag" />
-                <i18n>exercizer.grain.option3</i18n>
-            </form>
+            <select ng-model="grain.grain_data.custom_data.answersType"
+                    ng-change="switchTo(grain.grain_data.custom_data.answersType)">
+                <option value="text">[['exercizer.grain.option1'|i18n]]</option>
+                <option value="list">[['exercizer.grain.option2'|i18n]]</option>
+                <option value="drag">[['exercizer.grain.option3'|i18n]]</option>
+            </select>
         </div>
-        <message-info status="info">
+        <message-info status="info" ng-if="grain.grain_data.custom_data.answersType=='text'">
             <i18n>exercizer.grain.accent.warning</i18n>
         </message-info>
     </div>
-    <div class="row vertical-spacing"><strong><i18n>exercizer.grain.filltext.help</i18n></strong></div>
+    <div class="row mb-8"><small><em><i18n>exercizer.grain.filltext.help</i18n></em></small></div>
     <div class="row">
         <editor class="fill-text" ng-model="grain.grain_data.custom_data.htmlContent" inline track-input-event="grain.getTracker()"></editor>
     </div>
