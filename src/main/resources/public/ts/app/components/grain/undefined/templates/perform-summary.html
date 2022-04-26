@@ -1,6 +1,6 @@
 <div style="margin: -10px 0 20px" data-ng-show="!subjectScheduled.is_training_mode">
-  <div class="info row vertical-spacing" data-ng-show="!subjectScheduled.is_one_shot_submit"><i18n>exercizer.several.submit</i18n></div>
-  <div class="warning row vertical-spacing" data-ng-show="subjectScheduled.is_one_shot_submit"><i18n>exercizer.one.submit</i18n></div>
+  <message-info status="warning" data-ng-if="subjectScheduled.is_one_shot_submit"><i18n>exercizer.one.submit</i18n></message-info>
+  <message-info status="warning" data-ng-if="!subjectScheduled.is_one_shot_submit"><i18n>exercizer.several.submit</i18n></message-info>
 </div>
 <article class="grain-perform">
     <h2 class="row"><i18n>exercizer.summary</i18n></h2>
@@ -26,9 +26,9 @@
             </div>
           </div>
 
-          <div class="row vertical-spacing">
+          <p class="row vertical-spacing">
               [[subjectScheduled.description]]
-          </div>
+          </p>
         </div>
         <div data-ng-if="subjectCopy.is_training_copy">
             <i18n>exercizer.summary.training</i18n>

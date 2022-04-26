@@ -22,8 +22,8 @@
 
         <div class="info"><i18n>exercizer.make.copy.info</i18n></div>
 
-        <div class="warning" data-ng-if="subjectScheduled.is_one_shot_submit"><strong><i18n>exercizer.one.submit</i18n></strong></div>
-        <div class="warning" data-ng-if="!subjectScheduled.is_one_shot_submit"><strong><i18n>exercizer.several.submit</i18n></strong></div>
+        <message-info status="warning" data-ng-if="subjectScheduled.is_one_shot_submit"><i18n>exercizer.one.submit</i18n></message-info>
+        <message-info status="warning" data-ng-if="!subjectScheduled.is_one_shot_submit"><i18n>exercizer.several.submit</i18n></message-info>
 
         <div class="row">
             <button data-ng-click="submitSubjectCopy()" data-ng-disabled="submitButtonDisabled" class="cell right-magnet"><i18n>exercizer.make.copy</i18n></button>
