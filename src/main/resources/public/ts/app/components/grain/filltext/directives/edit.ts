@@ -42,6 +42,34 @@ let addEditorOption = () => {
     });
 };
 
+class LightboxPromise {
+    isVisible: boolean = false;
+    private _resolution?: (value: Boolean | PromiseLike<Boolean>) => void;
+	private _rejection?: (reason?: any) => void;
+    display() {
+        this.isVisible = true;
+        return new Promise<Boolean>((_resolve, _reject) => {
+            this._resolution = _resolve;
+            this._rejection = _reject;
+        });
+    }
+    private hide() {
+        this.isVisible = false;
+    }
+    confirm() {
+        this.hide();
+        this._resolution && this._resolution(true);
+    }
+    cancel() {
+        this.hide();
+        this._resolution && this._resolution(false);
+    }
+    dismiss() {
+        this.hide();
+        this._rejection && this._rejection();
+    }
+}
+
 export const editFillText = ng.directive('editFillText',
     [() => {
         addEditorOption();
@@ -59,6 +87,7 @@ export const editFillText = ng.directive('editFillText',
                         options: []
                     } as TextZone
                 };
+                scope.boxOnChange = new LightboxPromise();
 
                 element.on('editor-blur, save', 'editor', () => {
                     var dropZones = [];
@@ -138,27 +167,45 @@ export const editFillText = ng.directive('editFillText',
                     container.options.splice(i, 1);
                 };
 
-                scope.switchTo = (newType: string) => {
-                    let customData = scope.grain.grain_data.custom_data as CustomData;
-                    if (newType === 'drag') {
-                        customData.options = [];
-                        customData.zones.forEach((zone) => {
-                            customData.options.push(zone.answer);
-                        });
-                    }
-                    if (newType === 'list') {
-                        if(customData.options.length > 0){
+                scope.answersType = scope.grain.grain_data.custom_data.answersType;
+
+                scope.switchTo = async (newType: string) => {
+                    const customData = scope.grain.grain_data.custom_data as CustomData;
+                    const applyChange = () => {
+                        scope.grain.grain_data.custom_data.answersType = newType;
+                        if (newType === 'drag') {
+                            customData.options = [];
                             customData.zones.forEach((zone) => {
-                                zone.options = JSON.parse(JSON.stringify(customData.options));
+                                customData.options.push(zone.answer);
                             });
                         }
-                        else{
-                            customData.zones.forEach((zone) => {
-                                zone.options = [zone.answer];
-                            });
+                        if (newType === 'list') {
+                            if(customData.options.length > 0){
+                                customData.zones.forEach((zone) => {
+                                    zone.options = JSON.parse(JSON.stringify(customData.options));
+                                });
+                            }
+                            else{
+                                customData.zones.forEach((zone) => {
+                                    zone.options = [zone.answer];
+                                });
+                            }
                         }
+                        scope.updateGrain();
                     }
-                    scope.updateGrain();
+                    // #WB-460 Check whether to apply the change immediately, or ask for a validation before.
+                    if( newType!==scope.grain.grain_data.custom_data.answersType && customData.options.length ) {
+                        // Ask for a validation
+                        const ok = await scope.boxOnChange.display().catch( () => false );
+                        if( ok ) {
+                            applyChange();
+                        } else {
+                            scope.answersType = scope.grain.grain_data.custom_data.answersType;
+                        }
+                    } else {
+                        // Apply the change immediately
+                        applyChange();
+                    }
                 };
             }
         };
