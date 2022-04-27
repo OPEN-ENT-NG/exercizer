@@ -1,9 +1,10 @@
 import { ng, model, template, moment } from 'entcore';
 import { IGrainCopy } from '../models/domain';
+import { ISubjectCopyService } from '../services';
 import http from 'axios';
 
-export const exercizerController = ng.controller('ExercizerController', ['$scope', '$rootScope', 'model', 'route', '$route', '$location',
-    ($scope, $rootScope, model, route, $route, $location) => {
+export const exercizerController = ng.controller('ExercizerController', ['$scope', '$rootScope', 'model', 'route', '$route', '$location', 'SubjectCopyService',
+    ($scope, $rootScope, model, route, $route, $location, subjectCopyService: ISubjectCopyService) => {
 
     const teacherProfile = 'Teacher';
     const studentProfile = 'Student';
@@ -245,6 +246,39 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
                 template.open('main', '400-date-exercizer');
             }
         },
+        redirectFromLinker: async function () {
+            if (await checkSystemDate()) {
+                const redirect = (path: string) => {
+                    $location.path(path);
+                    $route.reload();
+                }
+                const url = $location.$$url.split("/");
+                const subject_scheduled_id = url[url.length-1];
+                try {
+                    let res = await http.get(`/exercizer/subject-copy-by-subject-schedule/${subject_scheduled_id}`);
+                    // There is a subject copy for this user associated with this subject scheduled
+                    if (res.data.subject_scheduled.type == 'simple') {
+                        redirect(`/subject/copy/perform/simple/${res.data.subject_copy.id}`);
+                    } else {
+                        if (subjectCopyService.canPerformACopyAsStudent(res.data.subject_scheduled, res.data.subject_copy)) {
+                            redirect(`/subject/copy/perform/${res.data.subject_copy.id}`);
+                        } else if (subjectCopyService.canAccessViewAsStudent(res.data.subject_scheduled, res.data.subject_copy)) {
+                            redirect(`/subject/copy/view/${res.data.subject_copy.id}`);
+                        } else {
+                            template.open('main', '401-exercizer');
+                        }
+                    }
+                } catch (err) {
+                    if (_userProfile === teacherProfile) {
+                        redirect(`/dashboard/teacher/correction/${subject_scheduled_id}`);
+                    } else {
+                        template.open('main', '401-exercizer');
+                    }
+                }
+            } else {
+                template.open('main', '400-date-exercizer');
+            }
+        }
     });
 
     // Used by mobile left nav
