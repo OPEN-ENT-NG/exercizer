@@ -277,6 +277,9 @@ routes.define(function ($routeProvider) {
         .when('/dashboard/teacher/archive/:subjectId/:subjectCopyId', {
             action: 'dashboardTeacherArchiveCopy'
         })
+        .when('/linker/:subjectScheduledId', {
+            action: 'redirectFromLinker'
+        })
         .otherwise({
             redirectTo: '/dashboard'
         });

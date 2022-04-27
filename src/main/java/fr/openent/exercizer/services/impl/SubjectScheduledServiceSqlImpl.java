@@ -548,4 +548,15 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
 	}
 
+	@Override
+	public void getSubjectCopyBySubjectScheduled(final Long subjectScheduledId, final String userId,
+												  final Handler<Either<String, JsonObject>> handler) {
+		final String query = "SELECT to_jsonb(ss.*) AS subject_scheduled, to_jsonb(sc.*) AS subject_copy " +
+				"FROM " +schema + "subject_copy AS sc " +
+				"LEFT JOIN " + schema + "subject_scheduled AS ss ON sc.subject_scheduled_id = ss.id " +
+				"WHERE sc.owner = ? AND NOT sc.is_training_copy AND ss.id = ?";
+		final JsonArray params =new JsonArray().add(userId).add(subjectScheduledId);
+		sql.prepared(query, params, SqlResult.validUniqueResultHandler(handler, "subject_scheduled", "subject_copy"));
+	}
+
 }
