@@ -14,7 +14,6 @@ gradlew
 gradlew.bat
 settings.gradle
 privateConfig.js
-/src/main/resources/public/js/scripts.min.js
 /scripts.min.js
 **/ts/entcore
 **/template/entcore

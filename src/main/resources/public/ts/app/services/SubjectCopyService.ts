@@ -34,7 +34,8 @@ export interface ISubjectCopyService {
     checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId:number):Promise<boolean>;
     setCurrentGrain(subjectCopyId:number, grainCopyId: number): Promise<any>;
     retry(subjectCopy:ISubjectCopy, grainCopyList:IGrainCopy[]): Promise<ISubjectCopy>;
-    
+    canPerformACopyAsStudent(subjectScheduled: ISubjectScheduled, copy: ISubjectCopy): boolean;
+    canAccessViewAsStudent(subjectScheduled: ISubjectScheduled, copy: ISubjectCopy): boolean;
 }
 
 export class SubjectCopyService implements ISubjectCopyService {
@@ -572,7 +573,7 @@ export class SubjectCopyService implements ISubjectCopyService {
         }
     };
 
-    public canPerformACopyAsStudent = function(subjectScheduled, copy){
+    public canPerformACopyAsStudent = function(subjectScheduled, copy): boolean {
         // a student can not access to a copy if
         // the subject have been submitted AND the subject have option one_shot == true;
         // OR
@@ -590,7 +591,7 @@ export class SubjectCopyService implements ISubjectCopyService {
         }
     };
 
-    public canAccessViewAsStudent = function (subjectScheduled, copy) {
+    public canAccessViewAsStudent = function (subjectScheduled, copy): boolean {
         // a student can access to the view of a copy if
         // quelque soit le statut, si la date de rendu est passée et que l'option "Affichage du résultat automatique pour les élèves" a été cochée
         // OR

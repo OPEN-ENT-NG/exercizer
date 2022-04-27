@@ -102,4 +102,6 @@ public interface ISubjectScheduledService {
     void createTrainingCopy(final String subjectScheduledId, UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
     void recreateGrainCopies(final String subjectScheduledId, final String subjectCopyId, final Handler<Either<String, JsonObject>> handler);
+
+    void getSubjectCopyBySubjectScheduled(final Long subjectScheduledId, final String userId, final Handler<Either<String, JsonObject>> handler);
 }

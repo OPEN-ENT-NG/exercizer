@@ -33,6 +33,7 @@ import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.I18n;
 import fr.wseduc.webutils.http.Renders;
+import fr.wseduc.webutils.http.response.DefaultResponseHandler;
 import fr.wseduc.webutils.request.RequestUtils;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.events.EventHelper;
@@ -177,6 +178,32 @@ public class SubjectScheduledController extends ControllerHelper {
 					unauthorized(request);
 				}
 
+			}
+		});
+	}
+
+	@Get("/subject-copy-by-subject-schedule/:id")
+	@SecuredAction(value = "", type = ActionType.AUTHENTICATED)
+	public void subjectCopyBySubjectSchedule(final HttpServerRequest request) {
+		final Long subjectScheduledId;
+		try {
+			subjectScheduledId = Long.parseLong(request.params().get("id"));
+		}catch (NumberFormatException e) {
+			badRequest(request, e.getMessage());
+			return;
+		}
+		UserUtils.getUserInfos(eb, request, user -> {
+			if (user != null) {
+				subjectScheduledService.getSubjectCopyBySubjectScheduled(subjectScheduledId, user.getUserId(), event -> {
+					if (event.isRight() && !event.right().getValue().isEmpty()) {
+						renderJson(request, event.right().getValue());
+					} else {
+						renderError(request);
+					}
+				});
+			} else {
+				log.debug("User not found in session.");
+				unauthorized(request);
 			}
 		});
 	}
