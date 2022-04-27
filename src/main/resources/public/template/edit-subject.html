@@ -34,8 +34,8 @@
         <div class="grid grid-layout-2">
 
             <!-- LEFT STICKY NAV -->
-            <aside class="vertical only-large-desktop sticky-nav">
-                <nav class="hash-magnet floating-navigation">
+            <aside class="only-large-desktop sticky-nav">
+                <nav class="floating-navigation">
 
                     <!-- ORGANIZER -->
                     <article>
@@ -189,7 +189,7 @@
                                             <a href="[[ grainDocument.path ]]" target="_blank">[[ grainDocument.name ]]</a>
                                         </td>
                                         <td style="text-align: right">
-                                            <i class="close" data-ng-click="editSubjectController.displayModalRemoveGrainDocument(grain, grainDocument)"></i>
+                                            <svg data-ng-click="editSubjectController.displayModalRemoveGrainDocument(grain, grainDocument)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                                         </td>
                                     </tr>
                                     </tbody>

@@ -16,15 +16,15 @@
         </button>
     </div>
     <div data-ng-if="archiveViewSubjectCopyController.hasDataLoaded && archiveViewSubjectCopyController.grainCopyList.length > 0">
-        <div class="row">
+        <div class="grid grid-layout-2">
             <!-- LEFT NAV -->
-            <aside class="three cell vertical side-col sticky-nav">
+            <aside class="sticky-nav zero-mobile">
                 <subject-copy-left-nav data-anchor-behaviour="true"
                                        data-grain-copy-list="archiveViewSubjectCopyController.grainCopyList">
                 </subject-copy-left-nav>
             </aside>
 
-            <section class="nine cell main-col">
+            <section class="main-col">
                 <!-- GRAIN COPY LIST -->
                 <subject-view-copy-grain-copy-list data-subject-scheduled="archiveViewSubjectCopyController.subjectScheduled"
                                                    data-subject-copy="archiveViewSubjectCopyController.subjectCopy"
