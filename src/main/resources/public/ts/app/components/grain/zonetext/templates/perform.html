@@ -3,10 +3,11 @@
     <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
 
-    <div class="row">
-        <message-info status="info" class="zero-desktop" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
-            <i18n>exercizer.grain.zonetxt.responsive.perform</i18n>
-        </message-info>
+    <message-info status="info" class="zero-desktop" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
+        <i18n>exercizer.grain.zonetxt.responsive.perform</i18n>
+    </message-info>
+    
+    <div class="grid grid-zone-image gap-16">
         <div class="base-image drawing-zone">
             <div class="image-container">
                 <div>
@@ -34,7 +35,7 @@
             </placed-block>
         </div>
 
-        <div class="options" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
+        <div class="options right" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
             <ul>
                 <li 
                     drag-item="option"

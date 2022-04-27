@@ -3,10 +3,11 @@
     <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
     <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
 
-    <div class="row">
-        <message-info status="info" class="zero-desktop">
-            <i18n>exercizer.grain.zoneimg.responsive.perform</i18n>
-        </message-info>
+    <message-info status="info" class="zero-desktop">
+        <i18n>exercizer.grain.zoneimg.responsive.perform</i18n>
+    </message-info>
+
+    <div class="grid grid-zone-image gap-16">
         <div class="base-image drawing-zone">
             <div class="image-container">
                 <div>
@@ -24,7 +25,7 @@
             </placed-block>
         </div>
 
-        <div class="row options" drop-item="removeAnswer($item);">
+        <div class="row options right" drop-item="removeAnswer($item);">
             <image-zone 
                 ng-repeat="option in availableAnswers() track by $index"
                 drag-item="option">

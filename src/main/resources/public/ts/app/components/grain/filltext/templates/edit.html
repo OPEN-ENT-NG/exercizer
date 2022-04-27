@@ -34,11 +34,11 @@
     <div class="row">
         <editor class="fill-text" ng-model="grain.grain_data.custom_data.htmlContent" inline track-input-event="grain.getTracker()"></editor>
     </div>
-    <div class="options center" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
+    <div class="options right" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
         <ul>
             <li ng-repeat="option in grain.grain_data.custom_data.options track by $index">
                 <text-zone style="max-width:unset">
-                    <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                    <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                     <span>[[option]]</span>
                 </text-zone>
             </li>
