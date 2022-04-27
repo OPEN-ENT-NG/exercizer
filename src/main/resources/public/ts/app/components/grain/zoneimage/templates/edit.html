@@ -10,7 +10,7 @@
                                 transform-x="getResizedIconZoneX" transform-y="getResizedIconZoneY"
                 >
                     <image-zone>
-                        <i class="close" ng-click="removeZone(iconZone)"></i>
+                        <svg ng-click="removeZone(iconZone)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                         <img ng-src="[[iconZone.answer]]?thumbnail=120x120" />
                         <div class="actions" ng-click="editZone(iconZone)">
                             <i class="edit"></i> <i18n>exercizer.edit</i18n>
@@ -25,7 +25,7 @@
             <button class="cancel flat-button flex-inline gap-8" ng-click="displayState.changeBackground = true"><svg class="icon-edit" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg><i18n>exercizer.grain.background</i18n></button>
             <div class="options">
                 <image-zone ng-repeat="option in grain.grain_data.custom_data.options track by $index">
-                    <i class="close" ng-click="removeOption(grain.grain_data.custom_data, option)"></i>
+                    <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                     <img ng-src="[[option]]?thumbnail=120x120" />
                 </image-zone>
             </div>
