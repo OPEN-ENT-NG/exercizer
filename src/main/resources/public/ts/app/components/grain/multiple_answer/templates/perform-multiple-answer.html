@@ -1,7 +1,9 @@
 <article class="grain-perform">
-    <grain-copy-header data-grain-copy="grainCopy" data-grain-copy-list="grainCopyList" data-display-hint="true"></grain-copy-header>
-    <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
-    <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
+    <div class="grain-divider">
+        <grain-copy-header data-grain-copy="grainCopy" data-grain-copy-list="grainCopyList" data-display-hint="true"></grain-copy-header>
+        <grain-copy-statement data-grain-copy="grainCopy"></grain-copy-statement>
+        <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
+    </div>
     <div data-ng-repeat="filled_answer in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list" class="row vertical-spacing">
         <input type="text" class="twelve cell" data-ng-model="filled_answer.text" data-ng-blur="updateGrainCopy()" i18n-placeholder="exercizer.grain.answer.info" />
     </div>
