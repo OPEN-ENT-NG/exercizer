@@ -23,7 +23,7 @@
         <div class="select-zone gap-8">
             <button ng-click="displayState.pickOption = true" class="btns btns-secondary flex-inline gap-8"><svg class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg><i18n>exercizer.grain.add.answer</i18n></button>
             <button class="cancel flat-button flex-inline gap-8" ng-click="displayState.changeBackground = true"><svg class="icon-edit" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg><i18n>exercizer.grain.background</i18n></button>
-            <div class="options">
+            <div class="options right">
                 <image-zone ng-repeat="option in grain.grain_data.custom_data.options track by $index">
                     <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                     <img ng-src="[[option]]?thumbnail=120x120" />
