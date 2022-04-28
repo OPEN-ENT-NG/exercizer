@@ -30,22 +30,20 @@
             </subject-view-copy-student-header>
         </div>
 
-        <div class="row">
+        <div class="grid grid-layout-2">
             <!-- LEFT NAV -->
-            <aside class="sticky-nav zero-mobile">
+            <aside class="sticky-nav side-nav only-large-desktop">
                 <subject-copy-left-nav data-anchor-behaviour="true"
                                        data-grain-copy-list="viewSubjectCopyController.grainCopyList">
                 </subject-copy-left-nav>
             </aside>
 
-            <section class="nine cell main-col twelve-mobile">
-                <div class="info vertical-spacing-twice" 
-                data-ng-if="viewSubjectCopyController._isTeacher && !viewSubjectCopyController._previewing && !viewSubjectCopyController._previewingFromLibrary">
+            <section>
+                <message-info
+                    status="info"
+                    data-ng-if="viewSubjectCopyController._isTeacher && !viewSubjectCopyController._previewing && !viewSubjectCopyController._previewingFromLibrary">
                     <i18n>exercizer.correction.warning</i18n>
-                </div>
-            </section>
-
-            <section class="nine cell main-col twelve-mobile">
+                </message-info>
                 <!-- GRAIN COPY LIST -->
                 <subject-view-copy-grain-copy-list data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
                                                    data-subject-copy="viewSubjectCopyController.subjectCopy"
