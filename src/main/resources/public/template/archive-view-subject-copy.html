@@ -18,13 +18,13 @@
     <div data-ng-if="archiveViewSubjectCopyController.hasDataLoaded && archiveViewSubjectCopyController.grainCopyList.length > 0">
         <div class="grid grid-layout-2">
             <!-- LEFT NAV -->
-            <aside class="sticky-nav zero-mobile">
+            <aside class="sticky-nav side-nav only-large-desktop">
                 <subject-copy-left-nav data-anchor-behaviour="true"
                                        data-grain-copy-list="archiveViewSubjectCopyController.grainCopyList">
                 </subject-copy-left-nav>
             </aside>
 
-            <section class="main-col">
+            <section>
                 <!-- GRAIN COPY LIST -->
                 <subject-view-copy-grain-copy-list data-subject-scheduled="archiveViewSubjectCopyController.subjectScheduled"
                                                    data-subject-copy="archiveViewSubjectCopyController.subjectCopy"
