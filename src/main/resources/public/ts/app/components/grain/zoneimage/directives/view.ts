@@ -1,7 +1,7 @@
-import { ng, $ } from 'entcore';
-import { CustomData, IconZone } from '../models/CustomData';
+import { ng } from 'entcore';
+import { CustomData } from '../models/CustomData';
 import { automaticCorrection } from '../../common/zonegrain/model';
-import { transformX, transformY } from '../../zonetext/directives/zoneCommon';
+import { getResizedIconZoneX, getResizedIconZoneY, preloadImage } from '../../zonetext/directives/zoneCommon';
 
 export const viewZoneImage = ng.directive('viewZoneImage',
     [() => {
@@ -16,6 +16,19 @@ export const viewZoneImage = ng.directive('viewZoneImage',
             templateUrl: 'exercizer/public/ts/app/components/grain/zoneimage/templates/view.html',
             link: (scope: any) => {
                 scope.grainCopy.grain_copy_data.custom_copy_data = new CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
+
+                scope.getResizedIconZoneX = (coord,reverse) => getResizedIconZoneX(selector,coord,reverse);
+                scope.getResizedIconZoneY = (coord,reverse) => getResizedIconZoneY(selector,coord,reverse);
+
+                // Wait for the background image to get loaded before placing blocks upon it.
+                scope.bckgrndLoaded = false;
+                const selector = `#${scope.grainCopy.id}-bckgrnd`;
+                preloadImage(selector)
+                .then( dimensions => {
+                    scope.bckgrndLoaded = true;
+                    scope.$apply('bckgrndLoaded');  // This will allow the blocks to be placed on the background image.
+                })
+                .catch( () => { /*console.log("background image cannot be loaded.")*/ } );
 
                 scope.displayCorrection = false;
                 scope.doDisplayCorrection = function() {
@@ -38,23 +51,6 @@ export const viewZoneImage = ng.directive('viewZoneImage',
                     if (scope.isTeacher) {
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     }
-                };
-
-                let selector = `#${scope.grainCopy.id}-bckgrnd`;
-                $(selector).load(function() {
-                    scope.$apply();
-                });
-
-                scope.getResizedIconZoneX = function(x: number, reverseTransform: boolean): number
-                {
-                    let selector = `#${scope.grainCopy.id}-bckgrnd`;
-                    return transformX(selector, x, reverseTransform);
-                };
-
-                scope.getResizedIconZoneY = function(y: number, reverseTransform: boolean): number
-                {
-                    let selector = `#${scope.grainCopy.id}-bckgrnd`;
-                    return transformY(selector, y, reverseTransform);
                 };
             }
         };
