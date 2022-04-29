@@ -1,6 +1,6 @@
 import { ng, $ } from 'entcore';
 import { CustomData, TextZone } from '../models/CustomData';
-import { transformX, transformY, transformW } from './zoneCommon';
+import { transformW, preloadImage, getResizedTextZoneX, getResizedTextZoneY } from './zoneCommon';
 
 export const performZoneText = ng.directive('performZoneText',
     ['$timeout', ($timeout) => {
@@ -15,6 +15,19 @@ export const performZoneText = ng.directive('performZoneText',
                 scope.$watch("grainCopy",function(newValue,oldValue) {
                     scope.init();
                 });
+
+                scope.getResizedTextZoneX = (coord,reverse)=>getResizedTextZoneX(selector,coord,reverse);
+                scope.getResizedTextZoneY = (coord,reverse)=>getResizedTextZoneY(selector,coord,reverse);
+
+                // Wait for the background image to get loaded before placing blocks upon it.
+                scope.bckgrndLoaded = false;
+                const selector = `#${scope.grainCopy.id}-bckgrnd`;
+                preloadImage(selector)
+                .then( dimensions => {
+                    scope.bckgrndLoaded = true;
+                    scope.$apply('bckgrndLoaded');  // This will allow the blocks to be placed on the background image.
+                })
+                .catch( () => { /*console.log("background image cannot be loaded.")*/ } );
 
                 scope.init = () => {
                     scope.grainCopy.grain_copy_data.custom_copy_data = new CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
@@ -64,23 +77,6 @@ export const performZoneText = ng.directive('performZoneText',
                         scope.$apply(fn);
                     }
                     scope.updateGrainCopy();
-                };
-
-                let selector = `#${scope.grainCopy.id}-bckgrnd`;
-                $(selector).load(function() {
-                    scope.apply();
-                });
-
-                scope.getResizedTextZoneX = function(x: number, reverseTransform: boolean): number
-                {
-                    let selector = `#${scope.grainCopy.id}-bckgrnd`;
-                    return transformX(selector, x, reverseTransform);
-                };
-
-                scope.getResizedTextZoneY = function(y: number, reverseTransform: boolean): number
-                {
-                    let selector = `#${scope.grainCopy.id}-bckgrnd`;
-                    return transformY(selector, y, reverseTransform);
                 };
 
                 scope.getResizedTextZoneW = function(w: number, reverseTransform: boolean): number
