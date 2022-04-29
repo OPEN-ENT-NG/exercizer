@@ -5,9 +5,11 @@
                 <div class="image-container">
                     <image-select ng-model="grain.grain_data.custom_data.guideImage" ng-change="updateGrain();" id="[[ grain.id ]]-bckgrnd"></image-select>
                 </div>
-                <placed-block ng-repeat="iconZone in grain.grain_data.custom_data.zones" style="padding:0;" draggable
-                                x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z"
-                                transform-x="getResizedIconZoneX" transform-y="getResizedIconZoneY"
+
+                <placed-block ng-if="bckgrndLoaded"
+                    ng-repeat="iconZone in grain.grain_data.custom_data.zones" style="padding:0;" draggable
+                    x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z"
+                    transform-x="getResizedIconZoneX" transform-y="getResizedIconZoneY"
                 >
                     <image-zone>
                         <svg ng-click="removeZone(iconZone)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>

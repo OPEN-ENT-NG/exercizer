@@ -1,6 +1,6 @@
-import { ng, $, _ } from 'entcore';
+import { ng, _ } from 'entcore';
 import { TextZone, CustomData } from '../models/CustomData';
-import { transformX, transformY } from './zoneCommon';
+import { getResizedTextZoneX, getResizedTextZoneY, preloadImage } from './zoneCommon';
 
 export const editZoneText = ng.directive('editZoneText',
     [() => {
@@ -20,6 +20,19 @@ export const editZoneText = ng.directive('editZoneText',
                         options: []
                     } as TextZone
                 };
+
+                scope.getResizedTextZoneX = (coord,reverse)=>getResizedTextZoneX(selector,coord,reverse);
+                scope.getResizedTextZoneY = (coord,reverse)=>getResizedTextZoneY(selector,coord,reverse);
+
+                // Wait for the background image to get loaded before placing blocks upon it.
+                scope.bckgrndLoaded = false;
+                const selector = `#${scope.grain.id}-bckgrnd > div > img.pick-file`;
+                preloadImage(selector)
+                .then( dimensions => {
+                    scope.bckgrndLoaded = true;
+                    scope.$apply('bckgrndLoaded');  // This will allow the blocks to be placed on the background image.
+                })
+                .catch( () => { /*console.log("background image cannot be loaded.")*/ } );
 
                 if (!scope.grain.grain_data.custom_data) {
                     scope.grain.grain_data.custom_data = new CustomData();
@@ -102,18 +115,6 @@ export const editZoneText = ng.directive('editZoneText',
                     }
                     scope.updateGrain();
                 };
-
-                scope.getResizedTextZoneX = function(x: number, reverseTransform: boolean): number
-                {
-                    let selector = `#${scope.grain.id}-bckgrnd > div > img.pick-file`;
-                    return transformX(selector, x, reverseTransform);
-                }
-
-                scope.getResizedTextZoneY = function(y: number, reverseTransform: boolean): number
-                {
-                    let selector = `#${scope.grain.id}-bckgrnd > div > img.pick-file`;
-                    return transformY(selector, y, reverseTransform);
-                }
 
                 scope.previousOpen = null;
                 scope.openTextZone = function($event): void
