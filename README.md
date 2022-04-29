@@ -6,8 +6,11 @@
 
 * Financeur(s) :  Région Hauts-de-France (ex Picardie), Département Seine et Marne
 	
+* Description : l'application "Exercices et évaluations" permet de créer des sujets, de les distribuer aux élèves, de suivre le rendu, de récupérer et de corriger les copies. 2 types de sujets peuvent être créés :
 
-* Description : "Exercices et évaluation " est une application d'édition, de conception, de partage  et d'administration d'exercices interactifs
+    * Sujet à rendre : permet de programmer une remise de devoir sous forme de fichier et de suivre le rendu des élèves. Elle permet également de déposer des corrections collectives et individuelles sous forme de fichier.
+    * Sujet interactif : permet de construire et distribuer une évaluation en créant des questions auxquels les élèves pourront répondre en ligne. Les copies seront corrigées automatiquement et/ou manuellement, suivant le type de questions choisies : QCM, textes à trous, association d’idées, mise en ordre...
+
 
 # Technical documentation
 
