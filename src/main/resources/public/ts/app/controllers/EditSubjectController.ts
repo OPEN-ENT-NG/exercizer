@@ -606,7 +606,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
 
         this._grainService.removeList(this._selectedGrainList, this._subject).then(
             function() {
-                self.closeModalRemove();
+                self.closeModalRemoveSelectedGrainList();
             },
             function(err) {
                 notify.error(err);
@@ -619,7 +619,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
         this._isModalRemoveSelectedGrainListDisplayed = true;
     };
 
-    public closeModalRemove = function() {
+    public closeModalRemoveSelectedGrainList = function() {
         this._selectedGrainList = [];
         this._isModalRemoveSelectedGrainListDisplayed = false;
     };
