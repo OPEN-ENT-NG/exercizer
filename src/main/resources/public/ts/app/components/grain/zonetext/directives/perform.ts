@@ -92,7 +92,6 @@ export const performZoneText = ng.directive('performZoneText',
                 scope.previousOpen = null;
                 scope.openTextZone = function($event): void
                 {
-                    console.log($event.currentTarget);
                     $event.currentTarget.classList.add("textZoneOpen");
                     if(scope.previousOpen != null)
                         scope.previousOpen.classList.remove("textZoneOpen");
