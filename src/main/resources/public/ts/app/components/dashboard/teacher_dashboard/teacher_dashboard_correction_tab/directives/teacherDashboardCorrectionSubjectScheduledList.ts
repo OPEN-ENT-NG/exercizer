@@ -3,8 +3,8 @@ import { moment } from 'entcore';
 import { ISubjectScheduled, Subject, ISubjectCopy } from '../../../../../models/domain';
 
 export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teacherDashboardCorrectionSubjectScheduledList', 
-    ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService','SubjectCopyService','$location','$route', 
-    (SubjectScheduledService, SubjectService, GroupService, DateService,SubjectCopyService, $location, $route) => {
+    ['SubjectScheduledService', 'SubjectService', 'GroupService','DateService','SubjectCopyService', 'LocalStorageService', '$location','$route', 
+    (SubjectScheduledService, SubjectService, GroupService, DateService,SubjectCopyService, LocalStorageService, $location, $route) => {
         return {
             restrict: 'E',
             scope: {
@@ -27,6 +27,7 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                     endDate : scope.dateInAYears,
                     filter: []
                 };
+                scope.displayList = LocalStorageService.getTeacherCorrectionDisplayList() || 'array';
                 
                 load();
 
@@ -312,6 +313,11 @@ export const teacherDashboardCorrectionSubjectScheduledList = ng.directive('teac
                     scope.assignInfoSubject = subjectScheduled;
                 };
 
+                // PREFERENCES
+                scope.setDisplayList = (pref: string) => {
+                    scope.displayList = pref;
+                    LocalStorageService.setTeacherCorrectionDisplayList(pref);
+                }
             }
         };
 }]);

@@ -9,6 +9,7 @@ export * from './GrainService';
 export * from './GrainTypeService';
 export * from './GroupService';
 export * from './ImportService';
+export * from './LocalStorageService';
 export * from './SubjectCopyService';
 export * from './SubjectLessonLevelService';
 export * from './SubjectLessonTypeService';

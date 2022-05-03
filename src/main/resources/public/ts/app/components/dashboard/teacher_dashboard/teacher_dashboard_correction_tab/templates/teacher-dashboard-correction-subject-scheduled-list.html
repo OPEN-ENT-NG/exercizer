@@ -66,12 +66,20 @@
             </div>
 
 
-            <div class="cell right-magnet" data-ng-init="displayList = 'domino'">
+            <div class="cell right-magnet">
               <div class="choice-view">
-                <i data-ng-click="displayList = 'domino'" class="show-icons"
-                data-ng-class="{selected: displayList == 'domino'}"></i>
-                <i data-ng-click="displayList = 'array'" class="show-list"
-                   data-ng-class="{selected: displayList == 'array'}"></i>
+                <i 
+                    data-ng-click="setDisplayList('domino')" 
+                    class="show-icons"
+                    data-ng-class="{selected: displayList == 'domino'}"
+                >
+                </i>
+                <i 
+                    data-ng-click="setDisplayList('array')" 
+                    class="show-list"
+                    data-ng-class="{selected: displayList == 'array'}"
+                >
+                </i>
                 </div>
             </div>
         </div>
