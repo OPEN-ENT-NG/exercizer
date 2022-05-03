@@ -21,15 +21,15 @@
                 transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
                 ng-click="openTextZone($event)"
             >
-                <text-zone>
+                <text-zone class="perform-text-zone">
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'text'">
-                        <input class="text-zone-size" type="text" ng-model="textZone.answer" complete-change="updateGrainCopy();" />
+                        <input class="text-zone-size" type="text" ng-model="textZone.answer" complete-change="updateGrainCopy();" ng-class="{ filled: textZone.answer !== '' }"/>
                     </div>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'list'">
-                        <select class="text-zone-size" ng-options="o as o for o in textZone.options" ng-model="textZone.answer" ng-change="apply()"></select>
+                        <select class="text-zone-size" ng-options="o as o for o in textZone.options" ng-model="textZone.answer" ng-change="apply()" ng-class="{ filled: textZone.answer !== '' }"></select>
                     </div>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
-                        <div class="drop-zone" drop-item="answer(textZone, $item);" drag-item="textZone">
+                        <div class="drop-zone" drop-item="answer(textZone, $item);" drag-item="textZone" ng-class="{ filled: textZone.answer !== '' }">
                             <span class="text-zone-size">[[textZone.answer]]</span>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                 <li 
                     drag-item="option"
                     ng-repeat="option in grainCopy.grain_copy_data.custom_copy_data.options | filter:availableOption">
-                    <text-zone class="perform-text-zone"><span>[[option]]</span></text-zone>
+                    <text-zone class="option-text-zone"><span>[[option]]</span></text-zone>
                 </li>
             </ul>
         </div>

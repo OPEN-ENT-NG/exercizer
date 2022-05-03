@@ -13,7 +13,7 @@
                 <li 
                     drag-item="option"
                     ng-repeat="option in dragOptions | filter:availableOption track by $index ">
-                    <text-zone style="max-width:unset"><span>[[option.option]]</span></text-zone>
+                    <text-zone class="option-text-zone"><span>[[option.option]]</span></text-zone>
                 </li>
             </ul>
         </div>

@@ -21,7 +21,7 @@
                 x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z"
                 transform-x="getResizedIconZoneX" transform-y="getResizedIconZoneY"
             >
-                <image-zone class="drop-zone" drop-item="answer(iconZone, $item);" drag-item="iconZone">
+                <image-zone class="drop-zone" drop-item="answer(iconZone, $item);" drag-item="iconZone" ng-class="{ dropped: iconZone.answer !== '' }">
                     <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" />
                 </image-zone>
 

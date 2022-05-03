@@ -9,9 +9,9 @@ export const fillZone = ng.directive('fillZone',
             scope: {
                 zoneId: '@'
             },
-            template: '<text-zone style="max-width:unset" ng-class="{ success: optionData.correction && optionData.isCorrect, error: optionData.correction && !optionData.isCorrect }" ng-style="{ width: optionData.correction ? \'auto\' : \'\' }">' +
-            '<i class="close" ng-click="removeFillZone($event)" ng-if="optionData.mode === \'edit\'"></i>' +
-            '<i class="edit" ng-if="optionData.mode === \'edit\'"></i>' +
+            template: '<text-zone style="max-width:unset;" ng-class="{ success: optionData.correction && optionData.isCorrect, error: optionData.correction && !optionData.isCorrect }" ng-style="{ width: optionData.correction ? \'auto\' : \'\' }">' +
+            '<svg ng-click="removeFillZone($event)" ng-if="optionData.mode === \'edit\'" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>' +
+            '<svg ng-if="optionData.mode === \'edit\'" class="icon-edit" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg>' +
             '<div ng-if="optionData.mode === \'view\'"><div>[[optionData.zone.answer]]</div></div>' +
             '<input type="text" disabled placeholder="[[optionData.zone.answer]]" ng-if="optionData.mode === \'edit\'" />' +
             '<input type="text" maxlength="40" ng-if="optionData.mode === \'perform-text\'" ng-model="optionData.zone.answer" />' +
