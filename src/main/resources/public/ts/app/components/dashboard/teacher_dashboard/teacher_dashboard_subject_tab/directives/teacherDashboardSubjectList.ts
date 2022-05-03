@@ -2,8 +2,8 @@
 import { ng, model, Behaviours, notify, skin, $ } from 'entcore';
 import { Subject } from '../../../../../models/domain';
 
-export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubjectList', ['SubjectService', 'ImportService', 'FolderService', 'DragService', '$location','AccessService',
-    (SubjectService, ImportService, FolderService, DragService, $location, AccessService) => {
+export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubjectList', ['SubjectService', 'ImportService', 'FolderService', 'DragService', '$location','AccessService', 'LocalStorageService',
+    (SubjectService, ImportService, FolderService, DragService, $location, AccessService, LocalStorageService) => {
         return {
             restrict: 'E',
             scope: {
@@ -15,7 +15,7 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                 /**
                  * INIT
                  */
-                scope.displayList = 'domino';
+                scope.displayList = LocalStorageService.getTeacherSubjectDisplayList() || 'array';
                 scope.currentFolderId = null;
                 scope.autocomplete = {
                     subjectList: null
@@ -384,6 +384,12 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                 scope.displayLibraryIncentive = function () {
                     return model.me.hasWorkflow(Behaviours.applicationsBehaviours.exercizer.rights.workflow.publish) &&
                     scope.subjectList().filter(subject => subject.owner.userId == model.me.userId).length >= 5;
+                }
+
+                // PREFERENCES
+                scope.setDisplayList = (pref: string) => {
+                    scope.displayList = pref;
+                    LocalStorageService.setTeacherSubjectDisplayList(pref);
                 }
             }
         };

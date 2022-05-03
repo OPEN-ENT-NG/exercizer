@@ -96,6 +96,7 @@ import {
     grainTypeService,
     groupService,
     importService,
+    localStorageService,
     subjectCopyService,
     subjectLessonLevelService,
     subjectLessonTypeService,
@@ -210,6 +211,7 @@ ng.services.push(accessService);
 ng.services.push(archivesService);
 ng.services.push(correctionService);
 ng.services.push(importService);
+ng.services.push(localStorageService);
 
 /**
  * Controllers
