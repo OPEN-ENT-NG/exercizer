@@ -151,7 +151,11 @@ export const editFillText = ng.directive('editFillText',
 
                 scope.addOption = (container: CustomData | TextZone) => {
                     container.options.push(scope.displayState.newOption);
-                    scope.displayState.editedTextZone.answer = scope.displayState.newOption;
+
+                    if (container.options.length === 1) {
+                        scope.displayState.editedTextZone.answer = scope.displayState.newOption
+                    }
+                    
                     scope.updateGrain();
                     scope.displayState.newOption = '';
                 };
