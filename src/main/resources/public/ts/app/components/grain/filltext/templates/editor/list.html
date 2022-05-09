@@ -5,8 +5,8 @@
 <div class="options lightbox">
     <label for="fill-text-input" class="form-label mb-8 block"><i18n>exercizer.grain.zone.add</i18n></label>
     <div class="add-option flex">
-        <input type="text" maxlength="40" id="fill-text-input" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(grain.grain_data.custom_data)" />
-        <button ng-disabled="!displayState.newOption" ng-click="addOption(displayState.editedTextZone)"><svg ng-click="editZone(textZone)" class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg></button>
+        <input type="text" maxlength="40" id="fill-text-input" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(displayState.editedTextZone)" />
+        <button ng-disabled="!displayState.newOption" ng-click="addOptionIfNotEmpty(displayState.editedTextZone)"><svg ng-click="editZone(textZone)" class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg></button>
     </div>
     <em class="form-info mt-12 block right-text"><i18n>exercizer.grain.zonetxt.limit</i18n></em>
     <ul class="gap-12">
