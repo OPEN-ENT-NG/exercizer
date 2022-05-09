@@ -94,7 +94,6 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                     } else{
                         return false;
                     }
-
                 };
 
                 scope.cantSart = function(){

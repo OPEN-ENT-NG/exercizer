@@ -1,14 +1,14 @@
 <!-- subject-copy-domino -->
-<div class="fallen dominos" style="margin-bottom: 0px">
-    <div class="item" style="width: 100%; max-width: none;">
+<div class="fallen dominos">
+    <div class="item">
         <section class="domino">
-            <div class="top" ng-class="{ 'divide-opacity': cantSart() }">
+            <div class="top" ng-class="{'divide-opacity': cantSart()}">
                 <img data-ng-src="[[getSubjectCopyPicture()]]" class="absolute" />
             </div>
             <div class="bottom">
-                <div class="content" style="flex-direction: row;">
-                    <div class="cell twelve-mobile" style="width: 80%">
-                        <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
+                <div class="content">
+                    <div class="cell twelve-mobile">
+                        <div class="row" ng-class="{'divide-opacity': cantSart()}">
                             <div class="cell title-icon">
                                 <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                             </div>
@@ -20,13 +20,13 @@
                                 <strong data-ng-switch-default >default</strong>
                             </div>
                         </div>
-                        <div class="row" ng-class="{ 'divide-opacity': cantSart() }">
+                        <div class="row mt-4" ng-class="{'divide-opacity': cantSart()}">
                             <i18n>exercizer.domino.by</i18n><em class="high-importance"><a data-ng-href="/userbook/annuaire#[[subjectScheduled.owner]]">[[subjectScheduled.owner_username]]</a></em>
                         </div>
-                        <div class="due-date row" data-ng-if="!subjectCopy.is_training_copy" ng-class="{ 'divide-opacity': cantSart(), 'delay': tooLate() }">
+                        <div class="due-date row pt-16" data-ng-if="!subjectCopy.is_training_copy" ng-class="{'divide-opacity': cantSart(), 'delay': tooLate()}">
                             <!-- Appliquer une class .delay quand le sujet est en retard -->
                             <div data-ng-show="isDueDateDisplayed()">
-                              <i18n>exercizer.domino.todelivered</i18n> <strong data-ng-bind="dueDate | date:'dd/MM/yyyy'"></strong> <i18n>exercizer.at</i18n> <span data-ng-bind="dueDate | date:'HH:mm'"></span>
+                              <i18n>exercizer.domino.todelivered</i18n> <strong data-ng-bind="dueDate | date:'dd/MM/yyyy'"></strong> <i18n>exercizer.at</i18n> <strong data-ng-bind="dueDate | date:'HH:mm'"></strong>
                             </div>
 
                             <!-- Ici il faut remplacer isDueDateDisplayed() par ce bloc quand la condition est respecté -->
@@ -52,18 +52,18 @@
                         </div>
                     </div>
                     <div data-ng-if="subjectScheduled.type === 'interactive'">
-                        <strong 
+                        <div 
                             data-ng-if="!subjectCopy.is_corrected || !isDueDateAfter()" 
                             class="score"
                         >
-                            - / [[getSubjectScheduledMaxScore()]]
-                        </strong>
-                        <strong 
+                            -/[[getSubjectScheduledMaxScore()]]
+                        </div>
+                        <div 
                             data-ng-if="subjectCopy.is_corrected && isDueDateAfter()"
                             class="score"
                         >
-                            [[(subjectCopy.is_training_copy ? subjectCopy.calculated_score : subjectCopy.final_score) | truncateNumber ]] / [[getSubjectScheduledMaxScore()]]
-                        </strong>
+                            [[(subjectCopy.is_training_copy ? subjectCopy.calculated_score : subjectCopy.final_score) | truncateNumber ]]/[[getSubjectScheduledMaxScore()]]
+                        </div>
                     </div>
                     <div class="buttons">
                         <button class="flat-button"
