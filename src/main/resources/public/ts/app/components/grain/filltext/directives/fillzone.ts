@@ -75,6 +75,7 @@ export const fillZone = ng.directive('fillZone',
                 }
 
                 scope.answer = ($item) => {
+                    console.log('in', $item);
                     scope.$parent.removeAnswer(scope.optionData.zone);
                     scope.optionData.zone.answer = $item.option;
                     $item.zoneId = scope.optionData.zone.id;

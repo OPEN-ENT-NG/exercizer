@@ -17,22 +17,41 @@
                 </div>
             </div>
             <placed-block ng-if="bckgrndLoaded"
-                ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
+                ng-repeat="iconZone in grainCopy.grain_copy_data.custom_copy_data.zones track by $index" style="padding:0;"
                 x="iconZone.position.x" y="iconZone.position.y" z="iconZone.position.z"
                 transform-x="getResizedIconZoneX" transform-y="getResizedIconZoneY"
             >
-                <image-zone class="drop-zone" drop-item="answer(iconZone, $item);" drag-item="iconZone" ng-class="{ dropped: iconZone.answer !== '' }">
+                <image-zone
+                    class="drop-zone no-responsive"
+                    drop-item="answer(iconZone, $item);"
+                    drag-item="iconZone"
+                    ng-class="{ filled: iconZone.answer !== '' }">
+                    <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" />
+                </image-zone>
+                <image-zone
+                    class="drop-zone no-desktop"
+                    ng-click="showAnswers($event, iconZone)"
+                    ng-class="{ filled: iconZone.answer !== '' }">
                     <img ng-src="[[iconZone.answer]]?thumbnail=120x120" ng-if="iconZone.answer" />
                 </image-zone>
 
             </placed-block>
         </div>
 
-        <div class="row options right" drop-item="removeAnswer($item);">
+        <div class="row options right no-responsive" drop-item="removeAnswer($item);">
             <image-zone 
                 ng-repeat="option in availableAnswers() track by $index"
                 drag-item="option">
                 <img ng-src="[[option]]?thumbnail=120x120" />
+            </image-zone>
+        </div>
+
+        <div class="no-desktop tap-tap" ng-if="showAnswersMobile">
+            <image-zone
+                class="tap-tap__item"
+                ng-repeat="option in dragOptions | filter:availableOption track by $index"
+                data-ng-click="selectAnswer(option)">
+                <img ng-src="[[option.option]]?thumbnail=120x120" />
             </image-zone>
         </div>
     </div>

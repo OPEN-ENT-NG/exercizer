@@ -27,7 +27,7 @@
                     <text-zone>
                         <svg ng-click="removeZone(textZone)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                         <svg ng-click="editZone(textZone)" class="icon-edit" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg>
-                        <span>[[textZone.answer]]</span>
+                        <span class="text-zone-size">[[textZone.answer]]</span>
                     </text-zone>
     
                 </placed-block>
@@ -43,7 +43,7 @@
                         ng-repeat="option in grain.grain_data.custom_data.options">
                         <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
                             <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
-                            <span>[[option]]</span>
+                            <span class="text-zone-size">[[option]]</span>
                         </text-zone>
                     </li>
                 </ul>

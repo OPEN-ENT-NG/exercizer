@@ -8,12 +8,12 @@
     <div class="row">
         <div bind-html="grainCopy.grain_copy_data.custom_copy_data.htmlContent"></div>
 
-        <div class="options no-responsive" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
+        <div class="options no-responsive mt-16" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
             <ul>
                 <li 
                     drag-item="option"
                     ng-repeat="option in dragOptions | filter:availableOption track by $index ">
-                    <text-zone class="option-text-zone"><span>[[option.option]]</span></text-zone>
+                    <text-zone class="option-text-zone"><span class="text-zone-size">[[option.option]]</span></text-zone>
                 </li>
             </ul>
         </div>

@@ -13,10 +13,10 @@ export const performFillText = ng.directive('performFillText',
             templateUrl: 'exercizer/public/ts/app/components/grain/filltext/templates/perform.html',
             link: (scope: any) => {
                 scope.$watch(function () {
-                    if (scope.customData && scope.customData.answersType === 'drag') {
+                    /* if (scope.customData && scope.customData.answersType === 'drag') {
                         //adapt the width of the textzone
                         $("fill-zone > text-zone").each(function() {$(this).width(getTextWidth(($(this)[0] as any).innerText, $(this).css('font')));});
-                    }
+                    } */
                     return scope.grainCopy;
                 }, function () {
                     scope.grainCopy.grain_copy_data.custom_copy_data = new CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
@@ -126,13 +126,13 @@ export const performFillText = ng.directive('performFillText',
                     scope.updateGrainCopy();
                 }
 
-                function getTextWidth(text, font) {
+                /* function getTextWidth(text, font) {
                     var canvas:any = document.createElement("canvas");
                     var context:any = canvas.getContext("2d");
                     context.font = font;
                     var metrics = context.measureText(text);
                     return metrics.width;
-                }
+                } */
             }
         };
     }]
