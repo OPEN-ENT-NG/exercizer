@@ -10,7 +10,7 @@
             <div class="image-container">
                 <img id="[[ grainCopy.id ]]-bckgrnd" ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
             </div>
-            <placed-block ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
+            <placed-block class="view-text-zone" ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
                             x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
                             transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
                             ng-click="openTextZone($event)"

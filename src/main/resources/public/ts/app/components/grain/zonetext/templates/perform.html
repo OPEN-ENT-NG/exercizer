@@ -16,33 +16,48 @@
                     <img id="[[ grainCopy.id ]]-bckgrnd" ng-src="[[grainCopy.grain_copy_data.custom_copy_data.guideImage]]" />
                 </div>
             </div>
-            <placed-block class="perform-placed-block" ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
+            <placed-block class="perform-text-zone" ng-repeat="textZone in grainCopy.grain_copy_data.custom_copy_data.zones" style="padding:0;"
                 x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
                 transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
                 ng-click="openTextZone($event)"
             >
-                <text-zone class="perform-text-zone">
+                <text-zone>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'text'">
-                        <input class="text-zone-size" type="text" ng-model="textZone.answer" complete-change="updateGrainCopy();" ng-class="{ filled: textZone.answer !== '' }"/>
+                        <input type="text" ng-model="textZone.answer" complete-change="updateGrainCopy();" ng-class="{ filled: textZone.answer !== '' }"/>
                     </div>
                     <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'list'">
-                        <select class="text-zone-size" ng-options="o as o for o in textZone.options" ng-model="textZone.answer" ng-change="apply()" ng-class="{ filled: textZone.answer !== '' }"></select>
+                        <select ng-options="o as o for o in textZone.options" ng-model="textZone.answer" ng-change="apply()" ng-class="{ filled: textZone.answer !== '' }"></select>
                     </div>
-                    <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
-                        <div class="drop-zone" drop-item="answer(textZone, $item);" drag-item="textZone" ng-class="{ filled: textZone.answer !== '' }">
+                    <div ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'" class="no-responsive">
+                        <div class="no-responsive drop-zone" drop-item="answer(textZone, $item);" drag-item="textZone" ng-class="{ filled: textZone.answer !== '' }">
                             <span class="text-zone-size">[[textZone.answer]]</span>
                         </div>
+                    </div>
+                    <div
+                        ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'"
+                        class="no-desktop"
+                        ng-class="{ filled: textZone.answer !== '' }"
+                        drag-item="textZone"
+                        drop-item="answer(textZone, $item)"
+                        ng-click="showAnswers($event, textZone)">
+                        <span class="text-zone-size">[[textZone.answer]]</span>
                     </div>
                 </text-zone>
             </placed-block>
         </div>
 
-        <div class="options right" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
+        <div class="no-desktop tap-tap" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag' && showAnswersMobile">
+            <div class="tap-tap__item" ng-repeat="option in dragOptions | filter:availableOption track by $index " data-ng-click="selectAnswer(option)">
+                [[option.option]]
+            </div>
+        </div>
+
+        <div class="options right no-responsive" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
             <ul>
                 <li 
                     drag-item="option"
-                    ng-repeat="option in grainCopy.grain_copy_data.custom_copy_data.options | filter:availableOption">
-                    <text-zone class="option-text-zone"><span>[[option]]</span></text-zone>
+                    ng-repeat="option in grainCopy.grain_copy_data.custom_copy_data.options | filter:availableOption track by $index">
+                    <text-zone class="option-text-zone"><span class="text-zone-size">[[option]]</span></text-zone>
                 </li>
             </ul>
         </div>

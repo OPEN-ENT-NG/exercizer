@@ -39,7 +39,7 @@
             <li ng-repeat="option in grain.grain_data.custom_data.options track by $index">
                 <text-zone style="max-width:unset;" class="option-text-zone">
                     <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
-                    <span>[[option]]</span>
+                    <span class="text-zone-size">[[option]]</span>
                 </text-zone>
             </li>
         </ul>

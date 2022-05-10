@@ -14,6 +14,7 @@ export const performZoneImage = ng.directive('performZoneImage',
             link: (scope: any) => {
 
                 scope.usedAnswers = {};
+                scope.dragOptions = [];
 
                 scope.$watch("grainCopy",function(newValue,oldValue) {
                     scope.init();
@@ -34,16 +35,39 @@ export const performZoneImage = ng.directive('performZoneImage',
 
                 scope.init = () => {
                     scope.grainCopy.grain_copy_data.custom_copy_data = new CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
+                    scope.customData = scope.grainCopy.grain_copy_data.custom_copy_data;
+
+                    let tmp = _.clone(scope.customData.options);
+                    let secureLoop = 0;
+                    if (tmp && tmp.length > 1) {
+                        while (scope.customData.options[0] === tmp[0] && !(secureLoop === 5)) {
+                            scope.customData.options = _.shuffle(scope.customData.options);
+                            secureLoop++;
+                        }
+                    }
+
+                    scope.customData.options.forEach((option, index) => {
+                        scope.dragOptions.push({id:index,option:option});
+                    });
+
                     if (!scope.usedAnswers[scope.grainCopy.id]) {
                         scope.usedAnswers[scope.grainCopy.id] = [];
                         if (scope.grainCopy.grain_copy_data.custom_copy_data.zones) {
-                            scope.grainCopy.grain_copy_data.custom_copy_data.zones.forEach((option) => {
-                                if (option.answer && option.answer.length > 0) {
-                                    scope.usedAnswers[scope.grainCopy.id].push(option.answer);
+
+                            scope.grainCopy.grain_copy_data.custom_copy_data.zones.forEach((zone) => {
+                                if (zone.answer) {
+                                    for (let option of scope.dragOptions) {
+                                        if (option.option === zone.answer && option.zoneId === undefined) {
+                                            option.zoneId = zone.id;
+                                            scope.usedAnswers[scope.grainCopy.id].push(option);
+                                            break;
+                                        }
+                                    }
                                 }
                             });
                         }
                     }
+
                 };
                 
                 scope.availableAnswers = () => {
@@ -63,6 +87,8 @@ export const performZoneImage = ng.directive('performZoneImage',
                     
                     return returnArray;
                 };
+
+                scope.availableOption = (option) => scope.usedAnswers[scope.grainCopy.id].indexOf(option) === -1;
 
                 scope.updateGrainCopy = () => {
                     scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
@@ -91,6 +117,25 @@ export const performZoneImage = ng.directive('performZoneImage',
                     $item.answer = '';
                     scope.updateGrainCopy();
                 };
+
+                let _selectedanswer;
+
+                scope.showAnswers = function(element, iconZone) {
+                    scope.showAnswersMobile = true;
+                    $('.item-selected').removeClass('item-selected');
+                    $(element.target).addClass('item-selected');
+                    _selectedanswer = iconZone;
+                }
+
+                scope.selectAnswer = function(option) {
+                    scope.removeAnswer(_selectedanswer);
+                    scope.showAnswersMobile = false;
+                    _selectedanswer.answer = option.option;
+                    option.zoneId = _selectedanswer.id;
+                    scope.usedAnswers[scope.grainCopy.id].push(option);
+                    $('.item-selected').removeClass('item-selected');
+                    scope.updateGrainCopy();
+                }
             }
         };
     }]
