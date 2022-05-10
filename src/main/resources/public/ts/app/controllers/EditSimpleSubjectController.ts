@@ -7,7 +7,6 @@ class EditSimpleSubjectController {
 
     static $inject = [
         '$routeParams',
-        '$sce',
         '$scope',
         '$location',
         'SubjectService',
@@ -24,20 +23,12 @@ class EditSimpleSubjectController {
 
     constructor
     (
-        private _$routeParams,
-        private _$sce,
+        _$routeParams,
         private _$scope,
         private _$location,
         private _subjectService:ISubjectService,
         private _subjectLibraryService:ISubjectLibraryService      
     ) {
-
-        this._$scope = _$scope;
-        this._$sce = _$sce;
-        this._$location = _$location;
-        this._subjectService = _subjectService;
-        this._subjectLibraryService = _subjectLibraryService;
-
         this._defaultTitle = idiom.translate('exercizer.simple.default.title');
         this._hasDataLoaded = false;
         this._readOnly = false;
@@ -76,7 +67,7 @@ class EditSimpleSubjectController {
             var folderId = _$routeParams['folderId'];
             self._subject = new Subject();
             self._subject.type = 'simple';
-            self._subject.title = self._defaultTitle;
+            self._subject.title = '';
             if (folderId) {
                 self._subject.folder_id = folderId;
             }
@@ -184,6 +175,10 @@ class EditSimpleSubjectController {
 
     get hasDataLoaded():boolean {
         return this._hasDataLoaded;
+    }
+
+    get hasDefaultImage():boolean {
+        return !this._subject.picture;
     }
 
     get readOnly():boolean {

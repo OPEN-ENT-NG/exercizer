@@ -8,11 +8,12 @@
     <div data-ng-if="editSimpleSubjectController.hasDataLoaded">
 
         <!-- TOP HEADER -->
-        <div class="row">
+        <div class="row mb-16">
             <h1 class="cell twelve-mobile">
                 <i class="exercizer"></i>
                 <span class="no-responsive"><span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
-                <span class="hover-orange" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
+                <span ng-if="!editSimpleSubjectController.subject.title.length" class="hover-orange" tooltip="exercizer.simple.default.title" data-ng-click=""><i18n>exercizer.simple.default.title</i18n></span>
+                <span ng-if="editSimpleSubjectController.subject.title.length" class="hover-orange" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
             <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly && editSimpleSubjectController.subject.id" data-ng-click="editSimpleSubjectController.scheduleSubject()">
                 <i class="distribute"></i>
@@ -21,10 +22,16 @@
             <button class="right-magnet cell" data-ng-click="editSimpleSubjectController.displayModalCopyPaste()" data-ng-if="editSimpleSubjectController.previewingFromLibrary">
                 <i18n>exercizer.copy.from.library</i18n>
             </button>
-            <button class="right-magnet cell flat-button" data-ng-click="editSimpleSubjectController.redirectToDashboard()">
+            <button class="right-magnet cell flat-button" 
+                    ng-if="editSimpleSubjectController.previewingFromLibrary"
+                    data-ng-click="editSimpleSubjectController.redirectToDashboard()">
                 <i class="left"></i>
-                <i18n ng-if="editSimpleSubjectController.previewingFromLibrary">exercizer.back.library</i18n>
-                <i18n ng-if="!editSimpleSubjectController.previewingFromLibrary">exercizer.back.subject</i18n>
+                <i18n>exercizer.back.library</i18n>
+            </button>
+            <button class="right-magnet cell flat-button" 
+                    ng-if="!editSimpleSubjectController.previewingFromLibrary"
+                    data-ng-click="editSimpleSubjectController.redirectToDashboard()">
+                <i18n>exercizer.update.quit</i18n>
             </button>
         </div>
 
@@ -36,23 +43,22 @@
                                 <img ng-src="[[editSimpleSubjectController.subject.picture]]" ng-if="editSimpleSubjectController.subject.picture" class="absolute" />
                                 <img skin-src="/img/illustrations/exercizer.svg" ng-if="!editSimpleSubjectController.subject.picture" class="absolute" />
                         </div>
-                        <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="!editSimpleSubjectController.readOnly">
+                        <div class="absolute" ng-class="{'default-img': editSimpleSubjectController.hasDefaultImage}" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="!editSimpleSubjectController.readOnly">
                             <image-select readonly="editSimpleSubjectController.readOnly" ng-change="editSimpleSubjectController.saveSubjectProperties()"  data-ng-model="editSimpleSubjectController.subject.picture" default="/img/illustrations/exercizer.svg"></image-select>
                         </div>
                     </div>
-                    <div class="margin-two height-three">
-                        <div class="twelve cell horizontal-spacing">
-                            <h3><i18n>exercizer.subject.title</i18n></h3>
+                    <div class="margin-two height-three pl-16">
+                        <div class="twelve cell">
                             <div data-ng-if="editSimpleSubjectController.readOnly" class="twelve cell">[[editSimpleSubjectController.subject.title]]</div>
-                            <input type="text" maxlength="200" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-click="editSimpleSubjectController.initTitle()" data-ng-model="editSimpleSubjectController.subject.title" style="cursor:default" class="twelve cell" i18n-placeholder="exercizer.subject.title">
+                            <input type="text" maxlength="200" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.title" style="cursor:default" class="twelve cell" i18n-placeholder="exercizer.simple.default.placeholder">
                         </div>
-                        <div class="twelve cell horizontal-spacing vertical-spacing">
-                            <h3><i18n>exercizer.simple.edit.description</i18n></h3>
+                        <div class="twelve cell mt-24">
+                            <h4><i18n>exercizer.simple.edit.description</i18n></h4>
                             <div data-ng-if="editSimpleSubjectController.readOnly"  style="word-wrap: break-word;" bind-html="editSimpleSubjectController.subject.description"></div>
                             <editor data-ng-if="!editSimpleSubjectController.readOnly"  on-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.description" track-input-event="editSimpleSubjectController.getTracker()"></editor>
                         </div>
-                        <div data-ng-if="editSimpleSubjectController.subject.corrected_file_id" class="twelve cell horizontal-spacing vertical-spacing">
-                            <h3><i18n>exercizer.simple.edit.corrected</i18n></h3>
+                        <div data-ng-if="editSimpleSubjectController.subject.corrected_file_id" class="twelve cell mt-24">
+                            <h4><i18n>exercizer.simple.edit.corrected</i18n></h4>
                             <i class="attachment medium-text"></i>
                             <a data-ng-click="editSimpleSubjectController.downloadCorrectedFile()" target="_blank">
                                 &nbsp; [[editSimpleSubjectController.subject.corrected_metadata.filename]]
