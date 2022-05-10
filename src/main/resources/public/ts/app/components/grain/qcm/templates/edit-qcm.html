@@ -1,11 +1,13 @@
 <div class="row">
     <span class="row"><i18n>exercizer.grain.mode</i18n> :&nbsp;</span>
-    <input
-        id="ck-no-err-allowed-[[grain.id]]"
-        type="checkbox"
-        data-ng-model="grain.grain_data.custom_data.no_error_allowed"
-        data-ng-change="updateGrain()" />
-    <label for="ck-no-err-allowed-[[grain.id]]"><i18n>exercizer.grain.mode.option</i18n></label>
+    <div class="m-16">
+        <input
+            id="ck-no-err-allowed-[[grain.id]]"
+            type="checkbox"
+            data-ng-model="grain.grain_data.custom_data.no_error_allowed"
+            data-ng-change="updateGrain()" />
+        <label for="ck-no-err-allowed-[[grain.id]]"><i18n>exercizer.grain.mode.option</i18n></label>
+    </div>
 </div>
 
 <div class="row">
