@@ -1,7 +1,33 @@
-import { ng, _ } from 'entcore';
+import { ng, $, _ } from 'entcore';
 import { TextZone, CustomData } from '../models/CustomData';
 import { getResizedTextZoneX, getResizedTextZoneY, preloadImage } from './zoneCommon';
-
+class LightboxPromise {
+    isVisible: boolean = false;
+    private _resolution?: (value: Boolean | PromiseLike<Boolean>) => void;
+	private _rejection?: (reason?: any) => void;
+    display() {
+        this.isVisible = true;
+        return new Promise<Boolean>((_resolve, _reject) => {
+            this._resolution = _resolve;
+            this._rejection = _reject;
+        });
+    }
+    private hide() {
+        this.isVisible = false;
+    }
+    confirm() {
+        this.hide();
+        this._resolution && this._resolution(true);
+    }
+    cancel() {
+        this.hide();
+        this._resolution && this._resolution(false);
+    }
+    dismiss() {
+        this.hide();
+        this._rejection && this._rejection();
+    }
+}
 export const editZoneText = ng.directive('editZoneText',
     [() => {
         return {
@@ -14,6 +40,17 @@ export const editZoneText = ng.directive('editZoneText',
                 element.on('stopDrag', '[draggable]', () => {
                     scope.updateGrain();
                 });
+
+                scope.$watch("grain.grain_data.custom_data.zones", function(newValue, oldValue) {
+                    element.find('article').each((i, item) => {
+                        $(item).on('click', () => {
+                            $('.textZoneOpen').removeClass('textZoneOpen');
+                            $(item).addClass('textZoneOpen');
+                        })
+                    });
+                },true);
+
+                scope.boxOnChange = new LightboxPromise();
 
                 scope.displayState = {
                     editedTextZone: {
@@ -74,7 +111,11 @@ export const editZoneText = ng.directive('editZoneText',
 
                 scope.addOption = (container: CustomData | TextZone) => {
                     container.options.push(scope.displayState.newOption);
-                    scope.displayState.editedTextZone.answer = scope.displayState.newOption;
+
+                    if (container.options.length === 1) {
+                        scope.displayState.editedTextZone.answer = scope.displayState.newOption
+                    }
+
                     scope.updateGrain();
                     scope.displayState.newOption = '';
                 };
@@ -100,30 +141,46 @@ export const editZoneText = ng.directive('editZoneText',
                     scope.updateGrain();
                 };
 
-                scope.switchTo = (newType: string) => {
-                    let customData = scope.grain.grain_data.custom_data as CustomData;
-                    if (newType === 'drag') {
-                        customData.options = [];
-                        customData.zones.forEach((zone) => {
-                            customData.options.push(zone.answer);
-                        });
-                    }
-                    if (newType === 'list') {
-                        customData.zones.forEach((zone) => {
-                            zone.options = JSON.parse(JSON.stringify(customData.options));
-                        });
-                    }
-                    scope.updateGrain();
-                };
+                scope.answersType = scope.grain.grain_data.custom_data.answersType;
 
-                scope.previousOpen = null;
-                scope.openTextZone = function($event): void
-                {
-                    $event.currentTarget.classList.add("textZoneOpen");
-                    if(scope.previousOpen != null)
-                        scope.previousOpen.classList.remove("textZoneOpen");
-                    scope.previousOpen = $event.currentTarget == scope.previousOpen ? null : $event.currentTarget;
-                }
+                scope.switchTo = async (newType: string) => {
+                    const customData = scope.grain.grain_data.custom_data as CustomData;
+                    const applyChange = () => {
+                        scope.grain.grain_data.custom_data.answersType = newType;
+                        if (newType === 'drag') {
+                            customData.options = [];
+                            customData.zones.forEach((zone) => {
+                                customData.options.push(zone.answer);
+                            });
+                        }
+                        if (newType === 'list') {
+                            if(customData.options.length > 0){
+                                customData.zones.forEach((zone) => {
+                                    zone.options = JSON.parse(JSON.stringify(customData.options));
+                                });
+                            }
+                            else{
+                                customData.zones.forEach((zone) => {
+                                    zone.options = [zone.answer];
+                                });
+                            }
+                        }
+                        scope.updateGrain();
+                    }
+                    // #WB-460 Check whether to apply the change immediately, or ask for a validation before.
+                    if( newType!==scope.grain.grain_data.custom_data.answersType && customData.options.length ) {
+                        // Ask for a validation
+                        const ok = await scope.boxOnChange.display().catch( () => false );
+                        if( ok ) {
+                            applyChange();
+                        } else {
+                            scope.answersType = scope.grain.grain_data.custom_data.answersType;
+                        }
+                    } else {
+                        // Apply the change immediately
+                        applyChange();
+                    }
+                };
             }
         };
     }]

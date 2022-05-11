@@ -9,7 +9,7 @@
                 <option value="drag">[['exercizer.grain.option3'|i18n]]</option>
             </select>
         </div>
-        <message-info status="info" ng-if="grain.grain_data.custom_data.answersType=='text'">
+        <message-info status="info" ng-if="answersType ==='text'">
             <i18n>exercizer.grain.accent.warning</i18n>
         </message-info>
     </div>
@@ -34,7 +34,7 @@
     <div class="row">
         <editor class="fill-text" ng-model="grain.grain_data.custom_data.htmlContent" inline track-input-event="grain.getTracker()"></editor>
     </div>
-    <div class="options right" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
+    <div class="options right" ng-if="answersType === 'drag'">
         <ul>
             <li ng-repeat="option in grain.grain_data.custom_data.options track by $index">
                 <text-zone style="max-width:unset;" class="option-text-zone">

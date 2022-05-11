@@ -2,14 +2,14 @@
     <div class="row">
         <div class="row mb-8"><strong><i18n>exercizer.grain.types</i18n></strong></div>
         <div class="row">
-            <select ng-model="grain.grain_data.custom_data.answersType"
-                    ng-change="switchTo(grain.grain_data.custom_data.answersType)">
+            <select ng-model="answersType"
+                ng-change="switchTo(answersType)">
                 <option value="text">[['exercizer.grain.option1'|i18n]]</option>
                 <option value="list">[['exercizer.grain.option2'|i18n]]</option>
                 <option value="drag">[['exercizer.grain.option3'|i18n]]</option>
             </select>
         </div>
-        <message-info status="info" ng-if="grain.grain_data.custom_data.answersType=='text'">
+        <message-info status="info" ng-if="answersType ==='text'">
             <i18n>exercizer.grain.accent.warning</i18n>
         </message-info>
     </div>
@@ -22,7 +22,7 @@
                 <placed-block ng-repeat="textZone in grain.grain_data.custom_data.zones" style="padding:0;" draggable
                                 x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
                                 transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
-                                ng-click="openTextZone($event)"
+                                
                 >
                     <text-zone>
                         <svg ng-click="removeZone(textZone)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
@@ -37,7 +37,7 @@
         <div class="select-zone flex gap-8">
             <button class="btns btns-secondary flex-inline gap-8" ng-click="editZone()"><svg class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg><i18n>exercizer.grain.zone.add</i18n></button>
             <button class="cancel flat-button flex-inline gap-8" ng-click="displayState.changeBackground = true"><svg class="icon-edit" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg><i18n>exercizer.grain.background</i18n></button>
-            <div class="options right" ng-if="grain.grain_data.custom_data.answersType === 'drag'">
+            <div class="options right" ng-if="answersType === 'drag'">
                 <ul>
                     <li 
                         ng-repeat="option in grain.grain_data.custom_data.options">
@@ -55,7 +55,7 @@
             <media-library ng-model="grain.grain_data.custom_data.guideImageFile" ng-change="displayState.changeBackground = false; updateGrain();" file-format="'img'"></media-library>
         </div>
     </lightbox>
-    <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'list'" on-close="displayState.editZone = false">
+    <lightbox show="displayState.editZone && answersType === 'list'" on-close="displayState.editZone = false">
         <h2><i18n>exercizer.grain.responses</i18n></h2>
 
         <message-info status="info"><i18n>exercizer.grain.responses.info</i18n></message-info>
@@ -63,8 +63,8 @@
         <div class="options lightbox">
             <label for="fill-text-input" class="form-label mb-8 block"><i18n>exercizer.grain.zone.add</i18n></label>
             <div class="add-option flex">
-                <input type="text" maxlength="40" id="fill-text-input" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(grain.grain_data.custom_data)" />
-                <button ng-disabled="!displayState.newOption" ng-click="addOption(displayState.editedTextZone)"><svg ng-click="editZone(textZone)" class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg></button>
+                <input type="text" maxlength="40" id="fill-text-input" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(displayState.editedTextZone)" />
+                <button ng-disabled="!displayState.newOption" ng-click="addOptionIfNotEmpty(displayState.editedTextZone)"><svg class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg></button>
             </div>
             <em class="form-info mt-12 block right-text"><i18n>exercizer.grain.zonetxt.limit</i18n></em>
             <ul class="gap-12">
@@ -91,7 +91,7 @@
             </button>
         </div>
     </lightbox>
-    <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'drag'" on-close="displayState.editZone = false">
+    <lightbox show="displayState.editZone && answersType === 'drag'" on-close="displayState.editZone = false">
         <h2><i18n>exercizer.grain.responses</i18n></h2>
 
         <message-info status="info"><i18n>exercizer.grain.responses.info</i18n></message-info>
@@ -100,7 +100,7 @@
             <label for="fill-text-input" class="form-label mb-8 block"><i18n>exercizer.grain.zone.add</i18n></label>
             <div class="add-option flex">
                 <input type="text" maxlength="40" id="fill-text-input" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(grain.grain_data.custom_data)" />
-                <button ng-disabled="!displayState.newOption" ng-click="addOption(grain.grain_data.custom_data)"><svg ng-click="editZone(textZone)" class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg></button>
+                <button ng-disabled="!displayState.newOption" ng-click="addOption(grain.grain_data.custom_data)"><svg class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg></button>
             </div>
             <ul class="gap-12">
                 <li ng-repeat="option in grain.grain_data.custom_data.options"
@@ -125,7 +125,7 @@
             </button>
         </div>
     </lightbox>
-    <lightbox show="displayState.editZone && grain.grain_data.custom_data.answersType === 'text'" on-close="displayState.editZone = false">
+    <lightbox show="displayState.editZone && answersType === 'text'" on-close="displayState.editZone = false">
         <h2><i18n>exercizer.grain.zone</i18n></h2>
         <form>
             <div class="row">
@@ -146,5 +146,22 @@
                 </button>
             </div>
         </form>
+    </lightbox>
+    <lightbox show="boxOnChange.isVisible" on-close="boxOnChange.dismiss()">
+        <span class="fs-5 flex gap-8">
+            <svg class="icon-alert fill-warning" width="24" height="24"><use href='exercizer/public/assets/icons/icons.svg#alert'></use></svg>
+            <strong><i18n>exercizer.grain.filltext.onchange.title</i18n></strong>
+        </span>
+        <div class="row">
+            <p><i18n>exercizer.grain.filltext.onchange.text</i18n></p>
+        </div>
+        <div class="row">
+            <button class="right-magnet" ng-click="boxOnChange.confirm()">
+                <i18n>confirm</i18n>
+            </button>
+            <button class="cancel right-magnet" ng-click="boxOnChange.cancel()" type="button">
+                <i18n>cancel</i18n>
+            </button>
+        </div>
     </lightbox>
 </div>
