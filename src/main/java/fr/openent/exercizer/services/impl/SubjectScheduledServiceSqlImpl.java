@@ -62,50 +62,18 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
     }
 
 	@Override
-	public void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler) {
-		super.getCorrectedDownloadInformation(id, "s.owner, s.corrected_file_id, s.corrected_metadata, s.corrected_date", handler);
-	}
-
-	@Override
-	public void addCorrectedFile(final String id, final String fileId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler) {
-		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
-
-		final String query =
-				"UPDATE " + resourceTable +
-						" SET corrected_file_id=?,corrected_metadata=?::jsonb,modified = NOW() " +
-						"WHERE id = ? ";
-
-		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
-		values.add(fileId);
-		values.add(metadata);
-		values.add(Sql.parseId(id));
-
-		builder.prepared(query,values);
-
-		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
-
-	}
-
-	@Override
-	public void removeCorrectedFile(final String id, final Handler<Either<String, JsonObject>> handler) {
-		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
-		final String query =
-				"UPDATE " + resourceTable +
-						" SET corrected_file_id=null,corrected_metadata=null,modified = NOW() " +
-						"WHERE id = ? ";
-
-		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
-		values.add(Sql.parseId(id));
-
-		builder.prepared(query,values);
-
-		//Mark as not corrected all copies that don't have individual correction
-		final String queryCopies = "UPDATE " + schema + "subject_copy SET is_corrected=false, modified = NOW() WHERE " +
-				"corrected_file_id IS NULL AND subject_scheduled_id = ?";
-
-		builder.prepared(queryCopies, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)));
-
-		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
+	public void getCorrectedDownloadInformation(final String id, final String docId, final Handler<Either<String, JsonObject>> handler) {
+		final String select = 
+				"SELECT s.owner, sd.doc_type, sd.metadata, s.corrected_date FROM "+ resourceTable +" AS s "+
+				"INNER JOIN "+ schema +"subject_document AS sd ON s.id = sd.subject_id "+
+				"WHERE s.id = ? AND sd.doc_id = ? ";
+        sql.prepared(
+			select, 
+			new fr.wseduc.webutils.collections.JsonArray()
+				.add(Sql.parseId(id))
+				.add(docId),
+			SqlResult.validUniqueResultHandler(handler, "metadata")
+		);
 	}
 
     /**

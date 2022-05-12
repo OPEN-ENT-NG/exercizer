@@ -21,7 +21,6 @@ package fr.openent.exercizer.services.impl;
 
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
-import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
@@ -33,8 +32,6 @@ import fr.wseduc.webutils.Either;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.entcore.common.sql.SqlResult.validResultHandler;
 
 public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements ISubjectCopyService {
 
@@ -104,45 +101,49 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
 
     @Override
     public void getDownloadInformation(final List<String> ids, final Handler<Either<String, JsonArray>> handler) {
-        final List<Object> sqlIds = new ArrayList<>();
-
-        final String query = "SELECT ss.title, ss.corrected_date, sc.owner_username, sc.homework_file_id, sc.homework_metadata, " +
-                "sc.corrected_file_id, sc.corrected_metadata FROM " +
-                resourceTable + " as sc INNER JOIN " + schema + "subject_scheduled as ss ON (ss.id = sc.subject_scheduled_id) " +
-                "WHERE sc.id IN " + Sql.listPrepared(ids.toArray());
+        final String query = 
+            "SELECT ss.title, ss.corrected_date, sc.owner_username,"+
+            "   jsonb_agg( jsonb_build_object('file_id', scf.file_id, 'file_type', scf.file_type, 'metadata', scf.metadata) ) AS files"+
+            " FROM "+ resourceTable +" sc"+
+            " INNER JOIN "+ schema +"subject_scheduled ss ON ss.id = sc.subject_scheduled_id"+
+            " LEFT JOIN "+ schema +"subject_copy_file AS scf ON scf.subject_copy_id = sc.id"+
+            " WHERE sc.id IN "+ Sql.listPrepared(ids.toArray())+ 
+            " GROUP BY ss.title, ss.corrected_date, sc.owner_username";
 
         JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
         for (final String id : ids) {
             values.add(Sql.parseId(id));
         }
 
-        sql.prepared(query, values, SqlResult.validResultHandler(handler, "homework_metadata", "corrected_metadata"));
-
+        sql.prepared(query, values, SqlResult.validResultHandler(handler, "files"));
     }
 
     @Override
     public void getMetadataOfSubject(final String id, final FileType fileType, final Handler<Either<String, JsonObject>> handler) {
 
-        final String query = "SELECT " + (FileType.CORRECTED.equals(fileType) ? "sc.corrected_file_id" : "sc.homework_file_id") + ", " +
-                " sc.owner as copy_owner, sc.subject_scheduled_id, ss.title, ss.owner as subject_owner " +
-                " FROM " + resourceTable + " AS sc INNER JOIN " + schema + "subject_scheduled as ss ON ss.id=sc.subject_scheduled_id" +
-                " WHERE sc.id = ?";
+        final String query = 
+                "SELECT sc.owner AS copy_owner, sc.subject_scheduled_id, ss.title, ss.owner AS subject_owner " +
+                "FROM "+ resourceTable +" AS sc INNER JOIN "+ schema +"subject_scheduled AS ss ON ss.id=sc.subject_scheduled_id " +
+                "WHERE sc.id = ?";
 
         sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)), SqlResult.validUniqueResultHandler(handler));
     }
 
     @Override
-    public void removeIndividualCorrectedFile(final String id, final Handler<Either<String, JsonObject>> handler) {
+    public void removeIndividualCorrectedFile(final Long id, final Handler<Either<String, JsonObject>> handler) {
         //Mark as not corrected if don't have global correction
-        final String queryCorrected = "(SELECT CASE WHEN ss.corrected_file_id IS NULL THEN false ELSE true END FROM "
-                + schema + "subject_scheduled as ss WHERE ss.id=subject_scheduled_id)";
+        final String queryCorrected = 
+                "(SELECT CASE WHEN COUNT(sd.doc_id) = 0 THEN false ELSE true END"
+                + " FROM "+ schema +"subject_scheduled as ss"
+                + " LEFT JOIN "+ schema +"subject_document as sd ON sd.subject_id=ss.subject_id"
+                + " WHERE ss.id=subject_scheduled_id)";
 
         final String query =
                 "UPDATE " + resourceTable +
-                        " SET corrected_file_id=null,corrected_metadata=null,modified = NOW(), is_corrected = " + queryCorrected +
-                        "WHERE id = ? ";
+                " SET modified = NOW(), is_corrected = " + queryCorrected +
+                " WHERE id = ? ";
 
-        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)), SqlResult.validRowsResultHandler(handler));
+        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(id), SqlResult.validRowsResultHandler(handler));
     }
 
     @Override
@@ -161,42 +162,84 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     }
 
     @Override
-    public void addFile(final String id, final String fileId, final JsonObject metadata, final FileType fileType, int timezoneOffset, final Handler<Either<String, JsonObject>> handler) {
-        if (FileType.CORRECTED.equals(fileType)) {
-            addIndividualCorrectedFile(id, fileId, metadata, handler);
-        } else {
-            addHomeworkFile(id, fileId, metadata, timezoneOffset, handler);
-        }
+    public void addFile(final String subjectCopyId, final String fileId, final JsonObject metadata, final FileType fileType, int timezoneOffset, final Handler<Either<String, JsonObject>> handler) {
+        StringBuilder insert = new StringBuilder()
+		.append("INSERT INTO ").append(schema).append("subject_copy_file (subject_copy_id, file_id, file_type, metadata) ")
+		.append("VALUES (?,?,?,?) RETURNING file_id, file_type, metadata");
+
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( Sql.parseId(subjectCopyId) )
+			.add( fileId )
+            .add( fileType.getKey() )
+			.add( metadata );
+        
+        sql.prepared(insert.toString(), values, SqlResult.validUniqueResultHandler(result->{
+            if( result.isRight() ) {
+                JsonArray params = new fr.wseduc.webutils.collections.JsonArray();
+                StringBuilder update = new StringBuilder()
+                .append("UPDATE ").append(resourceTable)
+                .append(" SET");
+                if( FileType.HOMEWORK.equals(fileType) ) {
+                    update.append(" submitted_date=NOW() at time zone 'utc' - (? * interval '1 minute'),");
+                    params.add(timezoneOffset);
+                }
+                update
+                .append(" modified = NOW()")
+                .append(" WHERE id = ? ");
+                params.add(Sql.parseId(subjectCopyId));
+
+                sql.prepared(update.toString(), params, SqlResult.validRowsResultHandler( updateResult -> {
+                    if( updateResult.isRight() ) {
+                        // Handle the resulting inserted file
+                        handler.handle( result );
+                    } else {
+                        // Handle the update error
+                        handler.handle( updateResult );
+                    }
+                }));
+            } else {
+                // Handle the resulting inserted file error.
+                handler.handle( result );
+            }
+        }, "metadata"));
     }
 
-    private void addHomeworkFile(final String id, final String fileId, final JsonObject metadata, int timezoneOffset, final Handler<Either<String, JsonObject>> handler) {
-        final String query =
-                "UPDATE " + resourceTable +
-                        " SET homework_file_id=?, homework_metadata=?::jsonb, submitted_date=NOW() at time zone 'utc' - (? * interval '1 minute'), modified = NOW() " +
-                        "WHERE id = ? ";
+	@Override
+    public void deleteFile(final Long subjectCopyId, final String fileId, final Handler<Either<String, JsonObject>> handler) {
+        StringBuilder delete = new StringBuilder()
+		.append("DELETE FROM ").append(schema).append("subject_copy_file ")
+		.append("WHERE subject_copy_id = ? AND file_id = ? RETURNING subject_copy_id, file_id, file_type, metadata");
 
-        final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
-        values.add(fileId);
-        values.add(metadata);
-        values.add(timezoneOffset);
-        values.add(Sql.parseId(id));
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectCopyId )
+			.add( fileId );
+		sql.prepared(delete.toString(), values, SqlResult.validUniqueResultHandler(handler));
+	}
 
-        sql.prepared(query, values, SqlResult.validRowsResultHandler(handler));
+    @Override
+    public void listFiles(final Long subjectCopyId, final Handler<Either<String, JsonArray>> handler) {
+        StringBuilder select = new StringBuilder()
+		.append("SELECT file_id, file_type, metadata ")
+		.append("FROM ").append(schema).append("subject_copy_file ")
+		.append("WHERE subject_copy_id = ?");
+		
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectCopyId );
+		sql.prepared(select.toString(), values, SqlResult.validResultHandler(handler, "metadata"));		
     }
 
-    private void addIndividualCorrectedFile(final String id, final String fileId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler) {
-        final String query =
-                "UPDATE " + resourceTable +
-                        " SET corrected_file_id=?, corrected_metadata=?::jsonb, is_corrected=true, modified = NOW() " +
-                        "WHERE id = ? ";
-
-        final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
-        values.add(fileId);
-        values.add(metadata);
-        values.add(Sql.parseId(id));
-
-        sql.prepared(query, values, SqlResult.validRowsResultHandler(handler));
-    }
+	@Override
+	public void getFile(final Long subjectCopyId, final String fileId, final Handler<Either<String, JsonObject>> handler ) {
+        StringBuilder select = new StringBuilder()
+		.append("SELECT file_id, file_type, metadata ")
+		.append("FROM ").append(schema).append("subject_copy_file ")
+		.append("WHERE subject_id = ? AND file_id = ?");
+		
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectCopyId )
+			.add( fileId );
+		sql.prepared(select.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));		
+	}
 
     @Override
     public void getOwners(final JsonArray ids, final Handler<Either<String, JsonArray>> handler) {

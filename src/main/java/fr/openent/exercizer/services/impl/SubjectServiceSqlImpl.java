@@ -23,6 +23,8 @@ import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Either;
 import io.vertx.core.json.Json;
+
+import org.apache.commons.lang3.NotImplementedException;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
@@ -477,9 +479,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
 	}
 
-	@Override
 	public void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler) {
-		super.getCorrectedDownloadInformation(id, null, handler);
+		throw new NotImplementedException("getCorrectedDownloadInformation is deprecated");
 	}
 
 	@Override
@@ -500,4 +501,55 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(userId).add(userId);
 		sql.prepared(query.toString(), params, SqlResult.validUniqueResultHandler(handler));
 	}
+
+    @Override
+    public void listCorrectedDocuments(final Long subjectId, final Handler<Either<String, JsonArray>> handler) {
+        StringBuilder select = new StringBuilder()
+		.append("SELECT doc_id, doc_type, metadata ")
+		.append("FROM ").append(schema).append("subject_document ")
+		.append("WHERE subject_id = ?");
+		
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectId );
+		sql.prepared(select.toString(), values, SqlResult.validResultHandler(handler, "metadata"));		
+    }
+
+	@Override
+	public void getCorrectedDocument(final Long subjectId, final String docId, final Handler<Either<String, JsonObject>> handler ) {
+        StringBuilder select = new StringBuilder()
+		.append("SELECT doc_id, doc_type, metadata ")
+		.append("FROM ").append(schema).append("subject_document ")
+		.append("WHERE subject_id = ? AND doc_id = ?");
+		
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectId )
+			.add( docId );
+		sql.prepared(select.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));		
+	}
+
+	@Override
+    public void addCorrectedDocument(final Long subjectId, final String docId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler) {
+        StringBuilder insert = new StringBuilder()
+		.append("INSERT INTO ").append(schema).append("subject_document (subject_id, doc_id, metadata) ")
+		.append("VALUES (?,?,?) RETURNING subject_id, doc_id, doc_type, metadata");
+
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectId )
+			.add( docId )
+			.add( metadata );
+		sql.prepared(insert.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));
+	}
+
+	@Override
+    public void deleteCorrectedDocument(final Long subjectId, final String docId, final Handler<Either<String, JsonObject>> handler) {
+        StringBuilder delete = new StringBuilder()
+		.append("DELETE FROM ").append(schema).append("subject_document ")
+		.append("WHERE subject_id = ? AND doc_id = ? RETURNING subject_id, doc_id, doc_type, metadata");
+
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectId )
+			.add( docId );
+		sql.prepared(delete.toString(), values, SqlResult.validUniqueResultHandler(handler));
+	}
+
 }

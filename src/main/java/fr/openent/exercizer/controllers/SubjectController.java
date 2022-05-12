@@ -24,10 +24,14 @@ import fr.openent.exercizer.exporter.ImagesToBase64;
 import fr.openent.exercizer.exporter.SubjectExporter;
 import fr.openent.exercizer.filters.MassOwnerOnly;
 import fr.openent.exercizer.filters.MassShareAndOwner;
+import fr.openent.exercizer.filters.SubjectDocumentOwner;
+import fr.openent.exercizer.filters.SubjectScheduledCorrected;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.IGrainService;
+import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.openent.exercizer.services.impl.GrainServiceSqlImpl;
+import fr.openent.exercizer.services.impl.SubjectScheduledServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
 import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
@@ -36,24 +40,37 @@ import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.I18n;
 import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.RequestUtils;
+
+import org.entcore.common.bus.WorkspaceHelper;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.events.EventHelper;
 import org.entcore.common.events.EventStore;
 import org.entcore.common.events.EventStoreFactory;
+import org.entcore.common.folders.impl.DocumentHelper;
 import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.http.filter.sql.OwnerOnly;
 import org.entcore.common.http.filter.sql.ShareAndOwner;
 import org.entcore.common.storage.Storage;
 import org.entcore.common.user.UserInfos;
+import org.entcore.common.utils.DateUtils;
 import org.entcore.common.user.UserUtils;
 import org.entcore.common.utils.StringUtils;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
+import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.DecodeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.entcore.common.http.response.DefaultResponseHandler.*;
@@ -62,15 +79,19 @@ public class SubjectController extends ControllerHelper {
 	static final String INTERACTIVE_RESOURCE_NAME = "exercice_interactive";
 	static final String SIMPLE_RESOURCE_NAME = "exercice_assignment";
 	private final ISubjectService subjectService;
+	private final ISubjectScheduledService subjectScheduledService;
 	private final IGrainService grainService;
 	private static final I18n i18n = I18n.getInstance();
 	private final Storage storage;
+	private final WorkspaceHelper workspaceHelper;
 	private final EventHelper eventHelper;
 
 	public SubjectController(final Storage storage) {
 		this.subjectService = new SubjectServiceSqlImpl();
+		this.subjectScheduledService = new SubjectScheduledServiceSqlImpl();
 		this.grainService = new GrainServiceSqlImpl();
 		this.storage = storage;
+		this.workspaceHelper = new WorkspaceHelper(eb, storage);
 		final EventStore eventStore = EventStoreFactory.getFactory().getEventStore(Exercizer.class.getSimpleName());
 		this.eventHelper = new EventHelper(eventStore);
 	}
@@ -759,42 +780,57 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
-	@Get("/subject/simple/corrected/download/:id")
+	@Get("/subject/:id/library/file/:fileId")
 	@ApiDoc("Download a corrected of a library subject.")
 	@SecuredAction("exercizer.subject.simple.download.library")
 	public void downloadCorrected(final HttpServerRequest request) {
-		final String id = request.params().get("id");
-
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(final UserInfos user) {
-				if (user != null) {
-					subjectService.getCorrectedDownloadInformation(id, new Handler<Either<String, JsonObject>>() {
-						@Override
-						public void handle(Either<String, JsonObject> event) {
-							if (event.isRight()) {
-								final JsonObject subject = event.right().getValue();
-								final String correctedFileId = subject.getString("corrected_file_id");
-								if (correctedFileId != null) {
-									final JsonObject metadata = subject.getJsonObject("corrected_metadata");
-									storage.sendFile(correctedFileId, metadata.getString("filename"),  request, false, metadata);
-								} else {
-									Renders.badRequest(request);
-								}
+		checkAuth(request).onSuccess( user -> {
+			try {
+				final Long subjectId = Long.parseLong( request.params().get("id") );
+				final String fileId = request.params().get("fileId");
+		
+				subjectService.getCorrectedDocument(subjectId, fileId, event -> {
+					if (event.isRight()) {
+						final JsonObject subject = event.right().getValue();
+						final String docType = subject.getString("doc_type");
+						final JsonObject metadata = subject.getJsonObject("metadata");
+						if (docType != null && metadata != null) {
+							if( ISubjectService.DocType.STORAGE.getKey().equals(docType) ) {
+								storage.sendFile(fileId, metadata.getString("filename"), request, false, metadata);
 							} else {
-								Renders.badRequest(request);
+								sendFileFromWorkspace(request, user, fileId);
 							}
+						} else {
+							Renders.badRequest(request);
 						}
-					});
-				}
-				else {
-					log.debug("User not found in session.");
-					unauthorized(request);
-				}
+					} else {
+						Renders.badRequest(request);
+					}
+				});
+			} catch( Exception e ) {
+				Renders.badRequest(request);
 			}
 		});
 	}
 
+	private void sendFileFromWorkspace(final HttpServerRequest request, final UserInfos user, final String docId) {
+		final Promise<Message<JsonObject>> promise = Promise.promise();
+		workspaceHelper.getDocument(docId, promise);
+		promise.future()
+		.onSuccess( msg -> {
+			try {
+				final JsonObject doc = msg.body();
+				final String fileId = DocumentHelper.getFileId(doc);
+				final JsonObject metadata = DocumentHelper.getMetadata(doc);
+				storage.sendFile(fileId, metadata.getString("filename"), request, false, metadata);
+			} catch ( Exception e ) {
+				Renders.noContent(request);
+			}
+		})
+		.onFailure(err-> {
+			Renders.badRequest(request);
+		});
+	}	
 
 	@Post("/subject/duplicate")
 	@ApiDoc("Duplicate subjects.")
@@ -956,6 +992,117 @@ public class SubjectController extends ControllerHelper {
 					log.debug("User not found in session.");
 					unauthorized(request);
 				}
+			}
+		});
+	}
+
+	/**
+	 * Helper function to retrieve the current UserInfo, if authorized. 
+	 * Otherwise, responds to request with HTTP 401 Unauthorized.
+	 */
+	protected Future<UserInfos> checkAuth(final HttpServerRequest request){
+		final Promise<UserInfos> promise = Promise.promise();
+		UserUtils.getUserInfos(eb, request, user -> {
+            if( user != null ) {
+				promise.complete( user );
+            } else {
+				final String unauthorized = "User not found in session.";
+                log.debug( unauthorized );
+                unauthorized( request );
+				promise.fail( unauthorized );
+            }
+		});
+		return promise.future();
+	}
+
+	@Get("/subject/:id/files")
+	@ResourceFilter(SubjectDocumentOwner.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void listCorrectedDocuments(final HttpServerRequest request){
+		checkAuth(request).onSuccess( user -> {
+			try {
+				final Long subjectId = Long.parseLong( request.params().get("id") );
+				subjectService.listCorrectedDocuments(subjectId, arrayResponseHandler(request));
+			} catch( Exception e ) {
+				badRequest(request);
+			}
+		});
+	}
+
+	@Put("/subject/:id/file")
+	@ResourceFilter(SubjectDocumentOwner.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void addCorrectedDocument(final HttpServerRequest request){
+		checkAuth(request).onSuccess( user -> {
+			try {
+				final Long subjectId = Long.parseLong( request.params().get("id") );
+				RequestUtils.bodyToJson(request, doc -> {
+					final String docId = doc.getString("docId");
+					final JsonObject metadata = doc.getJsonObject("metadata");
+					subjectService.addCorrectedDocument(subjectId, docId, metadata, defaultResponseHandler(request));
+				});
+			} catch( Exception e ) {
+				badRequest(request);
+			}
+		});
+	}
+
+	@Get("/subject/:id/file/:fileId")
+	@ApiDoc("Download a document, if available (when correction date is reached).")
+	@ResourceFilter(SubjectScheduledCorrected.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void downloadDocument(final HttpServerRequest request) {
+		checkAuth(request).onSuccess( user -> {
+			final String id = request.params().get("id");
+			final String correctedFileId = request.params().get("fileId");
+			subjectScheduledService.getCorrectedDownloadInformation(id, correctedFileId, event -> {
+				if (event.isRight()) {
+					final JsonObject subjectScheduled = event.right().getValue();
+
+					Date nowUTC = new DateTime(DateTimeZone.UTC).toLocalDateTime().toDate();
+					Date correctedDate;
+					try {
+						correctedDate = DateUtils.parseTimestampWithoutTimezone(subjectScheduled.getString("corrected_date"));
+					} catch (ParseException e) {
+						log.error("can't parse corrected_date of scheduled subject", e);
+						renderError(request);
+						return;
+					}
+
+					//check download is authorized only if corrected date is passed
+					if (DateUtils.lessOrEqualsWithoutTime(correctedDate, nowUTC) || subjectScheduled.getString("owner").equals(user.getUserId())) {
+						final JsonObject metadata = subjectScheduled.getJsonObject("metadata");
+						final String docType = subjectScheduled.getString("doc_type");
+						if (docType != null && metadata != null) {
+							if( ISubjectService.DocType.STORAGE.getKey().equals(docType) ) {
+								storage.sendFile(correctedFileId, metadata.getString("filename"), request, false, metadata);
+							} else {
+								sendFileFromWorkspace(request, user, correctedFileId);
+							}
+						} else {
+							Renders.badRequest(request);
+						}
+					} else {
+						unauthorized(request);
+					}
+				} else {
+					Renders.badRequest(request);
+				}
+			});
+		});
+	}
+
+	@Delete("/subject/:id/file/:fileId")
+	@ResourceFilter(SubjectDocumentOwner.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void deleteCorrectedDocument(final HttpServerRequest request){
+		checkAuth(request).onSuccess( user -> {
+			try {
+				final Long subjectId = Long.parseLong( request.params().get("id") );
+				final String fileId = request.params().get("fileId");
+				subjectService.deleteCorrectedDocument(subjectId, fileId, defaultResponseHandler(request));
+			} catch( Exception e ) {
+				badRequest(request);
 			}
 		});
 	}

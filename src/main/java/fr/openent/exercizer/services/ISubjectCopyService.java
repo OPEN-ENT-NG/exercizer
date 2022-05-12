@@ -29,8 +29,16 @@ import java.util.List;
 
 public interface ISubjectCopyService {
     enum FileType {
-        CORRECTED,
-        HOMEWORK
+        CORRECTED("corrected"),
+        HOMEWORK("homework");
+
+        private String key;
+        private FileType(final String key) {
+            this.key = key;
+        }
+        public String getKey() {
+            return key;
+        }
     }
 
     void submitCopy(final long id, int timezoneOffset, final Handler<Either<String, JsonObject>> handler);
@@ -73,7 +81,13 @@ public interface ISubjectCopyService {
 
     void addFile(final String id, final String fileId, final JsonObject metadata, final FileType fileType, int timezoneOffset, final Handler<Either<String, JsonObject>> handler);
 
-    void removeIndividualCorrectedFile(final String id, final Handler<Either<String, JsonObject>> handler);
+    void deleteFile(final Long subjectCopyId, final String fileId, final Handler<Either<String, JsonObject>> handler);
+
+    void listFiles(final Long subjectCopyId, final Handler<Either<String, JsonArray>> handler);
+
+    void getFile(final Long subjectCopyId, final String fileId, final Handler<Either<String, JsonObject>> handler );
+
+    void removeIndividualCorrectedFile(final Long subjectCopyId, final Handler<Either<String, JsonObject>> handler);
 
     void getOwners(final JsonArray ids, final Handler<Either<String, JsonArray>> handler);
 

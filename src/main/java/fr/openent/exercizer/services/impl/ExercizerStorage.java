@@ -42,6 +42,7 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 	private static final String application = Exercizer.class.getSimpleName();
 
 	@Override
+	@Deprecated //2022-05-17 JIRA WB-582
 	public void getInfo(final String fileId, final Handler<AsyncResult<FileInfos>> handler) {
 		final JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(fileId);
 		final String query1 = "select owner, corrected_metadata from exercizer.subject where corrected_file_id = ?";
@@ -94,6 +95,7 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 	}
 
 	@Override
+	@Deprecated //2022-05-17 JIRA WB-582
 	public void updateInfo(String fileId, FileInfos fileInfos, final Handler<AsyncResult<Integer>> handler) {
 		final JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(fileId);
 		final String query1 =
