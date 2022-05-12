@@ -13,7 +13,7 @@ export const fillZone = ng.directive('fillZone',
             '<svg ng-click="removeFillZone($event)" ng-if="optionData.mode === \'edit\'" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>' +
             '<svg ng-if="optionData.mode === \'edit\'" class="icon-edit" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg>' +
             '<div ng-if="optionData.mode === \'view\'"><div>[[optionData.zone.answer]]</div></div>' +
-            '<input type="text" disabled placeholder="[[optionData.zone.answer]]" ng-if="optionData.mode === \'edit\'" />' +
+            '<span ng-if="optionData.mode === \'edit\'">[[optionData.zone.answer]]</span>' +
             '<input type="text" maxlength="40" ng-if="optionData.mode === \'perform-text\'" ng-model="optionData.zone.answer" />' +
             '<select ng-if="optionData.mode === \'perform-list\'" ng-options="o as o for o in optionData.zone.options" ng-model="optionData.zone.answer"></select>' +
             '<div class="no-responsive" drag-item="optionData.zone" drop-item="answer($item)" ng-if="optionData.mode === \'perform-drag\'"><div>[[optionData.zone.answer]]</div></div>' +
