@@ -212,6 +212,7 @@
     "exercizer.simple.made.label" : "Rendu le",
     "exercizer.simple.make.submit" : "Rendre le devoir",
     "exercizer.simple.make.label" : "Rendre le devoir",
+    "exercizer.simple.make.title": "Vos fichier(s) déposé(s)",
     "exercizer.simple.make.cancel" : "Annuler",
     "exercizer.simple.make.confirm" : "Voulez-vous vraiment rendre votre devoir",
     "exercizer.simple.submit" : "Valider",
