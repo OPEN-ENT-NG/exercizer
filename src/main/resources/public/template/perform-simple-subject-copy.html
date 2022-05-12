@@ -31,59 +31,73 @@
                         <h3><i18n>exercizer.simple.edit.description</i18n></h3>
                         <div style="word-wrap: break-word;" bind-html="performSimpleSubjectCopyController.subjectScheduled.description"></div>
                     </div>
-                    <div class="twelve cell horizontal-spacing vertical-spacing">
-                        <h3><i18n>exercizer.simple.make.label</i18n></h3>
-
-                        <div data-ng-if="performSimpleSubjectCopyController.canHomeworkSubmit()"
-                            class="cell select-file input-block align-center" style="margin-top:5px; margin-bottom:5px">
-
-                            <div class="block-select-copy">
-                                <div drop-files="performSimpleSubjectCopyController.newFiles"
-                                    on-drop="performSimpleSubjectCopyController.setCurrentFileName()"
-                                    class="droppable flex-row align-center simple-drop horizontal-spacing" style="width: 25%">
-
-                                        <i ng-class="{'upload': !performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename, 'attachment': performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename}"
-                                            class="horizontal-spacing medium-text"></i>
-
-                                        <input ng-readonly="true" type="text"
-                                            ng-model="performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename"
-                                            data-display-file
-                                            class="no-margin"
-                                            style="width: 100%!important; border: none;"
-                                            i18n-placeholder="exercizer.simple.upload.drag" />
-                                        <i ng-class="{
-                                            loaded: performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename}">
-                                        </i>
-                                </div>
-                                <button class="file-button flat-button no-margin simple-button" style="width: 30%;"><i18n ng-if="performSimpleSubjectCopyController.canHomeworkReplace()">exercizer.simple.upload.replace</i18n><i18n ng-if="!performSimpleSubjectCopyController.canHomeworkReplace()">exercizer.simple.upload.choose</i18n></button>
-                            </div>
-                            <em class="helper-text"><i18n>exercizer.limit.exceed</i18n></em>
-                            <div class="hidden-content">
-                                <input type="file" style="z-index:-1" files-input-change="performSimpleSubjectCopyController.setCurrentFileName()"  ng-model="performSimpleSubjectCopyController.newFiles" />
-                            </div>
-                        </div>
-                        <div data-ng-if="performSimpleSubjectCopyController.canHomeworkOnlyView()"
-                            class="twelve cell"
-                            style="margin-top:5px;margin-bottom:5px">
-                            [[performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename]]
-                            <span style="color:green">
-                                <i18n>exercizer.simple.made.label</i18n>
-                                [[performSimpleSubjectCopyController.subjectCopy.submitted_date | date:'dd/MM/yyyy']] <i18n>exercizer.at</i18n> [[performSimpleSubjectCopyController.subjectCopy.submitted_date | date:'HH:mm']]
-                            </span>
-                        </div>
-                        <div data-ng-if="performSimpleSubjectCopyController.canShowFuturSubmitLabel()">
-                            <p class="info tuto">
-                                <span>
-                                    <i18n>exercizer.future.info</i18n>
-                                    <b> [[performSimpleSubjectCopyController.subjectScheduled.begin_date | date:'dd/MM/yyyy']]
-                                        <i18n>exercizer.at</i18n> [[performSimpleSubjectCopyController.subjectScheduled.begin_date | date:'HH:mm']]
-                                    </b>
-                                </span>
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </form>
+        </article>
+        <article class="flex-row f-column">
+            <h4 class="text-light mt-0 mb-16 fs-5"><i18n>exercizer.simple.make.title</i18n></h4>
+            <div data-ng-if="performSimpleSubjectCopyController.canHomeworkSubmit()"
+                class="cell select-file input-block align-center" style="margin-top:5px; margin-bottom:5px">
+                <!--REPLACE-->
+                <div class="block-select-copy" ng-if="performSimpleSubjectCopyController.canHomeworkReplace()">
+                    <div drop-files="performSimpleSubjectCopyController.newFiles" on-drop="performSimpleSubjectCopyController.setCurrentFileName()"
+                        class="droppable flex-row align-center simple-drop horizontal-spacing three radius-8">
+                            <i class="attachment horizontal-spacing medium-text"></i>
+                            <input ng-click="performSimpleSubjectCopyController.downloadFile($event)" ng-readonly="true" type="text" ng-model="performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename" class="no-margin flex-grow-1 text-pointer" style="border: none;"/>
+                            <label style="line-height: 1em;">
+                                <input style="display:none" type="file" style="z-index:-1" files-input-change="performSimpleSubjectCopyController.setCurrentFileName()"  ng-model="performSimpleSubjectCopyController.newFiles" />
+                                <svg class="icon-upload" width="22" height="22"><use href="exercizer/public/assets/icons/icons.svg#upload"></use></svg>
+                            </label>
+                    </div>
+                </div>
+                <!--ADD-->
+                <div ng-if="!performSimpleSubjectCopyController.canHomeworkReplace()">
+                    <div class="block-select-copy">
+                        <div drop-files="performSimpleSubjectCopyController.newFiles"
+                            on-drop="performSimpleSubjectCopyController.setCurrentFileName()"
+                            class="droppable flex-row align-center simple-drop horizontal-spacing" style="width: 25%">
+                                <i ng-class="{'upload': !performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename, 'attachment': performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename}"
+                                    class="horizontal-spacing medium-text"></i>
+                                <input ng-readonly="true" type="text"
+                                    ng-model="performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename"
+                                    data-display-file
+                                    class="no-margin"
+                                    style="width: 100%!important; border: none;"
+                                    i18n-placeholder="exercizer.simple.upload.drag" />
+                                <i ng-class="{
+                                    loaded: performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename}">
+                                </i>
+                        </div>
+                        <button class="file-button flat-button no-margin simple-button" style="width: 30%;">
+                            <i18n>exercizer.simple.upload.choose</i18n>
+                        </button>
+                    </div>
+                    <em class="helper-text"><i18n>exercizer.limit.exceed</i18n></em>
+                    <div class="hidden-content">
+                        <input type="file" style="z-index:-1" files-input-change="performSimpleSubjectCopyController.setCurrentFileName()"  ng-model="performSimpleSubjectCopyController.newFiles" />
+                    </div>
+                </div>
+            </div>
+            <!--VIEW-->
+            <div data-ng-if="performSimpleSubjectCopyController.canHomeworkOnlyView()" >
+                <div class="droppable flex-row align-center simple-drop horizontal-spacing three radius-8">
+                        <i class="attachment horizontal-spacing medium-text"></i>
+                        <input ng-click="performSimpleSubjectCopyController.downloadFile($event)" ng-readonly="true" type="text" ng-model="performSimpleSubjectCopyController.subjectCopy.homework_metadata.filename" class="no-margin flex-grow-1 text-pointer" style="border: none;"/>
+                        <label style="line-height: 1em;">
+                            <svg class="icon-upload" width="22" height="22"><use href="exercizer/public/assets/icons/icons.svg#upload"></use></svg>
+                        </label>
+                </div>
+            </div>
+            <div data-ng-if="performSimpleSubjectCopyController.canShowFuturSubmitLabel()">
+                <p class="info tuto">
+                    <span>
+                        <i18n>exercizer.future.info</i18n>
+                        <b> [[performSimpleSubjectCopyController.subjectScheduled.begin_date | date:'dd/MM/yyyy']]
+                            <i18n>exercizer.at</i18n> [[performSimpleSubjectCopyController.subjectScheduled.begin_date | date:'HH:mm']]
+                        </b>
+                    </span>
+                </p>
+            </div>
         </article>
         <div class="flex-row gap-24">
             <article class="six" data-ng-if="performSimpleSubjectCopyController.canShowGeneralCorrected()">

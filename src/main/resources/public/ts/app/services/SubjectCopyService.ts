@@ -25,6 +25,7 @@ export interface ISubjectCopyService {
     persistSimpleCopy(id, file): Promise<String>;
     downloadSimpleCopies(idCopies:string[]): string;
     downloadSimpleCopy(id:string): string;
+    downloadMySimpleCopy(id:string): string;
     addCorrectedFile(id, file): Promise<String>;
     removeCorrectedFile(id): Promise<any>;
     remindCustomCopies(copyIds:number[], subject:string, body:string): Promise<Boolean>;
@@ -376,6 +377,10 @@ export class SubjectCopyService implements ISubjectCopyService {
 
     public downloadSimpleCopy = function(id:string): string  {
         return '/exercizer/subject-copy/simple/download/' + id;
+    };
+
+    public downloadMySimpleCopy = function(id:string): string  {
+        return '/exercizer/subject-copy/simple/mine/' + id;
     };
 
     private write = function(subjectCopy:ISubjectCopy, action:String):Promise<ISubjectCopy> {

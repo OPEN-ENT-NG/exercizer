@@ -1,6 +1,6 @@
 import { ng, notify } from 'entcore';
 import { angular } from 'entcore';
-import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IDateService } from '../services';
+import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IDateService, SubjectCopyService } from '../services';
 import { ISubjectScheduled, ISubjectCopy } from '../models/domain';
 
 class PerformSimpleSubjectCopyController {
@@ -115,6 +115,13 @@ class PerformSimpleSubjectCopyController {
                 });
         }
     };
+    
+
+    public downloadFile = function(e:Event){
+        e.stopPropagation();
+        const self:PerformSimpleSubjectCopyController=this;
+        window.location.href = self._subjectCopyService.downloadMySimpleCopy(self._subjectCopy.id.toString());
+    }
     
     public openConfirmModal = function() {
         if (!this._file) {
