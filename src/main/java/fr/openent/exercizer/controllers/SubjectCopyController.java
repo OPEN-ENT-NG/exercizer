@@ -857,6 +857,32 @@ public class SubjectCopyController extends ControllerHelper {
 		});
 	}
 
+	@Get("/subject-copy/simple/mine/:id")
+	@ApiDoc("Download my simple copy.")
+	@ResourceFilter(SubjectCopyLearnerAccess.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void downloadMineCopy(final HttpServerRequest request) {
+		final String id = request.params().get("id");
+		UserUtils.getUserInfos(eb, request,  user-> {
+			if (user != null) {
+				final List<String> ids = Arrays.asList(new String[]{id});
+				subjectCopyService.getDownloadInformation(ids, event -> {
+					if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() == 1) {
+						final JsonObject jo = event.right().getValue().getJsonObject(0);
+						final String fileName = makeDownloadFileName(jo);
+						storage.sendFile(jo.getString("homework_file_id"), fileName, request, false, jo.getJsonObject("homework_metadata"));
+					} else {
+						Renders.badRequest(request);
+					}
+				});
+			}
+			else {
+				log.debug("User not found in session.");
+				unauthorized(request);
+			}
+		});
+	}
+
 	@Get("/subject-copy/simple/downloads")
 	@ApiDoc("Download simple copies.")
 	@ResourceFilter(SubjectCopyAccess.class)
