@@ -82,50 +82,41 @@
                             </p>
                         </div>
                     </div>
-                    <div class="row horizontal-spacing vertical-spacing">
-                        <div class="six cell">
-                            <h3><i18n>exercizer.simple.corrected</i18n></h3>
-                        </div>
-                        <div class="six cell">
-                            <h3><i18n>exercizer.simple.individual.corrected</i18n></h3>
-                        </div>
-
-                        <div data-ng-if="performSimpleSubjectCopyController.canShowGeneralCorrected()" class="six cell">
-                            <span data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()">
-                                <i class="attachment medium-text"></i>
-                                <a data-ng-click="performSimpleSubjectCopyController.downloadGeneralCorrectedFile()" target="_blank">
-                                    &nbsp; [[performSimpleSubjectCopyController.subjectScheduled.corrected_metadata.filename]]
-                                </a>
-                            </span>
-                            <label data-ng-if="!performSimpleSubjectCopyController.canDownloadCorrected()">
-                                <i18n>exercizer.simple.consult.corrected</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'dd/MM/yyyy']]
-                                <i18n>exercizer.at</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'HH:mm']]
-                            </label>
-                        </div>
-
-                        <div data-ng-if="!performSimpleSubjectCopyController.canShowGeneralCorrected()" class="six cell">
-                            <i18n>exercizer.simple.no.corrected</i18n>
-                        </div>
-                        <div data-ng-if="performSimpleSubjectCopyController.canShowIndividualCorrected()" class="six cell">
-                            <span data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()">
-                                <i class="attachment medium-text"></i>
-                                <a data-ng-click="performSimpleSubjectCopyController.downloadCorrectedFile()" target="_blank">
-                                    &nbsp; [[performSimpleSubjectCopyController.subjectCopy.corrected_metadata.filename]]
-                                </a>
-                            </span>
-                            <label data-ng-if="!performSimpleSubjectCopyController.canDownloadCorrected()">
-                                <i18n>exercizer.simple.consult.corrected</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'dd/MM/yyyy']]
-                                <i18n>exercizer.at</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'HH:mm']]
-                            </label>
-                        </div>
-                        <div data-ng-if="!performSimpleSubjectCopyController.canShowIndividualCorrected()" class="six cell">
-                            <i18n>exercizer.simple.no.corrected</i18n>
-                        </div>
-                    </div>
                 </div>
             </form>
         </article>
-
+        <div class="flex-row gap-24">
+            <article class="six" data-ng-if="performSimpleSubjectCopyController.canShowGeneralCorrected()">
+                <h4 class="text-light mt-0 fs-5"><i18n>exercizer.simple.corrected</i18n></h4>
+                <div class="text-body text-lighter">
+                    <span data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()">
+                        <i class="attachment medium-text"></i>
+                        <a data-ng-click="performSimpleSubjectCopyController.downloadGeneralCorrectedFile()" target="_blank">
+                            &nbsp; [[performSimpleSubjectCopyController.subjectScheduled.corrected_metadata.filename]]
+                        </a>
+                    </span>
+                    <label data-ng-if="!performSimpleSubjectCopyController.canDownloadCorrected()">
+                        <i18n>exercizer.simple.consult.corrected</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'dd/MM/yyyy']]
+                        <i18n>exercizer.at</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'HH:mm']]
+                    </label>
+                </div>
+            </article>
+            <article class="six" data-ng-if="performSimpleSubjectCopyController.canShowIndividualCorrected()">
+                <h4 class="text-light mt-0 fs-5"><i18n>exercizer.simple.individual.corrected</i18n></h4>
+                <div class="text-body text-lighter">
+                    <span data-ng-if="performSimpleSubjectCopyController.canDownloadCorrected()">
+                        <i class="attachment medium-text"></i>
+                        <a data-ng-click="performSimpleSubjectCopyController.downloadCorrectedFile()" target="_blank">
+                            &nbsp; [[performSimpleSubjectCopyController.subjectCopy.corrected_metadata.filename]]
+                        </a>
+                    </span>
+                    <label data-ng-if="!performSimpleSubjectCopyController.canDownloadCorrected()">
+                        <i18n>exercizer.simple.consult.corrected</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'dd/MM/yyyy']]
+                        <i18n>exercizer.at</i18n> [[performSimpleSubjectCopyController.subjectScheduled.corrected_date | date:'HH:mm']]
+                    </label>
+                </div>
+            </article>
+        </div>
         <!-- Modal confirmation -->
         <lightbox data-show="performSimpleSubjectCopyController.isModalConfirmDisplayed" on-close="performSimpleSubjectCopyController.closeConfirmModal()">
             <h2><i18n>exercizer.simple.make.label</i18n> [[performSimpleSubjectCopyController.subjectScheduled.title | limitTo: 35  ]][[ performSimpleSubjectCopyController.subjectScheduled.title.length > 35 ? '...' : '']]</h2>
