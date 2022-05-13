@@ -3,95 +3,95 @@
 </div>
 
 <div class="flex-inline gap-16 mobile-row">
-    <div class="flex-inline align-items-center">
+    <div class="flex-inline align-items-center gap-8">
         <label class="two cell">
             <i18n>exercizer.date.from</i18n>
         </label>
-        <date-picker data-ng-model="search.beginDate" class="six cell"></date-picker>
+        <date-picker data-ng-model="search.beginDate" class="input-date six cell"></date-picker>
     </div>
-    <div class="flex-inline align-items-center">
+    <div class="flex-inline align-items-center gap-8">
         <label class="two cell">
             <i18n>exercizer.date.to</i18n>
         </label>
-        <date-picker data-ng-model="search.endDate" class="six cell"></date-picker>
+        <date-picker data-ng-model="search.endDate" class="input-date six cell"></date-picker>
     </div>
 </div>
 
-        <div class="row" data-ng-show="filteredSubjectScheduledList.length == 0 && search.text.title">
-            <h2><i18n>exercizer.correction.search.empty</i18n></h2>
-        </div>
+<div class="row" data-ng-show="filteredSubjectScheduledList.length == 0 && search.text.title">
+    <h2><i18n>exercizer.correction.search.empty</i18n></h2>
+</div>
 
-        <div data-ng-show="filteredSubjectScheduledList.length > 0">
-            <div class="row vertical-spacing">
-                <!-- list subject scheduled -->
-                <div class="fallen dominos">
-                    <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate))"
-                         class="item" style="width: 100%; max-width: none;">
-                        <section class="domino">
-                            <div class="top">
-                                <img data-ng-src="[[getSubjectScheduledPicture(subjectScheduled)]]" class="absolute"/>
-                            </div>
-                            <div class="bottom">
-                                <div class="content">
-                                    <div class="eight cell">
-                                        <div class="row">
-                                            <div class="cell title-icon">
-                                                <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
-                                            </div>
-                                            <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">
-                                                [[subjectScheduled.title ]]
-                                            </strong>
-                                        </div>
-                                        <div class="row">
-                                            <i18n>exercizer.domino.modified</i18n> [[ orderByCopyListModificationDate(subjectScheduled.id) |
-                                            date:'dd/MM/yyyy' ]]
-                                        </div>
-                                        <div class="row">
-                                            <i18n>exercizer.domino.due</i18n> [[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[subjectScheduled.due_date | date:'HH:mm']]
-                                        </div>
-                                        <div class="row">
-                                            [[subjectScheduled.corrected_copy]] <i18n>exercizer.total.made</i18n> [[subjectScheduled.total_copy]] <i18n>exercizer.total.made2</i18n>
-                                        </div>
-                                        <div class="row"
-                                             data-ng-if="subjectScheduled.corrected_date !== null" style="color: #72BB53">
-                                            <i18n>exercizer.domino.corrected</i18n>
-                                        </div>
-                                        <div class="row"
-                                             data-ng-if="subjectScheduled.corrected_date === null" style="color: #FF8351">
-                                            <i18n>exercizer.domino.notcorrected</i18n>
-                                        </div>
+<div data-ng-show="filteredSubjectScheduledList.length > 0">
+    <div class="row vertical-spacing">
+        <!-- list subject scheduled -->
+        <div class="fallen dominos">
+            <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate))"
+                    class="item" style="width: 100%; max-width: none;">
+                <section class="domino">
+                    <div class="top">
+                        <img data-ng-src="[[getSubjectScheduledPicture(subjectScheduled)]]" class="absolute"/>
+                    </div>
+                    <div class="bottom">
+                        <div class="content">
+                            <div class="eight cell">
+                                <div class="row">
+                                    <div class="cell title-icon">
+                                        <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]"></i>
                                     </div>
-                                    <div class="cell right-magnet">
-                                        <div class="row">
-                                            <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList |limitTo : 1">
-                                                <h3 style="margin:0px;"
-                                                    data-ng-click="seeAllAssignAtList(subjectScheduled)"
-                                                    class="hover-orange">[[group.name]]</h3>
-                                            </div>
-                                            <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList |limitTo : 1">
-                                                <h3 style="margin:0px;"
-                                                    data-ng-click="seeAllAssignAtList(subjectScheduled)"
-                                                    class="hover-orange">[[user.name]]</h3>
-                                            </div>
-                                            <h3 style="margin:0px;"
-                                                data-ng-click="seeAllAssignAtList(subjectScheduled)"
-                                                class="hover-orange"
-                                                data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
-                                        </div>
-                                        <div class="row" data-ng-if="subjectScheduled.type !== 'simple'">
-                                            <input class="cell right-magnet" type="checkbox" data-ng-model="subjectScheduled.selected" data-ng-change="selectsubjectScheduled(subjectScheduled)"/>
-                                        </div>
-
-                                    </div>
-
+                                    <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">
+                                        [[subjectScheduled.title ]]
+                                    </strong>
+                                </div>
+                                <div class="row">
+                                    <i18n>exercizer.domino.modified</i18n> [[ orderByCopyListModificationDate(subjectScheduled.id) |
+                                    date:'dd/MM/yyyy' ]]
+                                </div>
+                                <div class="row">
+                                    <i18n>exercizer.domino.due</i18n> [[ subjectScheduled.due_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[subjectScheduled.due_date | date:'HH:mm']]
+                                </div>
+                                <div class="row">
+                                    [[subjectScheduled.corrected_copy]] <i18n>exercizer.total.made</i18n> [[subjectScheduled.total_copy]] <i18n>exercizer.total.made2</i18n>
+                                </div>
+                                <div class="row"
+                                        data-ng-if="subjectScheduled.corrected_date !== null" style="color: #72BB53">
+                                    <i18n>exercizer.domino.corrected</i18n>
+                                </div>
+                                <div class="row"
+                                        data-ng-if="subjectScheduled.corrected_date === null" style="color: #FF8351">
+                                    <i18n>exercizer.domino.notcorrected</i18n>
                                 </div>
                             </div>
-                        </section>
+                            <div class="cell right-magnet">
+                                <div class="row">
+                                    <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList |limitTo : 1">
+                                        <h3 style="margin:0px;"
+                                            data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                            class="hover-orange">[[group.name]]</h3>
+                                    </div>
+                                    <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList |limitTo : 1">
+                                        <h3 style="margin:0px;"
+                                            data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                            class="hover-orange">[[user.name]]</h3>
+                                    </div>
+                                    <h3 style="margin:0px;"
+                                        data-ng-click="seeAllAssignAtList(subjectScheduled)"
+                                        class="hover-orange"
+                                        data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
+                                </div>
+                                <div class="row" data-ng-if="subjectScheduled.type !== 'simple'">
+                                    <input class="cell right-magnet" type="checkbox" data-ng-model="subjectScheduled.selected" data-ng-change="selectsubjectScheduled(subjectScheduled)"/>
+                                </div>
 
+                            </div>
+
+                        </div>
                     </div>
-                </div>
+                </section>
+
             </div>
         </div>
+    </div>
+</div>
 
 <section class="toggle-buttons" data-ng-show="selectedSubjectsScheduled.length > 0">
     <div class="toggle">

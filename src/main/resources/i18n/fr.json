@@ -591,5 +591,6 @@
     "exercizer.subject.emptyscreen": "C’est vide par içi !\nAjoutez le premier élément à votre sujet interactif",
     "exercizer.grain.openanswer.info": "La correction automatique n’est pas disponible pour les réponses ouvertes.",
     "exercizer.grain.statement.placeholder" : "Ajouter ici les consignes, le descriptif, l’énoncé de la question",
-    "exercizer.grain.filltext.placeholder": "Créez ici votre texte à trous"
+    "exercizer.grain.filltext.placeholder": "Créez ici votre texte à trous",
+    "exercizer.file.download": "Télécharger le devoir"
 }

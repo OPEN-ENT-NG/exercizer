@@ -81,12 +81,14 @@ export const editFillText = ng.directive('editFillText',
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/filltext/templates/edit.html',
             link:(scope:any, element: any) => {
+                scope.boxOnChange = new LightboxPromise();
                 scope.displayState = {
                     editZone: false,
                     editedTextZone: {
                         options: []
                     } as TextZone
                 };
+                
 
                 element.on('editor-blur, save', 'editor', () => {
                     var dropZones = [];
@@ -170,13 +172,11 @@ export const editFillText = ng.directive('editFillText',
                     container.options.splice(i, 1);
                 };
 
-                scope.boxOnChange = new LightboxPromise();
                 scope.answersType = scope.grain.grain_data.custom_data.answersType;
 
                 scope.switchTo = async (newType: string) => {
-                    console.log(newType);
-                    console.log(scope.grain.grain_data.custom_data.answersType)
-                    console.log(scope.answersType)
+                    console.log('answersType', scope.answersType);
+                    console.log('newType', newType);
                     const customData = scope.grain.grain_data.custom_data as CustomData;
                     const applyChange = () => {
                         scope.grain.grain_data.custom_data.answersType = newType;
@@ -192,7 +192,7 @@ export const editFillText = ng.directive('editFillText',
                                     zone.options = JSON.parse(JSON.stringify(customData.options));
                                 });
                             }
-                            else {
+                            else{
                                 customData.zones.forEach((zone) => {
                                     zone.options = [zone.answer];
                                 });
@@ -201,7 +201,7 @@ export const editFillText = ng.directive('editFillText',
                         scope.updateGrain();
                     }
                     // #WB-460 Check whether to apply the change immediately, or ask for a validation before.
-                    if( newType !== scope.answersType && customData.options.length ) {
+                    if( newType!==scope.grain.grain_data.custom_data.answersType && customData.options.length ) {
                         // Ask for a validation
                         const ok = await scope.boxOnChange.display().catch( () => false );
                         if( ok ) {

@@ -16,12 +16,12 @@
             </h1>
 
             <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
-                <i class="distribute"></i>
+                <svg class="icon-send" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#send"></use></svg>
                 <i18n>exercizer.schedule</i18n>
             </button>
 
             <button class="flat-button right-magnet cell" data-ng-click="editSubjectController.previewPerformSubjectCopy()">
-                <i class="eye"></i>
+                <svg class="icon-eye" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
                 <i18n>exercizer.preview</i18n>
             </button>
 
@@ -272,7 +272,7 @@
                                     <choose-answer data-grain="grain"></choose-answer>
                                     <div class="card-footer flex-row justify-end">
                                         <a class="btns btns-flat-primary flex-row align-center text-body px-24 gap-8" data-ng-click="editSubjectController.removeGrain(grain)">
-                                            <svg class="icon-trash" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#trash"></use></svg>
+                                            <svg class="icon-delete" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
                                             <i18n>exercizer.remove</i18n>
                                         </a>
                                     </div>
