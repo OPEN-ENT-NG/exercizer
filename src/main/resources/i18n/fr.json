@@ -496,6 +496,7 @@
     "exercizer.grain.type.choose" : "Ajouter...",
     "exercizer.grain.type.chooseanswer" : "Choisir un type de question...",
     "exercizer.grain.type.statement" : "Énoncé",
+    "exercizer.grain.type.statement.placeholder" : "Ajouter ici votre énoncé",
     "exercizer.grain.type.simpleanswer" : "Réponse simple",
     "exercizer.grain.type.openanswer" : "Réponse ouverte",
     "exercizer.grain.type.multipleanswers" : "Réponses multiples",
