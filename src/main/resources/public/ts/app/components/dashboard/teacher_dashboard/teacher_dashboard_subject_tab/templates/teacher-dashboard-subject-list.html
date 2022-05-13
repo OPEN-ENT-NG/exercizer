@@ -1,6 +1,6 @@
-<div class="row">
+<div class="grid grid-layout-2">
     <!-- navigation -->
-    <section class="three cell vertical">
+    <aside class="only-large-desktop">
         <div class="row">
             <div class="eleven cell search-control" data-ng-click="clickOnAutoComplete()">
                 <autocomplete
@@ -37,38 +37,44 @@
                 <i18n>exercizer.new.folder</i18n>
             </a>
         </nav>
-    </section>
+    </aside>
     <!-- main page -->
-    <section class="nine cell">
-        <div class="row">
-            <div class="cell">
-                <button data-ng-click="addNewSubject(currentFolderId)" workflow="exercizer.create"><i18n>exercizer.new.subject</i18n></button>
+    <section>
+        <div class="flex align-items-center justify-space-between">
+            <div class="flex-inline gap-8">
+                <div class="cell">
+                    <button data-ng-click="addNewSubject(currentFolderId)" workflow="exercizer.create"><i18n>exercizer.new.subject</i18n></button>
+                </div>
+                <dropdown-buttons class="cell">
+                    <open><i class="manage" ></i></open>
+                    <options>
+                        <bt ng-click="importNewSubject()" >
+                            <i18n>exercizer.import</i18n>
+                        </bt>
+                        <bt ng-click="openArchive()" >
+                            <i18n>exercizer.archive.open</i18n>
+                        </bt>
+                    </options>
+                </dropdown-buttons>
             </div>
-            <dropdown-buttons class="cell">
-                <open><i class="manage" ></i></open>
-                <options>
-                    <bt ng-click="importNewSubject()" >
-                        <i18n>exercizer.import</i18n>
-                    </bt>
-                    <bt ng-click="openArchive()" >
-                        <i18n>exercizer.archive.open</i18n>
-                    </bt>
-                </options>
-            </dropdown-buttons>
             <div class="cell right-magnet">
-              <div class="choice-view">
-                <i 
+              <div class="choice-view flex-inline gap-8">
+                <svg
+                    class="icon-applications"
                     data-ng-click="setDisplayList('domino')"
-                    class="show-icons"
                     data-ng-class="{selected: displayList == 'domino'}"
-                >
-                </i>
-                <i 
+                    width="24"
+                    height="24">
+                    <use href="exercizer/public/assets/icons/icons.svg#applications"></use>
+                </svg>
+                <svg
+                    class="icon-list"
                     data-ng-click="setDisplayList('array')"
-                    class="show-list"
                     data-ng-class="{selected: displayList == 'array'}"
-                >
-                </i>
+                    width="24"
+                    height="24">
+                    <use href="exercizer/public/assets/icons/icons.svg#list"></use>
+                </svg>
               </div>
             </div>
         </div>
@@ -239,7 +245,7 @@
         </div>
     </section>
     <lightbox data-show="isImportDisplayed" data-on-close="closeImportLightbox()">
-        <h1><i18n>exercizer.title</i18n> - <i18n>exercizer.import</i18n></h1>
+        <h2><i18n>exercizer.title</i18n> - <i18n>exercizer.import</i18n></h2>
         <div class="row" data-ng-show="stateImport == 'begin'">
             <div class="row">
                 <span style="font-weight: bold"><i18n>exercizer.import.intro</i18n></span>

@@ -332,6 +332,16 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     return res;
                 };
 
+                scope.numberCopyNotCorrected = function(){
+                    var res = 0;
+                    angular.forEach(scope.subjectCopyList, function(copy){
+                        if(!copy.is_corrected){
+                            res++;
+                        }
+                    });
+                    return res;
+                };
+
                 scope.order = {};
 
                 scope.order.order = function(item){
