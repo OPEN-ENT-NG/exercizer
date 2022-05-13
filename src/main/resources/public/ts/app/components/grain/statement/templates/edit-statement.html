@@ -8,6 +8,13 @@
 </div>
 
 <div class="row">
-    <editor class="m-0" data-ng-model="grain.grain_data.custom_data.statement" on-change="updateGrain()" track-input-event="grain.getTracker()"></editor>
+    <editor 
+        class="small-editor radius-8 m-0" 
+        data-ng-model="grain.grain_data.custom_data.statement" 
+        on-change="updateGrain()" 
+        inline 
+        track-input-event="grain.getTracker()"
+    >
+    </editor>
 </div>
 
