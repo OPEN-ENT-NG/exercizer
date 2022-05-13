@@ -168,7 +168,7 @@ export const editZoneText = ng.directive('editZoneText',
                         scope.updateGrain();
                     }
                     // #WB-460 Check whether to apply the change immediately, or ask for a validation before.
-                    if( newType!==scope.grain.grain_data.custom_data.answersType && customData.options.length ) {
+                    if( newType !== scope.grain.grain_data.custom_data.answersType && customData.zones.length ) {
                         // Ask for a validation
                         const ok = await scope.boxOnChange.display().catch( () => false );
                         if( ok ) {

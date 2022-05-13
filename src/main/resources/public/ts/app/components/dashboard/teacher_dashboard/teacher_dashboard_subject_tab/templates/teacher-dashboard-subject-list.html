@@ -87,7 +87,7 @@
         <div data-ng-show="subjectList().length > 0 || folderList().length > 0">
             <!-- domino part -->
             <div class="row" data-ng-show="displayList == 'domino'">
-                <div class="fallen dominos">
+                <div class="dominos fallen index">
                     <!-- folder part -->
                     <explorer
                         ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'modified':true"
