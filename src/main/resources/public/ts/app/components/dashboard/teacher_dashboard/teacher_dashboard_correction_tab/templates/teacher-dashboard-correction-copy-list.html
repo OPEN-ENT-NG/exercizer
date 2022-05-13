@@ -1,206 +1,301 @@
-<article class="five cell left-magnet twelve-mobile">
-    <h2 class="no-margin"><i18n>exercizer.schedule.info</i18n> "[[selectedSubjectScheduled.title]]"</h2>
-    <div data-ng-if="option.editedDates && option.hasBeenSarted" class="warning no-margin no-padding">&nbsp;<i18n>exercizer.schedule.rule.copies</i18n></div>
-    <div class="row row-like-input" data-ng-class="{'vertical-spacing' : !(option.editedDates && option.hasBeenSarted) }">
-        <div class="cell"><span><i18n>exercizer.scheduled.start</i18n>&nbsp;</span></div>
-        <b ng-if="!option.editedDates || option.hasBeenSarted">  [[ selectedSubjectScheduled.begin_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.begin_date | date:'HH:mm']]</b>
-        <div ng-if="option.editedDates && !option.hasBeenSarted">
-            <date-picker ng-model="option.begin_date" class="two no-margin no-padding" ></date-picker>
-            <i18n>exercizer.at</i18n>
-            <input class="one no-margin no-padding" type="text" data-ng-model="option.begin_time" data-ng-blur="option.begin_time = checkTime(option.begin_time, selectedSubjectScheduled.begin_date)"/>
+<div class="grid grid-2 gap-24">
+    <article class="article-column">
+        <div>
+            <h2 class="no-margin">
+                <i18n>exercizer.schedule.info</i18n> "[[selectedSubjectScheduled.title]]"
+            </h2>
+            <message-info status="warning" data-ng-if="option.editedDates && option.hasBeenSarted">
+                <i18n>exercizer.schedule.rule.copies</i18n>
+            </message-info>
+            <div class="row small-text m-8" data-ng-class="{'m-8' : !(option.editedDates && option.hasBeenSarted) }">
+                <div class="cell"><span>
+                        <i18n>exercizer.scheduled.start</i18n>&nbsp;
+                    </span></div>
+                <span ng-if="!option.editedDates || option.hasBeenSarted"> [[ selectedSubjectScheduled.begin_date |
+                    date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.begin_date |
+                    date:'HH:mm']]</span>
+                <div ng-if="option.editedDates && !option.hasBeenSarted" class="option-edited-dates">
+                    <date-picker ng-model="option.begin_date" class="two no-margin no-padding"></date-picker>
+                    <i18n>exercizer.at</i18n>
+                    <input class="one no-margin no-padding" type="text" data-ng-model="option.begin_time"
+                        data-ng-blur="option.begin_time = checkTime(option.begin_time, selectedSubjectScheduled.begin_date)" />
+                </div>
+            </div>
+            <div class="row small-text m-8">
+                <div class="cell"><span>
+                        <i18n>exercizer.scheduled.end</i18n> &nbsp;
+                    </span></div>
+                <span ng-if="!option.editedDates">[[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]] <i18n>
+                        exercizer.at</i18n> [[selectedSubjectScheduled.due_date | date:'HH:mm']]</span>
+                <div ng-if="option.editedDates" class="option-edited-dates">
+                    <date-picker ng-model="option.due_date" class="two no-margin no-padding"></date-picker>
+                    <i18n>exercizer.at</i18n>
+                    <input class="one no-margin no-padding" type="text" data-ng-model="option.due_time"
+                        data-ng-blur="option.due_time = checkTime(option.due_time, selectedSubjectScheduled.due_date)" />
+                </div>
+            </div>
+            <div class="row small-text m-8">
+                <div class="cell italic-text" ng-if="selectedSubjectScheduled.is_training_permitted && !option.editedDates">
+                    <span>
+                        <i18n>exercizer.scheduled.subject.training.authorized</i18n> &nbsp;
+                    </span></div>
+                <div class="cell italic-text"
+                    ng-if="!selectedSubjectScheduled.is_training_permitted && !option.editedDates"><span>
+                        <i18n>exercizer.scheduled.subject.training.unauthorized</i18n> &nbsp;
+                    </span></div>
+                <label ng-if="option.editedDates" class="option-edited-dates">
+                    <input type="checkbox" class="sized" ng-checked="!selectedSubjectScheduled.is_training_permitted"
+                        ng-click="forbidTraining($event)" />
+                    <i18n>exercizer.scheduled.subject.training.forbid</i18n>
+                </label>
+            </div>
+        </div>
+        <div class="row small-text m-8">
+            <div class="cell right-magnet" data-ng-show="!option.editedDates">
+                <button class="flat-button" data-ng-click="option.showUnScheduled=true">
+                    <i18n>exercizer.unschedule</i18n>
+                </button>
+                <button data-ng-click="option.editedDates=true">
+                    <i18n>edit</i18n>
+                </button>
+            </div>
+            <div class="cell right-magnet" data-ng-show="option.editedDates">
+                <button class="flat-button" data-ng-click="cancelDatesEditing()">
+                    <i18n>exercizer.cancel</i18n>
+                </button>
+                <button data-ng-click="checkDatesModified()">
+                    <i18n>exercizer.validate</i18n>
+                </button>
+            </div>
+        </div>
+    </article>
+
+    <article class="article-column">
+        <div>
+            <h2 class="block">
+                <i18n>exercizer.schedule.stats</i18n> "[[selectedSubjectScheduled.title]]"
+            </h2>
+            <div class="row small-text m-8">
+                <i18n>exercizer.schedule.stats.info1</i18n> [[score.nb]] <i18n>exercizer.schedule.stats.info2</i18n> :
+                [[score.sum/score.nb | truncateNumber]] / [[selectedSubjectScheduled.max_score]]
+            </div>
+            <div class="row small-text m-8">
+                [[numberCopySubmitted()]] <i18n>exercizer.total.made</i18n> [[subjectCopyList.length]] <i18n>
+                    exercizer.total.made2</i18n>
+            </div>
+        </div>
+        <div class="row small-text m-8">
+            <div class="cell right-magnet">
+                <button class="flat-button" data-ng-click="selectedSubjectScheduled.showStats=true">
+                    <i18n>exercizer.schedule.stats.more</i18n>
+                </button>
+            </div>
+        </div>
+    </article>
+
+</div>
+
+<article>
+    <div class="flex align-items-center gap-16 mb-24">
+        <div class="cell" data-ng-click="seeAllAssignAtList(subjectScheduled)">
+            <span>
+                <i18n>exercizer.schedule.at</i18n>
+            </span>
+            <span data-ng-repeat="user in lUserGroup | limitTo: 3" class="hover-orange">
+                [[user.name]]
+            </span>
+            <span class="hover-orange" data-ng-if="lUserGroup.length > 3">...</span>
+            <em class="small-text copy-not-corrected">
+                <i18n>exercizer.numbercopy.notcorrected</i18n> [[numberCopyNotCorrected()]] <i18n>
+                    exercizer.numbercopy.notcorrected2</i18n>
+            </em>
         </div>
     </div>
-    <div class="row vertical-spacing row-like-input">
-        <div class="cell"><span><i18n>exercizer.scheduled.end</i18n> &nbsp;</span></div>
-        <b ng-if="!option.editedDates"> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.due_date | date:'HH:mm']]</b>
-        <div ng-if="option.editedDates ">
-            <date-picker ng-model="option.due_date" class="two no-margin no-padding"></date-picker>
-            <i18n>exercizer.at</i18n>
-            <input class="one no-margin no-padding" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, selectedSubjectScheduled.due_date)"/>
-        </div>
+
+    <div class="flex align-items-center justify-space-between gap-16 m-24">
+        <input type="text" class="five cell twelve-mobile" data-ng-model="search.owner.owner_username"
+            i18n-placeholder="exercizer.find.learner" style="flex: inherit;">
     </div>
-    <div class="row vertical-spacing row-like-input">
-        <div class="cell italic-text" ng-if="selectedSubjectScheduled.is_training_permitted && !option.editedDates"><span><i18n>exercizer.scheduled.subject.training.authorized</i18n> &nbsp;</span></div>
-        <div class="cell italic-text" ng-if="!selectedSubjectScheduled.is_training_permitted && !option.editedDates"><span><i18n>exercizer.scheduled.subject.training.unauthorized</i18n> &nbsp;</span></div>
-        <label ng-if="option.editedDates">
-            <input type="checkbox" ng-checked="!selectedSubjectScheduled.is_training_permitted" ng-click="forbidTraining($event)"/>
-            <span style="height: unset;">&nbsp;<i18n>exercizer.scheduled.subject.training.forbid</i18n></span>
-        </label>
-    </div>
-    <div class="row vertical-spacing row-like-input">
-        <div class="cell right-magnet" data-ng-show="!option.editedDates">
-            <button class="flat-button" data-ng-click="option.showUnScheduled=true"><i18n>exercizer.unschedule</i18n></button>
-            <button data-ng-click="option.editedDates=true"> <i18n>edit</i18n></button>
-        </div>
-        <div class="cell right-magnet" data-ng-show="option.editedDates">
-            <button class="flat-button" data-ng-click="cancelDatesEditing()"><i18n>exercizer.cancel</i18n></button>
-            <button data-ng-click="checkDatesModified()"> <i18n>exercizer.validate</i18n></button>
-        </div>
+    <div class="row vertical-spacing" data-ng-if="!option.stat" style="overflow-x: auto;">
+        <table class="list-view">
+            <thead>
+                <tr>
+                    <th class="one">
+                        <label for="select-all">
+                            <input id="select-all" class="sized" type="checkbox" data-ng-model="selectAll"
+                                data-ng-change="clickSelectAll(selectAll)" />
+                        </label>
+                    </th>
+                    <th scope="col" ng-click="orderByField('owner_username')">
+                        <span translate content="exercizer.copy.from"></span>
+                        <i class="sort" ng-if="order.field !== 'owner_username'"></i>
+                        <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
+                        <i class="sort-desc" ng-if="order.field === 'owner_username' && order.desc"></i>
+                    </th>
+                    <th scope="col" ng-click="orderByField('state')">
+                        <span translate content="exercizer.state"></span>
+                        <i class="sort" ng-if="order.field !== 'state'"></i>
+                        <i class="sort-asc" ng-if="order.field === 'state' && !order.desc"></i>
+                        <i class="sort-desc" ng-if="order.field === 'state' && order.desc"></i>
+                    </th>
+                    <th scope="col" ng-click="orderByField('submitted_date')">
+                        <span translate content="exercizer.submitted.date"></span>
+                        <i class="sort" ng-if="order.field !== 'submitted_date'"></i>
+                        <i class="sort-asc" ng-if="order.field === 'submitted_date' && !order.desc"></i>
+                        <i class="sort-desc" ng-if="order.field === 'submitted_date' && order.desc"></i>
+                    </th>
+                    <th scope="col" ng-click="orderByField('calculated_score')">
+                        <span translate content="exercizer.auto.score"></span>
+                        <i class="sort" ng-if="order.field !== 'calculated_score'"></i>
+                        <i class="sort-asc" ng-if="order.field === 'calculated_score' && !order.desc"></i>
+                        <i class="sort-desc" ng-if="order.field === 'calculated_score' && order.desc"></i>
+                    </th>
+                    <th scope="col" ng-click="orderByField('final_score')">
+                        <span translate content="exercizer.final.score"></span>
+                        <i class="sort" ng-if="order.field !== 'final_score'"></i>
+                        <i class="sort-asc" ng-if="order.field === 'final_score' && !order.desc"></i>
+                        <i class="sort-desc" ng-if="order.field === 'final_score' && order.desc"></i>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc">
+                    <td>
+                        <label for="copy_[[copy.id]]">
+                            <input id="copy_[[copy.id]]" class="sized" type="checkbox" data-ng-model="copy.selected"
+                                data-ng-change="selectCopy()" />
+                        </label>
+                    </td>
+                    <td>
+                        <span>[[copy.owner_username]]</span>
+                    </td>
+                    <td>
+                        <div data-ng-show="copyStateColorClass(copy)" data-ng-class="copyStateColorClass(copy)">
+                            [[copyStateText(copy)]]
+                        </div>
+                    </td>
+                    <td>
+                        <message-info status="error" data-ng-if="tooLate(copy)">
+                            <i18n>exercizer.lag</i18n> <span class="warning-text">[[copy.submitted_date |
+                                date:'dd/MM/yyyy']] <i18n>exercizer.at</i18n> [[copy.submitted_date |
+                                date:'HH:mm']]</span>
+                        </message-info>
+
+                        <div data-ng-if="!tooLate(copy) && copy.submitted_date" class="valid-color">
+                            <span>[[copy.submitted_date | date:'dd/MM/yyyy']] <i18n>
+                                    exercizer.at</i18n> [[copy.submitted_date | date:'HH:mm']]</span>
+                        </div>
+
+                        <div data-ng-if="showReminder(copy)" class="flex-row align-center">
+                            <button data-ng-click="reminder(copy.id)" class="flat-button no-margin">
+                                <i18n>exercizer.reminder</i18n>
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <span>[[copy.calculated_score | truncateNumber ]] /
+                            [[selectedSubjectScheduled.max_score]]</span>
+                    </td>
+                    <td>
+                        <span>[[copy.final_score | truncateNumber]] / [[selectedSubjectScheduled.max_score]]</span>
+                    </td>
+
+                    <td data-ng-switch="selectTitle(copy)" style="min-width: 150px;">
+                        <button data-ng-switch-when="correction" data-ng-click="clickOnCopy(copy)"
+                            class="flat-button no-margin">
+                            <svg class="icon-eye" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+                            <i18n>exercizer.see.copy</i18n>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </article>
-
-<article class="six cell right-magnet twelve-mobile">
-    <h2 class="block"> <i18n>exercizer.schedule.stats</i18n> "[[selectedSubjectScheduled.title]]"</h2>
-    <div class="row vertical-spacing">
-        <i18n>exercizer.schedule.stats.info1</i18n> [[score.nb]] <i18n>exercizer.schedule.stats.info2</i18n> : [[score.sum/score.nb | truncateNumber]] / [[selectedSubjectScheduled.max_score]]
-    </div>
-    <div class="row vertical-spacing">
-        [[numberCopySubmitted()]] <i18n>exercizer.total.made</i18n> [[subjectCopyList.length]] <i18n>exercizer.total.made2</i18n>
-    </div>
-    <div class="row vertical-spacing">
-        <div class="cell right-magnet">
-            <button class="flat-button" data-ng-click="selectedSubjectScheduled.showStats=true"><i18n>exercizer.schedule.stats.more</i18n></button>
-        </div>
-    </div>
-</article>
-
-<div class="row vertical-spacing">
-     <div class="cell" data-ng-click="seeAllAssignAtList(subjectScheduled)">
-         <span class="small-text">
-             <i18n>exercizer.schedule.at</i18n>
-         </span>
-         <span data-ng-repeat="user in lUserGroup | limitTo: 3" class="small-text" class="hover-orange">
-             <b>[[user.name]] </b>
-         </span>
-         <span class="hover-orange"
-            data-ng-if="lUserGroup.length > 3">...</span>
-          <em class="small-text"> - <i18n>exercizer.numbercopy.notcorrected</i18n> <b>[[numberCopyNotCorrected()]]</b> <i18n>exercizer.numbercopy.notcorrected2</i18n> </em>
-     </div>
-</div>
-
-<div class="vertical-spacing">
-     <input type="text" class="five cell" data-ng-model="search.owner.owner_username" i18n-placeholder="exercizer.find.learner">
-</div>
-<div class="row vertical-spacing" data-ng-if="!option.stat">
-     <table class="list-view">
-          <thead>
-          <tr>
-               <th class="one centered-text" ><input type="checkbox" data-ng-model="selectAll" data-ng-change="clickSelectAll(selectAll)"/></th>
-               <th scope="col" ng-click="orderByField('owner_username')">
-                    <span translate content="exercizer.copy.from" ></span>
-                    <i class="sort" ng-if="order.field !== 'owner_username'"></i>
-                    <i class="sort-asc" ng-if="order.field === 'owner_username' && !order.desc"></i>
-                    <i class="sort-desc" ng-if="order.field === 'owner_username' && order.desc"></i>
-               </th>
-               <th scope="col" ng-click="orderByField('state')">
-                    <span translate content="exercizer.state" ></span>
-                    <i class="sort" ng-if="order.field !== 'state'"></i>
-                    <i class="sort-asc" ng-if="order.field === 'state' && !order.desc"></i>
-                    <i class="sort-desc" ng-if="order.field === 'state' && order.desc"></i>
-               </th>
-               <th scope="col" ng-click="orderByField('submitted_date')">
-                    <span translate content="exercizer.submitted.date" ></span>
-                    <i class="sort" ng-if="order.field !== 'submitted_date'"></i>
-                    <i class="sort-asc" ng-if="order.field === 'submitted_date' && !order.desc"></i>
-                    <i class="sort-desc" ng-if="order.field === 'submitted_date' && order.desc"></i>
-               </th>
-               <th scope="col" ng-click="orderByField('calculated_score')">
-                    <span translate content="exercizer.auto.score" ></span>
-                    <i class="sort" ng-if="order.field !== 'calculated_score'"></i>
-                    <i class="sort-asc" ng-if="order.field === 'calculated_score' && !order.desc"></i>
-                    <i class="sort-desc" ng-if="order.field === 'calculated_score' && order.desc"></i>
-               </th>
-               <th scope="col" ng-click="orderByField('final_score')">
-                    <span translate content="exercizer.final.score" ></span>
-                    <i class="sort" ng-if="order.field !== 'final_score'"></i>
-                    <i class="sort-asc" ng-if="order.field === 'final_score' && !order.desc"></i>
-                    <i class="sort-desc" ng-if="order.field === 'final_score' && order.desc"></i>
-               </th>
-               <th></th>
-          </tr>
-          </thead> 
-          <tbody>
-          <tr data-ng-repeat="copy in subjectCopyList | filter:search.owner | orderBy:order.order:order.desc">
-               <td class="centered-text">
-                    <input type="checkbox" data-ng-model="copy.selected" data-ng-change="selectCopy()"/>
-               </td>
-               <td>
-                    <span>[[copy.owner_username]]</span>
-               </td>
-               <td>
-                    <div data-ng-show="copyStateColorClass(copy)"
-                         data-ng-class="copyStateColorClass(copy)" >
-                         [[copyStateText(copy)]]
-                    </div>
-               </td>
-               <td>
-                   <div data-ng-if="tooLate(copy)" class="cell alert">
-                       <i class="timer-off"></i> &nbsp; <i18n>exercizer.lag</i18n> <span class="warning-text">[[copy.submitted_date | date:'dd/MM/yyyy']] <i18n>exercizer.at</i18n> [[copy.submitted_date | date:'HH:mm']]</span>&nbsp;&nbsp;
-                   </div>
-
-                   <div data-ng-if="!tooLate(copy) && copy.submitted_date" class="valid-color">
-                       <i class="check-circle"></i> &nbsp;<em>[[copy.submitted_date | date:'dd/MM/yyyy']] <i18n>exercizer.at</i18n> [[copy.submitted_date | date:'HH:mm']]</em>
-                   </div>
-
-                   <div data-ng-if="showReminder(copy)" class="flex-row align-center">
-                      <i class="pending-action horizontal-spacing medium-text"></i>
-                      <button data-ng-click="reminder(copy.id)" class="flat-button no-margin"><i18n>exercizer.reminder</i18n></button>
-                   </div>
-               </td>
-               <td>
-                    <span>[[copy.calculated_score | truncateNumber ]] / [[selectedSubjectScheduled.max_score]]</span>
-               </td>
-               <td>
-                    <span>[[copy.final_score  | truncateNumber]] / [[selectedSubjectScheduled.max_score]]</span>
-               </td>
-
-                <td data-ng-switch="selectTitle(copy)">
-                    <button data-ng-switch-when="correction" data-ng-click="clickOnCopy(copy)" class="flat-button no-margin">
-                        <i class="eye"></i> <i18n>exercizer.see.copy</i18n>
-                    </button>
-                </td>
-          </tr>
-          </tbody>
-     </table>
-</div>
 
 <section class="toggle-buttons" data-ng-show="toasterDisplayed.main">
-     <div class="toggle">
-          <div class="row">
-               <div class="cell" data-ng-if="showAutomaticMark()">
-                    <button data-ng-click="applyAutomaticMark()"><i18n>exercizer.copies.make.corrected</i18n></button>
-               </div>
-               <div class="cell">
-                    <button data-ng-click="reminder()"><i18n>exercizer.reminder.raise</i18n></button>
-               </div>
-              <div class="cell" data-ng-show="toasterDisplayed.exclude">
-                  <button data-ng-click="exclude()"><i18n>exercizer.exclude</i18n></button>
-              </div>
-              <div class="cell" data-ng-if="atLeastOneUnsubmitted()">
-                <button data-ng-click="option.confirmSubmitted=true"><i18n>exercizer.consider.submitted</i18n></button>
+    <div class="toggle">
+        <div class="row">
+            <div class="cell" data-ng-if="showAutomaticMark()">
+                <button data-ng-click="applyAutomaticMark()">
+                    <i18n>exercizer.copies.make.corrected</i18n>
+                </button>
             </div>
-          </div>
-     </div>
+            <div class="cell">
+                <button data-ng-click="reminder()">
+                    <i18n>exercizer.reminder.raise</i18n>
+                </button>
+            </div>
+            <div class="cell" data-ng-show="toasterDisplayed.exclude">
+                <button data-ng-click="exclude()">
+                    <i18n>exercizer.exclude</i18n>
+                </button>
+            </div>
+            <div class="cell" data-ng-if="atLeastOneUnsubmitted()">
+                <button data-ng-click="option.confirmSubmitted=true">
+                    <i18n>exercizer.consider.submitted</i18n>
+                </button>
+            </div>
+        </div>
+    </div>
 </section>
 
-<subject-scheduled-assign-at is-displayed="assignDisplayed" subject-scheduled="selectedSubjectScheduled"></subject-scheduled-assign-at>
+<subject-scheduled-assign-at is-displayed="assignDisplayed" subject-scheduled="selectedSubjectScheduled">
+</subject-scheduled-assign-at>
 
-<reminders is-displayed="reminderDisplayed" selected-subject-scheduled="selectedSubjectScheduled" reminder-copies="reminderCopies"></reminders>
-<exclude is-displayed="excludeDisplayed" subject-copy-list="subjectCopyList" selected-subject-scheduled="selectedSubjectScheduled" toaster-displayed="toasterDisplayed"></exclude>
+<reminders is-displayed="reminderDisplayed" selected-subject-scheduled="selectedSubjectScheduled"
+    reminder-copies="reminderCopies"></reminders>
+<exclude is-displayed="excludeDisplayed" subject-copy-list="subjectCopyList"
+    selected-subject-scheduled="selectedSubjectScheduled" toaster-displayed="toasterDisplayed"></exclude>
 <lightbox show="option.showUnScheduled" on-close="option.showUnScheduled=false">
-    <h2><i18n>exercizer.unschedule.title</i18n></h2>
-    <p><i18n>exercizer.unschedule.confirm</i18n></p>
+    <h2>
+        <i18n>exercizer.unschedule.title</i18n>
+    </h2>
+    <p>
+        <i18n>exercizer.unschedule.confirm</i18n>
+    </p>
     <div class="row">
-        <button data-ng-click="unScheduled(); " data-ng-disabled="option.unScheduledDisabled" class="right-magnet"><i18n>exercizer.unschedule</i18n></button>
-        <button data-ng-click="option.showUnScheduled=false" class="cancel right-magnet"><i18n>exercizer.cancel</i18n></button>
+        <button data-ng-click="unScheduled(); " data-ng-disabled="option.unScheduledDisabled" class="right-magnet">
+            <i18n>exercizer.unschedule</i18n>
+        </button>
+        <button data-ng-click="option.showUnScheduled=false" class="cancel right-magnet">
+            <i18n>exercizer.cancel</i18n>
+        </button>
     </div>
 </lightbox>
 <lightbox show="option.edit" on-close="option.edit=false">
-    <h2><i18n>exercizer.schedule.edit.title</i18n></h2>
+    <h2>
+        <i18n>exercizer.schedule.edit.title</i18n>
+    </h2>
     <p>
-        <span><i18n>exercizer.schedule.edit.confirm</i18n></span>
-        <span data-ng-if="selectedSubjectScheduled.is_notify"><i18n>exercizer.schedule.edit.confirm.notif</i18n></span>
+        <span>
+            <i18n>exercizer.schedule.edit.confirm</i18n>
+        </span>
+        <span data-ng-if="selectedSubjectScheduled.is_notify">
+            <i18n>exercizer.schedule.edit.confirm.notif</i18n>
+        </span>
     </p>
     <div class="cell right-magnet">
-        <button class="flat-button" data-ng-click="option.edit=false"><i18n>cancel</i18n></button>
-        <button data-ng-click="modifySchedule(); option.edit=false;"> <i18n>exercizer.validate</i18n></button>
+        <button class="flat-button" data-ng-click="option.edit=false">
+            <i18n>cancel</i18n>
+        </button>
+        <button data-ng-click="modifySchedule(); option.edit=false;">
+            <i18n>exercizer.validate</i18n>
+        </button>
     </div>
 </lightbox>
 <lightbox show="option.confirmSubmitted" on-close="option.confirmSubmitted=false">
-    <h2><i18n>exercizer.consider.submitted</i18n></h2>
+    <h2>
+        <i18n>exercizer.consider.submitted</i18n>
+    </h2>
     <p>
-        <span><i18n>exercizer.confirm.submitted1</i18n></span>
-        <span><i18n>exercizer.confirm.submitted2</i18n></span>
+        <span>
+            <i18n>exercizer.confirm.submitted1</i18n>
+        </span>
+        <span>
+            <i18n>exercizer.confirm.submitted2</i18n>
+        </span>
         <ul>
             <li data-ng-repeat="copy in subjectCopyList" ng-if="copy.selected && !copy.submitted_date">
                 [[ copy.owner_username ]]
@@ -208,7 +303,11 @@
         </ul>
     </p>
     <div class="cell right-magnet">
-        <button class="flat-button" data-ng-click="option.confirmSubmitted=false"><i18n>cancel</i18n></button>
-        <button data-ng-click="considerAsSubmitted(); option.confirmSubmitted=false;"> <i18n>exercizer.validate</i18n></button>
+        <button class="flat-button" data-ng-click="option.confirmSubmitted=false">
+            <i18n>cancel</i18n>
+        </button>
+        <button data-ng-click="considerAsSubmitted(); option.confirmSubmitted=false;">
+            <i18n>exercizer.validate</i18n>
+        </button>
     </div>
 </lightbox>

@@ -116,17 +116,19 @@
                     <h4><i18n>exercizer.scheduled.subject.option</i18n></h4>
                 </div>
                 <div data-ng-if="!isSimpleSubject && lightbox.isDisplayed">
-                    <div class="row" data-ng-show="option.mode == 'classic'">
+                    <div class="row option-edited-dates m-8" data-ng-show="option.mode == 'classic'">
                         <div class="seven cell"><span> <i18n>exercizer.scheduled.subject.start</i18n> :&nbsp;</span></div>
-                        <date-picker ng-model="option.begin_date" min-date="now"  class="two cell" date-picker-delegate="datePickerDelegate"></date-picker>
-                        <div class="one cell">&nbsp;</div>
-                        <input class="two cell"  type="text" data-ng-model="option.begin_time" data-ng-blur="option.begin_time = checkTime(option.begin_time)"/>
+                        <div class="flex-inline gap-8 justify-space-between">
+                            <date-picker ng-model="option.begin_date" min-date="now"  class="two cell" date-picker-delegate="datePickerDelegate"></date-picker>
+                            <input class="two cell"  type="text" data-ng-model="option.begin_time" data-ng-blur="option.begin_time = checkTime(option.begin_time)"/>
+                        </div>
                     </div>
-                    <div class="row" data-ng-show="option.mode == 'classic'">
+                    <div class="row option-edited-dates m-8" data-ng-show="option.mode == 'classic'">
                         <div class="seven cell"><span> <i18n>exercizer.scheduled.subject.end</i18n> :&nbsp;</span></div>
-                        <date-picker ng-model="option.due_date" min-date="option.begin_date" class="two cell" date-picker-delegate="datePickerDelegate"></date-picker>
-                        <div class="one cell">&nbsp;</div>
-                        <input class="two cell" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, true)"/>
+                        <div class="flex-inline gap-8 justify-space-between">
+                            <date-picker ng-model="option.due_date" min-date="option.begin_date" class="two cell" date-picker-delegate="datePickerDelegate"></date-picker>
+                            <input class="two cell" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, true)"/>
+                        </div>
                     </div>
                     <div class="row vertical-spacing" data-ng-show="option.mode == 'classic'">
                         <label>
@@ -160,7 +162,7 @@
                         <span>Résultat et correction automatique visibles pour les élèves</span>
                     </div>
                     -->
-                    <div class="row vertical-spacing" style="margin-top: 50px !important;">
+                    <div class="row vertical-spacing option-edited-dates" style="margin-top: 50px !important;">
                         <span><i18n>exercizer.scheduled.subject.delay</i18n></span>
                         <input type="text" data-ng-model="option.estimated_duration" size="5"/>
                         <span><i18n>exercizer.minute</i18n></span>
@@ -170,27 +172,28 @@
                     </div>
                 </div>
                 <div data-ng-if="isSimpleSubject && lightbox.isDisplayed">
-                    <div class="row">
+                    <div class="row option-edited-dates m-8">
                         <div class="seven cell"><span><i18n>exercizer.scheduled.subject.start</i18n> :&nbsp;</span></div>
-                        <date-picker ng-model="option.begin_date"  min-date="now" class="two cell" date-picker-delegate="datePickerDelegate"></date-picker>
-                        <div class="one cell">&nbsp;</div>
-                        <input class="two cell" type="text" data-ng-model="option.begin_time" data-ng-blur="option.begin_time = checkTime(option.begin_time)"/>
+                        <div class="flex-inline gap-8 justify-space-between">
+                            <date-picker ng-model="option.begin_date"  min-date="now" class="two cell" date-picker-delegate="datePickerDelegate"></date-picker>
+                            <input class="two cell" type="text" data-ng-model="option.begin_time" data-ng-blur="option.begin_time = checkTime(option.begin_time)"/>
+                        </div>
                     </div>
-                    <div class="row">
+                    <div class="row option-edited-dates m-8">
                         <div class="seven cell"><span><i18n>exercizer.scheduled.subject.end</i18n> :&nbsp;</span></div>
-                        <date-picker ng-model="option.due_date" min-date="option.begin_date" class="two cell" date-picker-delegate="datePickerDelegate"></date-picker>
-                        <div class="one cell">&nbsp;</div>
-                        <input class="two cell" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, true)"/>
+                        <div class="flex-inline gap-8 justify-space-between">
+                            <date-picker ng-model="option.due_date" min-date="option.begin_date" class="two cell" date-picker-delegate="datePickerDelegate"></date-picker>
+                            <input class="two cell" type="text" data-ng-model="option.due_time" data-ng-blur="option.due_time = checkTime(option.due_time, true)"/>
+                        </div>
                     </div>
-                    <div class="row">
+                    <div class="row option-edited-dates m-8">
                         <div class="seven cell"><span><i18n>exercizer.scheduled.simple.subject.corrected</i18n> :&nbsp;</span></div>
-                        <date-picker ng-model="option.corrected_date" min-date="option.due_date" class="two cell" date-picker-delegate="datePickerDelegate"></date-picker>
-                        <div class="one cell">&nbsp;</div>
-                        <input class="two cell" type="text" data-ng-model="option.corrected_time" data-ng-blur="option.corrected_time = checkTime(option.corrected_time)"/>
+                        <div class="flex-inline gap-8 justify-space-between">
+                            <date-picker ng-model="option.corrected_date" min-date="option.due_date" class="two cell" date-picker-delegate="datePickerDelegate"></date-picker>
+                            <input class="two cell" type="text" data-ng-model="option.corrected_time" data-ng-blur="option.corrected_time = checkTime(option.corrected_time)"/>
+                        </div>
                     </div>
-                    <div class="row warning" ng-if="!isValidSubject()">
-                        <i18n>exercizer.scheduled.simple.date.error</i18n>
-                    </div>
+                    <message-info status="warning" ng-if="!isValidSubject()"><i18n>exercizer.scheduled.simple.date.error</i18n></message-info>
                 </div>
                 <div class="row vertical-spacing">
                     <button class="right-magnet cell" data-ng-click="lightbox.state = 'schedule'" ng-disabled="!isValidSubject()">
@@ -203,9 +206,7 @@
             </div>
 
             <div data-ng-show="lightbox.state == 'schedule'">
-                <div class="row vertical-spacing">
-                    <div class="warning">[[confirmation()]]</div>
-                </div>
+                <message-info status="warning" ng-if="!isValidSubject()">[[confirmation()]]</message-info>
                 <div class="row vertical-spacing">
                     <button class="right-magnet cell" data-ng-click="scheduleSubject()" data-ng-disabled="scheduleSubjectInProgress">
                         <i18n>exercizer.schedule</i18n>
