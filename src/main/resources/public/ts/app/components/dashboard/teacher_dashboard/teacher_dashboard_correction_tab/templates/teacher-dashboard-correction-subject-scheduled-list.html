@@ -102,7 +102,7 @@
                     <div data-ng-show="filteredSubjectScheduledList.length > 0">
                         <div class="row vertical-spacing">
                             <!-- list subject scheduled -->
-                            <div class="fallen dominos" data-ng-show="displayList == 'domino'">
+                            <div class="dominos fallen large" data-ng-show="displayList == 'domino'">
                                 <div data-ng-repeat="subjectScheduled in filteredSubjectScheduledList = (subjectScheduledList | filter:search.text | filter: filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: filterOnGroupSelected(search.groupList) | filter: filterOnGroupSelectedState() | orderObjectBy : 'due_date' : true)"
                                      class="item" style="width: 100%; max-width: none;">
     
