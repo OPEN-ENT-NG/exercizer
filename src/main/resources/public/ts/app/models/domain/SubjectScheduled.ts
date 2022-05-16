@@ -49,6 +49,7 @@ export class SubjectScheduled implements ISubjectScheduled {
     type:string;
     is_training_mode: boolean;
     is_training_permitted: boolean;
+    corrected_file_id?:string
     
     constructor
     (

@@ -1,5 +1,5 @@
 <!-- subject-copy-domino -->
-<div class="fallen dominos">
+<div class="fallen dominos" ng-click="onSubjectClick()">
     <div class="item">
         <section class="domino">
             <div class="top" ng-class="{'divide-opacity': cantSart()}">
@@ -64,20 +64,6 @@
                         >
                             [[(subjectCopy.is_training_copy ? subjectCopy.calculated_score : subjectCopy.final_score) | truncateNumber ]]/[[getSubjectScheduledMaxScore()]]
                         </div>
-                    </div>
-                    <div class="buttons">
-                        <button class="flat-button"
-                            data-ng-if="canShowGeneralCorrected()"
-                            data-ng-click="downloadGeneralCorrectedFile()">
-                            <i18n>exercizer.domino.corrected</i18n>
-                            &nbsp; &nbsp; <i class="download"></i>
-                        </button>
-                        <button class="flat-button"
-                            data-ng-if="canShowIndividualCorrected()"
-                            data-ng-click="downloadCorrectedFile()">
-                            <i18n>exercizer.domino.individual.corrected</i18n>
-                            &nbsp; &nbsp; <i class="download"></i>
-                        </button>
                     </div>
                     <div class="right-glider"
                     data-ng-class="{'green': canCreateTraining(), 'grey': !canCreateTraining() }"

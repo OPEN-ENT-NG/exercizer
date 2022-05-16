@@ -44,6 +44,7 @@ export class SubjectCopy implements  ISubjectCopy {
     dueDate: string;
     _homework_metadata: any;
     tracker: EditTrackingEvent;
+    corrected_file_id?:string
 
     set homework_metadata(thing){
 
