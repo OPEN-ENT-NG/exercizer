@@ -6,11 +6,14 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
             restrict: 'E',
             scope: {
                 subjectCopy: '=',
-                subjectScheduled: '='
+                subjectScheduled: '=',
+                ngClick: "&",
             },
             templateUrl: 'exercizer/public/ts/app/components/dashboard/student_dashboard/common/templates/subject-copy-domino.html',
             link: (scope:any) => {
-
+                scope.onSubjectClick=()=>{
+                  scope.ngChange();
+                }
                 /**
                  * ACCESS Perform, view
                  */
