@@ -2,7 +2,8 @@ import { ng } from 'entcore';
 import { angular } from 'entcore';
 import { moment } from 'entcore';
 import { _ } from 'entcore';
-import { SubjectCopy } from '../models/domain';
+import { SubjectCopy, SubjectScheduled } from '../models/domain';
+import { DateService } from '../services';
 
 class SubjectCopyListController {
 
@@ -10,16 +11,42 @@ class SubjectCopyListController {
         'SubjectScheduledService',
         'DateService',
         'SubjectCopyService',
+        '$location'
     ];
     private _subjectScheduledService;
     private _subjectCopyService;
     private _dateService;
+    private $location;
 
-    constructor(SubjectScheduledService, DateService, SubjectCopyService) {
+    constructor(SubjectScheduledService, DateService, SubjectCopyService, $location) {
         this._subjectScheduledService = SubjectScheduledService;
         this._subjectCopyService = SubjectCopyService;
         this._dateService = DateService;
+        this.$location = $location;
+    }
 
+    public openCorrection(subjectCopy:SubjectCopy) {
+        const self:SubjectCopyListController = this;
+        const subjectScheduled:SubjectScheduled = self.getSubjectScheduledById(subjectCopy.subject_scheduled_id);
+        if(!subjectScheduled){
+            return;
+        }
+        const canShowGeneralCorrected = () => {
+            //if corrected date has passed and subject scheduled corrected exist
+            return  (subjectScheduled.type !== 'simple') ? false : canShowCorrected() && (subjectScheduled).corrected_file_id !== null;
+        };
+        const canShowIndividualCorrected = () => {
+            //if corrected date has passed and subject copy corrected exist
+            return  (subjectScheduled.type !== 'simple') ? false : canShowCorrected() && (subjectCopy).corrected_file_id !== null;
+        };
+
+        const canShowCorrected = () => {
+            //if corrected date has passed
+            return  new DateService().compare_after(new Date(), new DateService().isoToDate(subjectScheduled.corrected_date), true);
+        };
+        if(canShowIndividualCorrected() || canShowGeneralCorrected()) {
+            this.$location.path('/subject/copy/perform/simple/' + subjectCopy.id);
+        }
     }
 
     public getSubjectScheduledById(id:number) {
