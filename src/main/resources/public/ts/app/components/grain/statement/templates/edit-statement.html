@@ -2,7 +2,7 @@
     <input 
            class="twelve cell m-16"
            type="text" 
-           i18n-placeholder="exercizer.grain.type.statement.placeholder"
+           i18n-placeholder="exercizer.grain.type.statement.title.placeholder"
            ng-change="updateGrain()" 
            ng-model="grain.grain_data.title" />
 </div>
@@ -12,6 +12,7 @@
         class="small-editor radius-8 m-0" 
         data-ng-model="grain.grain_data.custom_data.statement" 
         on-change="updateGrain()" 
+        placeholder="[['exercizer.grain.type.statement.description.placeholder'|i18n]]"
         inline 
         track-input-event="grain.getTracker()"
     >
