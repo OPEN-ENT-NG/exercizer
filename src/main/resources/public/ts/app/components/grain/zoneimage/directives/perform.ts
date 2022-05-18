@@ -20,20 +20,20 @@ export const performZoneImage = ng.directive('performZoneImage',
                     scope.init();
                 });
 
-                scope.getResizedIconZoneX = (coord,reverse) => getResizedIconZoneX(selector,coord,reverse);
-                scope.getResizedIconZoneY = (coord,reverse) => getResizedIconZoneY(selector,coord,reverse);
-
-                // Wait for the background image to get loaded before placing blocks upon it.
-                scope.bckgrndLoaded = false;
-                const selector = `#${scope.grainCopy.id}-bckgrnd`;
-                preloadImage(selector)
-                .then( dimensions => {
-                    scope.bckgrndLoaded = true;
-                    scope.$apply('bckgrndLoaded');  // This will allow the blocks to be placed on the background image.
-                })
-                .catch( () => { /*console.log("background image cannot be loaded.")*/ } );
+                const selector = function(){ return `#${scope.grainCopy.id}-bckgrnd`; }
+                scope.getResizedIconZoneX = (coord,reverse) => getResizedIconZoneX(selector(),coord,reverse);
+                scope.getResizedIconZoneY = (coord,reverse) => getResizedIconZoneY(selector(),coord,reverse);
 
                 scope.init = () => {
+                    // Wait for the background image to get loaded before placing blocks upon it.
+                    scope.bckgrndLoaded = false;
+                    preloadImage(selector())
+                    .then( dimensions => {
+                        scope.bckgrndLoaded = true;
+                        scope.$apply('bckgrndLoaded');  // This will allow the blocks to be placed on the background image.
+                    })
+                    .catch( () => { /*console.log("background image cannot be loaded.")*/ } );
+
                     scope.grainCopy.grain_copy_data.custom_copy_data = new CustomData(scope.grainCopy.grain_copy_data.custom_copy_data);
                     scope.customData = scope.grainCopy.grain_copy_data.custom_copy_data;
 
