@@ -64,7 +64,7 @@ export function preloadImage( selector: string ):Promise<{w:number, h:number, vw
             } catch(e) {
                 reject( e );
             }
-        }, 10 );
+        }, 300 );
     });
 }
 
