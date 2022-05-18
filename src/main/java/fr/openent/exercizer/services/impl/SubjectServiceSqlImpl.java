@@ -435,6 +435,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		duplicationSubject(s, newSubjectId, fromSubjectId, false, null, null, null, folderId, user, titleSuffix, true);
 	}
 
+	/* TODO : migrate fields corrected_file_id, corrected_metadata to table subject_document */
 	private void duplicationSubject(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Boolean isLibrary,
 									final String authorsContributors,  final String correctedFileId, JsonObject correctedMetadata, final Long folderId, UserInfos user, final String titleSuffix, final Boolean isMergeUser) {
 		if (isMergeUser) {

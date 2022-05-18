@@ -79,7 +79,7 @@ export class SubjectScheduledService implements ISubjectScheduledService {
                     angular.forEach(response.data, function(subjectScheduledObject) {
                         subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(subjectScheduledObject)) as any;
                         subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
-                        subjectScheduled.corrected_metadata = JSON.parse(subjectScheduled.corrected_metadata);                       
+                        //WB-582 subjectScheduled.corrected_metadata = JSON.parse(subjectScheduled.corrected_metadata);                       
                         self._listMappedById[subjectScheduled.id] = subjectScheduled;
                     });
                     deferred.resolve(true);
