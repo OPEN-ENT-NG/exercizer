@@ -19,10 +19,10 @@
                 <div class="image-container">
                     <image-select ng-model="grain.grain_data.custom_data.guideImage" ng-change="updateGrain();" id="[[ grain.id ]]-bckgrnd"></image-select>
                 </div>
-                <placed-block ng-repeat="textZone in grain.grain_data.custom_data.zones" style="padding:0;" draggable
-                                x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
-                                transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
-                                
+                <placed-block ng-if="bckgrndLoaded"
+                    ng-repeat="textZone in grain.grain_data.custom_data.zones" style="padding:0;" draggable
+                    x="textZone.position.x" y="textZone.position.y" z="textZone.position.z"
+                    transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
                 >
                     <text-zone>
                         <svg ng-click="removeZone(textZone)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
