@@ -16,6 +16,7 @@ import { teacherDashboardSimpleCorrectionCopyList } from './app/components/dashb
 import { teacherDashboardCopyPaste } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardCopyPaste';
 import { teacherDashboardFolderEdit } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardFolderEdit';
 import { teacherDashboardMove } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardMove';
+import { teacherDashboardPrint } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardPrint';
 import { teacherDashboardPublishToLibrary } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardPublishToLibrary';
 import { teacherDashboardRemoveSelectedFolderAndSubject } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardRemoveSelectedFolderAndSubject';
 import { teacherDashboardSubjectEdit } from './app/components/dashboard/teacher_dashboard/teacher_dashboard_subject_tab/directives/teacherDashboardSubjectEdit';
@@ -143,7 +144,7 @@ ng.directives.push(sharePanelModal);
 ng.directives.push(subjectScheduleAssignAt);
 ng.directives.push(teacherDashboardCorrectionCopyList, teacherDashboardCorrectionStats);
 ng.directives.push(teacherDashboardCorrectionSubjectScheduledList);
-ng.directives.push(teacherDashboardSimpleCorrectionCopyList, teacherDashboardCopyPaste, teacherDashboardFolderEdit, teacherDashboardMove);
+ng.directives.push(teacherDashboardSimpleCorrectionCopyList, teacherDashboardCopyPaste, teacherDashboardFolderEdit, teacherDashboardMove, teacherDashboardPrint);
 ng.directives.push(teacherDashboardPublishToLibrary);
 ng.directives.push(teacherDashboardRemoveSelectedFolderAndSubject);
 ng.directives.push(teacherDashboardSubjectEdit, teacherDashboardSubjectList);

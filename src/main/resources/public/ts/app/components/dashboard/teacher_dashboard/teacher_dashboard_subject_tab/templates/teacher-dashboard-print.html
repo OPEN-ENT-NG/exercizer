@@ -1,0 +1,13 @@
+<lightbox show="isDisplayed" on-close="hide()">
+    <h2><i18n>exercizer.print.title</i18n></h2>
+    <message-info status="warning"><i18n>exercizer.print.warning</i18n></message-info>
+    <p><i18n>exercizer.print.choice</i18n></p>
+    <div class="flex-row f-column gap-12">
+        <label class="flex-row align-center gap-4"><input type="radio" class="m-0" ng-model="data.value" value="true"><i18n>exercizer.print.choice.responses.with</i18n></label>
+        <label class="flex-row align-center gap-4"><input type="radio" class="m-0" ng-model="data.value" value="false"><i18n>exercizer.print.choice.responses.without</i18n></label>
+    </div>
+    <div class="row">
+        <button data-ng-click="confirm()" class="right-magnet"><i18n>exercizer.validate</i18n></button>
+        <button data-ng-click="hide()" class="cancel right-magnet"><i18n>exercizer.cancel</i18n></button>
+    </div>
+</lightbox>
