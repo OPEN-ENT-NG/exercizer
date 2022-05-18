@@ -594,5 +594,10 @@
     "exercizer.grain.openanswer.info": "La correction automatique n’est pas disponible pour les réponses ouvertes.",
     "exercizer.grain.statement.placeholder" : "Ajouter ici les consignes, le descriptif, l’énoncé de la question",
     "exercizer.grain.filltext.placeholder": "Créez ici votre texte à trous",
-    "exercizer.file.download": "Télécharger le devoir"
+    "exercizer.file.download": "Télécharger le devoir",
+    "exercizer.print.title": "Options d’impression",
+    "exercizer.print.warning": "Certains types de questions, comme les zones à remplir, ne se prêtent pas bien à l’impression.",
+    "exercizer.print.choice": "Souhaitez vous imprimer le sujet :",
+    "exercizer.print.choice.responses.with": "Avec les réponses",
+    "exercizer.print.choice.responses.without": "Sans les réponses"
 }
