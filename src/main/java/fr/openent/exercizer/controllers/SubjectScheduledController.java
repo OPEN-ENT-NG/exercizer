@@ -198,7 +198,7 @@ public class SubjectScheduledController extends ControllerHelper {
 					if (event.isRight() && !event.right().getValue().isEmpty()) {
 						renderJson(request, event.right().getValue());
 					} else {
-						renderError(request);
+						unauthorized(request);
 					}
 				});
 			} else {
