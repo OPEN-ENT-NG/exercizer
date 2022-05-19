@@ -1,4 +1,4 @@
-import { Behaviours, _ } from 'entcore';
+import { idiom as lang, moment, Behaviours, _ } from 'entcore';
 import http from 'axios';
 
 console.log('Exercizer behaviours loaded');
@@ -46,8 +46,9 @@ Behaviours.register('exercizer', {
             if ((scheduled_at.groupList.length + scheduled_at.userList.length) > 1) {
                 subjectScheduled.recipient += '...';
             }
+            let title = `${subjectScheduled.title} - ${lang.translate("exercizer.behaviours.distributed.on")} ${moment(subjectScheduled.begin_date).format('DD/MM/YYYY')}`
             return {
-                title: subjectScheduled.title,
+                title: title,
                 owner: subjectScheduled.owner,
                 ownerName: subjectScheduled.recipient,
                 icon: subjectScheduled.icon,
