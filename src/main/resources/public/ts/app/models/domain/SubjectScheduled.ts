@@ -1,3 +1,5 @@
+import { ISubjectDocument } from "./SubjectDocument";
+
 export interface ISubjectScheduled {
     id:number;
     subject_id:number;
@@ -22,6 +24,7 @@ export interface ISubjectScheduled {
     type:string;
     is_training_mode: boolean;
     is_training_permitted: boolean;
+    files: Array<ISubjectDocument>;
 }
 
 export class SubjectScheduled implements ISubjectScheduled {
@@ -49,6 +52,7 @@ export class SubjectScheduled implements ISubjectScheduled {
     type:string;
     is_training_mode: boolean;
     is_training_permitted: boolean;
+    files: Array<ISubjectDocument>;
     
     constructor
     (
@@ -74,7 +78,8 @@ export class SubjectScheduled implements ISubjectScheduled {
         scheduled_at? : string[],
         type?:string,
         is_training_mode?: boolean,
-        is_training_permitted?: boolean
+        is_training_permitted?: boolean,
+        files?: Array<ISubjectDocument>
     )
     {
         this.id = id;
@@ -100,5 +105,6 @@ export class SubjectScheduled implements ISubjectScheduled {
         this.type = type;
         this.is_training_mode = is_training_mode;
         this.is_training_permitted = is_training_permitted;
+        this.files = files || [];
     }
 }

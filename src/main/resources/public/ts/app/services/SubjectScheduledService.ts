@@ -6,6 +6,7 @@ import { IGrainService } from './GrainService';
 import { IGrainScheduledService } from './GrainScheduledService';
 import { IGrainCopyService } from './GrainCopyService';
 import { IDateService } from './DateService';
+import { ISubjectDocument } from '../models/domain/SubjectDocument';
 
 export interface ISubjectScheduledService {
     resolve(isTeacher:boolean): Promise<boolean>;
@@ -16,8 +17,8 @@ export interface ISubjectScheduledService {
     getList():ISubjectScheduled[];
     getById(id:number):ISubjectScheduled;
     currentSubjectScheduledId:number;
-    removeCorrectedFile(id): Promise<any>;
-    addCorrectedFile(id, file): Promise<string>;
+    removeCorrectedFile(subjectId:number, docId:string): Promise<any>;
+    addCorrectedFile(id, file): Promise<ISubjectDocument>;
     getBySubjectId(id:number):ISubjectScheduled;
 }
 
@@ -79,7 +80,6 @@ export class SubjectScheduledService implements ISubjectScheduledService {
                     angular.forEach(response.data, function(subjectScheduledObject) {
                         subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(subjectScheduledObject)) as any;
                         subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
-                        //WB-582 subjectScheduled.corrected_metadata = JSON.parse(subjectScheduled.corrected_metadata);                       
                         self._listMappedById[subjectScheduled.id] = subjectScheduled;
                     });
                     deferred.resolve(true);
@@ -118,25 +118,23 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
-    public addCorrectedFile = function(id, file): Promise<string>  {
-        var formData = new FormData();
-        formData.append('file', file);
-
-        var deferred = this._$q.defer();         ;
-
-        this._$http.put('exercizer/subject-scheduled/add/corrected/' + id, formData, {
-            withCredentials: false,
+    public addCorrectedFile = function(id, file): Promise<ISubjectDocument>  {
+        var deferred = this._$q.defer();
+        let request = {
+            method: 'PUT',
+            url: `exercizer/subject/${id}/file`,
             headers: {
-                'Content-Type': undefined
+                'Content-Type': "application/json"
             },
-            transformRequest: angular.identity,
             data: {
-                formData
+                doc_id: file._id,
+                metadata: file.metadata
             },
             responseType: 'json'
+        };
 
-        }).then(function(response){
-                deferred.resolve(response.data.fileId);
+        this._$http(request).then( function(response){
+                deferred.resolve(response.data);
             },
             function(e) {
                 deferred.reject(e.data.error);
@@ -145,10 +143,10 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
-    public removeCorrectedFile = function(id): Promise<any>  {       
+    public removeCorrectedFile = function(subjectId:number, docId:string): Promise<any>  {       
         var deferred = this._$q.defer(), request = {
-            method: 'PUT',
-            url: 'exercizer/subject-scheduled/remove/corrected/' + id           
+            method: 'DELETE',
+            url: `exercizer/subject/${subjectId}/file/${docId}`
         };
 
         this._$http(request).then(function(response){

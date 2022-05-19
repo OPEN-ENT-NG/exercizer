@@ -3,10 +3,10 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "fileId": {
+    "file_id": {
       "type": "string"
     },
-    "fileType": {
+    "file_type": {
       "type": "string"
     },
     "metadata": {
@@ -29,8 +29,8 @@
     }
   },
   "required": [
-    "fileId",
-    "fileType",
+    "file_id",
+    "file_type",
     "metadata"
   ]
 }

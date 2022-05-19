@@ -25,6 +25,7 @@ import fr.openent.exercizer.services.IGrainCopyService;
 import fr.openent.exercizer.services.ISubjectCopyService;
 import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.openent.exercizer.services.ISubjectService;
+import fr.openent.exercizer.services.ISubjectCopyService.FileType;
 import fr.openent.exercizer.services.impl.GrainCopyServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectCopyServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectScheduledServiceSqlImpl;
@@ -246,6 +247,13 @@ public class SubjectCopyController extends ControllerHelper {
 											subject.getString("title"),
 											null,
 											subjectCopyId);
+
+									if( copyAction==CopyAction.SUBMITCOPY && "Student".equalsIgnoreCase(user.getType()) ) {
+										url = "/dashboard/teacher/correction/"+ subjectCopy.getLong("subject_scheduled_id");
+										String notificationName="submithomework";
+										recipient = subjectCopy.getString("subject_owner");
+										sendNotification(request, notificationName, user, Arrays.asList(recipient), url, subjectCopy.getString("title"), null, subjectCopyId);
+									}
 								}
 							});
 						}
@@ -643,20 +651,17 @@ public class SubjectCopyController extends ControllerHelper {
 		});
 	}
 
-	@Put("/subject-copy/:id/homework/:offset")
-	@ApiDoc("Submit a homework file to a subject copy.")
+	@Put("/subject-copy/:id/homework")
+	@ApiDoc("Add a homework file to a subject copy.")
 	@ResourceFilter(SubjectCopyLearnerAccess.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
-	public void submitHomeworkFile(final HttpServerRequest request) {
+	public void addHomeworkFile(final HttpServerRequest request) {
 		final String id = request.params().get("id");
 		try {
-			final Integer offset = Integer.parseInt(request.params().get("offset"));
-			final ISubjectCopyService.FileType homeworkType = ISubjectCopyService.FileType.HOMEWORK;
 			checkAuth(request).onSuccess( user -> {
-				addFile(request, id, offset, homeworkType, user);
+				addFile(request, id, ISubjectCopyService.FileType.HOMEWORK, user);
 			});
-		} catch (NumberFormatException e) {
-			log.error("can't parse offset of subject-copy", e);
+		} catch (Exception e) {
 			badRequest(request);
 		}
 	}
@@ -667,41 +672,33 @@ public class SubjectCopyController extends ControllerHelper {
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void addCorrectedFile(final HttpServerRequest request) {
 		final String id = request.params().get("id");
-		final ISubjectCopyService.FileType correctedType = ISubjectCopyService.FileType.CORRECTED;
-		checkAuth(request).onSuccess( user -> {
-			addFile(request, id, 0, correctedType, user);
-		});
+		try {
+			checkAuth(request).onSuccess( user -> {
+				addFile(request, id, ISubjectCopyService.FileType.CORRECTED, user);
+			});
+		} catch (Exception e) {
+			badRequest(request);
+		}
 	}
 
-	private void addFile(final HttpServerRequest request, final String id, final int offset, final ISubjectCopyService.FileType fileType, final UserInfos user) {
+	private void addFile(final HttpServerRequest request, final String id, final ISubjectCopyService.FileType fileType, final UserInfos user) {
 		getMetadataOfSubject(request, id, fileType).onSuccess( subjectCopy -> {
-			subjectCopy.put("offset", offset);
 			storage.writeUploadFile(request, writeRes -> {
 				if ("ok".equals(writeRes.getString("status"))) {
 					final String fileId = writeRes.getString("_id");
 					final JsonObject metadata = writeRes.getJsonObject("metadata");
-					subjectCopyService.addFile(id, fileId, metadata, fileType, subjectCopy.getInteger("offset", 0), event-> {
+					subjectCopyService.addFile(id, fileId, metadata, fileType, event-> {
 						if (event.isRight()) {
 							Renders.renderJson( request, new fr.wseduc.webutils.collections.JsonObject()
-								.put("fileId", fileId)
+								.put("file_id", fileId)
 								.put("metadata", metadata)
 							);
-							JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
-
-							String relativeUri = "";
-							String notificationName = "";
-							String recipient = "";
-							switch (fileType) {
-								case CORRECTED: notificationName="correcthomework"; recipient = subjectCopy.getString("copy_owner");
-									relativeUri = "/subject/copy/perform/simple/"+ id;  break;
-								case HOMEWORK: notificationName="submithomework"; recipient = subjectCopy.getString("subject_owner");
-									relativeUri = "/dashboard/teacher/correction/"+ subjectCopy.getLong("subject_scheduled_id"); break;
+							if( fileType == FileType.CORRECTED ) {
+								String relativeUri = "/subject/copy/perform/simple/"+ id;
+								String notificationName="correcthomework";
+								String recipient = subjectCopy.getString("copy_owner");
+								sendNotification(request, notificationName, user, Arrays.asList(recipient), relativeUri, subjectCopy.getString("title"), null, id);
 							}
-
-							final List<String> recipientSet = new ArrayList<String>();
-							recipientSet.add(recipient);
-
-							sendNotification(request, notificationName, user, recipientSet, relativeUri, subjectCopy.getString("title"), null, id);
 						} else {
 							Renders.badRequest(request, event.left().getValue());
 						}

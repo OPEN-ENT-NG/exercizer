@@ -48,40 +48,36 @@
         <div>
             <h2 class="block"> <i18n>exercizer.corrected.homework</i18n></h2>
             <div>
-                <div class="selected-subject-scheduled" data-ng-if="selectedSubjectScheduled.corrected_file_id">
+                <div class="selected-subject-scheduled" 
+                        data-ng-repeat="file in selectedSubjectScheduled.files">
                     <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                    <span>[[selectedSubjectScheduled.corrected_metadata.filename]]</span>
+                    <span>[[file.metadata.filename]]</span>
                     <button
                         class="download"
-                        data-ng-click="downloadCorrectedFile()"
+                        data-ng-click="downloadCorrectedFile(file)"
                         title="[['exercizer.scheduled.corrected.download'|i18n]]"
                         aria-label="[['exercizer.scheduled.corrected.download'|i18n]]">
                         <svg class="icon-download" width="24" height="24"><use href="exercizer/public/assets/icons/icons.svg#download"></use></svg>
                     </button>
                     <button
                         class="remove"
-                        data-ng-click="removeCorrected()"
+                        data-ng-click="removeCorrected(file)"
                         title="[['exercizer.scheduled.corrected.delete'|i18n]]"
                         aria-label="[['exercizer.scheduled.corrected.delete'|i18n]]">
                         <svg class="icon-delete" width="24" height="24"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
                     </button>
                 </div>
-                <div class="row media-library mt-16">
+                <div class="row media-library mt-16" ng-if="selectedSubjectScheduled.files.length < 5">
                     <div id="simple-correction-id" class="drop-zone import-files import-files-custom">
                         <article class="drop flex-row align-center">
-                            <div class="three select-file"></div>
+                            <div class="three m-0"></div>
                             <svg class="icon-upload" width="24" height="24"><use href="exercizer/public/assets/icons/icons.svg#upload"></use></svg>
                             <div class="seven help">
                                 <em><i18n>exercizer.drop.help</i18n></em>
                             </div>
                         </article>
                         <article class="default flex-row align-center">
-                            <div class="select-file">
-                                <div class="hidden-content">
-                                    <input type="file" files-input-change="saveCorrected()" ng-model="newFiles" />
-                                </div>
-                                <button class="file-button no-margin"><i18n>library.file.choose</i18n></button>
-                            </div>
+                            <button class="file-button no-margin" ng-click="fileSelectionDisplayed = true"><i18n>library.file.choose</i18n></button>
                             <div>
                                 <svg class="icon-upload" width="24" height="24"><use href="exercizer/public/assets/icons/icons.svg#upload"></use></svg>
                                 <div class="help">
@@ -90,10 +86,18 @@
                             </div>
                         </article>
                     </div>
+                    <lightbox show="fileSelectionDisplayed" on-close="fileSelectionDisplayed = false">
+                        <media-library 
+                            visibility="selectedFile.visibility"
+                            ng-change="appendCorrected()"
+                            ng-model="selectedFile.file"
+                            file-format="'any'">
+                        </media-library>
+                    </lightbox>
                 </div>
             </div>
         </div>
-        <div class="two cell select-file hidden-content">
+        <div class="two cell m-0 select-file hidden-content">
             <div class="hidden-content">
                 <input type="file" files-input-change="saveCurrentCorrected(this)"  ng-model="newFiles" />
             </div>
@@ -151,17 +155,17 @@
                             <i class="sort-asc" ng-if="order.field === 'submitted_date' && !order.desc"></i>
                             <i class="sort-desc" ng-if="order.field === 'submitted_date' && order.desc"></i>
                        </th>
-                       <th scope="col" ng-click="orderByField('homework_metadata.filename')">
+                       <th scope="col" ng-click="orderByField('homework_files[0].metadata.filename')">
                             <span translate content="exercizer.file" ></span>
-                            <i class="sort" ng-if="order.field !== 'homework_metadata.filename'"></i>
-                            <i class="sort-asc" ng-if="order.field === 'homework_metadata.filename' && !order.desc"></i>
-                            <i class="sort-desc" ng-if="order.field === 'homework_metadata.filename' && order.desc"></i>
+                            <i class="sort" ng-if="order.field !== 'homework_files[0].metadata.filename'"></i>
+                            <i class="sort-asc" ng-if="order.field === 'homework_files[0].metadata.filename' && !order.desc"></i>
+                            <i class="sort-desc" ng-if="order.field === 'homework_files[0].metadata.filename' && order.desc"></i>
                        </th>
-                       <th scope="col" ng-click="orderByField('corrected_metadata.filename')">
+                       <th scope="col" ng-click="orderByField('corrected_files[0].metadata.filename')">
                             <span translate content="exercizer.simple.individual.corrected" ></span>
-                            <i class="sort" ng-if="order.field !== 'corrected_metadata.filename'"></i>
-                            <i class="sort-asc" ng-if="order.field === 'corrected_metadata.filename' && !order.desc"></i>
-                            <i class="sort-desc" ng-if="order.field === 'corrected_metadata.filename' && order.desc"></i>
+                            <i class="sort" ng-if="order.field !== 'corrected_files[0].metadata.filename'"></i>
+                            <i class="sort-asc" ng-if="order.field === 'corrected_files[0].metadata.filename' && !order.desc"></i>
+                            <i class="sort-desc" ng-if="order.field === 'corrected_files[0].metadata.filename' && order.desc"></i>
                        </th>
                   </tr>
                   </thead>
@@ -194,31 +198,31 @@
                             </div>
                        </td>
    
-                       <td data-ng-if="copy.homework_metadata">
+                       <td data-ng-if="copy.homework_files.length>0">
                             <div class="selected-subject-scheduled">
                                 <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                                <span>[[copy.homework_metadata.filename | limitTo: 15  ]][[ copy.homework_metadata.filename.length > 15 ? '...' : '']]</span>
+                                <span>[[copy.homework_files[0].metadata.filename | limitTo: 15  ]][[ copy.homework_files[0].metadata.filename.length > 15 ? '...' : '']]</span>
+                                <span ng-if="copy.homework_files.length>1">+ [[copy.homework_files.length-1]]</span>
                                 <button
                                     class="download"
                                     aria-label="[['exercizer.file.download'|i18n]]"
-                                    data-ng-click="downloadFile(copy)"
+                                    data-ng-click="copy.homework_files.length===1 ? downloadFile(copy, copy.homework_files[0]) : showHomeworks(copy)"
                                     target="_blank">
                                     <svg class="icon-download" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#download"></use></svg>
                                 </button>
                            </div>
                        </td>
-                       <td data-ng-if="!copy.homework_metadata" colspan="2">
+                       <td data-ng-if="!copy.homework_files.length">
                            <em>
                                <i18n>exercizer.none.student.file</i18n>
                            </em>
                        </td>
    
-                       <td ng-hide="!copy.corrected_metadata.filename && !copy.submitted_date">
-                            <div
-                                class="selected-subject-scheduled droppable p-8"
-                                ng-if="!copy.corrected_metadata.filename && copy.submitted_date"
-                                drop-files="newFiles"
-                                on-drop="selectedCorrectedFileCopy(copy);saveCurrentCorrected(this);">
+                       <td ng-hide="copy.corrected_files.length<=0 && !copy.submitted_date">
+                            <div class="selected-subject-scheduled droppable p-8"
+                                    ng-if="!copy.corrected_files.length && copy.submitted_date"
+                                    drop-files="newFiles"
+                                    on-drop="selectedCorrectedFileCopy(copy);saveCurrentCorrected(this);">
                                 <svg class="icon-upload" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#upload"></use></svg>
                                 <a data-ng-click="selectedCorrectedFileCopy(copy)"
                                        onclick="$(currentUpload).click();">
@@ -226,13 +230,13 @@
                                 </a>
                            </div>
    
-                            <div class="selected-subject-scheduled" ng-if="copy.corrected_metadata.filename">
+                            <div class="selected-subject-scheduled" ng-if="copy.corrected_files.length">
                                 <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                                <span>[[copy.corrected_metadata.filename | limitTo: 15  ]][[ copy.corrected_metadata.filename.length > 15 ? '...' : '']]</span>
+                                <span>[[copy.corrected_files[0].metadata.filename | limitTo: 15  ]][[ copy.corrected_files[0].metadata.filename.length > 15 ? '...' : '']]</span>
                                 <button
                                     class="remove"
                                     aria-label="[['exercizer.scheduled.corrected.delete'|i18n]]"
-                                    data-ng-click="removeCurrentCorrected(copy)"
+                                    data-ng-click="removeCurrentCorrected(copy, copy.corrected_files[0])"
                                     target="_blank">
                                     <svg class="icon-delete" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
                                 </button>
@@ -243,6 +247,21 @@
              </table>
         </div>
    </form>
+
+   <lightbox show="homeworksDisplayed" on-close="homeworksDisplayed=false">
+      <div class="selected-subject-scheduled"
+            ng-repeat="homeworks in selectedCopy.homework_files">
+        <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+        <span>[[homeworks.metadata.filename | limitTo: 15  ]][[ homeworks.metadata.filename.length > 15 ? '...' : '']]</span>
+        <button
+            class="download"
+            aria-label="[['exercizer.file.download'|i18n]]"
+            data-ng-click="downloadFile(selectedCopy, homeworks)"
+            target="_blank">
+            <svg class="icon-download" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#download"></use></svg>
+        </button>
+      </div>
+    </lightbox>
 </article>
 
 <section class="toggle-buttons" data-ng-show="toasterDisplayed.main">

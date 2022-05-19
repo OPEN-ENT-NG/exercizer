@@ -72,7 +72,19 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
      */
     @Override
     public void list(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-        super.list(user, handler);
+        StringBuilder query = new StringBuilder()
+        .append("SELECT o.*, CASE WHEN t.files IS NULL THEN jsonb_build_array() ELSE t.files END")
+        .append(" FROM ").append(resourceTable).append(" AS o")
+        .append(" LEFT JOIN (")
+            .append(" SELECT o2.id, jsonb_agg(jsonb_build_object('file_id', scf.file_id, 'file_type', scf.file_type, 'metadata', scf.metadata)) AS files")
+            .append(" FROM ").append(resourceTable).append(" AS o2")
+            .append(" JOIN ").append(schema).append("subject_copy_file scf ON scf.subject_copy_id = o2.id")
+            .append(" WHERE o2.owner = ? ")
+            .append(" GROUP BY o2.id")
+        .append(" ) AS t ON o.id = t.id")
+        .append(" WHERE o.owner = ? ");
+
+        sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files"));
     }
 
     /**
@@ -80,7 +92,19 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
      */
     @Override
     public void listBySubjectScheduled(final JsonObject resource, final Handler<Either<String, JsonArray>> handler) {
-        super.list(resource, "subject_scheduled_id", "exercizer.subject_scheduled", handler);
+        StringBuilder query = new StringBuilder()
+        .append("SELECT o.*, CASE WHEN t.files IS NULL THEN jsonb_build_array() ELSE t.files END")
+        .append(" FROM ").append(resourceTable).append(" AS o")
+        .append(" LEFT JOIN (")
+            .append(" SELECT o2.id, jsonb_agg(jsonb_build_object('file_id', scf.file_id, 'file_type', scf.file_type, 'metadata', scf.metadata)) AS files")
+            .append(" FROM ").append(resourceTable).append(" AS o2")
+            .append(" JOIN ").append(schema).append("subject_copy_file scf ON scf.subject_copy_id = o2.id")
+            .append(" WHERE o2.subject_scheduled_id = ? ")
+            .append(" GROUP BY o2.id")
+        .append(" ) AS t ON o.id = t.id")
+        .append(" WHERE o.subject_scheduled_id = ? ");
+
+        sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray().add(resource.getInteger("id")).add(resource.getInteger("id")), SqlResult.validResultHandler(handler, "files"));
     }
 
     /**
@@ -88,7 +112,21 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
      */
     @Override
     public void listBySubjectScheduledList(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-        super.list("subject_scheduled_id", "exercizer.subject_scheduled", Boolean.TRUE, user, handler);
+        StringBuilder query = new StringBuilder()
+        .append("SELECT o.*, CASE WHEN t.files IS NULL THEN jsonb_build_array() ELSE t.files END")
+        .append(" FROM ").append(resourceTable).append(" AS o")
+        .append(" JOIN ").append(schema).append("subject_scheduled AS r ON o.subject_scheduled_id = r.id")
+        .append(" LEFT JOIN (")
+            .append(" SELECT o2.id, jsonb_agg(jsonb_build_object('file_id', scf.file_id, 'file_type', scf.file_type, 'metadata', scf.metadata)) AS files")
+            .append(" FROM ").append(resourceTable).append(" AS o2")
+            .append(" JOIN ").append(schema).append("subject_scheduled AS r2 ON o2.subject_scheduled_id = r2.id")
+            .append(" JOIN ").append(schema).append("subject_copy_file scf ON scf.subject_copy_id = o2.id")
+            .append(" WHERE r2.owner = ? ")
+            .append(" GROUP BY o2.id")
+        .append(" ) AS t ON o.id = t.id")
+        .append(" WHERE r.owner = ? ");
+
+        sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files"));
     }
 
     /**
@@ -135,7 +173,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
         final String queryCorrected = 
                 "(SELECT CASE WHEN COUNT(sd.doc_id) = 0 THEN false ELSE true END"
                 + " FROM "+ schema +"subject_scheduled as ss"
-                + " LEFT JOIN "+ schema +"subject_document as sd ON sd.subject_id=ss.subject_id"
+                + " INNER JOIN "+ schema +"subject_document as sd ON sd.subject_id=ss.subject_id"
                 + " WHERE ss.id=subject_scheduled_id)";
 
         final String query =
@@ -162,7 +200,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     }
 
     @Override
-    public void addFile(final String subjectCopyId, final String fileId, final JsonObject metadata, final FileType fileType, int timezoneOffset, final Handler<Either<String, JsonObject>> handler) {
+    public void addFile(final String subjectCopyId, final String fileId, final JsonObject metadata, final FileType fileType, final Handler<Either<String, JsonObject>> handler) {
         StringBuilder insert = new StringBuilder()
 		.append("INSERT INTO ").append(schema).append("subject_copy_file (subject_copy_id, file_id, file_type, metadata) ")
 		.append("VALUES (?,?,?,?) RETURNING file_id, file_type, metadata");
@@ -173,35 +211,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
             .add( fileType.getKey() )
 			.add( metadata );
         
-        sql.prepared(insert.toString(), values, SqlResult.validUniqueResultHandler(result->{
-            if( result.isRight() ) {
-                JsonArray params = new fr.wseduc.webutils.collections.JsonArray();
-                StringBuilder update = new StringBuilder()
-                .append("UPDATE ").append(resourceTable)
-                .append(" SET");
-                if( FileType.HOMEWORK.equals(fileType) ) {
-                    update.append(" submitted_date=NOW() at time zone 'utc' - (? * interval '1 minute'),");
-                    params.add(timezoneOffset);
-                }
-                update
-                .append(" modified = NOW()")
-                .append(" WHERE id = ? ");
-                params.add(Sql.parseId(subjectCopyId));
-
-                sql.prepared(update.toString(), params, SqlResult.validRowsResultHandler( updateResult -> {
-                    if( updateResult.isRight() ) {
-                        // Handle the resulting inserted file
-                        handler.handle( result );
-                    } else {
-                        // Handle the update error
-                        handler.handle( updateResult );
-                    }
-                }));
-            } else {
-                // Handle the resulting inserted file error.
-                handler.handle( result );
-            }
-        }, "metadata"));
+        sql.prepared(insert.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));
     }
 
 	@Override
@@ -213,7 +223,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
         JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
 			.add( subjectCopyId )
 			.add( fileId );
-		sql.prepared(delete.toString(), values, SqlResult.validUniqueResultHandler(handler));
+		sql.prepared(delete.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));
 	}
 
     @Override

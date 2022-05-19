@@ -1037,9 +1037,15 @@ public class SubjectController extends ControllerHelper {
 			try {
 				final Long subjectId = Long.parseLong( request.params().get("id") );
 				RequestUtils.bodyToJson(request, doc -> {
-					final String docId = doc.getString("docId");
+					final String docId = doc.getString("doc_id");
 					final JsonObject metadata = doc.getJsonObject("metadata");
-					subjectService.addCorrectedDocument(subjectId, docId, metadata, defaultResponseHandler(request));
+					subjectService.addCorrectedDocument(subjectId, docId, metadata, result -> {
+						if( result.isRight() ) {
+							defaultResponseHandler(request).handle(result);;
+						} else {
+							Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.file.limit5"));
+						}
+					});
 				});
 			} catch( Exception e ) {
 				badRequest(request);

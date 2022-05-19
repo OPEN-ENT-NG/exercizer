@@ -79,7 +79,7 @@ public interface ISubjectCopyService {
 
     void getMetadataOfSubject(final String id, final FileType fileType, final Handler<Either<String, JsonObject>> handler);
 
-    void addFile(final String id, final String fileId, final JsonObject metadata, final FileType fileType, int timezoneOffset, final Handler<Either<String, JsonObject>> handler);
+    void addFile(final String id, final String fileId, final JsonObject metadata, final FileType fileType, final Handler<Either<String, JsonObject>> handler);
 
     void deleteFile(final Long subjectCopyId, final String fileId, final Handler<Either<String, JsonObject>> handler);
 

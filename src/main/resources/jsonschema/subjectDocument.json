@@ -3,10 +3,10 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "docId": {
+    "doc_id": {
       "type": "string"
     },
-    "docType": {
+    "doc_type": {
       "type": "string"
     },
     "metadata": {
@@ -29,7 +29,7 @@
     }
   },
   "required": [
-    "docId",
+    "doc_id",
     "metadata"
   ]
 }

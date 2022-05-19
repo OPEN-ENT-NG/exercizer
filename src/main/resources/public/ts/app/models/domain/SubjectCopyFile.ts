@@ -1,9 +1,11 @@
+export type ISubjectCopyFileType = 'homework'|'corrected';
+
 export interface ISubjectCopyFile {
     /** ID of a physical file in user's storage. */
-    fileId: string;
+    file_id: string;
 
     /** Type of file. */
-    fileType?: 'homework'|'corrected';
+    file_type?: ISubjectCopyFileType;
     
     /** Metadata about the physical file. */
     metadata: {

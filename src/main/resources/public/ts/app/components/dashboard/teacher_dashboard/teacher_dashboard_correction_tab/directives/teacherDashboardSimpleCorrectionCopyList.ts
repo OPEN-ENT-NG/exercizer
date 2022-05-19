@@ -1,6 +1,9 @@
-import { ng, notify, $ } from 'entcore';
+import { ng, notify, $, Document, MediaLibrary } from 'entcore';
 import { moment } from 'entcore';
 import { _ } from 'entcore';
+import { ISubjectCopy } from '../../../../../models/domain';
+import { ISubjectCopyFile } from '../../../../../models/domain/SubjectCopyFile';
+import { ISubjectDocument } from '../../../../../models/domain/SubjectDocument';
 
 export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDashboardSimpleCorrectionCopyList',
     ['SubjectCopyService', 'SubjectScheduledService', '$location','DateService','$q', '$filter', (SubjectCopyService, SubjectScheduledService, $location, DateService, $q, $filter) => {
@@ -11,7 +14,19 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
             },
             templateUrl: 'exercizer/public/ts/app/components/dashboard/teacher_dashboard/teacher_dashboard_correction_tab/templates/teacher-dashboard-simple-correction-copy-list.html',
             link: (scope:any) => {
-
+                const safeApply = function(fn?) {
+                    try {
+                        const phase = scope.$root && scope.$root.$$phase;
+                        if (phase == '$apply' || phase == '$digest') {
+                            if (fn && (typeof (fn) === 'function')) {
+                                fn();
+                            }
+                        } else {
+                            scope.$apply(fn);
+                        }
+                    } catch (e) { }
+                };
+            
                 scope.$watch('selectedSubjectScheduled', function(newValue, oldValue) {
                     if(scope.selectedSubjectScheduled){
                         init(scope.selectedSubjectScheduled);
@@ -21,6 +36,9 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                         scope.subjectCopyList = [];
                         scope.toasterDisplayed = {main: false, exclude: false};
                         scope.search = {};
+
+                        scope.fileSelectionDisplayed = false;
+                        scope.selectedFile = { file: {}, visibility: 'protected' };
                         resetDisplay();
                         
                         scope.order.field = 'owner_username';
@@ -50,19 +68,23 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                             $('#simple-correction-id').removeClass('dragover');
                         });
 
-                        $('#simple-correction-id').on('drop', dropFiles);
+                        //WB-582 $('#simple-correction-id').on('drop', dropFiles);
                     }
                 });
 
+                /*TODO WB-582 When a file is dropped in the drop zone (#simple-correction-id)
                 const dropFiles = async (e) => {
                     if(!e.originalEvent.dataTransfer.files.length){
                         return;
                     }
-                    $('#simple-correction-id').removeClass('dragover');
+                    const $dropTgt = $('#simple-correction-id');
+                    $dropTgt.removeClass('dragover').addClass('loading-panel');
                     e.preventDefault();
-                    scope.saveCorrected(e.originalEvent.dataTransfer.files);
+                    scope.uploadFiles(e.originalEvent.dataTransfer.files);
                     scope.$apply();
+                    $dropTgt.removeClass('loading-panel');
                 };
+                */
                 
                 function init(subjectScheduled){
                     SubjectCopyService.resolveBySubjectScheduled_force(subjectScheduled).then(
@@ -86,6 +108,8 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                 function resetDisplay() {
                     scope.reminderDisplayed = false;
                     scope.excludeDisplayed = false;
+                    scope.fileSelectionDisplayed = false;
+                    scope.homeworksDisplayed = false;
                 };
 
                 /**
@@ -116,8 +140,8 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                 scope.exclude = function() {
                     scope.excludeDisplayed = true;
                 };
-                scope.downloadCorrectedFile = function () {
-                    window.location.href = '/exercizer/subject-scheduled/corrected/download/' + scope.selectedSubjectScheduled.id;
+                scope.downloadCorrectedFile = function (file:ISubjectDocument) {
+                    window.location.href = `/exercizer/subject/${scope.selectedSubjectScheduled.id}/file/${file.doc_id}`;
                 };
 
                 scope.downloadFiles = function(){
@@ -141,13 +165,18 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     }
                 };
 
-                scope.downloadFile = function(copy){
-                    window.location.href = SubjectCopyService.downloadSimpleCopy(copy.id);
+                scope.downloadFile = function(copy, file:ISubjectCopyFile){
+                    window.location.href = SubjectCopyService.downloadSimpleCopy(copy.id, file.file_id);
                 };
 
                 scope.selectedCorrectedFileCopy = function(copy){
                     scope.selectedCopy = copy;
                 };
+
+                scope.showHomeworks = function(copy) {
+                    scope.selectedCopy = copy;
+                    scope.homeworksDisplayed = true;
+                }
 
                 scope.selectCopy = function(){
                     var res = false;
@@ -177,36 +206,36 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     scope.toasterDisplayed.exclude = false;
                 };
 
-                scope.saveCorrected = function(files) {
-                    if(!files){
-                        files = scope.newFiles;
+                // 
+                scope.appendCorrected = async function() {
+                    const file = scope.selectedFile.file;
+                    //alert( JSON.stringify(file) );
+                    if(!file){
+                        return;
                     }
-
-                    if (files.length > 0) {
-                        var file = files[0];
-                        SubjectScheduledService.addCorrectedFile(scope.selectedSubjectScheduled.id, file).then(
-                            function (fileId) {
-                                scope.selectedSubjectScheduled.corrected_metadata = {"filename":file.name};
-                                scope.selectedSubjectScheduled.corrected_file_id = fileId;
-                                angular.forEach(scope.subjectCopyList, function(copy){
-                                    copy.is_corrected = true;
-                                });
-                                notify.info('exercizer.service.save.corrected');
-                            },
-                            function (err) {
-                                notify.error(err);
-                            }
-                        );
-                    }
+                    SubjectScheduledService.addCorrectedFile(scope.selectedSubjectScheduled.subject_id, file).then(
+                        function (doc:ISubjectDocument) {
+                            scope.selectedSubjectScheduled.files.push(doc);
+                            angular.forEach(scope.subjectCopyList, function(copy){
+                                copy.is_corrected = true;
+                            });
+                            notify.info('exercizer.service.save.corrected');
+                        },
+                        function (err) {
+                            notify.error(err);
+                        }
+                    );
                 };
 
-                scope.removeCorrected = function() {
-                    SubjectScheduledService.removeCorrectedFile(scope.selectedSubjectScheduled.id).then(
+                scope.removeCorrected = function(file:ISubjectDocument) {
+                    SubjectScheduledService.removeCorrectedFile(scope.selectedSubjectScheduled.subject_id, file.doc_id).then(
                         function () {
-                            scope.selectedSubjectScheduled.corrected_metadata.filename = null;
-                            scope.selectedSubjectScheduled.corrected_file_id = null;
+                            const idx = scope.selectedSubjectScheduled.files.findIndex( f => f.doc_id===file.doc_id );
+                            if( idx >= 0 ) {
+                                scope.selectedSubjectScheduled.files.splice( idx, 1 );
+                            }
                             angular.forEach(scope.subjectCopyList, function(copy){
-                                if (!copy.corrected_file_id) {
+                                if (!copy.corrected_files.length) {
                                     copy.is_corrected = false;
                                 }
                             });
@@ -225,28 +254,29 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                         if (scope.newFiles.length > 0) {
                             var file = scope.newFiles[0];
                             SubjectCopyService.addCorrectedFile(scope.selectedCopy.id, file).then(
-                                function (fileId) {
-                                    scope.selectedCopy.corrected_metadata = {"filename":file.name};
-                                    scope.selectedCopy.corrected_file_id = fileId;
+                                function (f:ISubjectCopyFile) {
+                                    scope.selectedCopy.corrected_files.push( f );
                                     scope.selectedCopy.is_corrected = true;
                                     notify.info('exercizer.service.save.individual.corrected');
-                                    scope.$apply();
+                                    safeApply();
                                 },
                                 function (err) {
                                     notify.error(err);
-                                    scope.$apply();
+                                    safeApply();
                                 }
                             );
                         }
                     }, 50);
                 };
 
-                scope.removeCurrentCorrected = function(copy) {
-                    SubjectCopyService.removeCorrectedFile(copy.id).then(
+                scope.removeCurrentCorrected = function(copy, file:ISubjectCopyFile) {
+                    SubjectCopyService.removeCorrectedFile(copy.id, file.file_id).then(
                         function () {
-                            copy.corrected_metadata.filename = null;
-                            copy.corrected_file_id = null;
-                            if (!scope.selectedSubjectScheduled.corrected_file_id) {
+                            const idx = copy.corrected_files.findIndex( f => f.file_id===file.file_id );
+                            if( idx >= 0 ) {
+                                copy.corrected_files.splice( idx, 1 );
+                            }
+                            if (!scope.selectedSubjectScheduled.files.length) {
                                 copy.is_corrected = false;
                             }
                             notify.info('exercizer.service.delete.individual.corrected');

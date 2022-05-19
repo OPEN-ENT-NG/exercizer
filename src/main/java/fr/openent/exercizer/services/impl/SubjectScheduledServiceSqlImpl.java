@@ -81,9 +81,18 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
      */
     @Override
     public void list(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-		final String query = "SELECT * " +
-				" FROM " + resourceTable + " AS ss WHERE ss.owner = ? AND ss.is_archived = false AND ss.is_training_mode = false";
-		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
+		final String query = 
+			" SELECT ss1.*, CASE WHEN t.files IS NULL THEN jsonb_build_array() ELSE t.files END"+
+			" FROM "+ resourceTable +" ss1"+
+			" LEFT JOIN ("+
+				" SELECT ss2.id, jsonb_agg(jsonb_build_object('doc_id', sd.doc_id, 'doc_type', sd.doc_type, 'metadata', sd.metadata)) AS files"+
+				" FROM "+ resourceTable +" ss2"+
+				" INNER JOIN "+ schema +"subject_document sd ON sd.subject_id = ss2.subject_id"+
+				" WHERE ss2.owner = ? AND ss2.is_archived = false AND ss2.is_training_mode = false"+
+				" GROUP BY ss2.id"+
+			" ) AS t ON ss1.id = t.id"+
+			" WHERE ss1.owner = ? AND ss1.is_archived = false AND ss1.is_training_mode = false";
+		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files") );
     }
 
     /**
@@ -91,7 +100,21 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
      */
     @Override
     public void listBySubjectCopyList(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-        super.list("subject_scheduled_id", "exercizer.subject_copy", Boolean.FALSE, user, handler);
+		final String query = 
+			" SELECT ss1.*, CASE WHEN t.files IS NULL THEN jsonb_build_array() ELSE t.files END"+
+			" FROM "+ resourceTable +" ss1"+
+			" INNER JOIN "+ schema +"subject_copy sc1 ON sc1.subject_scheduled_id = ss1.id"+
+			" LEFT JOIN ("+
+				" SELECT ss2.id, jsonb_agg(jsonb_build_object('doc_id', sd.doc_id, 'doc_type', sd.doc_type, 'metadata', sd.metadata)) AS files"+
+				" FROM "+ resourceTable +" ss2"+
+				" INNER JOIN "+ schema +"subject_document sd ON sd.subject_id = ss2.subject_id"+
+				" INNER JOIN "+ schema +"subject_copy sc2 ON sc2.subject_scheduled_id = ss2.id "+
+				" WHERE sc2.owner = ?"+
+				" GROUP BY ss2.id"+
+			" ) AS t ON ss1.id = t.id"+
+			" WHERE sc1.owner = ?";
+
+		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files") );
     }
 
     /**
