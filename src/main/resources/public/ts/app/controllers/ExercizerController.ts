@@ -269,11 +269,7 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
                         }
                     }
                 } catch (err) {
-                    if (_userProfile === teacherProfile) {
-                        redirect(`/dashboard/teacher/correction/${subject_scheduled_id}`);
-                    } else {
-                        template.open('main', '401-exercizer');
-                    }
+                    template.open('main', '401-exercizer');
                 }
             } else {
                 template.open('main', '400-date-exercizer');
