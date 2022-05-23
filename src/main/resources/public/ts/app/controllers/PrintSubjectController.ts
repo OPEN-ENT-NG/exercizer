@@ -1,4 +1,4 @@
-import { ng, notify, skin, _ } from 'entcore';
+import { ng, notify, skin, _, idiom } from 'entcore';
 import { ISubjectScheduled, IGrain } from '../models/domain';
 import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IGrainTypeService, IGrainService, IDragService } from '../services';
 import { EditSubjectController } from './EditSubjectController';
@@ -11,6 +11,7 @@ class PrintSubjectController extends EditSubjectController {
 
     private _subjectScheduled: ISubjectScheduled;
     private grainTypeService: IGrainTypeService;
+    public showResponses = false;
 
     static $inject = [
         '$routeParams',
@@ -49,9 +50,10 @@ class PrintSubjectController extends EditSubjectController {
         _grainService:IGrainService,
         _grainTypeService:IGrainTypeService,
         _dragService:IDragService) {
-
         super(_$routeParams,_$sce,_$scope,_$location,_subjectService,_subjectScheduledService,_subjectCopyService,_grainService,_grainTypeService,_dragService);
         this.grainTypeService = _grainTypeService;
+        const url = new URL(location.href.replace("#",""))
+        this.showResponses = url.searchParams.get("responses") == 'true';
         var self = this;
         this._subjectScheduledService.resolve(true).then(function() {
             self._subjectScheduled = self._subjectScheduledService.getBySubjectId(_$routeParams['subjectId']);
@@ -119,8 +121,24 @@ class PrintSubjectController extends EditSubjectController {
         return grain.grain_type_id === 10;
     }
 
+    public isTextToFillDragAndDrop(grain: IGrain) {
+        return this.isTextToFill(grain) && grain.grain_data.custom_data.answersType === "drag";
+    }
+
+    public isTextToFillList(grain: IGrain) {
+        return this.isTextToFill(grain) && grain.grain_data.custom_data.answersType === "list";
+    }
+
     public isAreaSelect(grain: IGrain) {
         return grain.grain_type_id === 11;
+    }
+
+    public isAreaSelectDragAndDrop(grain: IGrain) {
+        return grain.grain_data.custom_data.answersType === "drag";
+    }
+
+    public isAreaSelectList(grain: IGrain) {
+        return grain.grain_data.custom_data.answersType === "list";
     }
 
     public isAreaSelectImage(grain: IGrain) {
@@ -186,26 +204,38 @@ class PrintSubjectController extends EditSubjectController {
     }
 
     public getHtmlContent(grain: IGrain) {
+        var self :PrintSubjectController= this;
         var html = grain.grain_data.custom_data ? grain.grain_data.custom_data.htmlContent : "";
         if (grain.grain_data.custom_data && grain.grain_data.custom_data.zones) {
             grain.grain_data.custom_data.zones.forEach(answer => {
-                var list = " _______ [";
-                var suffix;
-                var first = true;
-                if (answer.options.length === 0) {
-                    list += "<b><u>" + answer.answer + "</u></b>";
-                } else {
-                    answer.options.forEach(prop => {
-                        if (answer.answer !== prop) {
-                            suffix = (first ? "" : ", ") + prop;
-                        } else {
-                            suffix = (first ? "" : ", ") + "<b><u>" + prop + "</u></b>";
+                let list:string = "";
+                if(self.isTextToFillDragAndDrop(grain)){
+                    if(self.showResponses){
+                        list = `<b><u>${answer.answer}</u></b>`;
+                    }else{
+                        list = " _______ ";
+                    }
+                }else{
+                    let suffix:string;
+                    let first = true;
+                    if (answer.options.length === 0) {
+                        //no options
+                        if(self.showResponses){
+                            list = `<b><u>${answer.answer}</u></b>`;
+                        }else{
+                            list = " _______ ";
                         }
-                        list += suffix;
-                        first = false;
-                    });
+                    } else {
+                        //multi options
+                        list = self.showResponses? `<b><u>${answer.answer}</u></b> [`: " _______ [";
+                        answer.options.forEach(prop => {
+                            suffix = (first ? "" : " / ") + prop;
+                            list += suffix;
+                            first = false;
+                        });
+                        list += "] ";
+                    }
                 }
-                list += "] ";
                 html = html.replace(new RegExp('<fill-zone([^>]*?)zone-id=\\"'+answer.id+'\\".*?>.*?\\/fill-zone>','gm'), list);
             });
         }
@@ -215,6 +245,48 @@ class PrintSubjectController extends EditSubjectController {
 
     public getZones(grain: IGrain) {
         return grain.grain_data.custom_data && grain.grain_data.custom_data.zones;
+    }
+
+    public getZonesResponses(grain: IGrain) {
+        const zones = grain.grain_data.custom_data && grain.grain_data.custom_data.zones;
+        if(zones){
+            return zones.map((e,index)=>{
+                return `${idiom.translate("exercizer.grain.filltext.editor.text.answer")} ${index+1}: ${e.options.join(" / ")}`
+            })
+        }else{
+            return [];
+        }
+    }
+
+    public getAssociationOptions(grain: IGrain) {
+        const associations:any[] = grain.grain_data.custom_data && grain.grain_data.custom_data.correct_answer_list;
+        if(associations){
+            const showLeft = grain.grain_data.custom_data.show_left_column;
+            const left = associations.map(e=>{
+                return e.text_left;
+            })
+            const right = associations.map(e=>{
+                return e.text_right
+            })
+            return showLeft? right.sort(): [...left, ...right].sort();
+        }else{
+            return []
+        }
+    }
+
+    public showLeftAssociation(grain: IGrain){
+        const associations = grain.grain_data.custom_data && grain.grain_data.custom_data.correct_answer_list;
+        const showLeft = grain.grain_data.custom_data.show_left_column;
+        return associations && (showLeft || this.showResponses);
+    }
+
+    public showRightAssociation(grain: IGrain){
+        const associations = grain.grain_data.custom_data && grain.grain_data.custom_data.correct_answer_list;
+        return associations && this.showResponses;
+    }
+
+    public getOptions(grain: IGrain) {
+        return grain.grain_data.custom_data && grain.grain_data.custom_data.options;
     }
 
     public getImage(grain: IGrain) {
