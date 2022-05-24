@@ -4,19 +4,24 @@
             <i18n>exercizer.title</i18n></span> / </span><span tooltip="[[subjectScheduled.title]]">[[ subjectScheduled.title | limitTo: 35  ]][[ subjectScheduled.title.length > 35 ? '...' : '']]</span>
     </h1>
 </div>
-<div class="row">
+<div class="flex gap-16 flex-wrap-wrap mt-16 mb-16 justify-space-between align-items-center">
     <h2 class="cell">
         <strong><i18n>exercizer.preview.copy</i18n></strong>
     </h2>
-    <button class="cell right-magnet" data-ng-click="redirectToTeacherDashboardLibraryTab()" data-ng-if="previewingFromLibrary">
-        <i18n>exercizer.back.library</i18n>
-    </button>
-
-    <button class="cell right-magnet" data-ng-click="redirectToSubjectEdit()" data-ng-if="!previewingFromLibrary">
-        <i18n>exercizer.back.edit</i18n>
-    </button>
-
-    <button class="cell right-magnet flat-button" data-ng-click="redirectToSubjectPreviewPerformCopy()">
-        <i18n>exercizer.back.preview</i18n>
-    </button>
+    <div class="flex gap-16 flex-wrap-wrap mt-16 mb-16 justify-content-end">
+        <button class="button button-secondary" data-ng-click="redirectToTeacherDashboardLibraryTab()" data-ng-if="previewingFromLibrary" style="margin-left: 1rem !important;">
+            <svg class="icon-arrowLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#arrowLeft"></use></svg>
+            <i18n>exercizer.back.library</i18n>
+        </button>
+    
+        <button class="button button-secondary" data-ng-click="redirectToSubjectEdit()" data-ng-if="!previewingFromLibrary">
+            <svg class="icon-arrowLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#arrowLeft"></use></svg>
+            <i18n>exercizer.back.edit</i18n>
+        </button>
+    
+        <button class="button button-secondary" data-ng-click="redirectToSubjectPreviewPerformCopy()">
+            <svg class="icon-arrowLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#arrowLeft"></use></svg>
+            <i18n>exercizer.back.preview</i18n>
+        </button>
+    </div>
 </div>

@@ -11,7 +11,6 @@ export const editQcm = ng.directive('editQcm',
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/qcm/templates/edit-qcm.html',
             link:(scope:any) => {
-
                 scope.addAnswer = function(isChecked = false, text = '') {
                     var newAnswer = {
                         isChecked : isChecked,

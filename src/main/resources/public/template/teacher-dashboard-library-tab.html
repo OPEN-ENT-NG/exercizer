@@ -89,7 +89,7 @@
 
 
                 <div class="row vertical-spacing">
-                    <div class="label-badge" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.filters.subjectTagList">
+                    <div class="button button-primary" data-ng-repeat="subjectTag in teacherDashboardLibraryTabController.filters.subjectTagList">
                         <span class="cell">[[ subjectTag.label ]]</span>
                         <span class="cell right-magnet" data-ng-click="teacherDashboardLibraryTabController.removeFromSelectedSubjectTagList(subjectTag)">
                             <svg class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
@@ -120,7 +120,7 @@
                                                 <div class="cell title-icon">
                                                     <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                                                 </div>
-                                                <strong data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)">[[ subject.title ]]</strong>
+                                                <strong class="title" data-ng-click="teacherDashboardLibraryTabController.previewSelectedSubject(subject)">[[ subject.title ]]</strong>
                                             </div>
                                             <div class="row primary-color">
                                                 <div class="cell">

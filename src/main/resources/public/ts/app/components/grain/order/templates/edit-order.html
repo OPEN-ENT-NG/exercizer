@@ -1,18 +1,22 @@
-<div class="row">
+<div class="row mt-16">
     <span class="row"><i18n>exercizer.grain.mode</i18n></span>
-    <input id="ck-no-err-allowed-[[grain.id]]" type="checkbox" 
+    <div class="flex-row align-center gap-8 mt-4 mb-8">
+        <input
+            id="ck-no-err-allowed-[[grain.id]]"
+            type="checkbox"
             data-ng-model="grain.grain_data.custom_data.no_error_allowed"
             data-ng-change="updateGrain()" />
-    <label for="ck-no-err-allowed-[[grain.id]]"><i18n>exercizer.grain.mode.option</i18n></label>
+        <label for="ck-no-err-allowed-[[grain.id]]"><i18n>exercizer.grain.mode.option</i18n></label>
+    </div>
 </div>
 
-<div>
+<div class="mt-16">
     <message-info status="info">
         <i18n>exercizer.grain.order.warning</i18n>
     </message-info>
 </div>
 
-<div class="row edit-order-list">
+<div class="row edit-order-list mt-16">
     <header class="row mb-4">
         <div class="cell m-8"><i18n>exercizer.grain.type.order</i18n></div>
         <div class="cell m-8"><i18n>exercizer.grain.order.answers</i18n></div>
@@ -24,16 +28,21 @@
             sortable-element
             data-ng-change="reOrder()"
             data-ng-model="answer.index">
-            <div class="edit-order-index">[[ answer.order_by ]]</div>
-            <input type="text" class="cell" data-ng-model="answer.text" ng-change="updateGrain()" value="[[ answer.text ]]" i18n-placeholder="exercizer.grain.answer.info" />
-            <div class="cell right-magnet edit-order-delete" data-ng-click="deleteAnswer(answer)">
-                <svg class="icon-close" width="22" height="22"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
+            <div class="flex align-items-center justify-space-between gap-24">
+                <div class="edit-order-index mx-0 my-0">[[ answer.order_by ]]</div>
+                <input type="text" class="cell m-0" data-ng-model="answer.text" ng-change="updateGrain()" value="[[ answer.text ]]" i18n-placeholder="exercizer.grain.answer.info" />
+                <svg class="icon-move" width="22" height="22"><use href="exercizer/public/assets/icons/icons.svg#move"></use></svg>
+                <svg
+                    data-ng-click="deleteAnswer(answer)"
+                    class="icon-close"
+                    width="22"
+                    height="22"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
             </div>
         </li>
     </ul>
 
-    <div class="row vertical-spacing">
-        <button data-ng-click="addAnswer()" class="btns btns-tertiary text-body-common flex align-items-center gap-8 px-0 m-0">
+    <div class="row">
+        <button data-ng-click="addAnswer()" class="button button-link text-body-common flex align-items-center gap-8 px-0 m-0">
             <svg class="icon-plus" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
             <i18n>exercizer.grain.add.answer</i18n>
         </button>

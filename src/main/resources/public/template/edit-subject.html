@@ -8,27 +8,29 @@
     <div data-ng-if="editSubjectController.hasDataLoaded">
 
         <!-- TOP HEADER -->
-        <div class="row">
+        <div class="flex align-items-center justify-space-between mb-16 flex-wrap-wrap">
             <h1 class="cell twelve-mobile">
                 <i class="exercizer"></i>
                 <span class="no-responsive"><span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
                 <span class="hover-orange" data-ng-click="" tooltip="[[editSubjectController.subject.title]]">[[ editSubjectController.subject.title | limitTo: 35  ]][[ editSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
 
-            <button class="right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
-                <svg class="icon-send" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#send"></use></svg>
-                <i18n>exercizer.schedule</i18n>
-            </button>
+            <div class="flex-inline gap-16 flex-wrap-wrap mt-16 justify-content-end">
+                <button class="right-magnet cell button button-secondary" data-ng-click="editSubjectController.redirectToDashboard()">
+                    <svg class="icon-arrowLeft" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#arrowLeft"></use></svg>
+                    <i18n>exercizer.back.subject</i18n>
+                </button>
+    
+                <button class="button button-secondary right-magnet cell" data-ng-click="editSubjectController.previewPerformSubjectCopy()">
+                    <svg class="icon-eye" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+                    <i18n>exercizer.preview</i18n>
+                </button>
 
-            <button class="flat-button right-magnet cell" data-ng-click="editSubjectController.previewPerformSubjectCopy()">
-                <svg class="icon-eye" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
-                <i18n>exercizer.preview</i18n>
-            </button>
-
-            <button class="right-magnet cell flat-button" data-ng-click="editSubjectController.redirectToDashboard()">
-                <i class="left"></i>
-                <i18n>exercizer.back.subject</i18n>
-            </button>
+                <button class="button button-accent right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
+                    <svg class="icon-send" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#send"></use></svg>
+                    <i18n>exercizer.schedule</i18n>
+                </button>
+            </div>
         </div>
 
         <div class="grid grid-layout-2">
@@ -39,22 +41,21 @@
 
                     <!-- ORGANIZER -->
                     <article>
-                        <div class="row mb-4" >
-                            <header class="cell hover-orange" data-ng-click="editSubjectController.foldOrganizer()"><i18n>exercizer.rank</i18n></header>
-
+                        <div class="row mb-4" data-ng-click="editSubjectController.foldOrganizer()">
+                            <header class="cell hover-orange"><i18n>exercizer.rank</i18n></header>
                             <!-- grain toggle icon -->
                             <div class="cell right-magnet">
-                                <i data-ng-show="editSubjectController.organizerFolded" data-ng-click="editSubjectController.foldOrganizer()" data-tooltip="exercizer.unfold" class="down-open hover-orange"></i>
-                                <i data-ng-hide="editSubjectController.organizerFolded" data-ng-click="editSubjectController.foldOrganizer()" data-tooltip="exercizer.fold" class="up-open hover-orange"></i>
+                                <i data-ng-show="editSubjectController.organizerFolded" data-tooltip="exercizer.unfold" class="down-open hover-orange"></i>
+                                <i data-ng-hide="editSubjectController.organizerFolded" data-tooltip="exercizer.fold" class="up-open hover-orange"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="cell fs-3 flex-inline gap-12">
+                                <i18n>exercizer.score.total</i18n><strong>[[editSubjectController.computedMaxScore]]</strong>
                             </div>
                         </div>
 
-                        <div data-ng-hide="editSubjectController.organizerFolded">
-                            <div class="row mb-16">
-                                <div class="cell fs-3 flex-inline gap-12">
-                                    <i18n>exercizer.score.total</i18n><strong>[[editSubjectController.computedMaxScore]]</strong>
-                                </div>
-                            </div>
+                        <div data-ng-hide="editSubjectController.organizerFolded" class="mt-16">
 
                             <div class="row" style="overflow-y:auto; max-height: 30vh;" data-ng-show="editSubjectController.grainList.length > 0">
                                 <!-- do not add data- before sortable-list and sortable element -->
@@ -64,27 +65,34 @@
                                         data-ng-change="editSubjectController.reOrder()"
                                         data-ng-model="grain.index">
 
-                                        <div class="one cell">
-                                            <div data-ng-switch="grain.grain_type_id">
-                                                <div data-ng-switch-when="1">
-                                                    <i class="info-pic"></i>
+                                        <div class="flex align-items-center justify-space-between">
+                                            <div class="ten flex-inline gap-8 align-items-center">
+                                                <div data-ng-switch="grain.grain_type_id" class="flex">
+                                                    <div data-ng-switch-when="1" class="flex">
+                                                        <i class="info-pic"></i>
+                                                    </div>
+                                                    <div data-ng-switch-when="2" class="flex">
+                                                        <svg class="icon-help" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#help"></use></svg>
+                                                    </div>
+                                                    <div data-ng-switch-when="3" class="flex">
+                                                        <svg class="icon-text" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
+                                                    </div>
+                                                    <div data-ng-switch-default>
+                                                        <div data-ng-include="editSubjectController.getGrainIllustrationURL(grain.grain_type_id)" class="flex"></div>
+                                                    </div>
                                                 </div>
-                                                <div data-ng-switch-when="2">
-                                                    <i class="help"></i>
+                                                <div data-ng-if="grain.grain_type_id === 2"><i18n>exercizer.question.new</i18n></div>
+                                                <div data-ng-if="grain.grain_type_id === 3">
+                                                    [[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]
                                                 </div>
-                                                <div data-ng-switch-when="3">
-                                                    <i class="doc-text"></i>
-                                                </div>
-                                                <div data-ng-switch-default style="width:15px; height:15px;">
-                                                    <div data-ng-include="editSubjectController.getGrainIllustrationURL(grain.grain_type_id)" style="height:100%"></div>
+                                                <div class="ten cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;"
+                                                    data-ng-if="grain.grain_type_id > 3"
+                                                     data-ng-click="editSubjectController.scrollToGrain(grain.id)">
+                                                    [[ grain.grain_type_id > 3 ? editSubjectController.getCorrectOrder(grain) + ') ' : '' ]]
+                                                    [[editSubjectController.getGrainDisplayedName(grain) ]]
                                                 </div>
                                             </div>
-
-                                        </div>
-                                        <div class="nine cell" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;"
-                                             data-ng-click="editSubjectController.scrollToGrain(grain.id)">
-                                            [[ grain.grain_type_id > 3 ? editSubjectController.getCorrectOrder(grain) + ') ' : '' ]]
-                                            [[editSubjectController.getGrainDisplayedName(grain) ]]
+                                            <svg class="icon-move" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#move"></use></svg>
                                         </div>
                                     </li>
                                 </ul>
@@ -113,7 +121,7 @@
                 <div class="row">
 
                     <article class="select-border article-edit" 
-                        ng-class="{'p-0 border-0 overflow-hidden': editSubjectController.isChooseStep(grain)}"
+                        ng-class="{'border-0 overflow-hidden': editSubjectController.isChooseStep(grain)}"
                         ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false" id="grain-edit-[[grain.id]]"
                     >
 
@@ -125,13 +133,17 @@
 
                                 <!-- GRAIN TYPE ICON -->
                                 <div class="cell">
-                                    <div data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
-                                         data-ng-if="grain.grain_type_id === 3">
-                                         <i class="doc-text"></i>
+                                    <div
+                                        data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
+                                        data-ng-if="grain.grain_type_id === 3"
+                                        class="flex-inline align-items-center gap-8">
+                                         <svg class="icon-text" style="fill:#2A9CC8" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
                                         <small class="text-medium">[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]</small>
                                     </div>
-                                    <div data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
-                                         data-ng-if="grain.grain_type_id > 3">
+                                    <div   
+                                        data-tooltip="[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]"
+                                        data-ng-if="grain.grain_type_id > 3"
+                                        class="flex-inline align-items-center gap-8">
                                         <div style="display: inline-block; vertical-align: middle; width: 20px; height:20px;" data-ng-include="editSubjectController.getGrainIllustrationURL(grain.grain_type_id)"></div>
                                         <small class="text-medium">[[ editSubjectController.getGrainPublicName(grain.grain_type_id) ]]</small>
                                     </div>
@@ -158,7 +170,7 @@
                             </div>
 
                             <!-- GRAIN INFO/WARNING -->
-                            <div class="row" data-ng-if="grain.grain_type_id == 5" stop-child-propagation>
+                            <div class="row mb-16" data-ng-if="grain.grain_type_id == 5" stop-child-propagation>
                                 <message-info status="info"><i18n>exercizer.grain.openanswer.info</i18n></message-info>
                             </div>
 
@@ -189,7 +201,7 @@
                                             <a href="[[ grainDocument.path ]]" target="_blank">[[ grainDocument.name ]]</a>
                                         </td>
                                         <td style="text-align: right">
-                                            <svg data-ng-click="editSubjectController.displayModalRemoveGrainDocument(grain, grainDocument)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
+                                            <svg data-ng-click="editSubjectController.displayModalRemoveGrainDocument(grain, grainDocument)" class="icon-close" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -233,11 +245,11 @@
 
                             <!-- GRAIN FOOTER -->
 
-                            <section class="grid grid-2 gap-24 mt-24">
+                            <section class="grid grid-2 gap-24 mt-24" data-ng-if="grain.grain_type_id > 3">
                                 <!-- GRAIN ANSWER HINT -->
-                                <div class="row" data-ng-if="grain.grain_type_id > 3">
+                                <div class="row">
                                     <label class="form-label flex align-items-center m-8 gap-8">
-                                        <svg class="icon-help" width="22" height="22"><use href="exercizer/public/assets/icons/icons.svg#help"></use></svg>
+                                        <svg class="icon-help" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#help"></use></svg>
                                         <i18n>exercizer.grain.help</i18n>
                                     </label>
                                     <div class="cell row">
@@ -249,9 +261,9 @@
                                 </div>
 
                                 <!-- GRAIN ANSWER EXPLANATION -->
-                                <div class="row" data-ng-if="grain.grain_type_id > 3">
+                                <div class="row">
                                     <label class="form-label flex align-items-center m-8 gap-8">
-                                        <svg class="icon-info" width="22" height="22"><use href="exercizer/public/assets/icons/icons.svg#info"></use></svg>
+                                        <svg class="icon-info" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#info"></use></svg>
                                         <i18n>exercizer.grain.explanation</i18n>
                                     </label>
                                     <div class="cell row">
@@ -270,9 +282,9 @@
                                 </div>
                                 <div data-ng-switch-when="2">
                                     <choose-answer data-grain="grain"></choose-answer>
-                                    <div class="card-footer flex-row justify-end">
-                                        <a class="btns btns-tertiary flex-row align-center text-body px-24 gap-8" data-ng-click="editSubjectController.removeGrain(grain)">
-                                            <svg class="icon-delete" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
+                                    <div class="card-footer flex-row justify-end in-place-toaster">
+                                        <a class="button button-link" data-ng-click="editSubjectController.removeGrain(grain)">
+                                            <svg class="icon-delete" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
                                             <i18n>exercizer.remove</i18n>
                                         </a>
                                     </div>
@@ -283,15 +295,15 @@
                             <section class="in-place-toaster" data-ng-if="grain.grain_type_id > 2">
                                 <div class="row">
                                     <div class="cell right-magnet">
-                                        <button class="btns btns-tertiary flex-row align-center text-body-common m-0 p-8 gap-8"
+                                        <button class="button button-link"
                                                 ng-if="grain.grain_type_id>1"
                                                 data-ng-click="editSubjectController.duplicate(grain)">
-                                            <svg class="icon-copy" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#copy"></use></svg>
+                                            <svg class="icon-copy" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#copy"></use></svg>
                                             <i18n>exercizer.duplicate</i18n>
                                         </button>
-                                        <button class="btns btns-tertiary flex-row align-center text-body-common m-0 p-8 gap-8"
+                                        <button class="button button-link"
                                                 data-ng-click="editSubjectController.displayModalRemove(grain)">
-                                            <svg class="icon-delete" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
+                                            <svg class="icon-delete" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
                                             <i18n>exercizer.remove</i18n>
                                         </button>
                                     </div>
@@ -304,13 +316,13 @@
                 </div>
 
                 <!-- ADD GRAIN -->
-                <div class="flex-row align-center p-0">
-                    <a class="btns btns-primary flex-row align-center text-body px-24 mr-16 gap-8" data-ng-click="editSubjectController.addGrainWithType(3)">
-                        <svg class="icon-plus" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
+                <div class="flex-row align-center p-0 gap-16">
+                    <a class="button button-primary" data-ng-click="editSubjectController.addGrainWithType(3)">
+                        <svg class="icon-plus" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
                         <i18n>exercizer.statement.new</i18n>
                     </a>
-                    <a class="btns btns-primary flex-row align-center text-body px-24 gap-8" data-ng-click="editSubjectController.addGrainWithType(2)">
-                        <svg class="icon-text" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
+                    <a class="button button-primary" data-ng-click="editSubjectController.addGrainWithType(2)">
+                        <svg class="icon-text" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
                         <i18n>exercizer.question.new</i18n>
                     </a>
                 </div>
@@ -333,8 +345,8 @@
             <h2><i18n>exercizer.grain.remove.title</i18n></h2>
             <p><i18n>exercizer.grain.remove.confirm</i18n></p>
             <div class="row">
-                <button data-ng-click="editSubjectController.removeSelectedGrainList()" class="cell right-magnet"><i18n>exercizer.grain.remove.title</i18n></button>
-                <button data-ng-click="editSubjectController.closeModalRemoveSelectedGrainList()" class="cell right-magnet cancel"><i18n>exercizer.cancel</i18n></button>
+                <button data-ng-click="editSubjectController.removeSelectedGrainList()" class="button button-accent cell right-magnet" style="margin-left: 16px !important"><i18n>exercizer.grain.remove.title</i18n></button>
+                <button data-ng-click="editSubjectController.closeModalRemoveSelectedGrainList()" class="button button-secondary cell right-magnet cancel"><i18n>exercizer.cancel</i18n></button>
             </div>
         </lightbox>
 

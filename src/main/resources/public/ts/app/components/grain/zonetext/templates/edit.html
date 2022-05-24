@@ -1,17 +1,21 @@
-<div class="row">
+<div class="row mt-16">
     <div class="row">
         <div class="row mb-8"><strong><i18n>exercizer.grain.types</i18n></strong></div>
         <div class="row">
-            <select ng-model="answersType"
-                ng-change="switchTo(answersType)">
+            <select
+                ng-model="answersType"
+                ng-change="switchTo(answersType)"
+                class="m-0">
                 <option value="text">[['exercizer.grain.option1'|i18n]]</option>
                 <option value="list">[['exercizer.grain.option2'|i18n]]</option>
                 <option value="drag">[['exercizer.grain.option3'|i18n]]</option>
             </select>
         </div>
-        <message-info status="info" ng-if="answersType ==='text'">
-            <i18n>exercizer.grain.accent.warning</i18n>
-        </message-info>
+        <div class="m-16">
+            <message-info status="info" ng-if="answersType ==='text'">
+                <i18n>exercizer.grain.accent.warning</i18n>
+            </message-info>
+        </div>
     </div>
     <section class="zone-text mb-16">
         <div class="row">
@@ -25,8 +29,8 @@
                     transform-x="getResizedTextZoneX" transform-y="getResizedTextZoneY"
                 >
                     <text-zone>
-                        <svg ng-click="removeZone(textZone)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
-                        <svg ng-click="editZone(textZone)" class="icon-edit" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg>
+                        <svg ng-click="removeZone(textZone)" class="icon-close" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
+                        <svg ng-click="editZone(textZone)" class="icon-edit" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg>
                         <span class="text-zone-size">[[textZone.answer]]</span>
                     </text-zone>
     
@@ -41,8 +45,8 @@
                 <ul>
                     <li 
                         ng-repeat="option in grain.grain_data.custom_data.options">
-                        <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
-                            <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
+                        <text-zone>
+                            <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                             <span class="text-zone-size">[[option]]</span>
                         </text-zone>
                     </li>
@@ -60,7 +64,7 @@
 
         <message-info status="info"><i18n>exercizer.grain.responses.info</i18n></message-info>
 
-        <div class="options lightbox">
+        <div class="options lightbox mt-16">
             <label for="fill-text-input" class="form-label mb-8 block"><i18n>exercizer.grain.zone.add</i18n></label>
             <div class="add-option flex">
                 <input type="text" maxlength="40" id="fill-text-input" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(displayState.editedTextZone)" />
@@ -71,7 +75,7 @@
                 <li ng-repeat="option in displayState.editedTextZone.options"
                 ng-click="displayState.editedTextZone.answer = option;">
                     <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
-                        <svg ng-click="removeOption(displayState.editedTextZone, option)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
+                        <svg ng-click="removeOption(displayState.editedTextZone, option)" class="icon-close" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                         <span>[[option]]</span>
                     </text-zone>
                     
@@ -96,7 +100,7 @@
 
         <message-info status="info"><i18n>exercizer.grain.responses.info</i18n></message-info>
 
-        <div class="options lightbox">
+        <div class="options lightbox mt-16">
             <label for="fill-text-input" class="form-label mb-8 block"><i18n>exercizer.grain.zone.add</i18n></label>
             <div class="add-option flex">
                 <input type="text" maxlength="40" id="fill-text-input" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(grain.grain_data.custom_data)" />
@@ -106,7 +110,7 @@
                 <li ng-repeat="option in grain.grain_data.custom_data.options"
                     ng-click="displayState.editedTextZone.answer = option;">
                     <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
-                        <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
+                        <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                         <span>[[option]]</span>
                     </text-zone>
                 </li>
