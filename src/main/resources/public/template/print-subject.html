@@ -85,7 +85,8 @@
                     <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.openanswer</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
-                    <div class="row vertical-spacing">
+                    <h4><i18n>exercizer.grain.filltext.editor.text.answer</i18n> :</h4>
+                    <div class="row">
                         <textarea class="twelve cell" i18n-placeholder="exercizer.grain.oanswer.info" disabled></textarea>
                     </div>
                     <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
@@ -312,7 +313,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="answer in printSubjectController.getCorrectAnswers(grain) | orderBy:'order_by'">
+                                <tr ng-repeat="answer in printSubjectController.getCorrectAnswers(grain) | orderBy:'text'">
                                     <td>
                                         <input ng-if="!printSubjectController.showResponses" disabled type="text" style="width: 100%">
                                         <input ng-if="printSubjectController.showResponses" disabled type="text" style="width: 100%" ng-value="answer.order_by">
