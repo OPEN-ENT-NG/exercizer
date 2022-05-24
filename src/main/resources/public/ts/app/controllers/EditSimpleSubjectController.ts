@@ -45,6 +45,7 @@ class EditSimpleSubjectController {
         if (subjectPreviewId) {
             if (!angular.isUndefined(self._subjectLibraryService.tmpSubjectForPreview)) {
                 var subjectPreview:any = self._subjectLibraryService.tmpSubjectForPreview;
+                /*TODO WB-582 */
                 subjectPreview.corrected_metadata = JSON.parse(subjectPreview.corrected_metadata);
                 self._previewFromLibrary(subjectPreview);
             } else {

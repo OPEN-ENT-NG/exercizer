@@ -51,6 +51,7 @@ class ArchivesService implements IArchivesService {
                 angular.forEach(response.data, function(subjectScheduledObject) {
                     subjectScheduled = SerializationHelper.toInstance(new SubjectScheduled(), JSON.stringify(subjectScheduledObject)) as any;
                     subjectScheduled.scheduled_at = JSON.parse(subjectScheduled.scheduled_at);
+                    /*TODO WB-582 */
                     subjectScheduled.corrected_metadata = JSON.parse(subjectScheduled.corrected_metadata);
                     self._listSubjectScheduledMappedById[subjectScheduled.id] = subjectScheduled;
                     self._listSubjectScheduledCopyMappedById[subjectScheduled.id] = [];
@@ -85,6 +86,7 @@ class ArchivesService implements IArchivesService {
                 var subjectCopy;
                 angular.forEach(response.data, function(subjectCopyObject) {
                     subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
+                    /*TODO WB-582 */
                     subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                     self._listSubjectScheduledCopyMappedById[subjectCopy.subject_scheduled_id].push(subjectCopy);
                 });

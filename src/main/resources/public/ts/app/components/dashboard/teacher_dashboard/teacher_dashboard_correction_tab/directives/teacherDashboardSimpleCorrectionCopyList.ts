@@ -68,7 +68,7 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                             $('#simple-correction-id').removeClass('dragover');
                         });
 
-                        //WB-582 $('#simple-correction-id').on('drop', dropFiles);
+                        //TODO WB-582 $('#simple-correction-id').on('drop', dropFiles);
                     }
                 });
 
