@@ -13,11 +13,11 @@
                                 <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                             </div>
                             <div data-ng-switch="selectTitle()" class="custom-ellipsis">
-                                <strong data-ng-switch-when="perform" data-ng-click="performSubjectCopy(subjectCopy.id)" ng-disabled="isPerformDisabled()"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
-                                <strong data-ng-switch-when="view" data-ng-click="viewSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
-                                <strong data-ng-switch-when="text" ><span class="token" data-ng-class="copyStateColorClass()">[[textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
-                                <strong data-ng-switch-when="training" data-ng-click="viewSubjectCopyFinalScore(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
-                                <strong data-ng-switch-default >default</strong>
+                                <strong class="title" data-ng-switch-when="perform" data-ng-click="performSubjectCopy(subjectCopy.id)" ng-disabled="isPerformDisabled()"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong class="title" data-ng-switch-when="view" data-ng-click="viewSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong class="title" data-ng-switch-when="text" ><span class="token" data-ng-class="copyStateColorClass()">[[textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong class="title" data-ng-switch-when="training" data-ng-click="viewSubjectCopyFinalScore(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
+                                <strong class="title" data-ng-switch-default >default</strong>
                             </div>
                         </div>
                         <div class="row mt-4" ng-class="{'divide-opacity': cantSart()}">

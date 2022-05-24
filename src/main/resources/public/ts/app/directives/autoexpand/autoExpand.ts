@@ -24,6 +24,7 @@ export const autoExpand = ng.directive('autoExpand',
                     let rows = parseInt(element[0].getAttribute("rows"));
                     element[0].setAttribute("rows", "1");
                     if (element[0].value === '') {
+                        console.log('empty');
                         rows = 1;
                     }
                     

@@ -53,7 +53,7 @@
     <h2 class="row" data-ng-show="selectedSubjectTagList.length > 0"><i18n>exercizer.publishto.tag.linked</i18n> :</h2>
 
     <div class="row vertical-spacing">
-        <div class="label-badge" data-ng-repeat="subjectTag in selectedSubjectTagList">
+        <div class="button button-primary" data-ng-repeat="subjectTag in selectedSubjectTagList">
             <span class="cell">[[ subjectTag.label ]]</span>
             <span class="cell right-magnet" data-ng-click="removeFromSelectedSubjectTagList(subjectTag)">
                 <svg class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>

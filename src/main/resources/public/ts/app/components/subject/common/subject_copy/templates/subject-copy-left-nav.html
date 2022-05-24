@@ -5,14 +5,29 @@
     <div class="content">
         <ul>
             <li data-ng-click="navigateTo()" data-ng-class="(!currentGrainCopy) ? 'selected' : ''">
-                <a>
+                <a class="flex-inline align-items-center gap-8">
+                    <svg class="icon-text" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
                     <i18n>exercizer.summary</i18n>
                 </a>
             </li>
             <li data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false | orderObjectBy:'display_order':false"
             data-ng-click="navigateTo(grainCopy)"
             data-ng-class="(currentGrainCopy.id === grainCopy.id) ? 'selected' : ''">
-                <a>
+                <a class="flex-inline align-items-center gap-8">
+                    <div data-ng-switch="grainCopy.grain_type_id" class="flex">
+                        <div data-ng-switch-when="1" class="flex">
+                            <i class="info-pic"></i>
+                        </div>
+                        <div data-ng-switch-when="2" class="flex">
+                            <svg class="icon-help" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#help"></use></svg>
+                        </div>
+                        <div data-ng-switch-when="3" class="flex">
+                            <svg class="icon-text" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
+                        </div>
+                        <div data-ng-switch-default class="flex">
+                            <div data-ng-include="getGrainIllustrationURL(grainCopy.grain_type_id)" class="flex"></div>
+                        </div>
+                    </div>
                     [[ grainCopy.grain_type_id > 3 ? getCorrectOrder(grainCopy) + ') ' : '' ]] [[ getGrainCopyName(grainCopy) ]]
                 </a>
             </li>

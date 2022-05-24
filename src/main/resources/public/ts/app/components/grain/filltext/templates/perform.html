@@ -18,8 +18,11 @@
             </ul>
         </div>
         <div class="no-desktop tap-tap" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag' && showAnswersMobile">
-            <div class="tap-tap__item" ng-repeat="option in dragOptions | filter:availableOption track by $index " data-ng-click="selectAnswer(option)">
-                [[option.option]]
+            <strong class="fs-4"><i18n>exercizer.taptap.responsive.perform</i18n></strong>
+            <div class="tap-tap__inner mt-8">
+                <div class="tap-tap__item" ng-repeat="option in dragOptions | filter:availableOption track by $index " data-ng-click="selectAnswer(option)">
+                    [[option.option]]
+                </div>
             </div>
         </div>
     </div>

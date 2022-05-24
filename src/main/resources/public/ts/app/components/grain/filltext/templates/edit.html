@@ -1,17 +1,21 @@
-<div class="row">
+<div class="row mt-16">
     <div class="row">
         <div class="row mb-8"><strong><i18n>exercizer.grain.types</i18n></strong></div>
         <div class="row">
-            <select ng-model="answersType"
-                    ng-change="switchTo(answersType)">
+            <select
+                ng-model="answersType"
+                ng-change="switchTo(answersType)"
+                class="m-0">
                 <option value="text">[['exercizer.grain.option1'|i18n]]</option>
                 <option value="list">[['exercizer.grain.option2'|i18n]]</option>
                 <option value="drag">[['exercizer.grain.option3'|i18n]]</option>
             </select>
         </div>
-        <message-info status="info" ng-if="answersType ==='text'">
-            <i18n>exercizer.grain.accent.warning</i18n>
-        </message-info>
+        <div class="m-16">
+            <message-info status="info" ng-if="answersType ==='text'">
+                <i18n>exercizer.grain.accent.warning</i18n>
+            </message-info>
+        </div>
     </div>
     <lightbox show="boxOnChange.isVisible" on-close="boxOnChange.dismiss()">
         <span class="fs-5 flex gap-8">
@@ -30,7 +34,7 @@
             </button>
         </div>
     </lightbox>
-    <div class="row mb-8"><small><em><i18n>exercizer.grain.filltext.help</i18n></em></small></div>
+    <div class="row mb-8"><small><em class="form-info"><i18n>exercizer.grain.filltext.help</i18n></em></small></div>
     <div class="row">
         <editor placeholder="[['exercizer.grain.filltext.placeholder'|i18n]]" class="fill-text small-editor radius-8" ng-model="grain.grain_data.custom_data.htmlContent" inline track-input-event="grain.getTracker()"></editor>
     </div>
@@ -38,7 +42,7 @@
         <ul>
             <li ng-repeat="option in grain.grain_data.custom_data.options track by $index">
                 <text-zone style="max-width:unset;" class="option-text-zone">
-                    <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
+                    <svg ng-click="removeOption(grain.grain_data.custom_data, option)" class="icon-close" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                     <span class="text-zone-size">[[option]]</span>
                 </text-zone>
             </li>

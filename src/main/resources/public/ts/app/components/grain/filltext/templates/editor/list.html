@@ -2,7 +2,7 @@
 
 <message-info status="info"><i18n>exercizer.grain.responses.info</i18n></message-info>
 
-<div class="options lightbox">
+<div class="options lightbox mt-16">
     <label for="fill-text-input" class="form-label mb-8 block"><i18n>exercizer.grain.zone.add</i18n></label>
     <div class="add-option flex">
         <input type="text" maxlength="40" id="fill-text-input" ng-model="displayState.newOption" on-enter="addOptionIfNotEmpty(displayState.editedTextZone)" />
@@ -13,7 +13,7 @@
         <li ng-repeat="option in displayState.editedTextZone.options track by $index"
             ng-click="displayState.editedTextZone.answer = option;">
             <text-zone ng-class="{ selected: option === displayState.editedTextZone.answer }">
-                <svg ng-click="removeOption(displayState.editedTextZone, option)" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
+                <svg ng-click="removeOption(displayState.editedTextZone, option)" class="icon-close" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>
                 <span>[[option]]</span>
             </text-zone>
         </li>
