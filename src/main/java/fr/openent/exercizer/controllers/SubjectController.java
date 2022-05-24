@@ -690,6 +690,7 @@ public class SubjectController extends ControllerHelper {
 								}
 
 								if (data != null) {
+									/*TODO WB-582 : there are many corrected files now. */
 									data.put("correctedFileId", fileId);
 									data.put("correctedMetadata", metadata);
 
@@ -709,7 +710,7 @@ public class SubjectController extends ControllerHelper {
 	}
 
 	private void publish(JsonObject data, Long subjectId, UserInfos user, final HttpServerRequest request) {
-		subjectService.publishLibrary(subjectId, data.getString("authorsContributors"), data.getString("correctedFileId"), data.getJsonObject("correctedMetadata"), data.getLong("subjectLessonTypeId"),
+		subjectService.publishLibrary(subjectId, data.getString("authorsContributors"), /*TODO WB-582 data.getString("correctedFileId"), data.getJsonObject("correctedMetadata"),*/ data.getLong("subjectLessonTypeId"),
 				data.getLong("subjectLessonLevelId"), data.getJsonArray("subjectTagList", new fr.wseduc.webutils.collections.JsonArray()), user,
 				new Handler<Either<String, JsonObject>>() {
 					@Override
