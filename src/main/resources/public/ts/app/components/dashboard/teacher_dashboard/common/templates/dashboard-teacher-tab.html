@@ -6,15 +6,15 @@
         <span data-ng-click="" data-ng-if="selectedSubjectScheduled"> / <span class="hover-orange" tooltip="[[selectedSubjectScheduled.title]]">[[ selectedSubjectScheduled.title | limitTo: 35  ]][[ selectedSubjectScheduled.title.length > 35 ? '...' : '']]</span></span>
     </h1>
     <div class="cell right-magnet" data-ng-if="!selectedSubjectScheduled">
-        <button class="label-badge" data-ng-click="switchToStudentView()">
-            <i class="switch"></i>
+        <button class="button button-primary" data-ng-click="switchToStudentView()">
+            <svg class="icon-switch" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#switch"></use></svg>
             <i18n>exercizer.switch.learner</i18n>
         </button>
     </div>
 </div>
 
-<div class="row twelve tabs mb-24">
-    <div class="cell">
+<div class="tabs dashboard-tabs mb-24">
+    <div class="tabs-inner">
         <header class="horizontal-spacing"
                 data-ng-click="switchTab('mySubjects')"
                 data-ng-class="{ selected: currentTab === 'mySubjects' }"
@@ -61,7 +61,7 @@
         </ul>
     </p>
     <div class="cell right-magnet">
-        <button class="flat-button" data-ng-click="option.chooseExport=false"><i18n>cancel</i18n></button>
+        <button class="button button-secondary" data-ng-click="option.chooseExport=false"><i18n>cancel</i18n></button>
         <button data-ng-click="export(); option.chooseExport=false;"> <i18n>exercizer.export.action</i18n></button>
     </div>
 </lightbox>

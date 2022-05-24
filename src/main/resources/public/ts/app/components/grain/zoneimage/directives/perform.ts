@@ -119,8 +119,14 @@ export const performZoneImage = ng.directive('performZoneImage',
                 };
 
                 let _selectedanswer;
+                scope.isFilled = false;
 
                 scope.showAnswers = function(element, iconZone) {
+                    if (iconZone.answer !== '') {
+                        scope.isFilled = true;
+                    } else {
+                        scope.isFilled = false;
+                    }
                     scope.showAnswersMobile = true;
                     $('.item-selected').removeClass('item-selected');
                     $(element.target).addClass('item-selected');

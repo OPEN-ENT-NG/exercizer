@@ -26,11 +26,13 @@ export const editMultipleAnswer = ng.directive('editMultipleAnswer',
                 }
 
                 scope.deleteAnswer = function(answer){
-                    var index = scope.grain.grain_data.custom_data.correct_answer_list.indexOf(answer);
-                    if(index !== -1){
-                        scope.grain.grain_data.custom_data.correct_answer_list.splice(index, 1);
+                    if (scope.grain.grain_data.custom_data.correct_answer_list.length > 2) {
+                        var index = scope.grain.grain_data.custom_data.correct_answer_list.indexOf(answer);
+                        if(index !== -1){
+                            scope.grain.grain_data.custom_data.correct_answer_list.splice(index, 1);
+                        }
+                        scope.$emit('E_UPDATE_GRAIN', scope.grain);
                     }
-                    scope.$emit('E_UPDATE_GRAIN', scope.grain);
                 };
 
                 scope.updateGrain = function() {

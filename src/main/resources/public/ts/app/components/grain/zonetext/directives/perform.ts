@@ -137,8 +137,14 @@ export const performZoneText = ng.directive('performZoneText',
                 }
 
                 let _selectedanswer;
+                scope.isFilled = false;
 
                 scope.showAnswers = function(ele, text_zone) {
+                    if (text_zone.answer !== '') {
+                        scope.isFilled = true;
+                    } else {
+                        scope.isFilled = false;
+                    }
                     scope.showAnswersMobile = true;
                     $('.item-selected').removeClass('item-selected');
                     $(ele.target).addClass('item-selected');

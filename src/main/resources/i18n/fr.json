@@ -255,7 +255,7 @@
     "exercizer.duplicate" : "Dupliquer",
     "exercizer.grain.title" : "Saisissez le titre de la question",
     "exercizer.score" : "point(s)",
-    "exercizer.score.total" : "Total de points",
+    "exercizer.score.total" : "Total de points :",
     "exercizer.see.copy" : "Voir la copie",
     "exercizer.see.copy.details" : "Voir le détail de ma copie",
     "exercizer.grain.scoring" : "Pondération",
@@ -434,7 +434,7 @@
     "exercizer.grain.footer.result" : "Résultats",
     "exercizer.grain.document" : "Documents",
     "exercizer.grain.action" : "Action",
-    "exercizer.grain.mode" : "Mode de correction",
+    "exercizer.grain.mode" : "Mode de correction :",
     "exercizer.grain.mode.option" : "Aucun point s'il y a une ou plusieurs erreurs dans les réponses.",
     "exercizer.grain.noanswer" : "Aucune réponse renseignée",
     "exercizer.grain.answer.info" : "Indiquez une réponse",
@@ -602,5 +602,7 @@
     "exercizer.print.choice.responses.with": "Avec les réponses",
     "exercizer.print.choice.responses.without": "Sans les réponses",
     "exercizer.all.submitted.copies": "Rendu de fichier(s)",
-    "exercizer.file.limit5": "Vous pouvez déposer jusqu’à 5 fichiers maximum."
+    "exercizer.file.limit5": "Vous pouvez déposer jusqu’à 5 fichiers maximum.",
+    "exercizer.taptap.select.perform": "Sélectionner une réponse",
+    "exercizer.taptap.change.perform": "Remplacer la réponse"
 }

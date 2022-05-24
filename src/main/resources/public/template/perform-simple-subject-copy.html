@@ -7,40 +7,43 @@
 
     <div data-ng-if="performSimpleSubjectCopyController.hasDataLoaded">
 
-        <div class="row">
-            <h1 class="cell new-title flex-inline align-items-center gap-16">
+        <div class="flex align-items-center justify-space-between mb-16 flex-wrap-wrap">
+            <h1 class="cell  flex-inline align-items-center gap-16">
                 <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
                 <span class="no-responsive"><span class="hover-orange" data-ng-click="performSimpleSubjectCopyController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span><span class="hover-orange" data-ng-click="">[[ performSimpleSubjectCopyController.subjectScheduled.title | limitTo: 35  ]][[ performSimpleSubjectCopyController.subjectScheduled.title.length > 35 ? '...' : '']]</span>
             </h1>
 
-            <button class="right-magnet cell" data-ng-if="performSimpleSubjectCopyController.canHomeworkSubmit()" data-ng-click="performSimpleSubjectCopyController.openConfirmModal()">
-                <i18n>exercizer.simple.submit</i18n>
-            </button>
-
-            <button class="right-magnet cell flat-button" data-ng-click="performSimpleSubjectCopyController.redirectToDashboard()">
-                <i18n>exercizer.back</i18n>
-            </button>
+            <div class="flex-inline gap-16 flex-wrap-wrap mt-16 justify-content-end">
+                <button class="button button-secondary" data-ng-click="performSimpleSubjectCopyController.redirectToDashboard()">
+                    <svg class="icon-arrowLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#arrowLeft"></use></svg>
+                    <i18n>exercizer.back</i18n>
+                </button>
+    
+                <button class="button button-accent" data-ng-if="performSimpleSubjectCopyController.canHomeworkSubmit()" data-ng-click="performSimpleSubjectCopyController.openConfirmModal()">
+                    <i18n>exercizer.simple.submit</i18n>
+                </button>
+            </div>
         </div>
 
         <article class="row">
             <form name="formSubjectProperties">
                 <div class="flex-row f-column gap-16">
-                    <h2 class="text-heading mb-0 new-title fs-7">[[performSimpleSubjectCopyController.subjectScheduled.title]]</h2>
+                    <h2 class="text-heading mb-0  fs-7">[[performSimpleSubjectCopyController.subjectScheduled.title]]</h2>
                     <div class="flex-row f-column gap-8">
-                        <h2 class="text-subheading mb-0 new-title"><i18n>exercizer.simple.edit.description</i18n></h2>
+                        <h2 class="text-subheading mb-0 "><i18n>exercizer.simple.edit.description</i18n></h2>
                         <div class="text-body" style="word-wrap: break-word;" bind-html="performSimpleSubjectCopyController.subjectScheduled.description"></div>
                     </div>
                 </div>
             </form>
         </article>
         <article class="flex-row f-column">
-            <h2 class="text-subheading mt-0 mb-16 new-title" ng-if="performSimpleSubjectCopyController.canHomeworkReplace()"><i18n>exercizer.simple.make.title</i18n></h2>
-            <h2 class="text-subheading mt-0 mb-16 new-title" ng-if="!performSimpleSubjectCopyController.canHomeworkReplace()"><i18n>exercizer.all.submitted.copies</i18n></h2>
+            <h2 class="text-subheading mt-0 mb-16 " ng-if="performSimpleSubjectCopyController.canHomeworkReplace()"><i18n>exercizer.simple.make.title</i18n></h2>
+            <h2 class="text-subheading mt-0 mb-16 " ng-if="!performSimpleSubjectCopyController.canHomeworkReplace()"><i18n>exercizer.all.submitted.copies</i18n></h2>
             <div data-ng-if="performSimpleSubjectCopyController.canHomeworkSubmit()"
                 class="cell input-block align-center">
-                <message-info status="info" style="margin-top: -16px;"><i18n>exercizer.file.limit5</i18n></message-info>
+                <message-info status="info"><i18n>exercizer.file.limit5</i18n></message-info>
                 <!--REPLACE-->  
-                <div ng-if="performSimpleSubjectCopyController.newFiles">
+                <div ng-if="performSimpleSubjectCopyController.newFiles" class="mt-16">
                     <div
                         class="selected-subject-scheduled"
                         drop-files="performSimpleSubjectCopyController.newFiles"
@@ -112,7 +115,7 @@
         </article>
         <div class="flex-row gap-24">
             <article class="six flex-row f-column gap-8" data-ng-if="performSimpleSubjectCopyController.canShowGeneralCorrected()">
-                <h2 class="text-subheading mb-0 new-title mb-16"><i18n>exercizer.simple.corrected</i18n></h2>
+                <h2 class="text-subheading mb-0  mb-16"><i18n>exercizer.simple.corrected</i18n></h2>
                 <div class="text-body">
                     <div class="selected-subject-scheduled" ng-if="performSimpleSubjectCopyController.canDownloadCorrected()" data-ng-click="performSimpleSubjectCopyController.downloadGeneralCorrectedFile()">
                         <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
@@ -132,7 +135,7 @@
                 </div>
             </article>
             <article class="six flex-row f-column gap-8" data-ng-if="performSimpleSubjectCopyController.canShowIndividualCorrected()">
-                <h2 class="text-subheading mb-0 new-title mb-16"><i18n>exercizer.simple.individual.corrected</i18n></h2>
+                <h2 class="text-subheading mb-0  mb-16"><i18n>exercizer.simple.individual.corrected</i18n></h2>
                 <div class="text-body">
                     <div class="selected-subject-scheduled" ng-if="performSimpleSubjectCopyController.canDownloadCorrected()" data-ng-click="performSimpleSubjectCopyController.downloadCorrectedFile()">
                         <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>

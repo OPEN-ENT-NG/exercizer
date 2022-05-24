@@ -2,7 +2,7 @@
     <!-- navigation -->
     <aside class="only-large-desktop">
         <div class="row">
-            <div class="eleven cell search-control" data-ng-click="clickOnAutoComplete()">
+            <div class="eleven cell search-control mb-24" data-ng-click="clickOnAutoComplete()">
                 <autocomplete
                         options="autocomplete.subjectList"
                         ng-change="clickOnItem(selectedItem)"
@@ -40,10 +40,16 @@
     </aside>
     <!-- main page -->
     <section>
-        <div class="flex align-items-center justify-space-between">
+        <div class="flex align-items-center justify-space-between mb-24">
             <div class="flex-inline gap-8">
                 <div class="cell">
-                    <button data-ng-click="addNewSubject(currentFolderId)" workflow="exercizer.create"><i18n>exercizer.new.subject</i18n></button>
+                    <button
+                        class="button button-primary flex-row align-center text-body px-16 mr-16 gap-8"
+                        data-ng-click="addNewSubject(currentFolderId)"
+                        workflow="exercizer.create">
+                        <svg class="icon-plus" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
+                        <i18n>exercizer.new.subject</i18n>
+                    </button>
                 </div>
                 <dropdown-buttons class="cell">
                     <open><i class="manage" ></i></open>
@@ -58,7 +64,7 @@
                 </dropdown-buttons>
             </div>
             <div class="cell right-magnet">
-              <div class="choice-view flex-inline gap-8">
+              <div class="choice-view flex-inline gap-16">
                 <svg
                     class="icon-applications"
                     data-ng-click="setDisplayList('domino')"
@@ -143,17 +149,17 @@
                                 <div class="bottom">
                                     <div class="content">
                                         <div class="cell">
-                                            <div class="row">
+                                            <div class="flex-inline">
                                                 <div class="cell title-icon">
                                                     <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                                                 </div>
                                                 <strong>[[ subject.title | limitTo: 35  ]][[ subject.title.length > 35 ? '...' : '']]</strong>
                                             </div>
                                             <div class="row">
-                                                <span data-ng-if="subject.modified"><i18n>exercizer.domino.modified</i18n> [[subject.modified | date: 'dd/MM/yyyy']]</span>
+                                                <em class="domino-date" data-ng-if="subject.modified"><i18n>exercizer.domino.modified</i18n> [[subject.modified | date: 'dd/MM/yyyy']]</em>
                                             </div>
                                             <div class="row" data-ng-if="!amITheAuthor(subject)">
-                                                <span data-ng-if="subject.modified"><i18n>exercizer.author</i18n> :  [[subject.owner_username]]</span>
+                                                <em data-ng-if="subject.modified"><i18n>exercizer.author</i18n> :  [[subject.owner_username]]</em>
                                             </div>
                                         </div>
                                         <div data-ng-show="canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
@@ -300,14 +306,17 @@
             <form id="idFormImport" name="formImport">
                 <div class="rigid-grid row vertical-spacing">
                     <div class="two cell clip height-two">
-                        <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail">
-                            <image-select data-ng-model="importSubject.picture" default="/img/illustrations/exercizer.svg"></image-select>
+                        <div class="absolute" ng-class="{'default-img': !importSubject.picture}" data-loading-panel="upload-collaborativeeditor-thumbnail">
+                            <image-select
+                                class="image-select-radius"
+                                data-ng-model="importSubject.picture"
+                                default="/img/illustrations/exercizer.svg"></image-select>
                         </div>
                     </div>
-                    <div class="margin-two height-three">
+                    <div class="margin-two">
                         <div class="twelve cell horizontal-spacing">
                             <input type="text" data-ng-model="importSubject.title" class="twelve cell" i18n-placeholder="exercizer.subject.title">
-                            <textarea data-ng-model="importSubject.description" class="twelve cell" i18n-placeholder="exercizer.subject.desc"></textarea>
+                            <textarea data-ng-model="importSubject.description" class="twelve cell subject-edit-textarea" i18n-placeholder="exercizer.subject.desc"></textarea>
                         </div>
                         <div class="twelve cell horizontal-spacing select-file input-block" style="margin-top:5px;margin-bottom:5px">
                             <button class="file-button"><i18n>exercizer.import.choose</i18n></button>

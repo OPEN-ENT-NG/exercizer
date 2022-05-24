@@ -8,31 +8,34 @@
     <div data-ng-if="editSimpleSubjectController.hasDataLoaded">
 
         <!-- TOP HEADER -->
-        <div class="row mb-16">
+        <div class="flex align-items-center justify-space-between mb-16 flex-wrap-wrap">
             <h1 class="cell twelve-mobile">
                 <i class="exercizer"></i>
                 <span class="no-responsive"><span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
                 <span ng-if="!editSimpleSubjectController.subject.title.length" class="hover-orange" tooltip="exercizer.simple.default.title" data-ng-click=""><i18n>exercizer.simple.default.title</i18n></span>
                 <span ng-if="editSimpleSubjectController.subject.title.length" class="hover-orange" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
-            <button class="right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly && editSimpleSubjectController.subject.id" data-ng-click="editSimpleSubjectController.scheduleSubject()">
-                <svg class="icon-send" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#send"></use></svg>
-                <i18n>exercizer.schedule</i18n>
-            </button>
-            <button class="right-magnet cell" data-ng-click="editSimpleSubjectController.displayModalCopyPaste()" data-ng-if="editSimpleSubjectController.previewingFromLibrary">
-                <i18n>exercizer.copy.from.library</i18n>
-            </button>
-            <button class="right-magnet cell flat-button" 
-                    ng-if="editSimpleSubjectController.previewingFromLibrary"
-                    data-ng-click="editSimpleSubjectController.redirectToDashboard()">
-                <i class="left"></i>
-                <i18n>exercizer.back.library</i18n>
-            </button>
-            <button class="right-magnet cell flat-button" 
-                    ng-if="!editSimpleSubjectController.previewingFromLibrary"
-                    data-ng-click="editSimpleSubjectController.redirectToDashboard()">
-                <i18n>exercizer.update.quit</i18n>
-            </button>
+            <div class="flex-inline gap-16 flex-wrap-wrap mt-16 justify-content-end">
+                <button class="right-magnet cell button button-secondary" 
+                        ng-if="editSimpleSubjectController.previewingFromLibrary"
+                        data-ng-click="editSimpleSubjectController.redirectToDashboard()">
+                    <svg class="icon-arrowLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#arrowLeft"></use></svg>
+                    <i18n>exercizer.back.library</i18n>
+                </button>
+                <button class="right-magnet cell button button-secondary" 
+                        ng-if="!editSimpleSubjectController.previewingFromLibrary"
+                        data-ng-click="editSimpleSubjectController.redirectToDashboard()">
+                        <svg class="icon-save" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#save"></use></svg>
+                    <i18n>exercizer.update.quit</i18n>
+                </button>
+                <button class="right-magnet cell" data-ng-click="editSimpleSubjectController.displayModalCopyPaste()" data-ng-if="editSimpleSubjectController.previewingFromLibrary">
+                    <i18n>exercizer.copy.from.library</i18n>
+                </button>
+                <button class="button button-accent right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly && editSimpleSubjectController.subject.id" data-ng-click="editSimpleSubjectController.scheduleSubject()">
+                    <svg class="icon-send" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#send"></use></svg>
+                    <i18n>exercizer.schedule</i18n>
+                </button>
+            </div>
         </div>
 
         <div class="row">
@@ -44,7 +47,12 @@
                                 <img skin-src="/img/illustrations/exercizer.svg" ng-if="!editSimpleSubjectController.subject.picture" class="absolute" />
                         </div>
                         <div class="absolute" ng-class="{'default-img': editSimpleSubjectController.hasDefaultImage}" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="!editSimpleSubjectController.readOnly">
-                            <image-select readonly="editSimpleSubjectController.readOnly" ng-change="editSimpleSubjectController.saveSubjectProperties()"  data-ng-model="editSimpleSubjectController.subject.picture" default="/img/illustrations/exercizer.svg"></image-select>
+                            <image-select
+                                class="image-select-radius"
+                                readonly="editSimpleSubjectController.readOnly"
+                                ng-change="editSimpleSubjectController.saveSubjectProperties()"
+                                data-ng-model="editSimpleSubjectController.subject.picture"
+                                default="/img/illustrations/exercizer.svg"></image-select>
                         </div>
                     </div>
                     <div class="margin-two height-three pl-16">
@@ -52,8 +60,8 @@
                             <div data-ng-if="editSimpleSubjectController.readOnly" class="twelve cell">[[editSimpleSubjectController.subject.title]]</div>
                             <input type="text" maxlength="200" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.title" style="cursor:default" class="twelve cell" i18n-placeholder="exercizer.simple.default.placeholder">
                         </div>
-                        <div class="twelve cell mt-24">
-                            <h4><i18n>exercizer.simple.edit.description</i18n></h4>
+                        <div class="twelve cell mt-16">
+                            <h4 class="mb-16"><i18n>exercizer.simple.edit.description</i18n></h4>
                             <div data-ng-if="editSimpleSubjectController.readOnly"  style="word-wrap: break-word;" bind-html="editSimpleSubjectController.subject.description"></div>
                             <editor data-ng-if="!editSimpleSubjectController.readOnly"  on-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.description" track-input-event="editSimpleSubjectController.getTracker()"></editor>
                         </div>

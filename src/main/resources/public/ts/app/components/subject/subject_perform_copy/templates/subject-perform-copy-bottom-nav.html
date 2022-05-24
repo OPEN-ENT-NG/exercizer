@@ -1,19 +1,20 @@
 <div class="row">
-    <button class="cell right-magnet" data-ng-click="navigateToNext()" data-ng-if="hasNext()">
-       <i18n>exercizer.next</i18n>
-    </button>
-
-    <button class="cell right-magnet" data-ng-if="canSubmit() && !subjectCopy.is_training_copy" data-ng-click="redirectToDashboard(true)">
-        <i18n>exercizer.make.copy</i18n>
-    </button>
-
-    <button class="cell right-magnet" data-ng-if="!hasNext() && subjectCopy.is_training_copy" data-ng-click="submitSubjectCopy()">
-        <i18n>exercizer.copy.see.final.score</i18n>
-    </button>
-
-    <button class="cell right-magnet flat-button" data-ng-click="navigateToPrevious()" data-ng-if="hasPrevious()">
-        <i18n>exercizer.previous</i18n>
-    </button>
+    <div class="flex justify-content-end gap-16">
+        <button class="button button-secondary" data-ng-click="navigateToPrevious()" data-ng-if="hasPrevious()">
+            <svg class="icon-chevronLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#chevronLeft"></use></svg>
+            <i18n>exercizer.previous</i18n>
+        </button>
+        <button class="button button-accent" data-ng-if="canSubmit() && !subjectCopy.is_training_copy" data-ng-click="redirectToDashboard(true)">
+            <i18n>exercizer.make.copy</i18n>
+        </button>
+        <button class="button button-accent" data-ng-if="!hasNext() && subjectCopy.is_training_copy" data-ng-click="submitSubjectCopy()">
+            <i18n>exercizer.copy.see.final.score</i18n>
+        </button>
+        <button class="button button-accent" data-ng-click="navigateToNext()" data-ng-if="hasNext()">
+        <i18n>exercizer.next</i18n>
+        <svg class="icon-chevronRight" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#chevronRight"></use></svg>
+        </button>
+    </div>
 
     <lightbox data-show="isModalDisplayed" on-close="closeModal()">
         <h2><i18n>exercizer.make.copy</i18n></h2>

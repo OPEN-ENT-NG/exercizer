@@ -9,7 +9,7 @@
         <i18n>exercizer.grain.zoneimg.responsive.perform</i18n>
     </message-info>
 
-    <div class="grid grid-zone-image gap-16">
+    <div class="grid grid-zone-image gap-16 mt-16">
         <div class="base-image drawing-zone">
             <div class="image-container">
                 <div>
@@ -47,12 +47,16 @@
         </div>
 
         <div class="no-desktop tap-tap" ng-if="showAnswersMobile">
-            <image-zone
-                class="tap-tap__item"
-                ng-repeat="option in dragOptions | filter:availableOption track by $index"
-                data-ng-click="selectAnswer(option)">
-                <img ng-src="[[option.option]]?thumbnail=120x120" />
-            </image-zone>
+            <strong class="fs-4" ng-if="!isFilled">[['exercizer.taptap.select.perform'|i18n]]</strong>
+            <strong class="fs-4" ng-if="isFilled">[['exercizer.taptap.change.perform'|i18n]]</strong>
+            <div class="tap-tap__inner mt-8">
+                <image-zone
+                    class="tap-tap__item"
+                    ng-repeat="option in dragOptions | filter:availableOption track by $index"
+                    data-ng-click="selectAnswer(option)">
+                    <img ng-src="[[option.option]]?thumbnail=120x120" />
+                </image-zone>
+            </div>
         </div>
     </div>
 

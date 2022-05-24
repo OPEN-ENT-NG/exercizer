@@ -6,7 +6,7 @@
 
         <nav class="floating-navigation">
             <article>
-                <h2 class="row"><i18n>exercizer.group.filter</i18n></h2>
+                <h2 class="row "><i18n>exercizer.group.filter</i18n></h2>
 
                 <div class="row">
                     <div class="twelve cell search-control" data-ng-click="clickOnAutoComplete()">
@@ -65,7 +65,7 @@
     
     
                 <div class="cell right-magnet">
-                    <div class="choice-view flex-inline gap-8">
+                    <div class="choice-view flex-inline gap-16">
                         <svg
                             data-ng-click="setDisplayList('domino')"
                             data-ng-class="{selected: displayList == 'domino'}"
@@ -89,7 +89,7 @@
             <article class="row vertical-spacing">
                 <div data-ng-show="filteredSubjectScheduledList.length === 0 && !search.text.title"><h2><i18n>exercizer.empty.corrections</i18n></h2></div>
                 <div data-ng-show="filteredSubjectScheduledList.length > 0 || search.text.title">
-                    <h2 class="row"><i18n>exercizer.last.scheduled.subject</i18n></h2>
+                    <h2 class="row mb-16"><i18n>exercizer.last.scheduled.subject</i18n></h2>
     
                     <div class="row">
                         <input type="text" class="twelve cell" data-ng-model="search.text.title" i18n-placeholder="exercizer.search">
@@ -117,7 +117,7 @@
                                                         <div class="cell title-icon">
                                                             <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                                                         </div>
-                                                        <strong data-ng-click="clickOnSubjectScheduled(subjectScheduled)">
+                                                        <strong class="title" data-ng-click="clickOnSubjectScheduled(subjectScheduled)">
                                                             [[ subjectScheduled.title ]]
                                                         </strong>
                                                     </div>

@@ -4,17 +4,17 @@
         <h1 class="cell no-responsive flex-inline align-items-center gap-16">
             <!-- <i class="exercizer"></i> -->
             <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
-            <span class="new-title fs-7"><i18n>exercizer.title</i18n></span>
+            <span class=" fs-7"><i18n>exercizer.title</i18n></span>
         </h1>
         <div class="cell right-magnet"  workflow="exercizer.create">
-            <button class="label-badge" data-ng-click="studentDashboardController.switchToTeacherView()">
-                <i class="switch"></i>
+            <button class="button button-primary" data-ng-click="studentDashboardController.switchToTeacherView()">
+                <svg class="icon-switch" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#switch"></use></svg>
                 <i18n>exercizer.switch.instructer</i18n>
             </button>
         </div>
     </div>
-    <div class="row twelve cell tabs">
-        <div class="cell">
+    <div class="tabs dashboard-tabs m-24">
+        <div class="tabs-inner flex-wrap-wrap">
             <header data-ng-class="{'selected': data.tabSelected == 'subjectCopyList'}"
                     data-ng-click="data.tabSelected = 'subjectCopyList'">
                 <i18n>exercizer.dashboard.learner.tab1</i18n>
@@ -28,9 +28,6 @@
                 <i18n>exercizer.dashboard.learner.tab3</i18n>
             </header>
         </div>
-    </div>
-    <div class="vertical-spacing">
-        &nbsp;
     </div>
     <!-- switch -->
     <div ng-switch="data.tabSelected">

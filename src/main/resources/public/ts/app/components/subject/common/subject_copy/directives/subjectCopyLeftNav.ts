@@ -24,6 +24,10 @@ export const subjectCopyLeftNav = ng.directive('subjectCopyLeftNav',
                     }
                 };
 
+                scope.getGrainIllustrationURL = function(grainTypeId:number) {
+                    return GrainTypeService.getIllustrationURL(grainTypeId);
+                };
+
                 scope.navigateTo = function(grainCopy:IGrainCopy = undefined) {
                     var article = $("article#" + ((grainCopy) ? grainCopy.id : 'summary'));
                     if(article.length)

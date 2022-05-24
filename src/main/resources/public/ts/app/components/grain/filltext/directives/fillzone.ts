@@ -10,11 +10,11 @@ export const fillZone = ng.directive('fillZone',
                 zoneId: '@'
             },
             template: '<text-zone style="max-width:unset;" ng-class="{ success: optionData.correction && optionData.isCorrect, error: optionData.correction && !optionData.isCorrect }" ng-style="{ width: optionData.correction ? \'auto\' : \'\' }">' +
-            '<svg ng-click="removeFillZone($event)" ng-if="optionData.mode === \'edit\'" class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>' +
-            '<svg ng-if="optionData.mode === \'edit\'" class="icon-edit" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg>' +
+            '<svg ng-click="removeFillZone($event)" ng-if="optionData.mode === \'edit\'" class="icon-close" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>' +
+            '<svg ng-if="optionData.mode === \'edit\'" class="icon-edit" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg>' +
             '<div ng-if="optionData.mode === \'view\'"><div>[[optionData.zone.answer]]</div></div>' +
             '<div ng-if="optionData.mode === \'edit\'"><span>[[optionData.zone.answer]]</span><input type="hidden" disabled placeholder="[[optionData.zone.answer]]" ng-if="optionData.mode === \'edit\'" /></div>' +
-            '<input type="text" maxlength="40" ng-if="optionData.mode === \'perform-text\'" ng-model="optionData.zone.answer" />' +
+            '<div ng-if="optionData.mode === \'perform-text\'" style="min-width:150px;height:20px;"><span>[[optionData.zone.answer]]</span><input class="edit-text-zone" maxlength="40" ng-model="optionData.zone.answer" type="text" placeholder="[[optionData.zone.answer]]" ng-if="optionData.mode === \'perform-text\'" /></div>' +
             '<select ng-if="optionData.mode === \'perform-list\'" ng-options="o as o for o in optionData.zone.options" ng-model="optionData.zone.answer"></select>' +
             '<div class="no-responsive" drag-item="optionData.zone" drop-item="answer($item)" ng-if="optionData.mode === \'perform-drag\'"><div>[[optionData.zone.answer]]</div></div>' +
             '<div class="no-desktop" drag-item="optionData.zone" drop-item="answer($item)" ng-click="showAnswers($event)" ng-if="optionData.mode === \'perform-drag\'"><div>[[optionData.zone.answer]]</div></div>' +

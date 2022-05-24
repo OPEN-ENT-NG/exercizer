@@ -1,27 +1,29 @@
 <div class="row">
-    <h1 class="cell new-title flex-inline align-items-center gap-16">
+    <h1 class="cell  flex-inline align-items-center gap-16">
         <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
         <span class="no-responsive"><span class="hover-orange" data-ng-click="(previewingFromLibrary) ? redirectToTeacherDashboardLibraryTab() : redirectToDashBoard()"><i18n>exercizer.title</i18n></span> / </span><span tooltip="[[subjectScheduled.title]]">[[ subjectScheduled.title | limitTo: 35  ]][[ subjectScheduled.title.length > 35 ? '...' : '']]&nbsp;-&nbsp;[[ subjectScheduled.max_score ]] <i18n>exercizer.score</i18n></span>
     </h1>
 </div>
-<div class="row">
-    <button class="cell right-magnet" data-ng-click="redirectToSubjectPreviewViewCopy()" data-ng-if="!previewingFromLibrary" data-ng-hide="previewingReader">
+<div class="flex gap-16 flex-wrap-wrap mt-16 justify-content-end">
+
+    <button class="button button-secondary" data-ng-click="redirectToSubjectEdit()" data-ng-if="!previewingFromLibrary" data-ng-hide="previewingReader">
+        <svg class="icon-arrowLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#arrowLeft"></use></svg>
+        <i18n>exercizer.back.edit</i18n>
+    </button>
+    <button class="button button-accent" data-ng-click="redirectToSubjectPreviewViewCopy()" data-ng-if="!previewingFromLibrary" data-ng-hide="previewingReader">
+        <svg class="icon-eye" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
         <i18n>exercizer.preview.correction</i18n>
     </button>
 
-    <button class="cell right-magnet flat-button" data-ng-click="redirectToSubjectEdit()" data-ng-if="!previewingFromLibrary" data-ng-hide="previewingReader">
-        <i18n>exercizer.back.edit</i18n>
-    </button>
-
-    <button class="cell right-magnet flat-button" data-ng-click="redirectToDashBoard()" data-ng-if="previewingReader && !previewingFromLibrary">
+    <button class="button button-secondary" data-ng-click="redirectToDashBoard()" data-ng-if="previewingReader && !previewingFromLibrary">
         <i18n>exercizer.back.subject</i18n>
     </button>
 
-    <button class="cell right-magnet" data-ng-click="displayModalCopyPaste()" data-ng-if="previewingFromLibrary">
+    <button data-ng-click="displayModalCopyPaste()" data-ng-if="previewingFromLibrary">
         <i18n>exercizer.copy.from.library</i18n>
     </button>
 
-    <button class="cell right-magnet flat-button" data-ng-click="redirectToTeacherDashboardLibraryTab()" data-ng-if="previewingFromLibrary">
+    <button class="button button-secondary" data-ng-click="redirectToTeacherDashboardLibraryTab()" data-ng-if="previewingFromLibrary">
         <i18n>exercizer.back.library</i18n>
     </button>
 </div>
