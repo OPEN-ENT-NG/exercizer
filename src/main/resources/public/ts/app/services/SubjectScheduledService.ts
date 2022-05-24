@@ -143,14 +143,14 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
-    public removeCorrectedFile = function(subjectId:number, docId:string): Promise<any>  {       
+    public removeCorrectedFile = function(subjectId:number, docId:string): Promise<any>  {
         var deferred = this._$q.defer(), request = {
             method: 'DELETE',
             url: `exercizer/subject/${subjectId}/file/${docId}`
         };
 
         this._$http(request).then(function(response){
-                deferred.resolve();
+                deferred.resolve(response.data);
             },
             function() {
                 deferred.reject("exercizer.error");

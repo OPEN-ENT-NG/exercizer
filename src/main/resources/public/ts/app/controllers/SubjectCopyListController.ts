@@ -33,11 +33,11 @@ class SubjectCopyListController {
         }
         const canShowGeneralCorrected = () => {
             //if corrected date has passed and subject scheduled corrected exist
-            return  (subjectScheduled.type !== 'simple') ? false : canShowCorrected() /*WB-582 && (subjectScheduled).corrected_file_id !== null*/;
+            return  (subjectScheduled.type !== 'simple') ? false : canShowCorrected() && subjectScheduled.files.length > 0;
         };
         const canShowIndividualCorrected = () => {
             //if corrected date has passed and subject copy corrected exist
-            return  (subjectScheduled.type !== 'simple') ? false : canShowCorrected() /*WB-582 && (subjectCopy).corrected_file_id !== null*/;
+            return  (subjectScheduled.type !== 'simple') ? false : canShowCorrected() && subjectCopy.corrected_files.length > 0;
         };
 
         const canShowCorrected = () => {

@@ -65,27 +65,29 @@
             </div>
             <div data-ng-if="performSimpleSubjectCopyController.canUpdate"
                     class="cell input-block align-center">
-                <h2 class="text-subheading m-0 new-title"><i18n>exercizer.all.submitted.copies</i18n></h2>
+                <h2 class="text-subheading new-title"><i18n>exercizer.all.submitted.copies</i18n></h2>
                 <message-info status="info"><i18n>exercizer.file.limit5</i18n></message-info>
-                <!-- DOWNLOAD / REMOVE -->  
-                <div class="selected-subject-scheduled mb-4"
-                        ng-repeat="file in performSimpleSubjectCopyController.subjectCopy.homework_files">
-                    <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                    <label class="text-pointer">[[file.metadata.filename]]</label>
-                    <button
-                        class="download"
-                        aria-label="[['exercizer.file.download'|i18n]]"
-                        data-ng-click="performSimpleSubjectCopyController.downloadFile(file)"
-                        target="_blank">
-                        <svg class="icon-download" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#download"></use></svg>
-                    </button>
-                    <button
-                        class="remove"
-                        data-ng-click="performSimpleSubjectCopyController.deleteFile(file)"
-                        title="[['exercizer.remove'|i18n]]"
-                        aria-label="[['exercizer.remove'|i18n]]">
-                        <svg class="icon-delete" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
-                    </button>
+                <!-- DOWNLOAD / REMOVE -->
+                <div class="mt-16">
+                    <div class="selected-subject-scheduled mb-4"
+                            ng-repeat="file in performSimpleSubjectCopyController.subjectCopy.homework_files">
+                        <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+                        <label class="text-pointer">[[file.metadata.filename]]</label>
+                        <button
+                            class="download"
+                            aria-label="[['exercizer.file.download'|i18n]]"
+                            data-ng-click="performSimpleSubjectCopyController.downloadFile(file)"
+                            target="_blank">
+                            <svg class="icon-download" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#download"></use></svg>
+                        </button>
+                        <button
+                            class="remove"
+                            data-ng-click="performSimpleSubjectCopyController.deleteFile(file)"
+                            title="[['exercizer.remove'|i18n]]"
+                            aria-label="[['exercizer.remove'|i18n]]">
+                            <svg class="icon-delete" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
+                        </button>
+                    </div>
                 </div>
                 <!-- ADD -->
                 <div class="row media-library mt-16" ng-if="performSimpleSubjectCopyController.subjectCopy.homework_files.length < 5">
@@ -117,7 +119,7 @@
         </article>
         <div class="flex-row gap-24">
             <article class="six flex-row f-column gap-8" data-ng-if="performSimpleSubjectCopyController.canShowGeneralCorrected()">
-                <h2 class="text-subheading mb-0  mb-16"><i18n>exercizer.simple.corrected</i18n></h2>
+                <h2 class="text-subheading"><i18n>exercizer.simple.corrected</i18n></h2>
                 <div class="text-body">
                     <div class="selected-subject-scheduled mb-4" 
                             ng-if="performSimpleSubjectCopyController.canDownloadCorrected()"
@@ -140,7 +142,7 @@
                 </div>
             </article>
             <article class="six flex-row f-column gap-8" data-ng-if="performSimpleSubjectCopyController.canShowIndividualCorrected()">
-                <h2 class="text-subheading mb-0  mb-16"><i18n>exercizer.simple.individual.corrected</i18n></h2>
+                <h2 class="text-subheading"><i18n>exercizer.simple.individual.corrected</i18n></h2>
                 <div class="text-body">
                     <div class="selected-subject-scheduled" 
                             ng-if="performSimpleSubjectCopyController.canDownloadCorrected()"

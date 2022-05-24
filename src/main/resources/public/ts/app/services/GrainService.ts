@@ -11,6 +11,7 @@ function cleanBeforeSave(subject: IGrain|ISubject|IGrainData):ISubject|IGrain|IG
         copy.owner = copy.owner.userId;
     }
     delete copy["tracker"];
+    if( copy["files"] ) delete copy["files"];
     return copy;
 }
 

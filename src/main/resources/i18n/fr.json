@@ -603,5 +603,6 @@
     "exercizer.all.submitted.copies": "Rendu de fichier(s)",
     "exercizer.file.limit5": "Vous pouvez déposer jusqu’à 5 fichiers maximum.",
     "exercizer.taptap.select.perform": "Sélectionner une réponse",
-    "exercizer.taptap.change.perform": "Remplacer la réponse"
+    "exercizer.taptap.change.perform": "Remplacer la réponse",
+    "exercizer.simple.corrected.optional": "facultatif"
 }

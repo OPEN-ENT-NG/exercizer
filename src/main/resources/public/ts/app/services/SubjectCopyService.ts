@@ -10,6 +10,9 @@ function cleanBeforeSave(subject: ISubjectCopy|ISubjectScheduled):ISubjectCopy|I
         copy.owner = copy.owner.userId;
     }
     delete copy["tracker"];
+    if( copy["files"] ) delete copy["files"];
+    if( copy["corrected_files"] ) delete copy["corrected_files"];
+    if( copy["homework_files"] )  delete copy["homework_files"];
     return copy;
 }
 
@@ -167,7 +170,6 @@ export class SubjectCopyService implements ISubjectCopyService {
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
-                        //WB-582 subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                         self._listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy);
 
                     });
