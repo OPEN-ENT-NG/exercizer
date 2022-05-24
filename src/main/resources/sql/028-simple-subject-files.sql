@@ -36,9 +36,7 @@ CREATE TABLE exercizer.subject_copy_file(
   CONSTRAINT subject_copy_file_subject_copy_fk FOREIGN KEY (subject_copy_id) REFERENCES exercizer.subject_copy(id) ON UPDATE CASCADE ON DELETE NO ACTION
 );
 
-/* --------------------------------------------------------------------------------- */
 CREATE OR REPLACE FUNCTION exercizer._trigger_subject_document_before_insert() RETURNS TRIGGER AS
-/* --------------------------------------------------------------------------------- */
 $$
 DECLARE
 docs int;
@@ -55,9 +53,9 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER subject_document_before_insert BEFORE INSERT ON exercizer.subject_document
 FOR EACH ROW EXECUTE PROCEDURE exercizer._trigger_subject_document_before_insert();
 
-/* --------------------------------------------------------------------------------- */
+
+
 CREATE OR REPLACE FUNCTION exercizer._trigger_subject_copy_file_before_insert() RETURNS TRIGGER AS
-/* --------------------------------------------------------------------------------- */
 $$
 DECLARE
 found_files int;

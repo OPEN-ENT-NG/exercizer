@@ -2,13 +2,11 @@
  Migrate corrected files to the new model with an external table (idempotent).
  
  Before migration
- ----------------
  - table "subject" has columns: "corrected_file_id" and "corrected_metadata" (never used).
  - table "subject_scheduled" has columns: "corrected_file_id" and "corrected_metadata".
  - table "subject_copy" has columns: "corrected_file_id", "corrected_metadata", "homework_file_id", "homework_metadata".
 
  After migration
- ---------------
  - table "subject" does not have the columns "corrected_file_id" and "corrected_metadata" anymore.
  - table "subject_scheduled" does not have the columns "corrected_file_id" and "corrected_metadata" anymore.
  - table "subject_document" may have 1 new row with data copied from "corrected_*" columns.
@@ -22,9 +20,7 @@
  => Files indexed in table "subject_copy_file" are always available from Storage (not Workspace)
 */
 
-/* --------------------------------------------------------------------------------- */
 CREATE OR REPLACE FUNCTION exercizer.migrate_subject_files(int) RETURNS SETOF bigint AS
-/* --------------------------------------------------------------------------------- */
 $$
 DECLARE
   batch_size ALIAS FOR $1;
@@ -61,9 +57,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-/* --------------------------------------------------------------------------------- */
 CREATE OR REPLACE FUNCTION exercizer.migrate_subject_scheduled_files(int) RETURNS SETOF bigint AS
-/* --------------------------------------------------------------------------------- */
 $$
 DECLARE
   batch_size ALIAS FOR $1;
@@ -100,9 +94,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-/* --------------------------------------------------------------------------------- */
 CREATE OR REPLACE FUNCTION exercizer.migrate_subject_copy_corrected_files(int) RETURNS SETOF bigint AS
-/* --------------------------------------------------------------------------------- */
 $$
 DECLARE
   batch_size ALIAS FOR $1;
@@ -139,9 +131,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-/* --------------------------------------------------------------------------------- */
 CREATE OR REPLACE FUNCTION exercizer.migrate_subject_copy_homework_files(int) RETURNS SETOF bigint AS
-/* --------------------------------------------------------------------------------- */
 $$
 DECLARE
   batch_size ALIAS FOR $1;
