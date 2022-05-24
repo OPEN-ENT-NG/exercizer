@@ -42,22 +42,26 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 	private static final String application = Exercizer.class.getSimpleName();
 
 	@Override
-	@Deprecated //2022-05-17 JIRA WB-582
 	public void getInfo(final String fileId, final Handler<AsyncResult<FileInfos>> handler) {
+		/* Used by the antivirus */
 		final JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(fileId);
-		final String query1 = "select owner, corrected_metadata from exercizer.subject where corrected_file_id = ?";
-		final String query2 = "select owner, homework_metadata from exercizer.subject_copy where homework_file_id = ?";
-		final String query3 = "select owner, corrected_metadata from exercizer.subject_scheduled where corrected_file_id = ?";
-		final String query4 =
-				"select sjs.owner as owner, sc.corrected_metadata as corrected_metadata " +
-				"from exercizer.subject_copy sc " +
-				"left join exercizer.subject_scheduled sjs on sjs.id = subject_scheduled_id " +
-				"where sc.corrected_file_id = ?";
+		final String query1 = "select s.owner, sd.metadata "+
+			"from exercizer.subject_document sd "+
+			"inner join exercizer.subject s on s.id=sd.subject_id "+
+			"where sd.doc_id = ?";
+		final String query2 = "select sc.owner, scf.metadata "+
+			"from exercizer.subject_copy_file scf "+
+			"inner join exercizer.subject_copy sc on sc.id = scf.subject_copy_id and scf.doc_type='homework' "+
+			"where scf.file_id = ?";
+		final String query3 = "select ss.owner, scf.metadata "+
+			"from exercizer.subject_copy_file scf "+
+			"inner join exercizer.subject_copy sc on sc.id = scf.subject_copy_id and scf.doc_type='corrected' "+
+			"inner join exercizer.subject_scheduled ss on ss.id = sc.subject_scheduled_id "+
+			"where scf.file_id = ?";
 		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
 		builder.prepared(query1, params);
 		builder.prepared(query2, params);
 		builder.prepared(query3, params);
-		builder.prepared(query4, params);
 		sql.transaction(builder.build(), new Handler<Message<JsonObject>>() {
 			@Override
 			public void handle(Message<JsonObject> message) {
@@ -71,11 +75,8 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 							fi.setId(fileId);
 							fi.setOwner(res.getString("owner"));
 							JsonObject meta = null;
-							if (res.getString("corrected_metadata") != null) {
-								meta = new fr.wseduc.webutils.collections.JsonObject(res.getString("corrected_metadata"));
-							}
-							if (meta == null && res.getString("homework_metadata") != null) {
-								meta = new fr.wseduc.webutils.collections.JsonObject(res.getString("homework_metadata"));
+							if (res.getString("metadata") != null) {
+								meta = new fr.wseduc.webutils.collections.JsonObject(res.getString("metadata"));
 							}
 							if (meta != null) {
 								fi.setName(meta.getString("filename"));
@@ -95,30 +96,20 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 	}
 
 	@Override
-	@Deprecated //2022-05-17 JIRA WB-582
 	public void updateInfo(String fileId, FileInfos fileInfos, final Handler<AsyncResult<Integer>> handler) {
+		/* Used by the antivirus */
 		final JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(fileId);
 		final String query1 =
-				"update exercizer.subject " +
-				"set corrected_metadata = jsonb_set(corrected_metadata, '{filename}', '\"" + fileInfos.getName() + "\"') " +
-				"where corrected_file_id = ?";
+				"update exercizer.subject_document " +
+				"set metadata = jsonb_set(metadata, '{filename}', '\"" + fileInfos.getName() + "\"') " +
+				"where doc_id = ?";
 		final String query2 =
-				"update exercizer.subject_copy " +
-				"set homework_metadata = jsonb_set(homework_metadata, '{filename}', '\"" + fileInfos.getName() + "\"') " +
-				"where homework_file_id = ?";
-		final String query3 =
-				"update exercizer.subject_scheduled " +
-				"set corrected_metadata = jsonb_set(corrected_metadata, '{filename}', '\"" + fileInfos.getName() + "\"') " +
-				"where corrected_file_id = ?";
-		final String query4 =
-				"update exercizer.subject_copy " +
-				"set corrected_metadata = jsonb_set(corrected_metadata, '{filename}', '\"" + fileInfos.getName() + "\"') " +
-				"where corrected_file_id = ?";
+				"update exercizer.subject_copy_file " +
+				"set metadata = jsonb_set(metadata, '{filename}', '\"" + fileInfos.getName() + "\"') " +
+				"where file_id = ?";
 		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
 		builder.prepared(query1, params);
 		builder.prepared(query2, params);
-		builder.prepared(query3, params);
-		builder.prepared(query4, params);
 		sql.transaction(builder.build(), new Handler<Message<JsonObject>>() {
 
 			@Override
