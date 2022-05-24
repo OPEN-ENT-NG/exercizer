@@ -25,7 +25,7 @@ public class SubjectCopyCorrected implements ResourcesProvider {
 
         Future<String> promise = Future.future();
 
-        promise.setHandler(asyncResult -> {
+        promise.onComplete(asyncResult -> {
             if (asyncResult.succeeded() && asyncResult.result() != null) {
                 final String id = asyncResult.result();
                 resourceRequest.pause();

@@ -23,6 +23,8 @@ import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Either;
 import io.vertx.core.json.Json;
+
+import org.apache.commons.lang3.NotImplementedException;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
@@ -312,6 +314,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 							final Long newSubjectId = ja.getJsonArray(i).getJsonObject(0).getLong("id");
 							final Long fromSubjectId = ids.get(i);
 							duplicateSubject(s, newSubjectId, fromSubjectId, folderId, user, titleSuffix);
+							duplicateSubjectDocuments(s, newSubjectId, fromSubjectId, false );
 							duplicationGrain(s, newSubjectId, fromSubjectId);
 						}
 						sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, handler));
@@ -327,25 +330,25 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		}
 	}
 
-	public void publishLibrary(final Long fromSubjectId, final String authorsContributors, final String correctedFileId, final JsonObject correctedMetadata,
+	public void publishLibrary(final Long fromSubjectId, final String authorsContributors, /*TODO WB-582 final String correctedFileId, final JsonObject correctedMetadata, */
 											 final Long typeId, final Long levelId, JsonArray tag, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		if (tag != null && tag.size() > 0) {
 			insertTag(tag, new Handler<Either<String, JsonArray>>() {
 				@Override
 				public void handle(Either<String, JsonArray> event) {
 					if (event.isRight()) {
-						publishSubjectGrainsLibrary(fromSubjectId, authorsContributors, correctedFileId, correctedMetadata, typeId, levelId, event.right().getValue(), user, handler);
+						publishSubjectGrainsLibrary(fromSubjectId, authorsContributors, typeId, levelId, event.right().getValue(), user, handler);
 					} else {
 						handler.handle(new Either.Left<String, JsonObject>(event.left().getValue()));
 					}
 				}
 			});
 		} else {
-			publishSubjectGrainsLibrary(fromSubjectId, authorsContributors, correctedFileId, correctedMetadata, typeId, levelId, tag, user, handler);
+			publishSubjectGrainsLibrary(fromSubjectId, authorsContributors, typeId, levelId, tag, user, handler);
 		}
 	}
 
-	private void publishSubjectGrainsLibrary( final Long fromSubjectId, final String authorsContributors, final String correctedFileId, final JsonObject correctedMetadata,
+	private void publishSubjectGrainsLibrary( final Long fromSubjectId, final String authorsContributors, /*TODO WB-582 final String correctedFileId, final JsonObject correctedMetadata,*/
 											 final Long typeId, final Long levelId,  final JsonArray tag, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		String queryNewSubjectId = "SELECT nextval('" + schema + "subject_id_seq') as id";
 		sql.prepared(queryNewSubjectId, new fr.wseduc.webutils.collections.JsonArray(),
@@ -356,7 +359,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 								if (event.isRight()) {
 									final Long newSubjectId = event.right().getValue().getLong("id");
 									final SqlStatementsBuilder s = new SqlStatementsBuilder();
-									duplicateSubjectForLibrary(s, newSubjectId, fromSubjectId, authorsContributors, correctedFileId, correctedMetadata, user);
+									duplicateSubjectForLibrary(s, newSubjectId, fromSubjectId, authorsContributors, user);
+									duplicateSubjectDocuments(s, newSubjectId, fromSubjectId, true );
 									duplicationGrain(s, newSubjectId, fromSubjectId);
 									insertSubjectMainInformation(newSubjectId, s, typeId, levelId);
 									insertSubjectTag(newSubjectId, s, tag);
@@ -425,30 +429,41 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	}
 
 	private void duplicateSubjectForLibrary(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final String authorsContributors,
-	                                        final String correctedFileId, final JsonObject correctedMetadata, UserInfos user) {
-		duplicationSubject(s, newSubjectId, fromSubjectId, true, authorsContributors, correctedFileId, correctedMetadata, null, user, "", false);
+	                                        /*final String correctedFileId, final JsonObject correctedMetadata,*/ UserInfos user) {
+		duplicationSubject(s, newSubjectId, fromSubjectId, true, authorsContributors, null, user, "", false);
 	}
 
 	private void duplicateSubject(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Long folderId, UserInfos user, String titleSuffix) {
-		duplicationSubject(s, newSubjectId, fromSubjectId, false, null, null, null, folderId, user, titleSuffix, true);
+		duplicationSubject(s, newSubjectId, fromSubjectId, false, null, folderId, user, titleSuffix, true);
 	}
 
 	private void duplicationSubject(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Boolean isLibrary,
-									final String authorsContributors,  final String correctedFileId, JsonObject correctedMetadata, final Long folderId, UserInfos user, final String titleSuffix, final Boolean isMergeUser) {
+									final String authorsContributors, final Long folderId, UserInfos user, final String titleSuffix, final Boolean isMergeUser) {
 		if (isMergeUser) {
 			String userQuery = "SELECT " + schema + "merge_users(?,?)";
 			s.prepared(userQuery, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUsername()));
 		}
 		//caution original_subject_id unmanagment
 		final String subjectCopy = "INSERT INTO exercizer.subject (id, folder_id, owner, owner_username, title, description, picture, max_score, " +
-				"is_library_subject, is_deleted, authors_contributors, corrected_file_id, corrected_metadata, type) " +
-				"SELECT ?, ?, ?, ?, s.title || ?, s.description, s.picture, s.max_score, ?, s.is_deleted, ?, ?, ?::jsonb, s.type FROM exercizer.subject as s " +
+				"is_library_subject, is_deleted, authors_contributors, type) " +
+				"SELECT ?, ?, ?, ?, s.title || ?, s.description, s.picture, s.max_score, ?, s.is_deleted, ?, s.type FROM exercizer.subject as s " +
 				"WHERE s.id = ?";
 
 		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray().add(newSubjectId).add(folderId).add(user.getUserId())
-				.add(user.getUsername()).add(titleSuffix).add(isLibrary).add(authorsContributors).add(correctedFileId).add(correctedMetadata).add(fromSubjectId);
+				.add(user.getUsername()).add(titleSuffix).add(isLibrary).add(authorsContributors).add(fromSubjectId);
 
 		s.prepared(subjectCopy, values);
+	}
+
+	private void duplicateSubjectDocuments(
+			final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final Boolean isLibrary 
+			) {
+		final String subjectDocumentCopy = "INSERT INTO exercizer.subject_document (subject_id, doc_id, doc_type, metadata) " +
+				"SELECT ?, s.doc_id, s.doc_type, s.metadata::jsonb FROM exercizer.subject as s WHERE s.subject_id = ?";
+
+		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray().add(newSubjectId).add(fromSubjectId);
+
+		s.prepared(subjectDocumentCopy, values);
 	}
 
 	private void duplicationGrain(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId) {
@@ -469,6 +484,9 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		final String deleteSubjectInfo = "DELETE FROM " + schema + "subject_library_main_information WHERE subject_id=?";
 		builder.prepared(deleteSubjectInfo, values);
 
+		final String deleteSubjectDocuments = "DELETE FROM " + schema + "subject_document WHERE subject_id=?";
+		builder.prepared(deleteSubjectDocuments, values);
+
 		removeGrains(builder, values);
 
 		final String deleteSubject = "DELETE FROM " + resourceTable + " WHERE id=?";
@@ -477,9 +495,8 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
 	}
 
-	@Override
 	public void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler) {
-		super.getCorrectedDownloadInformation(id, null, handler);
+		throw new NotImplementedException("getCorrectedDownloadInformation is deprecated");
 	}
 
 	@Override
@@ -500,4 +517,55 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(userId).add(userId);
 		sql.prepared(query.toString(), params, SqlResult.validUniqueResultHandler(handler));
 	}
+
+    @Override
+    public void listCorrectedDocuments(final Long subjectId, final Handler<Either<String, JsonArray>> handler) {
+        StringBuilder select = new StringBuilder()
+		.append("SELECT doc_id, doc_type, metadata ")
+		.append("FROM ").append(schema).append("subject_document ")
+		.append("WHERE subject_id = ?");
+		
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectId );
+		sql.prepared(select.toString(), values, SqlResult.validResultHandler(handler, "metadata"));		
+    }
+
+	@Override
+	public void getCorrectedDocument(final Long subjectId, final String docId, final Handler<Either<String, JsonObject>> handler ) {
+        StringBuilder select = new StringBuilder()
+		.append("SELECT doc_id, doc_type, metadata ")
+		.append("FROM ").append(schema).append("subject_document ")
+		.append("WHERE subject_id = ? AND doc_id = ?");
+		
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectId )
+			.add( docId );
+		sql.prepared(select.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));		
+	}
+
+	@Override
+    public void addCorrectedDocument(final Long subjectId, final String docId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler) {
+        StringBuilder insert = new StringBuilder()
+		.append("INSERT INTO ").append(schema).append("subject_document (subject_id, doc_id, metadata) ")
+		.append("VALUES (?,?,?) RETURNING subject_id, doc_id, doc_type, metadata");
+
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectId )
+			.add( docId )
+			.add( metadata );
+		sql.prepared(insert.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));
+	}
+
+	@Override
+    public void deleteCorrectedDocument(final Long subjectId, final String docId, final Handler<Either<String, JsonObject>> handler) {
+        StringBuilder delete = new StringBuilder()
+		.append("DELETE FROM ").append(schema).append("subject_document ")
+		.append("WHERE subject_id = ? AND doc_id = ? RETURNING subject_id, doc_id, doc_type, metadata");
+
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectId )
+			.add( docId );
+		sql.prepared(delete.toString(), values, SqlResult.validUniqueResultHandler(handler));
+	}
+
 }

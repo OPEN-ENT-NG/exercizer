@@ -2,6 +2,7 @@ import { ng, idiom, moment, notify } from 'entcore';
 import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainCopy, IGrainScheduled, ISubjectCopy, ISubjectScheduled, SubjectCopy } from '../models/domain';
 import { _ } from 'entcore';
+import { ISubjectCopyFile } from '../models/domain/SubjectCopyFile';
 
 function cleanBeforeSave(subject: ISubjectCopy|ISubjectScheduled):ISubjectCopy|ISubjectScheduled{
     const copy:any = {...subject}
@@ -9,6 +10,9 @@ function cleanBeforeSave(subject: ISubjectCopy|ISubjectScheduled):ISubjectCopy|I
         copy.owner = copy.owner.userId;
     }
     delete copy["tracker"];
+    if( copy["files"] ) delete copy["files"];
+    if( copy["corrected_files"] ) delete copy["corrected_files"];
+    if( copy["homework_files"] )  delete copy["homework_files"];
     return copy;
 }
 
@@ -22,12 +26,14 @@ export interface ISubjectCopyService {
     createFromSubjectScheduled(subjectScheduled:ISubjectScheduled):ISubjectCopy;
     getList():ISubjectCopy[];
     getById(id:number):ISubjectCopy;
-    persistSimpleCopy(id, file): Promise<String>;
+    submitSimpleCopy(id:number): Promise<ISubjectCopy>;
+    addHomeworkFile(id:number, file): Promise<String>;
+    removeHomeworkFile(id:number, fileId:string): Promise<any>;
     downloadSimpleCopies(idCopies:string[]): string;
-    downloadSimpleCopy(id:string): string;
-    downloadMySimpleCopy(id:string): string;
-    addCorrectedFile(id, file): Promise<String>;
-    removeCorrectedFile(id): Promise<any>;
+    downloadSimpleCopy(id:string, fileId:string): string;
+    downloadMySimpleCopy(id:string, fileId:string): string;
+    addCorrectedFile(id, file): Promise<ISubjectCopyFile>;
+    removeCorrectedFile(id:number, fileId:string): Promise<any>;
     remindCustomCopies(copyIds:number[], subject:string, body:string): Promise<Boolean>;
     remindAutomaticCopies(copyIds:number[], subjectScheduleId:number): Promise<Boolean>;
     excludeCopies(copyIds:number[]): Promise<{}[]>;
@@ -84,10 +90,9 @@ export class SubjectCopyService implements ISubjectCopyService {
                 function(response) {
                     self._listMappedById = {};
                     self._listBySubjectScheduled = {};
-                    var subjectCopy;
+                    var subjectCopy:ISubjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
-                        subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
-                        subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
+                        subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject));
                         if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
                             self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
                         }
@@ -118,7 +123,6 @@ export class SubjectCopyService implements ISubjectCopyService {
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
-                        subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                         if(!self._listBySubjectScheduled[subjectCopy.subject_scheduled_id]){
                             self._listBySubjectScheduled[subjectCopy.subject_scheduled_id] = [];
                         }
@@ -166,7 +170,6 @@ export class SubjectCopyService implements ISubjectCopyService {
                     var subjectCopy;
                     angular.forEach(response.data, function(subjectCopyObject) {
                         subjectCopy = SerializationHelper.toInstance(new SubjectCopy(), JSON.stringify(subjectCopyObject)) as any;
-                        subjectCopy.corrected_metadata = JSON.parse(subjectCopy.corrected_metadata);
                         self._listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy);
 
                     });
@@ -222,13 +225,38 @@ export class SubjectCopyService implements ISubjectCopyService {
         return deferred.promise;
     };
 
-    public persistSimpleCopy = function(id, file): Promise<String>  {
+    public submitSimpleCopy = function(id:number): Promise<ISubjectCopy>  {
+        var deferred = this._$q.defer(),
+            self = this,
+            request = {
+                method: 'PUT',
+                url: 'exercizer/subject-copy/submit',
+                data: {"id": id, "offset": new Date().getTimezoneOffset()}
+            };
+        
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(response.data);
+            },
+            function(e) {
+                if (e.status === 413) {
+                    notify.error('exercizer.notify.file.weight');
+                } else {
+                    deferred.reject(e.data.error);
+                }
+            }
+        );
+        
+        return deferred.promise;
+    };
+
+    public addHomeworkFile = function(id:number, file): Promise<String>  {
         var formData = new FormData();
         formData.append('file', file);
         
-        var deferred = this._$q.defer();
+        var deferred = this._$q.defer();         ;
 
-        this._$http.put('exercizer/subject-copy/simple/submit/' + id + '/' + new Date().getTimezoneOffset(), formData, {
+        this._$http.put(`exercizer/subject-copy/${id}/homework`, formData, {
             withCredentials: false,
             headers: {
                 'Content-Type': undefined
@@ -239,9 +267,8 @@ export class SubjectCopyService implements ISubjectCopyService {
             },
             responseType: 'json'
 
-        }).then(
-            function(response){
-                deferred.resolve(response.data.fileId);
+        }).then(function(response){
+                deferred.resolve(response.data);
             },
             function(e) {
                 notify.close();
@@ -251,6 +278,22 @@ export class SubjectCopyService implements ISubjectCopyService {
                 } else {
                     deferred.reject(e.data.error);
                 }
+            }
+        );
+        return deferred.promise;
+    };
+
+    public removeHomeworkFile = function(id:number, fileId:string): Promise<any>  {
+        var deferred = this._$q.defer(), request = {
+            method: 'DELETE',
+            url: `exercizer/subject-copy/${id}/homework/${fileId}`
+        };
+        
+        this._$http(request).then(function(response){
+                deferred.resolve();
+            },
+            function() {
+                deferred.reject("exercizer.error");
             }
         );
         return deferred.promise;
@@ -320,12 +363,12 @@ export class SubjectCopyService implements ISubjectCopyService {
     };
 
 
-    public addCorrectedFile = function(id, file): Promise<String>  {
+    public addCorrectedFile = function(id, file): Promise<ISubjectCopyFile>  {
         var formData = new FormData();
         formData.append('file', file);
        var deferred = this._$q.defer();         ;
 
-        this._$http.put('exercizer/subject-copy/simple/corrected/' + id, formData, {
+        this._$http.put(`exercizer/subject-copy/${id}/corrected`, formData, {
             withCredentials: false,
             headers: {
                 'Content-Type': undefined
@@ -337,7 +380,7 @@ export class SubjectCopyService implements ISubjectCopyService {
             responseType: 'json'
 
         }).then(function(response){
-                deferred.resolve(response.data.fileId);
+                deferred.resolve(response.data);
             },
             function(e) {
                 deferred.reject(e.data.error);
@@ -346,10 +389,10 @@ export class SubjectCopyService implements ISubjectCopyService {
         return deferred.promise;
     };
 
-    public removeCorrectedFile = function(id): Promise<any>  {
+    public removeCorrectedFile = function(id:number, fileId:string): Promise<any>  {
         var deferred = this._$q.defer(), request = {
-            method: 'PUT',
-            url: 'exercizer/subject-copy/simple/remove/corrected/' + id
+            method: 'DELETE',
+            url: `exercizer/subject-copy/${id}/corrected/${fileId}`
         };
         
         this._$http(request).then(function(response){
@@ -375,12 +418,12 @@ export class SubjectCopyService implements ISubjectCopyService {
        
     };
 
-    public downloadSimpleCopy = function(id:string): string  {
-        return '/exercizer/subject-copy/simple/download/' + id;
+    public downloadSimpleCopy = function(id:string, fileId:string): string  {
+        return `exercizer/subject-copy/${id}/homework/${fileId}`;
     };
 
-    public downloadMySimpleCopy = function(id:string): string  {
-        return '/exercizer/subject-copy/simple/mine/' + id;
+    public downloadMySimpleCopy = function(id:string, fileId:string): string  {
+        return `exercizer/subject-copy/${id}/mine/${fileId}`;
     };
 
     private write = function(subjectCopy:ISubjectCopy, action:String):Promise<ISubjectCopy> {

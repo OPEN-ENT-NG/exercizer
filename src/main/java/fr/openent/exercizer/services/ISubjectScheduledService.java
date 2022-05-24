@@ -85,11 +85,16 @@ public interface ISubjectScheduledService {
      */
     void simpleSchedule(final JsonObject scheduledSubject, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
-    void addCorrectedFile(final String id, final String fileId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler);
-
-    void removeCorrectedFile(final String id, final Handler<Either<String, JsonObject>> handler);
-
-    void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler);
+    /**
+     * Return download informations.
+     * Useful to check if the corrected file is available to the user.
+     *
+     * @param id the id of resource
+     * @param docId id of the file
+     * @param handler the handler
+     *
+     */
+    void getCorrectedDownloadInformation(final String id, final String docId, final Handler<Either<String, JsonObject>> handler);
 
     void getMember(final String id, final Handler<Either<String, JsonArray>> handler);
 

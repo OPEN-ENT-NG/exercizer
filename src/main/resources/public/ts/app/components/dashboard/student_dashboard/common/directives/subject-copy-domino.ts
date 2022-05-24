@@ -157,21 +157,6 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                     window.location.href = '/exercizer/subject-copy/corrected/download/' + scope.subjectCopy.id;
                 };
 
-                scope.canShowGeneralCorrected = function() {
-                    //if corrected date has passed and subject scheduled corrected exist
-                    return  (scope.subjectScheduled.type !== 'simple') ? false : scope.canShowCorrected() && this.subjectScheduled.corrected_file_id !== null;
-                };
-
-                scope.canShowIndividualCorrected = function(){
-                    //if corrected date has passed and subject copy corrected exist
-                    return  (scope.subjectScheduled.type !== 'simple') ? false : scope.canShowCorrected() && this.subjectCopy.corrected_file_id !== null;
-                };
-
-                scope.canShowCorrected = function() {
-                    //if corrected date has passed
-                    return  DateService.compare_after(new Date(), DateService.isoToDate(scope.subjectScheduled.corrected_date), true);
-                };
-
                 scope.canShowTrainingOption = function() {
                     return scope.subjectCopy.submitted_date && !scope.subjectCopy.is_training_copy;
                 };

@@ -1,7 +1,8 @@
 import { ng, idiom, model, Behaviours, notify, EditTrackingEvent, trackingService } from 'entcore';
 import { angular } from 'entcore';
 import { ISubject, IFolder, Subject, ISubjectScheduled } from '../models/domain';
-import { ISubjectService, ISubjectLibraryService } from '../services';
+import { ISubjectDocument } from '../models/domain/SubjectDocument';
+import { ISubjectService, ISubjectLibraryService, ISubjectScheduledService } from '../services';
 
 class EditSimpleSubjectController {
 
@@ -10,7 +11,8 @@ class EditSimpleSubjectController {
         '$scope',
         '$location',
         'SubjectService',
-        'SubjectLibraryService'
+        'SubjectLibraryService',
+        'SubjectScheduledService',
     ];
 
     // common
@@ -20,6 +22,8 @@ class EditSimpleSubjectController {
     private _previewingFromLibrary:boolean;
     private _readOnly:boolean;
     private _defaultTitle:string;
+    public fileSelectionDisplayed = false;
+    public selectedFile = { file: {}, visibility: 'protected' };
 
     constructor
     (
@@ -27,7 +31,8 @@ class EditSimpleSubjectController {
         private _$scope,
         private _$location,
         private _subjectService:ISubjectService,
-        private _subjectLibraryService:ISubjectLibraryService      
+        private _subjectLibraryService:ISubjectLibraryService,
+        private _subjectScheduledService:ISubjectScheduledService
     ) {
         this._defaultTitle = idiom.translate('exercizer.simple.default.title');
         this._hasDataLoaded = false;
@@ -36,10 +41,11 @@ class EditSimpleSubjectController {
         var self = this,
             subjectId = _$routeParams['subjectId'],
             subjectPreviewId =  _$routeParams['subjectPreviewId'];
-        
+
         if (subjectPreviewId) {
             if (!angular.isUndefined(self._subjectLibraryService.tmpSubjectForPreview)) {
                 var subjectPreview:any = self._subjectLibraryService.tmpSubjectForPreview;
+                /*TODO WB-582 */
                 subjectPreview.corrected_metadata = JSON.parse(subjectPreview.corrected_metadata);
                 self._previewFromLibrary(subjectPreview);
             } else {
@@ -57,7 +63,12 @@ class EditSimpleSubjectController {
                     }
 
                     self._previewingFromLibrary = false;
-                    self._hasDataLoaded = true;
+                    self._subjectService.listFiles(self._subject.id).then( function(files) {
+                        self._subject.files = files;
+                        self._hasDataLoaded = true;
+                    }, function(err) {
+                        self._hasDataLoaded = true; // Error, but users has already been notified.
+                    });
                 }
             }, function(err) {
                 notify.error(err);
@@ -157,8 +168,35 @@ class EditSimpleSubjectController {
         }
     };
 
-    public downloadCorrectedFile = function() {
-        window.location.href = '/exercizer/subject/simple/corrected/download/' + this._subject.id;
+    public appendCorrected() {
+        const file = this.selectedFile.file;
+        if(!file){
+            return;
+        }
+        this._subjectScheduledService.addCorrectedFile(this._subject.id, file).then(
+            (doc:ISubjectDocument) => {
+                this._subject.files.push(doc);
+                notify.info('exercizer.service.save.corrected');
+            },
+            (err) => {
+                notify.error(err);
+            }
+        );
+    };
+
+    public removeCorrected(file:ISubjectDocument) {
+        this._subjectScheduledService.removeCorrectedFile(this._subject.id, file.doc_id).then(
+            (res) => {
+                const idx = this._subject.files.findIndex( f => f.doc_id===file.doc_id );
+                if( idx >= 0 ) {
+                    this._subject.files.splice( idx, 1 );
+                }
+                notify.info('exercizer.service.delete.corrected');
+            },
+            (err) => {
+                notify.error(err);
+            }
+        );
     };
 
     public scheduleSubject() {

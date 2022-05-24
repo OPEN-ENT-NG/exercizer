@@ -220,7 +220,6 @@
     "exercizer.simple.individual.corrected" : "Correction individuelle",
     "exercizer.simple.no.corrected" : "Pas encore de correction disponible",
     "exercizer.simple.check" : "Veuillez déposer un fichier",
-    "exercizer.simple.check.renew" : "Veuillez déposer un nouveau fichier.",
     "exercizer.future.info" : "Vous pourrez rendre votre sujet à partir du",
     "exercizer.simple.submit.from.library" : "Le sujet a bien été ajouté dans votre liste des sujets.",
     "exercizer.simple.library.corrected" : "Ajouté un corrigé",
@@ -604,5 +603,6 @@
     "exercizer.all.submitted.copies": "Rendu de fichier(s)",
     "exercizer.file.limit5": "Vous pouvez déposer jusqu’à 5 fichiers maximum.",
     "exercizer.taptap.select.perform": "Sélectionner une réponse",
-    "exercizer.taptap.change.perform": "Remplacer la réponse"
+    "exercizer.taptap.change.perform": "Remplacer la réponse",
+    "exercizer.simple.corrected.optional": "facultatif"
 }

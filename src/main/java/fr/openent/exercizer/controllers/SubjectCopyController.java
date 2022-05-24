@@ -25,6 +25,7 @@ import fr.openent.exercizer.services.IGrainCopyService;
 import fr.openent.exercizer.services.ISubjectCopyService;
 import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.openent.exercizer.services.ISubjectService;
+import fr.openent.exercizer.services.ISubjectCopyService.FileType;
 import fr.openent.exercizer.services.impl.GrainCopyServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectCopyServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectScheduledServiceSqlImpl;
@@ -34,6 +35,7 @@ import fr.wseduc.rs.ApiDoc;
 import fr.wseduc.rs.Get;
 import fr.wseduc.rs.Post;
 import fr.wseduc.rs.Put;
+import fr.wseduc.rs.Delete;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.swift.utils.FileUtils;
@@ -53,7 +55,9 @@ import org.entcore.common.utils.Zip;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.HttpServerRequest;
@@ -243,6 +247,13 @@ public class SubjectCopyController extends ControllerHelper {
 											subject.getString("title"),
 											null,
 											subjectCopyId);
+
+									if( copyAction==CopyAction.SUBMITCOPY && "Student".equalsIgnoreCase(user.getType()) ) {
+										url = "/dashboard/teacher/correction/"+ subjectCopy.getLong("subject_scheduled_id");
+										String notificationName="submithomework";
+										recipient = subjectCopy.getString("subject_owner");
+										sendNotification(request, notificationName, user, Arrays.asList(recipient), url, subjectCopy.getString("title"), null, subjectCopyId);
+									}
 								}
 							});
 						}
@@ -583,303 +594,341 @@ public class SubjectCopyController extends ControllerHelper {
 		});
 	}
 
-	@Put("/subject-copy/simple/submit/:id/:offset")
-	@ApiDoc("Submit a homework file to a subject copy.")
+	/**
+	 * Helper function to retrieve the current UserInfo, if authorized. 
+	 * Otherwise, responds to request with HTTP 401 Unauthorized.
+	 */
+	protected Future<UserInfos> checkAuth(final HttpServerRequest request){
+		final Promise<UserInfos> promise = Promise.promise();
+		UserUtils.getUserInfos(eb, request, user -> {
+            if( user != null ) {
+				promise.complete( user );
+            } else {
+				final String unauthorized = "User not found in session.";
+                log.debug( unauthorized );
+                unauthorized( request );
+				promise.fail( unauthorized );
+            }
+		});
+		return promise.future();
+	}
+
+	/**
+	 * Helper function to get metadata of a subject.
+	 * Responds to request with HTTP BadRequest in case of failure.
+	 * @param request
+	 * @param id of the subject-copy
+	 * @param fileType which metadata is needed
+	 * @return see {@link ISubjectCopyService}.getMetadataOfSubject
+	 */
+	protected Future<JsonObject> getMetadataOfSubject(final HttpServerRequest request, final String id, final ISubjectCopyService.FileType fileType) {
+		final Promise<JsonObject> promise = Promise.promise();
+		request.pause();
+		subjectCopyService.getMetadataOfSubject(id, fileType, event -> {
+			request.resume();
+			if (event.isRight()) {
+				promise.complete( event.right().getValue() );
+			} else {
+				final String msg = event.left().getValue();
+				Renders.badRequest(request, msg);
+				promise.fail( msg );
+			}
+		});
+		return promise.future();
+	}
+
+	@Get("/subject-copy/:id/files")
+	@ResourceFilter(SubjectCopyCorrected.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void listFiles(final HttpServerRequest request){
+		checkAuth(request).onSuccess( user -> {
+			try {
+				final Long subjectCopyId = Long.parseLong( request.params().get("id") );
+				subjectCopyService.listFiles(subjectCopyId, arrayResponseHandler(request));
+			} catch( Exception e ) {
+				badRequest(request);
+			}
+		});
+	}
+
+	@Put("/subject-copy/:id/homework")
+	@ApiDoc("Add a homework file to a subject copy.")
 	@ResourceFilter(SubjectCopyLearnerAccess.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
-	public void submitHomeworkFile(final HttpServerRequest request) {
+	public void addHomeworkFile(final HttpServerRequest request) {
 		final String id = request.params().get("id");
 		try {
-			final Integer offset = Integer.parseInt(request.params().get("offset"));
-			final ISubjectCopyService.FileType homeworkType = ISubjectCopyService.FileType.HOMEWORK;
-			UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-				@Override
-				public void handle(final UserInfos user) {
-					if (user != null) {
-						addOrReplaceFile(request, id, offset, homeworkType, user);
-					} else {
-						log.debug("User not found in session.");
-						unauthorized(request);
-					}
-				}
-
+			checkAuth(request).onSuccess( user -> {
+				addFile(request, id, ISubjectCopyService.FileType.HOMEWORK, user);
 			});
-
-		}catch (NumberFormatException e){
-			log.error("can't parse offset of subject-copy", e);
+		} catch (Exception e) {
 			badRequest(request);
 		}
 	}
 
-	@Put("/subject-copy/simple/corrected/:id")
+	@Put("/subject-copy/:id/corrected")
 	@ApiDoc("Adding a corrected file to a subject copy.")
 	@ResourceFilter(SubjectCopyAccess.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void addCorrectedFile(final HttpServerRequest request) {
 		final String id = request.params().get("id");
-		final ISubjectCopyService.FileType correctedType = ISubjectCopyService.FileType.CORRECTED;
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(final UserInfos user) {
-				if (user != null) {
-					addOrReplaceFile(request, id, 0, correctedType, user);
-				} else {
-					log.debug("User not found in session.");
-					unauthorized(request);
-				}
-			}
-
-		});
+		try {
+			checkAuth(request).onSuccess( user -> {
+				addFile(request, id, ISubjectCopyService.FileType.CORRECTED, user);
+			});
+		} catch (Exception e) {
+			badRequest(request);
+		}
 	}
 
-	private void addOrReplaceFile(final HttpServerRequest request, final String id, final int offset, final ISubjectCopyService.FileType fileType, final UserInfos user) {
-		request.pause();
-		subjectCopyService.getMetadataOfSubject(id, fileType, new Handler<Either<String, JsonObject>>() {
-            @Override
-            public void handle(Either<String, JsonObject> event) {
-                request.resume();
-                if (event.isRight()) {
-                    final JsonObject subjectCopy = event.right().getValue();
-                    //replace corrected file
-	                final String labelFileId = ISubjectCopyService.FileType.CORRECTED.equals(fileType) ? "corrected_file_id" : "homework_file_id";
-					final String existingFileId = subjectCopy.getString(labelFileId, "");
-					subjectCopy.put("offset", offset);
-					storage.writeUploadFile(request, getAddOrReplaceFileHandler(request, id, fileType, subjectCopy, user, existingFileId));
-                } else {
-                    Renders.badRequest(request, event.left().getValue());
-                }
-            }
+	private void addFile(final HttpServerRequest request, final String id, final ISubjectCopyService.FileType fileType, final UserInfos user) {
+		getMetadataOfSubject(request, id, fileType).onSuccess( subjectCopy -> {
+			storage.writeUploadFile(request, writeRes -> {
+				if ("ok".equals(writeRes.getString("status"))) {
+					final String fileId = writeRes.getString("_id");
+					final JsonObject metadata = writeRes.getJsonObject("metadata");
+					subjectCopyService.addFile(id, fileId, metadata, fileType, event-> {
+						if (event.isRight()) {
+							Renders.renderJson( request, new fr.wseduc.webutils.collections.JsonObject()
+								.put("file_id", fileId)
+								.put("metadata", metadata)
+							);
+							if( fileType == FileType.CORRECTED ) {
+								String relativeUri = "/subject/copy/perform/simple/"+ id;
+								String notificationName="correcthomework";
+								String recipient = subjectCopy.getString("copy_owner");
+								sendNotification(request, notificationName, user, Arrays.asList(recipient), relativeUri, subjectCopy.getString("title"), null, id);
+							}
+						} else {
+							Renders.badRequest(request, event.left().getValue());
+						}
+					});
+				} else {
+					Renders.badRequest(request, writeRes.getString("message"));
+				}
+			});
         });
 	}
 
-	private Handler<JsonObject> getAddOrReplaceFileHandler(final HttpServerRequest request, final String id, final ISubjectCopyService.FileType fileType, final JsonObject subject, final UserInfos user, final String existingFileId) {
-		return new Handler<JsonObject>() {
-			@Override
-			public void handle(JsonObject event) {
-				if ("ok".equals(event.getString("status"))) {
-					final String fileId = event.getString("_id");
-					final JsonObject metadata = event.getJsonObject("metadata");
-					subjectCopyService.addFile(id, fileId, metadata, fileType, subject.getInteger("offset", 0), new Handler<Either<String, JsonObject>>() {
-						@Override
-						public void handle(Either<String, JsonObject> event) {
-							if (event.isRight()) {
-								Renders.renderJson(request, new fr.wseduc.webutils.collections.JsonObject().put("fileId", fileId));
-								JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
-
-								String relativeUri = "";
-								String notificationName = "";
-								String recipient = "";
-								switch (fileType) {
-									case CORRECTED: notificationName="correcthomework"; recipient = subject.getString("copy_owner");
-										relativeUri = "/subject/copy/perform/simple/"+ id;  break;
-									case HOMEWORK: notificationName="submithomework"; recipient = subject.getString("subject_owner");
-										relativeUri = "/dashboard/teacher/correction/"+ subject.getLong("subject_scheduled_id"); break;
-								}
-
-								final List<String> recipientSet = new ArrayList<String>();
-								recipientSet.add(recipient);
-
-								sendNotification(request, notificationName, user, recipientSet, relativeUri, subject.getString("title"), null, id);
-
-								if (!StringUtils.isEmpty(existingFileId)) {
-									storage.removeFile(existingFileId, new Handler<JsonObject>() {
-										@Override
-										public void handle(JsonObject event) {
-											if ("error".equals(event.getString("status"))) {
-												log.warn("Fail to delete file due to : " + event.getString("message"));
-											}
-										}
-									});
-								}
-							} else {
-								Renders.badRequest(request, event.left().getValue());
-							}
-						}
-					});
-
-				} else {
-					Renders.badRequest(request, event.getString("message"));
-				}
-			}
-
-		};
+	@Delete("/subject-copy/:id/homework/:fileId")
+	@ApiDoc("Delete a homework file from a subject copy.")
+	@ResourceFilter(SubjectCopyLearnerAccess.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void removeHomeworkFile(final HttpServerRequest request) {
+		try {
+			final Long id = Long.parseLong( request.params().get("id") );
+			final String fileId = request.params().get("fileId");
+			checkAuth(request).onSuccess( user -> {
+				deleteFile(request, id, fileId, ISubjectCopyService.FileType.HOMEWORK, user);
+			});
+		} catch (Exception e) {
+			badRequest(request);
+		}
 	}
 
-	@Put("/subject-copy/simple/remove/corrected/:id")
-	@ApiDoc("Removing a corrected file to a subject copy.")
+	@Delete("/subject-copy/:id/corrected/:fileId")
+	@ApiDoc("Remove a corrected file from a subject copy.")
 	@ResourceFilter(SubjectCopyAccess.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void removeCorrectedFile(final HttpServerRequest request) {
-		final String id = request.params().get("id");
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(final UserInfos user) {
-				if (user != null) {
-					request.pause();
-					subjectCopyService.getMetadataOfSubject(id, ISubjectCopyService.FileType.CORRECTED, new Handler<Either<String, JsonObject>>() {
-						@Override
-						public void handle(Either<String, JsonObject> event) {
-							request.resume();
-							if (event.isRight()) {
-								final JsonObject subjectCopy = event.right().getValue();
-								//replace corrected file
-								if (subjectCopy.getString("corrected_file_id") != null) {
-									final String existingFileId = subjectCopy.getString("corrected_file_id");
-									request.pause();
-									storage.removeFile(existingFileId, new Handler<JsonObject>() {
-										@Override
-										public void handle(JsonObject event) {
-											request.resume();
-											if ("error".equals(event.getString("status"))) {
-												log.error(event.getString("message"));
-												Renders.badRequest(request, event.getString("message"));
-											} else {
-												subjectCopyService.removeIndividualCorrectedFile(id, defaultResponseHandler(request));
-											}
-										}
-									});
-								} else {
-									Renders.badRequest(request);
-								}
-							} else {
-								Renders.badRequest(request, event.left().getValue());
-							}
-						}
-					});
-				} else {
-					log.debug("User not found in session.");
-					unauthorized(request);
-				}
-			}
+		try {
+			final Long id = Long.parseLong( request.params().get("id") );
+			final String fileId = request.params().get("fileId");
+			checkAuth(request).onSuccess( user -> {
+				deleteFile(request, id, fileId, ISubjectCopyService.FileType.CORRECTED, user);
+			});
+		} catch (Exception e) {
+			badRequest(request);
+		}
+	}
 
+	/** 
+	 * Delete an existing file from DB then storage.
+	 * Update the copy correction status afterwards.
+	 */
+	private void deleteFile(final HttpServerRequest request, final Long id, final String fileId, final ISubjectCopyService.FileType fileType, final UserInfos user) {
+		request.pause();
+		storage.removeFile(fileId, event -> {
+			request.resume();
+			if ("error".equals(event.getString("status"))) {
+				log.error(event.getString("message"));
+				Renders.badRequest(request, event.getString("message"));
+			} else {
+				subjectCopyService.deleteFile(id, fileId, result -> {
+					if( result.isRight() ) {
+						subjectCopyService.removeIndividualCorrectedFile(id, result2 -> {
+							// result2 being left or right, we cannot rollback => render the deleted subject copy.
+							Renders.renderJson( request, result.right().getValue() );
+						});
+					} else {
+						Renders.badRequest(request, result.left().getValue() );
+					}
+				});				
+			}
 		});
 	}
 
-	@Get("/subject-copy/corrected/download/:id")
+	@Get("/subject-copy/:id/corrected/:fileId")
 	@ApiDoc("Download a corrected.")
 	@ResourceFilter(SubjectCopyCorrected.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void downloadCorrected(final HttpServerRequest request) {
 		final String id = request.params().get("id");
+		final String fileId = request.params().get("fileId");
+		if( id==null ||id.isEmpty() || fileId==null || fileId.isEmpty() ) {
+			Renders.badRequest(request);
+			return;
+		}
 
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(final UserInfos user) {
-				if (user != null) {
-					subjectCopyService.getDownloadInformation(Arrays.asList(new String[]{id}), new Handler<Either<String, JsonArray>>() {
-						@Override
-						public void handle(Either<String, JsonArray> event) {
-							if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() == 1) {
-								final JsonObject jo = event.right().getValue().getJsonObject(0);
+		checkAuth(request).onSuccess( user -> {
+			subjectCopyService.getDownloadInformation(Arrays.asList(new String[]{id}), event -> {
+				if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() == 1) {
+					final JsonObject jo = event.right().getValue().getJsonObject(0);
+					final JsonArray files = jo.getJsonArray("files");
+					if( files==null || files.isEmpty() ) {
+						notFound(request);
+						return;
+					}
 
-								final Date nowUtc = new DateTime(DateTimeZone.UTC).toLocalDateTime().toDate();
-								Date correctedDate;
-								try {
-									correctedDate = DateUtils.parseTimestampWithoutTimezone(jo.getString("corrected_date"));
-								} catch (ParseException e) {
-									log.error("can't parse corrected_date of scheduled subject", e);
-									renderError(request);
-									return;
-								}
-
-								//check download is authorized only if corrected date is passed
-								if (DateUtils.lessOrEqualsWithoutTime(correctedDate, nowUtc)) {
-									final String correctedFileId = jo.getString("corrected_file_id");
-									if (correctedFileId != null) {
-										final JsonObject metadata = jo.getJsonObject("corrected_metadata");
-										storage.sendFile(correctedFileId, metadata.getString("filename"),  request, false, metadata);
-									} else {
-										Renders.badRequest(request);
-									}
-								} else {
-									unauthorized(request);
-								}
-							} else {
-								Renders.badRequest(request);
-							}
+					JsonObject fo = null;
+					for( Object o : files ) {
+						if (!(o instanceof JsonObject)) continue;
+						fo = (JsonObject) o;
+						if( fileId.equals( fo.getString("file_id") ) 
+								&& ISubjectCopyService.FileType.CORRECTED.getKey().equals( fo.getString("file_type") ) ) {
+							break; // found
+						} else {
+							fo = null;
 						}
-					});
+					}
+					if( fo==null ) {
+						notFound(request);
+						return;
+					}
+
+					final Date nowUtc = new DateTime(DateTimeZone.UTC).toLocalDateTime().toDate();
+					Date correctedDate;
+					try {
+						correctedDate = DateUtils.parseTimestampWithoutTimezone(jo.getString("corrected_date"));
+					} catch (ParseException e) {
+						log.error("can't parse corrected_date of scheduled subject", e);
+						renderError(request);
+						return;
+					}
+
+					//check download is authorized only if corrected date is passed
+					if (DateUtils.lessOrEqualsWithoutTime(correctedDate, nowUtc)) {
+						final JsonObject metadata = fo.getJsonObject("metadata");
+						storage.sendFile(fileId, metadata.getString("filename"),  request, false, metadata);
+					} else {
+						unauthorized(request);
+					}
+				} else {
+					Renders.badRequest(request);
 				}
-				else {
-					log.debug("User not found in session.");
-					unauthorized(request);
-				}
-			}
+			});
 		});
 	}
 
-	@Get("/subject-copy/simple/download/:id")
+	@Get("/subject-copy/:id/homework/:fileId")
 	@ApiDoc("Download a simple copy.")
 	@ResourceFilter(SubjectCopyAccess.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void downloadCopy(final HttpServerRequest request) {
 		final String id = request.params().get("id");
+		final String fileId = request.params().get("fileId");
 
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(final UserInfos user) {
-				if (user != null) {
-					final List<String> ids = Arrays.asList(new String[]{id});
-					subjectCopyService.getDownloadInformation(ids, new Handler<Either<String, JsonArray>>() {
+		checkAuth(request).onSuccess( user -> {
+			final List<String> ids = Arrays.asList(new String[]{id});
+			subjectCopyService.getDownloadInformation(ids, event -> {
+				if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() == 1) {
+					final JsonObject jo = event.right().getValue().getJsonObject(0);
+					final JsonArray files = jo.getJsonArray("files");
+					if( files==null || files.isEmpty() ) {
+						notFound(request);
+						return;
+					}
+
+					JsonObject fo = null;
+					for( Object o : files ) {
+						if (!(o instanceof JsonObject)) continue;
+						fo = (JsonObject) o;
+						if( fileId.equals( fo.getString("file_id") ) 
+								&& ISubjectCopyService.FileType.HOMEWORK.getKey().equals( fo.getString("file_type") ) ) {
+							break; // found
+						} else {
+							fo = null;
+						}
+					}
+					if( fo==null ) {
+						notFound(request);
+						return;
+					}
+
+					final String fileName = makeDownloadFileName(jo, fo);
+
+					storage.sendFile(fileId, fileName, request, false, fo.getJsonObject("metadata"), new Handler<AsyncResult<Void>>() {
 						@Override
-						public void handle(Either<String, JsonArray> event) {
-							if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() == 1) {
-								final JsonObject jo = event.right().getValue().getJsonObject(0);
-
-								final String fileName = makeDownloadFileName(jo);
-
-								storage.sendFile(jo.getString("homework_file_id"), fileName, request, false, jo.getJsonObject("homework_metadata"), new Handler<AsyncResult<Void>>() {
+						public void handle(AsyncResult<Void> event) {
+							if (event.succeeded()) {
+								subjectCopyService.correctedInProgress(ids, new Handler<Either<String, JsonObject>>() {
 									@Override
-									public void handle(AsyncResult<Void> event) {
-										if (event.succeeded()) {
-											subjectCopyService.correctedInProgress(ids, new Handler<Either<String, JsonObject>>() {
-												@Override
-												public void handle(Either<String, JsonObject> event) {
-													if (event.isLeft()) {
-														log.error("Error can't update subject copy state to in progress (is_correction_on_going) : " + event.left().getValue());
-													}
-												}
-											});
+									public void handle(Either<String, JsonObject> event) {
+										if (event.isLeft()) {
+											log.error("Error can't update subject copy state to in progress (is_correction_on_going) : " + event.left().getValue());
 										}
 									}
 								});
-							} else {
-								Renders.badRequest(request);
 							}
 						}
 					});
+				} else {
+					Renders.badRequest(request);
 				}
-				else {
-					log.debug("User not found in session.");
-					unauthorized(request);
-				}
-			}
+			});
 		});
 	}
 
-	@Get("/subject-copy/simple/mine/:id")
+	@Get("/subject-copy/:id/mine/:fileId")
 	@ApiDoc("Download my simple copy.")
 	@ResourceFilter(SubjectCopyLearnerAccess.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void downloadMineCopy(final HttpServerRequest request) {
 		final String id = request.params().get("id");
-		UserUtils.getUserInfos(eb, request,  user-> {
-			if (user != null) {
-				final List<String> ids = Arrays.asList(new String[]{id});
-				subjectCopyService.getDownloadInformation(ids, event -> {
-					if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() == 1) {
-						final JsonObject jo = event.right().getValue().getJsonObject(0);
-						final String fileName = makeDownloadFileName(jo);
-						storage.sendFile(jo.getString("homework_file_id"), fileName, request, false, jo.getJsonObject("homework_metadata"));
-					} else {
-						Renders.badRequest(request);
+		final String fileId = request.params().get("fileId");
+		checkAuth(request).onSuccess( user -> {
+			final List<String> ids = Arrays.asList(new String[]{id});
+			subjectCopyService.getDownloadInformation(ids, event -> {
+				if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() == 1) {
+					final JsonObject jo = event.right().getValue().getJsonObject(0);
+					final JsonArray files = jo.getJsonArray("files");
+					if( files==null || files.isEmpty() ) {
+						notFound(request);
+						return;
 					}
-				});
-			}
-			else {
-				log.debug("User not found in session.");
-				unauthorized(request);
-			}
+
+					JsonObject fo = null;
+					for( Object o : files ) {
+						if (!(o instanceof JsonObject)) continue;
+						fo = (JsonObject) o;
+						if( fileId.equals( fo.getString("file_id") ) 
+								&& ISubjectCopyService.FileType.HOMEWORK.getKey().equals( fo.getString("file_type") ) ) {
+							break; // found
+						} else {
+							fo = null;
+						}
+					}
+					if( fo==null ) {
+						notFound(request);
+						return;
+					}
+
+					final String fileName = makeDownloadFileName(jo, fo);
+					storage.sendFile(fileId, fileName, request, false, fo.getJsonObject("metadata"));
+				} else {
+					Renders.badRequest(request);
+				}
+			});
 		});
 	}
 
@@ -891,134 +940,136 @@ public class SubjectCopyController extends ControllerHelper {
 
 		final List<String> ids =  request.params().getAll("id");
 
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(final UserInfos user) {
-				if (user != null) {
+		checkAuth(request).onSuccess( user -> {
+			subjectCopyService.getDownloadInformation(ids, event-> {
+				final JsonArray infos = event.isRight() ? event.right().getValue() : null;
+				if (infos != null && infos.size() > 0) {
+					final JsonObject aliasFileName = new fr.wseduc.webutils.collections.JsonObject();
+					final List<String> fileIds = new ArrayList<String>();
 
-					subjectCopyService.getDownloadInformation(ids, new Handler<Either<String, JsonArray>>() {
+					String subjectTitle = "";
+
+					for (final Object o : infos) {
+						if (!(o instanceof JsonObject)) continue;
+						final JsonObject jo = (JsonObject) o;
+						final JsonArray joFiles = jo.getJsonArray("files", null);
+						if( joFiles==null || joFiles.isEmpty() )  continue;
+
+						for( final Object f : joFiles ) {
+							if (!(f instanceof JsonObject)) continue;
+							final JsonObject fo = (JsonObject) f;
+							final String fileId = fo.getString("file_id");
+							final String fileName = FileUtils.getNameWithExtension(makeDownloadFileName(jo, fo), fo.getJsonObject("metadata"));
+							if( fileId!=null && !fileId.isEmpty() && !aliasFileName.containsKey(fileId) ) {
+								aliasFileName.put(fileId, fileName);
+								fileIds.add( fileId );
+								subjectTitle = jo.getString("title", "file");
+							}
+						}
+					}
+
+					if( fileIds.isEmpty() ) {
+						notFound(request);
+						return;
+					}
+
+					final String zipDownloadName = makeZipFileName(subjectTitle);
+					final String zipDirectory = exportPath + File.separator + UUID.randomUUID().toString();
+
+					fs.mkdirs(zipDirectory, new Handler<AsyncResult<Void>>() {
 						@Override
-						public void handle(Either<String, JsonArray> event) {
-							if (event.isRight() && event.right().getValue() != null && event.right().getValue().size() > 0) {
+						public void handle(AsyncResult<Void> event) {
+							if (event.succeeded()) {
+								final String zipFile = zipDirectory + ".zip";
 
-								final JsonObject aliasFileName = new fr.wseduc.webutils.collections.JsonObject();
-								final List<String> fileIds = new ArrayList<String>();
-
-								String subjectTitle = "";
-
-								for (final Object o : event.right().getValue()) {
-									if (!(o instanceof JsonObject)) continue;
-									final JsonObject jo = (JsonObject) o;
-									final String fileName = FileUtils.getNameWithExtension(makeDownloadFileName(jo), jo.getJsonObject("homework_metadata"));
-									aliasFileName.put(jo.getString("homework_file_id"), fileName);
-									fileIds.add(jo.getString("homework_file_id"));
-									subjectTitle = jo.getString("title", "file");
-								}
-
-								final String zipDownloadName = makeZipFileName(subjectTitle);
-								final String zipDirectory = exportPath + File.separator + UUID.randomUUID().toString();
-
-								fs.mkdirs(zipDirectory, new Handler<AsyncResult<Void>>() {
+								storage.writeToFileSystem(fileIds.toArray(new String[0]), zipDirectory, aliasFileName, new Handler<JsonObject>() {
 									@Override
-									public void handle(AsyncResult<Void> event) {
-										if (event.succeeded()) {
-											final String zipFile = zipDirectory + ".zip";
+									public void handle(JsonObject event) {
+										if (!"ok".equals(event.getString("status"))) {
+											log.error("Can't write to zip directory : " + event.getString("message"));
+											deleteZipDirectory();
+										} else {
+											zipDirectory();
+										}
+									}
 
-											storage.writeToFileSystem(fileIds.toArray(new String[0]), zipDirectory, aliasFileName, new Handler<JsonObject>() {
-												@Override
-												public void handle(JsonObject event) {
-													if (!"ok".equals(event.getString("status"))) {
-														log.error("Can't write to zip directory : " + event.getString("message"));
-														deleteZipDirectory();
-													} else {
-														zipDirectory();
-													}
-												}
+									private void zipDirectory() {
+										Zip.getInstance().zipFolder(zipDirectory, zipFile, true,
+												Deflater.NO_COMPRESSION, new Handler<Message<JsonObject>>() {
+													@Override
+													public void handle(final Message<JsonObject> event) {
+														if (!"ok".equals(event.body().getString("status"))) {
+															log.error("Zip export " + zipDirectory + " error : " +
+																	event.body().getString("message"));
+															deleteZipDirectory();
+														} else {
 
-												private void zipDirectory() {
-													Zip.getInstance().zipFolder(zipDirectory, zipFile, true,
-															Deflater.NO_COMPRESSION, new Handler<Message<JsonObject>>() {
+															final HttpServerResponse resp = request.response();
+															resp.putHeader("Content-Disposition", "attachment; filename=\"" + zipDownloadName + "\"");
+															resp.putHeader("Content-Type", "application/zip; name=\"\" + zipDownloadName + \"\"");
+
+															resp.sendFile(zipFile, new Handler<AsyncResult<Void>>() {
 																@Override
-																public void handle(final Message<JsonObject> event) {
-																	if (!"ok".equals(event.body().getString("status"))) {
-																		log.error("Zip export " + zipDirectory + " error : " +
-																				event.body().getString("message"));
-																		deleteZipDirectory();
-																	} else {
+																public void handle(AsyncResult<Void> event) {
+																	deleteZipFile();
 
-																		final HttpServerResponse resp = request.response();
-																		resp.putHeader("Content-Disposition", "attachment; filename=\"" + zipDownloadName + "\"");
-																		resp.putHeader("Content-Type", "application/zip; name=\"\" + zipDownloadName + \"\"");
-
-																		resp.sendFile(zipFile, new Handler<AsyncResult<Void>>() {
+																	if (event.succeeded()) {
+																		subjectCopyService.correctedInProgress(ids, new Handler<Either<String, JsonObject>>() {
 																			@Override
-																			public void handle(AsyncResult<Void> event) {
-																				deleteZipFile();
-
-																				if (event.succeeded()) {
-																					subjectCopyService.correctedInProgress(ids, new Handler<Either<String, JsonObject>>() {
-																						@Override
-																						public void handle(Either<String, JsonObject> event) {
-																							if (event.isLeft()) {
-																								log.error("Error can't update subject copy state to in progress (is_correction_on_going) : " + event.left().getValue());
-																							}
-																						}
-																					});
-																				} else {
-																					log.error("Error can't send  the file: ", event.cause());
+																			public void handle(Either<String, JsonObject> event) {
+																				if (event.isLeft()) {
+																					log.error("Error can't update subject copy state to in progress (is_correction_on_going) : " + event.left().getValue());
 																				}
 																			}
 																		});
+																	} else {
+																		log.error("Error can't send  the file: ", event.cause());
 																	}
 																}
 															});
-												}
-
-												private void deleteZipDirectory() {
-													fs.deleteRecursive(zipDirectory, true, new Handler<AsyncResult<Void>>() {
-														@Override
-														public void handle(AsyncResult<Void> event) {
-															if (event.failed()) {
-																log.error("Error deleting directory : " + zipDirectory, event.cause());
-															}
 														}
-													});
-													Renders.badRequest(request);
-												}
+													}
+												});
+									}
 
-												private void deleteZipFile() {
-													fs.deleteRecursive(zipFile, true, new Handler<AsyncResult<Void>>() {
-														@Override
-														public void handle(AsyncResult<Void> event) {
-															if (event.failed()) {
-																log.error("Error deleting zip file : " + zipFile, event.cause());
-															}
-														}
-													});
+									private void deleteZipDirectory() {
+										fs.deleteRecursive(zipDirectory, true, new Handler<AsyncResult<Void>>() {
+											@Override
+											public void handle(AsyncResult<Void> event) {
+												if (event.failed()) {
+													log.error("Error deleting directory : " + zipDirectory, event.cause());
 												}
-											});
-										} else {
-											log.error("Can't create zip directory.", event.cause());
-											badRequest(request);
-										}
+											}
+										});
+										Renders.badRequest(request);
+									}
 
+									private void deleteZipFile() {
+										fs.deleteRecursive(zipFile, true, new Handler<AsyncResult<Void>>() {
+											@Override
+											public void handle(AsyncResult<Void> event) {
+												if (event.failed()) {
+													log.error("Error deleting zip file : " + zipFile, event.cause());
+												}
+											}
+										});
 									}
 								});
 							} else {
-								Renders.badRequest(request);
+								log.error("Can't create zip directory.", event.cause());
+								badRequest(request);
 							}
+
 						}
 					});
+				} else {
+					Renders.badRequest(request);
 				}
-				else {
-					log.debug("User not found in session.");
-					unauthorized(request);
-				}
-			}
+			});
 		});
 	}
 
-	private String makeDownloadFileName(JsonObject jo) {
+	private String makeDownloadFileName(JsonObject jo, JsonObject fo) {
 		final String title = makeDownloadTitle(jo.getString("title", ""));
 
 		final String username = StringUtils.stripAccents(jo.getString("owner_username","")

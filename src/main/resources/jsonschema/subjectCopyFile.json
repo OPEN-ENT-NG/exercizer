@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "file_id": {
+      "type": "string"
+    },
+    "file_type": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "size": {
+          "type": "number"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "content-type": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "file_id",
+    "file_type",
+    "metadata"
+  ]
+}
+
+
