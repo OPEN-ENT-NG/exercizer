@@ -62,50 +62,18 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
     }
 
 	@Override
-	public void getCorrectedDownloadInformation(final String id, final Handler<Either<String, JsonObject>> handler) {
-		super.getCorrectedDownloadInformation(id, "s.owner, s.corrected_file_id, s.corrected_metadata, s.corrected_date", handler);
-	}
-
-	@Override
-	public void addCorrectedFile(final String id, final String fileId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler) {
-		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
-
-		final String query =
-				"UPDATE " + resourceTable +
-						" SET corrected_file_id=?,corrected_metadata=?::jsonb,modified = NOW() " +
-						"WHERE id = ? ";
-
-		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
-		values.add(fileId);
-		values.add(metadata);
-		values.add(Sql.parseId(id));
-
-		builder.prepared(query,values);
-
-		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
-
-	}
-
-	@Override
-	public void removeCorrectedFile(final String id, final Handler<Either<String, JsonObject>> handler) {
-		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
-		final String query =
-				"UPDATE " + resourceTable +
-						" SET corrected_file_id=null,corrected_metadata=null,modified = NOW() " +
-						"WHERE id = ? ";
-
-		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
-		values.add(Sql.parseId(id));
-
-		builder.prepared(query,values);
-
-		//Mark as not corrected all copies that don't have individual correction
-		final String queryCopies = "UPDATE " + schema + "subject_copy SET is_corrected=false, modified = NOW() WHERE " +
-				"corrected_file_id IS NULL AND subject_scheduled_id = ?";
-
-		builder.prepared(queryCopies, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)));
-
-		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
+	public void getCorrectedDownloadInformation(final String id, final String docId, final Handler<Either<String, JsonObject>> handler) {
+		final String select = 
+				"SELECT s.owner, sd.doc_type, sd.metadata, s.corrected_date FROM "+ resourceTable +" AS s "+
+				"INNER JOIN "+ schema +"subject_document AS sd ON s.id = sd.subject_id "+
+				"WHERE s.id = ? AND sd.doc_id = ? ";
+        sql.prepared(
+			select, 
+			new fr.wseduc.webutils.collections.JsonArray()
+				.add(Sql.parseId(id))
+				.add(docId),
+			SqlResult.validUniqueResultHandler(handler, "metadata")
+		);
 	}
 
     /**
@@ -113,9 +81,18 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
      */
     @Override
     public void list(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-		final String query = "SELECT * " +
-				" FROM " + resourceTable + " AS ss WHERE ss.owner = ? AND ss.is_archived = false AND ss.is_training_mode = false";
-		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
+		final String query = 
+			" SELECT ss1.*, CASE WHEN t.files IS NULL THEN jsonb_build_array() ELSE t.files END"+
+			" FROM "+ resourceTable +" ss1"+
+			" LEFT JOIN ("+
+				" SELECT ss2.id, jsonb_agg(jsonb_build_object('doc_id', sd.doc_id, 'doc_type', sd.doc_type, 'metadata', sd.metadata)) AS files"+
+				" FROM "+ resourceTable +" ss2"+
+				" INNER JOIN "+ schema +"subject_document sd ON sd.subject_id = ss2.subject_id"+
+				" WHERE ss2.owner = ? AND ss2.is_archived = false AND ss2.is_training_mode = false"+
+				" GROUP BY ss2.id"+
+			" ) AS t ON ss1.id = t.id"+
+			" WHERE ss1.owner = ? AND ss1.is_archived = false AND ss1.is_training_mode = false";
+		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files") );
     }
 
     /**
@@ -123,7 +100,21 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
      */
     @Override
     public void listBySubjectCopyList(final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-        super.list("subject_scheduled_id", "exercizer.subject_copy", Boolean.FALSE, user, handler);
+		final String query = 
+			" SELECT ss1.*, CASE WHEN t.files IS NULL THEN jsonb_build_array() ELSE t.files END"+
+			" FROM "+ resourceTable +" ss1"+
+			" INNER JOIN "+ schema +"subject_copy sc1 ON sc1.subject_scheduled_id = ss1.id"+
+			" LEFT JOIN ("+
+				" SELECT ss2.id, jsonb_agg(jsonb_build_object('doc_id', sd.doc_id, 'doc_type', sd.doc_type, 'metadata', sd.metadata)) AS files"+
+				" FROM "+ resourceTable +" ss2"+
+				" INNER JOIN "+ schema +"subject_document sd ON sd.subject_id = ss2.subject_id"+
+				" INNER JOIN "+ schema +"subject_copy sc2 ON sc2.subject_scheduled_id = ss2.id "+
+				" WHERE sc2.owner = ?"+
+				" GROUP BY ss2.id"+
+			" ) AS t ON ss1.id = t.id"+
+			" WHERE sc1.owner = ?";
+
+		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files") );
     }
 
     /**

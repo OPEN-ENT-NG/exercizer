@@ -1,4 +1,5 @@
 import { EditTrackingEvent, trackingService } from "entcore";
+import { ISubjectDocument } from "./SubjectDocument";
 
 export interface ISubject {
     id:number;
@@ -17,7 +18,8 @@ export interface ISubject {
     is_deleted:boolean;
     type:string;
     selected:boolean;
-    getTracker():EditTrackingEvent
+    getTracker():EditTrackingEvent;
+    files: Array<ISubjectDocument>;
 }
 
 export class Subject implements ISubject {
@@ -39,6 +41,7 @@ export class Subject implements ISubject {
     type:string;
     selected: boolean;
     tracker: EditTrackingEvent;
+    files: Array<ISubjectDocument> = [];
 
     constructor
     (

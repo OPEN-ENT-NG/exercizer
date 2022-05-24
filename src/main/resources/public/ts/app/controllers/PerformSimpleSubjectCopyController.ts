@@ -2,6 +2,8 @@ import { ng, notify } from 'entcore';
 import { angular } from 'entcore';
 import { ISubjectService, ISubjectScheduledService, ISubjectCopyService, IDateService, SubjectCopyService } from '../services';
 import { ISubjectScheduled, ISubjectCopy } from '../models/domain';
+import { ISubjectCopyFile } from '../models/domain/SubjectCopyFile';
+import { ISubjectDocument } from '../models/domain/SubjectDocument';
 
 class PerformSimpleSubjectCopyController {
 
@@ -19,7 +21,6 @@ class PerformSimpleSubjectCopyController {
     private _subjectCopy:ISubjectCopy;
     private _hasDataLoaded:boolean;
     private _isModalConfirmDisplayed:boolean;
-    private _file:any;
 
     constructor
     (
@@ -85,28 +86,15 @@ class PerformSimpleSubjectCopyController {
         );
     };
 
-    public setCurrentFileName = function() {
-        if (this.newFiles.length > 0) {
-            this._file = this.newFiles[0];
-            this._subjectCopy.homework_metadata = {"filename":this._file.name};
-        }
-    };
-
-    public saveStudentCopy = function() {
+    public saveStudentCopy() {
         this.closeConfirmModal();
-        if (!this._file) {
+        if (!this._subjectCopy.homework_files.length) {
             notify.error('exercizer.simple.check');
         } else {
             var self = this;
-            var file = this._file;
-
-            notify.info('exercizer.notify.file.loading', false);
-
-            this._subjectCopyService.persistSimpleCopy(this._subjectCopy.id, file).then(
-                function (fileId) {
-                    self._subjectCopy.homework_metadata = {"filename":file.name};
-                    self._subjectCopy.homework_file_id = fileId;
-                    self._subjectCopy.submitted_date = new Date();
+            this._subjectCopyService.submitSimpleCopy(this._subjectCopy.id).then(
+                function (copy) {
+                    self._subjectCopy.submitted_date = copy.submitted_date;
                     self._$location.path('/dashboard').search({tab: 'finished'});
                     notify.close();
                     notify.success('exercizer.notify.file.sent');
@@ -116,20 +104,44 @@ class PerformSimpleSubjectCopyController {
         }
     };
     
-
-    public downloadFile = function(e:Event){
-        e.stopPropagation();
-        const self:PerformSimpleSubjectCopyController=this;
-        window.location.href = self._subjectCopyService.downloadMySimpleCopy(self._subjectCopy.id.toString());
-    }
+    public uploadFile= function(){
+        if (this.newFiles.length > 0) {
+            notify.info('exercizer.notify.file.loading', false);
+            const self:PerformSimpleSubjectCopyController=this;
+            this._subjectCopyService.addHomeworkFile(this._subjectCopy.id, this.newFiles[0]).then(
+                function (file:ISubjectCopyFile) {
+                    self._subjectCopy.homework_files.push( file );
+                    notify.close();
+                    notify.success('exercizer.navigation.success');
+                }, function (err) {
+                    notify.error(err);
+                }
+            );
+        }
+    };
     
-    public openConfirmModal = function() {
-        if (!this._file) {
-            if (this._subjectCopy.homework_file_id === null) {
-                notify.error('exercizer.simple.check.renew');
-            } else {
-                notify.error('exercizer.simple.check');
+    public downloadFile(file:ISubjectCopyFile) {
+        const self:PerformSimpleSubjectCopyController=this;
+        window.location.href = self._subjectCopyService.downloadMySimpleCopy(self._subjectCopy.id.toString(), file.file_id);
+    };
+
+    public deleteFile(file:ISubjectCopyFile) {
+        const self:PerformSimpleSubjectCopyController=this;
+        this._subjectCopyService.removeHomeworkFile(this._subjectCopy.id, file.file_id).then(
+            function () {
+                const idx = self._subjectCopy.homework_files.findIndex( f=>f.file_id===file.file_id );
+                if( idx >= 0 ) {
+                    self._subjectCopy.homework_files.splice( idx, 1 );
+                }
+            }, function (err) {
+                notify.error(err);
             }
+        );
+    };
+
+    public openConfirmModal = function() {
+        if (this._subjectCopy.homework_files.length === 0) {
+            notify.error('exercizer.simple.check');
         } else {
             this._isModalConfirmDisplayed = true;
         }
@@ -139,34 +151,29 @@ class PerformSimpleSubjectCopyController {
         this._isModalConfirmDisplayed = false;
     };
 
-    public canHomeworkReplace = function(){
-        return this._subjectCopy.submitted_date !== null &&  this._subjectCopy.homework_file_id !== null &&
-            this._dateService.compare_after(this._dateService.isoToDate(this._subjectScheduled.due_date), new Date(), true);
+    public get canUpdate(){
+        return this._subjectCopy.submitted_date === null
+            && this._dateService.compare_after(this._dateService.isoToDate(this._subjectScheduled.due_date), new Date(), true);
     };
 
     public canHomeworkSubmit = function(){
         //it's possible to submit a homework if the begin date is passed even if due date is exceeded (Unless it has already submit)
-        return this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.begin_date), true) &&
-            (this._subjectCopy.homework_file_id === null || this.canHomeworkReplace());
+        return this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.begin_date), true)
+            && this._subjectCopy.submitted_date === null;
     };
     
     public canShowFuturSubmitLabel = function(){
        return this._dateService.compare_after(this._dateService.isoToDate(this._subjectScheduled.begin_date), new Date(), false);  
     };
 
-    public canHomeworkOnlyView = function(){
-        return this._subjectCopy.submitted_date !== null &&  this._subjectCopy.homework_file_id !== null &&
-            this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.due_date), false);
-    };
-
     public canShowGeneralCorrected = function(){
         //if subject scheduled corrected exist
-        return this._subjectScheduled.corrected_file_id !== null;
+        return this._subjectScheduled.files.length > 0;
     };
 
     public canShowIndividualCorrected = function(){
         //if subject copy corrected exist
-        return this._subjectCopy.corrected_file_id !== null;
+        return this._subjectCopy.corrected_files.length > 0;
     };
 
     public canDownloadCorrected = function() {
@@ -178,12 +185,12 @@ class PerformSimpleSubjectCopyController {
         this._$location.path('/dashboard');
     };
     
-    public downloadGeneralCorrectedFile = function() {
-        window.location.href = '/exercizer/subject-scheduled/corrected/download/' + this._subjectScheduled.id;
+    public downloadGeneralCorrectedFile = function(doc:ISubjectDocument) {
+        window.location.href = `/exercizer/subject/${this._subjectScheduled.id}/file/${doc.doc_id}`;
     };
 
-    public downloadCorrectedFile = function() {
-        window.location.href = '/exercizer/subject-copy/corrected/download/' + this._subjectCopy.id;
+    public downloadCorrectedFile = function(file:ISubjectCopyFile) {
+        window.location.href = `/exercizer/subject-copy/${this._subjectCopy.id}/corrected/${file.file_id}`;
     };
 
     get subjectScheduled():ISubjectScheduled {

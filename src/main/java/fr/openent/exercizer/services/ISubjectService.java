@@ -29,6 +29,18 @@ import io.vertx.core.json.JsonObject;
 import java.util.List;
 
 public interface ISubjectService {
+    enum DocType {
+        STORAGE("storage"),
+        WORKSPACE("workspace");
+
+        private String key;
+        private DocType(final String key) {
+            this.key = key;
+        }
+        public String getKey() {
+            return key;
+        }
+    }
 
 	/**
 	 *@see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
@@ -71,7 +83,7 @@ public interface ISubjectService {
 	 */
     void getById(final String id, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
-	void publishLibrary(final Long fromSubjectId, final String authorsContributors, final String correctedFileId, final JsonObject correctedMetadata,
+	void publishLibrary(final Long fromSubjectId, final String authorsContributors,
 	                           final Long typeId, final Long levelId, JsonArray tag, final UserInfos user, final Handler<Either<String, JsonObject>> handler);
 
 	void duplicateSubjects(final JsonArray subjectIds, final Long folderId, final String titleSuffix, final UserInfos user,
@@ -86,4 +98,33 @@ public interface ISubjectService {
 	void setLastLibraryVisit(final String userId, final String displayName, final Handler<Either<String, JsonObject>> handler);
 
 	void countNewSubjectInLibrary(final String userId, final Handler<Either<String, JsonObject>> handler);
+
+	/** 
+	 * List documents associated to a subject; 
+	 * @param subjectId ID of the Subject
+	 * @return tuples of (id:Long, doc_id:String, doc_type:String, metadata:JSON)
+	 */
+	void listCorrectedDocuments(final Long subjectId, final Handler<Either<String, JsonArray>> handler);
+
+	/**
+	 * Get a document metadata associated to a subject.
+	 * @param id ID of the Subject
+	 * @param docId ID of the document (valid in Workspace or Storage)
+	 */
+	void getCorrectedDocument(final Long subjectId, final String docId, final Handler<Either<String, JsonObject>> handler);
+
+	/**
+	 * Associate a document to a subject.
+	 * @param id ID of the Subject
+	 * @param docId ID of the document (valid in Workspace)
+	 * @param metadata Metadata of the document
+	 */
+	void addCorrectedDocument(final Long subjectId, final String docId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler);
+
+	/**
+	 * Delete a document associated to a subject.
+	 * @param id ID of the Subject
+	 * @param docId ID of the document (valid in Workspace)
+	 */
+	void deleteCorrectedDocument(final Long subjectId, final String docId, final Handler<Either<String, JsonObject>> handler);
 }

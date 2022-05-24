@@ -1,5 +1,6 @@
 import { ng, Behaviours } from 'entcore';
 import { ISubject, IGrain, IFolder, Subject } from '../models/domain';
+import { ISubjectDocument } from '../models/domain/SubjectDocument';
 import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainService } from './GrainService';
 
@@ -9,6 +10,7 @@ function cleanBeforeSave(subject: ISubject|IGrain):ISubject|IGrain{
         copy.owner = copy.owner.userId;
     }
     delete copy["tracker"];
+    if( copy["files"] ) delete copy["files"];
     return copy;
 }
 
@@ -26,6 +28,7 @@ export interface ISubjectService {
     duplicate(ids: number[], folder: IFolder): Promise<boolean>;
     move(ids: number[], folder: IFolder): Promise<boolean>;
     importImage(file, name): Promise<String>;
+    listFiles(id): Promise<ISubjectDocument[]>;
 }
 
 export class SubjectService implements ISubjectService {
@@ -346,6 +349,26 @@ export class SubjectService implements ISubjectService {
         return deferred.promise;
 
     };
+
+    public listFiles(id): Promise<ISubjectDocument[]> {
+        var self = this,
+            deferred = this._$q.defer(),
+            request = {
+                method: 'GET',
+                url: `exercizer/subject/${id}/files`
+            };
+
+        this._$http(request).then(
+            function(response) {
+                deferred.resolve(response.data);
+            },
+            function() {
+                deferred.reject('exercizer.error');
+            }
+        );
+
+        return deferred.promise;
+    }
 
     private getSubjectListEvenDeleted = function() : Promise<any> {
         var deferred = this._$q.defer(),
