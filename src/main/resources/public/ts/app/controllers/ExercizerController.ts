@@ -1,4 +1,4 @@
-import { ng, model, template, moment } from 'entcore';
+import { ng, model, template, moment, Me } from 'entcore';
 import { IGrainCopy } from '../models/domain';
 import { ISubjectCopyService } from '../services';
 import http from 'axios';
@@ -36,11 +36,10 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
 
     route({
         dashboard: async function () {
-            if (await checkSystemDate()) {
-                if (_userProfile === studentProfile ||
-                    (model.me.profiles && 
-                    model.me.profiles.includes('Student') &&
-                    canAccessTeacherProfile)) {
+            const checkSystemDateRes: boolean = await checkSystemDate();
+            if (checkSystemDateRes) {
+                await Me.onSessionReady();
+                if (_userProfile === studentProfile || (model.me.type && model.me.type.includes('ELEVE'))) {
                     template.open('main', 'student-dashboard');
                 } else if (_userProfile === teacherProfile) {
                     template.open('main', 'teacher-dashboard-subject-tab');
