@@ -1030,7 +1030,7 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
-	@Put("/subject/:id/file")
+	@Put("/subject/:id/doc")
 	@ResourceFilter(SubjectDocumentOwner.class)
 	@SecuredAction(value="", type = ActionType.RESOURCE)
 	public void addCorrectedDocument(final HttpServerRequest request){
@@ -1047,6 +1047,40 @@ public class SubjectController extends ControllerHelper {
 							Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.file.limit5"));
 						}
 					});
+				});
+			} catch( Exception e ) {
+				badRequest(request);
+			}
+		});
+	}
+
+	@Put("/subject/:id/file")
+	@ApiDoc("Adding a corrected file to a subject.")
+	@ResourceFilter(SubjectDocumentOwner.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void uploadCorrectedFile(final HttpServerRequest request){
+		checkAuth(request).onSuccess( user -> {
+			try {
+				final Long subjectId = Long.parseLong( request.params().get("id") );
+				storage.writeUploadFile(request, event-> {
+					if ("ok".equals(event.getString("status"))) {
+						final String fileId = event.getString("_id");
+						final JsonObject metadata = event.getJsonObject("metadata");
+						subjectService.addCorrectedFile(subjectId, fileId, metadata, result -> {
+							if( result.isRight() ) {
+								defaultResponseHandler(request).handle(result);
+							} else {
+								Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.file.limit5"));
+								storage.removeFile(fileId, event2 -> {
+									if ("error".equals(event2.getString("status"))) {
+										log.warn("Fail to delete file due to : " + event2.getString("message"));
+									}
+								});
+							}
+						});
+					} else {
+						Renders.badRequest(request, event.getString("message"));
+					}
 				});
 			} catch( Exception e ) {
 				badRequest(request);

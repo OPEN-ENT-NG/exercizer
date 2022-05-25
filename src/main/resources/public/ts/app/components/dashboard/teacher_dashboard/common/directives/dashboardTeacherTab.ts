@@ -7,7 +7,7 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
         restrict: 'E',
         scope: {
             currentTab: "=",
-            selectedSubjectScheduled : "="
+            selectedSubjectScheduled : "=?"
         },
         templateUrl: 'exercizer/public/ts/app/components/dashboard/teacher_dashboard/common/templates/dashboard-teacher-tab.html',
         link: async (scope:any) => {
