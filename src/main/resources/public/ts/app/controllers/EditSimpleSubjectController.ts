@@ -66,6 +66,7 @@ class EditSimpleSubjectController {
                     self._subjectService.listFiles(self._subject.id).then( function(files) {
                         self._subject.files = files;
                         self._hasDataLoaded = true;
+                        self.initDragDrop();
                     }, function(err) {
                         self._hasDataLoaded = true; // Error, but users has already been notified.
                     });
@@ -84,9 +85,67 @@ class EditSimpleSubjectController {
             }
             self._previewingFromLibrary = false;
             self._hasDataLoaded = true;
+            self.initDragDrop();
             self.createSubject();
         }
     }
+
+    /* This whole thing should be... a directive. */
+    initDragDrop() {
+        const preventDefault = (e) => {e.preventDefault()};
+        const dragOver = (e) => {
+            $('#simple-correction-id').addClass('dragover');
+            e.preventDefault();
+        };
+        const dragLeave = () => {
+            $('#simple-correction-id').removeClass('dragover');
+        };
+        const drop = (e)=>{this.dropFiles(e)};
+
+        // Wait for DOM to update since there is no link function...
+        setTimeout( () => {
+            //disabled drag/drop browser feacture
+            $('html, body').on('drop', preventDefault).on('dragover', preventDefault);
+
+            //enabled just for simple-correction-id
+            $('#simple-correction-id')
+                .on('dragenter', preventDefault)
+                .on('dragover', dragOver)
+                .on('dragleave', dragLeave)
+                .on('drop', drop );
+
+            // Cleaning when destroyed
+            this._$scope.$on("$destroy", () => {
+                $('html, body').off('drop', preventDefault).off('dragover', preventDefault);
+                $('#simple-correction-id')
+                    .off('dragenter', preventDefault)
+                    .off('dragover', dragOver)
+                    .off('dragleave', dragLeave)
+                    .off('drop', drop );
+            });
+        }, 100);
+    }
+
+    /* When a file is dropped in the drop zone (#simple-correction-id) */
+    async dropFiles(e) {
+        const files = e.originalEvent.dataTransfer.files;
+        if(!files || !files.length){
+            return;
+        }
+        const $dropTgt = $('#simple-correction-id');
+        $dropTgt.removeClass('dragover').addClass('loading-panel');
+        e.preventDefault();
+        this._subjectScheduledService.uploadCorrectedFile(this._subject.id, files[0]).then(
+            (doc:ISubjectDocument) => {
+                this._subject.files.push(doc);
+                notify.info('exercizer.service.save.corrected');
+                $dropTgt.removeClass('loading-panel');
+            },
+            (err) => {
+                notify.error(err);
+            }
+        );
+    };
 
     getTracker():EditTrackingEvent{
         return this.subject.getTracker();
@@ -173,7 +232,7 @@ class EditSimpleSubjectController {
         if(!file){
             return;
         }
-        this._subjectScheduledService.addCorrectedFile(this._subject.id, file).then(
+        this._subjectScheduledService.addCorrectedDoc(this._subject.id, file).then(
             (doc:ISubjectDocument) => {
                 this._subject.files.push(doc);
                 notify.info('exercizer.service.save.corrected');

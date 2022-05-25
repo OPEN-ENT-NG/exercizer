@@ -557,6 +557,19 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	}
 
 	@Override
+    public void addCorrectedFile(final Long subjectId, final String fileId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler) {
+        StringBuilder insert = new StringBuilder()
+		.append("INSERT INTO ").append(schema).append("subject_document (subject_id, doc_id, doc_type, metadata) ")
+		.append("VALUES (?,?,'storage',?) RETURNING subject_id, doc_id, doc_type, metadata");
+
+        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+			.add( subjectId )
+			.add( fileId )
+			.add( metadata );
+		sql.prepared(insert.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));
+	}
+
+	@Override
     public void deleteCorrectedDocument(final Long subjectId, final String docId, final Handler<Either<String, JsonObject>> handler) {
         StringBuilder delete = new StringBuilder()
 		.append("DELETE FROM ").append(schema).append("subject_document ")

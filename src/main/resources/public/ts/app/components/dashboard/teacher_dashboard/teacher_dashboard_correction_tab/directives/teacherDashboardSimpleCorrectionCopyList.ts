@@ -68,11 +68,11 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                             $('#simple-correction-id').removeClass('dragover');
                         });
 
-                        //TODO WB-582 $('#simple-correction-id').on('drop', dropFiles);
+                        $('#simple-correction-id').on('drop', dropFiles);
                     }
                 });
 
-                /*TODO WB-582 When a file is dropped in the drop zone (#simple-correction-id)
+                /* When a file is dropped in the drop zone (#simple-correction-id) */
                 const dropFiles = async (e) => {
                     if(!e.originalEvent.dataTransfer.files.length){
                         return;
@@ -80,11 +80,10 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     const $dropTgt = $('#simple-correction-id');
                     $dropTgt.removeClass('dragover').addClass('loading-panel');
                     e.preventDefault();
-                    scope.uploadFiles(e.originalEvent.dataTransfer.files);
+                    await scope.uploadCorrected(e.originalEvent.dataTransfer.files);
                     scope.$apply();
                     $dropTgt.removeClass('loading-panel');
                 };
-                */
                 
                 function init(subjectScheduled){
                     SubjectCopyService.resolveBySubjectScheduled_force(subjectScheduled).then(
@@ -206,14 +205,30 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     scope.toasterDisplayed.exclude = false;
                 };
 
-                // 
+                scope.uploadCorrected = async function(files:Array<any>) {
+                    if (files.length > 0 && scope.selectedSubjectScheduled.files.length < 5) {
+                        SubjectScheduledService.uploadCorrectedFile(scope.selectedSubjectScheduled.subject_id, files[0]).then(
+                            function (doc:ISubjectDocument) {
+                                scope.selectedSubjectScheduled.files.push(doc);
+                                angular.forEach(scope.subjectCopyList, function(copy){
+                                    copy.is_corrected = true;
+                                });
+                                notify.info('exercizer.service.save.corrected');
+                            },
+                            function (err) {
+                                notify.error(err);
+                            }
+                        );
+                    }
+                };
+
                 scope.appendCorrected = async function() {
                     const file = scope.selectedFile.file;
                     //alert( JSON.stringify(file) );
                     if(!file){
                         return;
                     }
-                    SubjectScheduledService.addCorrectedFile(scope.selectedSubjectScheduled.subject_id, file).then(
+                    SubjectScheduledService.addCorrectedDoc(scope.selectedSubjectScheduled.subject_id, file).then(
                         function (doc:ISubjectDocument) {
                             scope.selectedSubjectScheduled.files.push(doc);
                             angular.forEach(scope.subjectCopyList, function(copy){
