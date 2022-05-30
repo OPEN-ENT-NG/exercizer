@@ -113,13 +113,17 @@ public interface ISubjectService {
 	 */
 	void getCorrectedDocument(final Long subjectId, final String docId, final Handler<Either<String, JsonObject>> handler);
 
-	/**
+	/*
 	 * Associate a document (from workspace) to a subject.
 	 * @param id ID of the Subject
 	 * @param docId ID of the document (valid in Workspace)
 	 * @param metadata Metadata of the document
+	 * 
+ 	 * NOTE 2022-05-30 : Dropped functionality 
+	 * => Only files from storage can be attached to a subject.
+	 * => Instead of associating a doc, its file is duplicated in storage and attached to the subject with addCorrectedFile().
 	 */
-	void addCorrectedDocument(final Long subjectId, final String docId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler);
+	//void addCorrectedDocument(final Long subjectId, final String docId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler);
 
 	/**
 	 * Associate a file (from storage) to a subject.

@@ -64,9 +64,9 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	@Override
 	public void getCorrectedDownloadInformation(final String id, final String docId, final Handler<Either<String, JsonObject>> handler) {
 		final String select = 
-				"SELECT s.owner, sd.doc_type, sd.metadata, s.corrected_date FROM "+ resourceTable +" AS s "+
-				"INNER JOIN "+ schema +"subject_document AS sd ON s.id = sd.subject_id "+
-				"WHERE s.id = ? AND sd.doc_id = ? ";
+				"SELECT ss.owner, sd.doc_type, sd.metadata, ss.corrected_date FROM "+ resourceTable +" AS ss "+
+				"INNER JOIN "+ schema +"subject_document AS sd ON ss.subject_id = sd.subject_id "+
+				"WHERE ss.id = ? AND sd.doc_id = ? ";
         sql.prepared(
 			select, 
 			new fr.wseduc.webutils.collections.JsonArray()

@@ -46,7 +46,6 @@ export class SubjectCopy implements  ISubjectCopy {
     current_grain_id:number;
     dueDate: string;
     tracker: EditTrackingEvent;
-    corrected_file_id?:string
     corrected_files: Array<ISubjectCopyFile> = [];
     homework_files: Array<ISubjectCopyFile> = [];
 

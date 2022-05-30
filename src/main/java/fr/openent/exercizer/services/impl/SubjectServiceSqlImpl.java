@@ -22,7 +22,6 @@ package fr.openent.exercizer.services.impl;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Either;
-import io.vertx.core.json.Json;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.entcore.common.sql.Sql;
@@ -330,7 +329,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		}
 	}
 
-	public void publishLibrary(final Long fromSubjectId, final String authorsContributors, /*TODO WB-582 final String correctedFileId, final JsonObject correctedMetadata, */
+	public void publishLibrary(final Long fromSubjectId, final String authorsContributors,
 											 final Long typeId, final Long levelId, JsonArray tag, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		if (tag != null && tag.size() > 0) {
 			insertTag(tag, new Handler<Either<String, JsonArray>>() {
@@ -348,7 +347,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		}
 	}
 
-	private void publishSubjectGrainsLibrary( final Long fromSubjectId, final String authorsContributors, /*TODO WB-582 final String correctedFileId, final JsonObject correctedMetadata,*/
+	private void publishSubjectGrainsLibrary( final Long fromSubjectId, final String authorsContributors,
 											 final Long typeId, final Long levelId,  final JsonArray tag, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		String queryNewSubjectId = "SELECT nextval('" + schema + "subject_id_seq') as id";
 		sql.prepared(queryNewSubjectId, new fr.wseduc.webutils.collections.JsonArray(),
@@ -428,8 +427,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		}
 	}
 
-	private void duplicateSubjectForLibrary(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final String authorsContributors,
-	                                        /*final String correctedFileId, final JsonObject correctedMetadata,*/ UserInfos user) {
+	private void duplicateSubjectForLibrary(final SqlStatementsBuilder s, final Long newSubjectId, final Long fromSubjectId, final String authorsContributors, UserInfos user) {
 		duplicationSubject(s, newSubjectId, fromSubjectId, true, authorsContributors, null, user, "", false);
 	}
 
@@ -541,19 +539,6 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 			.add( subjectId )
 			.add( docId );
 		sql.prepared(select.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));		
-	}
-
-	@Override
-    public void addCorrectedDocument(final Long subjectId, final String docId, final JsonObject metadata, final Handler<Either<String, JsonObject>> handler) {
-        StringBuilder insert = new StringBuilder()
-		.append("INSERT INTO ").append(schema).append("subject_document (subject_id, doc_id, metadata) ")
-		.append("VALUES (?,?,?) RETURNING subject_id, doc_id, doc_type, metadata");
-
-        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
-			.add( subjectId )
-			.add( docId )
-			.add( metadata );
-		sql.prepared(insert.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));
 	}
 
 	@Override

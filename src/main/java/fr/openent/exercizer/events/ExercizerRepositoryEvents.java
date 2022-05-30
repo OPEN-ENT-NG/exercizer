@@ -1,20 +1,29 @@
 package fr.openent.exercizer.events;
 
+import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.security.ActionType;
 import fr.wseduc.webutils.security.SecuredAction;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
+
+import org.entcore.common.folders.impl.StorageHelper;
 import org.entcore.common.service.impl.SqlRepositoryEvents;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
+import org.entcore.common.storage.Storage;
+
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -23,12 +32,15 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
     private static final Logger log = LoggerFactory.getLogger(ExercizerRepositoryEvents.class);
     private Map<String, SecuredAction> securedActions;
     private String actionType;
+    private final Storage storage;
+    private String correctedTable = "exercizer.subject_document";
 
-    public ExercizerRepositoryEvents(Map<String, SecuredAction> securedActions, String actionType, Vertx vertx) {
+    public ExercizerRepositoryEvents(Map<String, SecuredAction> securedActions, String actionType, Vertx vertx, Storage storage) {
         super(vertx);
         this.securedActions = securedActions;
         this.actionType = actionType;
         this.mainResourceName = "subject";
+        this.storage = storage;
     }
 
     @Override
@@ -40,8 +52,6 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
 
             final String folderTable = "exercizer.folder",
                     subjectTable = "exercizer.subject",
-                    subjectScheduledTable = "exercizer.subject_scheduled",
-                    subjectCopyTable = "exercizer.subject_copy",
                     subjectShareTable = "exercizer.subject_shares",
                     grainTable = "exercizer.grain",
                     membersTable = "exercizer.members";
@@ -106,7 +116,6 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
             String querySubject =
                     "SELECT DISTINCT sub.* " +
                             "FROM " + subjectTable + " sub " +
-                            "LEFT JOIN " + subjectScheduledTable + " subSche ON sub.id = subSche.subject_id " +
                             "LEFT JOIN " + subjectShareTable + " subSh ON sub.id = subSh.resource_id " +
                             (exportSharedResources == true ? "" : "AND 1 = 0 ") +
                             "LEFT JOIN " + membersTable + " mem ON subSh.member_id = mem.id " +
@@ -118,6 +127,14 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
             JsonArray params = new JsonArray().addAll(resourcesIdsAndUserIdParamTwice).addAll(groups);
             queries.put(subjectTable,new SqlStatementsBuilder().prepared(querySubject,params).build());
 
+            if( exportDocuments ) {
+                String queryCorrected =
+                        "SELECT DISTINCT cor.subject_id, cor.doc_type, cor.doc_id, cor.metadata " +
+                        "FROM " + correctedTable + " cor " +
+                        "WHERE cor.subject_id IN (" + querySubject.replace("*","id") + ")";
+                queries.put(correctedTable,new SqlStatementsBuilder().prepared(queryCorrected,params).build());
+            }
+
             String queryGrain =
                     "SELECT DISTINCT grain.* " +
                             "FROM " + grainTable + " " +
@@ -126,17 +143,68 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
 
             AtomicBoolean exported = new AtomicBoolean(false);
 
-            createExportDirectory(exportPath, locale, new Handler<String>() {
-                @Override
-                public void handle(String path) {
-                    if (path != null) {
-                        exportTables(queries, new JsonArray(), fieldsToNull, exportDocuments, path, exported, handler);
-                    }
-                    else {
-                        handler.handle(exported.get());
-                    }
+            createExportDirectory(exportPath, locale, path -> {
+                if (path != null) {
+                    exportTables(queries, new JsonArray(), fieldsToNull, exportDocuments, path, exported, handler);
+                }
+                else {
+                    handler.handle(exported.get());
                 }
             });
+    }
+
+    /** 
+     * On exercizer.subject_document table:
+     * - for "storage" documents, also export the associated physical files.
+     * - for 'workspace' documents, they should not exist (dropped functionality on 2022-05-30) and are ignored.
+     */
+    @Override
+    protected Future<Void> beforeExportingTableToPath(boolean exportDocuments, String exportPath, String tableName, final JsonArray fields, final JsonArray rows) {
+        if( !exportDocuments || !correctedTable.equals(tableName) ) {
+            return Future.succeededFuture();
+        }
+        int docTypeIdx = -1;
+        int docIdIdx = -1;
+        for( int i=0; i<fields.size(); i++ ) {
+            String field = fields.getString(i);
+            if("doc_type".equals(field)) {
+                docTypeIdx=i;
+            } else if("doc_id".equals(field)) {
+                docIdIdx=i;
+            }
+        }
+        if( docTypeIdx < 0 || docIdIdx < 0 ) {
+            return Future.succeededFuture();
+        }
+
+        final List<Future> futures = new ArrayList<>(rows.size());
+        
+        for( int i=rows.size()-1; i>=0; i-- ) {
+            JsonArray row = rows.getJsonArray(i);
+            if( row == null ) continue;
+            if( ISubjectService.DocType.WORKSPACE.getKey().equals(row.getString(docTypeIdx)) ) {
+                log.info("[ExercizerRepositoryEvents][beforeExportingTableToPath] Unsupported doc_type 'workspace' => skipping document");
+                rows.remove( i );
+                continue;
+            }
+            final String fileId = row.getString(docIdIdx);
+            if( fileId == null || fileId.length() == 0 ) {
+                log.info("[ExercizerRepositoryEvents][beforeExportingTableToPath] Null or empty doc_id => skipping document");
+                rows.remove( i );
+                continue;
+            }
+            final Promise<Void> promise = Promise.promise();
+            final int idx = i;
+            storage.copyFileId(fileId, exportPath+ java.io.File.separator +fileId, res -> {
+                if( "error".equals(res.getString("status")) ) {
+                    log.error("[ExercizerRepositoryEvents][beforeExportingTableToPath] File export failed."+ res.getString("message"));
+                    rows.remove( idx );
+                }
+                promise.complete();
+            });
+            futures.add(promise.future());
+        }
+        return CompositeFuture.all(futures).compose(handler -> Future.succeededFuture() );
     }
 
     @Override

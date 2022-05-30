@@ -23,6 +23,7 @@ import fr.openent.exercizer.Exercizer;
 import fr.openent.exercizer.filters.*;
 import fr.openent.exercizer.services.ISubjectCopyService;
 import fr.openent.exercizer.services.ISubjectScheduledService;
+import fr.openent.exercizer.services.ISubjectService;
 import fr.openent.exercizer.services.impl.SubjectCopyServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectScheduledServiceSqlImpl;
 import fr.openent.exercizer.utils.GroupUtils;
@@ -47,7 +48,10 @@ import org.entcore.common.utils.DateUtils;
 import org.entcore.common.utils.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -830,6 +834,70 @@ public class SubjectScheduledController extends ControllerHelper {
 					unauthorized(request);
 				}
 			}
+		});
+	}
+
+	/**
+	 * Helper function to retrieve the current UserInfo, if authorized. 
+	 * Otherwise, responds to request with HTTP 401 Unauthorized.
+	 */
+	protected Future<UserInfos> checkAuth(final HttpServerRequest request){
+		final Promise<UserInfos> promise = Promise.promise();
+		UserUtils.getUserInfos(eb, request, user -> {
+            if( user != null ) {
+				promise.complete( user );
+            } else {
+				final String unauthorized = "User not found in session.";
+                log.debug( unauthorized );
+                unauthorized( request );
+				promise.fail( unauthorized );
+            }
+		});
+		return promise.future();
+	}
+
+	@Get("/subject-scheduled/:id/file/:fileId")
+	@ApiDoc("Download a document, if available (when correction date is reached).")
+	@ResourceFilter(SubjectScheduledCorrected.class)
+	@SecuredAction(value="", type = ActionType.RESOURCE)
+	public void downloadDocument(final HttpServerRequest request) {
+		checkAuth(request).onSuccess( user -> {
+			final String id = request.params().get("id");
+			final String correctedFileId = request.params().get("fileId");
+			subjectScheduledService.getCorrectedDownloadInformation(id, correctedFileId, event -> {
+				if (event.isRight()) {
+					final JsonObject subjectScheduled = event.right().getValue();
+
+					Date nowUTC = new DateTime(DateTimeZone.UTC).toLocalDateTime().toDate();
+					Date correctedDate;
+					try {
+						correctedDate = DateUtils.parseTimestampWithoutTimezone(subjectScheduled.getString("corrected_date"));
+					} catch (ParseException e) {
+						log.error("can't parse corrected_date of scheduled subject", e);
+						renderError(request);
+						return;
+					}
+
+					//check download is authorized only if corrected date is passed
+					if (DateUtils.lessOrEqualsWithoutTime(correctedDate, nowUTC) || subjectScheduled.getString("owner").equals(user.getUserId())) {
+						final JsonObject metadata = subjectScheduled.getJsonObject("metadata");
+						final String docType = subjectScheduled.getString("doc_type");
+						if (docType != null && metadata != null) {
+							if( ISubjectService.DocType.STORAGE.getKey().equals(docType) ) {
+								storage.sendFile(correctedFileId, metadata.getString("filename"), request, false, metadata);
+//							} else {
+//								sendFileFromWorkspace(request, user, correctedFileId);
+							}
+						} else {
+							Renders.badRequest(request);
+						}
+					} else {
+						unauthorized(request);
+					}
+				} else {
+					Renders.badRequest(request);
+				}
+			});
 		});
 	}
 }

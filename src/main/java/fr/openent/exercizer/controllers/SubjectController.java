@@ -25,13 +25,10 @@ import fr.openent.exercizer.exporter.SubjectExporter;
 import fr.openent.exercizer.filters.MassOwnerOnly;
 import fr.openent.exercizer.filters.MassShareAndOwner;
 import fr.openent.exercizer.filters.SubjectDocumentOwner;
-import fr.openent.exercizer.filters.SubjectScheduledCorrected;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.IGrainService;
-import fr.openent.exercizer.services.ISubjectScheduledService;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.openent.exercizer.services.impl.GrainServiceSqlImpl;
-import fr.openent.exercizer.services.impl.SubjectScheduledServiceSqlImpl;
 import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
 import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
@@ -41,7 +38,6 @@ import fr.wseduc.webutils.I18n;
 import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.RequestUtils;
 
-import org.entcore.common.bus.WorkspaceHelper;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.events.EventHelper;
 import org.entcore.common.events.EventStore;
@@ -52,25 +48,18 @@ import org.entcore.common.http.filter.sql.OwnerOnly;
 import org.entcore.common.http.filter.sql.ShareAndOwner;
 import org.entcore.common.storage.Storage;
 import org.entcore.common.user.UserInfos;
-import org.entcore.common.utils.DateUtils;
 import org.entcore.common.user.UserUtils;
 import org.entcore.common.utils.StringUtils;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
-import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.DecodeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.entcore.common.http.response.DefaultResponseHandler.*;
@@ -79,19 +68,15 @@ public class SubjectController extends ControllerHelper {
 	static final String INTERACTIVE_RESOURCE_NAME = "exercice_interactive";
 	static final String SIMPLE_RESOURCE_NAME = "exercice_assignment";
 	private final ISubjectService subjectService;
-	private final ISubjectScheduledService subjectScheduledService;
 	private final IGrainService grainService;
 	private static final I18n i18n = I18n.getInstance();
 	private final Storage storage;
-	private final WorkspaceHelper workspaceHelper;
 	private final EventHelper eventHelper;
 
 	public SubjectController(final Storage storage) {
 		this.subjectService = new SubjectServiceSqlImpl();
-		this.subjectScheduledService = new SubjectScheduledServiceSqlImpl();
 		this.grainService = new GrainServiceSqlImpl();
 		this.storage = storage;
-		this.workspaceHelper = new WorkspaceHelper(eb, storage);
 		final EventStore eventStore = EventStoreFactory.getFactory().getEventStore(Exercizer.class.getSimpleName());
 		this.eventHelper = new EventHelper(eventStore);
 	}
@@ -664,6 +649,7 @@ public class SubjectController extends ControllerHelper {
 	@ApiDoc("Publish subject in library.")
 	@ResourceFilter(OwnerOnly.class)
 	@SecuredAction(value = "", type = ActionType.RESOURCE)
+	@Deprecated
 	public void publishSimpleSubject(final HttpServerRequest request) {
 		final Long subjectId;
 		try {
@@ -690,7 +676,7 @@ public class SubjectController extends ControllerHelper {
 								}
 
 								if (data != null) {
-									/*TODO WB-582 : there are many corrected files now. */
+									/*TODO WB-582 : this code is deprecated but seems never used. */
 									data.put("correctedFileId", fileId);
 									data.put("correctedMetadata", metadata);
 
@@ -710,7 +696,7 @@ public class SubjectController extends ControllerHelper {
 	}
 
 	private void publish(JsonObject data, Long subjectId, UserInfos user, final HttpServerRequest request) {
-		subjectService.publishLibrary(subjectId, data.getString("authorsContributors"), /*TODO WB-582 data.getString("correctedFileId"), data.getJsonObject("correctedMetadata"),*/ data.getLong("subjectLessonTypeId"),
+		subjectService.publishLibrary(subjectId, data.getString("authorsContributors"), data.getLong("subjectLessonTypeId"),
 				data.getLong("subjectLessonLevelId"), data.getJsonArray("subjectTagList", new fr.wseduc.webutils.collections.JsonArray()), user,
 				new Handler<Either<String, JsonObject>>() {
 					@Override
@@ -798,8 +784,8 @@ public class SubjectController extends ControllerHelper {
 						if (docType != null && metadata != null) {
 							if( ISubjectService.DocType.STORAGE.getKey().equals(docType) ) {
 								storage.sendFile(fileId, metadata.getString("filename"), request, false, metadata);
-							} else {
-								sendFileFromWorkspace(request, user, fileId);
+							// } else {
+							// 	sendFileFromWorkspace(request, user, fileId);
 							}
 						} else {
 							Renders.badRequest(request);
@@ -814,24 +800,42 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
+	Future<JsonObject> retrieveDocument(final String docId) {
+		final Promise<JsonObject> promise = Promise.promise();
+		JsonObject m = new JsonObject()
+				.put("action", "getDocument")
+				.put("id", docId);
+		eb.request("org.entcore.workspace", m, msg -> {
+			if( msg.succeeded() ) {
+				final JsonObject result = (JsonObject) msg.result().body();
+				if( "ok".equals(result.getString("status")) ) {
+					promise.complete( result.getJsonObject("result") );
+				} else {
+					promise.fail( result.getString("error") );
+				}
+			} else {
+				promise.fail( msg.cause() );
+			}
+		});
+		return promise.future();
+	}
+
+	/*
+	@Deprecated
 	private void sendFileFromWorkspace(final HttpServerRequest request, final UserInfos user, final String docId) {
-		final Promise<Message<JsonObject>> promise = Promise.promise();
-		workspaceHelper.getDocument(docId, promise);
-		promise.future()
-		.onSuccess( msg -> {
+		retrieveDocument(docId).onSuccess( doc -> {
 			try {
-				final JsonObject doc = msg.body();
 				final String fileId = DocumentHelper.getFileId(doc);
 				final JsonObject metadata = DocumentHelper.getMetadata(doc);
 				storage.sendFile(fileId, metadata.getString("filename"), request, false, metadata);
 			} catch ( Exception e ) {
 				Renders.noContent(request);
 			}
-		})
-		.onFailure(err-> {
+		}).onFailure(err-> {
 			Renders.badRequest(request);
 		});
-	}	
+	}
+	*/
 
 	@Post("/subject/duplicate")
 	@ApiDoc("Duplicate subjects.")
@@ -1037,15 +1041,33 @@ public class SubjectController extends ControllerHelper {
 		checkAuth(request).onSuccess( user -> {
 			try {
 				final Long subjectId = Long.parseLong( request.params().get("id") );
-				RequestUtils.bodyToJson(request, doc -> {
-					final String docId = doc.getString("doc_id");
-					final JsonObject metadata = doc.getJsonObject("metadata");
-					subjectService.addCorrectedDocument(subjectId, docId, metadata, result -> {
-						if( result.isRight() ) {
-							defaultResponseHandler(request).handle(result);;
-						} else {
-							Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.file.limit5"));
-						}
+				RequestUtils.bodyToJson(request, docInfo -> {
+					final String docId = docInfo.getString("doc_id");
+					retrieveDocument(docId)
+					.onSuccess( doc -> {
+						final JsonObject metadata = DocumentHelper.getMetadata(doc);
+						storage.copyFile(DocumentHelper.getFileId(doc), event -> {
+							if ("ok".equals(event.getString("status"))) {
+								final String fileId = event.getString("_id");
+								subjectService.addCorrectedFile(subjectId, fileId, metadata, result -> {
+									if( result.isRight() ) {
+										defaultResponseHandler(request).handle(result);
+									} else {
+										Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.file.limit5"));
+										storage.removeFile(fileId, event2 -> {
+											if ("error".equals(event2.getString("status"))) {
+												log.warn("Fail to delete file due to : " + event2.getString("message"));
+											}
+										});
+									}
+								});
+							} else {
+								Renders.noContent(request);
+							}
+						});
+					})
+					.onFailure(err-> {
+						Renders.badRequest(request);
 					});
 				});
 			} catch( Exception e ) {
@@ -1085,51 +1107,6 @@ public class SubjectController extends ControllerHelper {
 			} catch( Exception e ) {
 				badRequest(request);
 			}
-		});
-	}
-
-	@Get("/subject/:id/file/:fileId")
-	@ApiDoc("Download a document, if available (when correction date is reached).")
-	@ResourceFilter(SubjectScheduledCorrected.class)
-	@SecuredAction(value="", type = ActionType.RESOURCE)
-	public void downloadDocument(final HttpServerRequest request) {
-		checkAuth(request).onSuccess( user -> {
-			final String id = request.params().get("id");
-			final String correctedFileId = request.params().get("fileId");
-			subjectScheduledService.getCorrectedDownloadInformation(id, correctedFileId, event -> {
-				if (event.isRight()) {
-					final JsonObject subjectScheduled = event.right().getValue();
-
-					Date nowUTC = new DateTime(DateTimeZone.UTC).toLocalDateTime().toDate();
-					Date correctedDate;
-					try {
-						correctedDate = DateUtils.parseTimestampWithoutTimezone(subjectScheduled.getString("corrected_date"));
-					} catch (ParseException e) {
-						log.error("can't parse corrected_date of scheduled subject", e);
-						renderError(request);
-						return;
-					}
-
-					//check download is authorized only if corrected date is passed
-					if (DateUtils.lessOrEqualsWithoutTime(correctedDate, nowUTC) || subjectScheduled.getString("owner").equals(user.getUserId())) {
-						final JsonObject metadata = subjectScheduled.getJsonObject("metadata");
-						final String docType = subjectScheduled.getString("doc_type");
-						if (docType != null && metadata != null) {
-							if( ISubjectService.DocType.STORAGE.getKey().equals(docType) ) {
-								storage.sendFile(correctedFileId, metadata.getString("filename"), request, false, metadata);
-							} else {
-								sendFileFromWorkspace(request, user, correctedFileId);
-							}
-						} else {
-							Renders.badRequest(request);
-						}
-					} else {
-						unauthorized(request);
-					}
-				} else {
-					Renders.badRequest(request);
-				}
-			});
 		});
 	}
 
