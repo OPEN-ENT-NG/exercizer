@@ -18,8 +18,8 @@ export interface ISubjectScheduledService {
     getById(id:number):ISubjectScheduled;
     currentSubjectScheduledId:number;
     removeCorrectedFile(subjectId:number, docId:string): Promise<any>;
-    addCorrectedDoc(id, file): Promise<ISubjectDocument>;
-    uploadCorrectedFile(id, file): Promise<ISubjectDocument>;
+    addCorrectedDoc(subjectId, file): Promise<ISubjectDocument>;
+    uploadCorrectedFile(subjectId, file): Promise<ISubjectDocument>;
     getBySubjectId(id:number):ISubjectScheduled;
 }
 
@@ -119,12 +119,12 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
-    public uploadCorrectedFile = function(id, file): Promise<ISubjectDocument>  {
+    public uploadCorrectedFile = function(subjectId, file): Promise<ISubjectDocument>  {
         var formData = new FormData();
         formData.append('file', file);
 
         var deferred = this._$q.defer();         ;
-        this._$http.put(`exercizer/subject/${id}/file`, formData, {
+        this._$http.put(`exercizer/subject/${subjectId}/file`, formData, {
             withCredentials: false,
             headers: {
                 'Content-Type': undefined
@@ -145,11 +145,11 @@ export class SubjectScheduledService implements ISubjectScheduledService {
         return deferred.promise;
     };
 
-    public addCorrectedDoc = function(id, file): Promise<ISubjectDocument>  {
+    public addCorrectedDoc = function(subjectId, file): Promise<ISubjectDocument>  {
         var deferred = this._$q.defer();
         let request = {
             method: 'PUT',
-            url: `exercizer/subject/${id}/doc`,
+            url: `exercizer/subject/${subjectId}/doc`,
             headers: {
                 'Content-Type': "application/json"
             },

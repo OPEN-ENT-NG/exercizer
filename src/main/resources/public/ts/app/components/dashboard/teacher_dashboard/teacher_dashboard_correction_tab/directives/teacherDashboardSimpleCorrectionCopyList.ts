@@ -140,7 +140,7 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
                     scope.excludeDisplayed = true;
                 };
                 scope.downloadCorrectedFile = function (file:ISubjectDocument) {
-                    window.location.href = `/exercizer/subject/${scope.selectedSubjectScheduled.id}/file/${file.doc_id}`;
+                    window.location.href = `/exercizer/subject-scheduled/${scope.selectedSubjectScheduled.id}/file/${file.doc_id}`;
                 };
 
                 scope.downloadFiles = function(){
@@ -224,7 +224,6 @@ export const teacherDashboardSimpleCorrectionCopyList = ng.directive('teacherDas
 
                 scope.appendCorrected = async function() {
                     const file = scope.selectedFile.file;
-                    //alert( JSON.stringify(file) );
                     if(!file){
                         return;
                     }

@@ -186,7 +186,7 @@ class PerformSimpleSubjectCopyController {
     };
     
     public downloadGeneralCorrectedFile = function(doc:ISubjectDocument) {
-        window.location.href = `/exercizer/subject/${this._subjectScheduled.id}/file/${doc.doc_id}`;
+        window.location.href = `/exercizer/subject-scheduled/${this._subjectScheduled.id}/file/${doc.doc_id}`;
     };
 
     public downloadCorrectedFile = function(file:ISubjectCopyFile) {

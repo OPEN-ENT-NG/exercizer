@@ -51,7 +51,7 @@ public class Exercizer extends BaseServer {
 
         final Storage storage = new StorageFactory(vertx, config, new ExercizerStorage()).getStorage();
 
-        setRepositoryEvents(new ExercizerRepositoryEvents(securedActions, "exercizer.manager",vertx));
+        setRepositoryEvents(new ExercizerRepositoryEvents(securedActions, "exercizer.manager",vertx, storage));
 
         SqlConf folderConf = SqlConfs.createConf(FolderController.class.getName());
         folderConf.setSchema("exercizer");

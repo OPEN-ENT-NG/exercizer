@@ -89,7 +89,7 @@ public interface ISubjectScheduledService {
      * Return download informations.
      * Useful to check if the corrected file is available to the user.
      *
-     * @param id the id of resource
+     * @param id the id of SubjectScheduled
      * @param docId id of the file
      * @param handler the handler
      *
