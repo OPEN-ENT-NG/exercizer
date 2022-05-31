@@ -221,7 +221,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
         sql.transaction(builder.build(), message -> {
             if ("ok".equals(message.body().getString("status"))) {
 
-                List<String> tables = new ArrayList<>(Arrays.asList("folder", "subject", "grain"));
+                List<String> tables = new ArrayList<>(Arrays.asList("folder", "subject", "subject_document", "grain"));
                 Map<String,String> tablesWithId = new HashMap<>();
                 tablesWithId.put("folder", "DEFAULT");
                 tablesWithId.put("subject", "DEFAULT");
@@ -235,6 +235,40 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
             }
         });
 
+    }
+
+    @Override
+    protected Future<Void> beforeImportingResultsToTable(String importPath, String table, final JsonArray fields, final JsonArray rows) {
+        if( !"subject_document".equals(table) || rows==null || rows.isEmpty() ) return Future.succeededFuture();
+        final int doc_id = fields.getList().indexOf("doc_id");
+        if( doc_id <0 ) return Future.succeededFuture();
+
+        final List<Future> futures = new ArrayList<>(rows.size());
+        
+        for( int i=rows.size()-1; i>=0; i-- ) {
+            final JsonArray row = rows.getJsonArray(i);
+            String fileId = row.getString(doc_id);
+            if( fileId==null || fileId.isEmpty() ) {
+                continue;
+            }
+
+            // Copy corrected file to storage
+            final String sourceFilePath = importPath+ java.io.File.separator +fileId;
+            final String newFileId = UUID.randomUUID().toString();
+            final Promise<Void> promise = Promise.promise();
+            final int idx = i;
+            storage.writeFsFile(newFileId, sourceFilePath, res -> {
+                if( "error".equals(res.getString("status")) ) {
+                    log.error("[ExercizerRepositoryEvents][beforeImportingResultsToTable] File import failed. "+ res.getString("message"));
+                    rows.remove( idx );
+                } else {
+                    row.set(doc_id, newFileId);
+                }
+                promise.complete();
+            });
+            futures.add(promise.future());
+        }
+        return CompositeFuture.all(futures).compose(handler -> Future.succeededFuture() );
     }
 
     @Override
@@ -255,13 +289,35 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
         // Re-orders items to avoid breaking foreign key constraint
         final int indexId = fields.getList().indexOf("id");
         Collections.sort(results.getList(), (a,b) -> new JsonArray((List)a).getInteger(indexId).compareTo(new JsonArray((List)b).getInteger(indexId)));
+        
+        final boolean isSubjectTable = "subject".equals(table);
 
-        if ("subject".equals(table) || "folder".equals(table)) {
+        if (isSubjectTable || "folder".equals(table)) {
+            // WB-582 retro-compatibility on old exports (A)
+            final int corrected_file_id = fields.getList().indexOf("corrected_file_id");
+            if( isSubjectTable && corrected_file_id >= 0 ) {
+                fields.remove(corrected_file_id);
+            }
+            // WB-582 retro-compatibility on old exports (B)
+            final int corrected_metadata = fields.getList().indexOf("corrected_metadata");
+            if( isSubjectTable && corrected_metadata >= 0 ) {
+                fields.remove(corrected_metadata);
+            }
+
             final int titleId = fields.getList().indexOf("title");
-            final int parentId = fields.getList().indexOf("subject".equals(table) ? "original_subject_id" : "parent_folder_id");
+            final int parentId = fields.getList().indexOf(isSubjectTable ? "original_subject_id" : "parent_folder_id");
 
             label:
             for (int i = 0; i < results.size(); ) {
+                // WB-582 retro-compatibility on old exports
+                if( isSubjectTable ) {
+                    // Keep the removing sequence (A) then (B) for indexes to match !
+                    if( corrected_file_id >= 0 )
+                        results.getJsonArray(i).remove(corrected_file_id);
+                    if( corrected_metadata >= 0 )
+                        results.getJsonArray(i).remove(corrected_metadata);
+                }
+
                 if (forceImportAsDuplication == true) {
                     JsonArray row = results.getJsonArray(i);
 
