@@ -38,14 +38,14 @@
         </div>
         <div data-ng-show="getEmptyScreen() == 'is_on_going'">
             <img height="150" src="exercizer/public/assets/img/training-empty-ongoing.svg"/>
-            <h4>
+            <p>
                 <i18n ng-if="search.filter.length == 1">exercizer.dashboard.learner.training.empty.ongoing</i18n>
                 <i18n ng-if="search.filter.length != 1">exercizer.dashboard.learner.finish.empty</i18n>
-            </h4>
+            </p>
         </div>
         <div data-ng-show="getEmptyScreen() == 'is_done'">
             <img height="150" src="exercizer/public/assets/img/nothing.svg"/>
-            <h4><i18n>exercizer.dashboard.learner.training.empty.done</i18n></h4>
+            <p><i18n>exercizer.dashboard.learner.training.empty.done</i18n></p>
         </div>
     </article>
 </div>

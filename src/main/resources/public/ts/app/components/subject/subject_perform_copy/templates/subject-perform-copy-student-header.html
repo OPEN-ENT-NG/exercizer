@@ -2,7 +2,7 @@
     <h1 class="cell">
         <span class="no-responsive"><span class="hover-orange" data-ng-if="!subjectCopy.is_training_copy" data-ng-click="redirectToDashboard(false)"><i18n>exercizer.title</i18n></span>
         <span class="hover-orange" data-ng-if="subjectCopy.is_training_copy" data-ng-click="redirectToTrainingSubjects()"><i18n>exercizer.training.subject</i18n></span> / </span>
-        <span tooltip="[[subjectScheduled.title]]">[[ subjectScheduled.title | limitTo: 35  ]][[ subjectScheduled.title.length > 35 ? '...' : '']]&nbsp;-&nbsp;[[ subjectScheduled.max_score ]]&nbsp;<i18n>exercizer.score</i18n></span>
+        <span>[[ subjectScheduled.title | limitTo: 35  ]][[ subjectScheduled.title.length > 35 ? '...' : '']]&nbsp;-&nbsp;[[ subjectScheduled.max_score ]]&nbsp;<i18n>exercizer.score</i18n></span>
     </h1>
 </div>
 <div class="row">

@@ -24,6 +24,7 @@
                             <i18n>exercizer.domino.by</i18n><em class="high-importance"><a data-ng-href="/userbook/annuaire#[[subjectScheduled.owner]]">[[subjectScheduled.owner_username]]</a></em>
                         </div>
                         <div class="due-date row pt-16" data-ng-if="!subjectCopy.is_training_copy" ng-class="{'divide-opacity': cantSart(), 'delay': tooLate()}">
+                            <svg class="icon-clock" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#clock"></use></svg>
                             <!-- Appliquer une class .delay quand le sujet est en retard -->
                             <div data-ng-show="isDueDateDisplayed()">
                               <i18n>exercizer.domino.todelivered</i18n> <strong data-ng-bind="dueDate | date:'dd/MM/yyyy'"></strong> <i18n>exercizer.at</i18n> <strong data-ng-bind="dueDate | date:'HH:mm'"></strong>
