@@ -237,7 +237,7 @@ public class SubjectCopyController extends ControllerHelper {
 									String recipient = "";
 									String url = "";
 									switch (copyAction) {
-										case SUBMITCOPY: recipient = subjectSchedule.getString("owner"); url = "/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId; break;
+										case SUBMITCOPY: recipient = subjectSchedule.getString("owner"); url = "/dashboard/teacher/correction/"+ subjectScheduleId; break;
 										case CORRECTCOPY: recipient = subjectCopy.getString("owner");  url = "/subject/copy/view/"+ subjectCopyId; break;
 										case ASSIGNCOPY: recipient = subjectCopy.getString("owner");  url = "/subject/copy/view/"+ subject.getLong("id") +"/"+subjectCopyId; break;
 									}
@@ -247,13 +247,14 @@ public class SubjectCopyController extends ControllerHelper {
 											subject.getString("title"),
 											null,
 											subjectCopyId);
-
+/* WB-728 Why sending another notif here ?
 									if( copyAction==CopyAction.SUBMITCOPY && "Student".equalsIgnoreCase(user.getType()) ) {
 										url = "/dashboard/teacher/correction/"+ subjectCopy.getLong("subject_scheduled_id");
 										String notificationName="submithomework";
 										recipient = subjectCopy.getString("subject_owner");
 										sendNotification(request, notificationName, user, Arrays.asList(recipient), url, subjectCopy.getString("title"), null, subjectCopyId);
 									}
+*/
 								}
 							});
 						}
