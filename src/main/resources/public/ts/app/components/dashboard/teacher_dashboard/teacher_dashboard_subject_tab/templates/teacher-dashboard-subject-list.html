@@ -153,7 +153,7 @@
                                                 <div class="cell title-icon">
                                                     <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                                                 </div>
-                                                <strong>[[ subject.title | limitTo: 35  ]][[ subject.title.length > 35 ? '...' : '']]</strong>
+                                                <strong class="title">[[ subject.title | limitTo: 35  ]][[ subject.title.length > 35 ? '...' : '']]</strong>
                                             </div>
                                             <div class="row">
                                                 <em class="domino-date" data-ng-if="subject.modified"><i18n>exercizer.domino.modified</i18n> [[subject.modified | date: 'dd/MM/yyyy']]</em>

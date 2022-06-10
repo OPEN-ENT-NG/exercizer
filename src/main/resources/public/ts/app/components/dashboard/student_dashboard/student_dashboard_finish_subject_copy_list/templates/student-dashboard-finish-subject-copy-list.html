@@ -1,52 +1,62 @@
 <!-- filter -->
 <div data-ng-controller="SubjectCopyListController as subjectCopyListController">
 
-    <div class="row">
+    <!-- list -->
+    <div
+        data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopySubmittedOrCorrectionOnGoingOrCorrected() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: subjectCopyListController.filterOnSubjectCopyTraining() | filter: subjectCopyListController.filterOnSubjectCopyState(search.filter)) | orderBy:'modified':true">
+        <subject-copy-domino ng-click="subjectCopyListController.openCorrection(subjectCopy)" subject-copy="subjectCopy"
+            subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)">
+        </subject-copy-domino>
+    </div>
+    <article data-ng-show="!filteredSubjectCopyList.length">
 
-        <label class="chip"
-        data-ng-click="clickFilter('is_submitted')"
-        data-ng-class="filerIsSelected('is_submitted')">
-            <span><i18n>exercizer.all.submitted</i18n></span>
-        </label>
+        <div class="row">
 
-        <label class="chip"
-        data-ng-click="clickFilter('is_correction_on_going')"
-        data-ng-class="filerIsSelected('is_correction_on_going')">
-            <span><i18n>exercizer.all.correcting</i18n></span>
-        </label>
+            <label class="chip" data-ng-click="clickFilter('is_submitted')"
+                data-ng-class="filerIsSelected('is_submitted')">
+                <span>
+                    <i18n>exercizer.all.submitted</i18n>
+                </span>
+            </label>
 
-        <label class="chip"
-        data-ng-click="clickFilter('is_corrected')"
-        data-ng-class="filerIsSelected('is_corrected')">
-            <span><i18n>exercizer.all.corrected</i18n></span>
-        </label>
+            <label class="chip" data-ng-click="clickFilter('is_correction_on_going')"
+                data-ng-class="filerIsSelected('is_correction_on_going')">
+                <span>
+                    <i18n>exercizer.all.correcting</i18n>
+                </span>
+            </label>
 
-        <div class="flex align-items-center justify-space-between gap-8 right-magnet mobile-row">
-            <div class="flex align-items-center gap-8">
-                <label class="two cell">
-                    <i18n>exercizer.date.from</i18n>
-                </label>
-                <date-picker data-ng-model="search.beginDate" class="input-date cell"></date-picker>
-            </div>
-            <div class="flex align-items-center gap-8">
-                <label class="two cell">
-                    <i18n>exercizer.date.to</i18n>
-                </label>
-                <date-picker data-ng-model="search.endDate" class="input-date cell"></date-picker>
+            <label class="chip" data-ng-click="clickFilter('is_corrected')"
+                data-ng-class="filerIsSelected('is_corrected')">
+                <span>
+                    <i18n>exercizer.all.corrected</i18n>
+                </span>
+            </label>
+        </div>
+
+        <div class="flex flex-wrap-wrap align-items-center justify-space-between gap-16 mt-16">
+            <input type="text" data-ng-model="search.text" i18n-placeholder="exercizer.search"
+                class="six twelve-mobile cell" style="min-width: 220px !important;">
+            <div class="flex align-items-center justify-space-between gap-8 right-magnet mobile-row">
+                <div class="flex align-items-center gap-8">
+                    <label class="two cell">
+                        <i18n>exercizer.date.from</i18n>
+                    </label>
+                    <date-picker data-ng-model="search.beginDate" class="input-date cell"></date-picker>
+                </div>
+                <div class="flex align-items-center gap-8">
+                    <label class="two cell">
+                        <i18n>exercizer.date.to</i18n>
+                    </label>
+                    <date-picker data-ng-model="search.endDate" class="input-date cell"></date-picker>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="row vertical-spacing">
-        <input type="text" data-ng-model="search.text" i18n-placeholder="exercizer.search" class="six twelve-mobile cell">
-    </div>
-
-    <!-- list -->
-    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopySubmittedOrCorrectionOnGoingOrCorrected() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: subjectCopyListController.filterOnSubjectCopyTraining() | filter: subjectCopyListController.filterOnSubjectCopyState(search.filter)) | orderBy:'modified':true">
-        <subject-copy-domino ng-click="subjectCopyListController.openCorrection(subjectCopy)" subject-copy="subjectCopy" subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
-    </div>
-    <article data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
-        <img height="150" src="exercizer/public/assets/img/nothing.svg"/>
-        <p><i18n>exercizer.dashboard.learner.finish.empty</i18n></p>
+        <div style="text-align: center">
+            <img height="150" src="exercizer/public/assets/img/nothing.svg" />
+            <p>
+                <i18n>exercizer.dashboard.learner.finish.empty</i18n>
+            </p>
+        </div>
     </article>
 </div>

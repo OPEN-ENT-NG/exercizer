@@ -8,9 +8,9 @@
     <div data-ng-if="performSimpleSubjectCopyController.hasDataLoaded">
 
         <div class="flex align-items-center justify-space-between mb-16 flex-wrap-wrap">
-            <h1 class="cell  flex-inline align-items-center gap-16">
+            <h1 class="cell flex-inline align-items-center gap-8 only-desktop">
                 <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
-                <span class="no-responsive"><span class="hover-orange" data-ng-click="performSimpleSubjectCopyController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span><span class="hover-orange" data-ng-click="">[[ performSimpleSubjectCopyController.subjectScheduled.title | limitTo: 35  ]][[ performSimpleSubjectCopyController.subjectScheduled.title.length > 35 ? '...' : '']]</span>
+                <span class="no-responsive"><span data-ng-click="performSimpleSubjectCopyController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span><span class="hover-orange" data-ng-click="">[[ performSimpleSubjectCopyController.subjectScheduled.title | limitTo: 35  ]][[ performSimpleSubjectCopyController.subjectScheduled.title.length > 35 ? '...' : '']]</span>
             </h1>
 
             <div class="flex-inline gap-16 flex-wrap-wrap mt-16 justify-content-end">
@@ -43,8 +43,11 @@
                 <h2 class="text-subheading mt-0 mb-16 new-title"><i18n>exercizer.simple.make.title</i18n></h2>
                 <div class="selected-subject-scheduled"
                         data-ng-repeat="file in performSimpleSubjectCopyController.subjectCopy.homework_files">
-                    <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                    <label class="text-pointer">[[file.metadata.filename]]</label>
+                    <div class="selected-subject-inner flex-inline align-items-center gap-4">
+                        <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+                        <svg class="icon-eye" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+                        <label class="text-pointer">[[file.metadata.filename]]</label>
+                    </div>
                     <button
                         class="download"
                         aria-label="[['exercizer.file.download'|i18n]]"
@@ -72,8 +75,11 @@
                 <div class="mt-16">
                     <div class="selected-subject-scheduled mb-4"
                             ng-repeat="file in performSimpleSubjectCopyController.subjectCopy.homework_files">
-                        <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                        <label class="text-pointer">[[file.metadata.filename]]</label>
+                        <div class="selected-subject-inner flex-inline align-items-center gap-4">
+                            <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+                            <svg class="icon-eye" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+                            <label class="text-pointer">[[file.metadata.filename]]</label>
+                        </div>
                         <button
                             class="download"
                             aria-label="[['exercizer.file.download'|i18n]]"
@@ -126,8 +132,11 @@
                             ng-if="performSimpleSubjectCopyController.canDownloadCorrected()"
                             ng-repeat="doc in performSimpleSubjectCopyController.subjectScheduled.files"
                             data-ng-click="performSimpleSubjectCopyController.downloadGeneralCorrectedFile(doc)">
-                        <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                        <label class="text-pointer">[[doc.metadata.filename]]</label>
+                        <div class="selected-subject-inner flex-inline align-items-center gap-4">
+                            <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+                            <svg class="icon-eye" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+                            <label class="text-pointer">[[doc.metadata.filename]]</label>
+                        </div>
                         <button
                             class="download"
                             aria-label="[['exercizer.file.download'|i18n]]"
@@ -149,8 +158,11 @@
                             ng-if="performSimpleSubjectCopyController.canDownloadCorrected()"
                             ng-repeat="file in performSimpleSubjectCopyController.subjectCopy.corrected_files"
                             data-ng-click="performSimpleSubjectCopyController.downloadCorrectedFile(file)">
-                        <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                        <label class="text-pointer">[[file.metadata.filename]]</label>
+                        <div class="selected-subject-inner flex-inline align-items-center gap-4">
+                            <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+                            <svg class="icon-eye" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+                            <label class="text-pointer">[[file.metadata.filename]]</label>
+                        </div>
                         <button
                             class="download"
                             aria-label="[['exercizer.file.download'|i18n]]"
@@ -172,9 +184,9 @@
 
             <p><i18n>exercizer.simple.make.confirm</i18n> <em>[[ performSimpleSubjectCopyController.subjectScheduled.title ]]</em> <i18n>exercizer.to</i18n> <strong>[[ performSimpleSubjectCopyController.subjectScheduled.owner_username ]]</strong> ?</p>
 
-            <div class="row">
-                <button data-ng-click="performSimpleSubjectCopyController.saveStudentCopy()" class="cell right-magnet"><i18n>exercizer.simple.make.label</i18n></button>
-                <button data-ng-click="performSimpleSubjectCopyController.closeConfirmModal()" class="cell right-magnet cancel"><i18n>exercizer.simple.make.cancel</i18n></button>
+            <div class="flex gap-8 justify-content-end">
+                <button data-ng-click="performSimpleSubjectCopyController.closeConfirmModal()" class="cell right-magnet cancel button button-secondary"><i18n>exercizer.simple.make.cancel</i18n></button>
+                <button data-ng-click="performSimpleSubjectCopyController.saveStudentCopy()" class="cell right-magnet button button-accent"><i18n>exercizer.simple.make.label</i18n></button>
             </div>
         </lightbox>
 

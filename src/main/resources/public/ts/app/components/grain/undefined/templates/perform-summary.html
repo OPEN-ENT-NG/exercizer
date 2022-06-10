@@ -2,6 +2,8 @@
     <h2 class="row"><i18n>exercizer.summary</i18n></h2>
     <div class="m-16" data-ng-show="!subjectScheduled.is_training_mode">
       <message-info status="warning" data-ng-if="subjectScheduled.is_one_shot_submit"><i18n>exercizer.one.submit</i18n></message-info>
+    </div>
+    <div class="m-16" data-ng-show="!subjectScheduled.is_training_mode">
       <message-info status="warning" data-ng-if="!subjectScheduled.is_one_shot_submit"><i18n>exercizer.several.submit</i18n></message-info>
     </div>
     <div data-ng-if="previewing">

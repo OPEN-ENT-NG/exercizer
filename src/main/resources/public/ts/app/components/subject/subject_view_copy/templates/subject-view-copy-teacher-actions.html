@@ -1,11 +1,12 @@
 <div class="row" ng-if="isHeader()">
-    <h1 class="cell">
+    <h1 class="cell flex-inline align-items-center gap-8 only-desktop">
+        <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
         <span class="no-responsive"><span class="hover-orange" data-ng-click="redirectToSubjectDashboard()"><i18n>exercizer.title</i18n></span>
         / </span><span data-ng-click="redirectToCorrectDashboard()"><span class="hover-orange"><i18n>exercizer.dashboard.instructer.tab2</i18n></span></span>
         / <span tooltip="[[subjectScheduled.title]]" data-ng-click="redirectToDashboard(false)">[[ subjectScheduled.title | limitTo: 35  ]][[ subjectScheduled.title.length > 35 ? '...' : '']]</span>
     </h1>
 </div>
-<div class="row">
+<div class="flex align-items-center flex-wrap-wrap" ng-class="{'mt-24 justify-content-end': !isHeader(), 'justify-space-between': isHeader()}">
     <span ng-if="isHeader()" class="flex-inline align-items-center">
         <h2>
             <strong class="cell reduce-block-four">&nbsp;<i18n>exercizer.copy.from</i18n> [[ subjectCopy.owner_username ]] &nbsp;</strong>
@@ -14,25 +15,28 @@
             <span data-bind-html="copiesYetToCorrectDisplay"></span>
         </div>
     </span>
+    
+    <div class="flex-inline align-items-center justify-content-end gap-8">
+        <button class="cell right-magnet button button-secondary" data-ng-click="redirectToDashboard(false)" data-ng-show="copyIsCorrected()">
+            <i18n>exercizer.back.corrected</i18n>
+        </button>
+    
+        <button class="cell right-magnet button button-secondary" data-ng-click="redirectToDashboard(false)" data-ng-hide="copyIsCorrected()">
+            <i18n>exercizer.back</i18n>
+        </button>
+    
+        <button class="cell right-magnet button button-secondary" data-ng-click="redirectToPreviousCopy()" data-ng-show="hasPreviousCopy()" tooltip="exercizer.previous.copy">
+            <i class="left-open"></i>
+        </button>
+    
+        <button class="cell right-magnet button button-accent" data-ng-click="redirectToDashboard(true)" data-ng-hide="copyIsCorrected()">
+            <i18n>exercizer.copy.make.corrected</i18n>
+        </button>
 
-    <button class="right-magnet flat-button" data-ng-click="redirectToNextCopy()" data-ng-show="hasNextCopy()" tooltip="exercizer.next.copy">
-        <i class="open-right"></i>
-    </button>
+        <button class="right-magnet button button-secondary" data-ng-click="redirectToNextCopy()" data-ng-show="hasNextCopy()" tooltip="exercizer.next.copy">
+            <i class="open-right"></i>
+        </button>
+    
 
-    <button class="cell right-magnet" data-ng-click="redirectToDashboard(true)" data-ng-hide="copyIsCorrected()">
-        <i18n>exercizer.copy.make.corrected</i18n>
-    </button>
-
-    <button class="cell right-magnet flat-button" data-ng-click="redirectToPreviousCopy()" data-ng-show="hasPreviousCopy()" tooltip="exercizer.previous.copy">
-        <i class="left-open"></i>
-    </button>
-
-    <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-hide="copyIsCorrected()">
-        <i18n>exercizer.back</i18n>
-    </button>
-
-
-    <button class="cell right-magnet flat-button" data-ng-click="redirectToDashboard(false)" data-ng-show="copyIsCorrected()">
-        <i18n>exercizer.back.corrected</i18n>
-    </button>
+    </div>
 </div>

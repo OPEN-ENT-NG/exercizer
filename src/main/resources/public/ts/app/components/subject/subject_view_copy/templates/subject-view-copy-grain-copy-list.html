@@ -6,7 +6,7 @@
                   data-is-teacher="isTeacher">
     </view-summary>
 
-    <div data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false">
+    <div data-ng-repeat="grainCopy in grainCopyList | orderObjectBy:'order_by':false" class="mt-24">
         <div data-ng-switch="grainCopy.grain_type_id">
             <div data-ng-switch-when="3">
                 <view-statement data-grain-copy="grainCopy" data-grain-copy-list="grainCopyList">

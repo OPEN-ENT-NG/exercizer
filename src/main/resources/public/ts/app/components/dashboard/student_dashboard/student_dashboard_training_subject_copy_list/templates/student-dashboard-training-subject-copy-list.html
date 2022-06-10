@@ -1,51 +1,53 @@
 <!-- filter -->
 <div data-ng-controller="SubjectCopyListController as subjectCopyListController">
 
-    <div class="row">
-
-        <label class="chip"
-        data-ng-click="clickFilter('is_on_going')"
-        data-ng-class="filerIsSelected('is_on_going')">
-            <span><i18n>exercizer.dashboard.learner.tab3.sub.filter2</i18n></span>
-        </label>
-
-        <label class="chip"
-        data-ng-click="clickFilter('is_sided')"
-        data-ng-class="filerIsSelected('is_sided')">
-            <span><i18n>exercizer.dashboard.learner.tab3.sub.filter3</i18n></span>
-        </label>
-
-        <label class="chip"
-        data-ng-click="clickFilter('is_done')"
-        data-ng-class="filerIsSelected('is_done')">
-            <span><i18n>exercizer.dashboard.learner.tab3.sub.filter1</i18n></span>
-        </label>
-
-    </div>
-
-    <div class="row vertical-spacing">
-        <input type="text" data-ng-model="search.text" i18n-placeholder="exercizer.search" class="six twelve-mobile cell">
-    </div>
-
     <!-- list -->
     <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopyTrainingState(search.filter)) | orderBy:subjectTrainingComparator:true">
         <subject-copy-domino subject-copy="subjectCopy" subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
     </div>
-    <article data-ng-show="!filteredSubjectCopyList.length" style="text-align: center">
-        <div data-ng-show="getEmptyScreen() == 'is_sided'">
-            <img height="150" src="exercizer/public/assets/img/training-empty-sided.svg"/>
-            <h4><i18n>exercizer.dashboard.learner.training.empty.sided</i18n></h4>
+    <article data-ng-show="!filteredSubjectCopyList.length">
+
+        <div class="row">
+    
+            <label class="chip"
+            data-ng-click="clickFilter('is_on_going')"
+            data-ng-class="filerIsSelected('is_on_going')">
+                <span><i18n>exercizer.dashboard.learner.tab3.sub.filter2</i18n></span>
+            </label>
+    
+            <label class="chip"
+            data-ng-click="clickFilter('is_sided')"
+            data-ng-class="filerIsSelected('is_sided')">
+                <span><i18n>exercizer.dashboard.learner.tab3.sub.filter3</i18n></span>
+            </label>
+    
+            <label class="chip"
+            data-ng-click="clickFilter('is_done')"
+            data-ng-class="filerIsSelected('is_done')">
+                <span><i18n>exercizer.dashboard.learner.tab3.sub.filter1</i18n></span>
+            </label>
+    
         </div>
-        <div data-ng-show="getEmptyScreen() == 'is_on_going'">
-            <img height="150" src="exercizer/public/assets/img/training-empty-ongoing.svg"/>
-            <p>
-                <i18n ng-if="search.filter.length == 1">exercizer.dashboard.learner.training.empty.ongoing</i18n>
-                <i18n ng-if="search.filter.length != 1">exercizer.dashboard.learner.finish.empty</i18n>
-            </p>
+    
+        <div class="row mt-16">
+            <input type="text" data-ng-model="search.text" i18n-placeholder="exercizer.search" class="six twelve-mobile cell">
         </div>
-        <div data-ng-show="getEmptyScreen() == 'is_done'">
-            <img height="150" src="exercizer/public/assets/img/nothing.svg"/>
-            <p><i18n>exercizer.dashboard.learner.training.empty.done</i18n></p>
+        <div style="text-align: center">
+            <div data-ng-show="getEmptyScreen() == 'is_sided'">
+                <img height="150" src="exercizer/public/assets/img/training-empty-sided.svg"/>
+                <h4><i18n>exercizer.dashboard.learner.training.empty.sided</i18n></h4>
+            </div>
+            <div data-ng-show="getEmptyScreen() == 'is_on_going'">
+                <img height="150" src="exercizer/public/assets/img/training-empty-ongoing.svg"/>
+                <p>
+                    <i18n ng-if="search.filter.length == 1">exercizer.dashboard.learner.training.empty.ongoing</i18n>
+                    <i18n ng-if="search.filter.length != 1">exercizer.dashboard.learner.finish.empty</i18n>
+                </p>
+            </div>
+            <div data-ng-show="getEmptyScreen() == 'is_done'">
+                <img height="150" src="exercizer/public/assets/img/nothing.svg"/>
+                <p><i18n>exercizer.dashboard.learner.training.empty.done</i18n></p>
+            </div>
         </div>
     </article>
 </div>

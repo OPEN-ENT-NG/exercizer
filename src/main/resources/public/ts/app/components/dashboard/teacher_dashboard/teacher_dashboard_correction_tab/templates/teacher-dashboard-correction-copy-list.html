@@ -51,19 +51,19 @@
             </div>
         </div>
         <div class="row small-text m-8">
-            <div class="cell right-magnet" data-ng-show="!option.editedDates">
-                <button class="flat-button" data-ng-click="option.showUnScheduled=true">
+            <div class="cell right-magnet flex-inline gap-8" data-ng-show="!option.editedDates">
+                <button class="button button-secondary" data-ng-click="option.showUnScheduled=true">
                     <i18n>exercizer.unschedule</i18n>
                 </button>
-                <button data-ng-click="option.editedDates=true">
+                <button class="button button-accent" data-ng-click="option.editedDates=true">
                     <i18n>edit</i18n>
                 </button>
             </div>
-            <div class="cell right-magnet" data-ng-show="option.editedDates">
-                <button class="flat-button" data-ng-click="cancelDatesEditing()">
+            <div class="cell right-magnet flex-inline gap-8" data-ng-show="option.editedDates">
+                <button class="button button-secondary" data-ng-click="cancelDatesEditing()">
                     <i18n>exercizer.cancel</i18n>
                 </button>
-                <button data-ng-click="checkDatesModified()">
+                <button class="button button-accent" data-ng-click="checkDatesModified()">
                     <i18n>exercizer.validate</i18n>
                 </button>
             </div>
@@ -86,7 +86,7 @@
         </div>
         <div class="row small-text m-8">
             <div class="cell right-magnet">
-                <button class="flat-button" data-ng-click="selectedSubjectScheduled.showStats=true">
+                <button class="button button-secondary" data-ng-click="selectedSubjectScheduled.showStats=true">
                     <i18n>exercizer.schedule.stats.more</i18n>
                 </button>
             </div>
@@ -95,7 +95,7 @@
 
 </div>
 
-<article>
+<article class="mt-24">
     <div class="flex align-items-center gap-16 mb-24">
         <div class="cell" data-ng-click="seeAllAssignAtList(subjectScheduled)">
             <span>
@@ -188,7 +188,7 @@
                         </div>
 
                         <div data-ng-if="showReminder(copy)" class="flex-row align-center">
-                            <button data-ng-click="reminder(copy.id)" class="flat-button no-margin">
+                            <button data-ng-click="reminder(copy.id)" class="button button-secondary no-margin">
                                 <i18n>exercizer.reminder</i18n>
                             </button>
                         </div>
@@ -203,7 +203,7 @@
 
                     <td data-ng-switch="selectTitle(copy)" style="min-width: 150px;">
                         <button data-ng-switch-when="correction" data-ng-click="clickOnCopy(copy)"
-                            class="flat-button no-margin">
+                            class="button button-secondary no-margin">
                             <svg class="icon-eye" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
                             <i18n>exercizer.see.copy</i18n>
                         </button>
