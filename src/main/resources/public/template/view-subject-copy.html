@@ -39,11 +39,13 @@
             </aside>
 
             <section>
-                <message-info
-                    status="info"
-                    data-ng-if="viewSubjectCopyController._isTeacher && !viewSubjectCopyController._previewing && !viewSubjectCopyController._previewingFromLibrary">
-                    <i18n>exercizer.correction.warning</i18n>
-                </message-info>
+                <div class="m-16">
+                    <message-info
+                        status="info"
+                        data-ng-if="viewSubjectCopyController._isTeacher && !viewSubjectCopyController._previewing && !viewSubjectCopyController._previewingFromLibrary">
+                        <i18n>exercizer.correction.warning</i18n>
+                    </message-info>
+                </div>
                 <!-- GRAIN COPY LIST -->
                 <subject-view-copy-grain-copy-list data-subject-scheduled="viewSubjectCopyController.subjectScheduled"
                                                    data-subject-copy="viewSubjectCopyController.subjectCopy"

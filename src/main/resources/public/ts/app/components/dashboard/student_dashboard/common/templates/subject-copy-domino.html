@@ -2,13 +2,13 @@
 <div class="fallen dominos large" ng-click="onSubjectClick()">
     <div class="item">
         <section class="domino">
-            <div class="top" ng-class="{'divide-opacity': cantSart()}">
+            <div class="top" ng-class="{'divide-opacity': cantSart()}" data-ng-click="performSubjectCopy(subjectCopy.id)">
                 <img data-ng-src="[[getSubjectCopyPicture()]]" class="absolute" />
             </div>
             <div class="bottom">
                 <div class="content">
                     <div class="cell twelve-mobile">
-                        <div class="row" ng-class="{'divide-opacity': cantSart()}">
+                        <div ng-class="{'divide-opacity': cantSart()}">
                             <div class="cell title-icon">
                                 <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                             </div>
@@ -20,36 +20,37 @@
                                 <strong class="title" data-ng-switch-default >default</strong>
                             </div>
                         </div>
-                        <div class="row mt-4" ng-class="{'divide-opacity': cantSart()}">
+                        <div class="mt-4" ng-class="{'divide-opacity': cantSart()}">
                             <i18n>exercizer.domino.by</i18n><em class="high-importance"><a data-ng-href="/userbook/annuaire#[[subjectScheduled.owner]]">[[subjectScheduled.owner_username]]</a></em>
                         </div>
-                        <div class="due-date row pt-16" data-ng-if="!subjectCopy.is_training_copy" ng-class="{'divide-opacity': cantSart(), 'delay': tooLate()}">
-                            <svg class="icon-clock" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#clock"></use></svg>
+                        <div class="due-date flex-wrap-wrap" data-ng-if="!subjectCopy.is_training_copy" ng-class="{'pt-16': !isSubmittedDateDisplayed(), 'divide-opacity': cantSart(), 'delay': tooLate()}">
+                            <svg data-ng-show="isDueDateDisplayed()" class="icon-clock" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#clock"></use></svg>
                             <!-- Appliquer une class .delay quand le sujet est en retard -->
                             <div data-ng-show="isDueDateDisplayed()">
-                              <i18n>exercizer.domino.todelivered</i18n> <strong data-ng-bind="dueDate | date:'dd/MM/yyyy'"></strong> <i18n>exercizer.at</i18n> <strong data-ng-bind="dueDate | date:'HH:mm'"></strong>
+                              <i18n>exercizer.domino.todelivered</i18n> <span data-ng-bind="dueDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span data-ng-bind="dueDate | date:'HH:mm'"></span>
                             </div>
 
                             <!-- Ici il faut remplacer isDueDateDisplayed() par ce bloc quand la condition est respecté -->
                             <div data-ng-if="cantSart()">
                               &nbsp;<i18n>exercizer.domino.access</i18n> <span data-ng-bind="subjectScheduled.begin_date | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="subjectScheduled.begin_date | date:'HH:mm'"></span>&nbsp;&nbsp;
                             </div>
-
-                            <div data-ng-show="isSubmittedDateDisplayed()">
-                              <i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
-                            </div>
-                            <div class="row" data-ng-show="isSubmittedDateDisplayed()">
-                              <i18n>exercizer.corrected.available</i18n> <span  data-ng-bind="getCorrectedAvailable() | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="getCorrectedAvailable() | date:'HH:mm'"></span>
-                            </div>
                         </div>
-                        <div class="row italic-text" data-ng-if="subjectCopy.is_training_copy">
+                        <div data-ng-show="isSubmittedDateDisplayed()">
+                            <em class="block">
+                                <i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
+                            </em>
+                            <em class="block">
+                                <i18n>exercizer.corrected.available</i18n> <span  data-ng-bind="getCorrectedAvailable() | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="getCorrectedAvailable() | date:'HH:mm'"></span>
+                            </em>
+                        </div>
+                        <div class="italic-text" data-ng-if="subjectCopy.is_training_copy">
                             <br>
-                            <div class="row" data-ng-show="isSubmittedDateDisplayed()">
+                            <em data-ng-show="isSubmittedDateDisplayed()">
                               <i18n>exercizer.copy.last.training</i18n> <span data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
-                            </div>
-                            <div class="row" data-ng-show="!isSubmittedDateDisplayed()">
+                            </em>
+                            <em data-ng-show="!isSubmittedDateDisplayed()">
                               <i18n>exercizer.copy.no.score.yet</i18n>
-                            </div>
+                            </em>
                         </div>
                     </div>
                     <div data-ng-if="subjectScheduled.type === 'interactive'">

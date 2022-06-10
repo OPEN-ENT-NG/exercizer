@@ -1,9 +1,9 @@
 <div class="row">
-    <h1 class="cell only-wide-screen">
-        <i class="exercizer"></i>
+    <h1 class="cell flex-inline align-items-center gap-8 mb-0 only-desktop">
+        <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
         <span class="no-responsive"><span class="hover-orange" data-ng-click="clickReturnExercizer()"><span class="hover-orange"><i18n>exercizer.title</i18n></span></span> / </span>
         <span data-ng-click="clickReturnExercizerTab()"><span class="hover-orange">[[ getTab()]]</span></span>
-        <span data-ng-click="" data-ng-if="selectedSubjectScheduled"> / <span class="hover-orange" tooltip="[[selectedSubjectScheduled.title]]">[[ selectedSubjectScheduled.title | limitTo: 35  ]][[ selectedSubjectScheduled.title.length > 35 ? '...' : '']]</span></span>
+        <span data-ng-click="" data-ng-if="selectedSubjectScheduled"> / <span tooltip="[[selectedSubjectScheduled.title]]">[[ selectedSubjectScheduled.title | limitTo: 35  ]][[ selectedSubjectScheduled.title.length > 35 ? '...' : '']]</span></span>
     </h1>
     <div class="cell right-magnet" data-ng-if="!selectedSubjectScheduled">
         <button class="button button-primary" data-ng-click="switchToStudentView()">

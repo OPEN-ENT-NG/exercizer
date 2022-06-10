@@ -81,7 +81,7 @@
             </div>
             <div data-ng-show="lightbox.state == 'assignSubject'">
                 <div class="row">
-                    <h4><i18n>exercizer.scheduled.subject.search</i18n></h4>
+                    <label class="form-label"><i18n>exercizer.scheduled.subject.search</i18n></label>
                     <input type="text" class="twelve cell" ng-model="search.search" autofocus ng-change="updateFoundUsersGroups()" i18n-placeholder="exercizer.search" id="to-users" />
                     <drop-down
                             options="search.found"
@@ -98,15 +98,15 @@
                         selector="selector">
                     </groups-users-selector>
                 </div>
-                <div class="row vertical-spacing">
-                    <button class="right-magnet cell" data-ng-click="lightbox.state = 'option'">
-                        <i18n>exercizer.next</i18n>
+                <div class="flex-inline gap-8 flex-wrap-wrap mt-16 justify-content-end row">
+                    <button class="cancel button button-secondary" data-ng-click="hide()" data-ng-show="isSimpleSubject">
+                        <i18n>exercizer.cancel</i18n>
                     </button>
-                    <button class="flat-button right-magnet cell" data-ng-click="lightbox.state = 'type'" data-ng-hide="isSimpleSubject">
+                    <button class="cancel button button-secondary" data-ng-click="lightbox.state = 'type'" data-ng-hide="isSimpleSubject">
                         <i18n>exercizer.previous</i18n>
                     </button>
-                    <button class="cancel right-magnet cell" data-ng-click="hide()" data-ng-show="isSimpleSubject">
-                        <i18n>exercizer.cancel</i18n>
+                    <button class="button button-accent" data-ng-click="lightbox.state = 'option'">
+                        <i18n>exercizer.next</i18n>
                     </button>
                 </div>
             </div>
@@ -195,24 +195,24 @@
                     </div>
                     <message-info status="warning" ng-if="!isValidSubject()"><i18n>exercizer.scheduled.simple.date.error</i18n></message-info>
                 </div>
-                <div class="row vertical-spacing">
-                    <button class="right-magnet cell" data-ng-click="lightbox.state = 'schedule'" ng-disabled="!isValidSubject()">
-                        <i18n>exercizer.next</i18n>
-                    </button>
-                    <button class="flat-button right-magnet cell" data-ng-click="lightbox.state = 'assignSubject'">
+                <div class="flex-inline gap-8 flex-wrap-wrap mt-16 justify-content-end row">
+                    <button class="button button-secondary right-magnet cell" data-ng-click="lightbox.state = 'assignSubject'">
                         <i18n>exercizer.previous</i18n>
+                    </button>
+                    <button class="right-magnet cell button button-accent" data-ng-click="lightbox.state = 'schedule'" ng-disabled="!isValidSubject()">
+                        <i18n>exercizer.next</i18n>
                     </button>
                 </div>
             </div>
 
             <div data-ng-show="lightbox.state == 'schedule'">
                 <message-info status="warning" ng-if="!isValidSubject()">[[confirmation()]]</message-info>
-                <div class="row vertical-spacing">
-                    <button class="right-magnet cell" data-ng-click="scheduleSubject()" data-ng-disabled="scheduleSubjectInProgress">
-                        <i18n>exercizer.schedule</i18n>
-                    </button>
-                    <button class="flat-button right-magnet cell" data-ng-click="lightbox.state = 'option'">
+                <div class="flex-inline gap-8 flex-wrap-wrap mt-16 justify-content-end row">
+                    <button class="button button-secondary right-magnet cell" data-ng-click="lightbox.state = 'option'">
                         <i18n>exercizer.previous</i18n>
+                    </button>
+                    <button class="right-magnet cell button button-accent" data-ng-click="scheduleSubject()" data-ng-disabled="scheduleSubjectInProgress">
+                        <i18n>exercizer.schedule</i18n>
                     </button>
                 </div>
             </div>

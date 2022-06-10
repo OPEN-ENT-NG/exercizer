@@ -25,7 +25,7 @@
                 <div class="cell association__delete" data-ng-click="deleteFilledAnswer(filled_answer)" style="padding: 0px"><svg class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg></div>
             </div>
         </div>
-        <div class="row vertical-spacing no-responsive">
+        <div class="row vertical-spacing no-responsive options right">
             <div data-ng-repeat="possible_answer in possible_answer_left_list"
                  class="cell association-possible-answer-left"
                  drag-item="possible_answer">
@@ -33,7 +33,6 @@
                 [[possible_answer.text_right]]
             </div>
         </div>
-
     </div>
     <div data-ng-hide="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
         <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"

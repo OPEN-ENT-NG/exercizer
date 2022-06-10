@@ -9,11 +9,11 @@
 
         <!-- TOP HEADER -->
         <div class="flex align-items-center justify-space-between mb-16 flex-wrap-wrap">
-            <h1 class="cell twelve-mobile">
-                <i class="exercizer"></i>
+            <h1 class="cell flex-inline align-items-center gap-8 only-desktop">
+                <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
                 <span class="no-responsive"><span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
                 <span ng-if="!editSimpleSubjectController.subject.title.length" class="hover-orange" tooltip="exercizer.simple.default.title" data-ng-click=""><i18n>exercizer.simple.default.title</i18n></span>
-                <span ng-if="editSimpleSubjectController.subject.title.length" class="hover-orange" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
+                <span ng-if="editSimpleSubjectController.subject.title.length" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
             <div class="flex-inline gap-16 flex-wrap-wrap mt-16 justify-content-end">
                 <button class="right-magnet cell button button-secondary" 

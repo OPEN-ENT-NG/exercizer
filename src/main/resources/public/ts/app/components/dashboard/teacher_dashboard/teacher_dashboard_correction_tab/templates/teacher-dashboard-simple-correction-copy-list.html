@@ -33,13 +33,13 @@
         </div>
     
         <div class="row small-text m-8">
-            <div class="cell right-magnet" data-ng-show="!option.editedDates">
-                <button class="flat-button" data-ng-click="option.showUnScheduled=true"><i18n>exercizer.unschedule</i18n></button>
-                <button data-ng-click="option.editedDates=true"> <i18n>edit</i18n></button>
+            <div class="cell right-magnet flex-inline gap-8" data-ng-show="!option.editedDates">
+                <button class="button button-secondary" data-ng-click="option.showUnScheduled=true"><i18n>exercizer.unschedule</i18n></button>
+                <button class="button button-accent" data-ng-click="option.editedDates=true"> <i18n>edit</i18n></button>
             </div>
-            <div class="cell right-magnet" data-ng-show="option.editedDates">
-                <button class="flat-button" data-ng-click="cancelDatesEditing()"><i18n>exercizer.cancel</i18n></button>
-                <button data-ng-click="option.edit=true"><i18n>exercizer.validate</i18n></button>
+            <div class="cell right-magnet flex-inline gap-8" data-ng-show="option.editedDates">
+                <button class="button button-secondary" data-ng-click="cancelDatesEditing()"><i18n>exercizer.cancel</i18n></button>
+                <button class="button button-accent" data-ng-click="option.edit=true"><i18n>exercizer.validate</i18n></button>
             </div>
         </div>
     </article>
@@ -50,8 +50,11 @@
             <div>
                 <div class="selected-subject-scheduled" 
                         data-ng-repeat="file in selectedSubjectScheduled.files">
-                    <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                    <span>[[file.metadata.filename]]</span>
+                    <div class="selected-subject-inner flex-inline align-items-center gap-4">
+                        <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+                        <svg class="icon-eye" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+                        <label class="text-pointer">[[file.metadata.filename]]</label>
+                    </div>
                     <button
                         class="download"
                         data-ng-click="downloadCorrectedFile(file)"
@@ -104,7 +107,7 @@
     </article>
 </div>
 
-<article>
+<article class="mt-24">
     <div class="flex align-items-center gap-16 mb-24">
         <div data-ng-click="seeAllAssignAtList(subjectScheduled)">
             <span>
@@ -192,15 +195,18 @@
                             </div>
    
                             <div data-ng-if="showReminder(copy)" class="flex-row align-center">
-                               <button data-ng-click="reminder(copy.id)" class="flat-button no-margin"><i18n>exercizer.reminder</i18n></button>
+                               <button data-ng-click="reminder(copy.id)" class="button button-secondary no-margin"><i18n>exercizer.reminder</i18n></button>
                             </div>
                        </td>
    
                        <td data-ng-if="copy.homework_files.length">
                             <div class="selected-subject-scheduled">
-                                <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                                <span>[[copy.homework_files[0].metadata.filename | limitTo: 15  ]][[ copy.homework_files[0].metadata.filename.length > 15 ? '...' : '']]</span>
-                                <span ng-if="copy.homework_files.length>1">+ [[copy.homework_files.length-1]]</span>
+                                <div class="selected-subject-inner">
+                                    <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+                                    <svg class="icon-eye" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+                                    <span>[[copy.homework_files[0].metadata.filename | limitTo: 15  ]][[ copy.homework_files[0].metadata.filename.length > 15 ? '...' : '']]</span>
+                                </div>
+                                <div ng-if="copy.homework_files.length>1">+ [[copy.homework_files.length-1]]</div>
                                 <button
                                     class="download"
                                     aria-label="[['exercizer.file.download'|i18n]]"
@@ -229,8 +235,11 @@
                            </div>
    
                             <div class="selected-subject-scheduled" ng-if="copy.corrected_files.length">
-                                <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                                <span>[[copy.corrected_files[0].metadata.filename | limitTo: 15  ]][[ copy.corrected_files[0].metadata.filename.length > 15 ? '...' : '']]</span>
+                                <div class="selected-subject-inner flex-inline align-items-center gap-4">
+                                    <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+                                    <svg class="icon-eye" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+                                    <span>[[copy.corrected_files[0].metadata.filename | limitTo: 15  ]][[ copy.corrected_files[0].metadata.filename.length > 15 ? '...' : '']]</span>
+                                </div>
                                 <button
                                     class="remove"
                                     aria-label="[['exercizer.scheduled.corrected.delete'|i18n]]"
@@ -249,8 +258,11 @@
    <lightbox show="homeworksDisplayed" on-close="homeworksDisplayed=false">
       <div class="selected-subject-scheduled"
             ng-repeat="homeworks in selectedCopy.homework_files">
-        <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-        <span>[[homeworks.metadata.filename | limitTo: 15  ]][[ homeworks.metadata.filename.length > 15 ? '...' : '']]</span>
+        <div class="selected-subject-inner flex-inline align-items-center gap-4">
+            <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+            <svg class="icon-eye" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+            <span>[[homeworks.metadata.filename | limitTo: 15  ]][[ homeworks.metadata.filename.length > 15 ? '...' : '']]</span>
+        </div>
         <button
             class="download"
             aria-label="[['exercizer.file.download'|i18n]]"

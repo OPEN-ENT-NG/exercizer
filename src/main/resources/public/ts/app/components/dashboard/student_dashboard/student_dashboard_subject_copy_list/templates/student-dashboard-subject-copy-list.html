@@ -24,24 +24,26 @@
     </div>
   </article>
   <article>
-    <h2 class="row  mb-16">
+    <h2 class="row mb-16">
       <i18n>exercizer.dashboard.learner.tab1.sub.header2</i18n>
     </h2>
 
     <div class="mobile-row">
-      <div class="flex align-items-center justify-space-between gap-16">
+      <div class="flex flex-wrap-wrap align-items-center justify-space-between gap-16">
         <input type="text" data-ng-model="search.text_2" i18n-placeholder="exercizer.search"
-          class="three cell twelve-mobile">
+          class="three cell twelve-mobile" style="min-width: 220px !important;">
 
-        <label class="cell right-magnet">
-          <i18n>exercizer.date.from</i18n>
-        </label>
-        <date-picker data-ng-model="search.beginDate" class="input-date cell right-magnet"></date-picker>
-
-        <label class="cell right-magnet">
-          <i18n>exercizer.date.to</i18n>
-        </label>
-        <date-picker e-picker data-ng-model="search.endDate" class="input-date cell right-magnet"></date-picker>
+        <div class="flex align-items-center justify-space-between gap-8">
+          <label class="cell">
+            <i18n>exercizer.date.from</i18n>
+          </label>
+          <date-picker data-ng-model="search.beginDate" class="input-date cell right-magnet"></date-picker>
+  
+          <label class="cell">
+            <i18n>exercizer.date.to</i18n>
+          </label>
+          <date-picker e-picker data-ng-model="search.endDate" class="input-date cell right-magnet"></date-picker>
+        </div>
       </div>
     </div>
     <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">

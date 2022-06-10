@@ -12,7 +12,7 @@
             <h1 class="cell twelve-mobile">
                 <i class="exercizer"></i>
                 <span class="no-responsive"><span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
-                <span class="hover-orange" data-ng-click="" tooltip="[[editSubjectController.subject.title]]">[[ editSubjectController.subject.title | limitTo: 35  ]][[ editSubjectController.subject.title.length > 35 ? '...' : '']]</span>
+                <span data-ng-click="" tooltip="[[editSubjectController.subject.title]]">[[ editSubjectController.subject.title | limitTo: 35  ]][[ editSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
 
             <div class="flex-inline gap-16 flex-wrap-wrap mt-16 justify-content-end">
@@ -318,11 +318,11 @@
                 <!-- ADD GRAIN -->
                 <div class="flex-row align-center p-0 gap-16">
                     <a class="button button-primary" data-ng-click="editSubjectController.addGrainWithType(3)">
-                        <svg class="icon-plus" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
+                        <svg class="icon-text" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
                         <i18n>exercizer.statement.new</i18n>
                     </a>
                     <a class="button button-primary" data-ng-click="editSubjectController.addGrainWithType(2)">
-                        <svg class="icon-text" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
+                        <svg class="icon-plus" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
                         <i18n>exercizer.question.new</i18n>
                     </a>
                 </div>
