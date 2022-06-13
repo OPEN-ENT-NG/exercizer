@@ -512,13 +512,19 @@ export class SubjectCopyService implements ISubjectCopyService {
     };
 
     private replaceInList(subjectCopy : ISubjectCopy, listMappedById, listBySubjectScheduled) {
+        // NOTE WB-726 : we cannot really replace data here, 
+        // original data is much more complete and must be preserved (see cleanBeforeSave())
         listMappedById[subjectCopy.id] = subjectCopy;
-        angular.forEach(listBySubjectScheduled[subjectCopy.subject_scheduled_id], function(copy, key){
-            if(copy.id == subjectCopy.id) {
-                listBySubjectScheduled[subjectCopy.subject_scheduled_id].splice(key, 1);
-            }
-        });
-        listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy);
+        if( angular.isArray(listBySubjectScheduled[subjectCopy.subject_scheduled_id]) ) {
+            let copy = listBySubjectScheduled[subjectCopy.subject_scheduled_id].find(
+                copy => copy.id == subjectCopy.id
+            );
+            if( copy ) {
+                Object.assign( copy, cleanBeforeSave(subjectCopy) ); // merge and preserve
+            } else {
+                listBySubjectScheduled[subjectCopy.subject_scheduled_id].push(subjectCopy); // Add new data
+            };
+        }
     }
 
     public createFromSubjectScheduled = function(subjectScheduled:ISubjectScheduled):ISubjectCopy {
