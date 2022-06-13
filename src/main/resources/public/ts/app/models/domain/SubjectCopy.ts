@@ -74,7 +74,7 @@ export class SubjectCopy implements  ISubjectCopy {
     fromJSON(o){
         Object.assign(this, o);
         if( o.files ) {
-            o.files && o.files.forEach( f => {
+            o.files.forEach( f => {
                 switch( f.file_type ) {
                     case "corrected": this.corrected_files.push( f ); break;
                     case "homework": this.homework_files.push( f ); break;

@@ -19,7 +19,7 @@ case `uname -s` in
 esac
 
 # options
-SPRINGBOARD="paris"
+SPRINGBOARD="recette"
 for i in "$@"
 do
 case $i in
