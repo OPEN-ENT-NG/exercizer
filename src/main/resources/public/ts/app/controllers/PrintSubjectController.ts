@@ -178,7 +178,8 @@ class PrintSubjectController extends EditSubjectController {
     }
 
     public getGrainExplanation(grain: IGrain) {
-        return grain.grain_data.answer_explanation;
+        var self :PrintSubjectController= this;
+        return self.showResponses && grain.grain_data.answer_explanation;
     }
 
     public getGrainHint(grain: IGrain) {

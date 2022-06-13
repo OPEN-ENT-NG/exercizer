@@ -35,8 +35,8 @@
             <div ng-if="printSubjectController.isStatement(grain)">
                 <article id="print--exercizer__summary grain-edit-5">
                     <div>
-                        <h2 class="text-primary">[[ printSubjectController.getGrainTitle(grain) ]]</h2>
-                        <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.statement</i18n></h3>
+                        <h2 class="mb-16 text-primary">[[ printSubjectController.getGrainTitle(grain) ]]</h2>
+                        <h3 class="mb-24"><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.statement</i18n></h3>
                         <div ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     </div>
                 </article>
@@ -46,16 +46,18 @@
             <!-- Réponse simple -->
             <div ng-if="printSubjectController.isSimpleAnswer(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.simpleanswer</i18n></h3>
+                    <h2 class="mb-16 text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3 class="mb-24"><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.simpleanswer</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     <h4><i18n>exercizer.grain.filltext.editor.text.answer</i18n> :</h4>
                     <div ng-if="printSubjectController.showResponses" contenteditable="false" class="drawing-zone zone-response">
                         <div>[[ printSubjectController.getCorrectAnswer(grain) ]]</div>
                     </div>
-                    <textarea ng-if="!printSubjectController.showResponses" class="twelve cell" i18n-placeholder="exercizer.grain.oanswer.info" disabled></textarea>
-                    <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
+                    <div class="row">
+                        <textarea ng-if="!printSubjectController.showResponses" class="twelve cell" i18n-placeholder="exercizer.grain.oanswer.info" disabled></textarea>
+                    </div>
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainExplanation(grain)">
                         <div class="cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
@@ -65,8 +67,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row top-spacing-four" ng-if="printSubjectController.getGrainHint(grain)">
-                        <div class="cell twelve horizontal-spacing">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainHint(grain)">
+                        <div class="cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="cell twelve print--exercizer__help">
@@ -81,16 +83,16 @@
             <!-- Réponse ouverte -->
             <div ng-if="printSubjectController.isOpenAnswer(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.openanswer</i18n></h3>
+                    <h2 class="mb-16 text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3 class="mb-24"><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.openanswer</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     <h4><i18n>exercizer.grain.filltext.editor.text.answer</i18n> :</h4>
                     <div class="row">
                         <textarea class="twelve cell" i18n-placeholder="exercizer.grain.oanswer.info" disabled></textarea>
                     </div>
-                    <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
-                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainExplanation(grain)">
+                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__info">
@@ -99,8 +101,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row top-spacing-four" ng-if="printSubjectController.getGrainHint(grain)">
-                        <div class="twelve cell horizontal-spacing">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainHint(grain)">
+                        <div class="cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell  print--exercizer__help">
@@ -115,8 +117,8 @@
             <!-- Réponses multiples -->
             <div ng-if="printSubjectController.isMultipleAnswer(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.multipleanswers</i18n></h3>
+                    <h2 class="mb-16 text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3 class="mb-24"><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.multipleanswers</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     <div class="row" data-ng-if="printSubjectController.getGrainTypeOf(grain).id > 5 && grain.grain_data.custom_data.no_error_allowed">
@@ -129,8 +131,8 @@
                     <div ng-if="printSubjectController.showResponses" ng-repeat="answer in printSubjectController.getCorrectAnswers(grain)" contenteditable="false" class="drawing-zone zone-response mb-8" style="min-height: 50px;">
                         <div class="" >[[ answer.text ]]</div>
                     </div>
-                    <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
-                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainExplanation(grain)">
+                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__info">
@@ -139,8 +141,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row top-spacing-four" ng-if="printSubjectController.getGrainHint(grain)">
-                        <div class="twelve cell horizontal-spacing">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainHint(grain)">
+                        <div class="cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__help">
@@ -155,8 +157,8 @@
             <!-- QCM -->
             <div ng-if="printSubjectController.isQCM(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.qcm</i18n></h3>
+                    <h2 class="mb-16 text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3 class="mb-24"><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.qcm</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     <div class="row" data-ng-if="printSubjectController.getGrainTypeOf(grain).id > 5 && grain.grain_data.custom_data.no_error_allowed">
@@ -208,8 +210,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row top-spacing-four" ng-if="printSubjectController.getGrainHint(grain)">
-                        <div class="cell twelve horizontal-spacing">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainHint(grain)">
+                        <div class="cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__help">
@@ -224,8 +226,8 @@
             <!-- Association -->
             <div ng-if="printSubjectController.isAssociation(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.association</i18n></h3>
+                    <h2 class="mb-16 text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3 class="mb-24"><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.association</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     <div class="row" data-ng-if="printSubjectController.getGrainTypeOf(grain).id > 5 && grain.grain_data.custom_data.no_error_allowed">
@@ -266,8 +268,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
-                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainExplanation(grain)">
+                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__info">
@@ -276,8 +278,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row top-spacing-four" ng-if="printSubjectController.getGrainHint(grain)">
-                        <div class="twelve cell horizontal-spacing">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainHint(grain)">
+                        <div class="cell horizontal-spacing">
                             <i class="help" id="surcharge-Associaforce-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__help">
@@ -293,8 +295,8 @@
             <!-- Mise en ordre -->
             <div ng-if="printSubjectController.isOrderBy(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.orderby</i18n></h3>
+                    <h2 class="mb-16 text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3 class="mb-24"><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.orderby</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     <div class="row" data-ng-if="printSubjectController.getGrainTypeOf(grain).id > 5 && grain.grain_data.custom_data.no_error_allowed">
@@ -325,8 +327,8 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
-                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainExplanation(grain)">
+                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__info">
@@ -335,8 +337,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row top-spacing-four" ng-if="printSubjectController.getGrainHint(grain)">
-                        <div class="twelve cell horizontal-spacing">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainHint(grain)">
+                        <div class="cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__help">
@@ -352,8 +354,8 @@
             <!-- Texte à trous -->
             <div ng-if="printSubjectController.isTextToFill(grain)">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.texttofill</i18n>, [[ printSubjectController.translate(printSubjectController.getGrainType(grain)) ]]</h3>
+                    <h2 class="mb-16 text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3 class="mb-24"><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.texttofill</i18n>, [[ printSubjectController.translate(printSubjectController.getGrainType(grain)) ]]</h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     <div ng-bind-html="printSubjectController.getHtmlContent(grain)" contenteditable="false" class="drawing-zone" style="min-height: 25px;"></div>
@@ -366,8 +368,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
-                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainExplanation(grain)">
+                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__info">
@@ -376,8 +378,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row top-spacing-four" ng-if="printSubjectController.getGrainHint(grain)">
-                        <div class="twelve cell horizontal-spacing">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainHint(grain)">
+                        <div class="cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__help">
@@ -392,15 +394,15 @@
             <!-- Zone à remplir (texte) -->
             <div ng-if="printSubjectController.isAreaSelect(grain)" style="page-break-inside: avoid;">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.areaselect</i18n>, [[ printSubjectController.translate(printSubjectController.getGrainType(grain)) ]]</h3>
+                    <h2 class="mb-16 text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3 class="mb-24"><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.areaselect</i18n>, [[ printSubjectController.translate(printSubjectController.getGrainType(grain)) ]]</h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     <div class="row">
-                        <div class="zone-image">
-                            <div class="">
+                        <div class="zone-image base-image">
+                            <div class="twelve">
                                 <div>
-                                    <img style="max-width: 760px; max-height: 600px;" id="[[ grain.id ]]-bckgrnd" ng-src="[[ printSubjectController.getImage(grain) ]]">
+                                    <img class="twelve" id="[[ grain.id ]]-bckgrnd" ng-src="[[ printSubjectController.getImage(grain) ]]">
                                 </div>
                             </div>
                             <article ng-repeat="zone in printSubjectController.getZones(grain)" draggable="false" style="padding: 0px; position: absolute;"
@@ -433,8 +435,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
-                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainExplanation(grain)">
+                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__info">
@@ -443,8 +445,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row top-spacing-four" ng-if="printSubjectController.getGrainHint(grain)">
-                        <div class="twelve cell horizontal-spacing">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainHint(grain)">
+                        <div class="cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__help">
@@ -460,15 +462,15 @@
             <!-- Zone à remplir (image) -->
             <div ng-if="printSubjectController.isAreaSelectImage(grain)" style="page-break-inside: avoid;">
                 <article id="grain-edit-6" class="row">
-                    <h2 class="text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
-                    <h3><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.areaselectimage</i18n></h3>
+                    <h2 class="mb-16 text-primary">[[ printSubjectController.getGrainOrder(grain) ]]) [[printSubjectController.getGrainTitle(grain) ]] - [[ printSubjectController.getGrainScore(grain) ]] <i18n>exercizer.score</i18n></h2>
+                    <h3 class="mb-24"><i18n>exercizer.type</i18n> : <i18n>exercizer.grain.type.areaselectimage</i18n></h3>
                     <h4><i18n>exercizer.grain.type.statement</i18n>:</h4>
                     <div class="bottom-spacing-twice" ng-bind-html="printSubjectController.getGrainStatement(grain)"></div>
                     <div class="row">
-                        <div class="zone-image">
+                        <div class="zone-image base-image">
                             <div class="">
                                 <div>
-                                    <img style="max-width: 760px; max-height: 600px;" id="[[ grain.id ]]-bckgrnd" ng-src="[[ printSubjectController.getImage(grain) ]]">
+                                    <img id="[[ grain.id ]]-bckgrnd" ng-src="[[ printSubjectController.getImage(grain) ]]">
                                 </div>
                             </div>
                             <article ng-repeat="zone in printSubjectController.getZones(grain)" draggable="false" style="padding: 0px; position: absolute;"
@@ -489,8 +491,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="row" ng-if="printSubjectController.getGrainExplanation(grain)">
-                        <div class="twelve cell horizontal-spacing" style="padding-right: 16px;">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainExplanation(grain)">
+                        <div class="cell horizontal-spacing" style="padding-right: 16px;">
                             <i class="info-pic" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__info">
@@ -499,8 +501,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row top-spacing-four" ng-if="printSubjectController.getGrainHint(grain)">
-                        <div class="twelve cell horizontal-spacing">
+                    <div class="row flex-row align-center justify-center m-12" ng-if="printSubjectController.getGrainHint(grain)">
+                        <div class="cell horizontal-spacing">
                             <i class="help" id="surcharge-force-cursor-default"></i>
                         </div>
                         <div class="twelve cell print--exercizer__help">
