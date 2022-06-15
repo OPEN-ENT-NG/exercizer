@@ -46,7 +46,7 @@ Behaviours.register('exercizer', {
             if ((scheduled_at.groupList.length + scheduled_at.userList.length) > 1) {
                 subjectScheduled.recipient += '...';
             }
-            let title = `${subjectScheduled.title} - ${lang.translate("exercizer.behaviours.distributed.on")} ${moment(subjectScheduled.begin_date).format('DD/MM/YYYY')}`
+            let title = `${subjectScheduled.title} - ${lang.translate("exercizer.behaviours.distributed.on")} ${moment(subjectScheduled.due_date).format('DD/MM/YYYY')}`
             return {
                 title: title,
                 owner: subjectScheduled.owner,
