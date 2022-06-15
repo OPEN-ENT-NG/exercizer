@@ -17,17 +17,17 @@
 
             <div class="flex-inline gap-16 flex-wrap-wrap mt-16 justify-content-end">
                 <button class="right-magnet cell button button-secondary" data-ng-click="editSubjectController.redirectToDashboard()">
-                    <svg class="icon-arrowLeft" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#arrowLeft"></use></svg>
+                    <svg class="icon-chevronLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#chevronLeft"></use></svg>
                     <i18n>exercizer.back.subject</i18n>
                 </button>
     
                 <button class="button button-secondary right-magnet cell" data-ng-click="editSubjectController.previewPerformSubjectCopy()">
-                    <svg class="icon-eye" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
+                    <svg class="icon-eye" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#eye"></use></svg>
                     <i18n>exercizer.preview</i18n>
                 </button>
 
                 <button class="button button-accent right-magnet cell" data-ng-click="editSubjectController.scheduleSubject()">
-                    <svg class="icon-send" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#send"></use></svg>
+                    <svg class="icon-send" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#send"></use></svg>
                     <i18n>exercizer.schedule</i18n>
                 </button>
             </div>
@@ -110,7 +110,7 @@
             <section class="droppable drop-zone cell-initial-float" ng-attr-style="[[editSubjectController.isDropableZone ? 'border-width: 2px;' : 'border-width: 0px;']]" drop-item="editSubjectController.dropTo($item)">
                 <!--LOADER-->
                 <article class="flex-row empty-state align-center p-0" ng-if="editSubjectController.isEmptyStateVisible()">
-                    <img src="exercizer/public/assets/img/subject-emptyscreen.svg" class="ml-24"/>
+                    <img src="exercizer/public/assets/img/subject-emptyscreen.svg" class="ml-24" style="max-width: 200px;">
                     <p class="text-body text-preline ml-32"><i18n>exercizer.subject.emptyscreen</i18n></p>
                 </article>
                 <!--EMPTY STATE-->
@@ -121,7 +121,7 @@
                 <div class="row">
 
                     <article class="select-border article-edit" 
-                        ng-class="{'border-0 overflow-hidden': editSubjectController.isChooseStep(grain)}"
+                        ng-class="{'overflow-hidden': editSubjectController.isChooseStep(grain)}"
                         ng-repeat="grain in editSubjectController.grainList | orderObjectBy:'order_by':false" id="grain-edit-[[grain.id]]"
                     >
 
@@ -316,7 +316,7 @@
                 </div>
 
                 <!-- ADD GRAIN -->
-                <div class="flex-row align-center p-0 gap-16">
+                <div class="flex-row align-center p-0 gap-16 mt-16">
                     <a class="button button-primary" data-ng-click="editSubjectController.addGrainWithType(3)">
                         <svg class="icon-text" width="18" height="18"><use xlink:href="exercizer/public/assets/icons/icons.svg#text"></use></svg>
                         <i18n>exercizer.statement.new</i18n>

@@ -9,7 +9,7 @@ export const fillZone = ng.directive('fillZone',
             scope: {
                 zoneId: '@'
             },
-            template: '<text-zone style="max-width:unset;" ng-class="{ success: optionData.correction && optionData.isCorrect, error: optionData.correction && !optionData.isCorrect }" ng-style="{ width: optionData.correction ? \'auto\' : \'\' }">' +
+            template: '<text-zone style="max-width:unset;box-shadow:none;" ng-class="{ success: optionData.correction && optionData.isCorrect, error: optionData.correction && !optionData.isCorrect }" ng-style="{ width: optionData.correction ? \'auto\' : \'\' }">' +
             '<svg ng-click="removeFillZone($event)" ng-if="optionData.mode === \'edit\'" class="icon-close" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg>' +
             '<svg ng-if="optionData.mode === \'edit\'" class="icon-edit" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#edit"></use></svg>' +
             '<div ng-if="optionData.mode === \'view\'"><div>[[optionData.zone.answer]]</div></div>' +

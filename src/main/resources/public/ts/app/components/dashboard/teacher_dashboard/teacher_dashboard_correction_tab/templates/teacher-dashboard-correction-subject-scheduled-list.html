@@ -31,7 +31,7 @@
 
     <div>
         <section>
-            <div class="topbar">
+            <div class="topbar mb-16">
     
                 <div>
                     <label class="chip cell"
@@ -139,12 +139,12 @@
                                                 </div>
                                                 <div data-ng-click="seeAllAssignAtList(subjectScheduled)">
                                                     <div data-ng-repeat="group in subjectScheduled.scheduled_at.groupList |limitTo : 1">
-                                                        <h3 style="margin:0px;">[[group.name]]</h3>
+                                                        <h3 class="domino-group-name">[[group.name]]</h3>
                                                     </div>
                                                     <div data-ng-repeat="user in subjectScheduled.scheduled_at.userList |limitTo : 1">
-                                                        <h3 style="margin:0px;">[[user.name]]</h3>
+                                                        <h3 class="domino-group-name">[[user.name]]</h3>
                                                     </div>
-                                                    <h3 style="margin:0px;" data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
+                                                    <h3 class="domino-group-name" data-ng-if="subjectScheduled.scheduled_at.groupList.length > 1 || subjectScheduled.scheduled_at.userList.length >1">...</h3>
     
                                                 </div>
     
