@@ -125,7 +125,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
             if(!this._grainStreams.has(grain.id)){
                 const observable = new rx.Subject<IGrain>();
                 this._grainStreams.set(grain.id, observable);
-                this._subscriptions.push(observable.debounceTime(500).subscribe((grain)=>{
+                this._subscriptions.push(observable.debounceTime(2000).subscribe((grain)=>{
                     this.updateGrain(grain);
                 }));
             }
