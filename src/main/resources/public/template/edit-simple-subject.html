@@ -19,7 +19,7 @@
                 <button class="right-magnet cell button button-secondary" 
                         ng-if="editSimpleSubjectController.previewingFromLibrary"
                         data-ng-click="editSimpleSubjectController.redirectToDashboard()">
-                    <svg class="icon-arrowLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#arrowLeft"></use></svg>
+                    <svg class="icon-chevronLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#chevronLeft"></use></svg>
                     <i18n>exercizer.back.library</i18n>
                 </button>
                 <button class="right-magnet cell button button-secondary" 
@@ -75,16 +75,19 @@
             <div>
                 <message-info status="info" class="block"><i18n>exercizer.file.limit5</i18n></message-info>
                 <div class="m-16">
-                    <div class="selected-subject-scheduled " 
-                            data-ng-repeat="file in editSimpleSubjectController.subject.files">
-                        <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
-                        <span>[[file.metadata.filename]]</span>
-                        <button class="remove"
-                                data-ng-click="editSimpleSubjectController.removeCorrected(file)"
-                                title="[['exercizer.scheduled.corrected.delete'|i18n]]"
-                                aria-label="[['exercizer.scheduled.corrected.delete'|i18n]]">
-                            <svg class="icon-delete" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
-                        </button>
+                    <div data-ng-repeat="file in editSimpleSubjectController.subject.files">
+                        <div class="selected-subject-scheduled">
+                            <div class="selected-subject-inner">
+                                <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+                                <span>[[file.metadata.filename]]</span>
+                            </div>
+                            <button class="remove"
+                                    data-ng-click="editSimpleSubjectController.removeCorrected(file)"
+                                    title="[['exercizer.scheduled.corrected.delete'|i18n]]"
+                                    aria-label="[['exercizer.scheduled.corrected.delete'|i18n]]">
+                                <svg class="icon-delete" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="row media-library" ng-if="editSimpleSubjectController.subject.files.length < 5">

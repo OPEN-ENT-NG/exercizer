@@ -72,7 +72,7 @@
 
     <article class="article-column">
         <div>
-            <h2 class="block">
+            <h2 class="block mb-16">
                 <i18n>exercizer.schedule.stats</i18n> "[[selectedSubjectScheduled.title]]"
             </h2>
             <div class="row small-text m-8">
@@ -95,7 +95,7 @@
 
 </div>
 
-<article class="mt-24">
+<article class="mt-8">
     <div class="flex align-items-center gap-16 mb-24">
         <div class="cell" data-ng-click="seeAllAssignAtList(subjectScheduled)">
             <span>
@@ -177,7 +177,7 @@
                     </td>
                     <td>
                         <message-info status="error" data-ng-if="tooLate(copy)">
-                            <i18n>exercizer.lag</i18n> <span class="warning-text">[[copy.submitted_date |
+                            <i18n>exercizer.lag</i18n> <span>[[copy.submitted_date |
                                 date:'dd/MM/yyyy']] <i18n>exercizer.at</i18n> [[copy.submitted_date |
                                 date:'HH:mm']]</span>
                         </message-info>

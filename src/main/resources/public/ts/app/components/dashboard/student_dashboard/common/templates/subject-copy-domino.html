@@ -12,7 +12,7 @@
                             <div class="cell title-icon">
                                 <i class="[[subjectScheduled.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subjectScheduled.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
                             </div>
-                            <div data-ng-switch="selectTitle()" class="custom-ellipsis">
+                            <div data-ng-switch="selectTitle()">
                                 <strong class="title" data-ng-switch-when="perform" data-ng-click="performSubjectCopy(subjectCopy.id)" ng-disabled="isPerformDisabled()"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                                 <strong class="title" data-ng-switch-when="view" data-ng-click="viewSubjectCopy(subjectCopy.id)"><span class="token" data-ng-class="copyStateColorClass()">[[ textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
                                 <strong class="title" data-ng-switch-when="text" ><span class="token" data-ng-class="copyStateColorClass()">[[textBeforeTitle() ]]</span>[[ getSubjectScheduledTitle() ]]</strong>
@@ -23,7 +23,7 @@
                         <div class="mt-4" ng-class="{'divide-opacity': cantSart()}">
                             <i18n>exercizer.domino.by</i18n><em class="high-importance"><a data-ng-href="/userbook/annuaire#[[subjectScheduled.owner]]">[[subjectScheduled.owner_username]]</a></em>
                         </div>
-                        <div class="due-date flex-wrap-wrap" data-ng-if="!subjectCopy.is_training_copy" ng-class="{'pt-16': !isSubmittedDateDisplayed(), 'divide-opacity': cantSart(), 'delay': tooLate()}">
+                        <div class="due-date" data-ng-if="!subjectCopy.is_training_copy" ng-class="{'mt-8': !isSubmittedDateDisplayed(), 'divide-opacity': cantSart(), 'delay': tooLate()}">
                             <svg data-ng-show="isDueDateDisplayed()" class="icon-clock" width="18" height="18"><use href="exercizer/public/assets/icons/icons.svg#clock"></use></svg>
                             <!-- Appliquer une class .delay quand le sujet est en retard -->
                             <div data-ng-show="isDueDateDisplayed()">
