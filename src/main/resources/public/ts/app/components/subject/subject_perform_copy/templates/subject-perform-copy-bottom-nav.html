@@ -21,10 +21,17 @@
 
         <p><i18n>exercizer.make.copy.confirm</i18n> <em>[[ subjectScheduled.title ]]</em> <i18n>exercizer.to</i18n> <strong>[[ subjectScheduled.owner_username ]]</strong> ?</p>
 
-        <message-info status="info"><i18n>exercizer.make.copy.info</i18n></message-info>
+        <div class="m-16">
+            <message-info status="info"><i18n>exercizer.make.copy.info</i18n></message-info>
+        </div>
 
-        <message-info status="warning" data-ng-if="subjectScheduled.is_one_shot_submit"><i18n>exercizer.one.submit</i18n></message-info>
-        <message-info status="warning" data-ng-if="!subjectScheduled.is_one_shot_submit"><i18n>exercizer.several.submit</i18n></message-info>
+        <div class="m-16">
+            <message-info status="warning" data-ng-if="subjectScheduled.is_one_shot_submit"><i18n>exercizer.one.submit</i18n></message-info>
+        </div>
+
+        <div class="m-16">
+            <message-info status="warning" data-ng-if="!subjectScheduled.is_one_shot_submit"><i18n>exercizer.several.submit</i18n></message-info>
+        </div>
 
         <div class="row">
             <button data-ng-click="submitSubjectCopy()" data-ng-disabled="submitButtonDisabled" class="cell right-magnet"><i18n>exercizer.make.copy</i18n></button>
