@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-    <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
+    <div class="row mt-20" data-ng-controller="SubjectCopyListController as subjectCopyListController">
       <div
         data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyListController.orderByDueDate(subjectCopyList) | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_2) | filter: subjectCopyListController.filterOnSubjectCopyTraining() | filter: subjectCopyListController.filterOnSubjectCopyNotStartedOrStarted() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate)) | orderBy:'modified':true">
         <subject-copy-domino subject-copy="subjectCopy"
