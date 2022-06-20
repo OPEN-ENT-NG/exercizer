@@ -15,7 +15,7 @@
                 <span ng-if="!editSimpleSubjectController.subject.title.length" class="hover-orange" tooltip="exercizer.simple.default.title" data-ng-click=""><i18n>exercizer.simple.default.title</i18n></span>
                 <span ng-if="editSimpleSubjectController.subject.title.length" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
-            <div class="flex-inline gap-16 flex-wrap-wrap mt-16 justify-content-end">
+            <div class="flex-inline gap-8 flex-wrap-wrap mt-16 justify-content-end">
                 <button class="right-magnet cell button button-secondary" 
                         ng-if="editSimpleSubjectController.previewingFromLibrary"
                         data-ng-click="editSimpleSubjectController.redirectToDashboard()">

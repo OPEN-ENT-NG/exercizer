@@ -65,7 +65,7 @@
             <thead class="display-table">
             <tr>
                 <th class="small-cell nav" data-ng-click="downIndex()" ng-if="index > 0">
-                    <i class="left-open"></i>
+                    <svg class="icon-chevronLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#chevronLeft"></use></svg>
                 </th>
                 <th class="small-cell" ng-if="index < 1">
                 </th>
@@ -76,7 +76,7 @@
                     <i class="sort-desc" ng-if="order.field === grain.id && order.desc"></i>
                 </th>
                 <th class="small-cell nav" data-ng-click="upIndex()"  ng-if="canUpIndex">
-                    <i class="open-right"></i>
+                    <svg class="icon-chevronRight" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#chevronRight"></use></svg>
                 </th>
                 <th class="small-cell"   ng-if="!canUpIndex">
                 </th>

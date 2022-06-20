@@ -152,19 +152,19 @@
         </form>
     </lightbox>
     <lightbox show="boxOnChange.isVisible" on-close="boxOnChange.dismiss()">
-        <span class="fs-5 flex gap-8">
+        <span class="fs-5 flex align-items-center gap-8">
             <svg class="icon-alert fill-warning" width="24" height="24"><use href='exercizer/public/assets/icons/icons.svg#alert'></use></svg>
-            <strong><i18n>exercizer.grain.filltext.onchange.title</i18n></strong>
+            <h2 class="mb-0"><i18n>exercizer.grain.filltext.onchange.title</i18n></h2>
         </span>
         <div class="row">
             <p><i18n>exercizer.grain.filltext.onchange.text</i18n></p>
         </div>
-        <div class="row">
-            <button class="right-magnet" ng-click="boxOnChange.confirm()">
-                <i18n>confirm</i18n>
-            </button>
-            <button class="cancel right-magnet" ng-click="boxOnChange.cancel()" type="button">
+        <div class="flex align-items-center justify-content-end gap-8">
+            <button class="button button-secondary cancel right-magnet" ng-click="boxOnChange.cancel()" type="button">
                 <i18n>cancel</i18n>
+            </button>
+            <button class="button button-primary right-magnet" ng-click="boxOnChange.confirm()">
+                <i18n>confirm</i18n>
             </button>
         </div>
     </lightbox>

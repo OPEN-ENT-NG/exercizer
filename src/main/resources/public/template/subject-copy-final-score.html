@@ -1,13 +1,14 @@
 <div data-ng-controller="SubjectCopyFinalScoreController as subjectCopyFinalScoreController">
     <div class="row">
         <h1 class="cell twelve-mobile">
+            <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
             <span class="no-responsive">
                 <span class="hover-orange" data-ng-click="subjectCopyFinalScoreController.redirectToTrainingSubjects()">
                     <i18n>exercizer.training.subject</i18n>
                 </span> / 
             </span>
             <span class="hover-orange" data-ng-click="subjectCopyFinalScoreController.viewSubjectCopy()">[[ subjectCopyFinalScoreController.subjectScheduled.title | limitTo: 35  ]][[ subjectCopyFinalScoreController.subjectScheduled.title.length > 35 ? '...' : '']]
-            </span> / <span class="hover-orange" ><i18n>exercizer.copy.final.score</i18n></span>
+            </span> / <span><i18n>exercizer.copy.final.score</i18n></span>
         </h1>
     </div>
     <div class="row" data-ng-hide="subjectCopyFinalScoreController.hasDataLoaded">
