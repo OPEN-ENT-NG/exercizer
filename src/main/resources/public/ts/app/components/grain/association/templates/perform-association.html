@@ -25,7 +25,7 @@
                 <div class="cell association__delete" data-ng-click="deleteFilledAnswer(filled_answer)" style="padding: 0px"><svg class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg></div>
             </div>
         </div>
-        <div class="row vertical-spacing no-responsive options right">
+        <div data-ng-if="possible_answer_left_list.length > 0" class="row vertical-spacing no-responsive options right">
             <div data-ng-repeat="possible_answer in possible_answer_left_list"
                  class="cell association-possible-answer-left"
                  drag-item="possible_answer">
@@ -40,33 +40,46 @@
             <!-- dragdrop="dropToLeft(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, false, true)" -->
             <div drop-item="dropToLeft($item, filled_answer, key, false, true)"
-                 class="five twelve-mobile cell flex-row align-center justify-center"
+                 class="association__right five twelve-mobile cell flex-row align-center justify-end"
                  style="  border: 1px dashed;
                              border-radius: 10px;
                              text-align: center;
                              min-height: 50px;
                     "
                  data-ng-class="{'association-drop-hover'  : data.hover[key].left == true}">
-                <p>{{filled_answer.text_left}}</p>
-                <div class="association__delete cell" data-ng-click="deleteFilledAnswerLeft(filled_answer)"><svg class="icon-close" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#close"></use></svg></div>
+                <p class="mr-8">{{filled_answer.text_left}}</p>
+                <div class="association__delete cell" data-ng-click="deleteFilledAnswerLeft(filled_answer)">
+                    <svg class="icon-close" width="20" height="20">
+                        <use href="exercizer/public/assets/icons/icons.svg#close"></use>
+                    </svg>
+                </div>
             </div>
-            <div class="one cell">&nbsp;</div>
+            <div 
+                class="one cell mt-4"
+                style="border-bottom: 1px solid lightgrey"
+            >
+                &nbsp;
+            </div>
             <!-- dragdrop="dropToRight(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, true, false)" -->
             <div drop-item="dropToRight($item, filled_answer, key, true, false)"
-                 class="six twelve-mobile cell flex-row align-center justify-center"
+                 class="association__right six twelve-mobile cell flex-row align-center justify-end"
                  style="  border: 1px dashed;
                              border-radius: 10px;
                              text-align: center;
                              min-height: 50px;
                     "
                  data-ng-class="{'association-drop-hover'  : data.hover[key].right == true}">
-                <p>{{filled_answer.text_right}}</p>
-                <div class="cell association__delete" data-ng-click="deleteFilledAnswerRight(filled_answer)"><i class="close "></i></div>
+                <p class="mr-8">{{filled_answer.text_right}}</p>
+                <div class="cell association__delete" data-ng-click="deleteFilledAnswerRight(filled_answer)">
+                    <svg class="icon-close" width="20" height="20">
+                        <use href="exercizer/public/assets/icons/icons.svg#close"></use>
+                    </svg>
+                </div>
             </div>
         </div>
     </div>
-    <div class="options right mt-16">
+    <div data-ng-if="grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.length > 0" class="options right mt-16">
         <div data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
              class="cell association-possible-answer-left"
              drag-item="possible_answer">
