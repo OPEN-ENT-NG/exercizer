@@ -8,14 +8,14 @@
     <div data-ng-if="editSubjectController.hasDataLoaded">
 
         <!-- TOP HEADER -->
-        <div class="flex align-items-center justify-space-between mb-16 flex-wrap-wrap">
-            <h1 class="cell twelve-mobile">
+        <div class="flex align-items-center justify-space-between flex-wrap-wrap mb-24 mt-8">
+            <h1 class="cell flex-inline align-items-center gap-8 only-desktop mb-0">
                 <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
                 <span class="no-responsive"><span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
                 <span data-ng-click="" tooltip="[[editSubjectController.subject.title]]">[[ editSubjectController.subject.title | limitTo: 35  ]][[ editSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
 
-            <div class="flex-inline gap-8 flex-wrap-wrap mt-16 justify-content-end">
+            <div class="flex-inline gap-8 flex-wrap-wrap justify-content-end">
                 <button class="right-magnet cell button button-secondary" data-ng-click="editSubjectController.redirectToDashboard()">
                     <svg class="icon-chevronLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#chevronLeft"></use></svg>
                     <i18n>exercizer.back.subject</i18n>
