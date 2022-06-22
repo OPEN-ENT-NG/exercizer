@@ -30,7 +30,7 @@ Behaviours.register('exercizer', {
         const response = await http.get('/exercizer/subjects-scheduled');
         const data = response.data;
         this.resources = _.map(data, subjectScheduled => {
-            if(subjectScheduled.thumbnail){
+            if(subjectScheduled.picture){
                 subjectScheduled.icon = subjectScheduled.picture + '?thumbnail=48x48';
             } else{
                 subjectScheduled.icon = '/img/illustrations/exercizer.svg';
