@@ -246,6 +246,12 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                                             numberQuestion++;
                                             if (!grain.grain_data.custom_data.correct_answer_list || grain.grain_data.custom_data.correct_answer_list.length === 0) {
                                                 validationGrain = false;
+                                            } else {
+                                                grain.grain_data.custom_data.correct_answer_list.forEach(item => {
+                                                    if (item.text_left === '' || item.text_right === '') {
+                                                        validationGrain = false;
+                                                    }
+                                                })
                                             }
                                             break;
                                         case 9 :
