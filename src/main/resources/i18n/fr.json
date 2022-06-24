@@ -202,7 +202,7 @@
     "exercizer.choose" : "Quel type de sujet voulez-vous créer ?",
     "exercizer.choose.library" : "Permet d'importer un sujet publié par les enseignants du réseau dans la bibliothèque.",
     "exercizer.choose.simple.title" : "Sujet à rendre",
-    "exercizer.choose.simple.info" : "Remise de devoir sous forme de fichier et suivi des rendus des élèves.",
+    "exercizer.choose.simple.info" : "Organisez une remise de devoir sous forme de fichier et suivez les rendus des élèves.",
     "exercizer.choose.interactive.title" : "Sujet Interactif",
     "exercizer.choose.interactive.info" : "Créez une évaluation à l’aide de questions variées qui peuvent être corrigées automatiquement.",
     "exercizer.choose.library.button" : "Importer un sujet déjà existant",
