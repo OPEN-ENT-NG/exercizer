@@ -12,7 +12,7 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
             templateUrl: 'exercizer/public/ts/app/components/dashboard/student_dashboard/common/templates/subject-copy-domino.html',
             link: (scope:any) => {
                 scope.onSubjectClick=()=>{
-                  scope.ngChange();
+                  scope.ngClick && scope.ngClick();
                 }
                 /**
                  * ACCESS Perform, view
