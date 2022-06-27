@@ -39,12 +39,16 @@ class SubjectCopyListController {
             //if corrected date has passed and subject copy corrected exist
             return  (subjectScheduled.type !== 'simple') ? false : canShowCorrected() && subjectCopy.corrected_files.length > 0;
         };
+        const canShowHomework = () => {
+            //if corrected date has passed and student has uploaded its homework
+            return  (subjectScheduled.type !== 'simple') ? false : canShowCorrected() && subjectCopy.homework_files.length > 0;
+        };
 
         const canShowCorrected = () => {
             //if corrected date has passed
             return  new DateService().compare_after(new Date(), new DateService().isoToDate(subjectScheduled.corrected_date), true);
         };
-        if(canShowIndividualCorrected() || canShowGeneralCorrected()) {
+        if(canShowIndividualCorrected() || canShowGeneralCorrected() || canShowHomework()) {
             this.$location.path('/subject/copy/perform/simple/' + subjectCopy.id);
         }
     }
