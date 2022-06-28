@@ -1,5 +1,5 @@
 <div class="flex-row justify-space-between f-wrap mobile-justify-center">
-    <div class="flex-row f-column align-center answer-choice" data-ng-repeat="grainType in grainTypeList | filter:{'is_in_list':true}" data-ng-click="displayNextStep(grainType.id);$event.stopPropagation();">
+    <div class="flex-row f-column align-center answer-choice" data-ng-repeat="grainType in grainTypeList | filter:{'is_in_list':true} | orderBy:'id':false:grainSortOrder" data-ng-click="displayNextStep(grainType.id);$event.stopPropagation();">
         <svg class="mb-4" width="70" height="70"><use ng-attr-href="[[getGrainIllustrationURL(grainType)]]" href=""></use></svg>
         <span class="text-bold text-center"><i18n>[[grainType.public_name]]</i18n></span>
     </div>
