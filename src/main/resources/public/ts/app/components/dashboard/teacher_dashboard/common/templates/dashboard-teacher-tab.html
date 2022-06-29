@@ -1,11 +1,11 @@
-<div class="row">
+<div class="flex align-items-center justify-space-between flex-wrap-wrap mb-24 mt-8">
     <h1 class="cell flex-inline align-items-center gap-8 mb-0 only-desktop">
         <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
         <span class="no-responsive"><span class="hover-orange" data-ng-click="clickReturnExercizer()"><span class="hover-orange"><i18n>exercizer.title</i18n></span></span> / </span>
         <span data-ng-click="clickReturnExercizerTab()"><span data-ng-class="{'hover-orange': selectedSubjectScheduled}">[[ getTab()]]</span></span>
         <span data-ng-if="selectedSubjectScheduled"> / <span tooltip="[[selectedSubjectScheduled.title]]">[[ selectedSubjectScheduled.title | limitTo: 35  ]][[ selectedSubjectScheduled.title.length > 35 ? '...' : '']]</span></span>
     </h1>
-    <div class="cell right-magnet" data-ng-if="!selectedSubjectScheduled">
+    <div class="flex-inline gap-8 flex-wrap-wrap justify-content-end" data-ng-if="!selectedSubjectScheduled">
         <button class="button button-primary" data-ng-click="switchToStudentView()">
             <svg class="icon-switch" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#switch"></use></svg>
             <i18n>exercizer.switch.learner</i18n>
