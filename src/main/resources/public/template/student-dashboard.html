@@ -1,11 +1,11 @@
 <div data-ng-controller="StudentDashboardController as studentDashboardController">
     <!-- PAGE -->
-    <div class="row">
-        <h1 class="cell only-desktop flex-inline align-items-center gap-16">
+    <div class="flex align-items-center justify-space-between flex-wrap-wrap mb-24 mt-8" style="min-height: 40px;">
+        <h1 class="cell flex-inline align-items-center gap-8 only-desktop mb-0">
             <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
             <span class="fs-7"><i18n>exercizer.title</i18n></span>
         </h1>
-        <div class="cell right-magnet"  workflow="exercizer.create">
+        <div class="flex-inline gap-8 flex-wrap-wrap justify-content-end"  workflow="exercizer.create">
             <button class="button button-primary" data-ng-click="studentDashboardController.switchToTeacherView()">
                 <svg class="icon-switch" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#switch"></use></svg>
                 <i18n>exercizer.switch.instructer</i18n>

@@ -5,16 +5,11 @@
         <span data-ng-click="clickReturnExercizerTab()"><span data-ng-class="{'hover-orange': selectedSubjectScheduled}">[[ getTab()]]</span></span>
         <span data-ng-if="selectedSubjectScheduled"> / <span tooltip="[[selectedSubjectScheduled.title]]">[[ selectedSubjectScheduled.title | limitTo: 35  ]][[ selectedSubjectScheduled.title.length > 35 ? '...' : '']]</span></span>
     </h1>
-    <div class="flex-inline gap-8 flex-wrap-wrap justify-content-end" data-ng-if="!selectedSubjectScheduled">
-        <button class="button button-primary" data-ng-click="switchToStudentView()">
+    <div class="flex-inline gap-8 flex-wrap-wrap justify-content-end">
+        <button data-ng-if="!selectedSubjectScheduled" class="button button-primary" data-ng-click="switchToStudentView()">
             <svg class="icon-switch" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#switch"></use></svg>
             <i18n>exercizer.switch.learner</i18n>
         </button>
-    </div>
-</div>
-
-<div class="flex align-items-center justify-content-end mb-16 flex-wrap-wrap">
-    <div class="flex-inline gap-16 flex-wrap-wrap justify-content-end">
         <button  data-ng-if="selectedSubjectScheduled.showStats" data-ng-click="option.chooseExport=true; option.mode='simple'" class="right-magnet">
             <i18n>exercizer.export.action</i18n>
         </button>
