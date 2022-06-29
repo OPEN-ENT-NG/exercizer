@@ -6,15 +6,15 @@
     </div>
     <div data-ng-show="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
         <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"
-            class="association flex-row vertical-spacing-twice horizontal-spacing-twice"
+            class="association row vertical-spacing-twice horizontal-spacing-twice"
             data-ng-init="data.hover[key] = { bool : false }">
-            <div class="association__left five twelve-mobile cell flex-row align-center">[[filled_answer.text_left]]</div>
-            <div class="one cell">&nbsp;</div>
+            <div class="association__left five five-mobile cell flex-row align-center">[[filled_answer.text_left]]</div>
+            <div class="one cell" style="border-bottom: 1px solid lightgrey; margin-top: 2px;">&nbsp;</div>
             <!-- dragdrop="dropTo(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key)"-->
             <div 
                 drop-item="dropTo($item, filled_answer, key)"
-                class="association__right six twelve-mobile cell flex-row align-center justify-center no-responsive"
+                class="association__right six five-mobile cell flex-row align-center justify-center no-responsive"
                 data-ng-class="{'association-drop-hover'  : data.hover[key].bool == true}"
             >
                 <p>{{filled_answer.text_right}}</p>
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div 
-                class="association__right six twelve-mobile cell flex-row align-center justify-center no-desktop"
+                class="association__right six five-mobile cell flex-row align-center justify-center no-desktop"
                 data-ng-class="{'association-drop-hover'  : data.hover[key].bool == true}"
                 data-ng-click="showAnswers($event, filled_answer)"
             >
@@ -62,7 +62,7 @@
             <!-- dragdrop="dropToLeft(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, false, true)" -->
             <div drop-item="dropToLeft($item, filled_answer, key, false, true)"
-                 class="association__right five twelve-mobile cell flex-row align-center justify-end"
+                 class="association__right five five-mobile cell flex-row align-center justify-end"
                  style="  border: 1px dashed;
                              border-radius: 10px;
                              text-align: center;
@@ -89,7 +89,7 @@
             <!-- dragdrop="dropToRight(filled_answer, $originalEvent)"
                  dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, true, false)" -->
             <div drop-item="dropToRight($item, filled_answer, key, true, false)"
-                 class="association__right six twelve-mobile cell flex-row align-center justify-end"
+                 class="association__right six five-mobile cell flex-row align-center justify-end"
                  style="  border: 1px dashed;
                              border-radius: 10px;
                              text-align: center;
