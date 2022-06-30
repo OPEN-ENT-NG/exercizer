@@ -8,7 +8,7 @@
       <input type="text" data-ng-model="search.text_1" i18n-placeholder="exercizer.search" class="cell twelve">
     </div>
 
-    <div class="row" data-ng-controller="SubjectCopyListController as subjectCopyListController">
+    <div class="row mt-20" data-ng-controller="SubjectCopyListController as subjectCopyListController">
       <div
         data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyListController.orderByDueDate(subjectCopyListController.scheduledThisWeek(subjectCopyList)) | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text_1) | filter: subjectCopyListController.filterOnSubjectCopyTraining() | filter: subjectCopyListController.filterOnSubjectCopyNotStartedOrStarted()) | orderBy:'modified':true">
         <subject-copy-domino subject-copy="subjectCopy"
