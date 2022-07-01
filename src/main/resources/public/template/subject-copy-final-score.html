@@ -1,6 +1,6 @@
 <div data-ng-controller="SubjectCopyFinalScoreController as subjectCopyFinalScoreController">
-    <div class="row">
-        <h1 class="cell twelve-mobile">
+    <div class="flex align-items-center justify-space-between flex-wrap-wrap mb-24">
+        <h1 class="cell twelve-mobile m-0 flex-inline align-items-center gap-8">
             <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
             <span class="no-responsive">
                 <span class="hover-orange" data-ng-click="subjectCopyFinalScoreController.redirectToTrainingSubjects()">
@@ -10,14 +10,15 @@
             <span class="hover-orange" data-ng-click="subjectCopyFinalScoreController.viewSubjectCopy()">[[ subjectCopyFinalScoreController.subjectScheduled.title | limitTo: 35  ]][[ subjectCopyFinalScoreController.subjectScheduled.title.length > 35 ? '...' : '']]
             </span> / <span><i18n>exercizer.copy.final.score</i18n></span>
         </h1>
+
+        <div class="flex-inline gap-16 flex-wrap-wrap justify-content-end">
+            <button class="right-magnet cell button button-accent" data-ng-click="subjectCopyFinalScoreController.retrySubjectCopy()">
+                <i18n>exercizer.retry</i18n>
+            </button>
+        </div>
     </div>
     <div class="row" data-ng-hide="subjectCopyFinalScoreController.hasDataLoaded">
         <div class="info">exercizer.loading</div>
-    </div>
-    <div class="row">
-        <button class="right-magnet cell" data-ng-click="subjectCopyFinalScoreController.retrySubjectCopy()">
-            <i18n>exercizer.retry</i18n>
-        </button>
     </div>
     <div data-ng-if="subjectCopyFinalScoreController.hasDataLoaded && subjectCopyFinalScoreController.grainCopyList.length > 0">
         <div class="row">

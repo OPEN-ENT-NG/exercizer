@@ -6,17 +6,17 @@
     </h1>
 
     <div class="flex-inline gap-16 flex-wrap-wrap justify-content-end">
-        <button class="cell right-magnet" data-ng-if="canSubmit() && !subjectCopy.is_training_copy" data-ng-click="redirectToDashboard(true)">
+        <button class="cell right-magnet button button-secondary" data-ng-if="canSubmit() && !subjectCopy.is_training_copy" data-ng-click="redirectToDashboard(true)">
             <i18n>exercizer.make.copy</i18n>
-        </button>
-
-        <button class="cell right-magnet" data-ng-if="subjectCopy.is_training_copy" data-ng-click="submitSubjectCopy()">
-            <i18n>exercizer.copy.see.final.score</i18n>
         </button>
 
         <button class="cell right-magnet button button-secondary" data-ng-click="redirectToDashboard(false)">
             <svg class="icon-save" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#save"></use></svg>
             <i18n>exercizer.make.later</i18n>
+        </button>
+
+        <button class="cell right-magnet button button-accent" data-ng-if="subjectCopy.is_training_copy" data-ng-click="submitSubjectCopy()">
+            <i18n>exercizer.copy.see.final.score</i18n>
         </button>
     </div>
 </div>
