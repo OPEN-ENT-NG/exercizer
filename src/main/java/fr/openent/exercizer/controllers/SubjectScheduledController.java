@@ -108,6 +108,12 @@ public class SubjectScheduledController extends ControllerHelper {
 		});
 	}
 
+	private JsonArray extractFileIds( JsonArray files ) {
+		JsonArray ret = new JsonArray();
+		files.getList().forEach( f -> { ret.add( ((JsonObject)f).getString("file_id")); });
+		return ret;
+	}
+
 	@Delete("/unschedule-subject/:id")
 	@ApiDoc("Unschedules a subject.")
 	@ResourceFilter(SubjectScheduledOwner.class)
@@ -121,40 +127,58 @@ public class SubjectScheduledController extends ControllerHelper {
 			return;
 		}
 
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(final UserInfos user) {
-				if (user != null) {
-					//find subject title and members of scheduled subject for notification
-					subjectScheduledService.findUnscheduledData(subjectScheduledId, new Handler<Either<String, JsonObject>>() {
-						@Override
-						public void handle(Either<String, JsonObject> event) {
-							if (event.isLeft()) {
-								leftToResponse(request, event.left());
-								return;
-							}
+		checkAuth(request).onSuccess( user -> {
+			//find subject title and members of scheduled subject for notification
+			subjectScheduledService.findUnscheduledData(subjectScheduledId, new Handler<Either<String, JsonObject>>() {
+				@Override
+				public void handle(Either<String, JsonObject> event) {
+					if (event.isLeft()) {
+						leftToResponse(request, event.left());
+						return;
+					}
 
-							final JsonObject jo = event.right().getValue();
-							final List<String> recipientSet = jo.getJsonArray("owners", new fr.wseduc.webutils.collections.JsonArray()).getList();
-							subjectScheduledService.unSchedule(subjectScheduledId, new Handler<Either<String, JsonObject>>() {
-								@Override
-								public void handle(Either<String, JsonObject> either) {
-									if (either.isLeft()) {
-										leftToResponse(request, either.left());
-										return;
+					final JsonObject jo = event.right().getValue();
+					final List<String> recipientSet = jo.getJsonArray("owners", new fr.wseduc.webutils.collections.JsonArray()).getList();
+					subjectScheduledService.findUnscheduledCopyFiles(subjectScheduledId)
+					.compose( copyFiles -> {
+						JsonArray ids = extractFileIds( copyFiles );
+						if (ids.isEmpty()) {
+							return Future.succeededFuture(copyFiles);
+						} else {
+							Promise<JsonArray> p = Promise.promise();
+							storage.removeFiles( ids, resDelete -> {
+								if( !"ok".equals(resDelete.getString("status")) ) {
+									// Log the error, but proceed anyway
+									JsonArray errors = resDelete.getJsonArray("errors", new JsonArray());
+									for (Object o : errors) {
+										if (o instanceof JsonObject) {
+											String docId = ((JsonObject) o).getString("id");
+											String message = ((JsonObject) o).getString("message");
+											log.error("Failed to remove file with id: " + docId + "/" + message);
+										}
 									}
-
-									Renders.noContent(request);
-									sendNotification(request, "unassigncopy", user, recipientSet, "", jo.getString("title"),null, jo.getString("due_date"), null);
 								}
+								p.complete(copyFiles);
 							});
+							return p.future();
+						}
+					})
+					.compose( ids -> {
+						return subjectScheduledService.unSchedule(subjectScheduledId);
+					})
+					.onSuccess( (Void) -> {
+						Renders.noContent(request);
+						sendNotification(request, "unassigncopy", user, recipientSet, "", jo.getString("title"),null, jo.getString("due_date"), null);
+					})
+					.onFailure( err -> {
+						if( err != null ) {
+							Renders.renderJson(request, new JsonObject().put("error", err.getMessage()), 400);
+						} else {
+							request.response().setStatusCode(400).end();
 						}
 					});
-				} else {
-					log.debug("User not found in session.");
-					unauthorized(request);
 				}
-			}
+			});
 		});
 	}
 

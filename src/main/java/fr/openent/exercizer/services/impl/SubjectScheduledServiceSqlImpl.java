@@ -30,6 +30,7 @@ import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -214,11 +215,27 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	 * @see fr.openent.exercizer.services.ISubjectScheduledService
 	 */
 	@Override
-	public void unSchedule(final Long subjectScheduledId, final Handler<Either<String, JsonObject>> handler) {
-		final String query = "DELETE FROM " + schema + "subject_scheduled WHERE id = ?";
+	public Future<Void> unSchedule(final Long subjectScheduledId) {
+		Promise<Void> promise = Promise.promise();
+		final SqlStatementsBuilder s = new SqlStatementsBuilder();
+		JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId);
 
-		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId), SqlResult.validRowsResultHandler(handler));
+		final String query1 = "DELETE FROM " + schema + "subject_copy_file scf "
+			+"USING " + schema + "subject_copy AS sc WHERE sc.id=scf.subject_copy_id AND sc.subject_scheduled_id = ? ";
+		s.prepared(query1, params);
 
+		final String query2 = "DELETE FROM " + schema + "subject_scheduled WHERE id = ?";
+		s.prepared(query2, params);
+
+		sql.transaction(s.build(), SqlResult.validResultHandler(1, result -> {
+			if( result.isRight() ) {
+				promise.complete();
+			} else {
+				promise.fail( result.left().getValue() );
+			}
+		}));
+
+		return promise.future();
 	}
 
 	/**
@@ -230,6 +247,25 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				"WHERE ss.id = ? GROUP BY ss.title, ss.due_date";
 
 		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId), SqlResult.validUniqueResultHandler(handler, "owners"));
+	}
+
+	@Override
+	public Future<JsonArray> findUnscheduledCopyFiles(final Long subjectScheduledId) {
+		final Promise<JsonArray> promise = Promise.promise();
+		// Retrieve corrected and homework file IDs (in Storage) from copies.
+		final String query = 
+			 "SELECT DISTINCT scf.subject_copy_id AS subject_copy_id, scf.file_id AS file_id "
+			+"FROM " + schema + "subject_copy_file AS scf "
+			+"INNER JOIN " + schema + "subject_copy AS sc ON sc.id=scf.subject_copy_id AND sc.subject_scheduled_id = ? ";
+
+		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId), SqlResult.validResultHandler( res -> {
+			if (res.isRight()) {
+				promise.complete( res.right().getValue() );
+			} else {
+				promise.fail( res.left().getValue() );
+			}
+		}));
+		return promise.future();
 	}
 
 	private Map<Number, JsonObject> transformJaInMapCustomCopyData(JsonArray grainsCustomCopyData) {

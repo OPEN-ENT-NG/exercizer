@@ -21,6 +21,8 @@ package fr.openent.exercizer.services;
 
 import fr.wseduc.webutils.Either;
 import org.entcore.common.user.UserInfos;
+
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -69,12 +71,19 @@ public interface ISubjectScheduledService {
     void findUnscheduledData(final Long subjectScheduledId, final Handler<Either<String, JsonObject>> handler);
 
     /**
+     * Find file IDs to remove from Storage before unscheduling a subject_schedule
+     * 
+     * @param subjectScheduledId the id
+     * @return a Future list of subject_copy_file
+     */
+    Future<JsonArray> findUnscheduledCopyFiles(final Long subjectScheduledId);
+
+    /**
      * unScheduled a subject.
      *
      * @param subjectScheduledId the id
-     * @param handler the handler
      */
-    void unSchedule(final Long subjectScheduledId, final Handler<Either<String, JsonObject>> handler);
+    Future<Void> unSchedule(final Long subjectScheduledId);
 
     /**
      * Schedules a simple subject.
