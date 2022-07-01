@@ -70,66 +70,6 @@ export const performAssociation = ng.directive('performAssociation',
                     scope.updateGrainCopy();
                 };
 
-
-                /*scope.drag = function (possible_answer, $originalEvent) {
-                    try {
-                        $originalEvent.dataTransfer.setData('application/json', JSON.stringify(possible_answer));
-                    } catch (e) {
-                        $originalEvent.dataTransfer.setData('Text', JSON.stringify(possible_answer));
-                    }
-                };
-
-                scope.dropTo = function (targetItem, $originalEvent) {
-                    scope.setHover(null);
-                    var dataField = DragService.dropConditionFunction(targetItem, $originalEvent);
-                    var originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
-                    targetItem.text_right = angular.copy(originalItem.text_right);
-                    scope.resetPossibleAnswerLeftList();
-                    scope.$apply();
-                    scope.updateGrainCopy();
-                };
-
-                scope.dropToLeft = function (targetItem, $originalEvent) {
-                    scope.setHover(null);
-                    if(targetItem.text_left){
-                        scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
-                            item : angular.copy(targetItem.text_left),
-                            rank : 0.5 - Math.random()
-                        });
-                    }
-                    var dataField = DragService.dropConditionFunction(targetItem, $originalEvent);
-                    var originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
-                    targetItem.text_left = angular.copy(originalItem.item);
-                    //scope.resetPossibleAnswerLeftList();
-                    scope.$apply();
-                    scope.all_possible_answer_pop(targetItem.text_left);
-                    scope.updateGrainCopy();
-                };
-
-                scope.dropToRight = function (targetItem, $originalEvent) {
-                    scope.setHover(null);
-                    if(targetItem.text_right){
-                        scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.push({
-                            item : angular.copy(targetItem.text_right),
-                            rank : 0.5 - Math.random()
-                        });
-                    }
-                    var dataField = DragService.dropConditionFunction(targetItem, $originalEvent);
-                    var originalItem = JSON.parse($originalEvent.dataTransfer.getData(dataField));
-                    targetItem.text_right = angular.copy(originalItem.item);
-                    //scope.resetPossibleAnswerLeftList();
-                    scope.$apply();
-                    scope.all_possible_answer_pop(targetItem.text_right);
-                    scope.updateGrainCopy();
-                };
-
-                    scope.dropConditionFunction = function (targetItem, $originalEvent, index, right , left ) {
-                    scope.setHover(index, right, left);
-                    return DragService.dropConditionFunction(targetItem, $originalEvent);
-                    };
-
-                */
-
                 scope.all_possible_answer_pop = function(item, left, right){
                     var index = null;
                     angular.forEach(scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer, function(current, key){
@@ -193,14 +133,16 @@ export const performAssociation = ng.directive('performAssociation',
                 let _selectedanswer;
 
                 scope.showAnswers = function(ele, filled_answer) {
+                    console.log('filled_answer', filled_answer);
                     scope.showAnswersMobile = true;
+                    scope.showLeftAnswersMobile = false;
                     $('.association__right').removeClass('item-selected');
                     $(ele.target).addClass('item-selected');
                     _selectedanswer = filled_answer;
                     ele.stopPropagation();
                 }
 
-                scope.selectAnswer = function(possible_answer) {
+                scope.selectAnswer = function(possible_answer) {                
                     scope.deleteFilledAnswer(_selectedanswer);
                     scope.showAnswersMobile = false;
                     _selectedanswer.text_right = possible_answer.text_right;
@@ -215,7 +157,56 @@ export const performAssociation = ng.directive('performAssociation',
                         scope.possible_answer_left_list.splice(indexToRemove, 1);
                     }
                     scope.updateGrainCopy();
-                    scope.$apply();
+                    // scope.$apply();
+                }
+
+                scope.showLeftAnswers = function(ele, filled_answer) {
+                    scope.showLeftAnswersMobile = true;
+                    scope.showAnswersMobile = false;
+                    $('.association__left').removeClass('item-selected');
+                    $(ele.target).addClass('item-selected');
+                    _selectedanswer = filled_answer;
+                    ele.stopPropagation();
+                }
+
+                scope.selectLeftAnswer = function(possible_answer) {                
+                    scope.deleteFilledAnswer(_selectedanswer);
+                    scope.showAnswersMobile = false;
+                    scope.showLeftAnswersMobile = false;
+                    _selectedanswer.text_left = possible_answer.item;
+                    $('.association__right').removeClass('item-selected');
+                    var indexToRemove = null;
+                    angular.forEach(scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer, function(current_possible_left_answer, index){
+                        console.log('current_possible_left_answer', current_possible_left_answer);
+                        if(possible_answer.item == current_possible_left_answer.text_left){
+                            indexToRemove = index;
+                        }
+                    });
+                    if(indexToRemove !== null){
+                        scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.splice(indexToRemove, 1);
+                    }
+                    scope.all_possible_answer_pop(possible_answer.item);
+                    scope.updateGrainCopy();
+                    // scope.$apply();
+                }
+
+                scope.selectRightAnswer = function(possible_answer) {
+                    scope.deleteFilledAnswer(_selectedanswer);
+                    scope.showAnswersMobile = false;
+                    _selectedanswer.text_right = possible_answer.item;
+                    $('.association__right').removeClass('item-selected');
+                    var indexToRemove = null;
+                    angular.forEach(scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer, function(current_possible_left_answer, index){
+                        if(possible_answer.item == current_possible_left_answer.text_right){
+                            indexToRemove = index;
+                        }
+                    });
+                    if(indexToRemove !== null){
+                        scope.grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.splice(indexToRemove, 1);
+                    }
+                    scope.all_possible_answer_pop(possible_answer.item);
+                    scope.updateGrainCopy();
+                    // scope.$apply();
                 }
 
                 $('body').on('click', event => {

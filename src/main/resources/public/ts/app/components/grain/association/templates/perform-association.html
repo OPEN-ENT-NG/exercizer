@@ -5,13 +5,12 @@
         <grain-copy-grain-document-list data-grain-copy="grainCopy"></grain-copy-grain-document-list>
     </div>
     <div data-ng-show="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
-        <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"
+        <div
+            data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"
             class="association row vertical-spacing-twice horizontal-spacing-twice"
             data-ng-init="data.hover[key] = { bool : false }">
             <div class="association__left five five-mobile cell flex-row align-center">[[filled_answer.text_left]]</div>
             <div class="one cell" style="border-bottom: 1px solid lightgrey; margin-top: 2px;">&nbsp;</div>
-            <!-- dragdrop="dropTo(filled_answer, $originalEvent)"
-                 dropcondition="dropConditionFunction(filled_answer, $originalEvent, key)"-->
             <div 
                 drop-item="dropTo($item, filled_answer, key)"
                 class="association__right six five-mobile cell flex-row align-center justify-center no-responsive"
@@ -47,29 +46,57 @@
                 </div>
             </div>
         </div>
-        <div data-ng-if="possible_answer_left_list.length > 0" class="row vertical-spacing no-responsive options right">
-            <div data-ng-repeat="possible_answer in possible_answer_left_list"
-                 class="cell association-possible-answer-left"
-                 drag-item="possible_answer">
+        <!-- Drag -->
+        <div
+            data-ng-if="possible_answer_left_list.length > 0"
+            class="row vertical-spacing no-responsive options right">
+            <div
+                data-ng-repeat="possible_answer in possible_answer_left_list"
+                class="cell association-possible-answer-left"
+                drag-item="possible_answer">
                 <!--dragstart="drag(possible_answer, $originalEvent)-->
                 [[possible_answer.text_right]]
             </div>
         </div>
+        <!-- TAP TAP without Left COLUMN -->
+        <div class="no-desktop tap-tap" data-ng-if="showAnswersMobile">
+            <div
+                data-ng-repeat="possible_answer in possible_answer_left_list"
+                data-ng-click="selectAnswer(possible_answer)"
+                class="tap-tap__item">
+            [[possible_answer.text_right]]
+            </div>
+        </div>
     </div>
+    <!-- WITH LEFT COLUMN -->
     <div data-ng-hide="grainCopy.grain_copy_data.custom_copy_data.show_left_column">
-        <div data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"
-             class="row vertical-spacing">
-            <!-- dragdrop="dropToLeft(filled_answer, $originalEvent)"
-                 dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, false, true)" -->
-            <div drop-item="dropToLeft($item, filled_answer, key, false, true)"
-                 class="association__right five five-mobile cell flex-row align-center justify-end"
-                 style="  border: 1px dashed;
-                             border-radius: 10px;
-                             text-align: center;
-                             min-height: 50px;
-                    "
-                 data-ng-class="{'association-drop-hover'  : data.hover[key].left == true}">
+        <div
+            data-ng-repeat="(key, filled_answer) in grainCopy.grain_copy_data.custom_copy_data.filled_answer_list"
+            class="row vertical-spacing">
+            <!-- Drag -->
+            <div
+                drop-item="dropToLeft($item, filled_answer, key, false, true)"
+                class="association__right five five-mobile cell flex-row align-center justify-end no-responsive"
+                data-ng-class="{'association-drop-hover'  : data.hover[key].left == true}"
+                style="border: 1px dashed; border-radius: 10px; text-align: center; min-height: 50px;">
                 <p class="mr-8">{{filled_answer.text_left}}</p>
+                <div 
+                    class="association__delete cell" 
+                    data-ng-click="deleteFilledAnswerLeft(filled_answer)"
+                    data-ng-if="filled_answer.text_left"
+                >
+                    <svg class="icon-close" width="20" height="20">
+                        <use href="exercizer/public/assets/icons/icons.svg#close"></use>
+                    </svg>
+                </div>
+            </div>
+            <!-- Tap Tap -->
+            <div
+                data-ng-click="showLeftAnswers($event, filled_answer)"
+                class="association__left five five-mobile cell flex-row align-center justify-end no-desktop"
+                data-ng-class="{'association-drop-hover'  : data.hover[key].left == true}"
+                style="border: 1px dashed; border-radius: 10px; text-align: center; min-height: 50px;">
+                <p class="mr-16 my-0">{{filled_answer.text_left}}</p>
                 <div 
                     class="association__delete cell" 
                     data-ng-click="deleteFilledAnswerLeft(filled_answer)"
@@ -82,20 +109,15 @@
             </div>
             <div 
                 class="one cell"
-                style="border-bottom: 1px solid lightgrey; margin-top: 2px;"
-            >
+                style="border-bottom: 1px solid lightgrey; margin-top: 2px;">
                 &nbsp;
             </div>
-            <!-- dragdrop="dropToRight(filled_answer, $originalEvent)"
-                 dropcondition="dropConditionFunction(filled_answer, $originalEvent, key, true, false)" -->
-            <div drop-item="dropToRight($item, filled_answer, key, true, false)"
-                 class="association__right six five-mobile cell flex-row align-center justify-end"
-                 style="  border: 1px dashed;
-                             border-radius: 10px;
-                             text-align: center;
-                             min-height: 50px;
-                    "
-                 data-ng-class="{'association-drop-hover'  : data.hover[key].right == true}">
+            <!-- Drag -->
+            <div
+                drop-item="dropToRight($item, filled_answer, key, true, false)"
+                class="association__right six five-mobile cell flex-row align-center justify-end no-responsive"
+                data-ng-class="{'association-drop-hover'  : data.hover[key].right == true}"
+                style="border: 1px dashed; border-radius: 10px; text-align: center; min-height: 50px;">
                 <p class="mr-8">{{filled_answer.text_right}}</p>
                 <div 
                     class="cell association__delete" 
@@ -107,21 +129,52 @@
                     </svg>
                 </div>
             </div>
+            <!-- Tap Tap -->
+            <div
+                data-ng-click="showAnswers($event, filled_answer)"
+                class="association__right six five-mobile cell flex-row align-center justify-end no-desktop"
+                data-ng-class="{'association-drop-hover'  : data.hover[key].right == true}"
+                style="border: 1px dashed; border-radius: 10px; text-align: center; min-height: 50px;">
+                <p class="mr-16 my-0">{{filled_answer.text_right}}</p>
+                <div 
+                    class="cell association__delete" 
+                    data-ng-click="deleteFilledAnswerRight(filled_answer)"
+                    data-ng-if="filled_answer.text_right"
+                >
+                    <svg class="icon-close" width="20" height="20">
+                        <use href="exercizer/public/assets/icons/icons.svg#close"></use>
+                    </svg>
+                </div>
+            </div>
         </div>
-    </div>
-    <div data-ng-if="grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.length > 0" class="options right mt-16">
-        <div data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
-             class="cell association-possible-answer-left"
-             drag-item="possible_answer">
-            <!-- dragstart="drag(possible_answer, $originalEvent)" -->
+        <!-- Drag -->
+        <div data-ng-if="grainCopy.grain_copy_data.custom_copy_data.all_possible_answer.length > 0" class="options no-responsive right mt-16">
+            <div
+                data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
+                class="cell association-possible-answer-left"
+                drag-item="possible_answer">
+                <!-- dragstart="drag(possible_answer, $originalEvent)" -->
+                [[possible_answer.item]]
+            </div>
+        </div>
+        <!-- TAP TAP with Left COLUMN -->
+        <!-- For left answer -->
+        <div class="no-desktop tap-tap" data-ng-if="showLeftAnswersMobile">
+            <div
+                data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
+                data-ng-click="selectLeftAnswer(possible_answer)"
+                class="tap-tap__item">
             [[possible_answer.item]]
+            </div>
         </div>
-    </div>
-    <div class="no-desktop tap-tap" data-ng-if="showAnswersMobile">
-        <div data-ng-repeat="possible_answer in possible_answer_left_list" data-ng-click="selectAnswer(possible_answer)"
-            class="tap-tap__item">
-           <!-- dragstart="drag(possible_answer, $originalEvent)" -->
-           [[possible_answer.text_right]]
-       </div>
+        <!-- For right answer -->
+        <div class="no-desktop tap-tap" data-ng-if="showAnswersMobile">
+            <div
+                data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
+                data-ng-click="selectRightAnswer(possible_answer)"
+                class="tap-tap__item">
+            [[possible_answer.item]]
+            </div>
+        </div>
     </div>
 </article>
