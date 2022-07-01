@@ -60,11 +60,14 @@
         </div>
         <!-- TAP TAP without Left COLUMN -->
         <div class="no-desktop tap-tap" data-ng-if="showAnswersMobile">
-            <div
-                data-ng-repeat="possible_answer in possible_answer_left_list"
-                data-ng-click="selectAnswer(possible_answer)"
-                class="tap-tap__item">
-            [[possible_answer.text_right]]
+            <strong class="fs-4"><i18n>exercizer.taptap.responsive.perform</i18n></strong>
+            <div class="tap-tap__inner mt-8">
+                <div
+                    data-ng-repeat="possible_answer in possible_answer_left_list"
+                    data-ng-click="selectAnswer(possible_answer)"
+                    class="tap-tap__item">
+                [[possible_answer.text_right]]
+                </div>
             </div>
         </div>
     </div>
@@ -160,20 +163,26 @@
         <!-- TAP TAP with Left COLUMN -->
         <!-- For left answer -->
         <div class="no-desktop tap-tap" data-ng-if="showLeftAnswersMobile">
-            <div
-                data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
-                data-ng-click="selectLeftAnswer(possible_answer)"
-                class="tap-tap__item">
-            [[possible_answer.item]]
+            <strong class="fs-4"><i18n>exercizer.taptap.responsive.perform</i18n></strong>
+            <div class="tap-tap__inner mt-8">
+                <div
+                    data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
+                    data-ng-click="selectLeftAnswer(possible_answer)"
+                    class="tap-tap__item">
+                [[possible_answer.item]]
+                </div>
             </div>
         </div>
         <!-- For right answer -->
         <div class="no-desktop tap-tap" data-ng-if="showAnswersMobile">
-            <div
-                data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
-                data-ng-click="selectRightAnswer(possible_answer)"
-                class="tap-tap__item">
-            [[possible_answer.item]]
+            <strong class="fs-4"><i18n>exercizer.taptap.responsive.perform</i18n></strong>
+            <div class="tap-tap__inner mt-8">
+                <div
+                    data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
+                    data-ng-click="selectRightAnswer(possible_answer)"
+                    class="tap-tap__item">
+                [[possible_answer.item]]
+                </div>
             </div>
         </div>
     </div>
