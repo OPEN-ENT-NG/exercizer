@@ -60,7 +60,7 @@
         </div>
         <!-- TAP TAP without Left COLUMN -->
         <div class="no-desktop tap-tap" data-ng-if="showAnswersMobile">
-            <strong class="fs-4"><i18n>exercizer.taptap.responsive.perform</i18n></strong>
+            <strong class="fs-4">[['exercizer.taptap.select.perform'|i18n]]</strong>
             <div class="tap-tap__inner mt-8">
                 <div
                     data-ng-repeat="possible_answer in possible_answer_left_list"
@@ -163,7 +163,7 @@
         <!-- TAP TAP with Left COLUMN -->
         <!-- For left answer -->
         <div class="no-desktop tap-tap" data-ng-if="showLeftAnswersMobile">
-            <strong class="fs-4"><i18n>exercizer.taptap.responsive.perform</i18n></strong>
+            <strong class="fs-4">[['exercizer.taptap.select.perform'|i18n]]</strong>
             <div class="tap-tap__inner mt-8">
                 <div
                     data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
@@ -175,7 +175,7 @@
         </div>
         <!-- For right answer -->
         <div class="no-desktop tap-tap" data-ng-if="showAnswersMobile">
-            <strong class="fs-4"><i18n>exercizer.taptap.responsive.perform</i18n></strong>
+            <strong class="fs-4">[['exercizer.taptap.select.perform'|i18n]]</strong>
             <div class="tap-tap__inner mt-8">
                 <div
                     data-ng-repeat="possible_answer in grainCopy.grain_copy_data.custom_copy_data.all_possible_answer | orderBy:'rank'"
