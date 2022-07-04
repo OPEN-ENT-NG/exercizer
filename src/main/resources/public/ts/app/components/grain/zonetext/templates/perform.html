@@ -38,8 +38,7 @@
                         ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'"
                         class="no-desktop"
                         ng-class="{ filled: textZone.answer !== '' }"
-                        drag-item="textZone"
-                        drop-item="answer(textZone, $item)"
+                        drop-item=""
                         ng-click="showAnswers($event, textZone)">
                         <span class="text-zone-size">[[textZone.answer]]</span>
                     </div>
