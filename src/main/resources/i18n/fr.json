@@ -224,6 +224,7 @@
     "exercizer.simple.submit.from.library" : "Le sujet a bien été ajouté dans votre liste des sujets.",
     "exercizer.simple.library.corrected" : "Ajouté un corrigé",
     "exercizer.simple.consult.corrected" : "La consultation du corrigé sera possible à partir du",
+    "exercizer.simple.error.empty.info" : "Veuillez renseigner le nom et les consignes du devoir",
     "exercizer.reminder" : "Rappel",
     "exercizer.reminder.choose.label" : "Quel type de rappel voulez-vous envoyer ?",
     "exercizer.reminder.choose.type1" : "Personnalisé",
