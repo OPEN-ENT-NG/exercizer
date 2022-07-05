@@ -187,7 +187,7 @@ class EditSimpleSubjectController {
     };
 
     public redirectToDashboard() {
-        if (!this._subject.title || !this._subject.description) {
+        if (!this._subject.title) {
             notify.error('exercizer.simple.error.empty.info');
         } else if (this._previewingFromLibrary) {
             this._$location.path('/dashboard/teacher/library');
