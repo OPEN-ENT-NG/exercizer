@@ -177,7 +177,7 @@
                             <!-- GRAIN STATEMENT -->
                             <div class="row" data-ng-if="grain.grain_type_id > 3" stop-child-propagation>
                                 <!-- <label><i18n>exercizer.statement</i18n> :</label> -->
-                                <editor placeholder="[['exercizer.grain.statement.placeholder'|i18n]]" data-ng-model="grain.grain_data.statement" inline class="small-editor radius-8"></editor>
+                                <editor placeholder="[['exercizer.grain.statement.placeholder'|i18n]]" data-ng-model="grain.grain_data.statement" ng-change="editSubjectController.updateGrainDebounced(grain)" inline class="small-editor radius-8"></editor>
                                 <!-- <custom-editor placeholder="[['exercizer.grain.statement.placeholder'|i18n]]" text="grain.grain_data.statement" grain="grain" track-input-event="grain.getTracker()"></custom-editor> -->
                             </div>
 

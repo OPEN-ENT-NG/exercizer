@@ -386,8 +386,7 @@ export class EditSubjectController implements IObjectGuardDelegate {
         );
     };
     public updateGrainDebounced = function(grain:IGrain) {
-        var self:EditSubjectController = this;
-        self._getDebouncedGrain(grain).next(grain);
+        this._getDebouncedGrain(grain).next(grain);
     }
 
     public updateGrain = function(grain:IGrain, onSave?:({ok:boolean, grain: IGrain})=>void) {
