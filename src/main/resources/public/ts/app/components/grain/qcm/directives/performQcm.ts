@@ -10,13 +10,9 @@ export const performQcm = ng.directive('performQcm',
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/qcm/templates/perform-qcm.html',
             link:(scope:any) => {
-                scope.filledAnswerList = scope.grainCopy.grain_copy_data.custom_copy_data.filled_answer_list;
-                scope.filteredAnswersList = [];
-
-                scope.$watch("grainCopy",function() {
-                    scope.filteredAnswersList = scope.filledAnswerList.filter(answer => answer.text !== "")
-                });
-
+                scope.textNotEmpty = (answer, index, filteredAnswersList) => {
+                    return answer.text !== "";
+                }
                 scope.updateGrainCopy = function() {
                     scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                 };

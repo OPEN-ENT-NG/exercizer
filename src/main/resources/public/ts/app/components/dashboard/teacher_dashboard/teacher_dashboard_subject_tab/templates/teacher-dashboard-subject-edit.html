@@ -7,7 +7,7 @@
         <i18n>exercizer.choose</i18n>
     </h2>
     <div data-ng-if="step == 'subject'" class="row">
-        <form name="formSubjectProperties">
+        <form name="formSubjectProperties" ng-submit="saveSubjectProperties()">
             <div class="rigid-grid row">
                 <div class="two cell clip height-two">
                     <div class="absolute" ng-class="{'default-img': !subject.picture}" data-loading-panel="upload-collaborativeeditor-thumbnail">
@@ -23,10 +23,10 @@
                         <textarea track-input-event="subject.getTracker()" data-ng-model="subject.description" class="twelve cell subject-edit-textarea" i18n-placeholder="exercizer.subject.desc"></textarea>
                     </div>
                     <div class="twelve cell horizontal-spacing vertical-spacing flex align-items-center justify-content-end gap-8">
-                        <button data-ng-click="closeLightbox()" class="right-magnet cancel button button-secondary">
+                        <button type="reset" data-ng-click="closeLightbox()" class="right-magnet cancel button button-secondary">
                             <i18n>exercizer.cancel</i18n>
                         </button>
-                        <button data-ng-click="saveSubjectProperties()" class="right-magnet button button-accent">
+                        <button type="submit" class="right-magnet button button-accent">
                             <i18n>exercizer.update</i18n>
                         </button>
                     </div>
