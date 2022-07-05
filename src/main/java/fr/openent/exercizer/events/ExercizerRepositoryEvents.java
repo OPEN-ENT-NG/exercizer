@@ -288,7 +288,9 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
 
         // Re-orders items to avoid breaking foreign key constraint
         final int indexId = fields.getList().indexOf("id");
-        Collections.sort(results.getList(), (a,b) -> new JsonArray((List)a).getInteger(indexId).compareTo(new JsonArray((List)b).getInteger(indexId)));
+        if( indexId >= 0 ) {
+            Collections.sort(results.getList(), (a,b) -> new JsonArray((List)a).getInteger(indexId).compareTo(new JsonArray((List)b).getInteger(indexId)));
+        }
         
         final boolean isSubjectTable = "subject".equals(table);
 
