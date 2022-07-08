@@ -1,14 +1,12 @@
 <!-- filter -->
 <div data-ng-controller="SubjectCopyListController as subjectCopyListController">
 
-    <!-- list -->
-    <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopyTrainingState(search.filter)) | orderBy:subjectTrainingComparator:true">
-        <subject-copy-domino subject-copy="subjectCopy" subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
-    </div>
-    <article data-ng-show="!filteredSubjectCopyList.length">
+    <article class="pb-8">
+        <div class="row mb-16">
+            <input type="text" data-ng-model="search.text" i18n-placeholder="exercizer.search" class="six twelve-mobile cell">
+        </div>
 
-        <div class="row">
-    
+        <div class="row mb-16">
             <label class="chip"
             data-ng-click="clickFilter('is_on_going')"
             data-ng-class="filerIsSelected('is_on_going')">
@@ -26,13 +24,15 @@
             data-ng-class="filerIsSelected('is_done')">
                 <span><i18n>exercizer.dashboard.learner.tab3.sub.filter1</i18n></span>
             </label>
-    
+        </div>
+
+        <!-- list -->
+        <div data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopyTrainingState(search.filter)) | orderBy:subjectTrainingComparator:true">
+            <subject-copy-domino subject-copy="subjectCopy" subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)"></subject-copy-domino>
         </div>
     
-        <div class="row mt-16">
-            <input type="text" data-ng-model="search.text" i18n-placeholder="exercizer.search" class="six twelve-mobile cell">
-        </div>
-        <div style="text-align: center">
+        <!-- empty screen -->
+        <div style="text-align: center" data-ng-show="!filteredSubjectCopyList.length">
             <div data-ng-show="getEmptyScreen() == 'is_sided'">
                 <img height="150" src="exercizer/public/assets/img/training-empty-sided.svg"/>
                 <h4><i18n>exercizer.dashboard.learner.training.empty.sided</i18n></h4>

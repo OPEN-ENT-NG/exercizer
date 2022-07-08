@@ -1,17 +1,29 @@
 <!-- filter -->
 <div data-ng-controller="SubjectCopyListController as subjectCopyListController">
 
-    <!-- list -->
-    <div
-        data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopySubmittedOrCorrectionOnGoingOrCorrected() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: subjectCopyListController.filterOnSubjectCopyTraining() | filter: subjectCopyListController.filterOnSubjectCopyState(search.filter)) | orderBy:'modified':true">
-        <subject-copy-domino ng-click="subjectCopyListController.openCorrection(subjectCopy)" subject-copy="subjectCopy"
-            subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)">
-        </subject-copy-domino>
-    </div>
-    <article data-ng-show="!filteredSubjectCopyList.length">
+    <article class="pb-8">
+        <!-- search filter -->
+        <div class="flex flex-wrap-wrap align-items-center justify-space-between gap-16 mb-16">
+            <input type="text" data-ng-model="search.text" i18n-placeholder="exercizer.search"
+                class="six twelve-mobile cell" style="min-width: 220px !important;">
+            <div class="flex align-items-center justify-space-between gap-8 right-magnet mobile-row">
+                <div class="flex align-items-center gap-8">
+                    <label class="two cell">
+                        <i18n>exercizer.date.from</i18n>
+                    </label>
+                    <date-picker data-ng-model="search.beginDate" class="input-date cell"></date-picker>
+                </div>
+                <div class="flex align-items-center gap-8">
+                    <label class="two cell">
+                        <i18n>exercizer.date.to</i18n>
+                    </label>
+                    <date-picker data-ng-model="search.endDate" class="input-date cell"></date-picker>
+                </div>
+            </div>
+        </div>
 
-        <div class="row">
-
+        <!-- chip filters -->
+        <div class="row mb-16">
             <label class="chip" data-ng-click="clickFilter('is_submitted')"
                 data-ng-class="filerIsSelected('is_submitted')">
                 <span>
@@ -34,25 +46,16 @@
             </label>
         </div>
 
-        <div class="flex flex-wrap-wrap align-items-center justify-space-between gap-16 mt-16">
-            <input type="text" data-ng-model="search.text" i18n-placeholder="exercizer.search"
-                class="six twelve-mobile cell" style="min-width: 220px !important;">
-            <div class="flex align-items-center justify-space-between gap-8 right-magnet mobile-row">
-                <div class="flex align-items-center gap-8">
-                    <label class="two cell">
-                        <i18n>exercizer.date.from</i18n>
-                    </label>
-                    <date-picker data-ng-model="search.beginDate" class="input-date cell"></date-picker>
-                </div>
-                <div class="flex align-items-center gap-8">
-                    <label class="two cell">
-                        <i18n>exercizer.date.to</i18n>
-                    </label>
-                    <date-picker data-ng-model="search.endDate" class="input-date cell"></date-picker>
-                </div>
-            </div>
+        <!-- list -->
+        <div
+            data-ng-repeat="subjectCopy in filteredSubjectCopyList = (subjectCopyList | filter: subjectCopyListController.filterOnSubjectScheduledTitle(search.text) | filter: subjectCopyListController.filterOnSubjectCopySubmittedOrCorrectionOnGoingOrCorrected() | filter: subjectCopyListController.filterOnSubjectScheduledDueDate(search.beginDate, search.endDate) | filter: subjectCopyListController.filterOnSubjectCopyTraining() | filter: subjectCopyListController.filterOnSubjectCopyState(search.filter)) | orderBy:'modified':true">
+            <subject-copy-domino ng-click="subjectCopyListController.openCorrection(subjectCopy)" subject-copy="subjectCopy"
+                subject-scheduled="subjectCopyListController.getSubjectScheduledById(subjectCopy.subject_scheduled_id)">
+            </subject-copy-domino>
         </div>
-        <div style="text-align: center">
+
+        <!-- empty screen -->
+        <div style="text-align: center" data-ng-show="!filteredSubjectCopyList.length">
             <img height="150" src="exercizer/public/assets/img/nothing.svg" />
             <p>
                 <i18n>exercizer.dashboard.learner.finish.empty</i18n>

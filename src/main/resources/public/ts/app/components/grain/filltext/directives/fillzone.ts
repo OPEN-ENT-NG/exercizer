@@ -58,7 +58,7 @@ export const fillZone = ng.directive('fillZone',
                 }, 50);
                 
                 var openEdit = (e) => {
-                    scope.$parent.editZone(scope.optionData.zoneId);
+                    scope.$parent.editZone && scope.$parent.editZone(scope.optionData.zoneId);
                     e.preventDefault();
                     scope.$apply();
                 };
