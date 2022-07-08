@@ -199,8 +199,8 @@
                                <button data-ng-click="reminder(copy.id)" class="button button-secondary no-margin"><i18n>exercizer.reminder</i18n></button>
                             </div>
                         </td>
-                        <td data-ng-if="copy.homework_files.length">
-                            <div class="selected-subject-scheduled">
+                        <td>
+                            <div data-ng-if="copy.homework_files.length" class="selected-subject-scheduled">
                                 <div class="selected-subject-inner">
                                     <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
                                     <span>[[copy.homework_files[0].metadata.filename | limitTo: 15  ]][[ copy.homework_files[0].metadata.filename.length > 15 ? '...' : '']]</span>
@@ -213,18 +213,18 @@
                                     target="_blank">
                                     <svg class="icon-download" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#download"></use></svg>
                                 </button>
-                           </div>
+                            </div>
+                            <em data-ng-if="!copy.homework_files.length">
+                                <i18n>exercizer.none.student.file</i18n>
+                            </em>
                         </td>
-                        <td data-ng-if="!copy.homework_files.length">
-                           <em>
-                               <i18n>exercizer.none.student.file</i18n>
-                           </em>
-                        </td>
-                        <td ng-if="copy.corrected_files.length || copy.submitted_date">
-                            <div class="selected-subject-scheduled droppable p-8"
-                                    ng-if="!copy.corrected_files.length && copy.submitted_date"
-                                    drop-files="newFiles"
-                                    on-drop="selectedCorrectedFileCopy(copy);saveCurrentCorrected(this);">
+                        <td>
+                            <div 
+                                ng-if="!copy.corrected_files.length && copy.submitted_date"
+                                class="selected-subject-scheduled droppable p-8"
+                                drop-files="newFiles"
+                                on-drop="selectedCorrectedFileCopy(copy);saveCurrentCorrected(this);"
+                            >
                                 <div class="selected-subject-inner">
                                     <svg class="icon-upload" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#upload"></use></svg>
                                 </div>
@@ -232,7 +232,7 @@
                                        onclick="$(currentUpload).click();">
                                     <i18n>exercizer.add.file</i18n>
                                 </a>
-                           </div>
+                            </div>
    
                             <div class="selected-subject-scheduled" ng-if="copy.corrected_files.length">
                                 <div class="selected-subject-inner flex-inline align-items-center gap-4">
@@ -247,7 +247,6 @@
                                     <svg class="icon-delete" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
                                 </button>
                            </div>
-                           &nbsp;
                        </td>
                   </tr>
                   </tbody>
