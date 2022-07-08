@@ -1,26 +1,26 @@
 <lightbox data-show="isDisplayed" on-close="closeReminder()">
     <div data-ng-if="remind.step === 'choose'">
-        <h1><i18n>exercizer.reminder</i18n> - [[selectedSubjectScheduled.title]]</h1>
+        <h2><i18n>exercizer.reminder</i18n> - [[selectedSubjectScheduled.title]]</h2>
         <h4><i18n>exercizer.reminder.choose.label</i18n></h4>
-        <div class="row buttons-set-options">
-            <button data-ng-click="remind.step = 'perso'" class="flat-button"><i18n>exercizer.reminder.choose.type1</i18n></button>
-            <button data-ng-click="remind.step = 'auto'" class="flat-button"><i18n>exercizer.reminder.choose.type2</i18n></button>
+        <div class="flex-row justify-center gap-8 vertical-spacing-six">
+            <button data-ng-click="remind.step = 'perso'" class="button button-secondary"><i18n>exercizer.reminder.choose.type1</i18n></button>
+            <button data-ng-click="remind.step = 'auto'" class="button button-secondary"><i18n>exercizer.reminder.choose.type2</i18n></button>
         </div>
     </div>
     <div data-ng-if="remind.step === 'auto'">
-        <h1>
+        <h2>
             <span class="hover-orange" data-ng-click="remind.step = 'choose'"> < <i18n>exercizer.reminder.type2.header</i18n></span>
-        </h1>
+        </h2>
         <h4><i18n>exercizer.reminder.type2.label</i18n></h4>
         <div class="row">
             <i18n>exercizer.reminder.type2.content1</i18n> [[selectedSubjectScheduled.title]] <i18n>exercizer.reminder.type2.content2</i18n> [[ selectedSubjectScheduled.due_date | date:'dd/MM/yyyy' ]] <i18n>exercizer.at</i18n> [[selectedSubjectScheduled.due_date | date:'HH:mm']]</em>
         </div>
     </div>
     <div data-ng-if="remind.step === 'perso'">
-        <h1 class="row">
+        <h2 class="row">
             <span class="hover-orange" data-ng-click="remind.step = 'choose'"> < <i18n>exercizer.reminder.type1.header</i18n></span>
-        </h1>
-        <div class="row horizontal-spacing" style="cursor:default">
+        </h2>
+        <div class="flex-row align-center horizontal-spacing vertical-spacing-four" style="cursor:default">
             <label class="one cell">
                 <i18n>exercizer.reminder.type1.label1</i18n>
             </label>
@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="row vertical-spacing horizontal-spacing">
+        <div class="flex-row align-center vertical-spacing-four horizontal-spacing">
             <label class="one cell">
                 <i18n>exercizer.reminder.type1.label2</i18n>
             </label>
@@ -44,12 +44,12 @@
     </div>
     <div class="row vertical-spacing" data-ng-if="remind.step === 'perso' || remind.step === 'auto'">
         <div class="cell right-magnet">
-            <button data-ng-click="sendReminder()" class="right-magnet">
+            <button data-ng-click="sendReminder()" class="right-magnet button button-accent">
                 <i18n>exercizer.reminder.send</i18n>
             </button>
         </div>
-        <div class="cell right-magnet">
-            <button data-ng-click="closeReminder()" class="right-magnet cancel">
+        <div class="cell right-magnet mr-8">
+            <button data-ng-click="closeReminder()" class="right-magnet button button-secondary">
                 <i18n>exercizer.cancel</i18n>
             </button>
         </div>
