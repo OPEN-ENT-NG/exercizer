@@ -35,7 +35,7 @@
                               &nbsp;<i18n>exercizer.domino.access</i18n> <span data-ng-bind="subjectScheduled.begin_date | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="subjectScheduled.begin_date | date:'HH:mm'"></span>&nbsp;&nbsp;
                             </div>
                         </div>
-                        <div data-ng-show="isSubmittedDateDisplayed()">
+                        <div data-ng-if="!subjectCopy.is_training_copy" data-ng-show="isSubmittedDateDisplayed()">
                             <em class="block">
                                 <i18n>exercizer.domino.delivered</i18n> <span  data-ng-bind="submittedDate | date:'dd/MM/yyyy'"></span> <i18n>exercizer.at</i18n> <span  data-ng-bind="submittedDate | date:'HH:mm'"></span>
                             </em>
