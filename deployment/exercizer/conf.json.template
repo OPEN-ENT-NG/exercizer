@@ -1,5 +1,5 @@
     {
-      "name": "fr.openent~exercizer~3.0.2",
+      "name": "fr.openent~exercizer~3.0-dev-produit-SNAPSHOT",
       "config": {
         "main" : "fr.openent.exercizer.Exercizer",
         "port" : 8105,
