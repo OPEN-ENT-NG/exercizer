@@ -614,5 +614,13 @@
     "exercizer.assistant.teacher.step4.title": "Intégrer vos exercices à vos contenus pédagogiques",
     "exercizer.assistant.teacher.step4.content": "Vous souhaitez faire un lien vers un exercice distribué depuis un message ou un autre contenu? C'est désormais possible directement depuis l'éditeur de textes.",
     "exercizer.assistant.student.step2.title": "Amélioration des sujets à rendre",
-    "exercizer.assistant.student.step2.content": "Les sujets à rendre ont été améliorés : <ul class=\"pl-20\"><li>Possibilité de charger les corrigés d'un sujet directement depuis l'Espace documentaire.</li><li>Possibilité de déposer plusieurs corrections dans un même sujet.</li><li>Possibilité de charger plusieurs fichiers dans les réponses élèves.</li></ul>"
+    "exercizer.assistant.student.step2.content": "Les sujets à rendre ont été améliorés : <ul class=\"pl-20\"><li>Possibilité de déposer des corrigés dans un sujet non distribué et donc le partager dans la Bibliothèque</li><li>Possibilité de charger plusieurs corrigés d'un sujet directement depuis l'Espace documentaire.</li><li>Possibilité de charger plusieurs fichiers dans les réponses élèves.</li></ul>"
+    "exercizer.assistant.step1.title.1d": "Découvrez l'application Exercices",
+    "exercizer.assistant.step1.content.1d": "Créez et distribuez des sujets à rendre ou des activités interactives, gérez les relances, les corrections et accédez aux statistiques des réponses.",
+    "exercizer.assistant.teacher.step2.title.1d": "Créez des activités qui ont du peps",
+    "exercizer.assistant.teacher.step2.content.1d": "QCM, mise en ordre, texte à trous, zone à remplir… Jonglez entre différents types de questions pour réaliser des exercices amusants et stimulants.",
+    "exercizer.assistant.teacher.step3.title.1d": "Découvrez les sujets à rendre",
+    "exercizer.assistant.teacher.step3.content.1d": "Le type de devoir Sujets à rendre vous permet de récupérer des productions d'élèves sous forme de fichiers (images, sons ou même documents bureautique), d'en contrôler la réception, et si besoin d'envoyer des rappels.",
+    "exercizer.assistant.teacher.step4.title.1d": "Intégrer vos exercices à vos contenus pédagogiques",
+    "exercizer.assistant.teacher.step4.content.1d": "Vous souhaitez faire un lien vers un exercice distribué depuis le Cahier de textes, un Blog ou un Wiki ? Diffusez vos exercices depuis les autres applications en créant un lien interne dans l’éditeur de textes.",
 }
