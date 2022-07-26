@@ -237,7 +237,6 @@ class EditSimpleSubjectController {
         this._subjectScheduledService.addCorrectedDoc(this._subject.id, file).then(
             (doc:ISubjectDocument) => {
                 this._subject.files.push(doc);
-                notify.info('exercizer.service.save.corrected');
             },
             (err) => {
                 notify.error(err);
