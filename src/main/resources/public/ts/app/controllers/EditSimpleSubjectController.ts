@@ -237,12 +237,18 @@ class EditSimpleSubjectController {
         this._subjectScheduledService.addCorrectedDoc(this._subject.id, file).then(
             (doc:ISubjectDocument) => {
                 this._subject.files.push(doc);
+                this.closeLightBox();
             },
             (err) => {
                 notify.error(err);
             }
         );
     };
+
+
+    private closeLightBox() {
+        this.fileSelectionDisplayed = false;
+    }
 
     public removeCorrected(file:ISubjectDocument) {
         this._subjectScheduledService.removeCorrectedFile(this._subject.id, file.doc_id).then(
