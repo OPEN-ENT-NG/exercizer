@@ -152,14 +152,15 @@ class PerformSimpleSubjectCopyController {
     };
 
     public get canUpdate(){
-        return this._subjectCopy.submitted_date === null
-            && this._dateService.compare_after(this._dateService.isoToDate(this._subjectScheduled.due_date), new Date(), true);
+        //it's possible to update a homework until corrected date is reached, even if due date is exceeded (Unless it has already submit)
+        return typeof this._subjectCopy.submitted_date !== "string"
+            && this._dateService.compare_after(this._dateService.isoToDate(this._subjectScheduled.corrected_date), new Date(), true);
     };
 
     public canHomeworkSubmit = function(){
         //it's possible to submit a homework if the begin date is passed even if due date is exceeded (Unless it has already submit)
         return this._dateService.compare_after(new Date(), this._dateService.isoToDate(this._subjectScheduled.begin_date), true)
-            && this._subjectCopy.submitted_date === null;
+            && this.canUpdate;
     };
     
     public canShowFuturSubmitLabel = function(){
