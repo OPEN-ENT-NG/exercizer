@@ -135,8 +135,11 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
             console.debug("preview mode skip save: ", this._previewMode);
             return false;
         }
-        this._pendingEdit = this.grainCopyList.filter((e)=>e.getTracker().status=='editing');
-        return this._pendingTasks.length > 0 || this._pendingEdit.length > 0;
+        if (this.grainCopyList) {
+            this._pendingEdit = this.grainCopyList.filter((e)=>e.getTracker().status=='editing');
+            return this._pendingTasks.length > 0 || this._pendingEdit.length > 0;
+        }
+        return false;
     }
 
     guardObjectReset(): void {
@@ -278,31 +281,37 @@ class PerformSubjectCopyController implements IObjectGuardDelegate {
 
                             if (!angular.isUndefined(self._subjectScheduled)) {
 
-                                self._grainCopyService.getListBySubjectCopy(self._subjectCopy).then(
-                                    function(grainCopyList:IGrainCopy[]) {
+                                if (self._subjectCopyService.canPerformACopyAsStudent(self._subjectScheduled, self._subjectCopy)) {
 
-                                        if (!angular.isUndefined(grainCopyList)) {
-                                            self._subjectCopyService.checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId).then(function (isOk) {
-                                                if (self._subjectCopy.current_grain_id) {
-                                                    var currentGrainCopy = grainCopyList.find(grainCopy => grainCopy.id == self._subjectCopy.current_grain_id);
-                                                    self._currentGrainCopy = currentGrainCopy;
-                                                    self._currentGrainCopyChanged(currentGrainCopy);
-                                                }
-                                                self._isCanSubmit = isOk === true;
-                                                self._grainCopyList = grainCopyList;
-                                                self._$scope.$emit('E_GRAIN_COPY_LIST', self._grainCopyList);
-                                                self._eventsHandler(self);
-                                                self._hasDataLoaded = true;                                                
-                                            });
-                                        } else {
-                                            self._$location.path('/dashboard');
+                                    self._grainCopyService.getListBySubjectCopy(self._subjectCopy).then(
+                                        function(grainCopyList:IGrainCopy[]) {
+
+                                            if (!angular.isUndefined(grainCopyList)) {
+                                                self._subjectCopyService.checkIsNotCorrectionOnGoingOrCorrected(subjectCopyId).then(function (isOk) {
+                                                    if (self._subjectCopy.current_grain_id) {
+                                                        var currentGrainCopy = grainCopyList.find(grainCopy => grainCopy.id == self._subjectCopy.current_grain_id);
+                                                        self._currentGrainCopy = currentGrainCopy;
+                                                        self._currentGrainCopyChanged(currentGrainCopy);
+                                                    }
+                                                    self._isCanSubmit = isOk === true;
+                                                    self._grainCopyList = grainCopyList;
+                                                    self._$scope.$emit('E_GRAIN_COPY_LIST', self._grainCopyList);
+                                                    self._eventsHandler(self);
+                                                    self._hasDataLoaded = true;
+                                                });
+                                            } else {
+                                                self._$location.path('/dashboard');
+                                            }
+
+                                        },
+                                        function(err) {
+                                            notify.error(err);
                                         }
+                                    )
 
-                                    },
-                                    function(err) {
-                                        notify.error(err);
-                                    }
-                                )
+                                } else {
+                                    self._$location.path('/dashboard');
+                                }
 
                             } else {
                                 self._$location.path('/dashboard');

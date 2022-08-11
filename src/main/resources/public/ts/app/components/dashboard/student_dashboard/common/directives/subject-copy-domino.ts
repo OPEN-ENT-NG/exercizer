@@ -58,6 +58,13 @@ export let subjectCopyDomino = ng.directive('subjectCopyDomino', ['DateService',
                         $location.path('/subject/copy/perform/' + subjectCopyId);
                     }
                 };
+                scope.subjectImageAction = function (subjectCopyId) {
+                    switch(scope.selectTitle()) {
+                        case "perform": scope.performSubjectCopy(subjectCopyId); break;
+                        case "view": scope.viewSubjectCopy(subjectCopyId); break;
+                        case "training": scope.viewSubjectCopyFinalScore(subjectCopyId); break;
+                    }
+                }
 
                 scope.viewSubjectCopy = function (subjectCopyId) {
                     $location.path('/subject/copy/view/' + subjectCopyId);
