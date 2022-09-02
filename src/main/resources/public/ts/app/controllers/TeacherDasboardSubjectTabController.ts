@@ -83,6 +83,11 @@ class TeacherDashboardSubjectTabController {
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_TOASTER',  self._selectedSubjectList, self._selectedFolderList);
         });
 
+        self._$scope.$on('E_OPEN_FOLDER', function (event, folder) {
+            console.log('emit open folder', folder);
+            self._$scope.$broadcast('E_OPENED_FOLDER', folder)
+        });
+
         self._$scope.$on('E_SELECT_SUBJECT', function (event, subject) {
             self._toggleItem(subject.id, subject.selected, self._selectedSubjectList);
             self._$scope.$broadcast('E_DISPLAY_DASHBOARD_TOASTER',  self._selectedSubjectList, self._selectedFolderList);

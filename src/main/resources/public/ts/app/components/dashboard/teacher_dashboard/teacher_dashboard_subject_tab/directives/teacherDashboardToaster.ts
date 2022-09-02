@@ -79,15 +79,19 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                 actionOnClick : function()
                                 {
                                     var subject;
+                                    var folder;
+                                    
                                     if(scope.folderList.length == 1){
-                                        // folder is selected
-                                        subject = FolderService.folderById(scope.folderList[0]);
+                                        folder = FolderService.folderById(scope.folderList[0]);
+                                        scope.$emit('E_OPEN_FOLDER', folder);
+                                        return false;
                                     }
+
                                     if(scope.subjectList.length == 1){
                                         // subject is selected
                                         subject = SubjectService.getById(scope.subjectList[0]);
                                     }
-
+                                   
                                     // This code is duplicated in teacherDashboardSubjectList.ts
                                     if (subject.id) {
                                         if ('simple' === subject.type) {
@@ -122,7 +126,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                     if(scope.folderList.length == 1){
                                         // folder is selected
                                         var folder = FolderService.folderById(scope.folderList[0]);
-                                        scope.$emit('E_EDIT_FOLDER', folder);
+                                        scope.$emit('E_OPEN_FOLDER', folder);
 
                                     }
                                     if(scope.subjectList.length == 1){
@@ -241,9 +245,9 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                             return (scope.lowerRight == 'owner' || scope.lowerRight == 'manager') && subject.type === 'interactive';
                                         } else {
                                             //is folder
-                                            return true;
+                                            return false;
                                         }
-                                    } else{
+                                    } else {
                                         return false;
                                     }
                                 }

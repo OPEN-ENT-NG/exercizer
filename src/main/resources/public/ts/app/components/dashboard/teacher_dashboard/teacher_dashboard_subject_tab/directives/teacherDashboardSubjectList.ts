@@ -134,6 +134,10 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                     scope.currentFolderId = folder.id;
                 };
 
+                scope.$on('E_OPENED_FOLDER', function (event, folder) {
+                    scope.setCurrentFolder(folder);
+                });
+
                 scope.openSubject = function (subject) {
                     // This code is duplicated in teacherDashboardToaster.ts
                     if (subject.id) {
@@ -165,7 +169,6 @@ export const teacherDashboardSubjectList = ng.directive('teacherDashboardSubject
                 
                 scope.selectSubject = function (subject) {
                     scope.$emit('E_SELECT_SUBJECT', subject);
-
                 };
 
                 scope.clickCreateFolder = function (currentFolderId) {
