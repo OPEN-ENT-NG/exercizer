@@ -51,11 +51,11 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 			"where sd.doc_id = ?";
 		final String query2 = "select sc.owner, scf.metadata "+
 			"from exercizer.subject_copy_file scf "+
-			"inner join exercizer.subject_copy sc on sc.id = scf.subject_copy_id and scf.doc_type='homework' "+
+			"inner join exercizer.subject_copy sc on sc.id = scf.subject_copy_id and scf.file_type='homework' "+
 			"where scf.file_id = ?";
 		final String query3 = "select ss.owner, scf.metadata "+
 			"from exercizer.subject_copy_file scf "+
-			"inner join exercizer.subject_copy sc on sc.id = scf.subject_copy_id and scf.doc_type='corrected' "+
+			"inner join exercizer.subject_copy sc on sc.id = scf.subject_copy_id and scf.file_type='corrected' "+
 			"inner join exercizer.subject_scheduled ss on ss.id = sc.subject_scheduled_id "+
 			"where scf.file_id = ?";
 		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
