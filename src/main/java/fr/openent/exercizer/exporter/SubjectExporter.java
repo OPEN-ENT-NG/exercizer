@@ -106,6 +106,10 @@ public class SubjectExporter {
         final JsonObject customData = Utils.getOrElse(grainData.getJsonObject("custom_data"), new JsonObject());
 
         final String type = customData.getString("answersType");
+        if ("text".equals(type)) {
+            // TODO: Write implementation for Text to fill with free input answer type
+            return;
+        }
         if ("list".equals(type) || "drag".equals(type)) {
             final boolean isDrag = "drag".equals(type);
             this.writeStartQuestion();
