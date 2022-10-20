@@ -1,82 +1,125 @@
 <lightbox data-show="isDisplayed" data-on-close="closeLightbox()">
-    <h2 data-ng-if="step == 'subject'" class="mb-16"><span translate content="[[ isNewSubject ? 'exercizer.create' : 'exercizer.edit' ]]"></span> - <span translate content="[[ type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject' ]]"></span></h2>
-    <h2 data-ng-if="step == 'choose'" class="flex-row align-center m-0 mb-24 ">
-        <svg class="icon-plus mr-12" width="20" height="20">
-            <use href="exercizer/public/assets/icons/icons.svg#plus"></use>
+  <h2 data-ng-if="step == 'subject'" class="mb-16">
+    <span
+      translate
+      content="[[ isNewSubject ? 'exercizer.create' : 'exercizer.edit' ]]"
+    ></span>
+    -
+    <span
+      translate
+      content="[[ type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject' ]]"
+    ></span>
+  </h2>
+  <h2 data-ng-if="step == 'choose'" class="flex-row align-center m-0 mb-24">
+    <svg class="icon-plus mr-12" width="20" height="20">
+      <use href="exercizer/public/assets/icons/icons.svg#plus"></use>
+    </svg>
+    <i18n>exercizer.choose</i18n>
+  </h2>
+  <div data-ng-if="step == 'subject'" class="row">
+    <form name="formSubjectProperties" ng-submit="saveSubjectProperties()">
+      <div class="grid grid-create-subject row">
+        <div class="clip mb-16 relative">
+          <div
+            ng-class="{'default-img': !subject.picture}"
+            data-loading-panel="upload-collaborativeeditor-thumbnail"
+          >
+            <image-select
+              class="image-select-radius"
+              data-ng-model="subject.picture"
+              default="/img/illustrations/exercizer.svg"
+            ></image-select>
+          </div>
+        </div>
+        <div>
+          <div class="twelve cell horizontal-spacing">
+            <input
+              track-input-event="subject.getTracker()"
+              type="text"
+              maxlength="200"
+              data-ng-model="subject.title"
+              class="twelve cell"
+              i18n-placeholder="exercizer.subject.title"
+            />
+            <textarea
+              track-input-event="subject.getTracker()"
+              data-ng-model="subject.description"
+              class="twelve cell subject-edit-textarea"
+              i18n-placeholder="exercizer.subject.desc"
+            ></textarea>
+          </div>
+          <div
+            class="twelve cell horizontal-spacing vertical-spacing flex align-items-center justify-content-end gap-8"
+          >
+            <button
+              type="reset"
+              data-ng-click="closeLightbox()"
+              class="right-magnet cancel button button-secondary"
+            >
+              <i18n>exercizer.cancel</i18n>
+            </button>
+            <button type="submit" class="right-magnet button button-accent">
+              <i18n>exercizer.update</i18n>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div data-ng-if="step == 'choose'" class="grid grid-2 gap-24">
+    <div class="action-card" data-ng-click="nextStep('simple')">
+      <div class="action-card-image">
+        <svg class="icon-depositeInbox" width="48" height="48">
+          <use
+            href="exercizer/public/assets/icons/illustrations.svg#depositeInbox"
+          ></use>
         </svg>
-        <i18n>exercizer.choose</i18n>
-    </h2>
-    <div data-ng-if="step == 'subject'" class="row">
-        <form name="formSubjectProperties" ng-submit="saveSubjectProperties()">
-            <div class="rigid-grid row">
-                <div class="two cell clip height-two">
-                    <div class="absolute" ng-class="{'default-img': !subject.picture}" data-loading-panel="upload-collaborativeeditor-thumbnail">
-                        <image-select
-                            class="image-select-radius"
-                            data-ng-model="subject.picture"
-                            default="/img/illustrations/exercizer.svg"></image-select>
-                    </div>
-                </div>
-                <div class="margin-two">
-                    <div class="twelve cell horizontal-spacing">
-                        <input track-input-event="subject.getTracker()" type="text" maxlength="200" data-ng-model="subject.title" class="twelve cell" i18n-placeholder="exercizer.subject.title">
-                        <textarea track-input-event="subject.getTracker()" data-ng-model="subject.description" class="twelve cell subject-edit-textarea" i18n-placeholder="exercizer.subject.desc"></textarea>
-                    </div>
-                    <div class="twelve cell horizontal-spacing vertical-spacing flex align-items-center justify-content-end gap-8">
-                        <button type="reset" data-ng-click="closeLightbox()" class="right-magnet cancel button button-secondary">
-                            <i18n>exercizer.cancel</i18n>
-                        </button>
-                        <button type="submit" class="right-magnet button button-accent">
-                            <i18n>exercizer.update</i18n>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
+      </div>
+      <div class="action-card-title fs-5">
+        <i18n>exercizer.choose.simple.title</i18n>
+      </div>
+      <div class="action-card-info">
+        <i18n>exercizer.choose.simple.info</i18n>
+      </div>
+      <div class="action-card-link">
+        <button class="button button-link" data-ng-click="nextStep('simple')">
+          <i18n>exercizer.create</i18n>
+          <svg class="icon-arrowRight" width="20" height="20">
+            <use
+              href="exercizer/public/assets/icons/icons.svg#arrowRight"
+            ></use>
+          </svg>
+        </button>
+      </div>
     </div>
-    <div data-ng-if="step == 'choose'" class="grid grid-2 gap-24">
-        <div class="action-card" data-ng-click="nextStep('simple')">
-            <div class="action-card-image">
-                <svg class="icon-depositeInbox" width="48" height="48">
-                    <use href="exercizer/public/assets/icons/illustrations.svg#depositeInbox"></use>
-                </svg>
-            </div>
-            <div class="action-card-title  fs-5">
-                <i18n>exercizer.choose.simple.title</i18n>
-            </div>
-            <div class="action-card-info">
-                <i18n>exercizer.choose.simple.info</i18n>
-            </div>
-            <div class="action-card-link">
-                <button class="button button-link" data-ng-click="nextStep('simple')">
-                    <i18n>exercizer.create</i18n>
-                    <svg class="icon-arrowRight" width="20" height="20">
-                        <use href="exercizer/public/assets/icons/icons.svg#arrowRight"></use>
-                    </svg>
-                </button>
-            </div>
-        </div>
 
-        <div class="action-card" data-ng-click="nextStep('interactive')">
-            <div class="action-card-image">
-                <svg class="icon-checklist" width="48" height="48">
-                    <use href="exercizer/public/assets/icons/illustrations.svg#checklist"></use>
-                </svg>
-            </div>
-            <div class="action-card-title  fs-5">
-                <i18n>exercizer.choose.interactive.title</i18n>
-            </div>
-            <div class="action-card-info">
-                <i18n>exercizer.choose.interactive.info</i18n>
-            </div>
-            <div class="action-card-link">
-                <button class="button button-link" data-ng-click="nextStep('interactive')">
-                    <i18n>exercizer.create</i18n>
-                    <svg class="icon-arrowRight" width="20" height="20">
-                        <use href="exercizer/public/assets/icons/icons.svg#arrowRight"></use>
-                    </svg>
-                </button>
-            </div>
-        </div>
+    <div class="action-card" data-ng-click="nextStep('interactive')">
+      <div class="action-card-image">
+        <svg class="icon-checklist" width="48" height="48">
+          <use
+            href="exercizer/public/assets/icons/illustrations.svg#checklist"
+          ></use>
+        </svg>
+      </div>
+      <div class="action-card-title fs-5">
+        <i18n>exercizer.choose.interactive.title</i18n>
+      </div>
+      <div class="action-card-info">
+        <i18n>exercizer.choose.interactive.info</i18n>
+      </div>
+      <div class="action-card-link">
+        <button
+          class="button button-link"
+          data-ng-click="nextStep('interactive')"
+        >
+          <i18n>exercizer.create</i18n>
+          <svg class="icon-arrowRight" width="20" height="20">
+            <use
+              href="exercizer/public/assets/icons/icons.svg#arrowRight"
+            ></use>
+          </svg>
+        </button>
+      </div>
     </div>
+  </div>
 </lightbox>
