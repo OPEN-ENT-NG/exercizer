@@ -40,13 +40,13 @@
 
         <div class="row mb-16">
             <form name="formSubjectProperties">
-                <div class="rigid-grid row">
-                    <div class="two cell clip height-two">
-                        <div class="absolute" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="editSimpleSubjectController.readOnly">
+                <div class="grid grid-create-subject row">
+                    <div class="clip mb-16 relative">
+                        <div data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="editSimpleSubjectController.readOnly">
                                 <img ng-src="[[editSimpleSubjectController.subject.picture]]" ng-if="editSimpleSubjectController.subject.picture" class="absolute" />
                                 <img skin-src="/img/illustrations/exercizer.svg" ng-if="!editSimpleSubjectController.subject.picture" class="absolute" />
                         </div>
-                        <div class="absolute" ng-class="{'default-img': editSimpleSubjectController.hasDefaultImage}" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="!editSimpleSubjectController.readOnly">
+                        <div ng-class="{'default-img': editSimpleSubjectController.hasDefaultImage}" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="!editSimpleSubjectController.readOnly">
                             <image-select
                                 class="image-select-radius"
                                 readonly="editSimpleSubjectController.readOnly"
@@ -55,7 +55,7 @@
                                 default="/img/illustrations/exercizer.svg"></image-select>
                         </div>
                     </div>
-                    <div class="margin-two height-three pl-16">
+                    <div>
                         <div class="twelve cell">
                             <div data-ng-if="editSimpleSubjectController.readOnly" class="twelve cell">[[editSimpleSubjectController.subject.title]]</div>
                             <input type="text" maxlength="200" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.title" class="twelve cell" i18n-placeholder="exercizer.simple.default.placeholder">

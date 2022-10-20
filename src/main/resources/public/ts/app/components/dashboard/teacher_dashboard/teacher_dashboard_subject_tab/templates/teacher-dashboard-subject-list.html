@@ -1,372 +1,520 @@
 <div class="grid grid-layout-2">
-    <!-- navigation -->
-    <aside class="only-large-desktop">
-        <div class="row">
-            <div class="twelve cell search-control mb-24" data-ng-click="clickOnAutoComplete()">
-                <autocomplete
-                        options="autocomplete.subjectList"
-                        ng-change="clickOnItem(selectedItem)"
-                        ng-model="selectedItem">
-                </autocomplete>
-            </div>
+  <!-- navigation -->
+  <aside class="only-large-desktop">
+    <div class="row">
+      <div
+        class="twelve cell search-control mb-24"
+        data-ng-click="clickOnAutoComplete()"
+      >
+        <autocomplete
+          options="autocomplete.subjectList"
+          ng-change="clickOnItem(selectedItem)"
+          ng-model="selectedItem"
+        >
+        </autocomplete>
+      </div>
+    </div>
+    <nav
+      class="vertical dragging-zone-folder"
+      data-ng-init="display.tab = 'mySubject'; display.mySubjectSubFolder = true;"
+    >
+      <ul>
+        <li>
+          <a
+            data-ng-class="{selected: currentFolderId == null && display.tab == 'mySubject', opened: display.mySubjectSubFolder}"
+            dragdrop="dropToRoot($originalEvent)"
+          >
+            <i
+              data-ng-click="display.mySubjectSubFolder = !display.mySubjectSubFolder"
+              class="arrow"
+            ></i>
+            <span data-ng-click="goToRoot(); display.tab = 'mySubject'"
+              ><i18n>exercizer.dashboard.learner.tab1</i18n></span
+            >
+          </a>
+          <div
+            data-ng-repeat="item in  folderList() | orderObjectBy:'modified':true | filterIf:display.mySubjectSubFolder"
+          >
+            <folder-nav-item
+              item="item"
+              is-root="true"
+              parent-id="parentId"
+              current-folder-id="currentFolderId"
+              set-current-folder-fn="setCurrentFolder"
+            ></folder-nav-item>
+          </div>
+        </li>
+        <li>
+          <a
+            data-ng-class="{selected: currentFolderId == null && display.tab == 'subjectShared'}"
+          >
+            <i class="arrow"></i>
+            <span data-ng-click="goToRoot(); display.tab = 'subjectShared'"
+              ><i18n>exercizer.shared</i18n></span
+            >
+          </a>
+        </li>
+      </ul>
+      <a
+        class="classic-link"
+        data-ng-click="clickCreateFolder(currentFolderId)"
+      >
+        <i18n>exercizer.new.folder</i18n>
+      </a>
+    </nav>
+  </aside>
+  <!-- main page -->
+  <section>
+    <div class="flex align-items-center justify-space-between mb-24">
+      <div class="flex-inline gap-8">
+        <div class="cell">
+          <button
+            class="button button-accent flex-row align-center text-body px-16 mr-16 gap-8"
+            data-ng-click="addNewSubject(currentFolderId)"
+            workflow="exercizer.create"
+          >
+            <svg class="icon-plus" width="20" height="20">
+              <use
+                xlink:href="exercizer/public/assets/icons/icons.svg#plus"
+              ></use>
+            </svg>
+            <i18n>exercizer.new.subject</i18n>
+          </button>
         </div>
-        <nav class="vertical dragging-zone-folder" data-ng-init="display.tab = 'mySubject'; display.mySubjectSubFolder = true;">
-            <ul>
-                <li>
-                    <a  data-ng-class="{selected: currentFolderId == null && display.tab == 'mySubject', opened: display.mySubjectSubFolder}"
-                        dragdrop="dropToRoot($originalEvent)">
-                        <i data-ng-click="display.mySubjectSubFolder = !display.mySubjectSubFolder" class="arrow"></i>
-                        <span data-ng-click="goToRoot(); display.tab = 'mySubject'" ><i18n>exercizer.dashboard.learner.tab1</i18n></span>
-                    </a>
-                    <div data-ng-repeat="item in  folderList() | orderObjectBy:'modified':true | filterIf:display.mySubjectSubFolder" >
-                        <folder-nav-item item="item"
-                                         is-root="true"
-                                         parent-id="parentId"
-                                         current-folder-id="currentFolderId"
-                                         set-current-folder-fn="setCurrentFolder"></folder-nav-item>
-                    </div>
-                </li>
-                <li>
-                    <a  data-ng-class="{selected: currentFolderId == null && display.tab == 'subjectShared'}">
-                        <i class="arrow"></i>
-                        <span data-ng-click="goToRoot(); display.tab = 'subjectShared'"><i18n>exercizer.shared</i18n></span>
-                    </a>
-                </li>
-            </ul>
-            <a class="classic-link" data-ng-click="clickCreateFolder(currentFolderId)">
-                <i18n>exercizer.new.folder</i18n>
-            </a>
-        </nav>
-    </aside>
-    <!-- main page -->
-    <section>
-        <div class="flex align-items-center justify-space-between mb-24">
-            <div class="flex-inline gap-8">
-                <div class="cell">
-                    <button
-                        class="button button-accent flex-row align-center text-body px-16 mr-16 gap-8"
-                        data-ng-click="addNewSubject(currentFolderId)"
-                        workflow="exercizer.create">
-                        <svg class="icon-plus" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#plus"></use></svg>
-                        <i18n>exercizer.new.subject</i18n>
-                    </button>
+        <dropdown-buttons class="cell">
+          <open><i class="manage"></i></open>
+          <options>
+            <bt ng-click="importNewSubject()">
+              <i18n>exercizer.import</i18n>
+            </bt>
+            <bt ng-click="openArchive()">
+              <i18n>exercizer.archive.open</i18n>
+            </bt>
+          </options>
+        </dropdown-buttons>
+      </div>
+      <div class="cell right-magnet">
+        <div class="choice-view flex-inline gap-16">
+          <svg
+            class="icon-applications"
+            data-ng-click="setDisplayList('domino')"
+            data-ng-class="{selected: displayList == 'domino'}"
+            width="24"
+            height="24"
+          >
+            <use
+              href="exercizer/public/assets/icons/icons.svg#applications"
+            ></use>
+          </svg>
+          <svg
+            class="icon-list"
+            data-ng-click="setDisplayList('array')"
+            data-ng-class="{selected: displayList == 'array'}"
+            width="24"
+            height="24"
+          >
+            <use href="exercizer/public/assets/icons/icons.svg#list"></use>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- empty -->
+    <div
+      class="row"
+      data-ng-show="subjectList().length === 0 && folderList().length === 0"
+    >
+      <h2><i18n>exercizer.empty.subjects</i18n></h2>
+    </div>
+
+    <div data-ng-show="subjectList().length > 0 || folderList().length > 0">
+      <!-- domino part -->
+      <div class="row" data-ng-show="displayList == 'domino'">
+        <div class="dominos fallen index">
+          <!-- folder part -->
+          <explorer
+            ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'modified':true"
+            ng-model="folder.selected"
+            ng-change="selectFolder(folder)"
+            on-open="openFolder(folder)"
+            class="item"
+          >
+            <div>
+              <section class="domino">
+                <div
+                  class="top"
+                  dragstart="drag(folder, $originalEvent)"
+                  dragcondition="dragFolderCondition(folder)"
+                  dragdrop="dropTo(folder, $originalEvent)"
+                  dropcondition="dropFolderCondition(folder)"
+                >
+                  <a class="container">
+                    <i class="folder-large" style="cursor: move !important"></i>
+                  </a>
                 </div>
-                <dropdown-buttons class="cell">
-                    <open><i class="manage" ></i></open>
-                    <options>
-                        <bt ng-click="importNewSubject()" >
-                            <i18n>exercizer.import</i18n>
-                        </bt>
-                        <bt ng-click="openArchive()" >
-                            <i18n>exercizer.archive.open</i18n>
-                        </bt>
-                    </options>
-                </dropdown-buttons>
+                <div class="bottom">
+                  <div class="content">
+                    <div class="cell">
+                      <strong>[[folder.label]]</strong>
+                    </div>
+                  </div>
+                </div>
+              </section>
             </div>
-            <div class="cell right-magnet">
-              <div class="choice-view flex-inline gap-16">
-                <svg
-                    class="icon-applications"
-                    data-ng-click="setDisplayList('domino')"
-                    data-ng-class="{selected: displayList == 'domino'}"
-                    width="24"
-                    height="24">
-                    <use href="exercizer/public/assets/icons/icons.svg#applications"></use>
-                </svg>
-                <svg
-                    class="icon-list"
-                    data-ng-click="setDisplayList('array')"
-                    data-ng-class="{selected: displayList == 'array'}"
-                    width="24"
-                    height="24">
-                    <use href="exercizer/public/assets/icons/icons.svg#list"></use>
-                </svg>
+          </explorer>
+          <!-- subject part -->
+          <!-- my subject -->
+          <explorer
+            ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'modified':true"
+            ng-model="subject.selected"
+            ng-change="selectSubject(subject)"
+            on-open="openSubject(subject)"
+            class="item"
+          >
+            <div>
+              <section class="domino">
+                <div
+                  class="top"
+                  data-ng-if="display.tab == 'mySubject'"
+                  dragstart="drag(subject, $originalEvent)"
+                  dragcondition="dragSubjectCondition(subject)"
+                  dragdrop="dropTo(subject, $originalEvent)"
+                  dropcondition="dropSubjectCondition.dropCondition(subject)"
+                >
+                  <img
+                    class="absolute"
+                    data-ng-src="[[getSubjectPicture(subject)]]"
+                  />
+                </div>
+                <div class="top" data-ng-if="display.tab == 'subjectShared'">
+                  <img
+                    class="absolute"
+                    data-ng-src="[[getSubjectPicture(subject)]]"
+                  />
+                </div>
+                <div class="bottom">
+                  <div class="content">
+                    <div class="cell">
+                      <div class="flex-inline">
+                        <div class="cell title-icon">
+                          <i
+                            class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]"
+                            tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"
+                          ></i>
+                        </div>
+                        <strong class="title"
+                          >[[ subject.title | limitTo: 35 ]][[
+                          subject.title.length > 35 ? '...' : '']]</strong
+                        >
+                      </div>
+                      <div class="row">
+                        <em class="domino-date" data-ng-if="subject.modified"
+                          ><i18n>exercizer.domino.modified</i18n>
+                          [[subject.modified | date: 'dd/MM/yyyy']]</em
+                        >
+                      </div>
+                      <div class="row" data-ng-if="!amITheAuthor(subject)">
+                        <em data-ng-if="subject.modified"
+                          ><i18n>exercizer.author</i18n> :
+                          [[subject.owner_username]]</em
+                        >
+                      </div>
+                    </div>
+                    <div
+                      data-ng-show="canManageSubject()"
+                      class="bottom-locked eleven vertical-spacing-twice"
+                    >
+                      <div
+                        class="right-magnet cell"
+                        data-ng-show="subject.shared.length > 0"
+                      >
+                        <i
+                          class="shared"
+                          style="position: inherit; bottom: 0px; right: 10px"
+                        ></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </explorer>
+        </div>
+      </div>
+
+      <!-- array part -->
+      <div class="row" data-ng-show="displayList == 'array'">
+        <table class="list-view">
+          <thead>
+            <tr>
+              <th scope="col" class="icon">
+                <input
+                  type="checkbox"
+                  ng-model="data.selectAll"
+                  ng-click="$event.stopPropagation()"
+                  ng-change="selectAllFn(data.selectAll)"
+                />
+              </th>
+              <!-- icon folder -->
+              <th data-ng-if="display.tab == 'mySubject'">
+                <i class="drag-anchor"></i>
+              </th>
+              <th scope="col">
+                <span><i18n>exercizer.subject.title</i18n></span>
+              </th>
+              <th scope="col">
+                <span><i18n>exercizer.author</i18n></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- folder list-->
+            <tr
+              data-ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'modified':true"
+            >
+              <td>
+                <input
+                  type="checkbox"
+                  ng-model="folder.selected"
+                  ng-click="$event.stopPropagation()"
+                  ng-change="selectFolder(folder)"
+                />
+              </td>
+              <td
+                data-ng-if="display.tab == 'mySubject'"
+                dragstart="drag(folder, $originalEvent)"
+                dragcondition="dragFolderCondition(folder)"
+                dragdrop="dropTo(folder, $originalEvent)"
+                dropcondition="dropFolderCondition(folder)"
+              >
+                <i class="folder"></i>
+              </td>
+              <td>
+                <a data-ng-click="openFolder(folder)">[[folder.label]]</a>
+              </td>
+              <td></td>
+            </tr>
+            <!-- subject  list -->
+            <tr
+              data-ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'modified':true"
+            >
+              <td>
+                <input
+                  type="checkbox"
+                  ng-model="subject.selected"
+                  ng-click="$event.stopPropagation()"
+                  ng-change="selectSubject(subject)"
+                />
+              </td>
+              <td
+                data-ng-if="display.tab == 'mySubject'"
+                dragstart="drag(subject, $originalEvent)"
+                dragcondition="dragSubjectCondition(subject)"
+                dragdrop="dropTo(subject, $originalEvent)"
+                dropcondition="dropSubjectCondition(subject)"
+              >
+                <i
+                  class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]"
+                  tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"
+                ></i>
+              </td>
+              <td>
+                <a data-ng-click="openSubject(subject)">[[subject.title]]</a>
+              </td>
+              <td>
+                <a>[[subject.owner_username]]</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  <lightbox data-show="isImportDisplayed" data-on-close="closeImportLightbox()">
+    <h2><i18n>exercizer.title</i18n> - <i18n>exercizer.import</i18n></h2>
+    <div class="row" data-ng-show="stateImport == 'begin'">
+      <div class="row">
+        <span style="font-weight: bold"
+          ><i18n>exercizer.import.intro</i18n></span
+        >
+      </div>
+      <div class="row vertical-spacing">
+        <i18n>exercizer.import.feedback</i18n>
+      </div>
+      <div class="row vertical-spacing">
+        <div class="seven cell" style="font-weight: bold">
+          <i18n>exercizer.import.moodle</i18n>
+        </div>
+        <div class="five cell" style="font-weight: bold">
+          <i18n>exercizer.import.tdbase</i18n>
+        </div>
+        <div class="seven cell">
+          <ul>
+            <li><i18n>exercizer.import.moodle.type1</i18n></li>
+            <li><i18n>exercizer.import.moodle.type2</i18n></li>
+            <li><i18n>exercizer.import.moodle.type3</i18n></li>
+            <li><i18n>exercizer.import.moodle.type4</i18n></li>
+          </ul>
+        </div>
+        <div class="five cell">
+          <ul>
+            <li><i18n>exercizer.import.tdbase.type1</i18n></li>
+            <li><i18n>exercizer.import.tdbase.type2</i18n></li>
+            <li><i18n>exercizer.import.tdbase.type3</i18n></li>
+            <li><i18n>exercizer.import.tdbase.type4</i18n></li>
+            <li><i18n>exercizer.import.tdbase.type5</i18n></li>
+            <li><i18n>exercizer.import.tdbase.type6</i18n></li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <i18n>exercizer.import.feedback2</i18n>
+      </div>
+      <div class="row vertical-spacing" style="font-weight: bold">
+        <i18n>exercizer.import.info</i18n> :
+      </div>
+      <div class="row">
+        <ul>
+          <li><i18n>exercizer.import.info1</i18n></li>
+          <li><i18n>exercizer.import.info2</i18n></li>
+        </ul>
+      </div>
+      <div class="twelve cell horizontal-spacing vertical-spacing">
+        <button data-ng-click="setStateImport('import')" class="right-magnet">
+          <i18n>exercizer.next</i18n>
+        </button>
+        <button
+          data-ng-click="closeImportLightbox()"
+          class="right-magnet cancel"
+        >
+          <i18n>exercizer.cancel</i18n>
+        </button>
+      </div>
+    </div>
+    <div class="row" data-ng-show="stateImport == 'import'">
+      <form id="idFormImport" name="formImport">
+        <div class="rigid-grid row vertical-spacing">
+          <div class="two cell clip height-two">
+            <div
+              class="absolute"
+              ng-class="{'default-img': !importSubject.picture}"
+              data-loading-panel="upload-collaborativeeditor-thumbnail"
+            >
+              <image-select
+                class="image-select-radius"
+                data-ng-model="importSubject.picture"
+                default="/img/illustrations/exercizer.svg"
+              ></image-select>
+            </div>
+          </div>
+          <div class="seven cell margin-two">
+            <div class="twelve cell horizontal-spacing">
+              <input
+                type="text"
+                data-ng-model="importSubject.title"
+                class="twelve cell"
+                i18n-placeholder="exercizer.subject.title"
+              />
+              <textarea
+                data-ng-model="importSubject.description"
+                class="twelve cell subject-edit-textarea"
+                i18n-placeholder="exercizer.subject.desc"
+              ></textarea>
+            </div>
+            <div
+              class="twelve cell horizontal-spacing select-file input-block"
+              style="margin-top: 5px; margin-bottom: 5px"
+            >
+              <button class="file-button">
+                <i18n>exercizer.import.choose</i18n>
+              </button>
+              <input
+                style="width: 70% !important"
+                ng-readonly="true"
+                type="text"
+                ng-model="fileImportName"
+                data-display-file
+                class="nomargin"
+              />
+              <div class="hidden-content">
+                <input
+                  type="file"
+                  style="z-index: -1"
+                  files-input-change="setFilesName(this)"
+                  ng-model="newFiles"
+                />
               </div>
             </div>
-        </div>
 
-        <!-- empty -->
-        <div class="row" data-ng-show="subjectList().length === 0 && folderList().length === 0">
-            <h2><i18n>exercizer.empty.subjects</i18n></h2>
-        </div>
-
-        <div data-ng-show="subjectList().length > 0 || folderList().length > 0">
-            <!-- domino part -->
-            <div class="row" data-ng-show="displayList == 'domino'">
-                <div class="dominos fallen index">
-                    <!-- folder part -->
-                    <explorer
-                        ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'modified':true"
-                        ng-model="folder.selected"
-                        ng-change="selectFolder(folder)"
-                        on-open="openFolder(folder)"
-                        class="item"
-                    >
-                        <div>
-                            <section class="domino">
-                                    <div class="top"
-                                     dragstart="drag(folder, $originalEvent)"
-                                     dragcondition="dragFolderCondition(folder)"
-                                     dragdrop="dropTo(folder, $originalEvent)"
-                                     dropcondition="dropFolderCondition(folder)">
-                                    <a class="container">
-                                        <i class="folder-large" style="cursor: move!important;"></i>
-                                    </a>
-                                </div>
-                                <div class="bottom">
-                                    <div class="content">
-                                        <div class="cell">
-                                            <strong>[[folder.label]]</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    </explorer>
-                    <!-- subject part -->
-                    <!-- my subject -->
-                    <explorer
-                        ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'modified':true"
-                        ng-model="subject.selected"
-                        ng-change="selectSubject(subject)"
-                        on-open="openSubject(subject)"
-                        class="item"
-                    >
-                        <div>
-                            <section class="domino">
-                                <div class="top"
-                                     data-ng-if="display.tab == 'mySubject'"
-                                     dragstart="drag(subject, $originalEvent)"
-                                     dragcondition="dragSubjectCondition(subject)"
-                                     dragdrop="dropTo(subject, $originalEvent)"
-                                     dropcondition="dropSubjectCondition.dropCondition(subject)">
-                                    <img class="absolute" data-ng-src="[[getSubjectPicture(subject)]]" />
-                                </div>
-                                <div class="top"
-                                     data-ng-if="display.tab == 'subjectShared'">
-                                    <img class="absolute" data-ng-src="[[getSubjectPicture(subject)]]" />
-                                </div>
-                                <div class="bottom">
-                                    <div class="content">
-                                        <div class="cell">
-                                            <div class="flex-inline">
-                                                <div class="cell title-icon">
-                                                    <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
-                                                </div>
-                                                <strong class="title">[[ subject.title | limitTo: 35  ]][[ subject.title.length > 35 ? '...' : '']]</strong>
-                                            </div>
-                                            <div class="row">
-                                                <em class="domino-date" data-ng-if="subject.modified"><i18n>exercizer.domino.modified</i18n> [[subject.modified | date: 'dd/MM/yyyy']]</em>
-                                            </div>
-                                            <div class="row" data-ng-if="!amITheAuthor(subject)">
-                                                <em data-ng-if="subject.modified"><i18n>exercizer.author</i18n> :  [[subject.owner_username]]</em>
-                                            </div>
-                                        </div>
-                                        <div data-ng-show="canManageSubject()" class="bottom-locked eleven vertical-spacing-twice">
-                                            <div class="right-magnet cell" data-ng-show="subject.shared.length > 0"><i class="shared" style="position: inherit; bottom: 0px; right: 10px;"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    </explorer>
-
-                </div>
-            </div>
-
-            <!-- array part -->
-            <div class="row" data-ng-show="displayList == 'array'">
-                <table class="list-view">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="icon">
-                                <input
-                                    type="checkbox"
-                                    ng-model="data.selectAll"
-                                    ng-click="$event.stopPropagation()"
-                                    ng-change="selectAllFn(data.selectAll)"
-                                />
-                            </th>
-                            <!-- icon folder -->
-                            <th data-ng-if="display.tab == 'mySubject'"><i class="drag-anchor" ></i></th>
-                            <th scope="col">
-                                <span><i18n>exercizer.subject.title</i18n></span>
-                            </th>
-                            <th scope="col">
-                                <span><i18n>exercizer.author</i18n></span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <!-- folder list-->
-                        <tr data-ng-repeat="folder in folderList() | filter: filterFolderByParentFolderId() | filter: filterFolderTab(display.tab) | orderObjectBy:'modified':true">
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    ng-model="folder.selected"
-                                    ng-click="$event.stopPropagation()"
-                                    ng-change="selectFolder(folder)"
-                                />
-                            </td>
-                            <td data-ng-if="display.tab == 'mySubject'"
-                                dragstart="drag(folder, $originalEvent)"
-                                dragcondition="dragFolderCondition(folder)"
-                                dragdrop="dropTo(folder, $originalEvent)"
-                                dropcondition="dropFolderCondition(folder)">
-                                <i class="folder"></i>
-                            </td>
-                            <td>
-                                <a data-ng-click="openFolder(folder)">[[folder.label]]</a>
-                            </td>
-                            <td></td>
-                        </tr>
-                    <!-- subject  list -->
-                        <tr data-ng-repeat="subject in subjectList() | filter: filterSubjectByParentFolderId(display.tab) | filter: filterSubjectTab(display.tab) | orderObjectBy:'modified':true">
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    ng-model="subject.selected"
-                                    ng-click="$event.stopPropagation()"
-                                    ng-change="selectSubject(subject)"
-                                />
-                            </td>
-                            <td data-ng-if="display.tab == 'mySubject'"
-                                dragstart="drag(subject, $originalEvent)"
-                                dragcondition="dragSubjectCondition(subject)"
-                                dragdrop="dropTo(subject, $originalEvent)"
-                                dropcondition="dropSubjectCondition(subject)">
-                                <i class="[[subject.type === 'simple' ? 'file-upload' : 'file-interactive']]" tooltip="[[subject.type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject']]"></i>
-                            </td>
-                            <td>
-                                <a data-ng-click="openSubject(subject)">[[subject.title]]</a>
-                            </td>
-                            <td>
-                                <a>[[subject.owner_username]]</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-    <lightbox data-show="isImportDisplayed" data-on-close="closeImportLightbox()">
-        <h2><i18n>exercizer.title</i18n> - <i18n>exercizer.import</i18n></h2>
-        <div class="row" data-ng-show="stateImport == 'begin'">
-            <div class="row">
-                <span style="font-weight: bold"><i18n>exercizer.import.intro</i18n></span>
-            </div>
-            <div class="row vertical-spacing">
-                <i18n>exercizer.import.feedback</i18n>
-            </div>
-            <div class="row vertical-spacing">
-                <div class="seven cell" style="font-weight: bold"><i18n>exercizer.import.moodle</i18n></div>
-                <div class="five cell" style="font-weight: bold"><i18n>exercizer.import.tdbase</i18n></div>
-                <div class="seven cell">
-                    <ul>
-                        <li><i18n>exercizer.import.moodle.type1</i18n></li>
-                        <li><i18n>exercizer.import.moodle.type2</i18n></li>
-                        <li><i18n>exercizer.import.moodle.type3</i18n></li>
-                        <li><i18n>exercizer.import.moodle.type4</i18n></li>
-                    </ul>
-                </div>
-                <div class="five cell">
-                    <ul>
-                        <li><i18n>exercizer.import.tdbase.type1</i18n></li>
-                        <li><i18n>exercizer.import.tdbase.type2</i18n></li>
-                        <li><i18n>exercizer.import.tdbase.type3</i18n></li>
-                        <li><i18n>exercizer.import.tdbase.type4</i18n></li>
-                        <li><i18n>exercizer.import.tdbase.type5</i18n></li>
-                        <li><i18n>exercizer.import.tdbase.type6</i18n></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row">
-                <i18n>exercizer.import.feedback2</i18n>
-            </div>
-            <div class="row vertical-spacing" style="font-weight: bold">
-                <i18n>exercizer.import.info</i18n> :
-            </div>
-            <div class="row" >
-                <ul>
-                    <li><i18n>exercizer.import.info1</i18n></li>
-                    <li><i18n>exercizer.import.info2</i18n></li>
-                </ul>
-            </div>
             <div class="twelve cell horizontal-spacing vertical-spacing">
-                <button data-ng-click="setStateImport('import')" class="right-magnet">
-                    <i18n>exercizer.next</i18n>
-                </button>
-                <button data-ng-click="closeImportLightbox()" class="right-magnet cancel">
-                    <i18n>exercizer.cancel</i18n>
-                </button>
+              <span style="padding: 10px" data-ng-show="loadingImport">
+                <i class="left-magnet loading" style="padding: 10px"></i>
+                <strong class="left-magnet" style="padding: 10px"
+                  ><i18n>exercizer.import.loading</i18n></strong
+                >
+              </span>
+              <button
+                data-ng-click="saveImportSubject()"
+                class="right-magnet"
+                data-ng-disabled="loadingImport"
+              >
+                <i18n>exercizer.import.launch</i18n>
+              </button>
+              <button
+                data-ng-click="closeImportLightbox()"
+                class="right-magnet cancel"
+                data-ng-disabled="loadingImport"
+              >
+                <i18n>exercizer.cancel</i18n>
+              </button>
             </div>
+          </div>
         </div>
-        <div class="row" data-ng-show="stateImport == 'import'">
-            <form id="idFormImport" name="formImport">
-                <div class="rigid-grid row vertical-spacing">
-                    <div class="two cell clip height-two">
-                        <div class="absolute" ng-class="{'default-img': !importSubject.picture}" data-loading-panel="upload-collaborativeeditor-thumbnail">
-                            <image-select
-                                class="image-select-radius"
-                                data-ng-model="importSubject.picture"
-                                default="/img/illustrations/exercizer.svg"></image-select>
-                        </div>
-                    </div>
-                    <div class="margin-two">
-                        <div class="twelve cell horizontal-spacing">
-                            <input type="text" data-ng-model="importSubject.title" class="twelve cell" i18n-placeholder="exercizer.subject.title">
-                            <textarea data-ng-model="importSubject.description" class="twelve cell subject-edit-textarea" i18n-placeholder="exercizer.subject.desc"></textarea>
-                        </div>
-                        <div class="twelve cell horizontal-spacing select-file input-block" style="margin-top:5px;margin-bottom:5px">
-                            <button class="file-button"><i18n>exercizer.import.choose</i18n></button>
-                            <input style="width:70% !important" ng-readonly="true" type="text" ng-model="fileImportName" data-display-file class="nomargin" />
-                            <div class="hidden-content">
-                                <input type="file" style="z-index:-1" files-input-change="setFilesName(this)"  ng-model="newFiles" />
-                            </div>
-                        </div>
-
-                        <div class="twelve cell horizontal-spacing vertical-spacing">
-                            <span style="padding:10px" data-ng-show="loadingImport">
-                                <i class="left-magnet loading" style="padding:10px"></i>
-                                <strong class="left-magnet" style="padding:10px"><i18n>exercizer.import.loading</i18n></strong>
-                            </span>
-                            <button data-ng-click="saveImportSubject()" class="right-magnet" data-ng-disabled="loadingImport">
-                                <i18n>exercizer.import.launch</i18n>
-                            </button>
-                            <button data-ng-click="closeImportLightbox()" class="right-magnet cancel" data-ng-disabled="loadingImport">
-                                <i18n>exercizer.cancel</i18n>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+      </form>
+    </div>
+    <div class="row" data-ng-show="stateImport == 'result'">
+      <div class="height-three">
+        <div class="twelve cell horizontal-spacing">
+          <div style="font-weight: bold">
+            <i18n>exercizer.import.count</i18n>[[grainImportCount]]
+          </div>
         </div>
-        <div class="row" data-ng-show="stateImport == 'result'">
-            <div class="height-three">
-                <div class="twelve cell horizontal-spacing">
-                    <div style="font-weight: bold"><i18n>exercizer.import.count</i18n>[[grainImportCount]]</div>
-                </div>
-                <div class="twelve cell horizontal-spacing vertical-spacing">
-                    <div style="font-weight: bold"><i18n>exercizer.import.unsupported</i18n> :</div>
-                </div>
-                <div class="twelve cell horizontal-spacing vertical-spacing">
-                    <div style="overflow-y: auto; max-height:150px; border:1px dotted lightgrey;">
-                        <ul>
-                            <li data-ng-repeat="item in unsupported track by $index">{{item}}</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="twelve cell horizontal-spacing vertical-spacing">
-                    <button data-ng-click="goToSubjectAfterImport()" class="right-magnet">
-                        <i18n>exercizer.import.view</i18n>
-                    </button>
-                    <button data-ng-click="closeImportLightbox()" class="right-magnet cancel">
-                        <i18n>exercizer.close</i18n>
-                    </button>
-                </div>
-            </div>
+        <div class="twelve cell horizontal-spacing vertical-spacing">
+          <div style="font-weight: bold">
+            <i18n>exercizer.import.unsupported</i18n> :
+          </div>
         </div>
-    </lightbox>
-    <library-prompt data-ng-if="displayLibraryIncentive()" data-origin-module="'exercizer'"></library-prompt>
+        <div class="twelve cell horizontal-spacing vertical-spacing">
+          <div
+            style="
+              overflow-y: auto;
+              max-height: 150px;
+              border: 1px dotted lightgrey;
+            "
+          >
+            <ul>
+              <li data-ng-repeat="item in unsupported track by $index">
+                {{item}}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="twelve cell horizontal-spacing vertical-spacing">
+          <button data-ng-click="goToSubjectAfterImport()" class="right-magnet">
+            <i18n>exercizer.import.view</i18n>
+          </button>
+          <button
+            data-ng-click="closeImportLightbox()"
+            class="right-magnet cancel"
+          >
+            <i18n>exercizer.close</i18n>
+          </button>
+        </div>
+      </div>
+    </div>
+  </lightbox>
+  <library-prompt
+    data-ng-if="displayLibraryIncentive()"
+    data-origin-module="'exercizer'"
+  ></library-prompt>
 </div>
