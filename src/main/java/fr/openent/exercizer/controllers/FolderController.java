@@ -22,6 +22,7 @@ package fr.openent.exercizer.controllers;
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
 
+import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.filters.MassOwnerOnly;
 import fr.openent.exercizer.services.IFolderService;
 import fr.openent.exercizer.services.impl.FolderServiceSqlImpl;
@@ -46,8 +47,8 @@ public class FolderController extends ControllerHelper {
     private final IFolderService folderService;
     private static final I18n i18n = I18n.getInstance();
 
-    public FolderController() {
-        this.folderService = new FolderServiceSqlImpl();
+    public FolderController(final ExercizerExplorerPlugin plugin) {
+        this.folderService = new FolderServiceSqlImpl(plugin);
     }
 
     @Post("/folder")

@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.services.impl;
 
+import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.IFolderService;
 import fr.openent.exercizer.services.ISubjectService;
@@ -40,9 +41,9 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     private static final Logger log = LoggerFactory.getLogger(FolderServiceSqlImpl.class);
     private final ISubjectService subjectService;
 
-    public FolderServiceSqlImpl() {
+    public FolderServiceSqlImpl(final ExercizerExplorerPlugin plugin) {
         super("exercizer", "folder");
-        subjectService = new SubjectServiceSqlImpl();
+        subjectService = new SubjectServiceSqlImpl(plugin);
     }
 
     /**
@@ -86,6 +87,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                         for (int i=0;i<values.size();i++) {
                             subjectIds.add(values.getJsonObject(i).getLong("id"));
                         }
+                        //dont need to notifyDelete=>we will not use folders anymore
                         subjectService.removeSubjectsAndGrains(builder, user, subjectIds);
                     }
 

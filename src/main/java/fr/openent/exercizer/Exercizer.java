@@ -22,6 +22,7 @@ package fr.openent.exercizer;
 import fr.openent.exercizer.controllers.*;
 import fr.openent.exercizer.cron.ScheduledNotification;
 import fr.openent.exercizer.events.ExercizerRepositoryEvents;
+import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.services.impl.ExercizerStorage;
 import fr.wseduc.cron.CronTrigger;
 import fr.wseduc.webutils.Server;
@@ -39,11 +40,21 @@ import java.text.ParseException;
 
 
 public class Exercizer extends BaseServer {
+    public static final String APPLICATION = "exercizer";
+    public static final String SUBJECT_TYPE = "subject";
+    public static final String SUBJECT_TABLE = "exercizer.subject";
+    public static final String FOLDER_TABLE = "exercizer.folder";
+    public static final String GRAIN_TABLE = "exercizer.grain";
+    public static final String USER_TABLE = "exercizer.users";
+    private ExercizerExplorerPlugin plugin;
 
     @Override
     public void start() throws Exception {
         super.start();
-        
+        //init plugin
+        plugin = ExercizerExplorerPlugin.create();
+        plugin.start();
+        //init controllers
         final EventBus eb = getEventBus(vertx);
 
         final String exportPath = config
@@ -62,8 +73,8 @@ public class Exercizer extends BaseServer {
         subjectConf.setTable("subject");
         subjectConf.setShareTable("subject_shares");
         
-        SubjectController subjectController = new SubjectController(storage);
-        subjectController.setShareService(new SqlShareService("exercizer", "subject_shares", eb, securedActions, null));
+        SubjectController subjectController = new SubjectController(storage, plugin);
+        subjectController.setShareService(plugin.createPostgresShareService("exercizer", "subject_shares", eb, securedActions, null));
         subjectController.setCrudService(new SqlCrudService("exercizer", "subject"));
 
         SqlConf subjectScheduledConf = SqlConfs.createConf(SubjectScheduledController.class.getName());
@@ -81,12 +92,12 @@ public class Exercizer extends BaseServer {
         subjectCopyConf.setTable("subject_scheduled");
         
         addController(new ExercizerController());
-        addController(new FolderController());
+        addController(new FolderController(plugin));
         addController(subjectController);
         addController(new GrainTypeController());
         addController(new SubjectScheduledController(storage));
         addController(new GrainScheduledController());
-        addController(new SubjectCopyController(vertx.fileSystem(), storage, exportPath));
+        addController(new SubjectCopyController(plugin, vertx.fileSystem(), storage, exportPath));
         addController(new SubjectLessonLevelController());
         addController(new SubjectLessonTypeController());
         addController(new SubjectTagController());
@@ -105,4 +116,11 @@ public class Exercizer extends BaseServer {
         }
     }
 
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        if(plugin != null){
+            plugin.stop();
+        }
+    }
 }
