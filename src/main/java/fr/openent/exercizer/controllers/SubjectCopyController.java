@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.controllers;
 
+import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.filters.*;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.IGrainCopyService;
@@ -84,10 +85,10 @@ public class SubjectCopyController extends ControllerHelper {
 	private final String exportPath;
 	private static final String CONVERSATION_ADDRESS = "org.entcore.conversation";
 
-	public SubjectCopyController(final FileSystem fs, final Storage storage, final String exportPath) {
+	public SubjectCopyController(final ExercizerExplorerPlugin plugin, final FileSystem fs, final Storage storage, final String exportPath) {
 		this.subjectCopyService = new SubjectCopyServiceSqlImpl();
 		this.subjectScheduledService = new SubjectScheduledServiceSqlImpl();
-		this.subjectService = new SubjectServiceSqlImpl();
+		this.subjectService = new SubjectServiceSqlImpl(plugin);
 		this.grainCopyService = new GrainCopyServiceSqlImpl();
 		this.storage = storage;
 		this.fs = fs;

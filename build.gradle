@@ -34,6 +34,10 @@ configurations {
 
 sourceSets {
   main { compileClasspath += configurations.provided }
+  test {
+    runtimeClasspath += configurations.compileOnly
+    resources.srcDirs = ["src/test/resources"]
+  }
 }
 
 configurations.all {
@@ -56,8 +60,15 @@ dependencies {
   compileOnly "io.vertx:vertx-core:$vertxVersion"
   compile "org.entcore:common:$entCoreVersion"
   compile "fr.wseduc:vertx-cron-timer:$vertxCronTimer"
-  testCompile "org.entcore:tests:$entCoreVersion"
+  testCompile "io.vertx:vertx-unit:$vertxVersion"
+  testCompile "io.vertx:vertx-codegen:$vertxVersion"
+  testCompile "junit:junit:$junitVersion"
+  testCompile "org.entcore:test:$entCoreVersion:fat"
+  testCompile "com.opendigitaleducation:explorer:$explorerVersion:fat"
+  testCompile "com.opendigitaleducation:explorer:$explorerVersion:tests"
   testCompile 'io.gatling.highcharts:gatling-charts-highcharts:2.2.2'
+  configurations.compile.exclude(group: 'io.gatling', module: 'gatling-recorder')
+  configurations.compile.exclude(group: 'io.gatling', module: 'gatling-app')
 }
 
 jar {

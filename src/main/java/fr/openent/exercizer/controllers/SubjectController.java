@@ -20,6 +20,7 @@
 package fr.openent.exercizer.controllers;
 
 import fr.openent.exercizer.Exercizer;
+import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.exporter.ImagesToBase64;
 import fr.openent.exercizer.exporter.SubjectExporter;
 import fr.openent.exercizer.filters.MassOwnerOnly;
@@ -73,8 +74,8 @@ public class SubjectController extends ControllerHelper {
 	private final Storage storage;
 	private final EventHelper eventHelper;
 
-	public SubjectController(final Storage storage) {
-		this.subjectService = new SubjectServiceSqlImpl();
+	public SubjectController(final Storage storage, final ExercizerExplorerPlugin plugin) {
+		this.subjectService = new SubjectServiceSqlImpl(plugin);
 		this.grainService = new GrainServiceSqlImpl();
 		this.storage = storage;
 		final EventStore eventStore = EventStoreFactory.getFactory().getEventStore(Exercizer.class.getSimpleName());

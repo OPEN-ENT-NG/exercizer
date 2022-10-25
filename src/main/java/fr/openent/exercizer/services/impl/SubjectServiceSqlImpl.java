@@ -19,6 +19,7 @@
 
 package fr.openent.exercizer.services.impl;
 
+import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.parsers.ResourceParser;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Either;
@@ -37,12 +38,15 @@ import io.vertx.core.logging.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements ISubjectService {
 	private static final Logger log = LoggerFactory.getLogger(SubjectServiceSqlImpl.class);
-
-	public SubjectServiceSqlImpl() {
+	private final ExercizerExplorerPlugin plugin;
+	public SubjectServiceSqlImpl(final ExercizerExplorerPlugin plugin) {
 		super("exercizer", "subject", "subject_shares");
+		this.plugin = plugin;
 	}
 
 	/**
@@ -53,7 +57,14 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		JsonObject subject = ResourceParser.beforeAny(resource);
 		subject.put("owner", user.getUserId()); 
 		subject.put("owner_username", user.getUsername());
-		super.persist(subject, user, handler);
+		super.persist(subject, user, e->{
+			//call handle
+			handler.handle(e);
+			//if saved success => notifyUpsert
+			if(e.isRight()){
+				plugin.notifyUpsert(user, e.right().getValue());
+			}
+		});
 	}
 
 	public void persistSubjectGrains(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
@@ -69,25 +80,34 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 									final SqlStatementsBuilder builder = new SqlStatementsBuilder();
 									final String userQuery = "SELECT " + schema + "merge_users(?,?)";
 									builder.prepared(userQuery, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUsername()));
-
+									//save subject
 									final JsonObject subject = ResourceParser.beforeAny(resource.getJsonObject("subject"));
 									subject.put("owner", user.getUserId());
 									subject.put("owner_username", user.getUsername());
 									subject.put("id", newSubjectId);
 									builder.insert(resourceTable, subject, "*");
-
+									//save grains
 									final JsonArray grains = resource.getJsonArray("grains");
 									for (int i=0;i<grains.size();i++) {
 										final JsonObject grain = grains.getJsonObject(i);
 										final String query = "INSERT INTO " + schema + "grain (subject_id, grain_type_id, order_by, grain_data) VALUES (?,?,?,?)";
 										builder.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(newSubjectId).add(grain.getLong("grain_type_id")).add(grain.getInteger("order_by")).add(grain.getValue("grain_data")));
 									}
-
+									//update subject max_score
 									String updateSubjectQuery = "UPDATE " + resourceTable + " SET max_score=(SELECT sum(cast(g.grain_data::json->>'max_score' as double precision)) FROM " +
 											schema + "grain as g WHERE g.subject_id=?) WHERE id=?";
 									builder.prepared(updateSubjectQuery, new fr.wseduc.webutils.collections.JsonArray().add(newSubjectId).add(newSubjectId));
 
-									sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(1, handler));
+									sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(1, e->{
+										//notify subject upsert
+										plugin.notifyUpsert(user, subject);
+										//notify upsert grains
+										//for (int i=0;i<grains.size();i++) {
+										//	plugin.grainPlugin().notifyUpsert(newSubjectId.toString(), user, grains.getJsonObject(i));
+										//}
+										//call handle
+										handler.handle(e);
+									}));
 								} else {
 									log.error("fail to create subject and grains  : " + event.left().getValue());
 									handler.handle(event.left());
@@ -102,7 +122,14 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	@Override
 	public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		JsonObject subject = ResourceParser.beforeAny(resource);
-		super.update(subject, user, handler);
+		super.update(subject, user, e->{
+			//if saved success => notifyUpsert
+			if(e.isRight()){
+				plugin.notifyUpsert(user, subject);
+			}
+			//call handle
+			handler.handle(e);
+		});
 	}
 
 	/**
@@ -114,7 +141,15 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 
 		removeSubjectsAndGrains(builder, user, subjectIds);
 
-		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
+		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, e->{
+			//if saved success => notifyUpsert
+			if(e.isRight()){
+				final List<String> ids = subjectIds.stream().map(val->val.toString()).collect(Collectors.toList());
+				plugin.notifyDeleteById(user, ids);
+			}
+			//call handle
+			handler.handle(e);
+		}));
 	}
 
 	public void removeSubjectsAndGrains(SqlStatementsBuilder builder, final UserInfos user, JsonArray subjectIds) {
@@ -310,7 +345,11 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 						final JsonArray ja = event.right().getValue();
 						final SqlStatementsBuilder s = new SqlStatementsBuilder();
 						for (int i = 0; i < ja.size(); i++) {
-							final Long newSubjectId = ja.getJsonArray(i).getJsonObject(0).getLong("id");
+							final JsonObject subject = ja.getJsonArray(i).getJsonObject(0);
+							//notify upsert
+							plugin.notifyUpsert(user, ja.getJsonObject(i));
+							//duplicate grains....
+							final Long newSubjectId = subject.getLong("id");
 							final Long fromSubjectId = ids.get(i);
 							duplicateSubject(s, newSubjectId, fromSubjectId, folderId, user, titleSuffix);
 							duplicateSubjectDocuments(s, newSubjectId, fromSubjectId, false );
