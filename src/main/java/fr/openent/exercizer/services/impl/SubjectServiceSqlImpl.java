@@ -58,12 +58,12 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		subject.put("owner", user.getUserId()); 
 		subject.put("owner_username", user.getUsername());
 		super.persist(subject, user, e->{
-			//call handle
-			handler.handle(e);
 			//if saved success => notifyUpsert
 			if(e.isRight()){
 				plugin.notifyUpsert(user, e.right().getValue());
 			}
+			//call handle
+			handler.handle(e);
 		});
 	}
 
@@ -346,8 +346,6 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 						final SqlStatementsBuilder s = new SqlStatementsBuilder();
 						for (int i = 0; i < ja.size(); i++) {
 							final JsonObject subject = ja.getJsonArray(i).getJsonObject(0);
-							//notify upsert
-							plugin.notifyUpsert(user, ja.getJsonObject(i));
 							//duplicate grains....
 							final Long newSubjectId = subject.getLong("id");
 							final Long fromSubjectId = ids.get(i);

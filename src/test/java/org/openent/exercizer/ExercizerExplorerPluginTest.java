@@ -43,12 +43,14 @@ public class ExercizerExplorerPluginTest {
     static Map<String, Object> data = new HashMap<>();
     static final UserInfos user = test.directory().generateUser("user1");
     static final UserInfos user2 = test.directory().generateUser("user2");
+    static final UserInfos user3 = test.directory().generateUser("user3");
 
     @BeforeClass
     public static void setUp(TestContext context) throws Exception {
         test.database().initNeo4j(context, neo4jContainer);
         user.setLogin("user1");
         user2.setLogin("user2");
+        user3.setLogin("user3");
         explorerTest.start(context);
         test.database().initPostgreSQL(context, pgContainer, "exercizer");
         final PostgresClient pgClient = test.database().createPgClient(pgContainer);
@@ -255,4 +257,76 @@ public class ExercizerExplorerPluginTest {
             })));
         })));
     }
+
+    @Test
+    public void shouldCreateSubjectUsingPersist(TestContext context) {
+        final JsonObject payload1 = createSubject("exercizer1");
+        final JsonObject sb1 = payload1.getJsonObject("subject");
+        final Async async = context.async();
+        explorerTest.fetch(user3, application, explorerTest.createSearch()).onComplete(context.asyncAssertSuccess(fetch0 -> {
+            context.assertEquals(0, fetch0.size());
+            exercizerService.persist(sb1, user3, test.asserts().asyncAssertSuccessEither(context.asyncAssertSuccess(r -> {
+                exercizerPlugin.getCommunication().waitPending().onComplete(context.asyncAssertSuccess(r3->{
+                    explorerTest.ingestJobExecute(true).onComplete(context.asyncAssertSuccess(r4 -> {
+                        explorerTest.fetch(user3, application, explorerTest.createSearch()).onComplete(context.asyncAssertSuccess(fetch1 -> {
+                            context.assertEquals(1, fetch1.size());
+                            final JsonObject first = fetch1.getJsonObject(0);
+                            context.assertEquals(sb1.getString("title"), first.getString("name"));
+                            context.assertEquals(user3.getUserId(), first.getString("creatorId"));
+                            context.assertEquals(user3.getUserId(), first.getString("updaterId"));
+                            context.assertEquals(application, first.getString("application"));
+                            context.assertEquals(resourceType, first.getString("resourceType"));
+                            context.assertEquals(sb1.getString("description"), first.getString("contentHtml"));
+                            context.assertEquals(user3.getUsername(), first.getString("creatorName"));
+                            context.assertEquals(user3.getUsername(), first.getString("updaterName"));
+                            context.assertFalse(first.getBoolean("public"));
+                            context.assertFalse(first.getBoolean("trashed"));
+                            context.assertNotNull(first.getNumber("createdAt"));
+                            context.assertNotNull(first.getNumber("updatedAt"));
+                            context.assertNotNull(first.getString("assetId"));
+                            exercizerService.list(getGroupUserIds(user3),user3, test.asserts().asyncAssertSuccessEither(context.asyncAssertSuccess(list ->{
+                                context.assertEquals(1, list.size());
+                                final JsonObject firstDb = list.getJsonObject(0);
+                                data.put("ID1", firstDb.getValue("id").toString());
+                                context.assertEquals(sb1.getString("title"), firstDb.getString("title"));
+                                context.assertEquals(sb1.getString("description"), firstDb.getString("description"));
+                                context.assertEquals(sb1.getString("thumbnail"), firstDb.getString("thumbnail"));
+                                context.assertEquals(sb1.getBoolean("trashed"), firstDb.getBoolean("trashed"));
+                                context.assertEquals(first.getString("assetId"), firstDb.getValue("id").toString());
+                                context.assertNotNull(firstDb.getString("created"));
+                                context.assertNotNull(firstDb.getString("modified"));
+                                context.assertEquals(user3.getUserId(), firstDb.getString("owner"));
+                                context.assertEquals(user3.getUsername(), firstDb.getString("owner_username"));
+                                async.complete();
+                            })));
+                        }));
+                    }));
+                }));
+            })));
+        }));
+    }
+
+/*
+    @Test
+    duplicate seems to not work historically
+    public void shouldDuplicateSubject(TestContext context) {
+        final Async async = context.async();
+        explorerTest.fetch(user, application, explorerTest.createSearch()).onComplete(context.asyncAssertSuccess(fetch0 -> {
+            context.assertEquals(1, fetch0.size());
+            final JsonObject first = fetch0.getJsonObject(0);
+            final JsonArray ids = new JsonArray().add(Long.valueOf(first.getString("assetId")));
+            exercizerService.duplicateSubjects(ids, null,"suffix",user, test.asserts().asyncAssertSuccessEither(context.asyncAssertSuccess(r -> {
+                exercizerPlugin.getCommunication().waitPending().onComplete(context.asyncAssertSuccess(r3->{
+                    explorerTest.ingestJobExecute(true).onComplete(context.asyncAssertSuccess(r4 -> {
+                        explorerTest.fetch(user, application, explorerTest.createSearch()).onComplete(context.asyncAssertSuccess(fetch1 -> {
+                            context.assertEquals(2, fetch1.size());
+                            async.complete();
+                        }));
+                    }));
+                }));
+            })));
+        }));
+    }
+ */
+
 }
