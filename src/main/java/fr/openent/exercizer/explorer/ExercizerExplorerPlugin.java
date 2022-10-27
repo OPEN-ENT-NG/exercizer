@@ -1,7 +1,9 @@
 package fr.openent.exercizer.explorer;
 
 import fr.openent.exercizer.Exercizer;
+import fr.wseduc.webutils.security.SecuredAction;
 import io.vertx.core.Future;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.explorer.ExplorerMessage;
 import org.entcore.common.explorer.ExplorerPluginFactory;
@@ -9,10 +11,13 @@ import org.entcore.common.explorer.IExplorerPlugin;
 import org.entcore.common.explorer.IExplorerPluginCommunication;
 import org.entcore.common.explorer.impl.ExplorerPluginResourceSql;
 import org.entcore.common.postgres.PostgresClient;
+import org.entcore.common.share.ShareService;
 import org.entcore.common.user.UserInfos;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class ExercizerExplorerPlugin extends ExplorerPluginResourceSql {
     public static final String APPLICATION = Exercizer.APPLICATION;
@@ -20,6 +25,7 @@ public class ExercizerExplorerPlugin extends ExplorerPluginResourceSql {
     public static final String TABLE = Exercizer.SUBJECT_TABLE;
     private final PostgresClient pgClient;
     private final FoldersExplorerPlugin folderPlugin;
+    private ShareService shareService;
     //private final GrainExplorerPlugin grainPlugin;
 
     public ExercizerExplorerPlugin(final IExplorerPluginCommunication communication, final PostgresClient pgClient) {
@@ -42,7 +48,16 @@ public class ExercizerExplorerPlugin extends ExplorerPluginResourceSql {
 
     public FoldersExplorerPlugin folderPlugin(){ return folderPlugin; }
 
+    public ShareService createShareService(final EventBus eb, final Map<String, SecuredAction> securedActions){
+        shareService = createPostgresShareService("exercizer", "subject_shares", eb, securedActions, null);
+        return shareService;
+    }
     //public GrainExplorerPlugin grainPlugin(){ return grainPlugin; }
+
+    @Override
+    protected Optional<ShareService> getShareService() {
+        return Optional.ofNullable(shareService);
+    }
 
     @Override
     protected String getTableName() {

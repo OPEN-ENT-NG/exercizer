@@ -74,7 +74,7 @@ public class Exercizer extends BaseServer {
         subjectConf.setShareTable("subject_shares");
         
         SubjectController subjectController = new SubjectController(storage, plugin);
-        subjectController.setShareService(plugin.createPostgresShareService("exercizer", "subject_shares", eb, securedActions, null));
+        subjectController.setShareService(plugin.createShareService(eb, securedActions));
         subjectController.setCrudService(new SqlCrudService("exercizer", "subject"));
 
         SqlConf subjectScheduledConf = SqlConfs.createConf(SubjectScheduledController.class.getName());
