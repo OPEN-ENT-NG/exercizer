@@ -10,6 +10,7 @@ import org.entcore.common.explorer.ExplorerPluginFactory;
 import org.entcore.common.explorer.IExplorerPlugin;
 import org.entcore.common.explorer.IExplorerPluginCommunication;
 import org.entcore.common.explorer.impl.ExplorerPluginResourceSql;
+import org.entcore.common.postgres.IPostgresClient;
 import org.entcore.common.postgres.PostgresClient;
 import org.entcore.common.share.ShareService;
 import org.entcore.common.user.UserInfos;
@@ -23,13 +24,13 @@ public class ExercizerExplorerPlugin extends ExplorerPluginResourceSql {
     public static final String APPLICATION = Exercizer.APPLICATION;
     public static final String TYPE = Exercizer.SUBJECT_TYPE;
     public static final String TABLE = Exercizer.SUBJECT_TABLE;
-    private final PostgresClient pgClient;
+    private final IPostgresClient pgClient;
     private final FoldersExplorerPlugin folderPlugin;
     private ShareService shareService;
     //private final GrainExplorerPlugin grainPlugin;
 
-    public ExercizerExplorerPlugin(final IExplorerPluginCommunication communication, final PostgresClient pgClient) {
-        super(communication, pgClient.getClientPool());
+    public ExercizerExplorerPlugin(final IExplorerPluginCommunication communication, final IPostgresClient pgClient) {
+        super(communication, pgClient);
         this.pgClient = pgClient;
         //init folder plugin
         this.folderPlugin = new FoldersExplorerPlugin(this);
@@ -44,7 +45,7 @@ public class ExercizerExplorerPlugin extends ExplorerPluginResourceSql {
         return (ExercizerExplorerPlugin) plugin;
     }
 
-    public PostgresClient getPgClient() { return pgClient; }
+    public IPostgresClient getPgClient() { return pgClient; }
 
     public FoldersExplorerPlugin folderPlugin(){ return folderPlugin; }
 
