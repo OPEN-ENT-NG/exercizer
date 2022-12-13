@@ -4,6 +4,7 @@ import fr.openent.exercizer.Exercizer;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.explorer.ExplorerMessage;
+import org.entcore.common.explorer.IngestJobStateUpdateMessage;
 import org.entcore.common.explorer.impl.ExplorerSubResourceSql;
 
 import java.util.Collection;
@@ -20,14 +21,19 @@ public class GrainExplorerPlugin extends ExplorerSubResourceSql {
     }
 
     @Override
+    public String getEntityType() {
+        return "grain";
+    }
+
+    @Override
     protected String getParentId(final JsonObject jsonObject) {
         return jsonObject.getValue("subject_id").toString();
     }
 
     @Override
-    protected Future<ExplorerMessage> toMessage(final ExplorerMessage message, final JsonObject source) {
+    protected Future<ExplorerMessage> doToMessage(final ExplorerMessage message, final JsonObject source) {
         final String id = source.getValue("id").toString();
-        message.withSubResourceHtml(id, source.getString("grain_data",""));
+        message.withSubResourceHtml(id, source.getString("grain_data",""), source.getLong("version"));
         return Future.succeededFuture(message);
     }
 
