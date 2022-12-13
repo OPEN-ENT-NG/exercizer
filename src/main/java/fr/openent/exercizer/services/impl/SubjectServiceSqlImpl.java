@@ -25,6 +25,8 @@ import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Either;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.entcore.common.explorer.IdAndVersion;
+import org.entcore.common.explorer.IngestJobState;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
@@ -41,6 +43,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.lang.System.currentTimeMillis;
+
 public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements ISubjectService {
 	private static final Logger log = LoggerFactory.getLogger(SubjectServiceSqlImpl.class);
 	private final ExercizerExplorerPlugin plugin;
@@ -54,9 +58,11 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	 */
 	@Override
 	public void persist(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		final long now = currentTimeMillis();
 		JsonObject subject = ResourceParser.beforeAny(resource);
 		subject.put("owner", user.getUserId()); 
 		subject.put("owner_username", user.getUsername());
+		plugin.setIngestJobStateAndVersion(subject, IngestJobState.TO_BE_SENT, now);
 		super.persist(subject, user, e->{
 			//if saved success => notifyUpsert
 			if(e.isRight()){
@@ -68,6 +74,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	}
 
 	public void persistSubjectGrains(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		final long now = currentTimeMillis();
 		final String queryNewSubjectId = "SELECT nextval('" + schema + "subject_id_seq') as id";
 
 		sql.prepared(queryNewSubjectId, new fr.wseduc.webutils.collections.JsonArray(),
@@ -85,12 +92,14 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 									subject.put("owner", user.getUserId());
 									subject.put("owner_username", user.getUsername());
 									subject.put("id", newSubjectId);
+									plugin.setIngestJobStateAndVersion(subject, IngestJobState.TO_BE_SENT, now);
 									builder.insert(resourceTable, subject, "*");
 									//save grains
 									final JsonArray grains = resource.getJsonArray("grains");
 									for (int i=0;i<grains.size();i++) {
 										final JsonObject grain = grains.getJsonObject(i);
 										final String query = "INSERT INTO " + schema + "grain (subject_id, grain_type_id, order_by, grain_data) VALUES (?,?,?,?)";
+										// TODO When grain are handled, add version and state here
 										builder.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(newSubjectId).add(grain.getLong("grain_type_id")).add(grain.getInteger("order_by")).add(grain.getValue("grain_data")));
 									}
 									//update subject max_score
@@ -121,7 +130,9 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	 */
 	@Override
 	public void update(final JsonObject resource, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		final long now = currentTimeMillis();
 		JsonObject subject = ResourceParser.beforeAny(resource);
+		plugin.setIngestJobStateAndVersion(subject, IngestJobState.TO_BE_SENT, now);
 		super.update(subject, user, e->{
 			//if saved success => notifyUpsert
 			if(e.isRight()){
@@ -137,6 +148,7 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 	 */
 	@Override
 	public void remove(final JsonArray subjectIds, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		final long now = currentTimeMillis();
 		final SqlStatementsBuilder builder = new SqlStatementsBuilder();
 
 		removeSubjectsAndGrains(builder, user, subjectIds);
@@ -144,7 +156,9 @@ public class SubjectServiceSqlImpl extends AbstractExercizerServiceSqlImpl imple
 		sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, e->{
 			//if saved success => notifyUpsert
 			if(e.isRight()){
-				final List<String> ids = subjectIds.stream().map(val->val.toString()).collect(Collectors.toList());
+				final List<IdAndVersion> ids = subjectIds.stream()
+						.map(val->new IdAndVersion(val.toString(), now))
+						.collect(Collectors.toList());
 				plugin.notifyDeleteById(user, ids);
 			}
 			//call handle

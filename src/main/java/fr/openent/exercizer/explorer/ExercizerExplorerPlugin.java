@@ -10,15 +10,12 @@ import org.entcore.common.explorer.ExplorerPluginFactory;
 import org.entcore.common.explorer.IExplorerPlugin;
 import org.entcore.common.explorer.IExplorerPluginCommunication;
 import org.entcore.common.explorer.impl.ExplorerPluginResourceSql;
+import org.entcore.common.explorer.impl.ExplorerSubResource;
 import org.entcore.common.postgres.IPostgresClient;
-import org.entcore.common.postgres.PostgresClient;
 import org.entcore.common.share.ShareService;
 import org.entcore.common.user.UserInfos;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ExercizerExplorerPlugin extends ExplorerPluginResourceSql {
     public static final String APPLICATION = Exercizer.APPLICATION;
@@ -92,13 +89,18 @@ public class ExercizerExplorerPlugin extends ExplorerPluginResourceSql {
     }
 
     @Override
-    protected Future<ExplorerMessage> toMessage(final ExplorerMessage message, final JsonObject source) {
+    protected Future<ExplorerMessage> doToMessage(final ExplorerMessage message, final JsonObject source) {
         message.withName(source.getString("title", ""));
         message.withContent(source.getString("description", ""), ExplorerMessage.ExplorerContentType.Html);
         message.withPublic("PUBLIC".equals(source.getString("visibility")));
         message.withTrashed(source.getBoolean("is_deleted", false));
         message.withShared(source.getJsonArray("shared"));
         return Future.succeededFuture(message);
+    }
+
+    @Override
+    protected List<ExplorerSubResource> getSubResourcesPlugin() {
+        return Collections.emptyList();
     }
 
     @Override
