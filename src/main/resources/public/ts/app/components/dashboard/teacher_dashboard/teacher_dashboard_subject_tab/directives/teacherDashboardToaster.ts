@@ -213,7 +213,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                     scope.$emit('E_COPY_SELECTED_FOLDER_SUBJECT');
                                 },
                                 display : function(){
-                                    return true;
+                                    return false; // WB-1205: Remove "Copy" toaster option - TODO: clean code
                                 }
                             },
                             {
