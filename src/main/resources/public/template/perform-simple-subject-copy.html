@@ -8,7 +8,7 @@
     <div data-ng-if="performSimpleSubjectCopyController.hasDataLoaded">
 
         <div class="flex align-items-center justify-space-between flex-wrap-wrap mb-24 mt-8">
-            <h1 class="cell flex-inline align-items-center gap-8 only-desktop mb-0">
+            <h1 class="cell flex-inline align-items-center gap-8 only-desktop mb-0 title">
                 <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
                 <span class="no-responsive"><span data-ng-click="performSimpleSubjectCopyController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span><span class="hover-orange" data-ng-click="">[[ performSimpleSubjectCopyController.subjectScheduled.title | limitTo: 35  ]][[ performSimpleSubjectCopyController.subjectScheduled.title.length > 35 ? '...' : '']]</span>
             </h1>

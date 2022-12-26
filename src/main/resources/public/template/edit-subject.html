@@ -9,7 +9,7 @@
 
         <!-- TOP HEADER -->
         <div class="flex align-items-center justify-space-between flex-wrap-wrap mb-24 mt-8">
-            <h1 class="cell flex-inline align-items-center gap-8 only-desktop mb-0">
+            <h1 class="cell flex-inline align-items-center gap-8 only-desktop mb-0 title">
                 <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
                 <span class="no-responsive"><span class="hover-orange" data-ng-click="editSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
                 <span data-ng-click="" tooltip="[[editSubjectController.subject.title]]">[[ editSubjectController.subject.title | limitTo: 35  ]][[ editSubjectController.subject.title.length > 35 ? '...' : '']]</span>

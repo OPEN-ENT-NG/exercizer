@@ -1,5 +1,5 @@
 <div class="row">
-    <h1 class="cell flex-inline align-items-center gap-8 only-desktop ">
+    <h1 class="cell flex-inline align-items-center gap-8 only-desktop title">
         <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
         <span class="no-responsive"><span data-ng-click="(previewingFromLibrary) ? redirectToTeacherDashboardLibraryTab() : redirectToDashBoard()"><i18n>exercizer.title</i18n></span> / </span><span tooltip="[[subjectScheduled.title]]">[[ subjectScheduled.title | limitTo: 35  ]][[ subjectScheduled.title.length > 35 ? '...' : '']]&nbsp;-&nbsp;[[ subjectScheduled.max_score ]] <i18n>exercizer.score</i18n></span>
     </h1>
