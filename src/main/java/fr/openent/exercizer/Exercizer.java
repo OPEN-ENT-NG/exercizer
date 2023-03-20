@@ -52,7 +52,7 @@ public class Exercizer extends BaseServer {
     public void start() throws Exception {
         super.start();
         //init plugin
-        plugin = ExercizerExplorerPlugin.create();
+        plugin = ExercizerExplorerPlugin.create(securedActions);
         plugin.start();
         //init controllers
         final EventBus eb = getEventBus(vertx);
@@ -74,7 +74,7 @@ public class Exercizer extends BaseServer {
         subjectConf.setShareTable("subject_shares");
         
         SubjectController subjectController = new SubjectController(storage, plugin);
-        subjectController.setShareService(plugin.createShareService(eb, securedActions));
+        subjectController.setShareService(plugin.createShareService(eb));
         subjectController.setCrudService(new SqlCrudService("exercizer", "subject"));
 
         SqlConf subjectScheduledConf = SqlConfs.createConf(SubjectScheduledController.class.getName());

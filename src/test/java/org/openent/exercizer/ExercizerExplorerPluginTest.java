@@ -27,7 +27,7 @@ import java.util.*;
 
 @RunWith(VertxUnitRunner.class)
 public class ExercizerExplorerPluginTest {
-    static final String RIGHT = "fr-openent-exercizer-controllers-SubjectController|persist";
+    static final String RIGHT = "fr-openent-exercizer-controllers-SubjectController|grainList";
     private static final TestHelper test = TestHelper.helper();
     @ClassRule
     public static Neo4jContainer<?> neo4jContainer = test.database().createNeo4jContainer();
@@ -56,7 +56,7 @@ public class ExercizerExplorerPluginTest {
         final PostgresClient pgClient = test.database().createPgClient(pgContainer);
         final Map<String, SecuredAction> securedActions = test.share().getSecuredActions(context);
         final IExplorerPluginCommunication communication = explorerTest.getCommunication();
-        exercizerPlugin = new ExercizerExplorerPlugin(communication, pgClient);
+        exercizerPlugin = new ExercizerExplorerPlugin(communication, pgClient, securedActions);
         exercizerService = new SubjectServiceSqlImpl(exercizerPlugin);
         shareService = exercizerPlugin.createPostgresShareService("exercizer", "subject_shares", test.vertx().eventBus(), securedActions, null);
     }

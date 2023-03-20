@@ -5,6 +5,7 @@ import fr.openent.exercizer.Exercizer;
 import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
+import fr.wseduc.webutils.security.SecuredAction;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -46,14 +47,15 @@ public class ExercizerExplorerPluginClientTest {
     static IExplorerPluginClient client;
 
     @BeforeClass
-    public static void setUp(TestContext context) {
+    public static void setUp(TestContext context) throws Exception {
         user.setLogin("user1");
         user2.setLogin("user2");
         explorerTest.start(context);
+        final Map<String, SecuredAction> securedActions = test.share().getSecuredActions(context);
         final Async onInitPg = test.database().initPostgreSQL(context, pgContainer, "exercizer");
         final IExplorerPluginCommunication communication = explorerTest.getCommunication();
         pgClient = test.database().createPgClient(pgContainer);
-        exercizerPlugin = new ExercizerExplorerPlugin(communication, pgClient);
+        exercizerPlugin = new ExercizerExplorerPlugin(communication, pgClient, securedActions);
         exercizerService = new SubjectServiceSqlImpl(exercizerPlugin);
         exercizerPlugin.start();
         client = IExplorerPluginClient.withBus(test.vertx(), application, resourceType);

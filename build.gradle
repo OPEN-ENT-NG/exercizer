@@ -44,6 +44,10 @@ configurations.all {
   resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
+configurations.testRuntime {
+  exclude 'group': 'io.gatling'
+}
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -64,11 +68,10 @@ dependencies {
   testCompile "io.vertx:vertx-codegen:$vertxVersion"
   testCompile "junit:junit:$junitVersion"
   testCompile "org.entcore:test:$entCoreVersion:fat"
+  testCompile "org.entcore:tests:$entCoreVersion"
   testCompile "com.opendigitaleducation:explorer:$explorerVersion:fat"
   testCompile "com.opendigitaleducation:explorer:$explorerVersion:tests"
   testCompile 'io.gatling.highcharts:gatling-charts-highcharts:2.2.2'
-  configurations.compile.exclude(group: 'io.gatling', module: 'gatling-recorder')
-  configurations.compile.exclude(group: 'io.gatling', module: 'gatling-app')
 }
 
 jar {
