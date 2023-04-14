@@ -1,5 +1,5 @@
     {
-      "name": "fr.openent~exercizer~3.0.1",
+      "name": "fr.openent~exercizer~3.0.2",
       "config": {
         "main" : "fr.openent.exercizer.Exercizer",
         "port" : 8105,
