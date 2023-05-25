@@ -78,11 +78,13 @@ public class GrainServiceSqlImpl extends AbstractExercizerServiceSqlImpl impleme
      */
     @Override
     public void remove(final List<Long> grainIds, final Long subjectId, final Handler<Either<String, JsonObject>> handler) {
-        String query = "DELETE FROM " + resourceTable + " WHERE id IN " + Sql.listPrepared(grainIds.toArray());
+        String query = "DELETE FROM " + resourceTable + " WHERE subject_id = ? AND id IN " + Sql.listPrepared(grainIds.toArray());
 
         final SqlStatementsBuilder s = new SqlStatementsBuilder();
-
-        s.prepared(query, new fr.wseduc.webutils.collections.JsonArray(grainIds));
+        final fr.wseduc.webutils.collections.JsonArray all = new fr.wseduc.webutils.collections.JsonArray();
+        all.add(subjectId);
+        all.addAll(new JsonArray(grainIds));
+        s.prepared(query, all);
         updateMaxScoreAndDate(s, subjectId);
 
         sql.transaction(s.build(), SqlResult.validRowsResultHandler(1, handler));
