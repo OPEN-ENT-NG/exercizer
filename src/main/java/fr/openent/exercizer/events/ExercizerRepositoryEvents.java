@@ -8,6 +8,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 
 import org.entcore.common.folders.impl.StorageHelper;
+import org.entcore.common.mongodb.MongoDbConf;
 import org.entcore.common.service.impl.SqlRepositoryEvents;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
@@ -42,6 +43,10 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
         this.actionType = actionType;
         this.mainResourceName = "subject";
         this.storage = storage;
+    }
+    @Override
+    public Optional<String> getMainRepositoryName(){
+        return Optional.ofNullable("exercizer.subject");
     }
 
     @Override
@@ -497,10 +502,11 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
     }
 
     @Override
-    public void deleteGroups(JsonArray groups) {
+    public void deleteGroups(JsonArray groups, Handler<List<DeletedResource>> handler) {
         if(groups == null)
         {
             log.warn("[ExercizerRepositoryEvents][deleteGroups] groups is empty");
+            handler.handle(new ArrayList<>());
             return;
         }
 
@@ -514,6 +520,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
         if(groups.size() == 0)
         {
             log.warn("[ExercizerRepositoryEvents][deleteGroups] groups is empty");
+            handler.handle(new ArrayList<>());
             return;
         }
 
@@ -535,25 +542,25 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
             builder.prepared("UPDATE exercizer.subject_scheduled SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.getList()), userIds);
             builder.prepared("UPDATE exercizer.subject_copy SET is_archived = true WHERE owner IN " + Sql.listPrepared(userIds.getList()), userIds);
 
-            Sql.getInstance().transaction(builder.build(), new DeliveryOptions().setSendTimeout(90000l), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
-                @Override
-                public void handle(Either<String, JsonObject> event) {
-                    if (event.isRight()) {
-                        log.info("[ExercizerRepositoryEvents][deleteGroups] The resources created by users are archived");
-                    } else {
-                        log.warn("[ExercizerRepositoryEvents][deleteGroups] Error archiving the resources created by users " + event.left().getValue());
-                    }
+            Sql.getInstance().transaction(builder.build(), new DeliveryOptions().setSendTimeout(90000l), SqlResult.validRowsResultHandler(event -> {
+                if (event.isRight()) {
+                    log.info("[ExercizerRepositoryEvents][deleteGroups] The resources created by users are archived");
+                } else {
+                    log.warn("[ExercizerRepositoryEvents][deleteGroups] Error archiving the resources created by users " + event.left().getValue());
                 }
+                // do nothing => subject has not been modified
+                handler.handle(new ArrayList<>());
             }));
         }
 
     }
 
     @Override
-    public void deleteUsers(JsonArray users) {
+    public void deleteUsers(JsonArray users, Handler<List<DeletedResource>> handler) {
 
         if(users == null){
             log.warn("[ExercizerRepositoryEvents][deleteUsers] users is empty");
+            handler.handle(new ArrayList<>());
             return;
         }
 		for(int i = users.size(); i-- > 0;)
@@ -566,6 +573,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
         if(users.size() == 0)
         {
             log.warn("[ExercizerRepositoryEvents][deleteUsers] users is empty");
+            handler.handle(new ArrayList<>());
             return;
         }
 
@@ -603,20 +611,17 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                     " AND s.owner IN " + Sql.listPrepared(userIds.getList()) +
                     " AND NOT EXISTS (SELECT 1 FROM exercizer.subject_shares as ss WHERE ss.resource_id = s.id" +
                     " AND ss.member_id IN (SELECT m.id FROM exercizer.members AS m INNER JOIN exercizer.users AS u ON m.user_id = u.id WHERE u.is_deleted = false)" +
-                    " AND ss.action IN " + Sql.listPrepared(managersActions.getList()) + ")";
+                    " AND ss.action IN " + Sql.listPrepared(managersActions.getList()) + ") RETURNING id";
 
             builder.prepared(query, values);
 
-            Sql.getInstance().transaction(builder.build(), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
-                @Override
-                public void handle(Either<String, JsonObject> event) {
-                    if (event.isRight()) {
-                        log.info("[ExercizerRepositoryEvents][deleteUsers] The resources created by users are deleted");
-                    } else {
-                        log.warn("[ExercizerRepositoryEvents][deleteUsers] Error deleting the resources created by users : " + event.left().getValue());
-
-                    }
+            Sql.getInstance().transaction(builder.build(), SqlResult.validResultHandler(3, event -> {
+                if (event.isRight()) {
+                    log.info("[ExercizerRepositoryEvents][deleteUsers] The resources created by users are deleted");
+                } else {
+                    log.warn("[ExercizerRepositoryEvents][deleteUsers] Error deleting the resources created by users : " + event.left().getValue());
                 }
+                handler.handle(super.transactionToDeletedResources(event));
             }));
         }
     }

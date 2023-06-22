@@ -26,6 +26,7 @@ import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.services.impl.ExercizerStorage;
 import fr.wseduc.cron.CronTrigger;
 import fr.wseduc.webutils.Server;
+import org.entcore.common.explorer.impl.ExplorerRepositoryEvents;
 import org.entcore.common.http.BaseServer;
 import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.service.impl.SqlCrudService;
@@ -62,7 +63,7 @@ public class Exercizer extends BaseServer {
 
         final Storage storage = new StorageFactory(vertx, config, new ExercizerStorage()).getStorage();
 
-        setRepositoryEvents(new ExercizerRepositoryEvents(securedActions, "exercizer.manager",vertx, storage));
+        setRepositoryEvents(new ExplorerRepositoryEvents(plugin, new ExercizerRepositoryEvents(securedActions, "exercizer.manager",vertx, storage)));
 
         SqlConf folderConf = SqlConfs.createConf(FolderController.class.getName());
         folderConf.setSchema("exercizer");
