@@ -12,9 +12,11 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import static java.util.Collections.emptySet;
 import org.entcore.common.explorer.IExplorerFolderTree;
 import org.entcore.common.explorer.IExplorerPluginClient;
 import org.entcore.common.explorer.IExplorerPluginCommunication;
+import org.entcore.common.explorer.to.ExplorerReindexResourcesRequest;
 import org.entcore.common.postgres.PostgresClient;
 import org.entcore.common.user.UserInfos;
 import org.entcore.test.TestHelper;
@@ -129,7 +131,7 @@ public class ExercizerExplorerPluginClientTest {
                             return saveFolder("folder1", user, Optional.empty()).compose(folder1 -> {
                                 final Integer folder1Id = folder1.getInteger("id");
                                 return saveFolder("folder2", user, Optional.ofNullable(folder1Id), exercizer3Id).compose(folder2 -> {
-                                    return client.getForIndexation(admin, Optional.empty(), Optional.empty(), new HashSet<>(), true).onComplete(context.asyncAssertSuccess(indexation -> {
+                                    return client.reindex(admin, new ExplorerReindexResourcesRequest(null, null, emptySet(), true, emptySet())).onComplete(context.asyncAssertSuccess(indexation -> {
                                         context.assertEquals(3, indexation.nbBatch);
                                         context.assertEquals(3, indexation.nbMessage);
                                         explorerTest.getCommunication().waitPending().onComplete(context.asyncAssertSuccess(pending -> {
