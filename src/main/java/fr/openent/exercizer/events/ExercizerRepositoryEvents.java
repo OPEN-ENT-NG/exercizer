@@ -266,7 +266,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                     {
                         JsonArray results = message.body().getJsonArray("results");
                         Map<String, Integer> dupsMap = new HashMap<String, Integer>();
-
+                        final JsonObject idsByTable = new JsonObject();
                         for (int i = 0; i < results.size(); i++)
                         {
                             JsonObject jo = results.getJsonObject(i);
@@ -286,6 +286,17 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                                 if (jo.getJsonArray("fields").contains("noduplicates")) {
                                     resourcesNumber += jo.getJsonArray("results").getJsonArray(0).getInteger(1);
                                 }
+                                //TODO factorize it to abstract class?
+                                if (jo.getJsonArray("fields").contains("ids")) {
+                                    final JsonArray values = jo.getJsonArray("results").getJsonArray(0);
+                                    final String table = values.getString(0);
+                                    final JsonArray ids = values.getJsonArray(2);
+                                    final JsonArray prevIds = idsByTable.getJsonArray(table, new JsonArray());
+                                    if(ids != null){
+                                        prevIds.addAll(ids.getJsonArray(0));
+                                    }
+                                    idsByTable.put(table, prevIds);
+                                }
                             }
                         }
 
@@ -301,7 +312,8 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                                 .put("duplicatesNumber", String.valueOf(duplicatesNumber))
                                 .put("resourcesIdsMap", finalMap)
                                 .put("duplicatesNumberMap", dupsMap)
-                                .put("mainResourceName", mainResourceName);
+                                .put("mainResourceName", mainResourceName)
+                                .put("newIds", idsByTable);
 
                         log.info(title + " : Imported "+ resourcesNumber + " resources (" + duplicatesNumber + " duplicates) with " + errorsNumber + " errors." );
                         handler.handle(reply);
@@ -365,8 +377,8 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                             String insert = "WITH rows AS (INSERT INTO " + schema + "." + table + " (" + String.join(",",
                                     ((List<String>) fields.getList()).stream().map(f -> "\"" + f + "\"").toArray(String[]::new)) + ") VALUES ";
                             String conflictUpdate = "ON CONFLICT(id) DO UPDATE SET id = ";
-                            String conflictNothing = "ON CONFLICT DO NOTHING RETURNING 1) SELECT '" + table + "' AS table, "
-                                                    + "count(*) AS " + (tablesWithId.containsKey(table) ? "duplicates" : "noduplicates") + " FROM rows";
+                            String conflictNothing = "ON CONFLICT DO NOTHING RETURNING id) SELECT '" + table + "' AS table, "
+                                                    + "count(*) AS " + (tablesWithId.containsKey(table) ? "duplicates" : "noduplicates") + ", array_agg(rows.id) AS ids FROM rows";
 
                             for (int i = 0; i < finalResults.size(); i++) {
                                 JsonArray entry = finalResults.getJsonArray(i);
@@ -374,7 +386,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
 
                                 if (tablesWithId.containsKey(table)) {
                                     builder.prepared(query + conflictUpdate + tablesWithId.get(table) +
-                                            " RETURNING 1) SELECT '" + table + "' AS table, count(*) AS noduplicates FROM rows", entry);
+                                            " RETURNING id) SELECT '" + table + "' AS table, count(*) AS noduplicates, array_agg(rows.id) AS ids FROM rows", entry);
                                 }
                                 builder.prepared(query + conflictNothing, entry);
                             }
@@ -502,7 +514,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
     }
 
     @Override
-    public void deleteGroups(JsonArray groups, Handler<List<DeletedResource>> handler) {
+    public void deleteGroups(JsonArray groups, Handler<List<ResourceChanges>> handler) {
         if(groups == null)
         {
             log.warn("[ExercizerRepositoryEvents][deleteGroups] groups is empty");
@@ -551,13 +563,14 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                 // do nothing => subject has not been modified
                 handler.handle(new ArrayList<>());
             }));
+        }else{
+            handler.handle(new ArrayList<>());
         }
 
     }
 
     @Override
-    public void deleteUsers(JsonArray users, Handler<List<DeletedResource>> handler) {
-
+    public void deleteUsers(final JsonArray users, final Handler<List<ResourceChanges>> handler) {
         if(users == null){
             log.warn("[ExercizerRepositoryEvents][deleteUsers] users is empty");
             handler.handle(new ArrayList<>());
@@ -623,6 +636,8 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
                 }
                 handler.handle(super.transactionToDeletedResources(event));
             }));
+        }else{
+            handler.handle(new ArrayList<>());
         }
     }
 }
