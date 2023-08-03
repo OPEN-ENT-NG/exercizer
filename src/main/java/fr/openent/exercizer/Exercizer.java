@@ -26,6 +26,7 @@ import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.services.impl.ExercizerStorage;
 import fr.wseduc.cron.CronTrigger;
 import fr.wseduc.webutils.Server;
+import org.entcore.common.explorer.IExplorerPluginClient;
 import org.entcore.common.explorer.impl.ExplorerRepositoryEvents;
 import org.entcore.common.http.BaseServer;
 import org.entcore.common.notification.TimelineHelper;
@@ -38,6 +39,8 @@ import org.entcore.common.storage.StorageFactory;
 import io.vertx.core.eventbus.EventBus;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Exercizer extends BaseServer {
@@ -62,8 +65,10 @@ public class Exercizer extends BaseServer {
                 .getString("export-path", System.getProperty("java.io.tmpdir"));
 
         final Storage storage = new StorageFactory(vertx, config, new ExercizerStorage()).getStorage();
-
-        setRepositoryEvents(new ExplorerRepositoryEvents(plugin, new ExercizerRepositoryEvents(securedActions, "exercizer.manager",vertx, storage)));
+        final IExplorerPluginClient mainClient = IExplorerPluginClient.withBus(vertx, Exercizer.APPLICATION, Exercizer.SUBJECT_TYPE);
+        final Map<String, IExplorerPluginClient> pluginClientPerCollection = new HashMap<>();
+        pluginClientPerCollection.put(Exercizer.SUBJECT_TYPE, mainClient);
+        setRepositoryEvents(new ExplorerRepositoryEvents(new ExercizerRepositoryEvents(securedActions, "exercizer.manager",vertx, storage),pluginClientPerCollection, mainClient));
 
         SqlConf folderConf = SqlConfs.createConf(FolderController.class.getName());
         folderConf.setSchema("exercizer");
