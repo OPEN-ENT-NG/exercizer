@@ -963,7 +963,8 @@ public class SubjectCopyController extends ControllerHelper {
 							final String fileId = fo.getString("file_id");
 							final String fileName = FileUtils.getNameWithExtension(makeDownloadFileName(jo, fo), fo.getJsonObject("metadata"));
 							if( fileId!=null && !fileId.isEmpty() && !aliasFileName.containsKey(fileId) ) {
-								aliasFileName.put(fileId, fileName);
+								final int count = (aliasFileName.size()+1);
+								aliasFileName.put(fileId, count + "_" + fileName);
 								fileIds.add( fileId );
 								subjectTitle = jo.getString("title", "file");
 							}
