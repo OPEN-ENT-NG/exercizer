@@ -514,6 +514,11 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
     }
 
     @Override
+    public void deleteGroups(final JsonArray users) {
+        deleteGroups(users, e -> {});
+    }
+
+    @Override
     public void deleteGroups(JsonArray groups, Handler<List<ResourceChanges>> handler) {
         if(groups == null)
         {
@@ -567,6 +572,11 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
             handler.handle(new ArrayList<>());
         }
 
+    }
+
+    @Override
+    public void deleteUsers(final JsonArray users) {
+        deleteUsers(users, e -> {});
     }
 
     @Override
