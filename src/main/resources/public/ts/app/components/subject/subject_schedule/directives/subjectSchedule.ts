@@ -287,11 +287,11 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                 function scheduleSimpleSubject(subject, option, data) {
                     var deferred = $q.defer(),
                         subjectScheduled = SubjectScheduledService.createFromSubject(subject);
-                    subjectScheduled.begin_date = moment(option.begin_date).hours(14).minutes(0).seconds(0)
+                    subjectScheduled.begin_date = moment(option.begin_date).hours(12).minutes(0).seconds(0)
                         .toISOString().replace(/T..:../, "T"+option.begin_time);
-                    subjectScheduled.due_date = moment(option.due_date).hours(14).minutes(0).seconds(0)
+                    subjectScheduled.due_date = moment(option.due_date).hours(12).minutes(0).seconds(0)
                         .toISOString().replace(/T..:../, "T"+option.due_time);
-                    subjectScheduled.corrected_date = moment(option.corrected_date).hours(14).minutes(0).seconds(0)
+                    subjectScheduled.corrected_date = moment(option.corrected_date).hours(12).minutes(0).seconds(0)
                         .toISOString().replace(/T..:../, "T"+option.corrected_time);
                     subjectScheduled.scheduled_at = createSubjectScheduledAt(data)
                     SubjectScheduledService.simpleSchedule(subjectScheduled).then(
@@ -319,9 +319,9 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     subjectScheduled.due_date = moment(new Date(0))
                         .toISOString().replace(/T..:../, "T00:00");
                     } else {
-                        subjectScheduled.begin_date = moment(option.begin_date).hours(14).minutes(0).seconds(0)
+                        subjectScheduled.begin_date = moment(option.begin_date).hours(12).minutes(0).seconds(0)
                         .toISOString().replace(/T..:../, "T"+option.begin_time);
-                        subjectScheduled.due_date = moment(option.due_date).hours(14).minutes(0).seconds(0)
+                        subjectScheduled.due_date = moment(option.due_date).hours(12).minutes(0).seconds(0)
                         .toISOString().replace(/T..:../, "T"+option.due_time);
                         subjectScheduled.is_one_shot_submit = !option.allow_students_to_update_copy;
                         subjectScheduled.is_training_permitted = !option.forbid_training;
