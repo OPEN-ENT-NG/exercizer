@@ -1,13 +1,13 @@
 {
   "name": "exercizer",
-  "version": "0.4.0",
+  "version": "3.1.2",
   "description": "This application allows users to create exercices.",
   "main": "gulpfile.js",
   "dependencies": {
     "@types/core-js": "0.9.42",
     "axios": "0.16.2",
     "core-js": "2.4.1",
-    "entcore": "~4.8.0-dev",
+    "entcore": "4.8.5",
     "entcore-toolkit": "^1.0.1",
     "gulp": "3.9.1",
     "gulp-clean": "^0.3.2",
@@ -28,12 +28,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/web-education/pages.git"
+    "url": "https://github.com/OPEN-ENT-NG/exercizer.git"
   },
   "author": "",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/web-education/pages/issues"
+    "url": "https://github.com/OPEN-ENT-NG/exercizer/issues"
   },
-  "homepage": "https://github.com/web-education/pages"
+  "homepage": "https://github.com/OPEN-ENT-NG/exercizer"
 }
