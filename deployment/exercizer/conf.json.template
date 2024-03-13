@@ -1,5 +1,5 @@
     {
-      "name": "fr.openent~exercizer~3.1-SNAPSHOT",
+      "name": "fr.openent~exercizer~3.1-develop-pedago-SNAPSHOT",
       "config": {
         "main" : "fr.openent.exercizer.Exercizer",
         "port" : 8105,
