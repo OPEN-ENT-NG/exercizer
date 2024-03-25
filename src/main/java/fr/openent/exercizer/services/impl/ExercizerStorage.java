@@ -44,7 +44,7 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 	@Override
 	public void getInfo(final String fileId, final Handler<AsyncResult<FileInfos>> handler) {
 		/* Used by the antivirus */
-		final JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(fileId);
+		final JsonArray params = new JsonArray().add(fileId);
 		final String query1 = "select s.owner, sd.metadata "+
 			"from exercizer.subject_document sd "+
 			"inner join exercizer.subject s on s.id=sd.subject_id "+
@@ -76,7 +76,7 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 							fi.setOwner(res.getString("owner"));
 							JsonObject meta = null;
 							if (res.getString("metadata") != null) {
-								meta = new fr.wseduc.webutils.collections.JsonObject(res.getString("metadata"));
+								meta = new JsonObject(res.getString("metadata"));
 							}
 							if (meta != null) {
 								fi.setName(meta.getString("filename"));
@@ -98,7 +98,7 @@ public class ExercizerStorage extends AbstractApplicationStorage {
 	@Override
 	public void updateInfo(String fileId, FileInfos fileInfos, final Handler<AsyncResult<Integer>> handler) {
 		/* Used by the antivirus */
-		final JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(fileId);
+		final JsonArray params = new JsonArray().add(fileId);
 		final String query1 =
 				"update exercizer.subject_document " +
 				"set metadata = jsonb_set(metadata, '{filename}', '\"" + fileInfos.getName() + "\"') " +

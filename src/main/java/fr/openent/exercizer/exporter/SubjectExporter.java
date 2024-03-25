@@ -25,7 +25,7 @@ public class SubjectExporter {
     private static Pattern FILL_ZONE_P = Pattern.compile("(?<=<fill-zone).*?(?=</fill-zone>)");
 
     public SubjectExporter(final JsonArray grains) {
-        this.grains = Utils.getOrElse(grains, new fr.wseduc.webutils.collections.JsonArray());
+        this.grains = Utils.getOrElse(grains, new JsonArray());
         this.stringWriter = new StringWriter();
         try {
             this.xsw = XMLOutputFactory.newInstance().createXMLStreamWriter(stringWriter);
@@ -115,7 +115,7 @@ public class SubjectExporter {
             this.writeStartQuestion();
             this.xsw.writeAttribute("type", isDrag ? "ddwtos" : "gapselect");
 
-            final JsonArray zones = Utils.getOrElse(customData.getJsonArray("zones"), new fr.wseduc.webutils.collections.JsonArray());
+            final JsonArray zones = Utils.getOrElse(customData.getJsonArray("zones"), new JsonArray());
             final Map<Integer, JsonObject> mapIdZone = new HashMap<>();
 
             for (final Object z : zones) {
@@ -197,8 +197,8 @@ public class SubjectExporter {
             this.writeStartQuestion();
             this.xsw.writeAttribute("type", "ddimageortext");
             this.writeCommon(grainData.getString("title"), grainData.getString("statement"), "html");
-            final JsonArray options = Utils.getOrElse(customData.getJsonArray("options"), new fr.wseduc.webutils.collections.JsonArray());
-            final JsonArray zones = Utils.getOrElse(customData.getJsonArray("zones"), new fr.wseduc.webutils.collections.JsonArray());
+            final JsonArray options = Utils.getOrElse(customData.getJsonArray("options"), new JsonArray());
+            final JsonArray zones = Utils.getOrElse(customData.getJsonArray("zones"), new JsonArray());
 
             this.writeFile(customData.getString("_guideImage"));
             this.writeDefaultGrade(grainData);
@@ -270,7 +270,7 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "shortanswer");
         this.writeCommon(grainData.getString("title"), grainData.getString("statement"), "html");
         final JsonArray answers = Utils.getOrElse(Utils.getOrElse(grainData.getJsonObject("custom_data"),
-                new JsonObject()).getJsonArray("correct_answer_list"), new fr.wseduc.webutils.collections.JsonArray());
+                new JsonObject()).getJsonArray("correct_answer_list"), new JsonArray());
 
         this.writeDefaultGrade(grainData);
 
@@ -294,7 +294,7 @@ public class SubjectExporter {
         this.xsw.writeAttribute("type", "multichoice");
         this.writeCommon(grainData.getString("title"), grainData.getString("statement"), "html");
         final JsonArray answers = Utils.getOrElse(Utils.getOrElse(grainData.getJsonObject("custom_data"),
-                new JsonObject()).getJsonArray("correct_answer_list"), new fr.wseduc.webutils.collections.JsonArray());
+                new JsonObject()).getJsonArray("correct_answer_list"), new JsonArray());
 
         this.writeDefaultGrade(grainData);
 
@@ -329,7 +329,7 @@ public class SubjectExporter {
         this.writeCommon(grainData.getString("title", ""), grainData.getString("statement"), "html");
 
         final JsonArray answers = Utils.getOrElse(Utils.getOrElse(grainData.getJsonObject("custom_data"),
-                new JsonObject()).getJsonArray("correct_answer_list"), new fr.wseduc.webutils.collections.JsonArray());
+                new JsonObject()).getJsonArray("correct_answer_list"), new JsonArray());
 
         this.writeDefaultGrade(grainData);
 
@@ -348,7 +348,7 @@ public class SubjectExporter {
         this.writeCommon(grainData.getString("title"),
                 grainData.getString("statement"), "html");
         final JsonArray answers = Utils.getOrElse(Utils.getOrElse(grainData.getJsonObject("custom_data"),
-                new JsonObject()).getJsonArray("correct_answer_list"), new fr.wseduc.webutils.collections.JsonArray());
+                new JsonObject()).getJsonArray("correct_answer_list"), new JsonArray());
 
         this.writeDefaultGrade(grainData);
 

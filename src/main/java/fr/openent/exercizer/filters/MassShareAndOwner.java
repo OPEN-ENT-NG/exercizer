@@ -44,7 +44,7 @@ public class MassShareAndOwner implements ResourcesProvider {
 		final SqlConf conf = SqlConfs.getConf(binding.getServiceMethod().substring(0, binding.getServiceMethod().indexOf('|')));
 		RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 			public void handle(JsonObject data) {
-				final List ids = data.getJsonArray("ids", new fr.wseduc.webutils.collections.JsonArray()).getList();
+				final List ids = data.getJsonArray("ids", new JsonArray()).getList();
 				if (ids != null && ids.size() > 0) {
 					request.pause();
 					String sharedMethod = binding.getServiceMethod().replaceAll("\\.", "-");
@@ -58,7 +58,7 @@ public class MassShareAndOwner implements ResourcesProvider {
 									" LEFT JOIN " + conf.getSchema() + conf.getShareTable() + " ON id = resource_id " +
 									"WHERE ((member_id IN " + Sql.listPrepared(gu) + " AND action = ?) " +
 									"OR owner = ?) AND id IN " + Sql.listPrepared(ids);
-					JsonArray values = new fr.wseduc.webutils.collections.JsonArray(gu).add(sharedMethod)
+					JsonArray values = new JsonArray(gu).add(sharedMethod)
 							.add(user.getUserId());
 
 					for (final Object id : ids) {

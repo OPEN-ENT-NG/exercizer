@@ -39,7 +39,6 @@ import fr.wseduc.rs.Put;
 import fr.wseduc.rs.Delete;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
-import fr.wseduc.swift.utils.FileUtils;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.I18n;
 import fr.wseduc.webutils.http.Renders;
@@ -51,6 +50,7 @@ import org.entcore.common.storage.Storage;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.entcore.common.utils.DateUtils;
+import org.entcore.common.utils.FileUtils;
 import org.entcore.common.utils.StringUtils;
 import org.entcore.common.utils.Zip;
 import org.joda.time.DateTime;
@@ -197,7 +197,7 @@ public class SubjectCopyController extends ControllerHelper {
 	        final String dueDate,
 	        final String idResource
 	        ) {
-	        JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
+	        JsonObject params = new JsonObject();
 			if (relativeUri != null) {
 				params.put("uri", pathPrefix + "#" + relativeUri);
 				params.put("resourceUri", params.getString("uri"));
@@ -287,7 +287,7 @@ public class SubjectCopyController extends ControllerHelper {
 								@Override
 								public void handle(Either<String, JsonObject> r) {
 									if (r.isLeft()) {
-										renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", r.left().getValue()));
+										renderError(request, new JsonObject().put("error", r.left().getValue()));
 										return;
 									}
 									final JsonObject subjectCopy = ResourceParser.beforeAny(r.right().getValue());
@@ -396,12 +396,12 @@ public class SubjectCopyController extends ControllerHelper {
 		                @Override
 		                public void handle(Either<String, JsonObject> r) {
 			                if (r.isLeft()) {
-				                renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", r.left().getValue()));
+				                renderError(request, new JsonObject().put("error", r.left().getValue()));
 				                return;
 			                }
 			                final JsonObject subjectCopy = r.right().getValue();
 			                final boolean result = !subjectCopy.getBoolean("is_corrected", false) && !subjectCopy.getBoolean("is_correction_on_going", false);
-                            Renders.renderJson(request, new fr.wseduc.webutils.collections.JsonObject().put("result", result));
+                            Renders.renderJson(request, new JsonObject().put("result", result));
 	                    }
                     });
                 } else {
@@ -691,7 +691,7 @@ public class SubjectCopyController extends ControllerHelper {
 					final JsonObject metadata = writeRes.getJsonObject("metadata");
 					subjectCopyService.addFile(id, fileId, metadata, fileType, event-> {
 						if (event.isRight()) {
-							Renders.renderJson( request, new fr.wseduc.webutils.collections.JsonObject()
+							Renders.renderJson( request, new JsonObject()
 								.put("file_id", fileId)
 								.put("metadata", metadata)
 							);
@@ -946,7 +946,7 @@ public class SubjectCopyController extends ControllerHelper {
 			subjectCopyService.getDownloadInformation(ids, event-> {
 				final JsonArray infos = event.isRight() ? event.right().getValue() : null;
 				if (infos != null && infos.size() > 0) {
-					final JsonObject aliasFileName = new fr.wseduc.webutils.collections.JsonObject();
+					final JsonObject aliasFileName = new JsonObject();
 					final List<String> fileIds = new ArrayList<String>();
 
 					String subjectTitle = "";
@@ -1122,10 +1122,10 @@ public class SubjectCopyController extends ControllerHelper {
 											to.add(((JsonObject)owner).getString("owner"));
 										}
 
-										final JsonObject message = new fr.wseduc.webutils.collections.JsonObject();
+										final JsonObject message = new JsonObject();
 										message.put("subject", param.getString("subject"));
 										message.put("body", param.getString("body"));
-										message.put("to", new fr.wseduc.webutils.collections.JsonArray(to));
+										message.put("to", new JsonArray(to));
 
 										sendMail(message, user, request);
 									} else {
@@ -1145,18 +1145,18 @@ public class SubjectCopyController extends ControllerHelper {
 
 
 	private void sendMail(JsonObject message, UserInfos user, final HttpServerRequest request) {
-		JsonObject jo = new fr.wseduc.webutils.collections.JsonObject();
+		JsonObject jo = new JsonObject();
 		jo.put("action", "send");
 		jo.put("message", message);
 		jo.put("userId", user.getUserId());
 		jo.put("username", user.getUsername());
-		jo.put("request", new fr.wseduc.webutils.collections.JsonObject()
-						.put("headers", new fr.wseduc.webutils.collections.JsonObject()
+		jo.put("request", new JsonObject()
+						.put("headers", new JsonObject()
 								.put("Host", Renders.getHost(request))
 								.put("X-Forwarded-Proto", Renders.getScheme(request))
 								.put("Accept-Language", I18n.acceptLanguage(request))));
 
-		SubjectCopyController.this.eb.send(CONVERSATION_ADDRESS, jo, handlerToAsyncHandler(new Handler<Message<JsonObject>>() {
+		SubjectCopyController.this.eb.request(CONVERSATION_ADDRESS, jo, handlerToAsyncHandler(new Handler<Message<JsonObject>>() {
 			@Override
 			public void handle(Message<JsonObject> response) {
 				if ("ok".equals(response.body().getString("status"))) {

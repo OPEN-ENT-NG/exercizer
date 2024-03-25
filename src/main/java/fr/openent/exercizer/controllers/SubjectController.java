@@ -348,7 +348,7 @@ public class SubjectController extends ControllerHelper {
                         	JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
                             final String subjectName = subject.getString("title");
 
-        			        JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
+        			        JsonObject params = new JsonObject();
         			        params.put("username", user.getUsername());
         			        params.put("uri", pathPrefix + "#/subject/copy/preview/perform/"+subjectId);
                             params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
@@ -408,7 +408,7 @@ public class SubjectController extends ControllerHelper {
 						JsonObject subject  = ResourceParser.beforeAny(r.right().getValue());
 						final String subjectName = subject.getString("title");
 
-						JsonObject params = new fr.wseduc.webutils.collections.JsonObject();
+						JsonObject params = new JsonObject();
 						params.put("username", user.getUsername());
 						params.put("uri", pathPrefix + "#/subject/copy/preview/perform/"+subjectId);
 						params.put("userUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType());
@@ -674,7 +674,7 @@ public class SubjectController extends ControllerHelper {
 								final JsonObject metadata = event.getJsonObject("metadata");
 								JsonObject data = null;
 								try {
-									data = new fr.wseduc.webutils.collections.JsonObject(request.formAttributes().get("param"));
+									data = new JsonObject(request.formAttributes().get("param"));
 								} catch (DecodeException de) {
 									Renders.badRequest(request, de.getMessage());
 								}
@@ -701,14 +701,14 @@ public class SubjectController extends ControllerHelper {
 
 	private void publish(JsonObject data, Long subjectId, UserInfos user, final HttpServerRequest request) {
 		subjectService.publishLibrary(subjectId, data.getString("authorsContributors"), data.getLong("subjectLessonTypeId"),
-				data.getLong("subjectLessonLevelId"), data.getJsonArray("subjectTagList", new fr.wseduc.webutils.collections.JsonArray()), user,
+				data.getLong("subjectLessonLevelId"), data.getJsonArray("subjectTagList", new JsonArray()), user,
 				new Handler<Either<String, JsonObject>>() {
 					@Override
 					public void handle(Either<String, JsonObject> event) {
 						if (event.isRight()) {
 							Renders.created(request);
 						} else {
-							Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.error"));
+							Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
 						}
 					}
 				});
@@ -861,7 +861,7 @@ public class SubjectController extends ControllerHelper {
 											if (event.isRight()) {
 												Renders.created(request);
 											} else {
-												Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.error"));
+												Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
 											}
 										}
 									});
@@ -909,7 +909,7 @@ public class SubjectController extends ControllerHelper {
 									if (event.isRight()) {
 										Renders.created(request);
 									} else {
-										Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.error"));
+										Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
 									}
 								}
 							});
@@ -942,7 +942,7 @@ public class SubjectController extends ControllerHelper {
 											if (event.isRight()) {
 												Renders.noContent(request);
 											} else {
-												Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.error"));
+												Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
 											}
 										}
 									});
@@ -977,7 +977,7 @@ public class SubjectController extends ControllerHelper {
 						@Override
 						public void handle(Either<String, JsonArray> event) {
 							if (event.isLeft()) {
-								renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", event.left().getValue()));
+								renderError(request, new JsonObject().put("error", event.left().getValue()));
 								return;
 							}
 
@@ -1057,7 +1057,7 @@ public class SubjectController extends ControllerHelper {
 									if( result.isRight() ) {
 										defaultResponseHandler(request).handle(result);
 									} else {
-										Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.file.limit5"));
+										Renders.renderError(request, new JsonObject().put("error", "exercizer.file.limit5"));
 										storage.removeFile(fileId, event2 -> {
 											if ("error".equals(event2.getString("status"))) {
 												log.warn("Fail to delete file due to : " + event2.getString("message"));
@@ -1096,7 +1096,7 @@ public class SubjectController extends ControllerHelper {
 							if( result.isRight() ) {
 								defaultResponseHandler(request).handle(result);
 							} else {
-								Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.file.limit5"));
+								Renders.renderError(request, new JsonObject().put("error", "exercizer.file.limit5"));
 								storage.removeFile(fileId, event2 -> {
 									if ("error".equals(event2.getString("status"))) {
 										log.warn("Fail to delete file due to : " + event2.getString("message"));

@@ -52,7 +52,7 @@ public class SubjectCopiesOwner implements ResourcesProvider {
 					String query = "SELECT COUNT(ss.id) FROM " +
 							conf.getSchema() + "subject_scheduled as ss INNER JOIN " + conf.getSchema() + "subject_copy sc ON ss.id = sc.subject_scheduled_id " +
 							"WHERE ss.owner = ? AND sc.id IN " + Sql.listPrepared(ids.toArray());
-					JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+					JsonArray values = new JsonArray();
 					values.add(user.getUserId());
 
 					for (final Number id : ids) {

@@ -46,7 +46,7 @@ public class SubjectTagServiceSqlImpl extends AbstractExercizerServiceSqlImpl im
      * @see fr.openent.exercizer.services.impl.AbstractExercizerServiceSqlImpl
      */
     public void list(final Handler<Either<String, JsonArray>> handler) {
-    	JsonArray orderBy = new fr.wseduc.webutils.collections.JsonArray();
+    	JsonArray orderBy = new JsonArray();
     	orderBy.add("ORDER BY r.label ASC");
         super.list("r", null, null, orderBy, null, null, handler);
     }
