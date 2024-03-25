@@ -49,7 +49,7 @@ public class SubjectDocumentOwner implements ResourcesProvider {
 		resourceRequest.pause();
 
 		String query = "SELECT COUNT(*) FROM "+conf.getSchema()+"subject as s WHERE s.id = ? AND s.owner = ?";
-		JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+		JsonArray values = new JsonArray();
 		values.add(Sql.parseId(id));
 		values.add(user.getUserId());
 		

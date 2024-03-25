@@ -70,7 +70,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				"WHERE ss.id = ? AND sd.doc_id = ? ";
         sql.prepared(
 			select, 
-			new fr.wseduc.webutils.collections.JsonArray()
+			new JsonArray()
 				.add(Sql.parseId(id))
 				.add(docId),
 			SqlResult.validUniqueResultHandler(handler, "metadata")
@@ -93,7 +93,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				" GROUP BY ss2.id"+
 			" ) AS t ON ss1.id = t.id"+
 			" WHERE ss1.owner = ? AND ss1.is_archived = false AND ss1.is_training_mode = false";
-		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files") );
+		sql.prepared(query, new JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files") );
     }
 
     /**
@@ -115,7 +115,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 			" ) AS t ON ss1.id = t.id"+
 			" WHERE sc1.owner = ?";
 
-		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files") );
+		sql.prepared(query, new JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files") );
     }
 
     /**
@@ -143,7 +143,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		// in the next refactor step, grain entry can directly contain custom_data for copies of grain
 		final String queryGain = "SELECT g.id, g.grain_type_id, g.order_by, g.grain_data FROM " + schema + "grain as g " +
 				" WHERE g.subject_id = ? and g.grain_type_id > 2";
-		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray().add(fromSubjectId);
+		final JsonArray values = new JsonArray().add(fromSubjectId);
 		sql.prepared(queryGain,values, SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
 			@Override
 			public void handle(Either<String, JsonArray> event) {
@@ -163,7 +163,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 								sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, done -> {
 									if (scheduledSubject.getBoolean("randomDisplay", false).booleanValue()) {
 										Future<Void> future = assignGrainCopiesRandomOrder(subjectScheduledId);
-										future.setHandler(h -> handler.handle(done));
+										future.onComplete(h -> handler.handle(done));
 									} else {
 										handler.handle(done);
 									}
@@ -218,7 +218,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	public Future<Void> unSchedule(final Long subjectScheduledId) {
 		Promise<Void> promise = Promise.promise();
 		final SqlStatementsBuilder s = new SqlStatementsBuilder();
-		JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId);
+		JsonArray params = new JsonArray().add(subjectScheduledId);
 
 		final String query1 = "DELETE FROM " + schema + "subject_copy_file scf "
 			+"USING " + schema + "subject_copy AS sc WHERE sc.id=scf.subject_copy_id AND sc.subject_scheduled_id = ? ";
@@ -246,7 +246,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				schema + "subject_scheduled AS ss INNER JOIN " + schema + "subject_copy AS sc ON ss.id=sc.subject_scheduled_id " +
 				"WHERE ss.id = ? GROUP BY ss.title, ss.due_date";
 
-		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId), SqlResult.validUniqueResultHandler(handler, "owners"));
+		sql.prepared(query, new JsonArray().add(subjectScheduledId), SqlResult.validUniqueResultHandler(handler, "owners"));
 	}
 
 	@Override
@@ -258,7 +258,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 			+"FROM " + schema + "subject_copy_file AS scf "
 			+"INNER JOIN " + schema + "subject_copy AS sc ON sc.id=scf.subject_copy_id AND sc.subject_scheduled_id = ? ";
 
-		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId), SqlResult.validResultHandler( res -> {
+		sql.prepared(query, new JsonArray().add(subjectScheduledId), SqlResult.validResultHandler( res -> {
 			if (res.isRight()) {
 				promise.complete( res.right().getValue() );
 			} else {
@@ -285,7 +285,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				"SELECT ?, s.id, s.title, s.description, s.picture, s.max_score, ?, ?, ?::timestamp , ?::timestamp, ?, ?, ?, ?, ?, ?::json, s.type, ?, ?, ? FROM " + schema + "subject as s " +
 				"WHERE s.id=? RETURNING id";
 
-		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+		final JsonArray values = new JsonArray();
 		values.add(scheduledSubjectId)
 				.add(user.getUserId())
 				.add(user.getUsername())
@@ -312,7 +312,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				"SELECT ?, s.id, s.title, s.description, s.picture, ?, ?, ?::timestamp , ?::timestamp, ?::timestamp, ?::json, s.type, ?, ?, ? FROM " + schema + "subject as s " +
 				"WHERE s.id=? RETURNING id";
 
-		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+		final JsonArray values = new JsonArray();
 		values.add(scheduledSubjectId).add(user.getUserId()).add(user.getUsername()).add(scheduledSubject.getValue("beginDate"))
 				.add(scheduledSubject.getValue("dueDate")).add(scheduledSubject.getString("correctedDate"))
 				.add(scheduledSubject.getJsonObject("scheduledAt")).add(scheduledSubject.getBoolean("isNotify"))
@@ -329,7 +329,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				"SELECT ?, g.grain_type_id, NOW(), g.order_by, g.grain_data, g.grain_custom_data FROM " + schema + "subject as s INNER JOIN " + schema + "grain as g on (s.id = g.subject_id) " +
 				"WHERE s.id=? AND g.grain_type_id > 2";*/
 		final StringBuilder bulkInsertScheduledGrain = new StringBuilder("INSERT INTO " + schema + "grain_scheduled (subject_scheduled_id, grain_type_id, order_by, grain_data, grain_custom_data) VALUES ");
-		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+		final JsonArray values = new JsonArray();
 
 		for (int i=0;i<grainJa.size();i++) {
 			final JsonObject grainJo = grainJa.getJsonObject(i);
@@ -355,8 +355,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 		StringBuilder mergeUserQuery = new StringBuilder(initMergeUserQuery);
 		StringBuilder bulkInsertSubjectCopy = new StringBuilder(initSubjectCopyQuery);
 		//init values
-		JsonArray mergeUserValues = new fr.wseduc.webutils.collections.JsonArray();
-		JsonArray subjectCopyValues = new fr.wseduc.webutils.collections.JsonArray();
+		JsonArray mergeUserValues = new JsonArray();
+		JsonArray subjectCopyValues = new JsonArray();
 		//Batch of bulk insert to avoid PSQLException: ERROR: target lists can have at most 1664 entries
 		int batch = 0;
 
@@ -372,8 +372,8 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				//init for a new batch
 				mergeUserQuery = new StringBuilder(initMergeUserQuery);
 				bulkInsertSubjectCopy = new StringBuilder(initSubjectCopyQuery);
-				mergeUserValues = new fr.wseduc.webutils.collections.JsonArray();
-				subjectCopyValues = new fr.wseduc.webutils.collections.JsonArray();
+				mergeUserValues = new JsonArray();
+				subjectCopyValues = new JsonArray();
 			}
 
 			final JsonObject joUser =  users.getJsonObject(i);
@@ -402,7 +402,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				"FROM " + schema +"grain_scheduled AS gs INNER JOIN " + schema + "subject_scheduled AS ss ON (ss.id=gs.subject_scheduled_id) " +
 				"    INNER JOIN " + schema + "subject_copy AS sc ON (ss.id=sc.subject_scheduled_id) " +
 				"WHERE ss.id=? AND sc.is_training_copy = ?";
-		JsonArray params = new fr.wseduc.webutils.collections.JsonArray().add(subjectScheduledId).add(is_training);
+		JsonArray params = new JsonArray().add(subjectScheduledId).add(is_training);
 
 		if (subjectCopyId != null) {
 			query += " AND sc.id = ?";
@@ -413,15 +413,15 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	}
 
 	private Future<Void> assignGrainCopiesRandomOrder(final Long subjectScheduledId) {
-		Future<Void> result = Future.future();
+		Promise<Void> result = Promise.promise();
 		final String query = "SELECT id FROM " + schema + "subject_copy WHERE subject_scheduled_id = ?";
 		sql.prepared(query, new JsonArray().add(subjectScheduledId), SqlResult.validResultHandler(event -> {
 			if (event.isRight()) {
 				final JsonArray subjectCopiesIds = event.right().getValue();
 				final List<Future> subjectList = new ArrayList<>();
 				subjectCopiesIds.forEach(subjectCopyId -> {
-					Future<Void> promise = Future.future();
-					subjectList.add(promise);
+					Promise<Void> promise = Promise.promise();
+					subjectList.add(promise.future());
 					final String query2 = "SELECT id FROM " + schema + "grain_copy WHERE subject_copy_id = ? order by order_by, id";
 					sql.prepared(query2, new JsonArray().add(((JsonObject)subjectCopyId).getLong("id")), SqlResult.validResultHandler(event2 -> {
 						if (event2.isRight()) {
@@ -461,7 +461,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 						}
 					}));
 				});
-				CompositeFuture.join(subjectList).setHandler(compositeFutureAsyncResult -> {
+				CompositeFuture.join(subjectList).onComplete(compositeFutureAsyncResult -> {
 					if (compositeFutureAsyncResult.succeeded()) {
 						result.complete();
 					} else {
@@ -472,7 +472,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				result.fail(event.left().getValue());
 			}
 		}));
-		return result;
+		return result.future();
 	}
 
 	@Override
@@ -482,7 +482,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				" FROM " + resourceTable + " AS ss INNER JOIN " + schema + "subject_copy as sc ON ss.id=sc.subject_scheduled_id" +
 				" WHERE ss.id = ?";
 
-		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)), SqlResult.validResultHandler(handler));
+		sql.prepared(query, new JsonArray().add(Sql.parseId(id)), SqlResult.validResultHandler(handler));
 	}
 
 	public void getArchive(final UserInfos user, final Handler<Either<String, JsonArray>> handler){
@@ -494,7 +494,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				" WHERE ss.owner = ? AND ss.is_archived = true" +
 				" GROUP BY ss.id";
 
-		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
+		sql.prepared(query, new JsonArray().add(user.getUserId()), SqlResult.validResultHandler(handler));
 	}
 
 	public void getListForExport(final UserInfos user, final List<String> ids, final Handler<Either<String, JsonArray>> handler){
@@ -504,7 +504,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				" INNER JOIN exercizer.subject_copy AS sc ON sc.subject_scheduled_id = ss.id" +
 				" WHERE ss.id IN "+Sql.listPrepared(ids.toArray())+" AND ss.owner = ?";
 
-		JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+		JsonArray values = new JsonArray();
 		for (String id: ids) {
 			values.add(Sql.parseId(id));
 		}
@@ -514,7 +514,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 
 	@Override
 	public void modify(final String id, JsonObject fields, final Handler<Either<String, JsonObject>> handler) {
-		final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+		final JsonArray values = new JsonArray();
 		String query = "UPDATE " + resourceTable + " SET modified = NOW()";
 		if(fields.containsKey("beginDate")){
 			query += ", begin_date = ?";

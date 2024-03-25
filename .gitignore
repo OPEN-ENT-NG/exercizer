@@ -26,3 +26,7 @@ rev-manifest.json
 gradle/
 gradlew*
 .vscode/launch.json
+.env
+target
+dependency-reduced-pom.xml
+\?

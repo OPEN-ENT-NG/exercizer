@@ -57,7 +57,7 @@ public class SubjectCopyOwnerForGrain implements ResourcesProvider {
 							"AND ((ss.is_training_mode OR ss.is_training_permitted) OR (" +
 							"(ss.is_one_shot_submit IS FALSE OR (ss.is_one_shot_submit IS TRUE AND sc.submitted_date IS NULL)) " +
 							"AND sc.is_correction_on_going IS FALSE AND sc.is_corrected IS FALSE)) ";
-					JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+					JsonArray values = new JsonArray();
 					values.add(id);
 					values.add(user.getUserId());
 					values.add(subjectCopyId);

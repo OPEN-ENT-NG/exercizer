@@ -541,7 +541,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
             return;
         }
 
-        final JsonArray userIds = new fr.wseduc.webutils.collections.JsonArray();
+        final JsonArray userIds = new JsonArray();
         for (Object obj : groups){
             if (!(obj instanceof JsonObject)) continue;
             final JsonObject j = (JsonObject)obj;
@@ -600,9 +600,9 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
             return;
         }
 
-        final JsonArray userIds = new fr.wseduc.webutils.collections.JsonArray();
-        final JsonArray managersActions = new fr.wseduc.webutils.collections.JsonArray();
-        final JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+        final JsonArray userIds = new JsonArray();
+        final JsonArray managersActions = new JsonArray();
+        final JsonArray values = new JsonArray();
         for (Object obj : users){
             if (!(obj instanceof JsonObject)) continue;
             final JsonObject j = (JsonObject)obj;
