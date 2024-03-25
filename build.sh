@@ -119,6 +119,9 @@ do
     install)
       buildNode && install
       ;;
+    test)
+      test
+      ;;
     watch)
       watch
       ;;
