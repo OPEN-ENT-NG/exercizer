@@ -3,6 +3,7 @@ package fr.openent.exercizer.filters;
 import fr.wseduc.webutils.http.Binding;
 import fr.wseduc.webutils.request.RequestUtils;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import org.entcore.common.http.filter.ResourcesProvider;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlConf;
@@ -23,9 +24,9 @@ public class SubjectCopyCorrected implements ResourcesProvider {
 
         final SqlConf conf = SqlConfs.getConf(binding.getServiceMethod().substring(0, binding.getServiceMethod().indexOf('|')));
 
-        Future<String> promise = Future.future();
+        Promise<String> promise = Promise.promise();
 
-        promise.onComplete(asyncResult -> {
+        promise.future().onComplete(asyncResult -> {
             if (asyncResult.succeeded() && asyncResult.result() != null) {
                 final String id = asyncResult.result();
                 resourceRequest.pause();

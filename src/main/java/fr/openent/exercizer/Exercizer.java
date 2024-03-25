@@ -26,6 +26,7 @@ import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.services.impl.ExercizerStorage;
 import fr.wseduc.cron.CronTrigger;
 import fr.wseduc.webutils.Server;
+import io.vertx.core.Promise;
 import org.entcore.common.explorer.IExplorerPluginClient;
 import org.entcore.common.explorer.impl.ExplorerRepositoryEvents;
 import org.entcore.common.http.BaseServer;
@@ -53,8 +54,8 @@ public class Exercizer extends BaseServer {
     private ExercizerExplorerPlugin plugin;
 
     @Override
-    public void start() throws Exception {
-        super.start();
+    public void start(Promise<Void> startPromise) throws Exception {
+        super.start(startPromise);
         //init plugin
         plugin = ExercizerExplorerPlugin.create(securedActions);
         plugin.start();

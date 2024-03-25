@@ -163,7 +163,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 								sql.transaction(s.build(), SqlResult.validUniqueResultHandler(0, done -> {
 									if (scheduledSubject.getBoolean("randomDisplay", false).booleanValue()) {
 										Future<Void> future = assignGrainCopiesRandomOrder(subjectScheduledId);
-										future.setHandler(h -> handler.handle(done));
+										future.onComplete(h -> handler.handle(done));
 									} else {
 										handler.handle(done);
 									}
@@ -413,15 +413,15 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 	}
 
 	private Future<Void> assignGrainCopiesRandomOrder(final Long subjectScheduledId) {
-		Future<Void> result = Future.future();
+		Promise<Void> result = Promise.promise();
 		final String query = "SELECT id FROM " + schema + "subject_copy WHERE subject_scheduled_id = ?";
 		sql.prepared(query, new JsonArray().add(subjectScheduledId), SqlResult.validResultHandler(event -> {
 			if (event.isRight()) {
 				final JsonArray subjectCopiesIds = event.right().getValue();
 				final List<Future> subjectList = new ArrayList<>();
 				subjectCopiesIds.forEach(subjectCopyId -> {
-					Future<Void> promise = Future.future();
-					subjectList.add(promise);
+					Promise<Void> promise = Promise.promise();
+					subjectList.add(promise.future());
 					final String query2 = "SELECT id FROM " + schema + "grain_copy WHERE subject_copy_id = ? order by order_by, id";
 					sql.prepared(query2, new JsonArray().add(((JsonObject)subjectCopyId).getLong("id")), SqlResult.validResultHandler(event2 -> {
 						if (event2.isRight()) {
@@ -461,7 +461,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 						}
 					}));
 				});
-				CompositeFuture.join(subjectList).setHandler(compositeFutureAsyncResult -> {
+				CompositeFuture.join(subjectList).onComplete(compositeFutureAsyncResult -> {
 					if (compositeFutureAsyncResult.succeeded()) {
 						result.complete();
 					} else {
@@ -472,7 +472,7 @@ public class SubjectScheduledServiceSqlImpl extends AbstractExercizerServiceSqlI
 				result.fail(event.left().getValue());
 			}
 		}));
-		return result;
+		return result.future();
 	}
 
 	@Override

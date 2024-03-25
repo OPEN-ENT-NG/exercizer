@@ -39,7 +39,6 @@ import fr.wseduc.rs.Put;
 import fr.wseduc.rs.Delete;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
-import fr.wseduc.swift.utils.FileUtils;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.I18n;
 import fr.wseduc.webutils.http.Renders;
@@ -51,6 +50,7 @@ import org.entcore.common.storage.Storage;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.entcore.common.utils.DateUtils;
+import org.entcore.common.utils.FileUtils;
 import org.entcore.common.utils.StringUtils;
 import org.entcore.common.utils.Zip;
 import org.joda.time.DateTime;
@@ -1156,7 +1156,7 @@ public class SubjectCopyController extends ControllerHelper {
 								.put("X-Forwarded-Proto", Renders.getScheme(request))
 								.put("Accept-Language", I18n.acceptLanguage(request))));
 
-		SubjectCopyController.this.eb.send(CONVERSATION_ADDRESS, jo, handlerToAsyncHandler(new Handler<Message<JsonObject>>() {
+		SubjectCopyController.this.eb.request(CONVERSATION_ADDRESS, jo, handlerToAsyncHandler(new Handler<Message<JsonObject>>() {
 			@Override
 			public void handle(Message<JsonObject> response) {
 				if ("ok".equals(response.body().getString("status"))) {
