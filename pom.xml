@@ -10,14 +10,14 @@
         <version>1.0</version>
     </parent>
 
-    <groupId>net.atos</groupId>
+    <groupId>fr.openent</groupId>
     <artifactId>exercizer</artifactId>
     <version>4.0-b2school-SNAPSHOT</version>
 
     <scm>
-        <connection>scm:git:https://github.com/OPEN-ENT-NG/timeline-generator.git</connection>
-        <developerConnection>scm:git:https://github.com/OPEN-ENT-NG/timeline-generator.git</developerConnection>
-        <url>https://github.com/OPEN-ENT-NG/timeline-generator</url>
+        <connection>scm:git:https://github.com/OPEN-ENT-NG/exercizer.git</connection>
+        <developerConnection>scm:git:https://github.com/OPEN-ENT-NG/exercizer.git</developerConnection>
+        <url>https://github.com/OPEN-ENT-NG/exercizer</url>
     </scm>
 
     <repositories>
@@ -34,7 +34,7 @@
         <mongodb-helper.version>3.0-b2school-SNAPSHOT</mongodb-helper.version>
         <vertxCronTimerVersion>2.0.0</vertxCronTimerVersion>
         <junitVersion>4.13.2</junitVersion>
-        <explorerVersion>1.4-SNAPSHOT</explorerVersion>
+        <explorerVersion>2.0-b2school-SNAPSHOT</explorerVersion>
     </properties>
 
     <dependencies>
@@ -48,12 +48,7 @@
             <groupId>org.entcore</groupId>
             <artifactId>common</artifactId>
             <version>${entCoreVersion}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>fr.wseduc</groupId>
-            <artifactId>web-utils</artifactId>
-            <version>${web-utils.version}</version>
+            <classifier>fat</classifier>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -67,18 +62,6 @@
             <artifactId>vertx-cron-timer</artifactId>
             <version>${vertxCronTimerVersion}</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-unit</artifactId>
-            <version>${vertxVersion}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-codegen</artifactId>
-            <version>${vertxVersion}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -111,12 +94,6 @@
             <artifactId>explorer</artifactId>
             <version>${explorerVersion}</version>
             <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.gatling.highcharts</groupId>
-            <artifactId>gatling-charts-highcharts</artifactId>
-            <version>${gatlingHighchartsVersion}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
