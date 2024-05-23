@@ -118,7 +118,7 @@ export const dashboardTeacherTab = ng.directive('dashboardTeacherTab',  [ '$loca
 
             const externalLibraryUrl = await SubjectLibraryService.externalLibraryUrl();
             scope.rediectToExternalLibrary = function() {
-                window.location.href = `${externalLibraryUrl}?platformURL=${encodeURIComponent($location.host())}`;
+                window.open(`${externalLibraryUrl}?platformURL=${encodeURIComponent($location.host())}`, "_blank");
             }
 
             scope.showLibraryTag = function():boolean {
