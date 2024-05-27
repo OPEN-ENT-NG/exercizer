@@ -141,21 +141,24 @@ public class SubjectController extends ControllerHelper {
 	@ResourceFilter(ShareAndOwner.class)
 	@SecuredAction(value = "exercizer.contrib", type = ActionType.RESOURCE)
 	public void update(final HttpServerRequest request) {
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(final UserInfos user) {
-				if (user != null) {
-					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
-						@Override
-						public void handle(final JsonObject resource) {
-							subjectService.update(resource, user, notEmptyResponseHandler(request));
-						}
-					});
-				}
-				else {
-					log.debug("User not found in session.");
-					unauthorized(request);
-				}
+		UserUtils.getUserInfos(eb, request, user -> {
+			if (user != null) {
+				RequestUtils.bodyToJson(request, resource ->  {
+					// #WB2-532: fix Insecure Direct Object Reference (IDOR)
+					Integer resourceBodyId = resource.getInteger("id");
+					Integer resourceParamId = Integer.valueOf(request.params().get("id"));
+					if (resourceBodyId != null && !resourceBodyId.equals(resourceParamId)) {
+						log.error("Security Error: Insecure Direct Object Reference (IDOR). " +
+								"Id in request param = " + resourceParamId +
+								". Id in body = " + resourceBodyId);
+						unauthorized(request);
+					} else {
+						subjectService.update(resource, user, notEmptyResponseHandler(request));
+					}
+				});
+			} else {
+				log.debug("User not found in session.");
+				unauthorized(request);
 			}
 		});
 	}
