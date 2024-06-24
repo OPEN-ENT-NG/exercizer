@@ -44,7 +44,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     public void submitCopy(final long id, int timezoneOffset, final Handler<Either<String, JsonObject>> handler) {
         sql.prepared(
                 "UPDATE " + schema + "subject_copy SET submitted_date=NOW() at time zone 'utc' - (? * interval '1 minute') WHERE id = ? RETURNING *",
-                new fr.wseduc.webutils.collections.JsonArray().add(timezoneOffset).add(id),
+                new JsonArray().add(timezoneOffset).add(id),
                 SqlResult.validUniqueResultHandler(handler)
         );
     }
@@ -84,7 +84,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
         .append(" ) AS t ON o.id = t.id")
         .append(" WHERE o.owner = ? ");
 
-        sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files"));
+        sql.prepared(query.toString(), new JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files"));
     }
 
     /**
@@ -104,7 +104,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
         .append(" ) AS t ON o.id = t.id")
         .append(" WHERE o.subject_scheduled_id = ? ");
 
-        sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray().add(resource.getInteger("id")).add(resource.getInteger("id")), SqlResult.validResultHandler(handler, "files"));
+        sql.prepared(query.toString(), new JsonArray().add(resource.getInteger("id")).add(resource.getInteger("id")), SqlResult.validResultHandler(handler, "files"));
     }
 
     /**
@@ -126,7 +126,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
         .append(" ) AS t ON o.id = t.id")
         .append(" WHERE r.owner = ? ");
 
-        sql.prepared(query.toString(), new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files"));
+        sql.prepared(query.toString(), new JsonArray().add(user.getUserId()).add(user.getUserId()), SqlResult.validResultHandler(handler, "files"));
     }
 
     /**
@@ -148,7 +148,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
             " WHERE sc.id IN "+ Sql.listPrepared(ids.toArray())+ 
             " GROUP BY ss.title, ss.corrected_date, sc.owner_username";
 
-        JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+        JsonArray values = new JsonArray();
         for (final String id : ids) {
             values.add(Sql.parseId(id));
         }
@@ -164,7 +164,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
                 "FROM "+ resourceTable +" AS sc INNER JOIN "+ schema +"subject_scheduled AS ss ON ss.id=sc.subject_scheduled_id " +
                 "WHERE sc.id = ?";
 
-        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(Sql.parseId(id)), SqlResult.validUniqueResultHandler(handler));
+        sql.prepared(query, new JsonArray().add(Sql.parseId(id)), SqlResult.validUniqueResultHandler(handler));
     }
 
     @Override
@@ -181,13 +181,13 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
                 " SET modified = NOW(), is_corrected = " + queryCorrected +
                 " WHERE id = ? ";
 
-        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(id), SqlResult.validRowsResultHandler(handler));
+        sql.prepared(query, new JsonArray().add(id), SqlResult.validRowsResultHandler(handler));
     }
 
     @Override
     public void correctedInProgress(final List<String> ids, final Handler<Either<String, JsonObject>> handler) {
         final List<Object> sqlIds = new ArrayList<>();
-        JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+        JsonArray values = new JsonArray();
         for (final String id : ids) {
             values.add(Sql.parseId(id));
         }
@@ -205,7 +205,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
 		.append("INSERT INTO ").append(schema).append("subject_copy_file (subject_copy_id, file_id, file_type, metadata) ")
 		.append("VALUES (?,?,?,?) RETURNING file_id, file_type, metadata");
 
-        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+        JsonArray values = new JsonArray()
 			.add( Sql.parseId(subjectCopyId) )
 			.add( fileId )
             .add( fileType.getKey() )
@@ -220,7 +220,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
 		.append("DELETE FROM ").append(schema).append("subject_copy_file ")
 		.append("WHERE subject_copy_id = ? AND file_id = ? RETURNING subject_copy_id, file_id, file_type, metadata");
 
-        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+        JsonArray values = new JsonArray()
 			.add( subjectCopyId )
 			.add( fileId );
 		sql.prepared(delete.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));
@@ -233,7 +233,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
 		.append("FROM ").append(schema).append("subject_copy_file ")
 		.append("WHERE subject_copy_id = ?");
 		
-        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+        JsonArray values = new JsonArray()
 			.add( subjectCopyId );
 		sql.prepared(select.toString(), values, SqlResult.validResultHandler(handler, "metadata"));		
     }
@@ -245,7 +245,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
 		.append("FROM ").append(schema).append("subject_copy_file ")
 		.append("WHERE subject_id = ? AND file_id = ?");
 		
-        JsonArray values = new fr.wseduc.webutils.collections.JsonArray()
+        JsonArray values = new JsonArray()
 			.add( subjectCopyId )
 			.add( fileId );
 		sql.prepared(select.toString(), values, SqlResult.validUniqueResultHandler(handler, "metadata"));		
@@ -262,7 +262,7 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     @Override
     public void getArchive(final List<String> ids, final Handler<Either<String, JsonArray>> handler){
         final String query = "SELECT * FROM " + resourceTable + " AS sc WHERE sc.subject_scheduled_id IN "+ Sql.listPrepared(ids.toArray()) +"AND sc.is_archived = true";
-        JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+        JsonArray values = new JsonArray();
         for (final String id : ids) {
             values.add(Sql.parseId(id));
         }
@@ -272,13 +272,13 @@ public class SubjectCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl i
     @Override
     public void exclude(final JsonArray ids, final Handler<Either<String, JsonArray>> handler) {
         final String find = "SELECT sc.owner as _id, sc.owner_username as name FROM " + resourceTable + " AS sc WHERE sc.id IN " + Sql.listPrepared(ids.getList());
-        sql.prepared(find, new fr.wseduc.webutils.collections.JsonArray(ids.getList()), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
+        sql.prepared(find, new JsonArray(ids.getList()), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
             @Override
             public void handle(Either<String, JsonArray> event) {
                 if(event.isRight()){
                     JsonArray copies = event.right().getValue();
-                    final JsonArray exclude =  new fr.wseduc.webutils.collections.JsonArray();
-                    final JsonArray values =  new fr.wseduc.webutils.collections.JsonArray();
+                    final JsonArray exclude =  new JsonArray();
+                    final JsonArray values =  new JsonArray();
                     values.add(ids.getValue(0));
                     values.addAll(ids);
                     copies.forEach( o ->  exclude.add(((JsonObject)o)));

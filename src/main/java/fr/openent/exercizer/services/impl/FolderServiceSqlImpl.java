@@ -75,7 +75,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                 "SELECT id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
                 "SELECT s.id FROM folder AS f INNER JOIN " + schema + "subject AS s ON (f.folder_id=s.folder_id)";
 
-        sql.prepared(findSubjectQuery, new fr.wseduc.webutils.collections.JsonArray(folderIds.getList()), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
+        sql.prepared(findSubjectQuery, new JsonArray(folderIds.getList()), SqlResult.validResultHandler(new Handler<Either<String, JsonArray>>() {
             @Override
             public void handle(Either<String, JsonArray> event) {
                 if (event.isRight()) {
@@ -83,7 +83,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                     final SqlStatementsBuilder builder = new SqlStatementsBuilder();
                     //mark as delete subject and deleting grains
                     if (values != null && values.size() > 0) {
-                        final JsonArray subjectIds = new fr.wseduc.webutils.collections.JsonArray();
+                        final JsonArray subjectIds = new JsonArray();
                         for (int i=0;i<values.size();i++) {
                             subjectIds.add(values.getJsonObject(i).getLong("id"));
                         }
@@ -93,7 +93,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
 
                     //delete cascade
                     final String removeFolderQuery = "DELETE FROM " + resourceTable + " WHERE id IN " + Sql.listPrepared(folderIds.getList());
-                    builder.prepared(removeFolderQuery, new fr.wseduc.webutils.collections.JsonArray(folderIds.getList()));
+                    builder.prepared(removeFolderQuery, new JsonArray(folderIds.getList()));
 
                     sql.transaction(builder.build(), SqlResult.validUniqueResultHandler(0, handler));
                 } else {
@@ -121,7 +121,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                 "SELECT id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
                 "SELECT f.folder_id FROM folder AS f WHERE f.folder_id=? ";
 
-        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray(new ArrayList(sourceFoldersIdJa.getList())).add(targetFolderId), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
+        sql.prepared(query, new JsonArray(new ArrayList(sourceFoldersIdJa.getList())).add(targetFolderId), SqlResult.validRowsResultHandler(new Handler<Either<String, JsonObject>>() {
             @Override
             public void handle(Either<String, JsonObject> event) {
                 if (event.isRight()) {
@@ -141,7 +141,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
 
         final String query = "UPDATE " + resourceTable + " SET parent_folder_id=?, modified=NOW() WHERE id IN " + Sql.listPrepared(sourceFoldersIdJa.getList());
 
-        final JsonArray values = new fr.wseduc.webutils.collections.JsonArray().add(targetFolderId);
+        final JsonArray values = new JsonArray().add(targetFolderId);
         try {
             for (int i=0;i<sourceFoldersIdJa.size();i++) {
                 values.add(Long.parseLong(sourceFoldersIdJa.getValue(i).toString()));
@@ -279,7 +279,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                 "SELECT id, e.label, e.parent_folder_id FROM " + resourceTable + " AS e INNER JOIN folder ON e.parent_folder_id = folder.folder_id)" +
                 "SELECT f.folder_id, f.label, f.parent_folder_id, s.id FROM folder AS f LEFT JOIN " + schema +
                 "subject AS s ON (f.folder_id=s.folder_id) ORDER BY f.parent_folder_id ASC NULLS FIRST, f.folder_id";
-        sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray(sourceFoldersIdJa.getList()), SqlResult.validResultHandler(handler));
+        sql.prepared(query, new JsonArray(sourceFoldersIdJa.getList()), SqlResult.validResultHandler(handler));
     }
 
     private void generateId(final Integer number, final String sequence, final Handler<List<Number>> handler) {
@@ -313,19 +313,19 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
     private void duplicateFolder(SqlStatementsBuilder s, final Number newFolderId, final Number parentId, final String label, final String userId) {
         final String query = "INSERT INTO " + resourceTable + "(id, parent_folder_id, label, owner) VALUES " +
                 "(?,?,?,?)";
-        s.prepared(query, new fr.wseduc.webutils.collections.JsonArray().add(newFolderId).add(parentId).add(label).add(userId));
+        s.prepared(query, new JsonArray().add(newFolderId).add(parentId).add(label).add(userId));
     }
 
     private void duplicationSubject(final SqlStatementsBuilder s, final Number newSubjectId, final Number fromSubjectId,
                                     final Number folderId, UserInfos user, final String titleSuffix) {
         String userQuery = "SELECT " + schema + "merge_users(?,?)";
-        s.prepared(userQuery, new fr.wseduc.webutils.collections.JsonArray().add(user.getUserId()).add(user.getUsername()));
+        s.prepared(userQuery, new JsonArray().add(user.getUserId()).add(user.getUsername()));
 
         final String subjectCopy = "INSERT INTO " + schema + "subject (id, folder_id, owner, owner_username, title, description, picture, max_score) " +
                 "SELECT ?, ?, ?, ?, s.title || ?, s.description, s.picture, s.max_score FROM " + schema + "subject as s " +
                 "WHERE s.id = ?";
 
-        final JsonArray values = new fr.wseduc.webutils.collections.JsonArray().add(newSubjectId).add(folderId).add(user.getUserId())
+        final JsonArray values = new JsonArray().add(newSubjectId).add(folderId).add(user.getUserId())
                 .add(user.getUsername()).add(titleSuffix).add(fromSubjectId);
 
         s.prepared(subjectCopy, values);
@@ -336,7 +336,7 @@ public class FolderServiceSqlImpl extends AbstractExercizerServiceSqlImpl implem
                 "SELECT ?, g.grain_type_id, g.order_by, g.grain_data FROM " + schema + "subject as s INNER JOIN " + schema + "grain as g on (s.id = g.subject_id) " +
                 "WHERE s.id=?";
 
-        s.prepared(grainsCopy, new fr.wseduc.webutils.collections.JsonArray().add(newSubjectId).add(fromSubjectId));
+        s.prepared(grainsCopy, new JsonArray().add(newSubjectId).add(fromSubjectId));
     }
 
 }

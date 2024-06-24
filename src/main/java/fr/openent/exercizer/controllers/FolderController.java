@@ -177,7 +177,7 @@ public class FolderController extends ControllerHelper {
                                                 if (event.isRight()) {
                                                     Renders.created(request);
                                                 } else {
-                                                    Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.error"));
+                                                    Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
                                                 }
                                             }
                                         });
@@ -220,7 +220,7 @@ public class FolderController extends ControllerHelper {
                                                         if (event.isRight()) {
                                                             Renders.noContent(request);
                                                         } else {
-                                                            Renders.renderError(request, new fr.wseduc.webutils.collections.JsonObject().put("error", "exercizer.error"));
+                                                            Renders.renderError(request, new JsonObject().put("error", "exercizer.error"));
                                                         }
                                                     }
                                                 });

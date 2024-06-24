@@ -47,7 +47,7 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
 
 	private SqlStatementsBuilder updateGrain(final JsonObject resource) {
 		// update copy grain
-		JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+		JsonArray values = new JsonArray();
 		StringBuilder updateGrainQuery = new StringBuilder();
 		for (String attr : resource.fieldNames()) {
 			updateGrainQuery.append(attr).append(" = ?, ");
@@ -68,7 +68,7 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
 		// update subject copy
 		s.prepared(
 				"UPDATE " + schema + "subject_copy SET modified=NOW(), " + subjectiCopyState+ "=true WHERE id = ? RETURNING *",
-				new fr.wseduc.webutils.collections.JsonArray().add(resource.getLong("subject_copy_id")));
+				new JsonArray().add(resource.getLong("subject_copy_id")));
 
 		sql.transaction(s.build(), SqlResult.validUniqueResultHandler(1, handler));
 	}
@@ -87,7 +87,7 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
 						"final_score = CASE WHEN is_corrected THEN (select sum(final_score) from "+schema+"grain_copy where subject_copy_id = ?) ELSE NULL END, " +
 						"calculated_score=(select sum(calculated_score) from "+schema+"grain_copy where subject_copy_id = ?), "
 						+ subjectiCopyState+ "=true WHERE id = ? RETURNING *",
-				new fr.wseduc.webutils.collections.JsonArray().add(resource.getLong("subject_copy_id"))
+				new JsonArray().add(resource.getLong("subject_copy_id"))
 						.add(resource.getLong("subject_copy_id"))
 						.add(resource.getLong("subject_copy_id")));
 
@@ -106,7 +106,7 @@ public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl imp
 	@Override
     public void listBySubjectIds(final JsonArray subjectIds, final Handler<Either<String, JsonArray>> handler){
 		final String query = "SELECT * FROM "+schema+"grain_copy WHERE subject_copy_id IN "+sql.listPrepared(subjectIds.getList());
-		sql.prepared(query, new fr.wseduc.webutils.collections.JsonArray(subjectIds.getList()), SqlResult.validResultHandler(handler));
+		sql.prepared(query, new JsonArray(subjectIds.getList()), SqlResult.validResultHandler(handler));
 	}
 
 }

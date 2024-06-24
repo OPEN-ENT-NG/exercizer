@@ -61,7 +61,7 @@ public class SubjectCopyTraining implements ResourcesProvider {
                 String query = "SELECT COUNT(*) FROM " + conf.getSchema() + "subject_scheduled ss " +
                         "LEFT JOIN " + conf.getSchema() + "subject_copy sc ON sc.subject_scheduled_id = ss.id " +
                         "WHERE ss.is_training_permitted AND ss.id = ? AND sc.owner = ? AND NOT sc.is_training_copy";
-                JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+                JsonArray values = new JsonArray();
                 values.add(id);
                 values.add(user.getUserId());
 

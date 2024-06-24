@@ -30,7 +30,7 @@ public class GrainsCopyAccess implements ResourcesProvider {
                     handler.handle(false);
                 } else {
                     resourceRequest.pause();
-                    JsonArray values = new fr.wseduc.webutils.collections.JsonArray();
+                    JsonArray values = new JsonArray();
                     String query = "SELECT COUNT(sc.id) FROM " +
                             conf.getSchema() + "subject_scheduled as ss INNER JOIN " + conf.getSchema() + "subject_copy sc ON ss.id = sc.subject_scheduled_id " +
                             "WHERE sc.id = ? ";
