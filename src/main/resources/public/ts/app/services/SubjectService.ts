@@ -3,6 +3,7 @@ import { ISubject, IGrain, IFolder, Subject } from '../models/domain';
 import { ISubjectDocument } from '../models/domain/SubjectDocument';
 import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainService } from './GrainService';
+import { timeLog } from 'core-js/core/log';
 
 function cleanBeforeSave(subject: ISubject|IGrain):ISubject|IGrain{
     const copy:any = {...subject}
@@ -15,6 +16,7 @@ function cleanBeforeSave(subject: ISubject|IGrain):ISubject|IGrain{
 }
 
 export interface ISubjectService {
+    generate(subject: any): Promise<any>;
     resolve(force?:boolean): Promise<boolean>;
     persist(subject: ISubject): Promise<ISubject>;
     importSubject(subject: ISubject, grains: IGrain[]): Promise<ISubject>;
@@ -401,6 +403,27 @@ export class SubjectService implements ISubjectService {
         subject.owner = { userId: subject.owner };
         Behaviours.findRights('exercizer', subject);
 
+    }
+
+    public generate = (subject: ISubject): Promise<any> => {
+        let content = {
+            id: subject.id,
+            docId: subject.files[0].doc_id
+        };
+
+        const request = {
+            method: 'POST',
+            url: '/exercizer/subject/generate',
+            data: content
+        };
+
+        return this._$http(request)
+            .then((response) => {
+                return response.data._id;
+            })
+            .catch(() => {
+                return Promise.reject("exercizer.error");
+            });
     }
 }
 

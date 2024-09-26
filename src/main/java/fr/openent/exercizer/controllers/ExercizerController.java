@@ -43,6 +43,7 @@ public class ExercizerController extends ControllerHelper {
     public ExercizerController(){
         final EventStore eventStore = EventStoreFactory.getFactory().getEventStore(Exercizer.class.getSimpleName());
         this.eventHelper = new EventHelper(eventStore);
+
     }
     @Get("")
     @SecuredAction("exercizer.view")

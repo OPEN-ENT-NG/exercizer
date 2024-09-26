@@ -3,6 +3,7 @@ import { angular } from 'entcore';
 import { ISubject, IFolder, Subject, ISubjectScheduled } from '../models/domain';
 import { ISubjectDocument } from '../models/domain/SubjectDocument';
 import { ISubjectService, ISubjectLibraryService, ISubjectScheduledService } from '../services';
+import { Buffer } from "buffer";
 
 class EditSimpleSubjectController {
 
@@ -37,6 +38,8 @@ class EditSimpleSubjectController {
         this._defaultTitle = idiom.translate('exercizer.simple.default.title');
         this._hasDataLoaded = false;
         this._readOnly = false;
+        var currentRoute = this._$location.path();
+        var lastSegment = currentRoute.split('/').pop();
 
         var self = this,
             subjectId = _$routeParams['subjectId'],
@@ -78,7 +81,12 @@ class EditSimpleSubjectController {
             //new subject
             var folderId = _$routeParams['folderId'];
             self._subject = new Subject();
-            self._subject.type = 'simple';
+            if (lastSegment && lastSegment == "generate") {
+                self._subject.type = 'interactive';
+            } else {
+                self._subject.type = 'simple';
+            }
+
             self._subject.title = '';
             if (folderId) {
                 self._subject.folder_id = folderId;
@@ -268,6 +276,19 @@ class EditSimpleSubjectController {
     public scheduleSubject() {
         this._$scope.$broadcast('E_DISPLAY_MODAL_SCHEDULE_SUBJECT', this._subject);
     };
+
+    public generate() {
+        var self = this;
+        self._subjectService.generate(this._subject).then(
+            (res) => {
+                notify.info('exercizer.generate.subject');
+                self.redirectToDashboard();
+            },
+            (err) => {
+                notify.error(err);
+            }
+        )
+    }
 
     /**
      *  GETTER
