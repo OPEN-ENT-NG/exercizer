@@ -24,6 +24,8 @@ class EditSimpleSubjectController {
     private _defaultTitle:string;
     public fileSelectionDisplayed = false;
     public selectedFile = { file: {}, visibility: 'protected' };
+    public lastSegment = null;
+    private base64Image = null;
 
     constructor
     (
@@ -37,6 +39,8 @@ class EditSimpleSubjectController {
         this._defaultTitle = idiom.translate('exercizer.simple.default.title');
         this._hasDataLoaded = false;
         this._readOnly = false;
+        var currentRoute = this._$location.path();
+        this.lastSegment = currentRoute.split('/').pop();
 
         var self = this,
             subjectId = _$routeParams['subjectId'],
@@ -78,7 +82,11 @@ class EditSimpleSubjectController {
             //new subject
             var folderId = _$routeParams['folderId'];
             self._subject = new Subject();
-            self._subject.type = 'simple';
+            if (this.lastSegment && this.lastSegment == "generate") {
+                self._subject.type = 'interactive';
+            } else {
+                self._subject.type = 'simple';
+            }
             self._subject.title = '';
             if (folderId) {
                 self._subject.folder_id = folderId;
@@ -229,7 +237,7 @@ class EditSimpleSubjectController {
         }
     };
 
-    public appendCorrected() {
+    public async appendCorrected() {
         const file = this.selectedFile.file;
         if(!file){
             return;
@@ -238,6 +246,16 @@ class EditSimpleSubjectController {
             (doc:ISubjectDocument) => {
                 this._subject.files.push(doc);
                 this.closeLightBox();
+                if (this.lastSegment && this.lastSegment == "generate") {
+                    this._subjectService.getFileFromWorkspace(file["_id"]).then(
+                        async (file: File) => {
+                            await this.convertToBase64(file)
+                        },
+                        (err) => {
+                            notify.error(err);
+                        }
+                    );
+                }
             },
             (err) => {
                 notify.error(err);
@@ -245,6 +263,19 @@ class EditSimpleSubjectController {
         );
     };
 
+    async convertToBase64(file: File): Promise<void> {
+        if (file) {
+            const blob = new Blob([file], { type: file.type });
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                this.base64Image = reader.result as string;
+                console.log(this.base64Image);
+            };
+            reader.readAsDataURL(blob);
+        } else {
+            console.error('No binary data found.');
+        }
+    }    
 
     private closeLightBox() {
         this.fileSelectionDisplayed = false;
@@ -268,6 +299,22 @@ class EditSimpleSubjectController {
     public scheduleSubject() {
         this._$scope.$broadcast('E_DISPLAY_MODAL_SCHEDULE_SUBJECT', this._subject);
     };
+
+    public generate() {
+        this._hasDataLoaded = false;
+        var self = this;
+        self._subjectService.generate({ ...this._subject, file: this.base64Image }).then(
+            (res) => {
+                this._hasDataLoaded = true;
+                this._$location.path("/subject/edit/" + this._subject.id);
+                notify.success('exercizer.generate.subject');
+            },
+            (err) => {
+                this._hasDataLoaded = true;
+                notify.error(err);
+            }
+        )
+    }
 
     /**
      *  GETTER
