@@ -7,7 +7,11 @@
     -
     <span
       translate
-      content="[[ type === 'simple' ? 'exercizer.simple.subject' : 'exercizer.interactive.subject' ]]"
+      content="[[ type === 'simple'
+      ? 'exercizer.simple.subject'
+      : type === 'generate'
+      ? 'exercizer.generate.subject'
+      : 'exercizer.interactive.subject' ]]"
     ></span>
   </h2>
   <h2 data-ng-if="step == 'choose'" class="flex-row align-center m-0 mb-24">
@@ -20,15 +24,9 @@
     <form name="formSubjectProperties" ng-submit="saveSubjectProperties()">
       <div class="grid grid-create-subject row">
         <div class="clip mb-16 relative">
-          <div
-            ng-class="{'default-img': !subject.picture}"
-            data-loading-panel="upload-collaborativeeditor-thumbnail"
-          >
-            <image-select
-              class="image-select-radius"
-              data-ng-model="subject.picture"
-              default="/img/illustrations/exercizer.svg"
-            ></image-select>
+          <div ng-class="{'default-img': !subject.picture}" data-loading-panel="upload-collaborativeeditor-thumbnail">
+            <image-select class="image-select-radius" data-ng-model="subject.picture"
+              default="/img/illustrations/exercizer.svg"></image-select>
           </div>
         </div>
         <div>
@@ -66,7 +64,7 @@
       </div>
     </form>
   </div>
-  <div data-ng-if="step == 'choose'" class="grid grid-2 gap-24">
+  <div data-ng-if="step == 'choose'" class="grid grid-2 gap-24" style="grid-template-columns: repeat(3, minmax(0px, 7fr));">
     <div class="action-card" data-ng-click="nextStep('simple')">
       <div class="action-card-image">
         <svg class="icon-depositeInbox" width="48" height="48">
@@ -85,9 +83,27 @@
         <button class="button button-link" data-ng-click="nextStep('simple')">
           <i18n>exercizer.create</i18n>
           <svg class="icon-arrowRight" width="20" height="20">
-            <use
-              href="exercizer/public/assets/icons/icons.svg#arrowRight"
-            ></use>
+            <use href="exercizer/public/assets/icons/icons.svg#arrowRight"></use>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="action-card" data-ng-click="nextStep('generate')">
+      <div class="action-card-image">
+        <img class="icon-checklist" width="48" height="48" src="exercizer/public/assets/icons/file.svg">
+      </div>
+      <div class="action-card-title fs-5">
+        <i18n>exercizer.choose.assist.title</i18n>
+      </div>
+      <div class="action-card-info">
+        <i18n>exercizer.choose.assist.info</i18n>
+      </div>
+      <div class="action-card-link">
+        <button class="button button-link" data-ng-click="nextStep('generate')">
+          <i18n>exercizer.create</i18n>
+          <svg class="icon-arrowRight" width="20" height="20">
+            <use href="exercizer/public/assets/icons/icons.svg#arrowRight"></use>
           </svg>
         </button>
       </div>

@@ -1,0 +1,128 @@
+<div data-ng-controller="EditSimpleSubjectController as editSimpleSubjectController" id="edit-subject">
+
+    <!-- LOADER -->
+    <div class="row" data-ng-if="!editSimpleSubjectController.hasDataLoaded">
+        <div class="info"><i18n>exercizer.loading</i18n></div>
+    </div>
+
+    <div data-ng-if="editSimpleSubjectController.hasDataLoaded">
+
+        <!-- TOP HEADER -->
+        <div class="flex align-items-center justify-space-between flex-wrap-wrap mb-24 mt-8">
+            <h1 class="cell flex-inline align-items-center gap-8 only-desktop mb-0 title">
+                <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
+                <span class="no-responsive"><span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
+                <span ng-if="!editSimpleSubjectController.subject.title.length" class="hover-orange" tooltip="exercizer.generate.subject" data-ng-click=""><i18n>exercizer.generate.subject</i18n></span>
+                <span ng-if="editSimpleSubjectController.subject.title.length" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
+            </h1>
+            <div class="flex-inline gap-8 flex-wrap-wrap justify-content-end">
+                <button class="right-magnet cell button button-secondary" 
+                        ng-if="editSimpleSubjectController.previewingFromLibrary"
+                        data-ng-click="editSimpleSubjectController.redirectToDashboard()">
+                    <svg class="icon-chevronLeft" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#chevronLeft"></use></svg>
+                    <i18n>exercizer.back.library</i18n>
+                </button>
+                <button class="right-magnet cell button button-secondary" 
+                        ng-if="!editSimpleSubjectController.previewingFromLibrary"
+                        data-ng-click="editSimpleSubjectController.redirectToDashboard()">
+                        <svg class="icon-save" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#save"></use></svg>
+                    <i18n>exercizer.update.quit</i18n>
+                </button>
+                <button class="right-magnet cell" data-ng-click="editSimpleSubjectController.displayModalCopyPaste()" data-ng-if="editSimpleSubjectController.previewingFromLibrary">
+                    <i18n>exercizer.copy.from.library</i18n>
+                </button>
+                <button class="button button-accent right-magnet cell" data-ng-if="!editSimpleSubjectController.readOnly && editSimpleSubjectController.subject.id" data-ng-click="editSimpleSubjectController.generate()">
+                    <svg class="icon-send" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/icons.svg#send"></use></svg>
+                    <i18n>exercizer.generate</i18n>
+                </button>
+            </div>
+        </div>
+
+        <div class="row mb-16">
+            <form name="formSubjectProperties">
+                <div class="grid grid-create-subject row">
+                    <div class="clip mb-16 relative">
+                        <div data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="editSimpleSubjectController.readOnly">
+                                <img ng-src="[[editSimpleSubjectController.subject.picture]]" ng-if="editSimpleSubjectController.subject.picture" class="absolute" />
+                                <img skin-src="/img/illustrations/exercizer.svg" ng-if="!editSimpleSubjectController.subject.picture" class="absolute" />
+                        </div>
+                        <div ng-class="{'default-img': editSimpleSubjectController.hasDefaultImage}" data-loading-panel="upload-collaborativeeditor-thumbnail" ng-if="!editSimpleSubjectController.readOnly">
+                            <image-select
+                                class="image-select-radius"
+                                readonly="editSimpleSubjectController.readOnly"
+                                ng-change="editSimpleSubjectController.saveSubjectProperties()"
+                                data-ng-model="editSimpleSubjectController.subject.picture"
+                                default="/img/illustrations/exercizer.svg"></image-select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="twelve cell">
+                            <div data-ng-if="editSimpleSubjectController.readOnly" class="twelve cell">[[editSimpleSubjectController.subject.title]]</div>
+                            <input type="text" maxlength="200" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.title" class="twelve cell" i18n-placeholder="exercizer.simple.default.placeholder">
+                        </div>
+                        <div class="twelve cell mt-16">
+                            <h4 class="mb-16"><i18n>exercizer.simple.edit.description</i18n></h4>
+                            <div data-ng-if="editSimpleSubjectController.readOnly"  style="word-wrap: break-word;" bind-html="editSimpleSubjectController.subject.description"></div>
+                            <textarea
+                            track-input-event="editSimpleSubjectController.subject.getTracker()"
+                            data-ng-model="editSimpleSubjectController.subject.description"
+                            class="twelve cell subject-edit-textarea"
+                            i18n-placeholder="exercizer.subject.desc"
+                          ></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <article class="row">
+            <h2 class="block mb-16"><i18n>exercizer.generate.file</i18n></h2>
+            <div>
+                <message-info status="info" class="block"><i18n>exercizer.file.limit1</i18n></message-info>
+                <div class="m-16">
+                    <div data-ng-repeat="file in editSimpleSubjectController.subject.files">
+                        <div class="selected-subject-scheduled">
+                            <div class="selected-subject-inner">
+                                <svg class="icon-attachement" width="16" height="16"><use href="exercizer/public/assets/icons/icons.svg#attachement"></use></svg>
+                                <span>[[file.metadata.filename]]</span>
+                            </div>
+                            <button class="remove"
+                                    data-ng-click="editSimpleSubjectController.removeCorrected(file)"
+                                    title="[['exercizer.scheduled.corrected.delete'|i18n]]"
+                                    aria-label="[['exercizer.scheduled.corrected.delete'|i18n]]">
+                                <svg class="icon-delete" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#delete"></use></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row media-library" ng-if="editSimpleSubjectController.subject.files.length < 1">
+                    <div id="simple-correction-id" class="drop-zone import-files import-files-custom">
+                        <article class="drop flex-row align-center">
+                            <div class="three m-0"></div>
+                            <svg class="icon-upload" width="24" height="24"><use href="exercizer/public/assets/icons/icons.svg#upload"></use></svg>
+                            <div class="seven help">
+                                <em><i18n>exercizer.drop.help2</i18n></em>
+                            </div>
+                        </article>
+                        <article class="default flex-row align-center">
+                            <button class="button file-button no-margin" style="min-width:fit-content;" ng-click="editSimpleSubjectController.fileSelectionDisplayed = true"><i18n>library.file.choose</i18n></button>
+                            <svg class="icon-upload" width="24" height="24"><use href="exercizer/public/assets/icons/icons.svg#upload"></use></svg>
+                            <div class="help">
+                                <em><i18n>exercizer.drop.help</i18n></em>
+                            </div>
+                        </article>
+                    </div>
+                    <lightbox show="editSimpleSubjectController.fileSelectionDisplayed" on-close="editSimpleSubjectController.fileSelectionDisplayed = false">
+                        <media-library 
+                            visibility="editSimpleSubjectController.selectedFile.visibility"
+                            ng-change="editSimpleSubjectController.appendCorrected()"
+                            ng-model="editSimpleSubjectController.selectedFile.file"
+                            file-format="'any'">
+                        </media-library>
+                    </lightbox>
+                </div>
+            </div>
+        </article>
+
+    </div>
+</div>
