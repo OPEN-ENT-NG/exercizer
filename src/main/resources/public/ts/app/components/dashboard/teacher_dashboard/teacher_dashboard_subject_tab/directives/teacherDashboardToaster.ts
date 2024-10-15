@@ -1,4 +1,4 @@
-import { ng, model, Behaviours, idiom } from 'entcore';
+import { Behaviours, idiom, model, ng } from 'entcore';
 import { LibraryService } from "entcore/types/src/ts/library/library.service";
 import { Subject } from "../../../../../models/domain";
 
@@ -126,7 +126,7 @@ export const teacherDashboardToaster = ng.directive('teacherDashboardToaster', [
                                     if(scope.folderList.length == 1){
                                         // folder is selected
                                         var folder = FolderService.folderById(scope.folderList[0]);
-                                        scope.$emit('E_OPEN_FOLDER', folder);
+                                        scope.$emit('E_EDIT_FOLDER', folder);
 
                                     }
                                     if(scope.subjectList.length == 1){
