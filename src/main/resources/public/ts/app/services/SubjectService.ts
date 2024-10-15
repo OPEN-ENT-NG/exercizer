@@ -405,10 +405,10 @@ export class SubjectService implements ISubjectService {
 
     }
 
-    public generate = (subject: ISubject): Promise<any> => {
+    public generate = (subject: any): Promise<any> => {
         let content = {
             id: subject.id,
-            docId: subject.files[0].doc_id
+            docId: subject.docId
         };
 
         const request = {
