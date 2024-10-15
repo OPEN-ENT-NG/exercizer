@@ -126,7 +126,7 @@ public class SubjectController extends ControllerHelper {
 	}
 
 	@Post("/subject/generate")
-	@SecuredAction("exercizer.subject.persist")
+	@SecuredAction(value = "", type = ActionType.AUTHENTICATED)
 	@ApiDoc("Persists a subject and creates an exercise generate.")
 	public void generateSubject(final HttpServerRequest request) {
 		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {

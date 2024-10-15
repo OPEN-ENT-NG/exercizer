@@ -215,11 +215,7 @@ export class GrainService implements IGrainService {
                 data: cleanBeforeSave(subject)
             };
 
-        if (!angular.isUndefined(this._listMappedBySubjectId[subject.id])) {
-            deferred.resolve(this._listMappedBySubjectId[subject.id]);
-        } else {
             this._listMappedBySubjectId[subject.id] = [];
-
             this._$http(request).then(
                 function (response) {
                     angular.forEach(response.data, function (grainObject) {
@@ -232,7 +228,7 @@ export class GrainService implements IGrainService {
                     deferred.reject('exercizer.error');
                 }
             );
-        }
+
         return deferred.promise;
     };
 

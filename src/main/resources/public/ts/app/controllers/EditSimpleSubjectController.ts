@@ -3,7 +3,6 @@ import { angular } from 'entcore';
 import { ISubject, IFolder, Subject, ISubjectScheduled } from '../models/domain';
 import { ISubjectDocument } from '../models/domain/SubjectDocument';
 import { ISubjectService, ISubjectLibraryService, ISubjectScheduledService } from '../services';
-import { Buffer } from "buffer";
 
 class EditSimpleSubjectController {
 
@@ -24,7 +23,7 @@ class EditSimpleSubjectController {
     private _readOnly:boolean;
     private _defaultTitle:string;
     public fileSelectionDisplayed = false;
-    public selectedFile = { file: {}, visibility: 'protected' };
+    public selectedFile = { file: {}, visibility: 'public' };
 
     constructor
     (
@@ -86,7 +85,6 @@ class EditSimpleSubjectController {
             } else {
                 self._subject.type = 'simple';
             }
-
             self._subject.title = '';
             if (folderId) {
                 self._subject.folder_id = folderId;
@@ -278,13 +276,16 @@ class EditSimpleSubjectController {
     };
 
     public generate() {
+        this._hasDataLoaded = false;
         var self = this;
-        self._subjectService.generate(this._subject).then(
+        self._subjectService.generate({ ...this._subject, docId: this.selectedFile.file["_id"] }).then(
             (res) => {
-                notify.info('exercizer.generate.subject');
-                self.redirectToDashboard();
+                this._hasDataLoaded = true;
+                this._$location.path("/subject/edit/" + this._subject.id);
+                notify.success('exercizer.generate.subject');
             },
             (err) => {
+                this._hasDataLoaded = true;
                 notify.error(err);
             }
         )
