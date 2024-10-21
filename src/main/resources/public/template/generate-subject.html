@@ -54,7 +54,7 @@
             <h1 class="cell flex-inline align-items-center gap-8 only-desktop mb-0 title">
                 <svg class="icon-exercizer" width="30" height="30"><use href="exercizer/public/assets/icons/illustrations.svg#exercizer"></use></svg>
                 <span class="no-responsive"><span class="hover-orange" data-ng-click="editSimpleSubjectController.redirectToDashboard()"><i18n>exercizer.title</i18n></span> / </span>
-                <span ng-if="!editSimpleSubjectController.subject.title.length" class="hover-orange" tooltip="exercizer.generate.subject" data-ng-click=""><i18n>exercizer.generate.subject</i18n></span>
+                <span ng-if="!editSimpleSubjectController.subject.title.length" class="hover-orange" tooltip="exercizer.generate" data-ng-click=""><i18n>exercizer.generate</i18n></span>
                 <span ng-if="editSimpleSubjectController.subject.title.length" tooltip="[[editSimpleSubjectController.subject.title]]" data-ng-click="">[[ editSimpleSubjectController.subject.title | limitTo: 35  ]][[ editSimpleSubjectController.subject.title.length > 35 ? '...' : '']]</span>
             </h1>
             <div class="flex-inline gap-8 flex-wrap-wrap justify-content-end">
@@ -120,7 +120,8 @@
         <article class="row">
             <h2 class="block mb-16"><i18n>exercizer.generate.file</i18n></h2>
             <div>
-                <message-info status="info" class="block"><i18n>exercizer.file.limit1</i18n></message-info>
+                <message-info status="info" data-ng-if="editSimpleSubjectController.subject.files.length == 1" class="block"><i18n>exercizer.file.limit1</i18n></message-info>
+                <message-info status="info" data-ng-if="editSimpleSubjectController.subject.files.length < 1" class="block"><i18n>exercizer.file.instruct</i18n></message-info>
                 <div class="m-16">
                     <div data-ng-repeat="file in editSimpleSubjectController.subject.files">
                         <div class="selected-subject-scheduled">
