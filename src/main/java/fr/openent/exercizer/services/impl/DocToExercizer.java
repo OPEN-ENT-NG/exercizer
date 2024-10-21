@@ -55,38 +55,52 @@ public class DocToExercizer {
             JsonArray bodyArray = data.getJsonArray("body");
             for (int i = 0; i < bodyArray.size(); i++) {
                 JsonObject bodyObject = bodyArray.getJsonObject(i);
-                if ("statement".equals(bodyObject.getString("type"))) {
-                    continue;
-                }
-                JsonArray answers = bodyObject.getJsonArray("answers");
-                String title = bodyObject.getString("content", "");
-                String statement = bodyObject.getString("title", "");
-                String hint = bodyObject.getString("hint", "");
-                String explanation = bodyObject.getString("explanation", "");
-                JsonArray correctAnswerList = new JsonArray();
-                if (answers != null) {
-                    for (int j = 0; j < answers.size(); j++) {
-                        JsonObject answer = answers.getJsonObject(j);
-                        JsonObject answerObj = new JsonObject()
-                                .put("text", answer.getString("content", ""));
-                        correctAnswerList.add(answerObj);
+                String type = bodyObject.getString("type");
+
+                if ("statement".equals(type)) {
+                    JsonObject customData = new JsonObject()
+                            .put("statement", "<div>" + bodyObject.getString("content", "") + "</div>");
+                    JsonObject grainData = new JsonObject()
+                            .put("title", bodyObject.getString("title", ""))
+                            .put("max_score", 0)
+                            .put("custom_data", customData);
+                    JsonObject output = new JsonObject()
+                            .put("grainTypeId", 3)
+                            .put("orderBy", i + 1)
+                            .put("grainData", grainData);
+                    resultArray.add(output);
+                } else {
+                    JsonArray answers = bodyObject.getJsonArray("answers");
+                    String title = bodyObject.getString("content", "");
+                    String statement = bodyObject.getString("title", "");
+                    String hint = bodyObject.getString("hint", "");
+                    String explanation = bodyObject.getString("explanation", "");
+                    JsonArray correctAnswerList = new JsonArray();
+                    if (answers != null) {
+                        for (int j = 0; j < answers.size(); j++) {
+                            JsonObject answer = answers.getJsonObject(j);
+                            JsonObject answerObj = new JsonObject()
+                                    .put("text", answer.getString("content", ""))
+                                    .put("isChecked", false);
+                            correctAnswerList.add(answerObj);
+                        }
                     }
+                    JsonObject customData = new JsonObject()
+                            .put("correct_answer_list", correctAnswerList)
+                            .put("no_error_allowed", false);
+                    JsonObject grainData = new JsonObject()
+                            .put("title", title)
+                            .put("statement", "<div class=\"ng-scope\">" + statement + "</div>")
+                            .put("answer_hint", hint)
+                            .put("answer_explanation", explanation)
+                            .put("max_score", 0)
+                            .put("custom_data", customData);
+                    JsonObject output = new JsonObject()
+                            .put("grainTypeId", 6)
+                            .put("orderBy", i + 1)
+                            .put("grainData", grainData);
+                    resultArray.add(output);
                 }
-                JsonObject customData = new JsonObject()
-                        .put("correct_answer_list", correctAnswerList)
-                        .put("no_error_allowed", false);
-                JsonObject grainData = new JsonObject()
-                        .put("title", title)
-                        .put("statement", "<div class=\"ng-scope\">" + statement + "</div>")
-                        .put("answer_hint", hint)
-                        .put("answer_explanation", explanation)
-                        .put("max_score", 0)
-                        .put("custom_data", customData);
-                JsonObject output = new JsonObject()
-                        .put("grainTypeId", 6)
-                        .put("orderBy", i + 1)
-                        .put("grainData", grainData);
-                resultArray.add(output);
             }
             return resultArray;
         } catch (Exception e) {
@@ -98,43 +112,61 @@ public class DocToExercizer {
     public static JsonArray convertToMqc(JsonObject input) {
         try {
             JsonArray resultArray = new JsonArray();
-            JsonObject headerObject = input.getJsonObject("data").getJsonObject("header");
-            JsonArray bodyArray = input.getJsonObject("data").getJsonArray("body");
+            JsonObject data = input.getJsonObject("data");
+            JsonObject headerObject = data.getJsonObject("header");
+            JsonArray bodyArray = data.getJsonArray("body");
+            
             for (int i = 0; i < bodyArray.size(); i++) {
                 JsonObject bodyObject = bodyArray.getJsonObject(i);
-                JsonArray answers = bodyObject.getJsonArray("answers");
-                String hint = bodyObject.getString("hint", "");
-                String explanation = bodyObject.getString("explanation", "");
-                String title = bodyObject.getString("content", "Untitled");
-                JsonArray correctAnswerList = new JsonArray();
-                for (int j = 0; j < answers.size(); j++) {
-                    JsonObject answer = (JsonObject) answers.getValue(j);
-                    boolean isCorrect = false;
-                    if (answer.containsKey("is_correct") && answer.getValue("is_correct") instanceof Boolean) {
-                        isCorrect = answer.getBoolean("is_correct", false);
-                    }
-                    JsonObject answerObj = new JsonObject()
+                String type = bodyObject.getString("type");
+                
+                if ("statement".equals(type)) {
+                    JsonObject customData = new JsonObject()
+                        .put("statement", "<div>" + bodyObject.getString("content", "") + "</div>");
+                    JsonObject grainData = new JsonObject()
+                        .put("title", bodyObject.getString("title", ""))
+                        .put("max_score", 0)
+                        .put("custom_data", customData);
+                    JsonObject output = new JsonObject()
+                        .put("grainTypeId", 3)
+                        .put("orderBy", i + 1)
+                        .put("grainData", grainData);
+                    resultArray.add(output);
+                } else {
+                    JsonArray answers = bodyObject.getJsonArray("answers");
+                    String hint = bodyObject.getString("hint", "");
+                    String explanation = bodyObject.getString("explanation", "");
+                    String title = bodyObject.getString("content", "Untitled");
+                    JsonArray correctAnswerList = new JsonArray();
+                    
+                    for (int j = 0; j < answers.size(); j++) {
+                        JsonObject answer = answers.getJsonObject(j);
+                        boolean isCorrect = false;
+                        if (answer.containsKey("is_correct") && answer.getValue("is_correct") instanceof Boolean) {
+                            isCorrect = answer.getBoolean("is_correct", false);
+                        }
+                        JsonObject answerObj = new JsonObject()
                             .put("isChecked", isCorrect)
                             .put("text", answer.getString("content", ""));
-                    correctAnswerList.add(answerObj);
-                }
-                JsonObject customData = new JsonObject()
+                        correctAnswerList.add(answerObj);
+                    }
+                    
+                    JsonObject customData = new JsonObject()
                         .put("correct_answer_list", correctAnswerList)
                         .put("no_error_allowed", false);
-                JsonObject grainData = new JsonObject()
+                    JsonObject grainData = new JsonObject()
                         .put("title", title)
                         .put("answer_hint", hint)
                         .put("answer_explanation", explanation)
                         .put("max_score", 0)
                         .put("custom_data", customData);
-                JsonObject output = new JsonObject()
+                    JsonObject output = new JsonObject()
                         .put("grainTypeId", 7)
                         .put("orderBy", i + 1)
                         .put("grainData", grainData);
-
-                resultArray.add(output);
+                    resultArray.add(output);
+                }
             }
-
             return resultArray;
         } catch (Exception e) {
             log.error("Échec de l'analyse du tableau JSON : " + e);
@@ -189,7 +221,8 @@ public class DocToExercizer {
         JsonObject requestData = new JsonObject()
                 .put("data", new JsonArray()
                         .add(new JsonObject()
-                                .put("path", path)));
+                                .put("path",
+                                        path)));
         client.postAbs(convertUrl, response -> {
                     if (response.statusCode() == 200) {
                         response.bodyHandler(body -> {
