@@ -28,3 +28,12 @@
 <div class="row mb-16" data-ng-if="grainType.id > 5 && grainCopy.grain_copy_data.custom_copy_data.no_error_allowed">
     <message-info status="warning"><i18n>exercizer.grain.no.error.allowed</i18n></message-info>
 </div>
+
+<div class="row mb-16" data-ng-if="grainType.id > 5 && grainCopy.grain_copy_data.custom_copy_data.multipleAnswers">
+    <label class="form-label flex align-items-center m-8 gap-8">
+        <i18n>exercizer.grain.title.multiple.answers</i18n>
+    </label>
+    <div class="cell row">
+        <em class="form-info"><i18n>exercizer.grain.multiple.answers</i18n></em>
+    </div>
+</div>

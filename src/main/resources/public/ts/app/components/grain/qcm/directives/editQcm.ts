@@ -37,10 +37,16 @@ export const editQcm = ng.directive('editQcm',
                     _updateGrain(scope.grain);
                 };
 
+                scope.toggleMultipleAnswers = function() {
+                    scope.grain.grain_data.custom_data.multipleAnswers = !scope.grain.grain_data.custom_data.multipleAnswers;
+                    _updateGrain(scope.grain);
+                };
+
                 const _updateGrain = (grain) => {
                     let savedGrain = new Grain();
                     savedGrain = angular.copy(grain, savedGrain);
                     savedGrain.grain_data.custom_data.correct_answer_list = savedGrain.grain_data.custom_data.correct_answer_list.filter(answer => !!answer.text);
+                    savedGrain.grain_data.custom_data.multipleAnswers = grain.grain_data.custom_data.multipleAnswers;
                     scope.$emit('E_UPDATE_GRAIN', savedGrain);
                 }
             }
