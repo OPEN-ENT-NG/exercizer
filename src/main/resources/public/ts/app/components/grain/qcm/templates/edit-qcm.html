@@ -12,8 +12,8 @@
         <input 
             id="option-multiple-[[grain.id]]"
             type="checkbox" 
-            data-ng-model="grain.grain_data.custom_data.multipleAnswers" 
-            data-ng-change="toggleMultipleAnswers()">
+            ng-model="grain.grain_data.custom_data.multipleAnswers" 
+            ng-click="toggleMultipleAnswers()">
         <label for="option-multiple-[[grain.id]]"><i18n>exercizer.grain.mode.option.multiple</i18n></label>
     </div>
 </div>
