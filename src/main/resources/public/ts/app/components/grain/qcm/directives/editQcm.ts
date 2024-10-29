@@ -37,11 +37,6 @@ export const editQcm = ng.directive('editQcm',
                     _updateGrain(scope.grain);
                 };
 
-                scope.toggleMultipleAnswers = function() {
-                    scope.grain.grain_data.custom_data.multipleAnswers = !scope.grain.grain_data.custom_data.multipleAnswers;
-                    _updateGrain(scope.grain);
-                };
-
                 const _updateGrain = (grain) => {
                     let savedGrain = new Grain();
                     savedGrain = angular.copy(grain, savedGrain);
