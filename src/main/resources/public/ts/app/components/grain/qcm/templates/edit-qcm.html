@@ -6,7 +6,11 @@
             type="checkbox"
             data-ng-model="grain.grain_data.custom_data.no_error_allowed"
             data-ng-change="updateGrain()" />
-        <label for="ck-no-err-allowed-[[grain.id]]"><i18n>exercizer.grain.mode.option</i18n></label>
+        <label for="ck-no-err-allowed-[[grain.id]]"><i18n>exercizer.grain.mode.option.one</i18n></label>
+    </div>
+    <div class="flex-row align-center gap-8 mt-4 mb-8">
+        <input type="checkbox" ng-model="grain.grain_data.custom_data.multipleAnswers" ng-click="toggleMultipleAnswers()">
+        <label for="ck-no-err-allowed-[[grain.id]]"><i18n>exercizer.grain.mode.option.multiple</i18n></label>
     </div>
 </div>
 
