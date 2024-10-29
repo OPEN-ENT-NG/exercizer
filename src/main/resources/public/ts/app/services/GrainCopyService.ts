@@ -466,6 +466,7 @@ export class GrainCopyService implements IGrainCopyService {
 
         if (grain.grain_data.custom_data && grainCopy.grain_copy_data.custom_copy_data && grain.grain_type_id > 5) {
             grainCopy.grain_copy_data.custom_copy_data.no_error_allowed = grain.grain_data.custom_data.no_error_allowed;
+            grainCopy.grain_copy_data.custom_copy_data.multipleAnswers = grain.grain_data.custom_data.multipleAnswers;
         }
     };
 
