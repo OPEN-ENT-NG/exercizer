@@ -10,7 +10,7 @@
         <button class="button button-accent" data-ng-if="!hasNext() && subjectCopy.is_training_copy" data-ng-click="submitSubjectCopy()">
             <i18n>exercizer.copy.see.final.score</i18n>
         </button>
-        <button class="button button-accent" data-ng-click="navigateToNext()" data-ng-if="hasNext()">
+        <button class="button button-accent" data-ng-click="navigateToNext()" data-ng-if="hasNext()" style="z-index: 9000;">
         <i18n>exercizer.next</i18n>
         <svg class="icon-chevronRight" width="20" height="20"><use href="exercizer/public/assets/icons/icons.svg#chevronRight"></use></svg>
         </button>
