@@ -1,5 +1,5 @@
     {
-      "name": "fr.openent~exercizer~3.1.4",
+      "name": "fr.openent~exercizer~5.5-mail-to-exercizer-SNAPSHOT",
       "config": {
         "main" : "fr.openent.exercizer.Exercizer",
         "port" : 8105,
