@@ -15,6 +15,8 @@ function cleanBeforeSave(subject: ISubject|IGrain):ISubject|IGrain{
 }
 
 export interface ISubjectService {
+    renameFileInWorkspace (id:string, name:string)
+    trackEvent(eventType: any): void;
     resolve(force?:boolean): Promise<boolean>;
     persist(subject: ISubject): Promise<ISubject>;
     importSubject(subject: ISubject, grains: IGrain[]): Promise<ISubject>;
@@ -402,6 +404,31 @@ export class SubjectService implements ISubjectService {
         Behaviours.findRights('exercizer', subject);
 
     }
+
+    public async trackEvent(eventType: any) {
+        if (eventType && eventType.length > 0) {
+            const eventJson: any = {
+                "event-type": eventType,
+            };
+            try {
+                await this._$http.post("/infra/event/web/store", eventJson);
+
+            } catch (e) {
+                console.error("[TrackingInternal] failed to trackEvent: ", e);
+            }
+        }
+
+    }
+
+    public async renameFileInWorkspace( id: string, name: string) {
+        try {
+            await this._$http.put("/workspace/rename/" + id, { name: name });
+        } catch (e) {
+            console.error("failed to rename file: ", e);
+        }
+    }
+
+
 }
 
 export const subjectService = ng.service('SubjectService', SubjectService);
