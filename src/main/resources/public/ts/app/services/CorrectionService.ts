@@ -61,7 +61,7 @@ export class CorrectionService implements ICorrectionService {
                         grainCopyList.forEach((grain) => {
                             score += this.genericCorrection(grainScheduledList.find((grainScheduled) => {return grainScheduled.id === grain.grain_scheduled_id}), grain);
                         });
-                        subjectCopy.calculated_score = score;
+                        subjectCopy.calculated_score = Math.ceil(score * 100) / 100;
                         this._subjectCopyService.update(subjectCopy);
                     })
                 })
@@ -81,7 +81,7 @@ export class CorrectionService implements ICorrectionService {
                     promises.push(this._grainCopyService.update(grain));
                     score += grainScore;
                 });
-                subjectCopy.calculated_score = score;
+                subjectCopy.calculated_score = Math.ceil(score * 100) / 100;
                 subjectCopy.has_been_started = false;
                 promises.push(this._subjectCopyService.update(subjectCopy));
                 this._$q.all(promises).then(data => {
