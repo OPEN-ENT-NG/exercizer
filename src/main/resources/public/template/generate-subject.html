@@ -1,49 +1,38 @@
 <head>
     <style>
-    .info {
-            display: flex;
-            align-items: center;
-            gap: 6%;}
-    .loader{
-        display: block;
-        position: relative;
-        height: 12px;
-        width: 70%;
-        border: 1px solid #fff;
-        border-radius: 2px;
-        overflow: hidden;
-        }
-        .loader::after {
-        content: '';
-        width: 40%;
-        height: 100%;
-        background: #43ABD3;
-        position: absolute;
-        top: 0;
-        left: 0;
-        box-sizing: border-box;
-        animation: animloader 2s linear infinite;
-        }
-        
-        @keyframes animloader {
-        0% {
-            left: 0;
-            transform: translateX(-100%);
-        }
-        100% {
-            left: 100%;
-            transform: translateX(0%);
-        }
-        }
+        .info-loader {
+                background-color: transparent !important;
+                font-family: 'Comfortaa' !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        .loader-container{
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(1, 1fr);
+                grid-column-gap: 0px;
+                grid-row-gap: 30px; 
+                border-radius: 15px;
+                padding: 20px;
+                background-color: white;
+                place-items: center; 
+            }
+        .loader{
+                width: 300px;
+                height: auto;
+            }        
     </style>
 </head>
 <div data-ng-controller="EditSimpleSubjectController as editSimpleSubjectController" id="edit-subject">
 
     <!-- LOADER -->
     <div class="row" data-ng-if="!editSimpleSubjectController.hasDataLoaded">
-        <div class="info">
-            <i18n>exercizer.genrete.loader</i18n>
-            <span class="loader"></span>
+        <div class="info-loader">
+            <div class="loader-container">
+                <img class="loader" src="exercizer/public/assets/img/d2E-loading.gif">
+                <i18n >exercizer.genrete.loader</i18n>
+            </div>
         </div>
     </div>
 

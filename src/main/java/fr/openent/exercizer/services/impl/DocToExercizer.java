@@ -93,7 +93,7 @@ public class DocToExercizer {
                             .put("statement", "<div class=\"ng-scope\">" + statement + "</div>")
                             .put("answer_hint", hint)
                             .put("answer_explanation", explanation)
-                            .put("max_score", 0)
+                            .put("max_score", 1)
                             .put("custom_data", customData);
                     JsonObject output = new JsonObject()
                             .put("grainTypeId", 6)
@@ -158,7 +158,7 @@ public class DocToExercizer {
                         .put("title", title)
                         .put("answer_hint", hint)
                         .put("answer_explanation", explanation)
-                        .put("max_score", 0)
+                            .put("max_score", 1)
                         .put("custom_data", customData);
                     JsonObject output = new JsonObject()
                         .put("grainTypeId", 7)
@@ -221,8 +221,7 @@ public class DocToExercizer {
         JsonObject requestData = new JsonObject()
                 .put("data", new JsonArray()
                         .add(new JsonObject()
-                                .put("path",
-                                        path)));
+                        .put("path", path)));
         client.postAbs(convertUrl, response -> {
                     if (response.statusCode() == 200) {
                         response.bodyHandler(body -> {
