@@ -16,6 +16,8 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.service.VisibilityFilter;
 import org.entcore.common.user.UserInfos;
+import io.vertx.ext.web.client.WebClient;
+import io.vertx.ext.web.client.WebClientOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,20 +34,19 @@ public class DocToExercizer {
     private final ISubjectService subjectService;
     private final IGrainService grainService;
     protected EventBus eb;
-    private HttpClient client;
+    private final WebClient client;
 
     public DocToExercizer(Vertx vertx, final ExercizerExplorerPlugin plugin, JsonObject conf) {
         if (vertx != null) {
             this.eb = Server.getEventBus(vertx);
-            this.client = vertx.createHttpClient();
         }
+        this.client = WebClient.create(vertx);
         this.subjectService = new SubjectServiceSqlImpl(plugin);
         this.grainService = new GrainServiceSqlImpl();
         this.config = conf.getJsonObject("doc-to-exercizer");
         this.convertUrl = config.getString("convertUrl", "");
         this.hfToken = config.getString("hftoken", "");
         this.url = conf.getString("host") + "/workspace/pub/document/";
-
     }
 
     public static JsonArray convertToShort(JsonObject input) {
@@ -222,90 +223,70 @@ public class DocToExercizer {
                 .put("data", new JsonArray()
                         .add(new JsonObject()
                         .put("path", path)));
-        client.postAbs(convertUrl, response -> {
+
+        client.postAbs(convertUrl)
+                .putHeader("Content-Type", "application/json")
+                .putHeader("Authorization", "Bearer " + hfToken)
+                .sendJson(requestData)
+                .onSuccess(response -> {
                     if (response.statusCode() == 200) {
-                        response.bodyHandler(body -> {
-                            JsonObject responseBody = body.toJsonObject();
-                            String eventId = responseBody.getString("event_id");
-                    if (eventId != null) {
-                        log.info("Conversion started, Event ID: " + eventId);
-                        String resultUrl = convertUrl + "/" + eventId;
+                        JsonObject responseBody = response.bodyAsJsonObject();
+                        String eventId = responseBody.getString("event_id");
+                        if (eventId != null) {
+                            log.info("Conversion started, Event ID: " + eventId);
+                            String resultUrl = convertUrl + "/" + eventId;
 
-                        client.getAbs(resultUrl, resultResponse -> {
-                            if (resultResponse.statusCode() == 200) {
-                                resultResponse.bodyHandler(resultBody -> {
-                                    String rawResult = resultBody.toString();
-                                    try {
-                                        // Parse SSE format
-                                        String[] lines = rawResult.split("\n");
-                                        String jsonData = null;
-                                        for (String line : lines) {
-                                            if (line.startsWith("data:")) {
-                                                jsonData = line.substring(5).trim();
-                                                if (!jsonData.equals("null")) {
-                                                    break;
-                                                }
-                                            }
-                                        }
-
-                                        if (jsonData != null && !jsonData.equals("null")) {
+                            client.getAbs(resultUrl)
+                                    .putHeader("Authorization", "Bearer " + hfToken)
+                                    .send()
+                                    .onSuccess(resultResponse -> {
+                                        if (resultResponse.statusCode() == 200) {
+                                            String rawResult = resultResponse.bodyAsString();
                                             try {
-                                                JsonArray jsonArray = new JsonArray(jsonData);
-                                                log.info(
-                                                        "\n================== Hugging Face response ==================\n"
-                                                                +
-                                                                jsonArray +
-                                                                "\n========================================================\n");
-                                                handler.handle(jsonArray);
+                                                String[] lines = rawResult.split("\n");
+                                                String jsonData = null;
+                                                for (String line : lines) {
+                                                    if (line.startsWith("data:")) {
+                                                        jsonData = line.substring(5).trim();
+                                                        if (!jsonData.equals("null")) {
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+
+                                                if (jsonData != null && !jsonData.equals("null")) {
+                                                    try {
+                                                        JsonArray jsonArray = new JsonArray(jsonData);
+                                                        handler.handle(jsonArray);
+                                                    } catch (Exception e) {
+                                                        handleError("Failed to parse JSON Array: " + e.getMessage(), handler);
+                                                    }
+                                                } else {
+                                                    handleError("No data field found in the response", handler);
+                                                }
                                             } catch (Exception e) {
-                                                JsonObject errorResponse = new JsonObject()
-                                                        .put("response_error", new JsonObject(resultBody))
-                                                        .put("error_description",
-                                                                "Failed to parse JSON Array: " + e.getMessage());
-                                                log.error("Failed to parse JSON Array: " + e.getMessage());
-                                                handler.handle(new JsonArray().add(errorResponse));
+                                                handleError("Failed to parse JSON: " + e.getMessage(), handler);
                                             }
                                         } else {
-                                            JsonObject errorResponse = new JsonObject()
-                                                    .put("response_error", new JsonObject(resultBody))
-                                                    .put("error_description", "No data field found in the response");
-                                            log.error("No data found in response");
-                                            handler.handle(new JsonArray().add(errorResponse));
+                                            handleError("Failed to fetch conversion result: Status " + resultResponse.statusCode(), handler);
                                         }
-                                    } catch (Exception e) {
-                                        JsonObject errorResponse = new JsonObject()
-                                                .put("response_error", new JsonObject(resultBody))
-                                                .put("error_description", "Failed to parse JSON: " + e.getMessage());
-                                        log.error("Failed to parse JSON : " + e.getMessage());
-                                        handler.handle(new JsonArray().add(errorResponse));
-                                    }
-                                });
-                            } else {
-                                JsonObject errorResponse = new JsonObject()
-                                        .put("status_code", resultResponse.statusCode())
-                                        .put("error_description", "Failed to fetch conversion result");
-                                log.error("Failed to fetch result: " + resultResponse.statusCode());
-                                handler.handle(new JsonArray().add(errorResponse));
-                            }
-                        }).putHeader("Authorization", "Bearer " + hfToken)
-                                .end();
+                                    })
+                                    .onFailure(err -> handleError("Failed to get result: " + err.getMessage(), handler));
+                        } else {
+                            handleError("No event ID found in the response", handler);
+                        }
                     } else {
-                        JsonObject errorResponse = new JsonObject()
-                                .put("error_description", "No event ID found in the response");
-                        log.error("No event ID found in response");
-                        handler.handle(new JsonArray().add(errorResponse));
+                        handleError("Failed to initiate conversion: Status " + response.statusCode(), handler);
                     }
-                        });
-                    } else {
-                JsonObject errorResponse = new JsonObject()
-                        .put("status_code", response.statusCode())
-                        .put("error_description", "Failed to initiate conversion");
-                handler.handle(new JsonArray().add(errorResponse));
-                        log.error("Failed to initiate conversion: " + response.statusCode());
-                    }
-                }).putHeader("Content-Type", "application/json")
-                .putHeader("Authorization", "Bearer " + hfToken)
-                .end(requestData.encode());
+                })
+                .onFailure(err -> handleError("Failed to send request: " + err.getMessage(), handler));
+    }
+
+    private void handleError(String message, Handler<JsonArray> handler) {
+        log.error(message);
+        JsonObject errorResponse = new JsonObject()
+                .put("error_description", message);
+        handler.handle(new JsonArray().add(errorResponse));
     }
 
     public void generate(final HttpServerRequest request, UserInfos user, JsonObject resource) {
