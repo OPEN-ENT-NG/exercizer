@@ -199,7 +199,7 @@
   "exercizer.preview.copy": "Copie de NOM prénom",
   "exercizer.preview.correction": "Aperçu de la correction",
   "exercizer.copy.from.library": "Copier dans mes sujets",
-  "exercizer.choose": "Quel type de sujet voulez-vous créer ?",
+  "exercizer.choose": "Quel type de sujet voulez-vous créer ? 💬 ",
   "exercizer.choose.library": "Permet d'importer un sujet publié par les enseignants du réseau dans la bibliothèque.",
   "exercizer.choose.simple.title": "Sujet à rendre",
   "exercizer.choose.simple.info": "Organisez une remise de devoir sous forme de fichier et suivez les rendus des élèves.",
