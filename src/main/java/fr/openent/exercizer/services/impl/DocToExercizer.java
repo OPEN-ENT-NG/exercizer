@@ -1,5 +1,12 @@
 package fr.openent.exercizer.services.impl;
 
+import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.entcore.common.user.UserInfos;
+
 import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.services.IGrainService;
 import fr.openent.exercizer.services.ISubjectService;
@@ -9,20 +16,15 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpClient;
+import io.vertx.core.http.HttpClientOptions;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.RequestOptions;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import org.entcore.common.service.VisibilityFilter;
-import org.entcore.common.user.UserInfos;
-import io.vertx.ext.web.client.WebClient;
-import io.vertx.ext.web.client.WebClientOptions;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
+import io.vertx.core.Promise;
 
 public class DocToExercizer {
 
@@ -34,13 +36,13 @@ public class DocToExercizer {
     private final ISubjectService subjectService;
     private final IGrainService grainService;
     protected EventBus eb;
-    private final WebClient client;
+    private HttpClient client;
 
     public DocToExercizer(Vertx vertx, final ExercizerExplorerPlugin plugin, JsonObject conf) {
         if (vertx != null) {
             this.eb = Server.getEventBus(vertx);
+            this.client = vertx.createHttpClient(new HttpClientOptions());
         }
-        this.client = WebClient.create(vertx);
         this.subjectService = new SubjectServiceSqlImpl(plugin);
         this.grainService = new GrainServiceSqlImpl();
         this.config = conf.getJsonObject("doc-to-exercizer");
@@ -222,64 +224,96 @@ public class DocToExercizer {
         JsonObject requestData = new JsonObject()
                 .put("data", new JsonArray()
                         .add(new JsonObject()
-                        .put("path", path)));
+                                .put("path", path)));
 
-        client.postAbs(convertUrl)
-                .putHeader("Content-Type", "application/json")
-                .putHeader("Authorization", "Bearer " + hfToken)
-                .sendJson(requestData)
-                .onSuccess(response -> {
-                    if (response.statusCode() == 200) {
-                        JsonObject responseBody = response.bodyAsJsonObject();
-                        String eventId = responseBody.getString("event_id");
+        client.request(new RequestOptions()
+            .setAbsoluteURI(convertUrl)
+            .setMethod(HttpMethod.POST)
+            .addHeader("content-type", "application/json")
+            .addHeader("Authorization", "Bearer " + hfToken))
+            .flatMap(request -> request.send(requestData.encode()))
+            .onSuccess( response -> {
+                if (response.statusCode() == 200) {
+                    response.bodyHandler(body -> {
+                        JsonObject json = body.toJsonObject();
+                        String eventId = json.getString("event_id");
                         if (eventId != null) {
                             log.info("Conversion started, Event ID: " + eventId);
                             String resultUrl = convertUrl + "/" + eventId;
 
-                            client.getAbs(resultUrl)
-                                    .putHeader("Authorization", "Bearer " + hfToken)
-                                    .send()
-                                    .onSuccess(resultResponse -> {
-                                        if (resultResponse.statusCode() == 200) {
-                                            String rawResult = resultResponse.bodyAsString();
-                                            try {
-                                                String[] lines = rawResult.split("\n");
-                                                String jsonData = null;
-                                                for (String line : lines) {
-                                                    if (line.startsWith("data:")) {
-                                                        jsonData = line.substring(5).trim();
-                                                        if (!jsonData.equals("null")) {
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-
-                                                if (jsonData != null && !jsonData.equals("null")) {
-                                                    try {
-                                                        JsonArray jsonArray = new JsonArray(jsonData);
-                                                        handler.handle(jsonArray);
-                                                    } catch (Exception e) {
-                                                        handleError("Failed to parse JSON Array: " + e.getMessage(), handler);
-                                                    }
-                                                } else {
-                                                    handleError("No data field found in the response", handler);
-                                                }
-                                            } catch (Exception e) {
-                                                handleError("Failed to parse JSON: " + e.getMessage(), handler);
-                                            }
-                                        } else {
-                                            handleError("Failed to fetch conversion result: Status " + resultResponse.statusCode(), handler);
+                            client.request(new RequestOptions()
+                            .setAbsoluteURI(resultUrl)
+                            .setMethod(HttpMethod.GET)
+                            .addHeader("Accept", "text/event-stream")
+                            .addHeader("Cache-Control", "no-cache")
+                            .addHeader("Authorization", "Bearer " + hfToken))
+                            .flatMap(requestGet -> {
+                                Promise<Void> promise = Promise.promise();
+                                
+                                StringBuilder dataBuffer = new StringBuilder();
+                                
+                                return requestGet.send().onSuccess(sseResponse -> {
+                                    sseResponse.handler(chunk -> {
+                                        String chunkStr = chunk.toString();
+                                        dataBuffer.append(chunkStr);
+                                        
+                                        while (dataBuffer.indexOf("\n\n") != -1) {
+                                            int eventEnd = dataBuffer.indexOf("\n\n");
+                                            String event = dataBuffer.substring(0, eventEnd);
+                                            dataBuffer.delete(0, eventEnd + 2);
+                                            
+                                            processSSEEvent(event, handler);
                                         }
-                                    })
-                                    .onFailure(err -> handleError("Failed to get result: " + err.getMessage(), handler));
-                        } else {
-                            handleError("No event ID found in the response", handler);
-                        }
+                                    });
+    
+                                    sseResponse.endHandler(v -> {
+                                        if (dataBuffer.length() > 0) {
+                                            processSSEEvent(dataBuffer.toString(), handler);
+                                        }
+                                        promise.complete();
+                                    });
+    
+                                    sseResponse.exceptionHandler(e -> {
+                                        promise.fail(e);
+                                        handleError("SSE stream error: " + e.getMessage(), handler);
+                                    });
+                                });
+                            })
+                            .onFailure(throwable -> handleError("Failed to create GET request: " + throwable.getMessage(), handler));
+    
                     } else {
-                        handleError("Failed to initiate conversion: Status " + response.statusCode(), handler);
+                        handleError("No event ID found in the response", handler);
                     }
-                })
-                .onFailure(err -> handleError("Failed to send request: " + err.getMessage(), handler));
+                });
+            } else {
+                handleError("Failed to initiate conversion: " + response.statusCode(), handler);
+            }
+        })
+        .onFailure(throwable -> handleError("Failed to create POST request: " + throwable.getMessage(), handler));
+    }
+    
+    // Méthode utilitaire pour traiter les événements SSE
+    private void processSSEEvent(String eventData, Handler<JsonArray> handler) {
+        try {
+            String[] lines = eventData.split("\n");
+            String data = null;
+            
+            for (String line : lines) {
+                if (line.startsWith("data:")) {
+                    data = line.substring(5).trim();
+                    if (!data.equals("null")) {
+                        try {
+                            JsonArray jsonArray = new JsonArray(data);
+                            handler.handle(jsonArray);
+                        } catch (Exception e) {
+                            handleError("Failed to parse JSON Array: " + e.getMessage(), handler);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            handleError("Failed to process SSE event: " + e.getMessage(), handler);
+        }
     }
 
     private void handleError(String message, Handler<JsonArray> handler) {
