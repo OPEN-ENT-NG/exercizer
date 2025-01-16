@@ -73,8 +73,7 @@ export const subjectViewCopyTeacherActions = ng.directive('subjectViewCopyTeache
                     }
                 });
 
-                scope.copyIsCorrected = async function(){
-                    await scope.updateGrainCopy();
+                scope.copyIsCorrected = function(){
                     return scope.subjectCopy.is_corrected;
                 };
                 
