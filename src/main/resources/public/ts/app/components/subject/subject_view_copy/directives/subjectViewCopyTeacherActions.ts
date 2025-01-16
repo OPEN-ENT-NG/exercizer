@@ -45,6 +45,7 @@ export const subjectViewCopyTeacherActions = ng.directive('subjectViewCopyTeache
                 setCopiesYetToCorrectDisplay();
                 
                 scope.redirectToDashboard = function(isCorrected:boolean) {
+                    scope.updateGrainCopy();
                     if (isCorrected) {
                         var copy = SubjectCopyService.getById(scope.subjectCopy.id);
                         copy.is_correction_on_going = true;
@@ -72,8 +73,8 @@ export const subjectViewCopyTeacherActions = ng.directive('subjectViewCopyTeache
                     }
                 });
 
-                scope.copyIsCorrected = function(){
-                    scope.updateGrainCopy();
+                scope.copyIsCorrected = async function(){
+                    await scope.updateGrainCopy();
                     return scope.subjectCopy.is_corrected;
                 };
                 
