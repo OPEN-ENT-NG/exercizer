@@ -1,54 +1,95 @@
 <div class="row">
-    <div class="one cell right-magnet">
-        <div class="cell right-magnet" data-ng-click="toggle()">
-            <i data-ng-show="isFolded" data-tooltip="exercizer.unfold" class="down-open"></i>
-            <i data-ng-hide="isFolded" data-tooltip="exercizer.fold" class="up-open"></i>
-        </div>
+  <div class="one cell right-magnet">
+    <div class="cell right-magnet" data-ng-click="toggle()">
+      <i
+        data-ng-show="isFolded"
+        data-tooltip="exercizer.unfold"
+        class="down-open"
+      ></i>
+      <i
+        data-ng-hide="isFolded"
+        data-tooltip="exercizer.fold"
+        class="up-open"
+      ></i>
+    </div>
+  </div>
+
+  <div data-ng-show="isFolded" data-ng-click="toggle()" class="eleven cell">
+    <strong class="cell">
+      <i18n>exercizer.grain.footer.header1</i18n>
+    </strong>
+    <strong class="cell right-magnet">
+      <i18n>exercizer.grain.footer.header2</i18n> :&nbsp;[[
+      formatNumber(grainCopy.final_score) ]]&nbsp;sur&nbsp;[[
+      grainScheduled.grain_data.max_score]] <i18n>exercizer.score</i18n>
+    </strong>
+  </div>
+
+  <div data-ng-hide="isFolded" class="eleven cell">
+    <div class="row" data-ng-if="hasAnswerExplanation()">
+      <p style="text-align: justify">
+        <em class="medium-importance"
+          >[[ grainScheduled.grain_data.answer_explanation ]]</em
+        >
+      </p>
     </div>
 
-    <div data-ng-show="isFolded" data-ng-click="toggle()" class="eleven cell">
-        <strong class="cell">
-            <i18n>exercizer.grain.footer.header1</i18n>
-        </strong>
-        <strong class="cell right-magnet">
-            <i18n>exercizer.grain.footer.header2</i18n> :&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score]] <i18n>exercizer.score</i18n>
-        </strong>
-    </div>
-
-    <div data-ng-hide="isFolded" class="eleven cell">
-        <div class="row" data-ng-if="hasAnswerExplanation()">
-            <p style="text-align: justify"><em class="medium-importance">[[ grainScheduled.grain_data.answer_explanation ]]</em></p>
+    <div class="row">
+      <div class="six cell twelve-mobile">
+        <h2 class="row"><i18n>exercizer.grain.footer.comment</i18n> :</h2>
+        <div class="row" data-ng-if="isTeacher">
+          <textarea
+            data-ng-model="grainCopy.comment"
+            track-input-event="grainCopy.getTracker()"
+            complete-change="updateGrainCopy()"
+            style="height: 80px"
+            i18n-placeholder="exercizer.grain.footer.comment.default"
+          ></textarea>
         </div>
-
-        <div class="row">
-            <div class="six cell twelve-mobile">
-                <h2 class="row">
-                    <i18n>exercizer.grain.footer.comment</i18n> :
-                </h2>
-                <div class="row" data-ng-if="isTeacher">
-                    <textarea data-ng-model="grainCopy.comment"  track-input-event="grainCopy.getTracker()" complete-change="updateGrainCopy()" style="height: 80px;" i18n-placeholder="exercizer.grain.footer.comment.default"></textarea>
-                </div>
-                <div class="row" data-ng-if="!isTeacher">
-                    <textarea data-ng-model="grainCopy.comment"  track-input-event="grainCopy.getTracker()" style="height: 80px;" i18n-placeholder="exercizer.grain.footer.nocomment" disabled></textarea>
-                </div>
-            </div>
-            <div class="one cell twelve-mobile">
-                &nbsp;
-            </div>
-            <div class="five cell twelve-mobile">
-                <h2 class="row">
-                    <i18n>exercizer.grain.footer.result</i18n> :
-                </h2>
-                <div class="row vertical-spacing">
-                    <strong><i18n>exercizer.auto.score</i18n> :</strong>&nbsp;[[ formatNumber(grainCopy.calculated_score) ]]&nbsp;<i18n>exercizer.on</i18n>&nbsp;[[ grainScheduled.grain_data.max_score ]] <i18n>exercizer.score</i18n>
-                </div>
-                <div class="row vertical-spacing" data-ng-if="isTeacher && !isTrainingGrain()">
-                    <strong><i18n>exercizer.final.score</i18n> :</strong>&nbsp;<input type="text" data-ng-model="grainCopy.final_score" track-input-event="grainCopy.getTracker()" value="[[ grainCopy.final_score ]]" ng-change="debouncedUpdateGrainCopy()" style="width:50px;" class="score"/>&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]] <i18n>exercizer.score</i18n>
-                </div>
-                <div class="row vertical-spacing" data-ng-if="!isTeacher && !isTrainingGrain()">
-                    <strong><i18n>exercizer.final.score</i18n> :</strong>&nbsp;[[ formatNumber(grainCopy.final_score) ]]&nbsp;<i18n>exercizer.on</i18n>&nbsp;[[ grainScheduled.grain_data.max_score ]] <i18n>exercizer.score</i18n>
-                </div>
-            </div>
+        <div class="row" data-ng-if="!isTeacher">
+          <textarea
+            data-ng-model="grainCopy.comment"
+            track-input-event="grainCopy.getTracker()"
+            style="height: 80px"
+            i18n-placeholder="exercizer.grain.footer.nocomment"
+            disabled
+          ></textarea>
         </div>
+      </div>
+      <div class="one cell twelve-mobile">&nbsp;</div>
+      <div class="five cell twelve-mobile">
+        <h2 class="row"><i18n>exercizer.grain.footer.result</i18n> :</h2>
+        <div class="row vertical-spacing">
+          <strong><i18n>exercizer.auto.score</i18n> :</strong>&nbsp;[[
+          formatNumber(grainCopy.calculated_score)
+          ]]&nbsp;<i18n>exercizer.on</i18n>&nbsp;[[
+          grainScheduled.grain_data.max_score ]] <i18n>exercizer.score</i18n>
+        </div>
+        <div
+          class="row vertical-spacing"
+          data-ng-if="isTeacher && !isTrainingGrain()"
+        >
+          <strong><i18n>exercizer.final.score</i18n> :</strong>&nbsp;<input
+            type="text"
+            data-ng-model="grainCopy.final_score"
+            track-input-event="grainCopy.getTracker()"
+            value="[[ grainCopy.final_score ]]"
+            ng-change="debouncedUpdateGrainCopy()"
+            style="width: 50px"
+            class="score"
+          />&nbsp;sur&nbsp;[[ grainScheduled.grain_data.max_score ]]
+          <i18n>exercizer.score</i18n>
+        </div>
+        <div
+          class="row vertical-spacing"
+          data-ng-if="!isTeacher && !isTrainingGrain()"
+        >
+          <strong><i18n>exercizer.final.score</i18n> :</strong>&nbsp;[[
+          formatNumber(grainCopy.final_score)
+          ]]&nbsp;<i18n>exercizer.on</i18n>&nbsp;[[
+          grainScheduled.grain_data.max_score ]] <i18n>exercizer.score</i18n>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
