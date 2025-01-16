@@ -43,17 +43,24 @@ export const subjectViewCopyTeacherActions = ng.directive('subjectViewCopyTeache
                     scope.copiesYetToCorrectDisplay = idiom.translate("exercizer.copies.yet.to.correct").replace('{{number}}', `${copiesYetToCorrect}`);
                 }
                 setCopiesYetToCorrectDisplay();
+
+                function updateGrainCopy () {
+                    if (scope.isTeacher) {
+                        scope.grainCopy.final_score = angular.isUndefined(scope.grainCopy.final_score) ? 0 : parseFloat(parseFloat(String(scope.grainCopy.final_score).replace(',', '.')).toFixed(2));
+                        if (isNaN( scope.grainCopy.final_score)) scope.grainCopy.final_score = 0;
+                        scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
+                    }
+                };
                 
                 scope.redirectToDashboard = function(isCorrected:boolean) {
-                    scope.updateGrainCopy();
                     if (isCorrected) {
+                        updateGrainCopy();
                         var copy = SubjectCopyService.getById(scope.subjectCopy.id);
                         copy.is_correction_on_going = true;
                         copy.is_corrected = true;
                         copiesYetToCorrect--;
                         setCopiesYetToCorrectDisplay();
                         scope.$emit('E_UPDATE_SUBJECT_COPY', copy, false);
-
                     } else {
                         $location.path('/dashboard/teacher/correction/'+scope.subjectScheduled.id);
                     }
