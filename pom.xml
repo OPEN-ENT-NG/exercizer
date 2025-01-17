@@ -12,7 +12,7 @@
 
     <groupId>fr.openent</groupId>
     <artifactId>exercizer</artifactId>
-    <version>4.0.1</version>
+    <version>4.0-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:https://github.com/OPEN-ENT-NG/exercizer.git</connection>
@@ -29,12 +29,12 @@
     </repositories>
 
     <properties>
-        <entCoreVersion>6.0.2</entCoreVersion>
-        <web-utils.version>3.0.0</web-utils.version>
-        <mongodb-helper.version>3.0.1</mongodb-helper.version>
-        <vertxCronTimerVersion>3.0.0</vertxCronTimerVersion>
+        <entCoreVersion>6.0-SNAPSHOT</entCoreVersion>
+        <web-utils.version>3.0-SNAPSHOT</web-utils.version>
+        <mongodb-helper.version>3.0-SNAPSHOT</mongodb-helper.version>
+        <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
         <junitVersion>4.13.2</junitVersion>
-        <explorerVersion>2.0.0</explorerVersion>
+        <explorerVersion>2.0-SNAPSHOT</explorerVersion>
     </properties>
 
     <dependencies>
