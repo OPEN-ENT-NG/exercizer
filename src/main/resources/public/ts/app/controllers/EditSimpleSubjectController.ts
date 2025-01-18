@@ -23,7 +23,9 @@ class EditSimpleSubjectController {
     private _readOnly:boolean;
     private _defaultTitle:string;
     public fileSelectionDisplayed = false;
-    public selectedFile = { file: {}, visibility: 'public' };
+    public selectedFile = { file: {}, visibility: 'protected' };
+    public lastSegment = null;
+    private base64Image = null;
 
     constructor
     (
@@ -38,7 +40,7 @@ class EditSimpleSubjectController {
         this._hasDataLoaded = false;
         this._readOnly = false;
         var currentRoute = this._$location.path();
-        var lastSegment = currentRoute.split('/').pop();
+        this.lastSegment = currentRoute.split('/').pop();
 
         var self = this,
             subjectId = _$routeParams['subjectId'],
@@ -80,7 +82,7 @@ class EditSimpleSubjectController {
             //new subject
             var folderId = _$routeParams['folderId'];
             self._subject = new Subject();
-            if (lastSegment && lastSegment == "generate") {
+            if (this.lastSegment && this.lastSegment == "generate") {
                 self._subject.type = 'interactive';
             } else {
                 self._subject.type = 'simple';
@@ -235,7 +237,7 @@ class EditSimpleSubjectController {
         }
     };
 
-    public appendCorrected() {
+    public async appendCorrected() {
         const file = this.selectedFile.file;
         if(!file){
             return;
@@ -244,6 +246,16 @@ class EditSimpleSubjectController {
             (doc:ISubjectDocument) => {
                 this._subject.files.push(doc);
                 this.closeLightBox();
+                if (this.lastSegment && this.lastSegment == "generate") {
+                    this._subjectService.getFileFromWorkspace(file["_id"]).then(
+                        async (file: File) => {
+                            await this.convertToBase64(file)
+                        },
+                        (err) => {
+                            notify.error(err);
+                        }
+                    );
+                }
             },
             (err) => {
                 notify.error(err);
@@ -251,6 +263,19 @@ class EditSimpleSubjectController {
         );
     };
 
+    async convertToBase64(file: File): Promise<void> {
+        if (file) {
+            const blob = new Blob([file], { type: file.type });
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                this.base64Image = reader.result as string;
+                console.log(this.base64Image);
+            };
+            reader.readAsDataURL(blob);
+        } else {
+            console.error('No binary data found.');
+        }
+    }    
 
     private closeLightBox() {
         this.fileSelectionDisplayed = false;
@@ -278,7 +303,7 @@ class EditSimpleSubjectController {
     public generate() {
         this._hasDataLoaded = false;
         var self = this;
-        self._subjectService.generate({ ...this._subject, docId: this.selectedFile.file["_id"] }).then(
+        self._subjectService.generate({ ...this._subject, file: this.base64Image }).then(
             (res) => {
                 this._hasDataLoaded = true;
                 this._$location.path("/subject/edit/" + this._subject.id);

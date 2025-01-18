@@ -16,6 +16,7 @@ function cleanBeforeSave(subject: ISubject|IGrain):ISubject|IGrain{
 }
 
 export interface ISubjectService {
+    getFileFromWorkspace(id: String): Promise<any>;
     generate(subject: any): Promise<any>;
     resolve(force?:boolean): Promise<boolean>;
     persist(subject: ISubject): Promise<ISubject>;
@@ -405,10 +406,28 @@ export class SubjectService implements ISubjectService {
 
     }
 
+    public getFileFromWorkspace(id: string): Promise<any> {
+        const request = {
+            method: 'GET',
+            url: `/workspace/document/${id}`,
+            responseType: 'blob'
+        };
+
+        return this._$http(request)
+            .then((response) => {
+                const blob = response.data;
+                return blob;
+            })
+            .catch(() => {
+                return Promise.reject("exercizer.error");
+            });
+    }
+
+
     public generate = (subject: any): Promise<any> => {
         let content = {
             id: subject.id,
-            docId: subject.docId
+            file: subject.file
         };
 
         const request = {
