@@ -2,17 +2,18 @@ package fr.openent.exercizer.services.impl;
 
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.entcore.common.user.UserInfos;
+import org.entcore.common.user.UserUtils;
 
 import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.services.IGrainService;
 import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Server;
 import fr.wseduc.webutils.http.Renders;
+import fr.wseduc.webutils.request.CookieHelper;
+import fr.wseduc.webutils.request.RequestUtils;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpClient;
@@ -24,7 +25,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.core.Promise;
 
 public class DocToExercizer {
 
@@ -39,6 +39,7 @@ public class DocToExercizer {
     protected EventBus eb;
     private HttpClient client;
     private HttpServerRequest request;
+    private String userId;
 
     public DocToExercizer(Vertx vertx, final ExercizerExplorerPlugin plugin, JsonObject conf) {
         if (vertx != null) {
@@ -51,6 +52,7 @@ public class DocToExercizer {
         this.host = this.config.getString("docToExercizerHost", "");
         this.token = this.config.getString("docToExercizerPassword", "");
         this.username = this.config.getString("docToExercizerUsername", "");
+
         /* this.getAuthBasic(); */
     }
 
@@ -224,7 +226,13 @@ public class DocToExercizer {
     }
 
     private void serverLLM(String file, Handler<JsonArray> handler) {
-        JsonObject requestData = (new JsonObject()).put("image", file).put("parser_images", true);
+        final String session = CookieHelper.getInstance().getSigned("oneSessionId", request);
+        final String ua = request.headers().get("User-Agent");
+        JsonObject requestData = (new JsonObject())
+            .put("image", file)
+            .put("user_id", this.userId)
+            .put("user_session", session)
+            .put("user_browser", ua);
         this.client.request((new RequestOptions()).setAbsoluteURI(this.host + "doc-to-exo/generate")
                 .setMethod(HttpMethod.POST).addHeader("content-type", "application/json"))
                 .flatMap((request) -> request.send(requestData.encode()))
@@ -254,6 +262,7 @@ public class DocToExercizer {
         this.request = request;
         Long subjectId = resource.getLong("id");
         String file = resource.getString("file");
+        this.userId = user.getUserId();
         this.buildUrlFile(file, (response) -> {
             if (response != null && !response.getJsonObject(0).containsKey("error_description")) {
                 for (Object o : response) {

@@ -207,7 +207,7 @@
   "exercizer.choose.assist.title": "Génération de sujets",
   "exercizer.choose.assist.info": "Convertissez automatiquement  vos exercices a partir de vos documents.",
   "exercizer.file.limit1": "Vous pouvez déposer uniquement 1 fichier.",
-  "exercizer.file.instruct": "Déposez ici votre exercice sous forme de fichier (PDF, PNG, JPEG, Word) pour le transformer en exercice interactif.",
+  "exercizer.file.instruct": "Déposez ici votre exercice sous forme d'image (PNG, JPEG) pour le transformer en exercice interactif.",
   "exercizer.file.upload": "Parcourir",
   "exercizer.generate.subject": "L'exercice a été généré avec succès",
   "exercizer.genrete.loader": "Génération de l'exercice en cours ...",
