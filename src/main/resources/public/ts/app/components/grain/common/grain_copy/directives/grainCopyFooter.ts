@@ -27,14 +27,28 @@ export const grainCopyFooter = ng.directive('grainCopyFooter',
                     scope.isFolded = !scope.isFolded;
                 };
 
+                function debounce(func: Function, wait: number) {
+                    let timeout: any;
+                    return function(...args: any[]) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func.apply(this, args);
+                        };
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
+                }
+
                 scope.updateGrainCopy = function() {
                     if (scope.isTeacher) {
                         scope.grainCopy.comment = StringISOHelper.toISO(scope.grainCopy.comment);
                         scope.grainCopy.final_score = angular.isUndefined(scope.grainCopy.final_score) ? 0 : parseFloat(parseFloat(String(scope.grainCopy.final_score).replace(',', '.')).toFixed(2));
-                        if (isNaN( scope.grainCopy.final_score)) scope.grainCopy.final_score = 0;
+                        if (isNaN(scope.grainCopy.final_score)) scope.grainCopy.final_score = 0;
                         scope.$emit('E_UPDATE_GRAIN_COPY', scope.grainCopy);
                     }
                 };
+
+                scope.debouncedUpdateGrainCopy = debounce(scope.updateGrainCopy, 500);
 
                 scope.isTrainingGrain = function() {
                     let subjectCopy = SubjectCopyService.getById(scope.grainCopy.subject_copy_id);
