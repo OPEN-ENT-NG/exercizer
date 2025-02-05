@@ -201,7 +201,9 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
             }
             final Promise<Void> promise = Promise.promise();
             final int idx = i;
-            storage.copyFileId(fileId, exportPath+ java.io.File.separator +fileId, res -> {
+            // TODO objectstorage check if we can find the name of the field
+            final JsonObject alias = new JsonObject().put(fileId, fileId);
+            storage.writeToFileSystem(new String[]{fileId}, exportPath+ java.io.File.separator +fileId, alias, res -> {
                 if( "error".equals(res.getString("status")) ) {
                     log.error("[ExercizerRepositoryEvents][beforeExportingTableToPath] File export failed."+ res.getString("message"));
                     rows.remove( idx );
