@@ -16,6 +16,7 @@ function cleanBeforeSave(subject: ISubject|IGrain):ISubject|IGrain{
 }
 
 export interface ISubjectService {
+    renameFileInWorkspace (id:string, name:string)
     getFileFromWorkspace(id: String): Promise<any>;
     generate(subject: any): Promise<any>;
     resolve(force?:boolean): Promise<boolean>;
@@ -444,6 +445,16 @@ export class SubjectService implements ISubjectService {
                 return Promise.reject("exercizer.error");
             });
     }
+
+    public async renameFileInWorkspace( id: string, name: string) {
+        try {
+            await this._$http.put("/workspace/rename/" + id, { name: name });
+        } catch (e) {
+            console.error("failed to rename file: ", e);
+        }
+    }
+
+
 }
 
 export const subjectService = ng.service('SubjectService', SubjectService);

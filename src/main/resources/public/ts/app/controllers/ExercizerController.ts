@@ -119,6 +119,19 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
                 template.open('main', '400-date-exercizer');
             }
         },
+        createSimpleSubject: async function () {
+            if (await checkSystemDate()) {
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'edit-simple-subject');
+                } else if (_userProfile === studentProfile) {
+                    template.open('main', 'student-dashboard');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
+            } else {
+                template.open('main', '400-date-exercizer');
+            }
+        },
         generateSubject: async function () {
             const systemDateValid = await checkSystemDate();
             console.log("Date valide :", systemDateValid);
