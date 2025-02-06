@@ -10,6 +10,7 @@ class EditSimpleSubjectController {
         '$routeParams',
         '$scope',
         '$location',
+        '$window',
         'SubjectService',
         'SubjectLibraryService',
         'SubjectScheduledService',
@@ -24,6 +25,11 @@ class EditSimpleSubjectController {
     private _defaultTitle:string;
     public fileSelectionDisplayed = false;
     public selectedFile = { file: {}, visibility: 'protected' };
+    public isFromMessage = false;
+    public eventParam: any;
+    public messageBody: string;
+    public fileName: string;
+    public filesFromConversation : any;    
     public lastSegment = null;
     private base64Image = null;
 
@@ -32,6 +38,7 @@ class EditSimpleSubjectController {
         _$routeParams,
         private _$scope,
         private _$location,
+        private _$window,
         private _subjectService:ISubjectService,
         private _subjectLibraryService:ISubjectLibraryService,
         private _subjectScheduledService:ISubjectScheduledService
@@ -41,7 +48,7 @@ class EditSimpleSubjectController {
         this._readOnly = false;
         var currentRoute = this._$location.path();
         this.lastSegment = currentRoute.split('/').pop();
-
+        this.initFromUrlParams();
         var self = this,
             subjectId = _$routeParams['subjectId'],
             subjectPreviewId =  _$routeParams['subjectPreviewId'];
@@ -55,7 +62,28 @@ class EditSimpleSubjectController {
             } else {
                 self.redirectToDashboard();
             }
-        } else if (subjectId) {
+        } else if (this.isFromMessage) {
+            //new subject from conversation
+            this._subject = new Subject();
+            this._subject.type = 'simple';
+
+            if (this.eventParam['message'] != null) {
+                self._subject.description = "<div>" + this.messageBody + "<br> </div>";
+                self._previewingFromLibrary = false;
+                if(this.eventParam['object'] != null){
+                    self._subject.title = this.eventParam['object']
+                }else{
+                    self._subject.title = '';
+                }
+                self.initDragDrop();
+                self.createSubject();
+                self._hasDataLoaded = true;
+            }
+            else{
+                self.redirectToDashboard();
+            }
+        }
+        else if (subjectId) {
             this._subjectService.resolve().then(function() {
                 self._subject = self._subjectService.getById(subjectId);
 
@@ -78,7 +106,8 @@ class EditSimpleSubjectController {
             }, function(err) {
                 notify.error(err);
             });
-        } else {
+        }
+        else {
             //new subject
             var folderId = _$routeParams['folderId'];
             self._subject = new Subject();
@@ -97,6 +126,63 @@ class EditSimpleSubjectController {
             self.createSubject();
         }
     }
+    private initFromUrlParams(): void {
+        const { messagebody, event } = this._$location.search();
+        const messageBodyParam = messagebody ? atob(decodeURIComponent(messagebody)) : null;
+        this.eventParam = event ? atob(decodeURIComponent(event)) : null;
+
+        if (messageBodyParam && this.eventParam) {
+            this.isFromMessage = true;
+            try {
+                this.eventParam = JSON.parse(decodeURIComponent(this.eventParam));
+            } catch (error) {
+                console.error('Invalid JSON format in eventParam:', error);
+                this.eventParam = null;
+            }
+
+            try {
+                this.filesFromConversation = JSON.parse(decodeURIComponent(messageBodyParam));
+                if (Array.isArray(this.filesFromConversation)) {
+                    this.messageBody = this.createSubjectTemplate(this.filesFromConversation);
+                }
+                this._$location.search({});
+                this._$location.replace();
+                this.cleanUrl();
+
+            } catch (error) {
+                console.error('Invalid JSON format in messageBodyParam:', error);
+            }
+        }
+    }
+
+    cleanUrl() {
+        var baseUrl = this._$window.location.pathname;
+        this._$window.history.pushState({}, '', baseUrl);
+    };
+
+    createSubjectTemplate(ids: any) {
+        let template = "";
+        if (this.filesFromConversation.length == 1 && this.filesFromConversation[0].file == "empty") {
+            return this.eventParam['message'];
+        }
+        else {
+            this.filesFromConversation.forEach(file =>
+                template += '<a href=\'/workspace/document/' + file.id + "\'>\n" +
+                "<div class=\'download\'></div>" + file.name + "</a>\n"
+            );
+            return "<div class=\'ng-scope\'>\n" +
+                "   <div>\n" +
+                "<div class=\'download-attachments\'>\n" +
+                "<h2>Pièces jointes</h2>\n" +
+                "<div class=\'attachments\'>\n" +
+                template +
+                "</div>\n" +
+                "</div>\n" +
+                "</div>\n" +
+                "</div>\n" + this.eventParam['message'] + "<br> </div>";
+        }
+    }
+
 
     /* This whole thing should be... a directive. */
     initDragDrop() {
@@ -297,6 +383,7 @@ class EditSimpleSubjectController {
     };
 
     public scheduleSubject() {
+        this.renameFiles(this.filesFromConversation);
         this._$scope.$broadcast('E_DISPLAY_MODAL_SCHEDULE_SUBJECT', this._subject);
     };
 
@@ -315,6 +402,12 @@ class EditSimpleSubjectController {
             }
         )
     }
+
+    public renameFiles(files : any) {
+        if(Array.isArray(files)){
+            files.forEach(file => this._subjectService.renameFileInWorkspace(file['id'], file['name']));
+        }
+    } 
 
     /**
      *  GETTER
