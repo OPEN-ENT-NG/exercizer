@@ -242,6 +242,9 @@ routes.define(function ($routeProvider) {
             action: 'printSubject',
             reloadOnSearch: false
         })
+        .when('/subject/create/simple/:messagebody?', {
+            action: 'createSimpleSubject'
+        })
         .when('/subject/edit/simple/:subjectId/', {
             action: 'editSimpleSubject'
         })
