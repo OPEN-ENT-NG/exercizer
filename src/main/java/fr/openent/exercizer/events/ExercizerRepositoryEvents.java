@@ -184,35 +184,40 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
         }
 
         final List<Future> futures = new ArrayList<>(rows.size());
-        
+        final List<Integer> indicesOfRowsToRemove = new ArrayList<>();
         for( int i=rows.size()-1; i>=0; i-- ) {
             JsonArray row = rows.getJsonArray(i);
             if( row == null ) continue;
             if( ISubjectService.DocType.WORKSPACE.getKey().equals(row.getString(docTypeIdx)) ) {
                 log.info("[ExercizerRepositoryEvents][beforeExportingTableToPath] Unsupported doc_type 'workspace' => skipping document");
-                rows.remove( i );
+                indicesOfRowsToRemove.add(i);
                 continue;
             }
             final String fileId = row.getString(docIdIdx);
             if( fileId == null || fileId.length() == 0 ) {
                 log.info("[ExercizerRepositoryEvents][beforeExportingTableToPath] Null or empty doc_id => skipping document");
-                rows.remove( i );
+                indicesOfRowsToRemove.add(i);
                 continue;
             }
             final Promise<Void> promise = Promise.promise();
             final int idx = i;
-            // TODO objectstorage check if we can find the name of the field
             final JsonObject alias = new JsonObject().put(fileId, fileId);
             storage.writeToFileSystem(new String[]{fileId}, exportPath+ java.io.File.separator +fileId, alias, res -> {
                 if( "error".equals(res.getString("status")) ) {
                     log.error("[ExercizerRepositoryEvents][beforeExportingTableToPath] File export failed."+ res.getString("message"));
-                    rows.remove( idx );
+                    indicesOfRowsToRemove.add(idx);
                 }
                 promise.complete();
             });
             futures.add(promise.future());
         }
-        return CompositeFuture.all(futures).compose(handler -> Future.succeededFuture() );
+        return CompositeFuture.all(futures)
+          .compose(e -> {
+              // We have to sort in the decreasing order of indices otherwise the other elements will shift and
+              // the lower indices won't point to the right elements to remove
+              indicesOfRowsToRemove.stream().sorted((a, b) -> b - a).forEach(i -> rows.remove((int)i));
+              return Future.succeededFuture();
+          });
     }
 
     @Override
