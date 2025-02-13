@@ -10,6 +10,7 @@ class EditSimpleSubjectController {
         '$routeParams',
         '$scope',
         '$location',
+        '$window',
         'SubjectService',
         'SubjectLibraryService',
         'SubjectScheduledService',
@@ -37,6 +38,7 @@ class EditSimpleSubjectController {
         _$routeParams,
         private _$scope,
         private _$location,
+        private _$window,
         private _subjectService:ISubjectService,
         private _subjectLibraryService:ISubjectLibraryService,
         private _subjectScheduledService:ISubjectScheduledService
@@ -61,7 +63,7 @@ class EditSimpleSubjectController {
                 self.redirectToDashboard();
             }
         } else if (this.isFromMessage) {
-            //new subject from message
+            //new subject from conversation
             this._subject = new Subject();
             this._subject.type = 'simple';
 
@@ -143,33 +145,42 @@ class EditSimpleSubjectController {
                 if (Array.isArray(this.filesFromConversation)) {
                     this.messageBody = this.createSubjectTemplate(this.filesFromConversation);
                 }
+                this._$location.search({});
+                this._$location.replace();
+                this.cleanUrl();
+
             } catch (error) {
                 console.error('Invalid JSON format in messageBodyParam:', error);
             }
         }
     }
+
+    cleanUrl() {
+        var baseUrl = this._$window.location.pathname;
+        this._$window.history.pushState({}, '', baseUrl);
+    };
+
     createSubjectTemplate(ids: any) {
         let template = "";
-        this.filesFromConversation.forEach(file =>
-            template += '<a href=\'/workspace/document/' + file.id + "\'>\n" +
-            "<div class=\'download\'></div>" + file.name +"</a>\n"
-        );
-        return "<div class=\'ng-scope\'>\n" +
-            "   <div>\n" +
-            "<div class=\'download-attachments\'>\n" +
-            "<h2>Pièces jointes</h2>\n" +
-            "<div class=\'attachments\'>\n" +
-            template +
-            "</div>\n" +
-            "</div>\n" +
-            "</div>\n" +
-            "<div>\n" +
-            "<br>\n" +
-            "<div>\n" +
-            "<br>\n" +
-            "</div>\n" +
-            "</div>\n" + this.eventParam['message'] + "<br> </div>";
-
+        if (this.filesFromConversation.length == 1 && this.filesFromConversation[0].file == "empty") {
+            return this.eventParam['message'];
+        }
+        else {
+            this.filesFromConversation.forEach(file =>
+                template += '<a href=\'/workspace/document/' + file.id + "\'>\n" +
+                "<div class=\'download\'></div>" + file.name + "</a>\n"
+            );
+            return "<div class=\'ng-scope\'>\n" +
+                "   <div>\n" +
+                "<div class=\'download-attachments\'>\n" +
+                "<h2>Pièces jointes</h2>\n" +
+                "<div class=\'attachments\'>\n" +
+                template +
+                "</div>\n" +
+                "</div>\n" +
+                "</div>\n" +
+                "</div>\n" + this.eventParam['message'] + "<br> </div>";
+        }
     }
 
 
