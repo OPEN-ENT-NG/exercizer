@@ -10,7 +10,8 @@ Behaviours.register('exercizer', {
             import: 'fr.openent.exercizer.controllers.SubjectController|importSubjectGrains',
             publish: 'fr.openent.exercizer.controllers.SubjectController|publish',
             list: 'fr.openent.exercizer.controllers.SubjectController|listSubject',
-            view: 'fr.openent.exercizer.controllers.SubjectController|view'
+            view: 'fr.openent.exercizer.controllers.SubjectController|view',
+            generate: 'fr.openent.exercizer.controllers.SubjectController|generate'
 
         },
         resource: {

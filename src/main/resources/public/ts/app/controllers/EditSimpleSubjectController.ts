@@ -355,7 +355,6 @@ class EditSimpleSubjectController {
             const reader = new FileReader();
             reader.onloadend = () => {
                 this.base64Image = reader.result as string;
-                console.log(this.base64Image);
             };
             reader.readAsDataURL(blob);
         } else {

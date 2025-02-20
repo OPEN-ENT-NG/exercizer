@@ -148,6 +148,12 @@ public class SubjectController extends ControllerHelper {
 		});
 	}
 
+	@Post("/generate")
+	@SecuredAction("exercizer.subject.generate")
+	private String generate(){
+		return "";
+	}
+
 	@Post("/subject/import")
 	@ApiDoc("Import a subject with grains.")
 	@SecuredAction("exercizer.subject.import")

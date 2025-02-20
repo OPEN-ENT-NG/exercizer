@@ -1,4 +1,4 @@
-import { ng, notify } from "entcore";
+import { ng, notify, model, Behaviours, } from "entcore";
 import { Subject } from "../../../../../models/domain";
 
 export const teacherDashboardSubjectEdit = ng.directive(
@@ -106,6 +106,10 @@ export const teacherDashboardSubjectEdit = ng.directive(
                   scope.isDisplayed = false;
                   reset();
               };
+
+              scope.rightGenerate = function (): boolean {
+                return model.me.hasWorkflow(Behaviours.applicationsBehaviours.exercizer.rights.workflow.generate);
+            };
 
               var reset = function () {
                   scope.isDisplayed = false;
