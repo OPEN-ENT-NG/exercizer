@@ -236,7 +236,7 @@ public class DocToExercizer {
         if (outputLlm != null && !outputLlm.isEmpty()) {
             try {
                 JsonObject firstObject = outputLlm.getJsonObject(0);
-                if (firstObject.containsKey("image") && firstObject.getJsonObject("image").containsKey("content")) {
+                if (firstObject.containsKey("image") && firstObject.getValue("image") != null  && firstObject.getJsonObject("image").containsKey("content")) {
                     JsonArray imageContent = firstObject.getJsonObject("image").getJsonArray("content");
 
                     for (int i = 0; i < imageContent.size(); ++i) {
@@ -245,6 +245,8 @@ public class DocToExercizer {
                             this.base64Images.add(imageObj.getString("image"));
                         }
                     }
+                }else{
+                    log.info("Image empty: missing 'image' field");
                 }
 
                 if (!firstObject.containsKey("data")) {
@@ -286,7 +288,7 @@ public class DocToExercizer {
                     }
                 }
             } catch (Exception e) {
-                log.error("Error during conversion selection: {}", new Object[] { e.getMessage() });
+                log.error("Error during conversion selection: " +  e.getMessage() );
                 throw new RuntimeException("Error during conversion selection", e);
             }
         } else {
@@ -324,8 +326,11 @@ public class DocToExercizer {
             .put("user_id", this.userId)
             .put("user_session", session)
             .put("user_browser", ua);
+        String auth = String.format("%s:%s", this.username, this.token);
+        String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
         this.client.request((new RequestOptions()).setAbsoluteURI(this.host + "doc-to-exo/generate")
-                .setMethod(HttpMethod.POST).addHeader("content-type", "application/json"))
+                .setMethod(HttpMethod.POST).addHeader("content-type", "application/json")
+                .addHeader("Authorization", "Basic " + encodedAuth))
                 .flatMap((request) -> request.send(requestData.encode())).onSuccess((response) -> {
                     if (response.statusCode() == 200) {
                         response.bodyHandler((body) -> {
