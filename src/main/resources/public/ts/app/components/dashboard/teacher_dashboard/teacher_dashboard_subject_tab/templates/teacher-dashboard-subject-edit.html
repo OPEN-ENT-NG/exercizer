@@ -64,7 +64,7 @@
       </div>
     </form>
   </div>
-  <div data-ng-if="step == 'choose'" class="grid grid-2 gap-24" style="grid-template-columns: repeat(3, minmax(0px, 7fr));">
+  <div data-ng-if="step == 'choose'" class="grid grid-2 gap-24" data-ng-style="{'grid-template-columns': rightGenerate() ? 'repeat(3, minmax(0px, 7fr))' : '' }">
     <div class="action-card" data-ng-click="nextStep('simple')">
       <div class="action-card-image">
         <svg class="icon-depositeInbox" width="48" height="48">
@@ -89,7 +89,7 @@
       </div>
     </div>
 
-    <div class="action-card" data-ng-click="nextStep('generate')">
+    <div data-ng-if="rightGenerate()" class="action-card" data-ng-click="nextStep('generate')">
       <div class="action-card-image">
         <img class="icon-checklist" width="48" height="48" src="exercizer/public/assets/icons/file.svg">
       </div>

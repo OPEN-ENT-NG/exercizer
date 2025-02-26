@@ -1,4 +1,4 @@
-import { ng, model, template, moment, Me } from 'entcore';
+import { ng, model, template, moment, Me, Behaviours } from 'entcore';
 import { IGrainCopy } from '../models/domain';
 import { ISubjectCopyService } from '../services';
 import http from 'axios';
@@ -9,6 +9,7 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
     const teacherProfile = 'Teacher';
     const studentProfile = 'Student';
     const canAccessTeacherProfile = model.me.workflow.exercizer.create || false;
+    const canAccessStudentGenerationExo = model.me.workflow.exercizer.generate || false;
 
     var _userProfile;
 
@@ -136,9 +137,12 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
             const systemDateValid = await checkSystemDate();
             console.log("Date valide :", systemDateValid);
             if (systemDateValid) {
-                console.log("Profil utilisateur :", _userProfile);
                 if (_userProfile === teacherProfile) {
-                    template.open('main', 'generate-subject');
+                    if(canAccessStudentGenerationExo) {
+                        template.open('main', 'generate-subject');
+                    }else{
+                        template.open('main', '401-exercizer');
+                    }
                 } else if (_userProfile === studentProfile) {
                     template.open('main', 'student-dashboard');
                 } else {
