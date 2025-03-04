@@ -111,7 +111,11 @@ class EditSimpleSubjectController {
             //new subject
             var folderId = _$routeParams['folderId'];
             self._subject = new Subject();
-            self._subject.type = 'simple';
+            if (this.lastSegment && this.lastSegment == "generate") {
+                self._subject.type = 'interactive';
+            } else {
+                self._subject.type = 'simple';
+            }
             self._subject.title = '';
             if (folderId) {
                 self._subject.folder_id = folderId;
@@ -319,7 +323,7 @@ class EditSimpleSubjectController {
         }
     };
 
-    public appendCorrected() {
+    public async appendCorrected() {
         const file = this.selectedFile.file;
         if(!file){
             return;
@@ -328,6 +332,16 @@ class EditSimpleSubjectController {
             (doc:ISubjectDocument) => {
                 this._subject.files.push(doc);
                 this.closeLightBox();
+                if (this.lastSegment && this.lastSegment == "generate") {
+                    this._subjectService.getFileFromWorkspace(file["_id"]).then(
+                        async (file: File) => {
+                            await this.convertToBase64(file)
+                        },
+                        (err) => {
+                            notify.error(err);
+                        }
+                    );
+                }
             },
             (err) => {
                 notify.error(err);
@@ -335,6 +349,19 @@ class EditSimpleSubjectController {
         );
     };
 
+    async convertToBase64(file: File): Promise<void> {
+        if (file) {
+            const blob = new Blob([file], { type: file.type });
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                this.base64Image = reader.result as string;
+                console.log(this.base64Image);
+            };
+            reader.readAsDataURL(blob);
+        } else {
+            console.error('No binary data found.');
+        }
+    }    
 
     private closeLightBox() {
         this.fileSelectionDisplayed = false;

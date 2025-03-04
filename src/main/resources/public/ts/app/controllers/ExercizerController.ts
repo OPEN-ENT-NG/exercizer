@@ -89,6 +89,7 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
             }
         },
         editSubject: async function () {
+            const systemDateValid = await checkSystemDate();
             if (await checkSystemDate()) {
                 if (_userProfile === teacherProfile) {
                     template.open('main', 'edit-subject');
@@ -122,6 +123,22 @@ export const exercizerController = ng.controller('ExercizerController', ['$scope
             if (await checkSystemDate()) {
                 if (_userProfile === teacherProfile) {
                     template.open('main', 'edit-simple-subject');
+                } else if (_userProfile === studentProfile) {
+                    template.open('main', 'student-dashboard');
+                } else {
+                    template.open('main', '401-exercizer');
+                }
+            } else {
+                template.open('main', '400-date-exercizer');
+            }
+        },
+        generateSubject: async function () {
+            const systemDateValid = await checkSystemDate();
+            console.log("Date valide :", systemDateValid);
+            if (systemDateValid) {
+                console.log("Profil utilisateur :", _userProfile);
+                if (_userProfile === teacherProfile) {
+                    template.open('main', 'generate-subject');
                 } else if (_userProfile === studentProfile) {
                     template.open('main', 'student-dashboard');
                 } else {

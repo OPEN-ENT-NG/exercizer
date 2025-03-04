@@ -80,7 +80,7 @@ public class Exercizer extends BaseServer {
         subjectConf.setTable("subject");
         subjectConf.setShareTable("subject_shares");
         
-        SubjectController subjectController = new SubjectController(storage, plugin);
+        SubjectController subjectController = new SubjectController(storage, plugin, vertx , config);
         subjectController.setShareService(plugin.createShareService(eb));
         subjectController.setCrudService(new SqlCrudService("exercizer", "subject"));
 

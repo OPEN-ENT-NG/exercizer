@@ -19,25 +19,12 @@
 
 package fr.openent.exercizer.controllers;
 
-import fr.openent.exercizer.Exercizer;
-import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
-import fr.openent.exercizer.exporter.ImagesToBase64;
-import fr.openent.exercizer.exporter.SubjectExporter;
-import fr.openent.exercizer.filters.MassOwnerOnly;
-import fr.openent.exercizer.filters.MassShareAndOwner;
-import fr.openent.exercizer.filters.SubjectDocumentOwner;
-import fr.openent.exercizer.parsers.ResourceParser;
-import fr.openent.exercizer.services.IGrainService;
-import fr.openent.exercizer.services.ISubjectService;
-import fr.openent.exercizer.services.impl.GrainServiceSqlImpl;
-import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
-import fr.wseduc.rs.*;
-import fr.wseduc.security.ActionType;
-import fr.wseduc.security.SecuredAction;
-import fr.wseduc.webutils.Either;
-import fr.wseduc.webutils.I18n;
-import fr.wseduc.webutils.http.Renders;
-import fr.wseduc.webutils.request.RequestUtils;
+import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
+import static org.entcore.common.http.response.DefaultResponseHandler.defaultResponseHandler;
+import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.events.EventHelper;
@@ -52,18 +39,39 @@ import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 import org.entcore.common.utils.StringUtils;
 
+import fr.openent.exercizer.Exercizer;
+import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
+import fr.openent.exercizer.exporter.ImagesToBase64;
+import fr.openent.exercizer.exporter.SubjectExporter;
+import fr.openent.exercizer.filters.MassOwnerOnly;
+import fr.openent.exercizer.filters.MassShareAndOwner;
+import fr.openent.exercizer.filters.SubjectDocumentOwner;
+import fr.openent.exercizer.parsers.ResourceParser;
+import fr.openent.exercizer.services.IGrainService;
+import fr.openent.exercizer.services.ISubjectService;
+import fr.openent.exercizer.services.impl.GrainServiceSqlImpl;
+import fr.openent.exercizer.services.impl.SubjectServiceSqlImpl;
+import fr.openent.exercizer.services.impl.DocToExercizer;
+import fr.wseduc.rs.ApiDoc;
+import fr.wseduc.rs.Delete;
+import fr.wseduc.rs.Get;
+import fr.wseduc.rs.Post;
+import fr.wseduc.rs.Put;
+import fr.wseduc.security.ActionType;
+import fr.wseduc.security.SecuredAction;
+import fr.wseduc.webutils.Either;
+import fr.wseduc.webutils.I18n;
+import fr.wseduc.webutils.http.Renders;
+import fr.wseduc.webutils.request.RequestUtils;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
+import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.DecodeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.entcore.common.http.response.DefaultResponseHandler.*;
 
 public class SubjectController extends ControllerHelper {
 	static final String INTERACTIVE_RESOURCE_NAME = "exercice_interactive";
@@ -73,13 +81,17 @@ public class SubjectController extends ControllerHelper {
 	private static final I18n i18n = I18n.getInstance();
 	private final Storage storage;
 	private final EventHelper eventHelper;
+	private final HttpClient httpClient;
+	private final DocToExercizer docToExercizer;
 
-	public SubjectController(final Storage storage, final ExercizerExplorerPlugin plugin) {
+	public SubjectController(final Storage storage, final ExercizerExplorerPlugin plugin, Vertx vertx, JsonObject configuration) {
 		this.subjectService = new SubjectServiceSqlImpl(plugin);
 		this.grainService = new GrainServiceSqlImpl();
 		this.storage = storage;
 		final EventStore eventStore = EventStoreFactory.getFactory().getEventStore(Exercizer.class.getSimpleName());
 		this.eventHelper = new EventHelper(eventStore);
+		this.httpClient = vertx.createHttpClient();
+		this.docToExercizer = new DocToExercizer(vertx, plugin, configuration);
 	}
 
     @Post("/canSchedule")
@@ -106,6 +118,29 @@ public class SubjectController extends ControllerHelper {
 					});
 				}
 				else {
+					log.debug("User not found in session.");
+					unauthorized(request);
+				}
+			}
+		});
+	}
+
+	@Post("/subject/generate")
+	@SecuredAction(value = "", type = ActionType.AUTHENTICATED)
+	@ApiDoc("Persists a subject and creates an exercise generate.")
+	public void generateSubject(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
+						@Override
+						public void handle(final JsonObject resource) {
+							log.debug("Generation in process");
+							docToExercizer.generate(request, user, resource);
+						}
+					});
+				} else {
 					log.debug("User not found in session.");
 					unauthorized(request);
 				}

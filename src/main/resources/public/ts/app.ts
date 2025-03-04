@@ -245,6 +245,9 @@ routes.define(function ($routeProvider) {
         .when('/subject/create/simple/:messagebody?', {
             action: 'createSimpleSubject'
         })
+        .when('/subject/generate', {
+            action: 'generateSubject'
+        })
         .when('/subject/edit/simple/:subjectId/', {
             action: 'editSimpleSubject'
         })

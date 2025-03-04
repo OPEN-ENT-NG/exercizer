@@ -3,6 +3,7 @@ import { ISubject, IGrain, IFolder, Subject } from '../models/domain';
 import { ISubjectDocument } from '../models/domain/SubjectDocument';
 import { SerializationHelper, MapToListHelper } from '../models/helpers';
 import { IGrainService } from './GrainService';
+import { timeLog } from 'core-js/core/log';
 
 function cleanBeforeSave(subject: ISubject|IGrain):ISubject|IGrain{
     const copy:any = {...subject}
