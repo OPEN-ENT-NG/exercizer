@@ -34,7 +34,7 @@
         <mongodb-helper.version>3.0-SNAPSHOT</mongodb-helper.version>
         <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
         <junitVersion>4.13.2</junitVersion>
-        <explorerVersion>2.1-SNAPSHOT</explorerVersion>
+        <explorerVersion>2.1-objectstorage-SNAPSHOT</explorerVersion>
     </properties>
 
     <dependencies>
