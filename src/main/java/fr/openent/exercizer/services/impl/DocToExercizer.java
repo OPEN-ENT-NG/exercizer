@@ -60,7 +60,7 @@ public class DocToExercizer {
         this.hostApp = conf.getString("host", "");
         this.subjectService = new SubjectServiceSqlImpl(plugin);
         this.grainService = new GrainServiceSqlImpl();
-        this.config = conf.getJsonObject("doc-to-exercizer");
+        this.config = conf.getJsonObject("doc-to-exercizer", new JsonObject());
         this.host = this.config.getString("docToExercizerHost", "");
         this.token = this.config.getString("docToExercizerPassword", "");
         this.username = this.config.getString("docToExercizerUsername", "");
