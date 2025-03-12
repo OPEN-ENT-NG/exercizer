@@ -491,35 +491,68 @@ export const subjectSchedule = ng.directive('subjectSchedule',
                     }
                 };
 
-                var searchCache = {};
 
-                scope.updateFoundUsersGroups = async function() {
-                    var searchTerm =  idiom.removeAccents(scope.search.search).toLowerCase();
-                        
-                    if(!searchTerm){
-                        return [];
-                    }
-
-                    var startSearch = Me.session.functions.ADMIN_LOCAL ? searchTerm.substr(0, 3) : '';
-                    var list;
-                    var doApply = false;
-                    if (startSearch.length == 3) {
-                        if (!searchCache[startSearch]) {
-                            searchCache[startSearch] = await createLists(scope.subject, startSearch);
-                            doApply = true;
+                scope.safeApply = function (fn) {
+                    const phase = this.$root.$$phase;
+                    if (phase == '$apply' || phase == '$digest') {
+                        if (fn && (typeof (fn) === 'function')) {
+                            fn();
                         }
-                        list = searchCache[startSearch];
                     } else {
-                        list = scope.data.lists;
+                        this.$apply(fn);
                     }
-                    
-                    scope.search.found = _.filter(list, function(item) {
-                        let titleTest = idiom.removeAccents(item.name).toLowerCase();
-                        return titleTest.indexOf(searchTerm) !== -1;
-                    });
+                };
+                var searchCache = {};
+                scope.isAdml = function() {
+                    if(!Me.session){
+                        return false;
+                    }
+                    return Me.session.functions.ADMIN_LOCAL;
+                };
+                scope.canTriggerSearch = function() {
+                    if(!scope.search || !scope.search.search || !Me.session){
+                        return false;
+                    }
+                    // if ADMIN_LOCAL, search is triggered when 3 characters are entered
+                    return Me.session.functions.ADMIN_LOCAL? scope.search.search.length >= 3 : scope.search.search.length >= 1;
+                };
+                scope.updateFoundUsersGroups = async function() {
+                    try{
+                        scope.isSearching = true;
+                        // if can't trigger search, return empty list
+                        if(!scope.canTriggerSearch()){
+                            return [];
+                        }
+                        var searchTerm =  idiom.removeAccents(scope.search.search).toLowerCase();
+                        // if search term is empty, return empty list
+                        if(!searchTerm){
+                            return [];
+                        }
 
-                    if(doApply == true)
-                        scope.$apply();
+                        var startSearch = Me.session.functions.ADMIN_LOCAL ? searchTerm.substr(0, 3) : '';
+                        var list;
+                        var doApply = false;
+                        if (startSearch.length == 3) {
+                            if (!searchCache[startSearch]) {
+                                searchCache[startSearch] = await createLists(scope.subject, startSearch);
+                                doApply = true;
+                            }
+                            list = searchCache[startSearch];
+                        } else {
+                            list = scope.data.lists;
+                        }
+                        
+                        scope.search.found = _.filter(list, function(item) {
+                            let titleTest = idiom.removeAccents(item.name).toLowerCase();
+                            return titleTest.indexOf(searchTerm) !== -1;
+                        });
+
+                        if(doApply == true)
+                            scope.safeApply();
+                    } finally {                 
+                        scope.isSearching = false;
+                        scope.safeApply();
+                    }
                 };
 
                 scope.confirmation = function () {
