@@ -639,5 +639,6 @@
   "exercizer.assistant.teacher.step3.title.1d": "Découvrez les sujets à rendre",
   "exercizer.assistant.teacher.step3.content.1d": "Le type de devoir Sujets à rendre vous permet de récupérer des productions d'élèves sous forme de fichiers (images, sons ou même documents bureautique), d'en contrôler la réception, et si besoin d'envoyer des rappels.",
   "exercizer.assistant.teacher.step4.title.1d": "Intégrez vos exercices à vos contenus pédagogiques",
-  "exercizer.assistant.teacher.step4.content.1d": "Vous souhaitez faire un lien vers un exercice distribué depuis le Cahier de textes, un Blog ou un Cours ? Diffusez vos exercices depuis les autres applications en créant un lien interne dans l’éditeur de textes."
+  "exercizer.assistant.teacher.step4.content.1d": "Vous souhaitez faire un lien vers un exercice distribué depuis le Cahier de textes, un Blog ou un Cours ? Diffusez vos exercices depuis les autres applications en créant un lien interne dans l’éditeur de textes.",
+  "exercizer.search.limit": "Saisissez au moins 3 caractères pour démarrer la recherche"
 }

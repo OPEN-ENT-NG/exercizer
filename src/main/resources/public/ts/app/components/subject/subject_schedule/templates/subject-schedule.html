@@ -82,7 +82,8 @@
             <div data-ng-show="lightbox.state == 'assignSubject'">
                 <div class="row">
                     <label class="form-label"><i18n>exercizer.scheduled.subject.search</i18n></label>
-                    <input type="text" class="twelve cell" ng-model="search.search" autofocus ng-change="updateFoundUsersGroups()" i18n-placeholder="exercizer.search" id="to-users" />
+                    <input type="text" class="twelve cell" ng-model="search.search" autofocus ng-change="updateFoundUsersGroups()" i18n-placeholder="[[isAdml() ? 'exercizer.search.limit':'exercizer.search']]" id="to-users" />
+                    <div  ng-show="isSearching" ng-include="'exercizer/public/assets/img/spinner.svg'"></div>
                     <drop-down
                             options="search.found"
                             ng-change="clickOnItem(selectedItem)"
