@@ -67,6 +67,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.DecodeException;
@@ -136,7 +137,6 @@ public class SubjectController extends ControllerHelper {
 					RequestUtils.bodyToJson(request, new Handler<JsonObject>() {
 						@Override
 						public void handle(final JsonObject resource) {
-							log.debug("Generation in process");
 							docToExercizer.generate(request, user, resource);
 						}
 					});
@@ -1147,7 +1147,7 @@ public class SubjectController extends ControllerHelper {
 						});
 					} else {
 						Renders.badRequest(request, event.getString("message"));
-					}
+						}
 				});
 			} catch( Exception e ) {
 				badRequest(request);

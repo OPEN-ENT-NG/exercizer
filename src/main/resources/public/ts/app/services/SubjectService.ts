@@ -18,7 +18,7 @@ function cleanBeforeSave(subject: ISubject|IGrain):ISubject|IGrain{
 export interface ISubjectService {
     renameFileInWorkspace (id:string, name:string)
     getFileFromWorkspace(id: String): Promise<any>;
-    generate(subject: any): Promise<any>;
+    generate(subject: ISubject & { file: File }): Promise<any>;
     resolve(force?:boolean): Promise<boolean>;
     persist(subject: ISubject): Promise<ISubject>;
     importSubject(subject: ISubject, grains: IGrain[]): Promise<ISubject>;
@@ -424,25 +424,45 @@ export class SubjectService implements ISubjectService {
             });
     }
 
-
     public generate = (subject: any): Promise<any> => {
-        let content = {
-            id: subject.id,
-            file: subject.file
+        const formData = {
+            fileId: subject.file,
+            id: subject.id
         };
 
         const request = {
             method: 'POST',
             url: '/exercizer/subject/generate',
-            data: content
+            data: formData,
+            headers: {
+                'Accept': 'application/json'
+            },
+            withCredentials: true
         };
 
         return this._$http(request)
             .then((response) => {
-                return response.data._id;
+                return response.data;
             })
-            .catch(() => {
-                return Promise.reject("exercizer.error");
+            .catch((error) => {
+                switch (error.status) {
+                    case 400:
+                        return Promise.reject("exercizer.error.invalid.image");
+                    case 401:
+                        return Promise.reject("exercizer.error.auth.token");
+                    case 403:
+                        return Promise.reject("exercizer.error.permission");
+                    case 404:
+                        return Promise.reject("exercizer.error.resource.notfound");
+                    case 407:
+                        return Promise.reject("exercizer.error.invalid.token.format");
+                    case 415:
+                        return Promise.reject("exercizer.error.unsupported.generation");
+                    case 501:
+                        return Promise.reject("exercizer.error.unsupported.format");
+                    default:
+                        return Promise.reject("exercizer.error");
+                }
             });
     }
 
