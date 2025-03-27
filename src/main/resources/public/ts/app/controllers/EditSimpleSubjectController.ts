@@ -31,7 +31,6 @@ class EditSimpleSubjectController {
     public fileName: string;
     public filesFromConversation : any;    
     public lastSegment = null;
-    private base64Image = null;
 
     constructor
     (
@@ -332,35 +331,12 @@ class EditSimpleSubjectController {
             (doc:ISubjectDocument) => {
                 this._subject.files.push(doc);
                 this.closeLightBox();
-                if (this.lastSegment && this.lastSegment == "generate") {
-                    this._subjectService.getFileFromWorkspace(file["_id"]).then(
-                        async (file: File) => {
-                            await this.convertToBase64(file)
-                        },
-                        (err) => {
-                            notify.error(err);
-                        }
-                    );
-                }
             },
             (err) => {
                 notify.error(err);
             }
         );
     };
-
-    async convertToBase64(file: File): Promise<void> {
-        if (file) {
-            const blob = new Blob([file], { type: file.type });
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                this.base64Image = reader.result as string;
-            };
-            reader.readAsDataURL(blob);
-        } else {
-            console.error('No binary data found.');
-        }
-    }    
 
     private closeLightBox() {
         this.fileSelectionDisplayed = false;
@@ -373,7 +349,12 @@ class EditSimpleSubjectController {
                 if( idx >= 0 ) {
                     this._subject.files.splice( idx, 1 );
                 }
-                notify.info('exercizer.service.delete.corrected');
+                if (this.lastSegment && this.lastSegment == "generate") {
+                    notify.info('exercizer.service.delete.file');
+                }
+                else {
+                    notify.info('exercizer.service.delete.corrected');
+                }
             },
             (err) => {
                 notify.error(err);
@@ -388,8 +369,27 @@ class EditSimpleSubjectController {
 
     public generate() {
         this._hasDataLoaded = false;
+        let file: any = this.selectedFile.file;
         var self = this;
-        self._subjectService.generate({ ...this._subject, file: this.base64Image }).then(
+
+        if (file && file.metadata && file.metadata["content-type"]) {
+            const contentType = file.metadata["content-type"].toLowerCase();
+            if (!contentType.startsWith("image/jpeg") && !contentType.startsWith("image/jpg") && !contentType.startsWith("image/png")) {
+                this._hasDataLoaded = true;
+                notify.error("exercizer.simple.error.file.type");
+                return;
+            }
+        } else if (!file) {
+            this._hasDataLoaded = true;
+            notify.error("exercizer.simple.error.file.empty");
+            return;
+        }
+        if (this.selectedFile.file["_id"] == null) {
+            this._hasDataLoaded = true;
+            notify.error("exercizer.simple.error.file.empty");
+            return;
+        }
+        self._subjectService.generate({ ...this._subject, file: this.selectedFile.file["_id"] }).then(
             (res) => {
                 this._hasDataLoaded = true;
                 this._$location.path("/subject/edit/" + this._subject.id);
