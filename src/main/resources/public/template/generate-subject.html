@@ -12,11 +12,12 @@
                 grid-template-columns: 1fr;
                 grid-template-rows: repeat(1, 1fr);
                 grid-column-gap: 0px;
-                grid-row-gap: 30px; 
+                grid-row-gap: 5px; 
                 border-radius: 15px;
                 padding: 20px;
                 background-color: white;
                 place-items: center; 
+                width: 750px;
             }
         .loader{
                 width: 300px;
@@ -30,8 +31,9 @@
     <div class="row" data-ng-if="!editSimpleSubjectController.hasDataLoaded">
         <div class="info-loader">
             <div class="loader-container">
-                <img class="loader" src="exercizer/public/assets/img/d2E-loading.gif">
-                <i18n >exercizer.genrete.loader</i18n>
+                <img class="loader" style="margin-bottom: 25px;" src="exercizer/public/assets/img/d2E-loading.gif">
+                <i18n style="font-size: 18px;line-height: 26px;font-weight: 700;letter-spacing: 0%;">exercizer.genrete.loader</i18n>
+                <span><svg class="icon-timer" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/timer.svg#timer"></use></svg><i18n style="font-family: 'Roboto';font-size: 16px;font-weight: 400;line-height: 24px;color: #909090;" >exercizer.genrete.timer</i18n></span>
             </div>
         </div>
     </div>
@@ -91,16 +93,6 @@
                             <div data-ng-if="editSimpleSubjectController.readOnly" class="twelve cell">[[editSimpleSubjectController.subject.title]]</div>
                             <input type="text" maxlength="200" data-ng-if="!editSimpleSubjectController.readOnly" complete-change="editSimpleSubjectController.saveSubjectProperties()" data-ng-model="editSimpleSubjectController.subject.title" class="twelve cell" i18n-placeholder="exercizer.simple.default.placeholder">
                         </div>
-                        <div class="twelve cell mt-16">
-                            <h4 class="mb-16"><i18n>exercizer.simple.edit.description</i18n></h4>
-                            <div data-ng-if="editSimpleSubjectController.readOnly"  style="word-wrap: break-word;" bind-html="editSimpleSubjectController.subject.description"></div>
-                            <textarea
-                            track-input-event="editSimpleSubjectController.subject.getTracker()"
-                            data-ng-model="editSimpleSubjectController.subject.description"
-                            class="twelve cell subject-edit-textarea"
-                            i18n-placeholder="exercizer.subject.desc"
-                          ></textarea>
-                        </div>
                     </div>
                 </div>
             </form>
@@ -110,7 +102,6 @@
             <h2 class="block mb-16"><i18n>exercizer.generate.file</i18n></h2>
             <div>
                 <message-info status="info" data-ng-if="editSimpleSubjectController.subject.files.length == 1" class="block"><i18n>exercizer.file.limit1</i18n></message-info>
-                <message-info status="info" data-ng-if="editSimpleSubjectController.subject.files.length < 1" class="block"><i18n>exercizer.file.instruct</i18n></message-info>
                 <div class="m-16">
                     <div data-ng-repeat="file in editSimpleSubjectController.subject.files">
                         <div class="selected-subject-scheduled">
@@ -140,7 +131,7 @@
                             <button class="button file-button no-margin" style="min-width:fit-content;" ng-click="editSimpleSubjectController.fileSelectionDisplayed = true"><i18n>library.file.choose</i18n></button>
                             <svg class="icon-upload" width="24" height="24"><use href="exercizer/public/assets/icons/icons.svg#upload"></use></svg>
                             <div class="help">
-                                <em><i18n>exercizer.drop.help</i18n></em>
+                                <em><i18n>exercizer.drop.help3</i18n></em>
                             </div>
                         </article>
                     </div>
@@ -152,6 +143,32 @@
                             file-format="'img'">
                         </media-library>
                     </lightbox>
+                </div>
+                <div class="twelve cell mt-16" style="border: 1px solid #FFCBA0;border-radius: 8px;">
+                    <div style="border: 7px solid #FFEFE3;padding: 18px 30px;border-radius: 8px;">
+                        <div class="alert-message alert-message-info gap-8" role="alert" style="margin: 0px 8px;margin-bottom: 14px; border-left-color: #F59700;border-color: #F59700;">
+                            <svg class="icon-info" style="fill: #F59700;" width="24" height="24"><use href="exercizer/public/assets/icons/icons.svg#info"></use></svg>
+                            <i18n>exercizer.generate.alert</i18n>
+                        </div> 
+                        <div class="flex-row justify-space-between f-wrap mobile-justify-center">                  
+                            <div class="flex-row f-column align-center answer-choice ng-scope" >
+                                <svg class="mb-4" width="70" height="70"><use href="exercizer/public/assets/icons/illustrations.svg#qcm"></use></svg>
+                                <span class="text-bold text-center"><i18n >exercizer.grain.type.qcm</i18n></span>
+                            </div>
+                            <div class="flex-row f-column align-center answer-choice ng-scope" >
+                                <svg class="mb-4" width="70" height="70"><use href="exercizer/public/assets/icons/illustrations.svg#simple_answer"></use></svg>
+                                <span class="text-bold text-center"><i18n >exercizer.grain.type.simpleanswer</i18n></span>
+                            </div>
+                            <div class="flex-row f-column align-center answer-choice ng-scope" >
+                                <svg class="mb-4" width="70" height="70"><use  href="exercizer/public/assets/icons/illustrations.svg#multiple_answers"></use></svg>
+                                <span class="text-bold text-center"><i18n >exercizer.grain.type.multipleanswers</i18n></span>
+                            </div>
+                            <div class="flex-row f-column align-center answer-choice ng-scope" >
+                                <svg class="mb-4" width="70" height="70"><use href="exercizer/public/assets/icons/illustrations.svg#text_to_fill"></use></svg>
+                                <span class="text-bold text-center"><i18n >exercizer.grain.type.texttofill</i18n></span>
+                            </div>
+                        </div>   
+                    </div>
                 </div>
             </div>
         </article>
