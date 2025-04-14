@@ -12,7 +12,7 @@
 
     <groupId>fr.openent</groupId>
     <artifactId>exercizer</artifactId>
-    <version>4.2-SNAPSHOT</version>
+    <version>4.2-develop-b2school-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:https://github.com/OPEN-ENT-NG/exercizer.git</connection>
