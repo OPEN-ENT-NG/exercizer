@@ -3,7 +3,6 @@ package fr.openent.exercizer.services.impl;
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 
 import org.entcore.common.user.UserInfos;
-import org.entcore.common.user.UserUtils;
 
 import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.services.IGrainService;
@@ -11,7 +10,6 @@ import fr.openent.exercizer.services.ISubjectService;
 import fr.wseduc.webutils.Server;
 import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.CookieHelper;
-import fr.wseduc.webutils.request.RequestUtils;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Promise;
@@ -32,7 +30,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.entcore.common.http.response.DefaultResponseHandler;
 import org.entcore.common.user.UserInfos;
 
 public class DocToExercizer {
@@ -42,7 +39,6 @@ public class DocToExercizer {
     private final String token;
     private final String host;
     private final String username;
-    private String sessionBasic;
     private final ISubjectService subjectService;
     private final IGrainService grainService;
     protected EventBus eb;
@@ -67,169 +63,184 @@ public class DocToExercizer {
     }
 
     public JsonArray convertToShort(JsonObject input) {
+        return convertContent(input, 6);
+    }
+
+    public JsonArray convertToMqc(JsonObject input) {
+        return convertContent(input, 7);
+    }
+
+    public JsonArray convertToCloze(JsonObject input){
+        return convertContent(input, 10);
+    }
+
+    private JsonArray convertContent(JsonObject input, int nonStatementGrainTypeId) {
         try {
             JsonArray resultArray = new JsonArray();
             JsonObject data = input.getJsonObject("data");
             JsonArray bodyArray = data.getJsonArray("body");
 
+            List<String> imagePaths = processImages();
+
             for (int i = 0; i < bodyArray.size(); ++i) {
                 JsonObject bodyObject = bodyArray.getJsonObject(i);
                 String type = bodyObject.getString("type");
-                List<String> paths = new ArrayList<String>();
-                if (base64Images.size() > 0) {
-                    for (int c = 0; c < this.base64Images.size(); ++c) {
-                        Promise<JsonArray> promise = Promise.promise();
-                        this.storeImagesInWorkspace(this.base64Images.getString(c), promise);
-                        promise.future().onComplete((ar) -> {
-                            if (ar.succeeded()) {
-                                JsonObject imageResponse = ((JsonArray) ar.result()).getJsonObject(0);
-                                String imageId = imageResponse.getString("file");
-                                paths.add(String.format("/workspace/document/%s", imageId));
-                                log.info("Image stored in workspace: " + imageId);
-                            } else {
-                                log.error("Failed to store image in workspace: " + ar.cause().getMessage());
-                            }
-
-                        });
-                    }
-                    base64Images.clear();
-                }
 
                 if ("statement".equals(type)) {
-                    JsonObject customData = new JsonObject()
-                            .put("statement", "<div>" + bodyObject.getString("content", "") + "</div>");
-                    JsonObject grainData = new JsonObject()
-                            .put("title", bodyObject.getString("title", ""))
-                            .put("max_score", 0)
-                            .put("custom_data", customData);
-                    JsonObject output = new JsonObject()
-                            .put("grainTypeId", 3)
-                            .put("orderBy", i + 1)
-                            .put("grainData", grainData);
-                    resultArray.add(output);
+                    resultArray.add(createStatementGrain(bodyObject, i));
                 } else {
-                    JsonArray answers = bodyObject.getJsonArray("answers");
-                    String title = bodyObject.getString("content", "");
-                    String statement = bodyObject.getString("title", "");
-                    String hint = bodyObject.getString("hint", "");
-                    String explanation = bodyObject.getString("explanation", "");
-                    JsonArray correctAnswerList = new JsonArray();
-                    if (answers != null) {
-                        for (int j = 0; j < answers.size(); ++j) {
-                            JsonObject answer = answers.getJsonObject(j);
-                            JsonObject answerObj = new JsonObject()
-                                    .put("text", answer.getString("content", ""))
-                                    .put("isChecked", false);
-                            correctAnswerList.add(answerObj);
-                        }
-                    }
-                    JsonObject customData = new JsonObject()
-                            .put("correct_answer_list", correctAnswerList)
-                            .put("no_error_allowed", false);
-                    JsonObject grainData = (new JsonObject()).put("title", title)
-                            .put("statement", "<div class=\"ng-scope\">" + statement + "</div>")
-                            .put("answer_hint", hint)
-                            .put("answer_explanation", explanation)
-                            .put("max_score", 1)
-                            .put("custom_data", customData);
-                    JsonObject output = new JsonObject()
-                            .put("grainTypeId", 6)
-                            .put("orderBy", i + 1)
-                            .put("grainData", grainData);
-                    resultArray.add(output);
+                    resultArray.add(createAnswerGrain(bodyObject, i, nonStatementGrainTypeId));
                 }
             }
 
             return resultArray;
         } catch (Exception e) {
-            log.error("Echec de la conversion JSON : " + e.getMessage());
+            log.error("Conversion JSON failure: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
-    public JsonArray convertToMqc(JsonObject input) {
-        try {
-            JsonArray resultArray = new JsonArray();
-            JsonObject data = input.getJsonObject("data");
-            JsonObject headerObject = data.getJsonObject("header");
-            JsonArray bodyArray = data.getJsonArray("body");
-
-            for (int i = 0; i < bodyArray.size(); ++i) {
-                JsonObject bodyObject = bodyArray.getJsonObject(i);
-                String type = bodyObject.getString("type");
-                List<String> paths = new ArrayList<String>();
-                if (base64Images.size() > 0) {
-                    for (int c = 0; c < this.base64Images.size(); ++c) {
-                        Promise<JsonArray> promise = Promise.promise();
-                        this.storeImagesInWorkspace(this.base64Images.getString(c), promise);
-                        promise.future().onComplete((ar) -> {
-                            if (ar.succeeded()) {
-                                JsonObject imageResponse = ((JsonArray) ar.result()).getJsonObject(0);
-                                String imageId = imageResponse.getString("file");
-                                paths.add(String.format("/workspace/document/%s", imageId));
-                                log.info("Image stored in workspace: " + imageId);
-                            } else {
-                                log.error("Failed to store image in workspace: " + ar.cause().getMessage());
-                            }
-
-                        });
+    private List<String> processImages() {
+        List<String> paths = new ArrayList<>();
+        if (base64Images.size() > 0) {
+            for (int c = 0; c < this.base64Images.size(); ++c) {
+                Promise<JsonArray> promise = Promise.promise();
+                this.storeImagesInWorkspace(this.base64Images.getString(c), promise);
+                promise.future().onComplete((ar) -> {
+                    if (ar.succeeded()) {
+                        JsonObject imageResponse = ((JsonArray) ar.result()).getJsonObject(0);
+                        String imageId = imageResponse.getString("file");
+                        paths.add(String.format("/workspace/document/%s", imageId));
+                        log.info("Image stored in workspace: " + imageId);
+                    } else {
+                        log.error("Failed to store image in workspace: " + ar.cause().getMessage());
                     }
-                    base64Images.clear();
+                });
+            }
+            base64Images.clear();
+        }
+        return paths;
+    }
+
+    private JsonObject createStatementGrain(JsonObject bodyObject, int index) {
+        JsonObject customData = new JsonObject()
+                .put("statement", "<div>" + bodyObject.getString("content", "") + "</div>");
+        JsonObject grainData = new JsonObject()
+                .put("title", bodyObject.getString("title", ""))
+                .put("max_score", 0)
+                .put("custom_data", customData);
+        return new JsonObject()
+                .put("grainTypeId", 3)
+                .put("orderBy", index + 1)
+                .put("grainData", grainData);
+    }
+
+    private JsonObject createAnswerGrain(JsonObject bodyObject, int index, int grainTypeId) {
+        JsonArray answers = bodyObject.getJsonArray("answers");
+        String title = bodyObject.getString("content", "Untitled");
+        String hint = bodyObject.getString("hint", "");
+        String explanation = bodyObject.getString("explanation", "");
+        String statement = bodyObject.getString("title", "");
+        
+        JsonObject customData = new JsonObject();
+        
+        if (grainTypeId == 10) {
+            JsonArray zones = new JsonArray();
+            title = bodyObject.getString("title", "Untitled");
+            statement = bodyObject.getString("content", "Untitled");
+        
+            
+            
+            String clozeText = bodyObject.getString("cloze_text", "");
+            JsonArray placeholders = bodyObject.getJsonArray("placeholders", new JsonArray());
+            
+            for (int j = 0; j < placeholders.size(); j++) {
+                JsonObject placeholder = placeholders.getJsonObject(j);
+                String answerId = placeholder.getString("id", "");
+                JsonArray placeholderAnswers = placeholder.getJsonArray("answers", new JsonArray());
+                
+                String answer = "";
+                if (placeholderAnswers.size() > 0) {
+                    JsonObject firstAnswer = placeholderAnswers.getJsonObject(0);
+                    if (firstAnswer.containsKey("content")) {
+                        answer = firstAnswer.getString("content", "");
+                    }
                 }
-
-                if ("statement".equals(type)) {
-                    JsonObject customData = new JsonObject()
-                            .put("statement", "<div>" + bodyObject.getString("content", "") + "</div>");
-                    JsonObject grainData = new JsonObject()
-                            .put("title", bodyObject.getString("title", ""))
-                            .put("max_score", 0)
-                            .put("custom_data", customData);
-                    JsonObject output = new JsonObject()
-                            .put("grainTypeId", 3)
-                            .put("orderBy", i + 1)
-                            .put("grainData", grainData);
-                    resultArray.add(output);
-                } else {
-                    JsonArray answers = bodyObject.getJsonArray("answers");
-                    String hint = bodyObject.getString("hint", "");
-                    String explanation = bodyObject.getString("explanation", "");
-                    String title = bodyObject.getString("content", "Untitled");
-                    JsonArray correctAnswerList = new JsonArray();
-
-                    for (int j = 0; j < answers.size(); j++) {
-                        JsonObject answer = answers.getJsonObject(j);
-                        boolean isCorrect = false;
-                        if (answer.containsKey("is_correct") && answer.getValue("is_correct") instanceof Boolean) {
-                            isCorrect = answer.getBoolean("is_correct", false);
-                        }
-                        JsonObject answerObj = new JsonObject()
-                                .put("isChecked", isCorrect)
-                                .put("text", answer.getString("content", ""));
-                        correctAnswerList.add(answerObj);
+                
+                JsonObject zone = new JsonObject()
+                    .put("answer", answer)
+                    .put("options", new JsonArray())
+                    .put("id", j);
+                zones.add(zone);
+            }
+            
+            StringBuilder htmlBuilder = new StringBuilder();
+            if (!clozeText.isEmpty()) {
+                String htmlContent = clozeText;
+                for (int i = 0; i < zones.size(); i++) {
+                    String placeholder = "%%%" + (i+1) + "%%%";
+                    String replacement = "<span contenteditable=\"false\" class=\"ng-scope\"><fill-zone zone-id=\"" 
+                                      + i + "\" class=\"ng-isolate-scope\"><text-zone style=\"max-width:unset;box-shadow:none;\"></text-zone></fill-zone>&nbsp;</span>";
+                    htmlContent = htmlContent.replace(placeholder, replacement);
+                }
+                htmlBuilder.append(htmlContent);
+            } else if (answers != null) {
+                htmlBuilder.append("<div>");
+                for (int j = 0; j < answers.size(); j++) {
+                    JsonObject answer = answers.getJsonObject(j);
+                    String content = answer.getString("content", "");
+                    htmlBuilder.append(content);
+                    if (j < answers.size() - 1) {
+                        htmlBuilder.append("<span contenteditable=\"false\" class=\"ng-scope\"><fill-zone zone-id=\"")
+                                   .append(j)
+                                   .append("\" class=\"ng-isolate-scope\"><text-zone style=\"max-width:unset;box-shadow:none;\"></text-zone></fill-zone>&nbsp;</span>");
                     }
-
-                    JsonObject customData = new JsonObject()
-                            .put("correct_answer_list", correctAnswerList)
-                            .put("no_error_allowed", false);
-                    JsonObject grainData = new JsonObject()
-                            .put("title", title)
-                            .put("answer_hint", hint)
-                            .put("answer_explanation", explanation)
-                            .put("max_score", 1)
-                            .put("custom_data", customData);
-                    JsonObject output = new JsonObject()
-                            .put("grainTypeId", 7)
-                            .put("orderBy", i + 1)
-                            .put("grainData", grainData);
-                    resultArray.add(output);
+                }
+                htmlBuilder.append("</div>");
+            } else {
+                htmlBuilder.append("<div>Complete the text with appropriate words.</div>");
+            }
+            
+            customData.put("zones", zones)
+                     .put("options", new JsonArray())
+                     .put("htmlContent", bodyObject.getString("htmlContent", htmlBuilder.toString()))
+                     .put("answersType", "text");
+        } else {
+            JsonArray correctAnswerList = new JsonArray();
+            if (answers != null) {
+                for (int j = 0; j < answers.size(); ++j) {
+                    JsonObject answer = answers.getJsonObject(j);
+                    boolean isCorrect = false;
+                    if (answer.containsKey("is_correct") && answer.getValue("is_correct") instanceof Boolean) {
+                        isCorrect = answer.getBoolean("is_correct", false);
+                    }
+                    JsonObject answerObj = new JsonObject()
+                            .put("text", answer.getString("content", ""))
+                            .put("isChecked", isCorrect);
+                    correctAnswerList.add(answerObj);
                 }
             }
-
-            return resultArray;
-        } catch (Exception e) {
-            log.error("Échec de l'analyse du tableau JSON : " + e);
-            throw new RuntimeException(e);
+            
+            customData.put("correct_answer_list", correctAnswerList)
+                     .put("no_error_allowed", false);
         }
+        
+        JsonObject grainData = new JsonObject()
+                .put("title", title)
+                .put("statement", grainTypeId == 6 || grainTypeId == 10 ? "<div class=\"ng-scope\">" + statement + "</div>" : null)
+                .put("answer_hint", hint)
+                .put("answer_explanation", explanation)
+                .put("max_score", 1)
+                .put("custom_data", customData);
+        
+        if (grainData.getValue("statement") == null) {
+            grainData.remove("statement");
+        }
+        
+        return new JsonObject()
+                .put("grainTypeId", grainTypeId)
+                .put("orderBy", index + 1)
+                .put("grainData", grainData);
     }
 
     public JsonArray selectConverterMethod(JsonArray outputLlm) {
@@ -276,6 +287,9 @@ public class DocToExercizer {
                             case "mcq":
                                 result = this.convertToMqc(firstObject);
                                 break;
+                            case "cloze":
+                                result = this.convertToCloze(firstObject);
+                                break;
                             default:
                                 log.error("Unsupported converter type: {}", new Object[] { type });
                                 throw new IllegalArgumentException("Unsupported converter type: " + type);
@@ -295,27 +309,6 @@ public class DocToExercizer {
             log.error("Input array is null or empty");
             throw new IllegalArgumentException("Input array cannot be null or empty");
         }
-    }
-
-    private String buildTemplateWithRoutes(List<String> routes) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<div class=\"ng-scope\">\n");
-        if (routes != null && !routes.isEmpty()) {
-            sb.append("    <span>\n");
-            for (String route : routes) {
-                sb.append("        <span contenteditable=\"false\" class=\"image-container\">\n");
-                sb.append("            <img src=\"").append(route).append("?thumbnail=2600x0\" class=\"\" />\n");
-                sb.append("        </span>&nbsp;&nbsp;\n");
-            }
-            sb.append("    </span>\n");
-        } else {
-            sb.append("    <span>Aucune image disponible</span>\n");
-        }
-        sb.append("    <br />\n");
-        sb.append("    <div class=\"ng-scope\"></div>\n");
-        sb.append("</div>\n");
-        log.info("Template with routes: " + sb.toString());
-        return sb.toString();
     }
 
     private void serverLLM(String file, Handler<JsonArray> handler) {
@@ -464,19 +457,5 @@ public class DocToExercizer {
             promise.fail(e);
         }
     }
-    private void getAuthBasic() {
-        JsonObject requestData = new JsonObject();
-        this.client.request((new RequestOptions()).setAbsoluteURI(this.host + "doc-to-exo/login")
-                .setMethod(HttpMethod.POST).addHeader("content-type", "application/json")
-                .addHeader("Authorization", "Basic " + String.format("%s:%s", this.username, this.token)))
-                .flatMap((request) -> request.send(requestData.encode())).onSuccess((response) -> {
-                    if (response.statusCode() == 200) {
-                        response.bodyHandler((body) -> {
-                            JsonObject json = body.toJsonObject();
-                            this.sessionBasic = json.getString("token");
-                        });
-                    }
 
-                }).onFailure((throwable) -> log.error("Failed to create POST request: " + throwable.getMessage()));
-    }
 }
