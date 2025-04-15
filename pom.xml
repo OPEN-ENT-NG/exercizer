@@ -34,7 +34,7 @@
         <mongodb-helper.version>3.0-SNAPSHOT</mongodb-helper.version>
         <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
         <junitVersion>4.13.2</junitVersion>
-        <explorerVersion>2.2-SNAPSHOT</explorerVersion>
+        <explorerVersion>2.0-develop-b2school-SNAPSHOT</explorerVersion>
     </properties>
 
     <dependencies>
