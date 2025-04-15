@@ -441,8 +441,23 @@ export class SubjectService implements ISubjectService {
             .then((response) => {
                 return response.data._id;
             })
-            .catch(() => {
-                return Promise.reject("exercizer.error");
+            .catch((error) => {
+                switch (error.status) {
+                    case 400:
+                        return Promise.reject("exercizer.error.invalid.image");
+                    case 401:
+                        return Promise.reject("exercizer.error.auth.token");
+                    case 403:
+                        return Promise.reject("exercizer.error.permission");
+                    case 404:
+                        return Promise.reject("exercizer.error.resource.notfound");
+                    case 407:
+                        return Promise.reject("exercizer.error.invalid.token.format");
+                    case 415:
+                        return Promise.reject("exercizer.error.unsupported.generation");
+                    default:
+                        return Promise.reject("exercizer.error");
+                }
             });
     }
 

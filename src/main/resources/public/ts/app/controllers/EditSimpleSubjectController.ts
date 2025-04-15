@@ -325,6 +325,13 @@ class EditSimpleSubjectController {
 
     public async appendCorrected() {
         const file = this.selectedFile.file;
+        const fileName = file["name"] || "";
+        const fileExtension = fileName.split('.').pop()?.toLowerCase() || "";
+        if (!fileExtension || !["jpg", "jpeg", "png"].includes(fileExtension))
+        {
+            notify.error("exercizer.simple.error.file.type");
+            return;
+        }
         if(!file){
             return;
         }
