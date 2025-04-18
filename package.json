@@ -1,13 +1,13 @@
 {
   "name": "exercizer",
-  "version": "4.2.3",
+  "version": "4.2.3-dev.0",
   "description": "This application allows users to create exercices.",
   "main": "gulpfile.js",
   "dependencies": {
     "@types/core-js": "0.9.42",
     "axios": "0.16.2",
     "core-js": "2.4.1",
-    "entcore": "4.8.12",
+    "entcore": "dev",
     "entcore-toolkit": "^1.0.1",
     "gulp": "3.9.1",
     "gulp-clean": "^0.3.2",
