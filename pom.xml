@@ -29,12 +29,12 @@
     </repositories>
 
     <properties>
-        <entCoreVersion>6.6-SNAPSHOT</entCoreVersion>
-        <web-utils.version>3.1-SNAPSHOT</web-utils.version>
-        <mongodb-helper.version>3.0-SNAPSHOT</mongodb-helper.version>
-        <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
+        <entCoreVersion>6.6-develop-b2school-SNAPSHOT</entCoreVersion>
+        <web-utils.version>3.1-develop-b2school-SNAPSHOT</web-utils.version>
+        <mongodb-helper.version>4.0-develop-b2school-SNAPSHOT</mongodb-helper.version>
+        <vertxCronTimerVersion>3.0-develop-b2school-SNAPSHOT</vertxCronTimerVersion>
         <junitVersion>4.13.2</junitVersion>
-        <explorerVersion>2.0-develop-b2school-SNAPSHOT</explorerVersion>
+        <explorerVersion>2.2-develop-b2school-SNAPSHOT</explorerVersion>
     </properties>
 
     <dependencies>
