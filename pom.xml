@@ -12,7 +12,7 @@
 
     <groupId>fr.openent</groupId>
     <artifactId>exercizer</artifactId>
-    <version>4.2-SNAPSHOT</version>
+    <version>4.2-develop-pedago-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:https://github.com/OPEN-ENT-NG/exercizer.git</connection>
@@ -29,12 +29,12 @@
     </repositories>
 
     <properties>
-        <entCoreVersion>6.6-SNAPSHOT</entCoreVersion>
-        <web-utils.version>3.1-SNAPSHOT</web-utils.version>
-        <mongodb-helper.version>3.0-SNAPSHOT</mongodb-helper.version>
+        <entCoreVersion>6.6-develop-pedago-SNAPSHOT</entCoreVersion>
+        <web-utils.version>3.1-develop-pedago-SNAPSHOT</web-utils.version>
+        <mongodb-helper.version>3.0-develop-pedago-SNAPSHOT</mongodb-helper.version>
         <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
         <junitVersion>4.13.2</junitVersion>
-        <explorerVersion>2.2-SNAPSHOT</explorerVersion>
+        <explorerVersion>2.2-develop-pedago-SNAPSHOT</explorerVersion>
     </properties>
 
     <dependencies>
