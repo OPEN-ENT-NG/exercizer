@@ -216,7 +216,7 @@
   "exercizer.genrete.timer": "Cela peut prendre plusieurs minutes",
   "exercizer.genrete.out.page": "Votre exercice sera créé et enregistré même si vous quittez la page",
   "exercizer.generate.out.button": "Retourner sur Exercices",
-  "exercizer.generate.alert": "Pour que l’assistant fonctionne efficacement, vos énoncés à importer devront avoir un format similaire à ces types de questions :",
+  "exercizer.generate.alert": "Pour que l’assistant fonctionne efficacement, vos énoncés à importer devront avoir un format similaire à ces types de questions (voir l'aide) :",
   "ercizer.genrete.step1": "Analyse du fichier soumis...",
   "exercizer.genrete.step2": "Création des questions adaptées...",
   "exercizer.genrete.step3": "Ajout d'illustrations et de graphiques...",
