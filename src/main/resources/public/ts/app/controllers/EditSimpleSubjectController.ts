@@ -124,6 +124,9 @@ class EditSimpleSubjectController {
             self.initDragDrop();
             self.createSubject();
         }
+        this._$scope.openHelp = function() {
+            window.open('https://help.edifice.io/hc/fr/articles/5723621221916-Enseignant-Cr%C3%A9er-un-nouveau-sujet-dans-Exercices', '_blank');
+        };
     }
     private initFromUrlParams(): void {
         const { messagebody, event } = this._$location.search();
