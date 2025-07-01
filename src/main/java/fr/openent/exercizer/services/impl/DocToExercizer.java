@@ -2,6 +2,15 @@ package fr.openent.exercizer.services.impl;
 
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.checkerframework.common.returnsreceiver.qual.This;
+import org.entcore.common.http.request.JsonHttpServerRequest;
+import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.user.UserInfos;
 
 import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
@@ -26,12 +35,9 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import org.entcore.common.user.UserInfos;
+
+
+
 
 public class DocToExercizer {
 
@@ -48,12 +54,16 @@ public class DocToExercizer {
     private String userId;
     private final JsonArray base64Images = new JsonArray();
     private final String hostApp;
+    private TimelineHelper timelineHelper;
+    private Long subjectId;
+    private String entHost;
 
     public DocToExercizer(Vertx vertx, ExercizerExplorerPlugin plugin, JsonObject conf) {
         if (vertx != null) {
             this.eb = Server.getEventBus(vertx);
             this.client = vertx.createHttpClient(new HttpClientOptions());
         }
+        this.timelineHelper = new TimelineHelper(vertx, this.eb, conf);
         this.hostApp = conf.getString("host", "");
         this.subjectService = new SubjectServiceSqlImpl(plugin);
         this.grainService = new GrainServiceSqlImpl();
@@ -61,6 +71,7 @@ public class DocToExercizer {
         this.host = this.config.getString("docToExercizerHost", "");
         this.token = this.config.getString("docToExercizerPassword", "");
         this.username = this.config.getString("docToExercizerUsername", "");
+        this.entHost = this.config.getString("host", "");
     }
 
     public JsonArray convertToShort(JsonObject input) {
@@ -339,6 +350,131 @@ public class DocToExercizer {
                 }).onFailure((throwable) -> this.handleError("Failed to create POST request: " + throwable.getMessage(), 500, handler));
     }
 
+    /**
+     * Envoie une image à l'API doc-to-exo pour génération d'exercices via Server-Sent Events (SSE)
+     * 
+     * @param file L'image encodée en base64
+     * @param handler Le handler qui recevra le résultat
+     */
+    private void serverLLM_SSE(String file, Handler<JsonArray> handler) {
+        final String session = CookieHelper.getInstance().getSigned("oneSessionId", this.req);
+        final String ua = this.req.headers().get("User-Agent");
+
+        JsonObject requestData = new JsonObject()
+            .put("image", file)
+            .put("user_id", this.userId)
+            .put("user_session", session)
+            .put("user_browser", ua);
+
+        String auth = String.format("%s:%s", this.username, this.token);
+        String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+
+        // Première requête pour lancer la génération
+        this.client.request(new RequestOptions()
+                .setAbsoluteURI(this.host + "doc-to-exo/launch-generation")
+                .setMethod(HttpMethod.POST)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Basic " + encodedAuth))
+            .flatMap(request -> request.send(requestData.encode()))
+            .onSuccess(response -> {
+                if (response.statusCode() == 200) {
+                    response.body().onSuccess(body -> {
+                        try {
+                            String taskId = body.toJsonObject().getString("task_id");
+                            if (taskId == null) throw new IllegalArgumentException("task_id manquant");
+                            log.info("Tâche de génération lancée avec l'ID: " + taskId);
+
+                            this.client.request(new RequestOptions()
+                                    .setAbsoluteURI(this.host + "doc-to-exo/progress-stream?task_id=" + taskId)
+                                    .setMethod(HttpMethod.GET)
+                                    .addHeader("Accept", "text/event-stream")
+                                    .addHeader("Authorization", "Basic " + encodedAuth))
+                                .flatMap(sseRequest -> sseRequest.send())
+                                .onSuccess(sseResponse -> {
+                                    if (sseResponse.statusCode() == 200) {
+                                        sseResponse.bodyHandler(sseBody -> {
+                                            try {
+                                                JsonArray result = new JsonArray();
+                                                boolean foundJson = false;
+                                                String responseText = sseBody.toString();
+                                                log.debug("Received SSE response length: " + responseText.length());
+                                                
+                                                String[] eventBlocks = responseText.split("\n\n");
+                                                
+                                                for (String block : eventBlocks) {
+                                                    if (block.contains("event: json")) {
+                                                        String[] blockLines = block.split("\n");
+                                                        for (String line : blockLines) {
+                                                            if (line.startsWith("data:")) {
+                                                                String jsonData = line.substring(5).trim();
+                                                                if (!jsonData.isEmpty()) {
+                                                                    try {
+                                                                        result.add(new JsonObject(jsonData));
+                                                                        foundJson = true;
+                                                                        log.info("JSON récupéré et parsé avec succès");
+                                                                    } catch (Exception e) {
+                                                                        log.error("Échec du parsing JSON: " + e.getMessage());
+                                                                        this.handleError("Erreur parsing JSON : " + e.getMessage(), 502, handler);
+                                                                    }
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                    if (foundJson) {
+                                                            log.info("Traitement SSE terminé avec succès, envoi du résultat");
+                                                            handler.handle(result);
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (block.contains("data: _")) {
+                                                        String[] blockLines = block.split(" ");
+                                                        for(String line : blockLines){
+                                                            if(line.startsWith("_")){
+                                                                String codeStr = line.replace("_", "");
+                                                                try {
+                                                                    int code = Integer.parseInt(codeStr);
+                                                                    this.handleError("Erreur parsing réponse SSE : " + line, code, handler);
+                                                                }
+                                                                catch (Exception e){
+                                                                    this.handleError("Error :" + e.getMessage(), 501, handler);
+
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                if(!foundJson) {
+                                                    log.warn("Aucun JSON trouvé dans la réponse SSE");
+                                                    this.handleError("Aucun JSON trouvé dans la réponse SSE", 502, handler);
+                                                }
+                                            } catch (Exception e) {
+                                                this.handleError("Erreur parsing réponse SSE : " + e.getMessage(), 502, handler);
+                                            }
+                                        });
+                                    } else {
+                                        this.handleError("Erreur GET SSE : " + sseResponse.statusMessage(),
+                                                sseResponse.statusCode(), handler);
+                                    }
+                                })
+                                .onFailure(err -> {
+                                    this.handleError("Erreur GET SSE : " + err.getMessage(), 500, handler);
+                                });
+                        } catch (Exception ex) {
+                            this.handleError("Erreur parsing réponse launch-generation : " + ex.getMessage(), 500, handler);
+                        }
+                    });
+                } else {
+                    this.handleError("Erreur POST launch-generation : " + response.statusMessage(),
+                            response.statusCode(), handler);
+                }
+            })
+            .onFailure(err -> {
+                this.handleError("Erreur POST launch-generation : " + err.getMessage(), 500, handler);
+            });
+    }
+    
+
+
     private void handleError(String message, int code,  Handler<JsonArray> handler) {
         log.error(message);
         JsonObject errorResponse = new JsonObject().put("error_description", message).put("status_code", code);
@@ -347,6 +483,7 @@ public class DocToExercizer {
 
     public void generate(HttpServerRequest request, UserInfos user, JsonObject resource) {
         Long subjectId = resource.getLong("id");
+        this.subjectId = subjectId != null ? subjectId : resource.getLong("subjectId");
         String fileId = resource.getString("fileId");
         this.req = request;
         log.info("Generating exercise for subject ID: " + subjectId + " and user ID: " + user.getUserId());
@@ -363,12 +500,14 @@ public class DocToExercizer {
                 }
 
                 this.grainService.list(resource, arrayResponseHandler(request));
+                this.notifyUserOnTimeline(request.headers().get("Accept-Language"), "ok");
             } else {
                 int code = 500;
                 if(response != null && response.getJsonObject(0).containsKey("error_description")) {
                     code = response.getJsonObject(0).getInteger("status_code", 500);
                 }
                 Renders.renderJson(request, (new JsonObject()).put("error", response), code);
+                this.notifyUserOnTimeline(request.headers().get("Accept-Language"), "error");
             }
         });
     }
@@ -412,8 +551,8 @@ public void buildUrlFile(String fileId, Handler<JsonArray> handler) {
                     Base64.getEncoder().encodeToString(fileBuffer.getBytes());
                 
                 log.debug("File converted to base64, length: " + fileBase64.length());
-                
-                this.serverLLM(fileBase64, (res) -> {
+
+                this.serverLLM_SSE(fileBase64, (res) -> {
                     if (res != null && !res.isEmpty() && !res.getJsonObject(0).containsKey("error_description")) {
                         try {
                             JsonArray grains = new JsonArray().addAll(this.selectConverterMethod(res));
@@ -576,7 +715,7 @@ public void getFileFromWorkspace(String id, Promise<Buffer> promise) {
             .setAbsoluteURI(this.hostApp + "/workspace/document/" + id)
             .setMethod(HttpMethod.GET)
             .setHeaders(headers)
-            .setTimeout(30000);
+            .setTimeout(300000);
         
         log.debug("Retrieving file from workspace: " + id);
         
@@ -612,4 +751,14 @@ public void getFileFromWorkspace(String id, Promise<Buffer> promise) {
         promise.fail("Internal error: " + e.getMessage());
     }
 }
+
+private void notifyUserOnTimeline(String locale, String status) {
+		List<String> recipients = new ArrayList<>();
+		recipients.add(this.userId);
+		final JsonObject params = new JsonObject()
+				.put("exerciseGeneratedUri", entHost + "/exercizer#/subject/edit/" + this.subjectId)
+				.put("subjectId", this.subjectId);
+
+		this.timelineHelper.notifyTimeline(this.req, "exercizer.generated" +  "_" + status, null, recipients, params);
+	}
 }

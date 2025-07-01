@@ -28,7 +28,6 @@ import org.entcore.common.user.UserInfos;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import java.util.List;
 
 public class GrainCopyServiceSqlImpl extends AbstractExercizerServiceSqlImpl implements IGrainCopyService {
 	

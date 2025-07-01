@@ -448,6 +448,8 @@ export class SubjectService implements ISubjectService {
                 switch (error.status) {
                     case 400:
                         return Promise.reject("exercizer.error.invalid.image");
+                    case 429:
+                        return Promise.reject("exercizer.error.too.many.requests");
                     case 401:
                         return Promise.reject("exercizer.error.auth.token");
                     case 403:

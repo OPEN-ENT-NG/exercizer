@@ -515,6 +515,7 @@
   "exercizer.make.later": "Continuer plus tard",
   "exercizer.error": "Une erreur technique est survenue.",
   "exercizer.error.invalid.image": "L'URL de l'image est invalide",
+  "exercizer.error.too.many.requests": "Vous avez déjà une demande en cours, veuillez réessayer plus tard",
   "exercizer.error.auth.token": "Votre session a expiré, veuillez vous reconnecter",
   "exercizer.error.permission": "Vous n'avez pas les droits nécessaires pour cette opération",
   "exercizer.error.resource.notfound": "La ressource demandée est introuvable",
@@ -652,5 +653,7 @@
   "exercizer.assistant.teacher.step3.title.1d": "Découvrez les sujets à rendre",
   "exercizer.assistant.teacher.step3.content.1d": "Le type de devoir Sujets à rendre vous permet de récupérer des productions d'élèves sous forme de fichiers (images, sons ou même documents bureautique), d'en contrôler la réception, et si besoin d'envoyer des rappels.",
   "exercizer.assistant.teacher.step4.title.1d": "Intégrez vos exercices à vos contenus pédagogiques",
-  "exercizer.assistant.teacher.step4.content.1d": "Vous souhaitez faire un lien vers un exercice distribué depuis le Cahier de textes, un Blog ou un Wiki ? Diffusez vos exercices depuis les autres applications en créant un lien interne dans l’éditeur de textes."
+  "exercizer.assistant.teacher.step4.content.1d": "Vous souhaitez faire un lien vers un exercice distribué depuis le Cahier de textes, un Blog ou un Wiki ? Diffusez vos exercices depuis les autres applications en créant un lien interne dans l’éditeur de textes.",
+  "exercizer.generated_success": "Votre exercice a bien été généré veuillez le consulter ici : ",
+  "exercizer.generated_error": "Une erreur est survenue lors de la création assistée du sujet. Veuillez réessayer ultérieurement."
 }
