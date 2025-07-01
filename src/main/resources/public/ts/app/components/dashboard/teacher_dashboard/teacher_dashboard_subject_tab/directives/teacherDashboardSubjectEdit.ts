@@ -66,7 +66,6 @@ export const teacherDashboardSubjectEdit = ng.directive(
                   if (scope.isNewSubject) {
                       SubjectService.generate().then(
                           function (subject) {
-                              console.log(subject);
                               scope.closeLightbox();
                           },
                           function (err) {

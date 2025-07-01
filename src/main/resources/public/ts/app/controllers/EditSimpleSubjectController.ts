@@ -31,6 +31,7 @@ class EditSimpleSubjectController {
     public fileName: string;
     public filesFromConversation : any;    
     public lastSegment = null;
+    public outContextPage = false;
 
     constructor
     (
@@ -372,6 +373,7 @@ class EditSimpleSubjectController {
 
     public generate() {
         this._hasDataLoaded = false;
+        this.outContextPage = false;
         let file: any = this.selectedFile.file;
         var self = this;
 
@@ -395,8 +397,10 @@ class EditSimpleSubjectController {
         self._subjectService.generate({ ...this._subject, file: this.selectedFile.file["_id"] }).then(
             (res) => {
                 this._hasDataLoaded = true;
-                this._$location.path("/subject/edit/" + this._subject.id);
-                notify.success('exercizer.generate.subject');
+                if (!this.outContextPage) {
+                    this._$location.path("/subject/edit/" + this._subject.id);
+                    notify.success('exercizer.generate.subject');
+                }
             },
             (err) => {
                 this._hasDataLoaded = true;
@@ -404,6 +408,11 @@ class EditSimpleSubjectController {
             }
         )
     }
+
+    public outContext() {
+        this.outContextPage = true;
+        this.redirectToDashboard();
+    };
 
     public renameFiles(files : any) {
         if(Array.isArray(files)){

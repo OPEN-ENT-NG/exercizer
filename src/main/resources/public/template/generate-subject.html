@@ -34,6 +34,24 @@
                 <img class="loader" style="margin-bottom: 25px;" src="exercizer/public/assets/img/d2E-loading.gif">
                 <i18n style="font-size: 18px;line-height: 26px;font-weight: 700;letter-spacing: 0%;">exercizer.genrete.loader</i18n>
                 <span><svg class="icon-timer" width="20" height="20"><use xlink:href="exercizer/public/assets/icons/timer.svg#timer"></use></svg><i18n style="font-family: 'Roboto';font-size: 16px;font-weight: 400;line-height: 24px;color: #909090;" >exercizer.genrete.timer</i18n></span>
+                <div id="line" style="margin-top: 25px;border: 1px solid #E4E4E4;width: 43rem;"></div>
+                <p>Votre exercice sera créé et enregistré même si vous quittez la page</p>
+                <button
+                    data-ng-click="editSimpleSubjectController.outContext()"
+                    style="
+                        font-size: medium;
+                        font-weight: 800;
+                        color: #2A9CC8;
+                    background: transparent;
+                    border: 0px;
+                    margin-right: 8px;
+                    box-shadow: none;
+                    ">Retourner sur Exercices 
+                   <svg width="24" height="24" viewBox="0 0 24 24" fill="#2A9CC8" xmlns="http://www.w3.org/2000/svg" >
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4 12C4 11.4477 4.44772 11 5 11H19C19.5523 11 20 11.4477 20 12C20 12.5523 19.5523 13 19 13H5C4.44772 13 4 12.5523 4 12Z" fill="#2A9CC8"></path>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2929 4.29289C11.6834 3.90237 12.3166 3.90237 12.7071 4.29289L19.7071 11.2929C20.0976 11.6834 20.0976 12.3166 19.7071 12.7071L12.7071 19.7071C12.3166 20.0976 11.6834 20.0976 11.2929 19.7071C10.9024 19.3166 10.9024 18.6834 11.2929 18.2929L17.5858 12L11.2929 5.70711C10.9024 5.31658 10.9024 4.68342 11.2929 4.29289Z" fill="#2A9CC8"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
