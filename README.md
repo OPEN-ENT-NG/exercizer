@@ -1,10 +1,10 @@
 # exercizer
 
-* Licence : AGPL V3 - Copyright Région Hauts-de-France (ex Picardie)
+* Licence : AGPL V3 - Copyright Région Hauts-de-France (ex Picardie), Edifice
 
-* Développeur(s) : OPEN DIGITAL EDUCATION
+* Développeur(s) : The coding machine, Edifice
 
-* Financeur(s) :  Région Hauts-de-France (ex Picardie), Département Seine et Marne
+* Financeur(s) :  Région Hauts-de-France (ex Picardie), Département Seine et Marne, Edifice
 	
 * Description : l'application "Exercices et évaluations" permet de créer des sujets, de les distribuer aux élèves, de suivre le rendu, de récupérer et de corriger les copies. 2 types de sujets peuvent être créés :
 
