@@ -66,6 +66,7 @@ public class ExercizerRepositoryEventTest {
     static PostgresClient pgClient;
     @BeforeClass
     public static void setUp(TestContext context) throws Exception {
+        Async async = context.async();
         test.database().initNeo4j(context, neo4jContainer);
         user.setLogin("user1");
         user2.setLogin("user2");
@@ -79,14 +80,17 @@ public class ExercizerRepositoryEventTest {
         exercizerPlugin = new ExercizerExplorerPlugin(communication, pgClient, securedActions);
         exercizerService = new SubjectServiceSqlImpl(exercizerPlugin);
         shareService = exercizerPlugin.createPostgresShareService("exercizer", "subject_shares", vertx.eventBus(), securedActions, null);
-        final Storage storage = new StorageFactory(vertx, new JsonObject(), new ExercizerStorage()).getStorage();
-        final IExplorerPluginClient mainClient = IExplorerPluginClient.withBus(vertx, Exercizer.APPLICATION, Exercizer.SUBJECT_TYPE);
-        final Map<String, IExplorerPluginClient> pluginClientPerCollection = new HashMap<>();
-        pluginClientPerCollection.put(Exercizer.SUBJECT_TYPE, mainClient);
-        // init conf before repositoryevent
-        Config.getInstance().setConfig(new JsonObject().put("path-prefix", "exercizer"));
-        repositoryEvents = new ExplorerRepositoryEvents(new ExercizerRepositoryEvents(securedActions, "exercizer.manager", vertx, storage), pluginClientPerCollection, mainClient);
-        exercizerPlugin.start();
+        StorageFactory.build(vertx, new JsonObject()).onSuccess(storageFactory -> {
+            final Storage storage = storageFactory.getStorage();
+            final IExplorerPluginClient mainClient = IExplorerPluginClient.withBus(vertx, Exercizer.APPLICATION, Exercizer.SUBJECT_TYPE);
+            final Map<String, IExplorerPluginClient> pluginClientPerCollection = new HashMap<>();
+            pluginClientPerCollection.put(Exercizer.SUBJECT_TYPE, mainClient);
+            // init conf before repositoryevent
+            Config.getInstance().setConfig(new JsonObject().put("path-prefix", "exercizer"));
+            repositoryEvents = new ExplorerRepositoryEvents(new ExercizerRepositoryEvents(securedActions, "exercizer.manager", vertx, storage), pluginClientPerCollection, mainClient);
+            exercizerPlugin.start();
+            async.complete();
+        }).onFailure(context::fail);
     }
 
     /**

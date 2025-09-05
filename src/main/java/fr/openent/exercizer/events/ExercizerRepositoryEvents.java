@@ -1,14 +1,11 @@
 package fr.openent.exercizer.events;
 
 import fr.openent.exercizer.services.ISubjectService;
-import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.security.ActionType;
 import fr.wseduc.webutils.security.SecuredAction;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 
-import org.entcore.common.folders.impl.StorageHelper;
-import org.entcore.common.mongodb.MongoDbConf;
 import org.entcore.common.service.impl.SqlRepositoryEvents;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
@@ -23,9 +20,9 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import org.entcore.common.user.ExportResourceResult;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -51,7 +48,7 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
 
     @Override
     public void exportResources(JsonArray resourcesIds, boolean exportDocuments, boolean exportSharedResources, String exportId, String userId,
-                                JsonArray groups, String exportPath, String locale, String host, Handler<Boolean> handler) {
+                                JsonArray groups, String exportPath, String locale, String host, Handler<ExportResourceResult> handler) {
 
             final HashMap<String,JsonArray> queries = new HashMap<String, JsonArray>();
 
@@ -151,10 +148,10 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
 
             createExportDirectory(exportPath, locale, path -> {
                 if (path != null) {
-                    exportTables(queries, new JsonArray(), fieldsToNull, exportDocuments, path, exported, handler);
+                    exportTables(queries, new JsonArray(), fieldsToNull, exportDocuments, path, exported, e -> new ExportResourceResult(e, path));
                 }
                 else {
-                    handler.handle(exported.get());
+                    handler.handle(new ExportResourceResult(exported.get(), path));
                 }
             });
     }

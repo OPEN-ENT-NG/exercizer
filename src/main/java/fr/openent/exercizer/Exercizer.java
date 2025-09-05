@@ -26,13 +26,13 @@ import fr.openent.exercizer.explorer.ExercizerExplorerPlugin;
 import fr.openent.exercizer.services.impl.ExercizerStorage;
 import fr.wseduc.cron.CronTrigger;
 import fr.wseduc.webutils.Server;
+import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import org.entcore.common.explorer.IExplorerPluginClient;
 import org.entcore.common.explorer.impl.ExplorerRepositoryEvents;
 import org.entcore.common.http.BaseServer;
 import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.service.impl.SqlCrudService;
-import org.entcore.common.share.impl.SqlShareService;
 import org.entcore.common.sql.SqlConf;
 import org.entcore.common.sql.SqlConfs;
 import org.entcore.common.storage.Storage;
@@ -55,72 +55,83 @@ public class Exercizer extends BaseServer {
 
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
-        super.start(startPromise);
+        final Promise<Void> promise = Promise.promise();
+        super.start(promise);
+        promise.future()
+		        .compose(init -> StorageFactory.build(vertx, config))
+                .compose(this::initExercizer)
+		        .onComplete(startPromise);
+    }
+
+    public Future<Void> initExercizer(StorageFactory storageFactory) {
         //init plugin
-        plugin = ExercizerExplorerPlugin.create(securedActions);
-        plugin.start();
-        //init controllers
-        final EventBus eb = getEventBus(vertx);
+        return ExercizerExplorerPlugin.create(securedActions).compose(p -> {
+            plugin = p;
+            plugin.start();
+            //init controllers
+            final EventBus eb = getEventBus(vertx);
 
-        final String exportPath = config
-                .getString("export-path", System.getProperty("java.io.tmpdir"));
+            final String exportPath = config
+                    .getString("export-path", System.getProperty("java.io.tmpdir"));
 
-        final Storage storage = new StorageFactory(vertx, config, new ExercizerStorage()).getStorage();
-        final IExplorerPluginClient mainClient = IExplorerPluginClient.withBus(vertx, Exercizer.APPLICATION, Exercizer.SUBJECT_TYPE);
-        final Map<String, IExplorerPluginClient> pluginClientPerCollection = new HashMap<>();
-        pluginClientPerCollection.put(Exercizer.SUBJECT_TYPE, mainClient);
-        setRepositoryEvents(new ExplorerRepositoryEvents(new ExercizerRepositoryEvents(securedActions, "exercizer.manager",vertx, storage),pluginClientPerCollection, mainClient));
+            final Storage storage = storageFactory.getStorage();
+            final IExplorerPluginClient mainClient = IExplorerPluginClient.withBus(vertx, Exercizer.APPLICATION, Exercizer.SUBJECT_TYPE);
+            final Map<String, IExplorerPluginClient> pluginClientPerCollection = new HashMap<>();
+            pluginClientPerCollection.put(Exercizer.SUBJECT_TYPE, mainClient);
+            setRepositoryEvents(new ExplorerRepositoryEvents(new ExercizerRepositoryEvents(securedActions, "exercizer.manager", vertx, storage), pluginClientPerCollection, mainClient));
 
-        SqlConf folderConf = SqlConfs.createConf(FolderController.class.getName());
-        folderConf.setSchema("exercizer");
-        folderConf.setTable("folder");
+            SqlConf folderConf = SqlConfs.createConf(FolderController.class.getName());
+            folderConf.setSchema("exercizer");
+            folderConf.setTable("folder");
 
-        SqlConf subjectConf = SqlConfs.createConf(SubjectController.class.getName());
-        subjectConf.setSchema("exercizer");
-        subjectConf.setTable("subject");
-        subjectConf.setShareTable("subject_shares");
-        
-        SubjectController subjectController = new SubjectController(storage, plugin, vertx , config);
-        subjectController.setShareService(plugin.createShareService(eb));
-        subjectController.setCrudService(new SqlCrudService("exercizer", "subject"));
+            SqlConf subjectConf = SqlConfs.createConf(SubjectController.class.getName());
+            subjectConf.setSchema("exercizer");
+            subjectConf.setTable("subject");
+            subjectConf.setShareTable("subject_shares");
 
-        SqlConf subjectScheduledConf = SqlConfs.createConf(SubjectScheduledController.class.getName());
-        subjectScheduledConf.setSchema("exercizer");
-        subjectScheduledConf.setTable("subject");
-        subjectScheduledConf.setShareTable("subject_shares");
-        
-        SqlConf grainScheduledConf = SqlConfs.createConf(GrainScheduledController.class.getName());
-        grainScheduledConf.setSchema("exercizer");
-        grainScheduledConf.setTable("subject");
-        grainScheduledConf.setShareTable("subject_shares");
-        
-        SqlConf subjectCopyConf = SqlConfs.createConf(SubjectCopyController.class.getName());
-        subjectCopyConf.setSchema("exercizer");
-        subjectCopyConf.setTable("subject_scheduled");
-        
-        addController(new ExercizerController());
-        addController(new FolderController(plugin));
-        addController(subjectController);
-        addController(new GrainTypeController());
-        addController(new SubjectScheduledController(storage));
-        addController(new GrainScheduledController());
-        addController(new SubjectCopyController(plugin, vertx.fileSystem(), storage, exportPath));
-        addController(new SubjectLessonLevelController());
-        addController(new SubjectLessonTypeController());
-        addController(new SubjectTagController());
+            SubjectController subjectController = new SubjectController(storage, plugin, vertx, config);
+            subjectController.setShareService(plugin.createShareService(eb));
+            subjectController.setCrudService(new SqlCrudService("exercizer", "subject"));
 
-        final String notifyCron = config.getString("scheduledNotificationCron", "0 0 4 * * ?");
-        final TimelineHelper timelineHelper = new TimelineHelper(vertx, vertx.eventBus(), config);
-        final String pathPrefix = Server.getPathPrefix(config);
+            SqlConf subjectScheduledConf = SqlConfs.createConf(SubjectScheduledController.class.getName());
+            subjectScheduledConf.setSchema("exercizer");
+            subjectScheduledConf.setTable("subject");
+            subjectScheduledConf.setShareTable("subject_shares");
 
-        try {
-            new CronTrigger(vertx, notifyCron).schedule(
-                    new ScheduledNotification(timelineHelper, pathPrefix)
-            );
-        } catch (ParseException e) {
-            log.fatal("[Exercizer] Invalid cron expression.", e);
-            vertx.close();
-        }
+            SqlConf grainScheduledConf = SqlConfs.createConf(GrainScheduledController.class.getName());
+            grainScheduledConf.setSchema("exercizer");
+            grainScheduledConf.setTable("subject");
+            grainScheduledConf.setShareTable("subject_shares");
+
+            SqlConf subjectCopyConf = SqlConfs.createConf(SubjectCopyController.class.getName());
+            subjectCopyConf.setSchema("exercizer");
+            subjectCopyConf.setTable("subject_scheduled");
+
+            addController(new ExercizerController());
+            addController(new FolderController(plugin));
+            addController(subjectController);
+            addController(new GrainTypeController());
+            addController(new SubjectScheduledController(storage));
+            addController(new GrainScheduledController());
+            addController(new SubjectCopyController(plugin, vertx.fileSystem(), storage, exportPath));
+            addController(new SubjectLessonLevelController());
+            addController(new SubjectLessonTypeController());
+            addController(new SubjectTagController());
+
+            final String notifyCron = config.getString("scheduledNotificationCron", "0 0 4 * * ?");
+            final TimelineHelper timelineHelper = new TimelineHelper(vertx, vertx.eventBus(), config);
+            final String pathPrefix = Server.getPathPrefix(config);
+
+            try {
+                new CronTrigger(vertx, notifyCron).schedule(
+                        new ScheduledNotification(timelineHelper, pathPrefix)
+                );
+            } catch (ParseException e) {
+                log.fatal("[Exercizer] Invalid cron expression.", e);
+                vertx.close();
+            }
+            return Future.succeededFuture();
+        });
     }
 
     @Override

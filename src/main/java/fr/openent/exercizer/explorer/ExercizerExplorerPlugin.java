@@ -39,11 +39,9 @@ public class ExercizerExplorerPlugin extends ExplorerPluginResourceSql {
         //this.grainPlugin =  new GrainExplorerPlugin(this);
     }
 
-    public static ExercizerExplorerPlugin create(final Map<String, SecuredAction> securedActions) throws Exception {
-        final IExplorerPlugin plugin = ExplorerPluginFactory.createPostgresPlugin((params)->{
-            return new ExercizerExplorerPlugin(params.getCommunication(), params.getDb(), securedActions);
-        });
-        return (ExercizerExplorerPlugin) plugin;
+    public static Future<ExercizerExplorerPlugin> create(final Map<String, SecuredAction> securedActions) {
+        return ExplorerPluginFactory.createPostgresPlugin((params)-> new ExercizerExplorerPlugin(params.getCommunication(), params.getDb(), securedActions))
+                .map(plugin -> (ExercizerExplorerPlugin) plugin);
     }
 
     public IPostgresClient getPgClient() { return pgClient; }
