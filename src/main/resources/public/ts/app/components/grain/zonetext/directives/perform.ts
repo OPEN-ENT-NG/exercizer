@@ -12,7 +12,9 @@ export const performZoneText = ng.directive('performZoneText',
             },
             templateUrl: 'exercizer/public/ts/app/components/grain/zonetext/templates/perform.html',
             link: (scope: any) => {
-                scope.$watch("grainCopy",function() {
+                scope.$watch(function () {
+                    return scope.grainCopy;
+                }, function () {
                     scope.init();
                 });
 
