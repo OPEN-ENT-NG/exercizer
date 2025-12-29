@@ -1,0 +1,56 @@
+{
+  "name": "fr.openent~exercizer",
+  "config": {
+    "main": "fr.openent.exercizer.Exercizer",
+    "port": 8105,
+    "csrf-token": {{ csrfToken | default('true') }},
+    "app-name": "Exercices et évaluations",
+    "app-address": "/exercizer",
+    "app-icon": "exercizer-large",
+    "sql": true,
+    "app-type" : "END_USER",
+    "mongodb": true,
+    "host": "https://{{ host }}",
+    "ssl": true,
+    "auto-redeploy": false,
+    "userbook-host": "https://{{ host }}",
+    "integration-mode": "{{ integration_mode|default('HTTP') }}",
+    "app-registry.port": 8012,
+    "mode": "prod",
+    "doc-to-exercizer": {
+      {% if docToExercizerEnabled is defined and docToExercizerEnabled %}
+      	"docToExercizerHost": "{{ docToExercizerHost | default('https://doc2exo.ode.tools/v0.4/') }}",
+      	"docToExercizerUsername": "{{ platform_name }}",
+      	"docToExercizerPassword": "{{ credentials_doc_to_exercizer }}"
+      {% endif %}
+    },
+    {% if ha is defined and ha and inventory_hostname_short is defined and inventory_hostname_short != 'jobs' %}
+      "scheduledNotificationCron": "0 0 4 * * ? 2099",
+    {% else %}
+      "scheduledNotificationCron": "0 0 4 * * ? *",
+    {% endif %}
+    "fileAnalyzer": {
+      "enabled": {{ fileAnalyzerOn|default('true') }},
+      "messaging": {
+        "type": "redis",
+        "stream": "xss-analyzer",
+        "tags": ["xss-analyzer", "exercizer"],
+        "consumer-block-ms": 0,
+        "consumer-name": "xss-analyzer-exercizer-{{ ansible_fqdn|default('app') }}",
+        "consumer-group": "xss-analyzer-exercizer-group",
+        "metrics": {
+          "enabled": true
+        }
+      },
+      "mime-types": {{ fileAnalyzerMimeTypes|default('[".*image/svg.*"]') }},
+      "max-size": 20000000
+    },
+    "entcore.port": 8009,
+    "publicConf": {
+      {% if libraryEnabled is defined and libraryHost is defined %}
+        "libraryHost": "{{ libraryHost }}",
+      {% endif %}
+      "disable-timezone-check": {{ exercizerDisableTimeZoneCheck|default('false') }}
+    }
+  }
+}
