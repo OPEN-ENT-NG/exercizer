@@ -148,10 +148,10 @@ public class ExercizerRepositoryEvents extends SqlRepositoryEvents {
 
             createExportDirectory(exportPath, locale, path -> {
                 if (path != null) {
-                    exportTables(queries, new JsonArray(), fieldsToNull, exportDocuments, path, exported, e -> new ExportResourceResult(e, path));
+                    exportTables(queries, new JsonArray(), fieldsToNull, exportDocuments, path, exported, e -> handler.handle(new ExportResourceResult(e, path)));
                 }
                 else {
-                    handler.handle(new ExportResourceResult(exported.get(), path));
+                    handler.handle(ExportResourceResult.KO);
                 }
             });
     }
