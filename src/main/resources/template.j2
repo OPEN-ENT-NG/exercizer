@@ -19,7 +19,7 @@
     "mode": "prod",
     "doc-to-exercizer": {
       {% if docToExercizerEnabled is defined and docToExercizerEnabled %}
-      	"docToExercizerHost": "{{ docToExercizerHost | default('https://doc2exo.ode.tools/v0.4/') }}",
+      	"docToExercizerHost": "{{ docToExercizerHost | default('https://doc2exo.ode.tools/v0.5/') }}",
       	"docToExercizerUsername": "{{ platform_name }}",
       	"docToExercizerPassword": "{{ credentials_doc_to_exercizer }}"
       {% endif %}
