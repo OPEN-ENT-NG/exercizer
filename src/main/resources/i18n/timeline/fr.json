@@ -17,7 +17,7 @@
   "exercizer.correcthomework.submit": "a corrigé votre devoir du sujet",
   "exercizer.due.modified": "a modifié la date de fin du sujet",
   "exercizer.from": "du",
-  "exercizer.generated_error": "Une erreur survenue lors de la génération du sujet",
+  "exercizer.generated_error": "Une erreur est survenue lors de la génération du sujet",
   "exercizer.generated_ok": "Génération de sujet",
   "exercizer.generated_success": "Votre exercice a bien été généré veuillez le consulter ici :  ",
   "exercizer.homeworkreminder": "Rappel automatique",
