@@ -48,7 +48,7 @@ export const grainCopyFooter = ng.directive('grainCopyFooter',
                     }
                 };
 
-                scope.debouncedUpdateGrainCopy = debounce(scope.updateGrainCopy, 500);
+                scope.debouncedUpdateGrainCopy = debounce(scope.updateGrainCopy, 5000);
 
                 scope.isTrainingGrain = function() {
                     let subjectCopy = SubjectCopyService.getById(scope.grainCopy.subject_copy_id);
