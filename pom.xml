@@ -12,7 +12,7 @@
 
     <groupId>fr.openent</groupId>
     <artifactId>exercizer</artifactId>
-    <version>4.3-SNAPSHOT</version>
+    <version>4.3-separation-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:https://github.com/OPEN-ENT-NG/exercizer.git</connection>
@@ -29,11 +29,12 @@
     </repositories>
 
     <properties>
-        <entCoreVersion>6.14-SNAPSHOT</entCoreVersion>
+        <entCoreVersion>6.14-separation-SNAPSHOT</entCoreVersion>
+        <entCoreLibsVersion>6.14-separation-SNAPSHOT</entCoreLibsVersion>
         <mongodb-helper.version>3.1-SNAPSHOT</mongodb-helper.version>
         <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
         <junitVersion>4.13.2</junitVersion>
-        <explorerVersion>2.5-SNAPSHOT</explorerVersion>
+        <explorerVersion>2.5-separation-SNAPSHOT</explorerVersion>
     </properties>
 
     <dependencies>
@@ -44,9 +45,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-buffer</artifactId>
+            <version>4.1.107.Final</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.entcore</groupId>
             <artifactId>common</artifactId>
-            <version>${entCoreVersion}</version>
+            <version>${entCoreLibsVersion}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -64,7 +71,7 @@
         <dependency>
             <groupId>org.entcore</groupId>
             <artifactId>test</artifactId>
-            <version>${entCoreVersion}</version>
+            <version>${entCoreLibsVersion}</version>
             <classifier>fat</classifier>
             <scope>test</scope>
         </dependency>
@@ -86,6 +93,13 @@
             <version>${explorerVersion}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.entcore</groupId>
+            <artifactId>session</artifactId>
+            <version>${entCoreLibsVersion}</version>
+            <scope>runtime</scope>
+            <classifier>fat</classifier>
         </dependency>
     </dependencies>
 </project>

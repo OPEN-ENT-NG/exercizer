@@ -14,6 +14,7 @@ pipeline {
         script {
           def version = sh(returnStdout: true, script: 'docker compose run --rm maven mvn $MVN_OPTS help:evaluate -Dexpression=project.version -q -DforceStdout')
           buildName "${env.GIT_BRANCH.replace("origin/", "")}@${version}"
+          sh "edifice download $CLI_VERSION"
         }
       }
     }
@@ -25,7 +26,7 @@ pipeline {
     }
     stage('Build image') {
       steps {
-        sh 'edifice image --archs=linux/amd64 --force'
+        sh './edifice image --archs=linux/amd64 --force --rebuild=false'
       }
     }
   }
