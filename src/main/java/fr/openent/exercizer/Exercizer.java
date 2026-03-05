@@ -121,11 +121,12 @@ public class Exercizer extends BaseServer {
             final String notifyCron = config.getString("scheduledNotificationCron", "0 0 4 * * ?");
             final TimelineHelper timelineHelper = new TimelineHelper(vertx, vertx.eventBus(), config);
             final String pathPrefix = Server.getPathPrefix(config);
-
+            final ScheduledNotification scheduledNotification = new ScheduledNotification(timelineHelper, pathPrefix);
+            // Enable notification task to be triggered via API
+            addController(new TaskController(scheduledNotification));
+            // Schedule notification task from cron expression
             try {
-                new CronTrigger(vertx, notifyCron).schedule(
-                        new ScheduledNotification(timelineHelper, pathPrefix)
-                );
+                new CronTrigger(vertx, notifyCron).schedule(scheduledNotification);
             } catch (ParseException e) {
                 log.fatal("[Exercizer] Invalid cron expression.", e);
                 vertx.close();
