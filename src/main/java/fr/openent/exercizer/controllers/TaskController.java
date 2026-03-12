@@ -2,6 +2,8 @@ package fr.openent.exercizer.controllers;
 
 import fr.openent.exercizer.cron.ScheduledNotification;
 import fr.wseduc.rs.Post;
+import fr.wseduc.security.ActionType;
+import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.http.BaseController;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.impl.logging.Logger;
@@ -17,6 +19,7 @@ public class TaskController extends BaseController {
 	}
 
 	@Post("api/internal/scheduled-notifications")
+	@SecuredAction(value = "", type = ActionType.RESOURCE)
 	public void sendScheduledNotifications(HttpServerRequest request) {
 		log.info("Triggered scheduled notification task");
 		scheduledNotification.handle(0L);
