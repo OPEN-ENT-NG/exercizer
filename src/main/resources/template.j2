@@ -2,6 +2,11 @@
   "name": "fr.openent~exercizer",
   "config": {
     "main": "fr.openent.exercizer.Exercizer",
+    "probes": [
+      "org.entcore.common.http.health.Neo4jProbe",
+      "org.entcore.common.http.health.MongoProbe",
+      "org.entcore.common.http.health.PostgresProbe"
+    ],
     "port": 8105,
     "csrf-token": {{ csrfToken | default('true') }},
     "app-name": "Exercices et évaluations",
