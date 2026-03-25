@@ -136,7 +136,7 @@
   "exercizer.export.desc": "Attention, le format moodle (.xml) ne prend pas en charge tous les types de questions, ceux listés ci-dessous ne seront pas exportés",
   "exercizer.export.format": "au format moodle",
   "exercizer.export.lightbox.choice1": "Les scores automatiques, finaux et commentaires par élève - <em>format CSV</em>",
-  "exercizer.export.lightbox.choice2": "Les réponses complètes (hors zones à remplir) par élève - <em>format CSV</em>",
+  "exercizer.export.lightbox.choice2": "Les réponses complètes par élève (les questions \"zones à remplir\" seront ignorées) - <em>format CSV</em>",
   "exercizer.export.lightbox.question": "Souhaitez-vous exporter :",
   "exercizer.export.lightbox.title": "Exporter les statistiques",
   "exercizer.export.student.name": "Nom de l'élève",
