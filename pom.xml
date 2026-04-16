@@ -43,12 +43,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty-buffer</artifactId>
-      <version>4.1.107.Final</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.entcore</groupId>
       <artifactId>common</artifactId>
       <version>${entCoreLibsVersion}</version>
@@ -100,16 +94,9 @@
       <classifier>fat</classifier>
     </dependency>
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>mod-mongo-persistor</artifactId>
-      <version>${modMongoVersion}</version>
-      <scope>runtime</scope>
-      <classifier>fat</classifier>
-    </dependency>
-    <dependency>
-      <groupId>com.opendigitaleducation</groupId>
-      <artifactId>mod-json-schema-validator</artifactId>
-      <version>${modJsonSchemaValidatorVersion}</version>
+      <groupId>org.entcore</groupId>
+      <artifactId>workspace</artifactId>
+      <version>${entCoreVersion}</version>
       <scope>runtime</scope>
       <classifier>fat</classifier>
     </dependency>
