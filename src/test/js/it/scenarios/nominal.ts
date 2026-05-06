@@ -88,7 +88,7 @@ export function setup(): InitData {
  * @param {Structure} structure - The initialized school structure for community API testing
  * @returns {void}
  */
-export function testNominalCase(context: InitData) {
+export function testExercizer(context: InitData) {
     const structure = context.structure!;
     let adminUser: UserInfo;
     describe("[Exercizer] Community API scenarios", () => {
