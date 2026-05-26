@@ -11,7 +11,7 @@
   </parent>
   <groupId>fr.openent</groupId>
   <artifactId>exercizer</artifactId>
-  <version>4.3-separation-SNAPSHOT</version>
+  <version>4.3-SNAPSHOT</version>
   <scm>
     <connection>scm:git:https://github.com/OPEN-ENT-NG/exercizer.git</connection>
     <developerConnection>scm:git:https://github.com/OPEN-ENT-NG/exercizer.git</developerConnection>
@@ -25,14 +25,14 @@
     </repository>
   </repositories>
   <properties>
-    <entCoreVersion>6.14-separation-SNAPSHOT</entCoreVersion>
+    <entCoreVersion>6.14-SNAPSHOT</entCoreVersion>
     <entCoreLibsVersion>6.14-separation-SNAPSHOT</entCoreLibsVersion>
     <mongodb-helper.version>3.1-SNAPSHOT</mongodb-helper.version>
     <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
     <junitVersion>4.13.2</junitVersion>
-    <explorerVersion>2.5-separation-SNAPSHOT</explorerVersion>
-    <modMongoVersion>4.1-separation-SNAPSHOT</modMongoVersion>
-    <modPostgresVersion>2.1-separation-SNAPSHOT</modPostgresVersion>
+    <explorerVersion>2.5-SNAPSHOT</explorerVersion>
+    <modMongoVersion>4.1-SNAPSHOT</modMongoVersion>
+    <modPostgresVersion>2.1-SNAPSHOT</modPostgresVersion>
     <modJsonSchemaValidatorVersion>2.1-SNAPSHOT</modJsonSchemaValidatorVersion>
   </properties>
   <dependencies>
