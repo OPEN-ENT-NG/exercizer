@@ -25,7 +25,7 @@
     </repository>
   </repositories>
   <properties>
-    <entCoreVersion>6.16-SNAPSHOT</entCoreVersion>
+    <entCoreVersion>6.16-develop-enabling-SNAPSHOT</entCoreVersion>
     <entCoreLibsVersion>6.16-SNAPSHOT</entCoreLibsVersion>
     <mongodb-helper.version>3.1-SNAPSHOT</mongodb-helper.version>
     <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
