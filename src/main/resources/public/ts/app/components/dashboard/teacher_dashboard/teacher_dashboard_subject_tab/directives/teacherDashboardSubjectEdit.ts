@@ -88,14 +88,9 @@ export const teacherDashboardSubjectEdit = ng.directive(
 
                 if (type === "simple") {
                     scope.closeLightbox();
-                    if (scope.subject.folder_id) {
-                      $location.path(
-                          "/subject/create/simple/" + scope.subject.folder_id
-                      );
-                  } else {
-                      $location.path("/subject/create/simple/");
-                  }
-              } else if (type === "generate") {
+                    // redirect to Casier App: "/rack"
+                    document.location = "/rack";
+                } else if (type === "generate") {
                   scope.closeLightbox();
                   $location.path("/subject/generate");
                 }
