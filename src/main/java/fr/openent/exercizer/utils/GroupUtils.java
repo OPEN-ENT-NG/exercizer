@@ -19,11 +19,13 @@
 
 package fr.openent.exercizer.utils;
 
+import io.vertx.core.json.Json;
 import org.entcore.common.user.UserUtils;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.entcore.common.user.dto.VisibleIdentityRequest;
 
 import java.util.List;
 
@@ -38,8 +40,27 @@ public final class GroupUtils {
 				"MATCH (s:Group)<-[:IN]-(visibles) " +
 						"WHERE s.id IN {groupIds} " +
 						"RETURN DISTINCT visibles.id as _id, visibles.lastName + ' ' + visibles.firstName as name, visibles.profiles as profiles";
-		final JsonObject params = new JsonObject().put("groupIds", new JsonArray(groupIds));
-		UserUtils.findVisibleUsers(eb, userId, true, false, customReturn, params, handler);
+		VisibleIdentityRequest request = new VisibleIdentityRequest()
+					.setVisibleIdFilter(VisibleIdentityRequest.VisibleIdFilter.GROUPS)
+				.setUserId(userId)
+				.setPublicDetails(true)
+				.setItSelf(true)
+				.setExpectedVisiblesIds(groupIds);
+		UserUtils.findVisibleIdentities(eb, request)
+				.onSuccess( visibles -> handler.handle(map(visibles)))
+				.onFailure( t -> handler.handle(null));
+	}
+
+	private static JsonArray map(JsonArray visibles) {
+		JsonArray mappedVisibles = new JsonArray();
+		visibles.forEach( o -> {
+			JsonObject visible = (JsonObject) o;
+			mappedVisibles.add(new JsonObject()
+									.put("_id", visible.getString("id"))
+									.put("name", visible.getString("displayName"))
+									.put("profiles", new JsonArray().add(visible.getString("profile"))));
+		});
+		return mappedVisibles;
 	}
 
 }
