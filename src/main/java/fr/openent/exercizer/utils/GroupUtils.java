@@ -19,11 +19,11 @@
 
 package fr.openent.exercizer.utils;
 
-import org.entcore.common.user.UserUtils;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.entcore.common.user.UserUtils;
 
 import java.util.List;
 
@@ -33,13 +33,26 @@ public final class GroupUtils {
 
 	}
 
+	/**
+	 * Members of the given groups that the user can see, the user included.
+	 * @return [{_id, name, profiles}] through the handler, null on failure
+	 */
 	public static void findMembers(final EventBus eb, final String userId, final List<String> groupIds, Handler<JsonArray> handler) {
-		final String customReturn =
-				"MATCH (s:Group)<-[:IN]-(visibles) " +
-						"WHERE s.id IN {groupIds} " +
-						"RETURN DISTINCT visibles.id as _id, visibles.lastName + ' ' + visibles.firstName as name, visibles.profiles as profiles";
-		final JsonObject params = new JsonObject().put("groupIds", new JsonArray(groupIds));
-		UserUtils.findVisibleUsers(eb, userId, true, false, customReturn, params, handler);
+		UserUtils.findVisibleMembersOfGroups(eb, userId, groupIds, true)
+				.onSuccess( members -> handler.handle(map(members)))
+				.onFailure( t -> handler.handle(null));
+	}
+
+	private static JsonArray map(JsonArray members) {
+		JsonArray mappedMembers = new JsonArray();
+		members.forEach( o -> {
+			JsonObject member = (JsonObject) o;
+			mappedMembers.add(new JsonObject()
+									.put("_id", member.getString("id"))
+									.put("name", member.getString("displayName"))
+									.put("profiles", member.getJsonArray("profiles", new JsonArray())));
+		});
+		return mappedMembers;
 	}
 
 }
