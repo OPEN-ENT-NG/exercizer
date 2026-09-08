@@ -245,27 +245,21 @@ public class SubjectScheduledController extends ControllerHelper {
 			badRequest(request);
 			return;
 		}
-		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
-			@Override
-			public void handle(final UserInfos user) {
-				if (user != null) {
-					GroupUtils.findMembers(eb, user.getUserId(), Arrays.asList(id), new Handler<JsonArray>() {
-						@Override
-						public void handle(JsonArray membersJa) {
-							if (membersJa != null) {
-								renderJson(request, membersJa);
-							} else {
-								log.error("Failure to find group members : JsonArray null");
-								renderError(request);
-							}
-						}
-					});
-				} else {
-					log.debug("User not found in session.");
-					unauthorized(request);
-				}
-		}
-	});
+		UserUtils.getUserInfos(eb, request, user -> {
+            if (user != null) {
+                GroupUtils.findMembers(eb, user.getUserId(), Arrays.asList(id), membersJa -> {
+                    if (membersJa != null) {
+                        renderJson(request, membersJa);
+                    } else {
+                        log.error("Failure to find group members : JsonArray null");
+                        renderError(request);
+                    }
+                });
+            } else {
+                log.debug("User not found in session.");
+                unauthorized(request);
+            }
+    });
 }
 
 
