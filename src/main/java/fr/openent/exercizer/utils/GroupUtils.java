@@ -36,10 +36,6 @@ public final class GroupUtils {
 	}
 
 	public static void findMembers(final EventBus eb, final String userId, final List<String> groupIds, Handler<JsonArray> handler) {
-		final String customReturn =
-				"MATCH (s:Group)<-[:IN]-(visibles) " +
-						"WHERE s.id IN {groupIds} " +
-						"RETURN DISTINCT visibles.id as _id, visibles.lastName + ' ' + visibles.firstName as name, visibles.profiles as profiles";
 		VisibleIdentityRequest request = new VisibleIdentityRequest()
 					.setVisibleIdFilter(VisibleIdentityRequest.VisibleIdFilter.GROUPS)
 				.setUserId(userId)
