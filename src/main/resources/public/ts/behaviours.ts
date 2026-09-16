@@ -1,5 +1,5 @@
 import { idiom as lang, moment, Behaviours, _ } from 'entcore';
-import http from 'axios';
+import { http } from 'entcore-toolkit';
 
 console.log('Exercizer behaviours loaded');
 
