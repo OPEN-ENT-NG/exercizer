@@ -1,7 +1,7 @@
 import { ng, notify } from 'entcore';
 import { IFolderService, ISubjectService } from '../services';
 import { angular } from 'entcore';
-import http from 'axios';
+import { http } from 'entcore-toolkit';
 
 class TeacherDashboardSubjectTabController {
 
