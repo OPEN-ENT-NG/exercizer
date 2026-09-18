@@ -1,7 +1,7 @@
 import { ng, model, template, moment, Me, Behaviours } from 'entcore';
 import { IGrainCopy } from '../models/domain';
 import { ISubjectCopyService } from '../services';
-import http from 'axios';
+import { http } from 'entcore-toolkit';
 
 export const exercizerController = ng.controller('ExercizerController', ['$scope', '$rootScope', 'model', 'route', '$route', '$location', 'SubjectCopyService',
     ($scope, $rootScope, model, route, $route, $location, subjectCopyService: ISubjectCopyService) => {

@@ -1,5 +1,5 @@
 import { ng, _ } from 'entcore';
-import http from 'axios';
+import { http } from 'entcore-toolkit';
 
 export interface IGroupService {
     findMembers(id:string):Promise<any>;
