@@ -36,7 +36,7 @@ public final class GroupUtils {
 
 	public static void findMembers(final EventBus eb, final String userId, final List<String> groupIds, Handler<JsonArray> handler) {
 		VisibleIdentityRequest request = new VisibleIdentityRequest()
-					.setVisibleIdFilter(VisibleIdentityRequest.VisibleIdFilter.GROUPS)
+					.setVisibleIdFilter(VisibleIdentityRequest.VisibleIdFilter.USERS_OF_GROUPS)
 				.setUserId(userId)
 				.setPublicDetails(true)
 				.setItSelf(true)
