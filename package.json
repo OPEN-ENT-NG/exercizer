@@ -1,6 +1,6 @@
 {
   "name": "exercizer",
-  "version": "4.4.7-dev.0",
+  "version": "4.4.0-develop-pedago.0",
   "description": "This application allows users to create exercices.",
   "main": "gulpfile.js",
   "dependencies": {
