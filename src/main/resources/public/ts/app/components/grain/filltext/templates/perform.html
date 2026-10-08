@@ -6,7 +6,7 @@
     </div>
 
     <div class="row">
-        <div bind-html="grainCopy.grain_copy_data.custom_copy_data.htmlContent"></div>
+        <div bind-html="grainCopy.grain_copy_data.custom_copy_data.htmlContent" compile-fill-zones="grainCopy.grain_copy_data.custom_copy_data.htmlContent"></div>
 
         <div class="options no-responsive mt-16" drop-item="removeAnswer($item);" ng-if="grainCopy.grain_copy_data.custom_copy_data.answersType === 'drag'">
             <ul>

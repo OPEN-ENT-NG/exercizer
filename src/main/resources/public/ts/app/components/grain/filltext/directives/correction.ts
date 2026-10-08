@@ -9,7 +9,7 @@ export const correctionFillText = ng.directive('correctionFillText',
             },
             template: `
                 <div class="row">
-                    <div bind-html="grainScheduled.grain_data.custom_data.htmlContent"></div>
+                    <div bind-html="grainScheduled.grain_data.custom_data.htmlContent" compile-fill-zones="grainScheduled.grain_data.custom_data.htmlContent"></div>
                 </div>
             `,
             link: (scope: any) => {

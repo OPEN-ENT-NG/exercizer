@@ -37,7 +37,7 @@ import { grainCopyFooter } from './app/components/grain/common/grain_copy/direct
 import { grainCopyGrainDocumentList } from './app/components/grain/common/grain_copy/directives/grainCopyGrainDocumentList';
 import { grainCopyHeader } from './app/components/grain/common/grain_copy/directives/grainCopyHeader';
 import { grainCopyStatement } from './app/components/grain/common/grain_copy/directives/grainCopyStatement';
-import { editFillText, fillZone, performFillText, viewFillText, correctionFillText } from './app/components/grain/filltext/directives';
+import { editFillText, fillZone, performFillText, viewFillText, correctionFillText, compileFillZones } from './app/components/grain/filltext/directives';
 import { editMultipleAnswer } from './app/components/grain/multiple_answer/directives/editMultipleAnswer';
 import { performMultipleAnswer } from './app/components/grain/multiple_answer/directives/performMultipleAnswer';
 import { viewMultipleAnswer } from './app/components/grain/multiple_answer/directives/viewMultipleAnswer';
@@ -155,7 +155,7 @@ ng.directives.push(folderNavContainer, folderNavItem);
 ng.directives.push(editAssociation, performAssociation, viewAssociation);
 ng.directives.push(customEditor);
 ng.directives.push(grainCopyFooter, grainCopyGrainDocumentList, grainCopyHeader, grainCopyStatement);
-ng.directives.push(editFillText, performFillText, viewFillText, fillZone, correctionFillText);
+ng.directives.push(editFillText, performFillText, viewFillText, fillZone, correctionFillText, compileFillZones);
 ng.directives.push(editMultipleAnswer, performMultipleAnswer, viewMultipleAnswer);
 ng.directives.push(editOpenAnswer, performOpenAnswer, viewOpenAnswer);
 ng.directives.push(editOrder, performOrder, viewOrder);
