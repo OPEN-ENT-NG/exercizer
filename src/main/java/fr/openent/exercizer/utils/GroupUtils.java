@@ -24,7 +24,6 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.user.UserUtils;
-import org.entcore.common.user.dto.VisibleIdentityRequest;
 
 import java.util.List;
 
@@ -34,28 +33,26 @@ public final class GroupUtils {
 
 	}
 
+	/**
+	 * Members of the given groups that the user can see, the user included.
+	 * @return [{_id, name, profiles}] through the handler, null on failure
+	 */
 	public static void findMembers(final EventBus eb, final String userId, final List<String> groupIds, Handler<JsonArray> handler) {
-		VisibleIdentityRequest request = new VisibleIdentityRequest()
-					.setVisibleIdFilter(VisibleIdentityRequest.VisibleIdFilter.USERS_OF_GROUPS)
-				.setUserId(userId)
-				.setPublicDetails(true)
-				.setItSelf(true)
-				.setExpectedVisiblesIds(groupIds);
-		UserUtils.findVisibleIdentities(eb, request)
-				.onSuccess( visibles -> handler.handle(map(visibles)))
+		UserUtils.findVisibleMembersOfGroups(eb, userId, groupIds, true)
+				.onSuccess( members -> handler.handle(map(members)))
 				.onFailure( t -> handler.handle(null));
 	}
 
-	private static JsonArray map(JsonArray visibles) {
-		JsonArray mappedVisibles = new JsonArray();
-		visibles.forEach( o -> {
-			JsonObject visible = (JsonObject) o;
-			mappedVisibles.add(new JsonObject()
-									.put("_id", visible.getString("id"))
-									.put("name", visible.getString("displayName"))
-									.put("profiles", new JsonArray().add(visible.getString("profile"))));
+	private static JsonArray map(JsonArray members) {
+		JsonArray mappedMembers = new JsonArray();
+		members.forEach( o -> {
+			JsonObject member = (JsonObject) o;
+			mappedMembers.add(new JsonObject()
+									.put("_id", member.getString("id"))
+									.put("name", member.getString("displayName"))
+									.put("profiles", member.getJsonArray("profiles", new JsonArray())));
 		});
-		return mappedVisibles;
+		return mappedMembers;
 	}
 
 }
