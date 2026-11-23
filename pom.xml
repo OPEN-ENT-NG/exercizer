@@ -25,7 +25,7 @@
     </repository>
   </repositories>
   <properties>
-    <entCoreVersion>6.17-develop-pedago-SNAPSHOT</entCoreVersion>
+    <entCoreVersion>6.18-develop-pedago-SNAPSHOT</entCoreVersion>
     <entCoreLibsVersion>6.16-develop-pedago-SNAPSHOT</entCoreLibsVersion>
     <mongodb-helper.version>3.1-develop-pedago-SNAPSHOT</mongodb-helper.version>
     <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
