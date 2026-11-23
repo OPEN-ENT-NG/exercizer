@@ -164,7 +164,7 @@
   "exercizer.folder.title.copySuffix": "_copie",
   "exercizer.folderedit.title.create": "créer un dossier",
   "exercizer.folderedit.title.edit": "éditer un dossier",
-  "exercizer.folderedit.update": "Sauvegarder",
+  "exercizer.folderedit.update": "Enregistrer",
   "exercizer.future.info": "Vous pourrez rendre votre sujet à partir du",
   "exercizer.generate": "Générer l’exercice",
   "exercizer.generate.alert": "Pour que l’assistant fonctionne efficacement, vos énoncés à importer devront avoir un format similaire à ces types de questions :",
