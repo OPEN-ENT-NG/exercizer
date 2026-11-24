@@ -58,7 +58,7 @@ export function setup(): InitData {
     describe("[Exercizer-Init] Initialize data", () => {
         authenticateWeb(__ENV.ADMC_LOGIN, __ENV.ADMC_PASSWORD)!;
         const structure = createDefaultStructure(schoolName, 'tiny');
-        const role = createAndSetRole("Exercizer");
+        const role = createAndSetRole("Exercices et évaluations");
         const groups = [
             `Teachers from group ${structure.name}.`,
             `Enseignants du groupe ${structure.name}.`,
