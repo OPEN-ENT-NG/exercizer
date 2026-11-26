@@ -92,6 +92,8 @@ export function testExercizer(context: InitData) {
     const structure = context.structure!;
     let adminUser: UserInfo;
     describe("[Exercizer] Community API scenarios", () => {
+        // setup() runs in its own VU, so its session cookies are not available here
+        authenticateWeb(__ENV.ADMC_LOGIN, __ENV.ADMC_PASSWORD);
         // Get a teacher
         const users = getUsersOfSchool(structure);
         const teacher = getRandomUserWithProfile(users, "Teacher");
